@@ -17,6 +17,13 @@
 around them on 2026-09-05 and their numbers were retired rather than reused, so a citation made
 against an earlier draft still means what it meant. The live sections are §0 and §3–§10.*
 
+***The rendered page carries fewer, and that is deliberate.*** *`deliverables/terrain-the-case.html`
+renders §0.1–§0.4 as its four sections and §3–§6 as the detail folded under them. **§0.5, §4.H and
+§7–§10 are markdown-only.** The page is a four-section outbound read, not the whole document; this
+file is the complete record and wins wherever the two differ. Adding a section here does not add one
+there — and if one of these is ever wanted on the page, the section count in `index.html` and
+`README.md` moves with it.*
+
 **Static HTML, no server and no build step** — open it in any browser. The prototype is a second
 file that the document loads into a frame, so keep the two together, or read them from the repository
 where they live.
@@ -383,8 +390,9 @@ than only a claim.
 **`Hierarchy` is the most important row here, and it was missing from this inventory entirely.** It
 is a top-level destination in your own navigation and appears in no marketing we audited. Screen `25`
 shows the 技術 tree with per-branch counts, the patent list, a per-patent 分類相似度 score, an
-`AI Sort` control — and a **Recycle Bin holding 33 patents** of roughly 135. An analyst builds the
-taxonomy, assigns patents by hand, and bins what does not fit.
+`AI Sort` control — and a **Recycle Bin** holding what did not fit. An analyst builds the taxonomy,
+assigns patents by hand, and bins the rest: at the scale our illustrative set models, **41 of
+roughly 158 binned**, leaving 117 in scope.
 
 **That is the work Terrain exists to remove, not a feature to match.** Every other cut here removes
 something a founder would not use; this one removes a *job*, and it is the clearest answer to *what
@@ -625,12 +633,13 @@ Three rules hold that shape together, and all three are testable rather than dec
   the benefit columns it will measure them against, to edit or approve. This is IPtech's 技術魚骨
   plus 技術定義表 rendered as something a founder can check, and it gates because a wrong reading
   here poisons every downstream view equally and invisibly.
-- **And nothing is drawn until the founder approves what the search found.** The project we opened
-  reaches 117 patents because an analyst working in `Hierarchy` binned 41 of roughly 158 by hand.
-  **We have no analyst to do that discarding**, so the founder does it — once, over a ranked set with
-  our recommendation already selected, before any chart exists. It is one click to accept. The map
-  then carries a standing note of what it was built on, because a cell that is empty because of that
-  cut must never look like a cell that is empty because nobody filed.
+- **And nothing is drawn until the founder approves what the search found.** An analyst working in
+  `Hierarchy` assigns by hand and bins what does not fit — at the scale our illustrative set models,
+  41 of roughly 158, leaving 117 in scope. **We have no analyst to do that discarding**, so the
+  founder does it — once, over a ranked set with our recommendation already selected, before any
+  chart exists. It is one click to accept. The map then carries a standing note of what it was built
+  on, because a cell that is empty because of that cut must never look like a cell that is empty
+  because nobody filed.
 
 The words *fishbone*, *node*, *taxonomy* and *classification* appear nowhere in the interface.
 
@@ -802,25 +811,26 @@ and this section differ, **this section wins**.
    one sentence. **This is the highest product risk in the build** — every element in §6.2 rests on
    it, and without it the confirm card has nothing to show and the map has no columns.
 
-**Blocking a US product specifically:**
+**Blocking the quality of the answer rather than its availability — the pipeline can be reachable
+and still not be good enough. Two of the three are specifically about the US.** Numbered to match
+[platform.md](platform.md) §10 exactly, so §9.n here and §10.n there are the same question:
 
-3. **Does 名稱統一 cover US startups?** The stated coverage is 1,800+ Taiwanese listed and academic
+3. **How good is the AI fishbone actually?** Innovue's own blog contradicts itself: 專利布局分析大解密
+   EP7 argues *against* AI classification and cites a case where AI-selected patents were 20%
+   accurate, while 專利分析實操 EP41 sells AI魚骨 and AI分類Pro doing exactly that. Which position is
+   current? This decides how much work the confirm card (§6.1) has to do.
+4. **Does 名稱統一 cover US startups?** The stated coverage is 1,800+ Taiwanese listed and academic
    entities plus 1,000+ large international names. US seed-stage companies are exactly what such a
    list would miss, and exactly the competitors this audience most needs deduplicated correctly.
    **The rivals view could work perfectly for DJI and fail completely for a YC company**, and the
    founder would have no way to notice. Not hypothetical: §4.B has the evidence, and the strongest
    part of it is that one *Taiwanese* company — inside the coverage described as strongest — splits
    across five rows totalling 163 patents.
-4. **US patent depth and lag** within the 100+ countries / 180M records claim. The coverage claim is
+5. **US patent depth and lag** within the 100+ countries / 180M records claim. The coverage claim is
    the product's foundation and we have not verified it for our market.
 
-**Blocking specific elements of §6.** Numbered to match [platform.md](platform.md) §10 exactly, so
-§9.n here and §10.n there are the same question:
+**Blocking specific elements of §6:**
 
-5. **How good is the AI fishbone actually?** Innovue's own blog contradicts itself: 專利布局分析大解密
-   EP7 argues *against* AI classification and cites a case where AI-selected patents were 20%
-   accurate, while 專利分析實操 EP41 sells AI魚骨 and AI分類Pro doing exactly that. Which position is
-   current? This decides how much work the confirm card (§6.1) has to do.
 6. **Is IPC data exposed, and at what depth** — full symbol, or class only? It is the only part of
    the pipeline that is not AI-generated, so it is the one available check on a system that infers
    everything else from a sentence. It also carries the handoff row in §6.2.
@@ -880,11 +890,11 @@ the capability behind it — is `design/components.md`.
     panel?** If it comes back as generated HTML or an image we cannot re-label it in English or place
     it in our own summary — which would settle question 14's follow-on for reasons that have nothing
     to do with whether the capability is good.
-20. **Does a programmatic result return what was excluded, or only what was kept?** The project we
-    opened reaches 117 patents because an analyst in `Hierarchy` binned 41 of roughly 158 by hand —
-    §4.G. **Terrain has no analyst to do that discarding.** Is the kept-or-binned decision the
-    engine's or the person's, and can we see the discarded set? **This bears on whether our counts
-    and yours are comparable at all.**
+20. **Does a programmatic result return what was excluded, or only what was kept?** An analyst in
+    `Hierarchy` assigns by hand and bins what does not fit — at the scale our illustrative set
+    models, 41 of roughly 158, leaving 117 in scope; §4.G. **Terrain has no analyst to do that
+    discarding.** Is the kept-or-binned decision the engine's or the person's, and can we see the
+    discarded set? **This bears on whether our counts and yours are comparable at all.**
 21. **Is the same measure available at an earlier date?** A change indicator needs two time points
     and we hold one. We can snapshot our own runs and diff them — but that changes what we store and
     what a run costs, so we would rather know first. Related to question 8.

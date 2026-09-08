@@ -294,6 +294,15 @@ different things.
 hatched — that is precisely Emerging, and it is only expressible because the two channels are
 independent. The legend names all three states in words.
 
+**The hatch entry is labelled by its channel, not by the state** — *Rising — and Emerging where the
+tone is light* — because the independence cuts both ways. The same hatch over a dark tone reads
+**crowded and rising**, which is a true and useful cell and a fourth reading the three state names
+have no room for. Labelling that swatch *Emerging — low, but rising* was the earlier wording, and it
+was wrong about the data on screen: two of the three hatched cells in the prototype sit at
+`--density-4`, the tone the same legend calls Crowded. The correction is in the words, not the
+data — and not in this section's design, which is what makes the dark hatched cell legitimate in the
+first place.
+
 ### 3.5 · Chart layers
 
 Three layers, never merged. From the dark reference screen.
@@ -1211,8 +1220,8 @@ Density tone is locked to grey by `CLAUDE.md` and §6.1 forbids the interface im
 empty, so a selection cannot enter a cell's fill. It goes on the column's **edge**: a 3px `--mark-1`
 rule under the header and 2px rails down the cells, a mark beside the tone rather than replacing it.
 The header also reveals that column's **total, summed from the observed cell counts** rather than
-carried as a separate figure — so the header and the cells can never disagree. Navigation / control
-comes to 26, which is the number the dashboard finding already states.
+carried as a separate figure — so the header and the cells can never disagree. Flight computer and
+datalink comes to 33, which is the number the dashboard finding already states.
 
 **This was the one place the withdrawn hue did work no neutral does for free**, and it is the honest
 cost of §2's 2026-09-05 amendment. A lime rail was a different *kind* of thing from the grey it ran

@@ -55,7 +55,7 @@ between them, so the seam is complete rather than only its interesting half.
 | **The rising hatch** · part of `matrixHTML` | the 45° hatch `<pattern>` | `rows[].rising: [colIndex]` — which intersections are growing. **Requires the same grid over two time windows**, which is the one part of the map's shape we cannot derive from a single result set | 技術功效矩陣, run twice — or a field we do not know exists. See §4 |
 | **The map's caption** · the widget's finding | `--text-1` `--text-2`, body scale | Nothing new — **derivable in full from `cols`, `rows` and `total`.** Recorded because it looks like generated content and is not | — |
 | **Column selection** · `colTotal`, `MX_SEL` | `--mark-1` on the column **edge** only, inverting to `--text-inverse` over `--density-4` | Nothing new. The header total is summed client-side from the cells, so header and cells cannot disagree | — |
-| **Rivals** · `sortRivals` | `--border`, table + `--state-*` for the row status | `{ holders: [{ name, patentsInScope: int, lastFiledYear: int, cells: [[rowIdx, colIdx]] }] }` — recency is a **separate field, not a sort of the count**: a rival who stopped filing in 2019 is a different fact from one filing now | **競合分析** + **名稱統一** + **同族合併**. Merged *by default*, not behind a toolbar toggle. Whether the coverage reaches US seed-stage entities is `case.md` §9.3 |
+| **Rivals** · `sortRivals` | `--border`, table + `--state-*` for the row status | `{ holders: [{ name, patentsInScope: int, lastFiledYear: int, cells: [[rowIdx, colIdx]] }] }` — recency is a **separate field, not a sort of the count**: a rival who stopped filing in 2019 is a different fact from one filing now | **競合分析** + **名稱統一** + **同族合併**. Merged *by default*, not behind a toolbar toggle. Whether the coverage reaches US seed-stage entities is `case.md` §9.4 |
 | **Filings over time** · `filingsChart` | `--chart-series` `--chart-trend` `--chart-unknown` `--chart-grid` `--border-strong` | `{ perYear: [{ year, count }], lagWindowYears: number }` — the trend is fitted over the **published points only**, so the incomplete window cannot pull the decline the caption exists to prevent a founder reading | **宏觀趨勢分析**. `lagWindowYears` is the open one — see §4 |
 | **Lineage** · the most-cited table | `--border`, table scale | `{ mostCited: [{ title, holder, year, citedBy: int }] }` — three to five rows. **Not a network graph**: a citation graph is noise to someone with no patent background | **技術脈絡分析**, reduced. The hard part is `citedBy` counted *within scope* rather than globally — see §4 |
 | **Drill-down list** · `openDrill`, `DRILL_ROWS` | `--surface` `--border` `--state-live` `--state-expired` `--skeleton` | `{ patents: [{ skim: string, holder, year, status: 'live' \| 'expired' }] }` — four fields per row and nothing else | **AI速讀Pro in bulk** (`case.md` §9.11) + **名稱統一** + **法律狀態 per patent in bulk** (§9.7). Without the first this degrades to a list of titles, which is a search result rather than evidence |
@@ -73,7 +73,7 @@ between them, so the seam is complete rather than only its interesting half.
 ## 2 · Specced, not built
 
 The four remaining `Diverge` chart forms, plus one row that needs the data and no chart. **They are
-blocked by data, not by design** — the eVTOL capture does not carry what they need, and drawing a
+blocked by data, not by design** — the illustrative set does not carry what they need, and drawing a
 shape from numbers we do not hold is the one thing our skeleton contract forbids. Specs are in
 `design-language.md` §7. These five shapes are `platform.md` §10.22, asked as one question.
 
@@ -138,8 +138,9 @@ questions loses it. Where this file and §9 differ, **§9 wins.**
 7. **→ `case.md` §9.23** · **Projects — yours or ours?** Can a 專案 be created, listed and reopened programmatically, and
    what does one contain? It decides whether the project rail is a view of your object or a Terrain
    object that happens to hold a query.
-8. **→ `case.md` §9.20** · **Does a result return what was excluded?** The observed project reaches 102 patents because an
-   analyst discarded 33 of ~135 in `Hierarchy` by hand. **Terrain has no analyst to do that
+8. **→ `case.md` §9.20** · **Does a result return what was excluded?** An analyst working in
+   `Hierarchy` assigns by hand and bins what does not fit — at the scale our illustrative set
+   models, 41 of roughly 158, leaving 117 in scope. **Terrain has no analyst to do that
    discarding.** Does a programmatic result return the excluded set, or only the kept one — and if
    only the kept one, is the kept/discarded decision made by the engine or by the person? This bears
    on whether our counts and yours are comparable at all, and we would rather raise it than assume.

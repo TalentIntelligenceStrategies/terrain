@@ -237,10 +237,10 @@ ruled out. Selecting once, before a map exists, is not maintenance. It is the sa
 the confirm card, applied to results instead of to a reading.
 
 **And it is not an act Terrain invented for the founder's benefit — it is one the analyst was already
-doing invisibly.** §10.20 records that the project we opened reaches 117 patents because an analyst
-working in `Hierarchy` binned 41 of roughly 158 by hand. **Terrain has no analyst to do that
-discarding**, so either the founder does it once, in the open, or nobody does it and the map is drawn
-over everything the search returned. §4b chooses the first.
+doing invisibly.** §10.20 records it: an analyst working in `Hierarchy` assigns by hand and bins what
+does not fit — at the scale our illustrative set models, 41 of roughly 158, leaving 117 in scope.
+**Terrain has no analyst to do that discarding**, so either the founder does it once, in the open, or
+nobody does it and the map is drawn over everything the search returned. §4b chooses the first.
 
 **The cost, recorded plainly, because it is real.** A list of patents with checkboxes is `Hierarchy`
 at smaller scale, and `case.md`'s argument to Innovue is that Terrain removes the analyst workflow. A
@@ -417,8 +417,9 @@ approve it, or they change it, and **what they approve is what every view in §6
 
 §10.20, asked of Innovue about their own product, is the whole argument:
 
-> The project we observed reaches 117 patents because an analyst working in `Hierarchy`
-> assigned by hand and binned 41 of roughly 158. **Terrain has no analyst to do that discarding.**
+> An analyst working in `Hierarchy` assigns by hand and bins what does not fit — at the scale our
+> illustrative set models, 41 of roughly 158, leaving 117 in scope. **Terrain has no analyst to do
+> that discarding.**
 
 Three answers were available. **Let the engine decide silently** — the map is then drawn over a
 corpus nobody has looked at, and a founder who was misread never finds out, which is the failure §4
@@ -1719,12 +1720,12 @@ cited by number elsewhere.
     it in §7a.4's summary — which would settle §6.4's candidate question by making the answer *no*
     for reasons that have nothing to do with whether the capability is good.
 
-20. **Does a programmatic result return what was excluded, or only what was kept?** The project we
-    observed reaches 117 patents because an analyst working in `Hierarchy` assigned by
-    hand and binned 41 of roughly 158. **Terrain has no analyst to do that discarding.** So: is the
-    kept/discarded decision made by the engine or by the person, and can we see the discarded set?
-    **This bears on whether our counts and yours are comparable at all**, and it is the question
-    `Hierarchy` raises that we had not thought to ask.
+20. **Does a programmatic result return what was excluded, or only what was kept?** An analyst
+    working in `Hierarchy` assigns by hand and bins what does not fit — at the scale our
+    illustrative set models, 41 of roughly 158, leaving 117 in scope. **Terrain has no analyst to do
+    that discarding.** So: is the kept/discarded decision made by the engine or by the person, and
+    can we see the discarded set? **This bears on whether our counts and yours are comparable at
+    all**, and it is the question `Hierarchy` raises that we had not thought to ask.
 
     *§4b is Terrain's answer to the half of this we control: the founder does the discarding, once,
     over a set, before the map is built. The question above is unchanged and still needs an answer —

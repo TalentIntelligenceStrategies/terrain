@@ -31,7 +31,8 @@ docs/brief.md        positioning, naming, the Innovue relationship — what Terr
 docs/platform.md     product definition — what gets built, and §9 DEFERRED — NOT IN SCOPE
 docs/design-language.md  tokens, type, components — how it looks
 docs/case.md         outbound — the capability read and the design pass, for management and
-                     Innovue. §8–§9 (the open questions) stay in the record and no longer render
+                     Innovue. The page renders §0.1–§0.4 and §3–§6; §0.5, §4.H and §7–§10 stay in
+                     the record and do not render
 deliverables/        the case document — maintained directly, no longer generated
 design/previews/     static HTML design explorations
 design/components.md the component manifest — per component, the data shape the engine must return

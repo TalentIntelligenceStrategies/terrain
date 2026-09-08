@@ -1407,7 +1407,7 @@ input{font:inherit}
             </div>
                 <div class="mx-legend">
                   <span class="lg"><span class="lg-sw" style="background:var(--density-4)"></span>Crowded</span>
-                  <span class="lg"><span class="lg-sw hatch"></span>Emerging — low, but rising</span>
+                  <span class="lg"><span class="lg-sw hatch"></span>Rising — and Emerging where the tone is light</span>
                   <span class="lg"><span class="lg-sw" style="background:var(--density-0)"></span>Open</span>
                   <span class="lg" style="margin-left:auto;color:var(--text-3)">Click a cell for the patents behind it</span>
                 </div>
@@ -3041,13 +3041,13 @@ function shareBars(rows, total){
 
    Each panel sorts by ITS OWN measure. A shared row order would have let
    position carry identity and hidden the interesting thing in this data: the
-   holder with the FEWEST patents ties for the MOST inventors, and the holder
-   with the most patents has the fewest. Sorting each panel separately makes
-   that inversion visible, and it is exactly why the mark is here — rank moves
-   between the panels, identity does not, and dataviz is absolute that a mark
-   follows the entity and never its rank. That was the hue's job until
-   2026-09-05 and it is now the darkest value's; the requirement did not
-   change when the hue went, only what discharges it.
+   holder with the MOST patents names the FEWEST inventors, and the MOST
+   inventors belong to a holder near the bottom of the patent count. Sorting
+   each panel separately makes that inversion visible, and it is exactly why
+   the mark is here — rank moves between the panels, identity does not, and
+   dataviz is absolute that a mark follows the entity and never its rank. That
+   was the hue's job until 2026-09-05 and it is now the darkest value's; the
+   requirement did not change when the hue went, only what discharges it.
 
    One holder is tracked at a time; the rest are ink. Click any row to move it.
    The labels stay skeleton bars because the prototype names no parties. The bar
@@ -3188,7 +3188,7 @@ function drawFilings(){
 
 var MX_LEGEND = '<div class="mx-legend">'
   + '<span class="lg"><span class="lg-sw" style="background:var(--density-4)"></span>Crowded</span>'
-  + '<span class="lg"><span class="lg-sw hatch"></span>Emerging — low, but rising</span>'
+  + '<span class="lg"><span class="lg-sw hatch"></span>Rising — and Emerging where the tone is light</span>'
   + '<span class="lg"><span class="lg-sw" style="background:var(--density-0)"></span>Open</span>'
   + '</div>';
 
@@ -3285,9 +3285,9 @@ var PAGES = {
             + holderBars(DATA.rivals, 'i', 'Inventors named')
             + '<p class="note" style="margin-top:var(--s-14)">Two measures on different scales, so '
             + '<b>two charts rather than two axes</b>. Each panel is ranked by its own measure, and '
-            + 'they do not agree: <b>the holder with the fewest patents ties for the most '
-            + 'inventors</b>, and the one with the most patents has the fewest. Click any row to '
-            + 'follow that holder through both.</p>'
+            + 'they do not agree: <b>the holder with the most patents names the fewest '
+            + 'inventors</b>, and the most inventors belong to a holder near the bottom of the '
+            + 'patent count. Click any row to follow that holder through both.</p>'
             + '<p class="note" style="margin-top:var(--s-10)">IPtech splits this on a base year into '
             + 'a butterfly chart. We did not capture that split for this project, so this is the '
             + 'ranking without it.</p>')
@@ -4076,13 +4076,19 @@ $('#setBuild').addEventListener('click', function(){ buildFromSet(true); });
 function setScopeChip(){
   var chip = $('#scopeChip');
   if (!chip) return;
-  var picked = 0, i;
-  for (i = 0; i < SET_ROWS.length; i++) if (SET_PICKED[i]) picked++;
+  var bar = '<span class="sk sk-h-micro w-xs" '
+          + 'style="display:inline-block;vertical-align:-1px"></span>';
   var n = (SET_TOUCHED || SET_BASELINE)
-    ? '<span class="sk sk-h-micro w-xs" style="display:inline-block;vertical-align:-1px"></span>'
-    : (DATA.total ? '<span class="fig fig-s">' + DATA.total + '</span>' : '<span class="sk sk-h-micro w-xs" style="display:inline-block;vertical-align:-1px"></span>');
-  chip.innerHTML = 'Built on ' + n + ' of <span class="sk sk-h-micro w-xs" '
-                 + 'style="display:inline-block;vertical-align:-1px"></span> matched';
+    ? bar
+    : (DATA.total ? '<span class="fig fig-s">' + DATA.total + '</span>' : bar);
+  /* the denominator is what the search MATCHED - in scope plus what was binned
+     out of it - and that is a different fact from the numerator, so it does NOT
+     go to a bar when the founder changes the scope. Reading it off the set is
+     what stops `binned` drifting from the figure the documents cite. */
+  var m = (DATA.total && DATA.binned)
+    ? '<span class="fig fig-s">' + (DATA.total + DATA.binned) + '</span>'
+    : bar;
+  chip.innerHTML = 'Built on ' + n + ' of ' + m + ' matched';
   chip.hidden = false;
 }
 
@@ -4262,7 +4268,8 @@ function routeFromHash(){
     go('map', h.indexOf('return') > -1 ? 'reopened' : 'built');
     /* #track — a founder following one technology and one holder at once, so
        the two selections can be seen agreeing across the map and the Rivals
-       card. Column 5 is Navigation / control, the 26 the finding already names. */
+       card. Column 5 is Flight computer and datalink, the 33 the finding
+       already names. */
     if (h.indexOf('track') > -1){
       MX_SEL = 5;
       $$('.matrix').forEach(function(el){ mountMatrix(el); });
