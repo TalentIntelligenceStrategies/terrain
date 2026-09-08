@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Inline brand/fonts/ into a preview so the HTML is a single sendable file.
 
-    python3 design/previews/inline-fonts.py design/previews/*.html
+    python3 design/previews/inline_fonts.py design/previews/*.html
 
 `CLAUDE.md` requires every preview to stand alone. Both previews linked
 `../../brand/fonts/fonts.css`, which meant they rendered correctly from this
@@ -18,9 +18,15 @@ import base64, os, re, sys
 
 HERE  = os.path.dirname(os.path.abspath(__file__))
 ROOT  = os.path.dirname(os.path.dirname(HERE))
-FONTS = os.path.join(ROOT, "TIS-Terrain", "brand", "fonts")
+FONTS = os.path.join(ROOT, "brand", "fonts")
+
+# This resolved the repo root and then appended the repo's own directory name,
+# asking for <repo>/TIS-Terrain/brand/fonts -- a path that never existed. A
+# fallback underneath it caught that every time, so the bug never surfaced and
+# the wrong line looked load-bearing. Removed 2026-09-08. The name of the
+# checkout directory is not this script's business.
 if not os.path.isdir(FONTS):
-    FONTS = os.path.normpath(os.path.join(HERE, "..", "..", "brand", "fonts"))
+    raise SystemExit("brand/fonts not found at %s" % FONTS)
 
 FACES = [("Urbanist", w) for w in (400, 500, 600, 700)] + \
         [("Inconsolata", w) for w in (400, 500, 600)]
