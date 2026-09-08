@@ -1,0 +1,67 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TIS Terrain</title>
+<link rel="stylesheet" href="brand/fonts/fonts.css">
+<style>
+  :root{
+    --bg:#FAFAFA; --surface:#FFF; --border:#E7E7E7;
+    --text-1:#121212; --text-2:#4A4A4A; --text-3:#767676;
+    --font:'Urbanist',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --mono:'Inconsolata',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text-1);font-family:var(--font);
+       -webkit-font-smoothing:antialiased;line-height:1.55}
+  .wrap{max-width:660px;margin:0 auto;padding:96px 24px 80px}
+  .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+           color:var(--text-3);margin:0 0 20px}
+  h1{font-size:44px;line-height:1.1;letter-spacing:-.02em;font-weight:700;margin:0 0 20px}
+  .lede{font-size:18px;color:var(--text-2);margin:0 0 12px;max-width:56ch}
+  .note{font-size:14px;color:var(--text-3);margin:0 0 44px;max-width:60ch}
+  .cards{display:flex;flex-direction:column;gap:12px;margin:0 0 44px}
+  a.card{display:block;background:var(--surface);border:1px solid var(--border);
+         border-radius:14px;padding:20px 22px;text-decoration:none;color:inherit;
+         transition:border-color .12s ease, transform .12s ease}
+  a.card:hover{border-color:var(--text-3);transform:translateY(-1px)}
+  a.card:focus-visible{outline:2px solid var(--text-1);outline-offset:2px}
+  .card h2{font-size:19px;font-weight:600;margin:0 0 6px}
+  .card p{font-size:14px;color:var(--text-2);margin:0}
+  .card .meta{font-family:var(--mono);font-size:12px;color:var(--text-3);margin-top:10px}
+  footer{border-top:1px solid var(--border);padding-top:22px;font-size:13px;color:var(--text-3)}
+  footer p{margin:0 0 8px}
+  code{font-family:var(--mono);font-size:.92em}
+  @media (max-width:520px){ .wrap{padding:56px 20px 64px} h1{font-size:34px} }
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">TIS Patent Intelligence</p>
+  <h1>Terrain</h1>
+  <p class="lede">Patent search with strategic direction, for founders working out where their
+  idea sits. You arrive with a concept; Terrain shows you who else is in the space, what is
+  adjacent to it, and where the gaps are.</p>
+  <p class="note">Design and definition phase. Both pages below are self-contained — no server,
+  no build step, nothing to install.</p>
+
+  <div class="cards">
+    <a class="card" href="deliverables/terrain-the-case.html">
+      <h2>The case</h2>
+      <p>Why this direction, who it is for, every capability rated from a founder's position,
+      and the design pass. Carries the working prototype in its second tab.</p>
+      <p class="meta">4 sections &middot; generated from docs/case.md</p>
+    </a>
+    <a class="card" href="design/previews/terrain-prototype.html">
+      <h2>The prototype</h2>
+      <p>The interface, running. Four surfaces, twenty-four states, clickable end to end.</p>
+      <p class="meta">static html &middot; open it at full window</p>
+    </a>
+  </div>
+
+  <footer>
+    <p><b>Every figure in both pages is illustrative.</b> The distribution is representative and
+    the arithmetic is internally consistent, but no number is a real filing count and no holder
+    is named — holder labels render as bars by decision.</p>
+    <p><code>docs/</code> is the source of truth; everything rendered is a view of it.</p>
+    <p>TIS Terrain &middot; Patent Intelligence &middot; Powered by Innovue.</p>
+  </footer>
+</div>

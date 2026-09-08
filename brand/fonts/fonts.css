@@ -1,0 +1,64 @@
+/* TIS Terrain — typefaces.
+   Copied from the TIS marketing site's subset build, with paths made relative to this
+   file so previews work over file:// with no server and no build step.
+
+   Urbanist      400/500/600/700  — text and display
+   Inconsolata   400/500/600      — numerals, figures, monospace
+
+   Terrain is English-only; there is no CJK face here on purpose. If that ever changes,
+   Noto Sans TC lives in the marketing site's subset build as FOUR files, each with its own
+   unicode-range — all four are required, and dropping one falls back silently.
+
+   Usage from design/previews/:
+     <link rel="stylesheet" href="../../brand/fonts/fonts.css">
+*/
+
+@font-face {
+  font-family: 'Urbanist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./Urbanist-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Urbanist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./Urbanist-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Urbanist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./Urbanist-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Urbanist';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./Urbanist-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inconsolata';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./Inconsolata-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inconsolata';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./Inconsolata-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inconsolata';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./Inconsolata-600.woff2') format('woff2');
+}

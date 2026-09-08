@@ -1,0 +1,26 @@
+# ── Local only. These are in the working tree and must never be pushed. ──────
+# Captures of Innovue's IPtech platform rendering a client's patent data, the
+# crops taken from them, and the two artifacts built out of those crops.
+# CLAUDE.md explains why the line sits here and not at "anything about Innovue".
+iptech-screenshots/
+iptech-screenshots-identified/
+design/previews/comparison-assets/
+design/previews/iptech-terrain-comparison.html
+design/previews/iptech-feature-request.html
+visual_inspo/
+
+# A third party's trademark files. Cited in the documents, not redistributed.
+brand/logos/innovue/
+
+# ── Build output and cruft ───────────────────────────────────────────────────
+deliverables/bundle/
+deliverables/*.zip
+deliverables/terrain-prototype.html
+.DS_Store
+node_modules/
+.next/
+dist/
+build/
+*.log
+.env
+.env.local
