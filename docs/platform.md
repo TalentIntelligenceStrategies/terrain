@@ -784,7 +784,7 @@ it. It is **`Switch To Ai Insight`**, the toolbar action on every M-Map and T-Ma
 narrative that traces the field across three eras and then names five core technology concepts with
 their relationships and representative patents. It closes its own first section with *"整體而言，本專案
 **技術脈絡**正從「單機飛行性能優化」轉向…"* — using the exact term for what it produced. Screen `28` in
-[`iptech-screenshots-identified/README.md`](../iptech-screenshots-identified/README.md) §2.16.
+[`visual-reference/iptech-screenshots-identified/README.md`](../visual-reference/iptech-screenshots-identified/README.md) §2.16.
 
 **This is our reading, not Innovue's confirmation**, so §10 keeps a one-line check on it.
 
@@ -1260,7 +1260,7 @@ canonical mapping**, and everything else is a view of it:
 | §7a.7 | 12 update-log capabilities not in §8 | folded in below as `Omit · later` rows |
 | [case.md](case.md) §4.A–G | 43 rated capabilities, marketing-sourced | **50, re-rated against the screens 2026-09-04** — the outbound *reading* of this ledger |
 | [case.md](case.md) §4.H | the 68-entry analysis menu, tiered | still the finer-grained menu record — §8.3 points at it |
-| [screenshot index](../iptech-screenshots-identified/README.md) §1 | 31 observed screens | the **evidence** column below |
+| [screenshot index](../visual-reference/iptech-screenshots-identified/README.md) §1 | 31 observed screens | the **evidence** column below |
 | §6, §7a, §9, §8.2, `design-language.md` §7 | five places explaining why a High-rated capability is not on screen | **§8.6** — one table, one state per capability |
 
 **Five verdicts, not four.** The set began as Match / Diverge / Omit·deferred / Omit·cut, and a
@@ -1328,7 +1328,7 @@ added below on 2026-09-07 are marked **`+ 2026-09-07`**, and §8.5's counts are 
 ### 8.1 · Observed surfaces
 
 Every one of the 31 identified screens has exactly one row here. `Screen` numbers are the stable IDs
-in the [screenshot index](../iptech-screenshots-identified/README.md) §1.
+in the [screenshot index](../visual-reference/iptech-screenshots-identified/README.md) §1.
 
 | IPtech surface | ZH | Screen | The founder question it answers | Verdict | Where in Terrain | Why |
 | --- | --- | --- | --- | --- | --- | --- |

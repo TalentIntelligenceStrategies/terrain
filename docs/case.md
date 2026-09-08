@@ -17,7 +17,7 @@
 around them on 2026-09-05 and their numbers were retired rather than reused, so a citation made
 against an earlier draft still means what it meant. The live sections are §0 and §3–§10.*
 
-***The rendered page carries fewer, and that is deliberate.*** *`deliverables/terrain-the-case.html`
+***The rendered page carries fewer, and that is deliberate.*** *`design/previews/terrain-the-case.html`
 renders §0.1–§0.4 as its four sections and §3–§6 as the detail folded under them. **§0.5, §4.H and
 §7–§10 are markdown-only.** The page is a four-section outbound read, not the whole document; this
 file is the complete record and wins wherever the two differ. Adding a section here does not add one
@@ -1087,7 +1087,7 @@ and the blog series 專利分析實操 (EP7, EP41) and 專利布局分析大解�
 destinations, the `M-Map` and `T-Map` menus expanded group by group, and the `Fishbone`, `View`,
 `Project`, `Company - Ranking`, `Company - Activity`, `Company - Legal Status`,
 `Patent Count - Life Cycle`, `Tech-Effx - 1D Matrix` and `Tech-Effx - Company Trend` screens.
-Captures are indexed in [iptech-screenshots-identified/README.md](../iptech-screenshots-identified/README.md).
+Captures are indexed in [visual-reference/iptech-screenshots-identified/README.md](../visual-reference/iptech-screenshots-identified/README.md).
 **This is the source for §4.H and for the evidence in §5.3**, and where it disagrees with the
 marketing audit above, it wins.
 

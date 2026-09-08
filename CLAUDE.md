@@ -33,19 +33,19 @@ docs/design-language.md  tokens, type, components — how it looks
 docs/case.md         outbound — the capability read and the design pass, for management and
                      Innovue. The page renders §0.1–§0.4 and §3–§6; §0.5, §4.H and §7–§10 stay in
                      the record and do not render
-deliverables/        the case document — maintained directly, no longer generated
-design/previews/     static HTML design explorations
+design/previews/     the case document and the prototype — both maintained directly
 design/components.md the component manifest — per component, the data shape the engine must return
 brand/logos/tis/     TIS SVGs, copied from the monorepo (read-only, do not edit)
 brand/fonts/         7 self-hosted woff2 + fonts.css + the two OFL licences — see Typefaces
 
     LOCAL ONLY — present in the working tree, excluded by .gitignore, never pushed:
-iptech-screenshots/             raw platform captures, 2026-09-02 and 2026-09-04
-iptech-screenshots-identified/  the same, identified and cropped, with a README index
-design/previews/comparison-assets/       crops taken from those captures
+visual-reference/    every capture and crop, gathered here 2026-09-08
+  iptech-screenshots/             raw platform captures, 2026-09-02 and 2026-09-04
+  iptech-screenshots-identified/  the same, identified and cropped, with a README index
+  visual-inspiration/             reference screens the design language was derived from
+  comparison-assets/              crops taken from those captures
 design/previews/iptech-terrain-comparison.html   the side-by-side deck
 design/previews/iptech-feature-request.html      the capability ask addressed to Innovue
-visual-inspiration/  reference screens the design language was derived from
 brand/logos/innovue/ Innovue SVGs — a third party's marks, cited but not redistributed
 ```
 
@@ -99,8 +99,8 @@ building it. Deferral here is a scope decision, not a backlog.
 parent monorepo: settle the decision in markdown, then build the preview. Never let a design
 preview become the only record of a decision.
 
-**One exception, and it is a real weakening rather than a clarification.** `deliverables/` holds one
-outbound document, `terrain-the-case.html` — four sections and a prototype tab — and it is
+**One exception, and it is a real weakening rather than a clarification.** `design/previews/` holds
+one outbound document, `terrain-the-case.html` — four sections and a prototype tab — and it is
 **maintained directly**. A Python build generated it from `docs/case.md` until 2026-09-08; the build
 was removed with the packaging it existed for, when hosting made a single self-contained file
 pointless.

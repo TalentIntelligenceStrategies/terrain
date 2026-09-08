@@ -14,7 +14,7 @@ Light mode only. The dark pass is a separate job, and §10 is the contract that 
 
 ## 1 · The read on the reference screens
 
-Seven screens in `visual_inspo/` — six light, one dark. They are not one aesthetic, but they run one
+Seven screens in `visual-reference/visual-inspiration/` — six light, one dark. They are not one aesthetic, but they run one
 system, and that system is what Terrain takes.
 
 **The shared structure.** A grey page ground with white cards floating on it. Generous radius.
@@ -104,7 +104,7 @@ hues read as one colour. So the jurisdiction pie's largest slice read *live* and
 reserves the status hues outright — never a series. That is a defect, not a preference, and it is why
 this amendment is not a reversal of the one above but a correction inside it.
 
-**Observed: the reference screens do not use categorical palettes at all.** `visual_inspo`
+**Observed: the reference screens do not use categorical palettes at all.** The reference screens
 2.13.59, 2.16.27 and 2.17.53 each use **one warm hue against ink**, with a third value carried as a
 diagonal hatch. Sampled, they are `#C2F662`, `#F3FFA5` and `#E4A24E`. Nothing in the folder that
 Terrain's aesthetic is derived from asks for five hues.
@@ -487,7 +487,7 @@ Kept because the reasoning cost a day to produce and a later session will otherw
 and because two of the numbers below are the reason the *dark* set cannot be guessed.
 
 **The hue was `--lime` `#C2F662`, `L 0.908 C 0.183 H 126.2`, sampled not chosen.** Read off the
-pixels of `visual_inspo/Screenshot 2026-08-31 at 2.13.59 PM.png`. Its two siblings in the folder were
+pixels of `visual-reference/visual-inspiration/Screenshot 2026-08-31 at 2.13.59 PM.png`. Its two siblings in the folder were
 sampled at the same time and rejected with reasons:
 
 | Sampled | Value | OKLCH hue | Why not |
@@ -1363,7 +1363,7 @@ token.** Dark mode then redefines the **30** tokens in §3.2–3.6 under both `:
 and `@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) }`, and touches no
 component CSS. One grep — raw hex outside `:root` — proves compliance.
 
-The dark screen in `visual_inspo/` is the reference, and it says **the dark theme is not an
+The dark screen in `visual-reference/visual-inspiration/` is the reference, and it says **the dark theme is not an
 inversion**:
 
 - **Surfaces stop being fills.** That screen separates every region on hairlines alone, with almost

@@ -130,7 +130,7 @@ site*, and it stands. **The product is not Chinese-only** — there is an Englis
 account. What is incomplete is the English, not its absence: a Chinese column header sits in an
 otherwise English table, applicant names render untranslated, and the vocabulary is non-idiomatic
 throughout (*Citings*, *Overdue*, *Tech-Effx*). Evidence and screens are indexed in
-`iptech-screenshots-identified/README.md` §2.2.
+`visual-reference/iptech-screenshots-identified/README.md` §2.2.
 
 The platform's own structure, which replaces what we had inferred, is its top navigation:
 **Search · Fishbone · View · Hierarchy · M-Map · T-Map · Report · Project.** `T-Map › Tech-Effx` is
@@ -177,7 +177,7 @@ like a tier of IPtech.
   see §6.
 
   **It has a candidate, a candidate is not a decision, and the candidate was tried in production for
-  one day.** `#C2F662`, sampled from `visual_inspo/Screenshot 2026-08-31 at 2.13.59 PM.png`, shipped
+  one day.** `#C2F662`, sampled from `visual-reference/visual-inspiration/Screenshot 2026-08-31 at 2.13.59 PM.png`, shipped
   2026-09-04 as `--mark-1`, the chart hue in `design-language.md` §3.7 — and **withdrawn 2026-09-05.
   There is now no hue anywhere in Terrain.** The marks are neutral ramp steps and a hatch; §2 of
   `design-language.md` carries the amendment. It was also darkened to `#9ACB2F` and reverted inside
@@ -221,7 +221,7 @@ The monorepo's tokens and components are still not to be imported to fill the ga
 
 As of 2026-08-31 this is **no longer bare**: [design-language.md](design-language.md) holds a
 verified neutral ramp, state colours, type scale, component specs and a dark-mode contract, derived
-from the reference screens in `visual_inspo/`. It is Terrain's own system, not the monorepo's.
+from the reference screens in `visual-reference/visual-inspiration/`. It is Terrain's own system, not the monorepo's.
 
 ## 5 · What gets built
 

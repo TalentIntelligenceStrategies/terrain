@@ -15,7 +15,7 @@ design language, settled in writing before application code exists.
 
 | | |
 | --- | --- |
-| [**The case**](deliverables/terrain-the-case.html) | Why this direction, who it is for, every IPtech capability rated from a founder's position, and the design pass. Its second tab runs the prototype in a frame. Written from [`docs/case.md`](docs/case.md), which stays the record of the argument. |
+| [**The case**](design/previews/terrain-the-case.html) | Why this direction, who it is for, every IPtech capability rated from a founder's position, and the design pass. Its second tab runs the prototype in a frame. Written from [`docs/case.md`](docs/case.md), which stays the record of the argument. |
 | [**The prototype**](design/previews/terrain-prototype.html) | The interface, running. Four surfaces, twenty-four states, clickable end to end. |
 
 Both are static HTML with no build step and no server. They link one stylesheet —
@@ -42,10 +42,9 @@ repository**. They render a client's data as pixels.
 
 ```
 index.html       the landing page — links the two pages below
-deliverables/
-  terrain-the-case.html   the case, four sections and a prototype tab
 design/
   previews/
+    terrain-the-case.html   the case, four sections and a prototype tab
     terrain-prototype.html  the interface, running
   components.md    per component, the data shape the engine must return
 docs/            the source of truth — four documents, and they win over anything rendered
@@ -84,7 +83,7 @@ Four things must hold. Each command prints offending files and nothing otherwise
 git ls-files | grep -iE '\.(png|jpe?g|gif|webp|bmp|tiff)$'
 
 # 2 · nothing local-only is tracked, by name as well
-git ls-files | grep -Ei 'iptech-screenshots|comparison-assets|visual.inspo|visual.inspiration|logos/innovue|iptech-terrain-comparison|iptech-feature-request'
+git ls-files | grep -Ei 'visual-reference|iptech-screenshots|comparison-assets|visual.inspo|visual.inspiration|logos/innovue|iptech-terrain-comparison|iptech-feature-request'
 
 # 3 · no client or patent data in tracked files
 git ls-files | grep -v README.md | tr '\n' '\0' \
