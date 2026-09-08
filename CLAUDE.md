@@ -37,7 +37,6 @@ design/previews/     static HTML design explorations
 design/components.md the component manifest — per component, the data shape the engine must return
 brand/logos/tis/     TIS SVGs, copied from the monorepo (read-only, do not edit)
 brand/fonts/         7 self-hosted woff2 + fonts.css + the two OFL licences — see Typefaces
-.nojekyll            stops GitHub Pages running Jekyll over docs/*.md
 
     LOCAL ONLY — present in the working tree, excluded by .gitignore, never pushed:
 iptech-screenshots/             raw platform captures, 2026-09-02 and 2026-09-04
@@ -45,12 +44,24 @@ iptech-screenshots-identified/  the same, identified and cropped, with a README 
 design/previews/comparison-assets/       crops taken from those captures
 design/previews/iptech-terrain-comparison.html   the side-by-side deck
 design/previews/iptech-feature-request.html      the capability ask addressed to Innovue
-visual_inspo/        reference screens the design language was derived from
+visual-inspiration/  reference screens the design language was derived from
 brand/logos/innovue/ Innovue SVGs — a third party's marks, cited but not redistributed
 ```
 
 Add directories when work actually needs them, not in advance. When application code arrives it
 goes in `app/`, and that decision gets recorded in `docs/brief.md` first.
+
+*There is no `.nojekyll`, and the reason first recorded for one was wrong. It was committed and
+removed on 2026-09-08. Markdown with no YAML front matter is a Jekyll **static file** — copied
+byte-for-byte, never rendered — so Jekyll was never going to turn `docs/*.md` into site content.
+Nothing here carries front matter and no path starts with `_` or `.`, so a Jekyll build and a raw
+copy produce the same site.*
+
+***The next Pages pass owns what that leaves open.*** *Deploying from a branch runs Jekyll, and two
+things stop being hypothetical: a build failure fails the **whole** deploy rather than one file, and
+any path later added with a `_` prefix is dropped from the output with no error — the same shape as
+the rename that defeated the path-based ignore rule. `touch .nojekyll` is the entire fix if either
+bites. Deploying through a GitHub Actions workflow skips Jekyll and the question does not arise.*
 
 ## Rules
 
