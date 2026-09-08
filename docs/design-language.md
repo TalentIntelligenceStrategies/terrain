@@ -1271,16 +1271,24 @@ needs both encodings is two charts.
 ## 8 · The skeleton contract
 
 Terrain has no API yet (`platform.md` §10.1 is unanswered and blocks everything downstream of it),
-so every preview shows a populated screen with nothing real in it.
+so every preview shows a populated screen without live data behind it.
 
-**Chrome is real. Data is a bar. Nothing is invented.**
+**Chrome is real. Identities stay bars. Figures are illustrative.**
 
-| Real English | Grey bar |
-|---|---|
-| Nav labels, widget titles, buttons, column headers, captions, legends, empty-state copy, menu rows, axis *titles* | Patent counts, company names, dates, years, project names, user name, plan tier, axis *values* |
+| Real English | Grey bar | Illustrative |
+|---|---|---|
+| Nav labels, widget titles, buttons, column headers, captions, legends, empty-state copy, menu rows, axis *titles* | Company names, dates, years, project names, user name, plan tier | Patent counts, cell values, jurisdiction split, axis *values* |
 
-No invented patent number, no invented company, no plausible-looking year. The screen must read as
-populated **through layout alone**, which is the harder and more useful test.
+**No patent number, no named company, no plausible-looking date.** An *identity* is never invented,
+because an invented one reads as a live example — that is the line, and it has not moved.
+
+*The third column is new as of 2026-09-08, and it is a real narrowing of the contract.* It read
+**"Data is a bar. Nothing is invented"** until the prototype was populated, and everything numeric
+was genuinely observed. The figures are now modelled rather than observed — the repository is public
+and the observed set was a client's — so the honest claim is *illustrative*, not *nothing invented*.
+The invariants hold: cells sum to the scope figure, the finding quotes the true maximum, the
+distribution is representative. **The screen must still read as populated through layout alone**,
+which is the harder and more useful test.
 
 **There are exactly two exceptions, and they are the same exception twice.** Where a widget's whole
 purpose is to express a *shape*, rendering it flat would show nothing, so the shape is drawn and the

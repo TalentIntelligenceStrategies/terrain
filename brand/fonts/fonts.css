@@ -1,9 +1,14 @@
 /* TIS Terrain — typefaces.
    Copied from the TIS marketing site's subset build, with paths made relative to this
-   file so previews work over file:// with no server and no build step.
+   file so every page here can link it with no server and no build step.
 
    Urbanist      400/500/600/700  — text and display
    Inconsolata   400/500/600      — numerals, figures, monospace
+
+   Both are licensed under the SIL Open Font License 1.1, and the licence travels with
+   the files as OFL requires: OFL-Urbanist.txt and OFL-Inconsolata.txt beside this one.
+   The woff2 here are SUBSETS of the upstream fonts, which OFL permits — see each
+   licence for the terms that apply to a modified version.
 
    Terrain is English-only; there is no CJK face here on purpose. If that ever changes,
    Noto Sans TC lives in the marketing site's subset build as FOUR files, each with its own

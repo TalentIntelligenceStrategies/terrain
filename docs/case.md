@@ -17,15 +17,18 @@
 around them on 2026-09-05 and their numbers were retired rather than reused, so a citation made
 against an earlier draft still means what it meant. The live sections are §0 and §3–§10.*
 
-**One file, and everything is inside it** — no server, no build step, nothing to install, nothing
-that has to stay beside it. Open it in any browser.
+**Static HTML, no server and no build step** — open it in any browser. The prototype is a second
+file that the document loads into a frame, so keep the two together, or read them from the repository
+where they live.
 
 | File | What it is |
 | --- | --- |
-| `terrain-the-case.html` | **This document.** Four sections, and a second tab holding **the working prototype itself** — clickable, running on an illustrative set (§6.5) |
+| `terrain-the-case.html` | **This document.** Four sections, and a second tab running the prototype in a frame |
+| `terrain-prototype.html` | **The prototype itself** — clickable, on an illustrative set (§6.5). The tab above frames this file; it also opens on its own at full window |
 
-*The prototype used to travel as a second file. It is now embedded in the second tab, so the document
-survives being forwarded on its own — which is how a document is actually read.*
+*It was one file with the prototype embedded inside it between 2026-09-05 and 2026-09-08, so it could
+be sent as a single mail attachment. It is hosted now, so the two are separate files again and the
+document is 96 KB rather than 700.*
 
 And the handoff, for whoever would implement it: `design/components.md` (**the component manifest**
 — per component, what it reads, the data shape it needs from your engine, and which capability
@@ -685,7 +688,7 @@ Interface language is English only, natively — not translated.
 The prototype is a real, clickable build of all four surfaces — the conversation, the set, the map
 with its four widgets and drill-down, and the widget page — running on a deliberate contract:
 
-> **Chrome is real. Data is a bar. Nothing is invented.**
+> **Chrome is real. Identities stay bars. Figures are illustrative.**
 
 It ships showing an **illustrative set**: 117 patents, an 8×8 technology-outcome grid and its cell
 counts, five largest holders, and a jurisdiction split of 81 Taiwan / 26 US / 7 across five other

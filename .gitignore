@@ -7,7 +7,13 @@ iptech-screenshots-identified/
 design/previews/comparison-assets/
 design/previews/iptech-terrain-comparison.html
 design/previews/iptech-feature-request.html
+
+# Mood-board captures. BOTH names: the folder was visual_inspo/ and was renamed
+# to visual-inspiration/ outside the repo on 2026-09-08, at which point the old
+# entry stopped matching and `git add -A` staged all 6 MB of it. Caught before
+# the commit. The raster rule at the bottom is the real guard; these are hints.
 visual_inspo/
+visual-inspiration/
 
 # A third party's trademark files. Cited in the documents, not redistributed.
 brand/logos/innovue/
@@ -24,3 +30,17 @@ build/
 *.log
 .env
 .env.local
+
+# ── The invariant, not a name blocklist ──────────────────────────────────────
+# This repository legitimately contains no raster images at all: the pages are
+# HTML, the marks are SVG, the typefaces are woff2. Every screenshot here is
+# either a capture of a third party's product or a mood board, and neither is
+# ours to publish. So rasters are refused wholesale -- a directory rename
+# cannot get around this the way it got around the entries above.
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.bmp
+*.tiff

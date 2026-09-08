@@ -26,21 +26,18 @@ order. Never write copy that describes it in report language.
 ```
 CLAUDE.md            this file — how to work here
 README.md            what a visitor to the public repo reads first
-index.html           the landing page GitHub Pages serves — links the two artifacts
-KICKOFF-PROMPT.md    paste-in prompt for starting a fresh session on this project
-PLAN.md              phase plan and handoff state — read this to pick up work in progress
+index.html           the landing page GitHub Pages serves — links the two pages
 docs/brief.md        positioning, naming, the Innovue relationship — what Terrain is
 docs/platform.md     product definition — what gets built, and §9 DEFERRED — NOT IN SCOPE
 docs/design-language.md  tokens, type, components — how it looks
 docs/case.md         outbound — the capability read and the design pass, for management and
                      Innovue. §8–§9 (the open questions) stay in the record and no longer render
-deliverables/        the outbound document, GENERATED — see deliverables/README.md
-deliverables/document.css  the document's tokens and components, read by build.py
-design/previews/     self-contained static HTML design explorations
+deliverables/        the case document — maintained directly, no longer generated
+design/previews/     static HTML design explorations
 design/components.md the component manifest — per component, the data shape the engine must return
 brand/logos/tis/     TIS SVGs, copied from the monorepo (read-only, do not edit)
-brand/fonts/         7 self-hosted woff2 + fonts.css — see Typefaces
-.claude/skills/      build-terrain-preview, port-21st
+brand/fonts/         7 self-hosted woff2 + fonts.css + the two OFL licences — see Typefaces
+.nojekyll            stops GitHub Pages running Jekyll over docs/*.md
 
     LOCAL ONLY — present in the working tree, excluded by .gitignore, never pushed:
 iptech-screenshots/             raw platform captures, 2026-09-02 and 2026-09-04
@@ -60,10 +57,11 @@ goes in `app/`, and that decision gets recorded in `docs/brief.md` first.
 **Fewer, denser documents.** Add to an existing doc in `docs/` before creating a new file. There
 are **four**, split on purpose:
 
-*The rule governs `docs/`. `PLAN.md` at the root is not a fifth — it is operational state (what
-phase we are in, what is owed, what is closed), the same category as `KICKOFF-PROMPT.md`, and it
-holds no decision that is not already recorded in one of the four. If it and they disagree, they
-win.* `brief.md` is what Terrain *is*, `platform.md` is what gets *built*,
+*The rule governs `docs/`, and `README.md` at the root is not a fifth — it is the front door for a
+visitor, and it holds no decision that is not already recorded in one of the four. If it and they
+disagree, they win. `PLAN.md` and `KICKOFF-PROMPT.md` used to sit here as operational state; both
+were deleted 2026-09-08 when the repo went public, being tooling rather than product.*
+`brief.md` is what Terrain *is*, `platform.md` is what gets *built*,
 `design-language.md` is how it *looks*, `case.md` is the argument sent *outward*. A folder full of
 near-duplicate markdown is how the definition phase stops being legible.
 
@@ -89,34 +87,44 @@ building it. Deferral here is a scope decision, not a backlog.
 parent monorepo: settle the decision in markdown, then build the preview. Never let a design
 preview become the only record of a decision.
 
-*This now has teeth beyond the previews.* `deliverables/` holds **one** outbound document —
-`terrain-the-case.html`, four sections and a prototype tab — and it is **generated from
-`docs/case.md` plus the comparison deck by `deliverables/build.py`**. Editing the output directly
-survives until the next build and then vanishes without an error, which is the worst failure mode in
-the folder. Change the source and rebuild. `deliverables/README.md` is the routing table for what to
-edit to change what.
+**One exception, and it is a real weakening rather than a clarification.** `deliverables/` holds one
+outbound document, `terrain-the-case.html` — four sections and a prototype tab — and it is
+**maintained directly**. A Python build generated it from `docs/case.md` until 2026-09-08; the build
+was removed with the packaging it existed for, when hosting made a single self-contained file
+pointless.
 
-*It was three documents plus a standalone deck until 2026-09-04.* Three was five artifacts for one
-argument, each written at working-record density. **The comparison deck is now a source, not a
-deliverable** — it is still a self-contained preview you can open, and `build.py` ingests its panels
-into section 4.
+So the case document is the one rendered thing that is **not** automatically a view of its source.
+`docs/case.md` is still the record of the argument, and it still wins where the two disagree — but
+nothing enforces that any more. **Change both, in the same pass.** If they drift, the markdown is
+right and the page is stale. `git show b96f61a:deliverables/build.py` has the generator if the
+generated approach is ever wanted back.
+
+*It was three documents plus a standalone comparison deck until 2026-09-04, then one document with
+the deck ingested into section 4. The deck's panels came out on 2026-09-08 with the screenshots.*
 
 **And the outbound document carries the conclusion, not the history of reaching it.** Amendment
 trails, retractions and dated corrections stay in `brief.md` and `platform.md`, which are working
 records. `case.md` is a view for a reader who was not in the room.
 
-**Design previews are self-contained.** Each file in `design/previews/` stands alone — inline CSS,
-no shared stylesheet, no build step. There is no design system here yet, and prematurely
-extracting one is the most likely way to lock in a bad early guess. Extract shared tokens only
-once three previews independently want the same value.
+**Design previews inline their own tokens.** Each file in `design/previews/` carries its own token
+block — no shared token stylesheet, no build step. There is no design system here yet, and
+prematurely extracting one is the most likely way to lock in a bad early guess. Extract shared
+tokens only once three previews independently want the same value.
+
+*The typefaces are the one shared thing, since 2026-09-08.* Every page links
+`brand/fonts/fonts.css` rather than inlining seven base64 payloads, because these are served from a
+repository now instead of sent as attachments — the inlining existed only to survive being emailed,
+and it cost 0.9 MB across two files. **Tokens are still inlined and must stay that way**; a linked
+font stylesheet locks nothing, a linked token sheet would.
 
 *There was one recorded exception between 2026-09-03 and 2026-09-08: `design/tokens/` held a
 generated token extraction built for handoff to Innovue. **It is deleted.** A copy of
 `docs/design-language.md` in another format is regenerable from the document at any time, and
 carrying it meant carrying a second thing to keep in sync. `design/components.md` — the per-component
 data-shape manifest — was never part of that extraction and survives, because it is not a copy of
-anything. **Previews still inline their own token blocks and must continue to.** The one generated
-stylesheet left is `deliverables/document.css`, which `build.py` reads; no preview imports it.*
+anything. **Previews still inline their own token blocks and must continue to.** `document.css`,
+the case document's stylesheet, went with the build on 2026-09-08 — its rules live inline in the
+page they style.*
 
 **This is a public repository, and the boundary is client data, not Innovue's features.** Innovue
 markets IPtech's capabilities publicly, so reading them, rating them and arguing with them is
@@ -131,13 +139,20 @@ Three things follow, and they are not stylistic:
   representative and the arithmetic is internally consistent; no number is a real filing count. If
   you change one, say so where the document claims provenance, and keep the invariants — the matrix
   sums to the scope figure, the finding quotes the true maximum, the rivals total matches its own
-  sentence. `deliverables/build.py` will not catch an arithmetic lie.
+  sentence. Nothing checks this for you — the build that used to is gone.
 - **Never name a real holder as data.** Holder names render as skeleton bars by decision. Inventing
   one reads as a live example, and transliterating a real one is fabrication — both are worse than
   a bar.
 - **The screenshots and the deck stay local.** They render a client's data as pixels. Nothing in a
-  published artifact may embed them, and `.gitignore` is the mechanism, not the decision. Before any
-  push, run the checks in `README.md`.
+  published artifact may embed them. Before any push, run the four checks in `README.md`.
+
+  **`.gitignore` is a hint; the raster rule is the mechanism.** `*.png` and friends are refused
+  wholesale, because this repository legitimately holds no raster images — the pages are HTML, the
+  marks are SVG, the typefaces are woff2. That rule exists because the path-based one failed: the
+  mood-board folder was renamed outside the repo on 2026-09-08, the ignore entry stopped matching,
+  and `git add -A` staged 6 MB of it while the name-based check reported clean. **Never add a
+  raster to this repository**, and if you ever need to, understand that you are removing the guard
+  that catches the next rename.
 
 **Do not invent brand law.** Terrain is a TIS product, but this folder is not the TIS brand system.
 If a decision here changes something that belongs upstream — a token, a logo rule, a component,
@@ -177,9 +192,13 @@ Two, carried over from TIS and locked:
 decision, not an omission. Don't add one, and don't write bilingual markup or `data-zh` attributes
 out of habit from the parent site.
 
-`brand/fonts/` holds the 7 self-hosted woff2 files plus `fonts.css`, copied from the marketing
-site's subset build with paths rewritten to be relative to the CSS file. Previews load them with
-no server and no build step:
+`brand/fonts/` holds the 7 self-hosted woff2 files, `fonts.css`, and the two OFL licences —
+`OFL-Urbanist.txt` and `OFL-Inconsolata.txt`. The woff2 came from the marketing site's subset build
+with paths rewritten relative to the CSS file, and **the licences must stay with them**: these are
+subsets, which OFL permits, and OFL 1.1 requires the notice travel with the Font Software wherever
+it is redistributed. This repository is public, so that is not theoretical.
+
+Every page links it — no server, no build step:
 
 ```html
 <link rel="stylesheet" href="../../brand/fonts/fonts.css">
@@ -191,8 +210,9 @@ each with its own `unicode-range`. All four are required, and dropping one doesn
 silently falls back to a system CJK face for part of the character set. Copy the `@font-face` block
 with the files rather than reconstructing it.
 
-Verified rendering headlessly on 2026-08-31: Urbanist 400/700 and Inconsolata 500 resolve from a
-preview opened over `file://`.
+Verified headlessly on 2026-09-08, after the inlined base64 was replaced by this link: all seven
+faces resolve in both pages over `file://`. **Render and look at the PNG when you touch font
+loading** — a missing typeface falls back to a system face and reports nothing.
 
 ## Logos
 
