@@ -22,8 +22,26 @@ design/previews/iptech-feature-request.html
 visual_inspo/
 visual-inspiration/
 
-# A third party's trademark files. Cited in the documents, not redistributed.
-brand/logos/innovue/
+# A third party's trademark files. Cited in the documents, not redistributed --
+# with one exception, and it is the whole folder minus one file.
+#
+# The product attributes Innovue, and from 2026-09-08 it does so with their mark
+# rather than with the words alone: docs/brief.md section 3 carries the argument
+# and the two limits on it. An attribution line that ships a broken image is not
+# an attribution, so the variants the dashboard renders are tracked -- TWO of
+# them, because the line is theme-aware: their primary blue in light, their own
+# white mark in dark. The other six stay out -- the Chinese lockups because
+# nothing here is bilingual, the other colourways because nothing uses them.
+#
+# The trailing /* is load-bearing and is not a tidier spelling of the directory.
+# Git will not descend into an excluded DIRECTORY, so a negation under one never
+# fires -- `brand/logos/innovue/` followed by a ! line silently ignores all eight
+# and reports nothing. Excluding the CONTENTS leaves the directory walkable and
+# the negation works. Verified with git check-ignore, which is the only way to
+# see this: the wrong form fails exactly like the right one until you look.
+brand/logos/innovue/*
+!brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg
+!brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg
 
 # ── Build output and cruft ───────────────────────────────────────────────────
 .DS_Store
@@ -48,3 +66,24 @@ build/
 *.webp
 *.bmp
 *.tiff
+
+# ── The one permitted raster family. Read the rule above first. ──────────────
+# Terrain's own marketing gradient for the website's Products menu, in the same
+# three-file shape as licensing-warm-v2 and signal-cool: a 640x413 original as
+# the <img> fallback plus the two webp widths the image build emits.
+#
+# It clears the rule above on the distinction that rule was actually drawing:
+# these are OURS. Not a capture of a third party's product, not a mood board.
+# Neither of the two reasons rasters were refused applies to them.
+#
+# But it IS a weakening, so it is scoped as narrowly as the syntax allows --
+# three literal paths, no glob. A rename is still refused. A fourth file in the
+# same directory is still refused. The invariant still catches what the
+# path-based entries at the top of this file failed to.
+#
+# Adding a product means adding its three paths here, deliberately, one line
+# each. If that ever feels tedious enough to replace with a glob, that is the
+# guard working.
+!brand/assets/imagery/terrain/terrain-forest.jpg
+!brand/assets/imagery/terrain/terrain-forest-400.webp
+!brand/assets/imagery/terrain/terrain-forest-640.webp

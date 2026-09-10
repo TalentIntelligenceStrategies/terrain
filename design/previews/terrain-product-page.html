@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TIS Terrain — patent search with strategic direction</title>
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#FAFAFA">
+<meta name="description" content="Patent search with strategic direction, for founders working out where their idea sits.">
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     SCAFFOLD, NOT A SHIPPING PAGE.
+
+     This is the Terrain product marketing page, built in the Terrain repo so
+     copy, layout and the Products nav can be iterated before anything is
+     transplanted into ~/Desktop/TIS/website/. Porting is out of scope here.
+
+     THREE THINGS BECOME UNTRUE AT PORT TIME, and each is marked inline:
+
+     1 · ASSET PATHS ARE RELATIVE so the page opens over file://. The website
+         requires root-relative (/assets/…, /designs/assets/…) and says so in
+         its CLAUDE.md. Every one of them carries an inline PORT note.
+
+     2 · THE INLINE STYLE BLOCK MUST NOT SURVIVE. website/ bans page-local styles.
+         The block is split in two: tokens MIRRORED from styles.css, which are
+         thrown away, and one NEW-CSS section written as if it were already in
+         styles.css, which is cut and pasted into it. Do not blend them.
+
+     3 · THE INLINE SCRIPT IS site.js's dropdown logic PLUS new logic, and
+         site.js DOES need editing at port time. Two changes: its card array
+         moves from querySelectorAll('.product-card') to '.pm-row', and the
+         preview swap below is new. It is small and it is marked.
+
+     Bilingual: NONE. No data-zh anywhere, deliberately. Terrain is
+     English-only (docs/brief.md §1) and its CLAUDE.md says not to write
+     data-zh out of habit. The website's nav IS bilingual, so a Chinese product
+     name is an OUTSTANDING UPSTREAM DECISION, recorded in docs/brief.md.
+     Never invent it.
+
+     Every figure on this page is illustrative. No number is a real filing
+     count and no holder is named.
+     ══════════════════════════════════════════════════════════════════════════ -->
+
+<link rel="stylesheet" href="../../brand/fonts/fonts.css"><!-- PORT: /assets/build/fonts, via the @generated block -->
+
+<style>
+/* ╔══════════════════════════════════════════════════════════════════════════╗
+   ║ 1 · MIRRORED TOKENS — website/assets/styles.css :96–236, :530–539       ║
+   ║     A SUBSET, copied verbatim. Do not tune these here; they are not     ║
+   ║     ours. At port time this whole section is deleted.                   ║
+   ║                                                                          ║
+   ║     Note these are the WEBSITE's token names, not Terrain's product      ║
+   ║     tokens in docs/design-language.md. This is a marketing surface; that ║
+   ║     document governs the app. Mixing them is how a page becomes          ║
+   ║     unportable.                                                          ║
+   ╚══════════════════════════════════════════════════════════════════════════╝ */
+:root{
+  --surface-page:#FFFFFF;
+  --surface-secondary:#FAFAFA;
+  --surface-tertiary:#F3F3F3;
+  --surface-quaternary:#EEEEEE;
+  --surface-inverse:#252525;
+  --surface-inverse-hover:#292524;
+  --surface-page-translucent:rgba(255,255,255,0.70);
+
+  --text-primary:#252525;
+  --text-secondary:#474747;
+  --text-tertiary:#8A8F98;
+  --text-quaternary:#A5A5A5;
+  --text-inverse:#FFFFFF;
+
+  --border-primary:#EEEEEE;
+  --border-secondary:#E8E8E8;
+  --border-tertiary:#D5D5D5;
+  --border-focus:#252525;
+
+  --shadow-low:0 1px 2px rgba(0,0,0,.04);
+  --shadow-medium:0 4px 16px -2px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+
+  --ease-card:cubic-bezier(0.16,1,0.3,1);
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+
+  --space-section:clamp(28px,3vw,44px);
+  --space-head-gap:clamp(32px,3.5vw,48px);
+
+  --font-sans:'Urbanist','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'Inconsolata',ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+
+*{box-sizing:border-box}
+html{scroll-padding-top:80px}
+body{
+  margin:0;background:var(--surface-secondary);color:var(--text-primary);
+  font-family:var(--font-sans);font-size:16px;line-height:1.6;letter-spacing:.01em;
+  -webkit-font-smoothing:antialiased;
+}
+main{padding-top:64px}
+a{color:inherit}
+img{max-width:100%}
+picture{display:contents} /* load-bearing — keeps the img a direct flex/grid item */
+
+.container{max-width:1440px;margin:0 auto;padding-inline:32px}
+@media (max-width:768px){ .container{padding-inline:20px} }
+
+.section{padding-block:var(--space-section)}
+.section--alt{background:var(--surface-page)}
+.skip-link{position:absolute;inset-inline-start:-9999px;top:0;background:var(--surface-inverse);
+  color:var(--text-inverse);padding:12px 20px;z-index:900;text-decoration:none}
+.skip-link:focus{inset-inline-start:0}
+
+.h-section{font-size:clamp(32px,4vw,48px);font-weight:700;line-height:1.1;
+  letter-spacing:-.02em;margin:0;text-wrap:balance}
+.offerings .h-section,.narrow-head .h-section{font-size:clamp(24px,2.8vw,36px);
+  font-weight:600;line-height:1.15;letter-spacing:-.015em}
+.section-dek{font-size:16px;line-height:1.55;color:var(--text-secondary);
+  margin:16px 0 0;max-width:44ch}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:inherit;font-size:12px;font-weight:700;line-height:1;letter-spacing:.10em;
+  text-transform:uppercase;text-decoration:none;border:1px solid transparent;
+  border-radius:10px;padding:14px 22px;cursor:pointer;
+  transition:background-color 150ms var(--ease-out),border-color 150ms var(--ease-out)}
+.btn-lg{font-size:14px;padding:18px 28px;border-radius:12px}
+.btn-primary{background:var(--surface-inverse);color:var(--text-inverse)}
+.btn-primary:hover{background:var(--surface-inverse-hover)}
+.btn-secondary{background:transparent;color:var(--text-primary);border-color:var(--border-tertiary)}
+.btn-secondary:hover{border-color:var(--text-primary)}
+:focus-visible{outline:2px solid var(--border-focus);outline-offset:2px}
+
+.status-flag{display:inline-flex;align-items:center;font-size:12px;font-weight:600;
+  letter-spacing:.01em;background:var(--surface-page);color:var(--text-secondary);
+  border:1px solid var(--border-secondary);border-radius:999px;padding:3px 10px}
+
+/* topnav — styles.css :602–744, copied */
+.topnav{position:fixed;inset-inline:0;top:0;height:64px;z-index:100;
+  background:var(--surface-page-translucent);backdrop-filter:saturate(140%) blur(20px);
+  border-bottom:1px solid var(--border-primary)}
+.topnav-inner{display:flex;align-items:center;height:100%;gap:32px}
+.topnav-logo-link{display:inline-flex;align-items:center;text-decoration:none;
+  font-weight:700;font-size:17px;letter-spacing:-.01em}
+.topnav-spacer{flex:1}
+.topnav-links{display:flex;align-items:center;gap:4px}
+.topnav-link{display:inline-flex;align-items:center;font-family:inherit;font-size:14px;
+  font-weight:600;color:var(--text-secondary);padding:6px 14px;text-decoration:none;
+  background:transparent;border:0;border-radius:8px;cursor:pointer}
+.topnav-link:hover{color:#000}
+.topnav-controls{display:flex;align-items:center;gap:8px}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;
+  background:transparent;border:0;border-radius:8px;cursor:pointer;color:var(--text-secondary)}
+.icon-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round}
+.topnav-mobile-trigger{display:none;align-items:center;justify-content:center;width:36px;height:36px;
+  background:transparent;border:0;cursor:pointer;color:var(--text-primary)}
+.topnav-mobile-trigger svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:980px){
+  .topnav-links{display:none}
+  .topnav-cta{display:none}
+  .topnav-mobile-trigger{display:inline-flex}
+}
+
+/* ╔══════════════════════════════════════════════════════════════════════════╗
+   ║ 2 · NEW CSS — cut and paste this section into website/assets/styles.css ║
+   ║     Written as if it already lived there: website token names only, no   ║
+   ║     new colour literals, media queries interleaved with the rules they   ║
+   ║     override (styles.css runs at (0,1,0) specificity, so a @media block  ║
+   ║     placed above its component silently loses every shared property —    ║
+   ║     scripts/check-cascade-order.mjs fails on exactly that).             ║
+   ║                                                                          ║
+   ║     WHAT CHANGED, and why, for the reviewer:                             ║
+   ║     The shipping panel is 560px wide, 1fr 1fr, two ~243px cards. A third ║
+   ║     card at that size needs an 836px panel. So the panel splits into a   ║
+   ║     LIST and a PREVIEW instead: three icon+name rows on the leading      ║
+   ║     side, one product card on the trailing side that follows whichever   ║
+   ║     row is hovered or focused.                                           ║
+   ║                                                                          ║
+   ║     THE PANEL WIDTH DOES NOT CHANGE. 200 list + 16 gap + 328 preview =   ║
+   ║     544, which is exactly the 560px panel minus its 8px padding. And it  ║
+   ║     gets SHORTER: ~250px against 504px for a stacked-row version, since  ║
+   ║     three names cost 132px while only one description is ever showing.   ║
+   ║     A fourth product adds 44px to the list and nothing to the preview.   ║
+   ║                                                                          ║
+   ║     Row one is active at rest and hover moves it. Predictable, and the   ║
+   ║     rule never needs deciding again. See docs/marketing.md §4.           ║
+   ║                                                                          ║
+   ║     The preview name stays 18px/600, unchanged from today — the media is ║
+   ║     328px wide, so the longest name has room to spare.                   ║
+   ║                                                                          ║
+   ║     THE DESCRIPTION CARRIES A min-height. The three descriptions are 82, ║
+   ║     100 and 119 characters, which is 2, 3 and 3 lines at this width — so ║
+   ║     without it the panel would resize as the pointer moves down the      ║
+   ║     list. Pinning it to three lines makes every card the same height and ║
+   ║     the menu still. Same device as .offer-card-desc's min-height:4.5em.  ║
+   ╚══════════════════════════════════════════════════════════════════════════╝ */
+
+.topnav-link.has-dropdown{display:inline-flex;align-items:center;gap:6px;
+  border:0;background:transparent;cursor:pointer;font-family:inherit}
+.topnav-chevron{width:12px;height:12px;color:var(--text-quaternary);
+  stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+  transition:transform 150ms cubic-bezier(0.2,1,0.3,1)}
+.topnav-link.has-dropdown[aria-expanded="true"] .topnav-chevron{transform:rotate(180deg)}
+
+.topnav-dropdown-wrap{position:relative}
+.products-menu{
+  position:absolute;top:calc(100% + 24px);inset-inline-start:0;
+  transform:translateY(-4px);
+  width:min(560px,calc(100vw - 32px));          /* unchanged */
+  background:var(--surface-page);
+  border:1px solid var(--border-primary);
+  border-radius:12px;
+  box-shadow:var(--shadow-medium);
+  padding:8px;
+  opacity:0;pointer-events:none;
+  transition:opacity 150ms cubic-bezier(0.2,1,0.3,1),transform 150ms cubic-bezier(0.2,1,0.3,1);
+  z-index:600;
+}
+/* transparent hover bridge across the 24px gap to the trigger */
+.products-menu::before{content:'';position:absolute;top:-24px;inset-inline:0;height:24px}
+.products-menu[data-open="true"]{opacity:1;transform:translateY(0);pointer-events:auto}
+
+.products-menu-grid{
+  display:grid;
+  grid-template-columns:200px 328px;             /* was 1fr 1fr */
+  gap:16px;
+  align-items:start;
+}
+
+/* ── the leading list — the only interactive part of the panel ───────────── */
+/* Reused verbatim from styles.css:4039 -- do NOT author a second copy at port
+   time, the site already has this. Needed because the preview panel is
+   aria-hidden (it is a picture of what the row already says), so each row
+   carries its description AND its status as sr-only text. styles.css:2168
+   records that "Coming soon" is real text inside the link precisely so the
+   accessible name reads "Licensing Platform Coming soon" -- moving the chip
+   into the preview would drop that, and this puts it back. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+.pm-list{display:flex;flex-direction:column;gap:2px}
+.pm-row{
+  display:flex;align-items:center;gap:10px;
+  min-height:44px;padding:8px 10px;
+  border-radius:8px;text-decoration:none;
+  color:var(--text-secondary);
+  background:transparent;
+  transition:background-color 120ms var(--ease-out),color 120ms var(--ease-out);
+}
+/* Active is a filled shape, not a colour change, so it does not depend on hue
+   and reads at a glance. Driven by JS on hover AND focus -- keyboard users get
+   the preview too, which is the whole reason it is not a :hover-only rule. */
+.pm-row[data-active="true"]{background:var(--surface-tertiary);color:var(--text-primary)}
+.pm-row-ico{flex:none;width:18px;height:18px;stroke:currentColor;fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* no fixed width and no nowrap: a longer name than today's must be free to wrap */
+.pm-row-name{font-size:15px;font-weight:500;line-height:1.3}
+
+/* ── the trailing preview — one panel visible at a time ─────────────────── */
+.pm-preview{position:relative}
+.pm-panel{display:none;flex-direction:column;gap:8px}
+.pm-panel[data-active="true"]{display:flex}
+
+.product-card-media{position:relative;display:block;flex:none;
+  width:100%;height:140px;
+  border-radius:8px;overflow:hidden;background:var(--surface-tertiary)}
+/* object-position is LOAD-BEARING, not polish. The gradients run light at the
+   top to dark at the base, and the name is white, so the crop has to keep the
+   base. Plain `cover` keeps the vertical CENTRE instead.
+
+   Measured on the shipped green asset, over the region the name occupies, at
+   this 328x140 box:
+       centre crop   mean  9.15:1   lightest pixel 3.30:1   <- scrapes the 3:1
+       bottom crop   mean 12.80:1   lightest pixel 9.44:1
+   So at 140px the centre crop technically passes and would look fine right up
+   until someone swapped the image. At the 72px box an earlier pass used, the
+   same measurement gave 1.69:1 and failed outright. The margin is the point.
+
+   RE-MEASURE IF THE MEDIA HEIGHT CHANGES -- a shorter box crops a narrower
+   band and the numbers move fast. Do not drop this line. */
+.product-card-img{position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:50% 100%;
+  transition:transform 300ms var(--ease-card)}
+@media (hover:hover) and (pointer:fine){
+  .pm-row[data-active="true"] ~ .pm-preview .product-card-img{transform:none}
+}
+/* Name sits bottom-leading, white, straight on the gradient -- see the crop
+   note above for why that position is the legible one. Shadow for legibility;
+   no scrim, by design. */
+.product-card-name{position:absolute;inset-inline:0;bottom:0;
+  display:flex;align-items:center;gap:8px;padding:12px 14px;
+  color:#FFFFFF;text-shadow:0 1px 3px rgba(0,0,0,0.28)}
+.product-card-ico{flex:none;width:16px;height:16px;stroke:currentColor;fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.product-card-name-text{font-size:18px;font-weight:600;line-height:1.3;color:#FFFFFF}
+/* min-height pins every panel to three lines so the menu does not resize as the
+   pointer moves down the list. See the header note. */
+.product-card-desc{font-size:14px;font-weight:400;line-height:1.45;
+  min-height:4.35em;
+  color:var(--text-secondary);text-wrap:balance}
+.product-card-media > .status-flag{position:absolute;top:8px;inset-inline-end:8px;z-index:1}
+
+/* Mobile drawer — the Products group is a COMPACT LIST here: icon + name, no
+   image, no description. Three image cards would have tripped site.js's
+   fitProductsDefault() height measurement and collapsed the group by default
+   on a 375×667 phone. The product page carries the descriptions. */
+.mobile-overlay{position:fixed;inset:0;background:rgba(37,37,37,.28);opacity:0;
+  pointer-events:none;transition:opacity 200ms var(--ease-out);z-index:400}
+.mobile-overlay[data-open="true"]{opacity:1;pointer-events:auto}
+.mobile-drawer{position:fixed;top:0;inset-inline-end:0;height:100%;
+  width:min(360px,85vw);background:var(--surface-page);z-index:500;
+  transform:translateX(100%);transition:transform 320ms var(--ease-out);
+  display:flex;flex-direction:column;padding:16px 20px}
+[dir="rtl"] .mobile-drawer{transform:translateX(-100%)}
+.mobile-drawer[data-open="true"]{transform:translateX(0)}
+.mobile-header{display:flex;align-items:center;justify-content:space-between;height:48px}
+.mobile-list{display:flex;flex-direction:column;margin-top:8px;overflow-y:auto}
+.mobile-list > a{display:flex;align-items:center;height:48px;font-size:16px;font-weight:500;
+  color:var(--text-primary);text-decoration:none;border-bottom:1px solid var(--border-primary)}
+.mobile-row-dropdown{display:flex;align-items:center;justify-content:space-between;
+  width:100%;height:48px;font-family:inherit;font-size:16px;font-weight:500;
+  color:var(--text-primary);background:transparent;border:0;
+  border-bottom:1px solid var(--border-primary);text-align:start;cursor:pointer;padding:0}
+.mobile-nav-chevron{width:16px;height:16px;color:var(--text-tertiary);stroke:currentColor;
+  fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+  transition:transform 150ms cubic-bezier(0.2,1,0.3,1)}
+.mobile-row-dropdown[aria-expanded="true"] .mobile-nav-chevron{transform:rotate(180deg)}
+.mobile-sublist{display:none;flex-direction:column}
+.mobile-sublist[data-open="true"]{display:flex}
+.mobile-sub-row{display:flex;align-items:center;gap:10px;min-height:44px;
+  padding-inline-start:16px;text-decoration:none;color:var(--text-primary)}
+.mobile-sub-ico{flex:none;width:18px;height:18px;stroke:currentColor;fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:var(--text-tertiary)}
+.mobile-sub-name-text{font-size:15px;font-weight:500}
+.mobile-sub-row .status-flag{font-size:11px;padding:2px 8px}
+
+/* Veil — DESIGN.md §17. Terrain has one prototype and no application code, so
+   the page ships behind this exactly as Licensing Platform does. The veil owns
+   the h1; the hero heading below is demoted to h2. */
+.veil{position:relative;z-index:300;display:flex;align-items:center;justify-content:center;
+  min-height:calc(100vh - 64px);padding:64px 20px}
+.veil__card{max-width:520px;text-align:center}
+.veil__title{font-size:clamp(28px,3.4vw,40px);font-weight:600;line-height:1.15;
+  letter-spacing:-.02em;margin:16px 0 0}
+.veil__body{font-size:17px;line-height:1.55;color:var(--text-secondary);
+  margin:16px auto 28px;max-width:46ch}
+
+/* Hero */
+.hero{position:relative;padding:clamp(56px,7vw,104px) 0 clamp(40px,5vw,72px)}
+.hero-inner{max-width:820px;margin-inline-start:32px}
+@media (max-width:768px){ .hero-inner{margin-inline-start:0} }
+.pillar-eyebrow{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600;
+  letter-spacing:.02em;color:var(--text-secondary);margin:0 0 20px}
+.pillar-eyebrow svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+.pillar-title{font-size:clamp(34px,5vw,60px);font-weight:600;line-height:1.05;
+  letter-spacing:-.02em;margin:0;text-wrap:balance}
+/* ┌──────────────────────────────────────────────────────────────────────┐
+   │ THE ACCENT SLOT. Green is the intended direction, stated 2026-09-08,  │
+   │ and it is NOT YET A RECORDED DECISION — so this slot stays neutral    │
+   │ and the page ships hueless.                                           │
+   │                                                                       │
+   │ On every other product page the hero's second clause is an <em>       │
+   │ carrying that surface's accent: styles.css:1527 gives Signal          │
+   │ --surface-accent-signal, :1532 gives Licensing                        │
+   │ --surface-accent-licensing. Same markup here, deliberately, so the    │
+   │ port is identical and lighting it up is ONE LINE.                     │
+   │                                                                       │
+   │ TO FILL IT, when the decision is recorded in docs/brief.md §4:        │
+   │   1 · author --surface-accent-terrain / -text / -wash UPSTREAM in     │
+   │       brand/design-tokens.md (this folder may not edit the monorepo)  │
+   │   2 · resync website/designs/design-tokens-snapshot.md                │
+   │   3 · uncomment the rule below                                        │
+   │                                                                       │
+   │ brief.md §4 records WHY it waits: a candidate hue shipped 2026-09-04  │
+   │ and was withdrawn the next day, because "a placeholder accent becomes │
+   │ the thing everyone reviews instead of the structure".                 │
+   └──────────────────────────────────────────────────────────────────────┘ */
+.pillar-title em{font-style:normal;color:var(--text-primary)}
+/* .pillar-title em{color:var(--surface-accent-terrain);
+                    -webkit-text-fill-color:var(--surface-accent-terrain)} */
+.pillar-sub{font-size:clamp(17px,1.5vw,20px);font-weight:450;line-height:1.4;
+  letter-spacing:-.01em;color:var(--text-secondary);margin:20px 0 0;max-width:52ch}
+.pillar-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+
+/* Three-up and four-up grids */
+.offerings-grid{margin-top:var(--space-head-gap);display:grid;
+  grid-template-columns:repeat(3,1fr);gap:clamp(16px,1.6vw,24px)}
+/* NEW-CSS -- section 2 is two cards since 2026-09-10, and the site's own
+   three-up grid would leave a hole in the third track. The modifier is here
+   rather than a change to .offerings-grid because Signal and Licensing both
+   use that grid at three. marketing.md §6 records that the section is NOT to
+   be padded back to three with an invented card. */
+.offerings-grid--two{grid-template-columns:repeat(2,1fr)}
+.quad-grid{margin-top:var(--space-head-gap);display:grid;
+  grid-template-columns:repeat(4,1fr);gap:clamp(16px,1.6vw,24px)}
+@media (max-width:1100px){ .quad-grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:720px){
+  .offerings-grid{grid-template-columns:1fr}
+  .offerings-grid--two{grid-template-columns:1fr}
+  .quad-grid{grid-template-columns:1fr}
+}
+.q-card{display:flex;flex-direction:column;gap:8px;background:var(--surface-page);
+  border:1px solid var(--border-primary);border-radius:16px;padding:24px}
+.q-card-eyebrow{font-family:var(--font-mono);font-size:12px;font-weight:500;
+  color:var(--text-tertiary);font-variant-numeric:tabular-nums}
+.q-card-ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round;color:var(--text-primary)}
+.q-card h3{font-size:19px;font-weight:600;line-height:1.3;letter-spacing:-.01em;margin:0}
+.q-card-kind{font-size:13px;font-weight:500;color:var(--text-tertiary);margin:0}
+.q-card p{font-size:15px;line-height:1.5;color:var(--text-secondary);margin:0}
+
+/* The black panel — DESIGN.md §11: carry weight with a black card, never a
+   colour wash. This is the differentiation section and it gets the most ink. */
+.gap-panel{margin-top:var(--space-head-gap);background:var(--surface-inverse);
+  color:var(--text-inverse);border-radius:20px;padding:clamp(28px,4vw,56px);
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3vw,48px);align-items:center}
+@media (max-width:880px){ .gap-panel{grid-template-columns:1fr} }
+.gap-panel h3{font-size:clamp(22px,2.4vw,30px);font-weight:600;line-height:1.2;
+  letter-spacing:-.015em;margin:0 0 16px;text-wrap:balance}
+.gap-panel p{font-size:16px;line-height:1.6;color:rgba(255,255,255,.78);margin:0 0 14px}
+.gap-panel p:last-child{margin-bottom:0}
+.gap-panel strong{color:#FFFFFF;font-weight:600}
+.gap-states{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
+.gap-states li{font-size:15px;line-height:1.5;color:rgba(255,255,255,.78);
+  padding-inline-start:14px;border-inline-start:2px solid rgba(255,255,255,.24)}
+.gap-states b{color:#FFFFFF;font-weight:600;display:block}
+
+/* Steps */
+.steps{margin-top:var(--space-head-gap);display:grid;gap:clamp(16px,1.6vw,24px);
+  grid-template-columns:repeat(4,1fr)}
+@media (max-width:1100px){ .steps{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:640px){ .steps{grid-template-columns:1fr} }
+.step-num{font-family:var(--font-mono);font-size:12px;font-weight:500;
+  color:var(--text-tertiary);font-variant-numeric:tabular-nums}
+.step h3{font-size:17px;font-weight:600;line-height:1.3;margin:8px 0 6px}
+.step p{font-size:15px;line-height:1.5;color:var(--text-secondary);margin:0}
+
+/* Absent list */
+.absent{list-style:none;margin:var(--space-head-gap) 0 0;padding:0;display:grid;
+  grid-template-columns:repeat(2,1fr);gap:0 clamp(24px,3vw,48px)}
+@media (max-width:768px){ .absent{grid-template-columns:1fr} }
+.absent li{padding:18px 0;border-top:1px solid var(--border-secondary)}
+.absent b{display:block;font-size:16px;font-weight:600;margin-bottom:4px}
+.absent span{font-size:15px;line-height:1.5;color:var(--text-secondary)}
+
+/* Pricing — SLOTS, NOT PRICES. platform.md §11 has pricing and whether a free
+   tier exists open, and design-language.md records what happened the last time
+   a placeholder VALUE went into a deliverable: it became the thing everyone
+   reviewed instead of the structure. So the tiers carry no numbers at all. */
+.tiers{margin-top:var(--space-head-gap);display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(16px,1.6vw,24px)}
+@media (max-width:880px){ .tiers{grid-template-columns:1fr} }
+.tier{background:var(--surface-page);border:1px solid var(--border-primary);
+  border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px}
+.tier-slot{border:1px dashed var(--border-tertiary);border-radius:8px;padding:14px;
+  text-align:center;font-family:var(--font-mono);font-size:12px;
+  color:var(--text-tertiary);letter-spacing:.04em;text-transform:uppercase}
+
+/* Placeholder media boxes — every product screenshot on this page. Dashed, so
+   nobody mistakes one for art direction. brief.md §4 lists imagery direction
+   as from-scratch with no inherited constraint; none is decided yet. */
+.ph{display:flex;align-items:center;justify-content:center;text-align:center;
+  background:var(--surface-tertiary);border:1px dashed var(--border-tertiary);
+  border-radius:12px;color:var(--text-tertiary);font-family:var(--font-mono);
+  font-size:12px;letter-spacing:.04em;padding:16px;min-height:120px}
+.ph--wide{min-height:280px}
+.ph--step{min-height:132px;margin-bottom:14px}
+.ph--panel{min-height:240px;background:rgba(255,255,255,.06);
+  border-color:rgba(255,255,255,.24);color:rgba(255,255,255,.62)}
+
+/* Attribution + footer */
+.attrib{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;margin-top:20px}
+.attrib-mark{font-weight:700;letter-spacing:-.01em}
+.footer{background:var(--surface-page);border-top:1px solid var(--border-primary);
+  padding-block:40px}
+.footer-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+@media (max-width:880px){ .footer-cols{grid-template-columns:repeat(2,1fr)} }
+.footer-col h2{font-size:13px;font-weight:600;letter-spacing:.02em;margin:0 0 12px;
+  color:var(--text-primary)}
+.footer-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.footer-col a{font-size:14px;color:var(--text-secondary);text-decoration:none}
+.footer-col a:hover{color:var(--text-primary)}
+.footer-baseline{border-top:1px solid var(--border-primary);padding-block:20px}
+.footer-copy{font-size:13px;color:var(--text-tertiary);margin:0}
+
+[inert],[aria-hidden="true"]:not(svg):not(svg *){}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+  .products-menu[data-open="true"]{opacity:1;transform:none}
+  .mobile-drawer[data-open="true"]{transform:translateX(0)}
+}
+</style>
+</head>
+
+<body data-page="terrain" data-veil="coming-soon">
+
+<!-- Skip link points at the veil card, not #main: DESIGN.md §17 retargets it
+     because the main element is inert while the page is veiled. -->
+<a href="#veil-card" class="skip-link">Skip to content</a>
+
+<!-- ╔═════════════════════════════════════════════════════════════════════╗
+     ║ Top nav  —  three products, one column of rows                      ║
+     ╚═════════════════════════════════════════════════════════════════════╝ -->
+<header class="topnav" role="banner">
+  <div class="container topnav-inner">
+    <a href="/" class="topnav-logo-link" aria-label="TIS — home">TIS</a><!-- PORT: the topnav-logo span plus its logo token -->
+
+    <span class="topnav-spacer"></span>
+
+    <nav class="topnav-links" aria-label="Primary">
+      <div class="topnav-dropdown-wrap">
+        <button type="button" class="topnav-link has-dropdown" id="products-trigger" aria-haspopup="menu" aria-expanded="false" aria-controls="products-menu">
+          <span>Products</span>
+          <svg class="topnav-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div id="products-menu" class="products-menu" role="menu" aria-labelledby="products-trigger">
+          <div class="products-menu-grid">
+
+            <!-- The leading list is the only interactive part of the panel.
+                 Row one is active at rest; hover and focus both move it. -->
+            <div class="pm-list">
+              <a href="/product/licensing/" class="pm-row" role="menuitem" data-product="licensing" data-active="true">
+                <svg class="pm-row-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 12v2a2 2 0 0 1-2 2H9a1 1 0 0 0-1 1v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h0"/><path d="M4 16a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3a1 1 0 0 1-1 1h-5a2 2 0 0 0-2 2v2"/></svg>
+                <span class="pm-row-name">Licensing Platform</span><span class="sr-only">. Patent insurance for exporters. Curated 30-patent bundles by country and industry. Coming soon.</span>
+              </a>
+              <a href="/product/signal/" class="pm-row" role="menuitem" data-product="signal">
+                <svg class="pm-row-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 13.74a2 2 0 0 1-2 0L2.5 8.87a1 1 0 0 1 0-1.74L11 2.26a2 2 0 0 1 2 0l8.5 4.87a1 1 0 0 1 0 1.74z"/><path d="m20 14.285 1.5.845a1 1 0 0 1 0 1.74L13 21.74a2 2 0 0 1-2 0l-8.5-4.87a1 1 0 0 1 0-1.74l1.5-.845"/></svg>
+                <span class="pm-row-name">Patent Intelligence</span><span class="sr-only">. Three reports for investors: the grade, all 50 indicators, or the ten closest patents on the market.</span>
+              </a>
+              <a href="/product/terrain/" class="pm-row" role="menuitem" data-product="terrain" aria-current="page">
+                <svg class="pm-row-ico" viewBox="0 0 24 24" aria-hidden="true"><rect width="12" height="20" x="6" y="2" rx="2"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
+                <span class="pm-row-name">TIS Terrain</span><span class="sr-only">. Patent search with strategic direction. See who else is in the space, what sits adjacent, and who holds which part. Coming soon.</span>
+              </a>
+            </div>
+
+            <!-- The trailing preview is a PICTURE of whichever row is active,
+                 so it is aria-hidden: every word in it is already in that
+                 row's accessible name above. One panel shows at a time. -->
+            <div class="pm-preview" aria-hidden="true">
+
+              <!-- PLACEHOLDER GRADIENT. The real asset is
+                   /assets/imagery/coremap/licensing-warm-v2.{png,webp} in the
+                   website repo, and is not copied here -- the raster exception
+                   in .gitignore is scoped to Terrain's own file family. The
+                   inline gradient stands in so the panel is reviewable, and it
+                   goes at port time. -->
+              <div class="pm-panel" data-panel="licensing" data-active="true">
+                <span class="product-card-media" style="background:linear-gradient(160deg,#FBEBD6 0%,#F08A2E 44%,#B93206 100%)">
+                  <span class="product-card-name">
+                    <svg class="product-card-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 12v2a2 2 0 0 1-2 2H9a1 1 0 0 0-1 1v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h0"/><path d="M4 16a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3a1 1 0 0 1-1 1h-5a2 2 0 0 0-2 2v2"/></svg>
+                    <span class="product-card-name-text">Licensing Platform</span>
+                  </span>
+                  <span class="status-flag">Coming soon</span>
+                </span>
+                <span class="product-card-desc">Patent insurance for exporters. Curated 30-patent bundles by country and industry.</span>
+              </div>
+
+              <!-- PLACEHOLDER GRADIENT, real asset /assets/imagery/signal/signal-cool.jpg -->
+              <div class="pm-panel" data-panel="signal">
+                <span class="product-card-media" style="background:linear-gradient(160deg,#CFF3FF 0%,#1E7FD4 42%,#0A1A5E 100%)">
+                  <span class="product-card-name">
+                    <svg class="product-card-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 13.74a2 2 0 0 1-2 0L2.5 8.87a1 1 0 0 1 0-1.74L11 2.26a2 2 0 0 1 2 0l8.5 4.87a1 1 0 0 1 0 1.74z"/><path d="m20 14.285 1.5.845a1 1 0 0 1 0 1.74L13 21.74a2 2 0 0 1-2 0l-8.5-4.87a1 1 0 0 1 0-1.74l1.5-.845"/></svg>
+                    <span class="product-card-name-text">Patent Intelligence</span>
+                  </span>
+                </span>
+                <span class="product-card-desc">Three reports for investors: the grade, all 50 indicators, or the ten closest patents on the market.</span>
+              </div>
+
+              <!-- THE REAL ASSET, in the website's exact <picture> form: one
+                   line, no whitespace between tags, webp srcset with the
+                   original as the <img> fallback, explicit width/height,
+                   alt="" because the gradient is decorative and the name
+                   beside it is the label. sizes = 328px, the measured media
+                   width in the 560px panel. -->
+              <div class="pm-panel" data-panel="terrain">
+                <span class="product-card-media">
+                  <picture><source type="image/webp" srcset="../../brand/assets/imagery/terrain/terrain-forest-400.webp 400w, ../../brand/assets/imagery/terrain/terrain-forest-640.webp 640w" sizes="328px"><img class="product-card-img" src="../../brand/assets/imagery/terrain/terrain-forest.jpg" alt="" loading="lazy" decoding="async" width="640" height="413"></picture><!-- PORT: /assets/imagery/terrain/… -->
+                  <span class="product-card-name">
+                    <svg class="product-card-ico" viewBox="0 0 24 24" aria-hidden="true"><rect width="12" height="20" x="6" y="2" rx="2"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
+                    <span class="product-card-name-text">TIS Terrain</span>
+                  </span>
+                  <span class="status-flag">Coming soon</span>
+                </span>
+                <span class="product-card-desc">Patent search with strategic direction. See who else is in the space, what sits adjacent, and who holds which part.</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <a href="/patents/" class="topnav-link">Owned Patents</a>
+      <a href="/reports/" class="topnav-link">Reports &amp; Press</a>
+      <a href="/about/"   class="topnav-link">About</a>
+    </nav>
+
+    <div class="topnav-controls">
+      <button id="search-trigger" type="button" class="icon-btn" aria-label="Search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+      </button>
+      <!-- Veiled page, so all contact chrome points at the homepage. DESIGN.md §4 -->
+      <a href="/#contact" class="btn btn-primary topnav-cta">Contact sales</a>
+      <button class="topnav-mobile-trigger" id="mobile-trigger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile drawer — Products is a compact icon + name list -->
+<div class="mobile-overlay" id="mobile-overlay"></div>
+<aside class="mobile-drawer" id="mobile-drawer" aria-label="Menu">
+  <div class="mobile-header">
+    <span class="topnav-logo-link" aria-hidden="true">TIS</span>
+    <button class="icon-btn" id="mobile-close" type="button" aria-label="Close menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <nav class="mobile-list" aria-label="Primary mobile">
+    <button type="button" class="mobile-row-dropdown" id="m-products-trigger" aria-expanded="true" aria-controls="m-products-sublist">
+      <span>Products</span>
+      <svg class="mobile-nav-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div id="m-products-sublist" class="mobile-sublist" data-open="true">
+      <a href="/product/licensing/" class="mobile-sub-row">
+        <svg class="mobile-sub-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 12v2a2 2 0 0 1-2 2H9a1 1 0 0 0-1 1v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h0"/><path d="M4 16a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3a1 1 0 0 1-1 1h-5a2 2 0 0 0-2 2v2"/></svg>
+        <span class="mobile-sub-name-text">Licensing Platform</span>
+        <span class="status-flag">Coming soon</span>
+      </a>
+      <a href="/product/signal/" class="mobile-sub-row">
+        <svg class="mobile-sub-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 13.74a2 2 0 0 1-2 0L2.5 8.87a1 1 0 0 1 0-1.74L11 2.26a2 2 0 0 1 2 0l8.5 4.87a1 1 0 0 1 0 1.74z"/><path d="m20 14.285 1.5.845a1 1 0 0 1 0 1.74L13 21.74a2 2 0 0 1-2 0l-8.5-4.87a1 1 0 0 1 0-1.74l1.5-.845"/></svg>
+        <span class="mobile-sub-name-text">Patent Intelligence</span>
+      </a>
+      <a href="/product/terrain/" class="mobile-sub-row" aria-current="page">
+        <svg class="mobile-sub-ico" viewBox="0 0 24 24" aria-hidden="true"><rect width="12" height="20" x="6" y="2" rx="2"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
+        <span class="mobile-sub-name-text">TIS Terrain</span>
+        <span class="status-flag">Coming soon</span>
+      </a>
+    </div>
+    <a href="/patents/">Owned Patents</a>
+    <a href="/reports/">Reports &amp; Press</a>
+    <a href="/about/">About</a>
+  </nav>
+</aside>
+
+<!-- ╔═════════════════════════════════════════════════════════════════════╗
+     ║ Veil — DESIGN.md §17. Owns the h1.                                  ║
+     ╚═════════════════════════════════════════════════════════════════════╝ -->
+<div class="veil">
+  <div class="veil__card" id="veil-card">
+    <span class="status-flag">Coming soon</span>
+    <h1 class="veil__title">TIS Terrain</h1>
+    <p class="veil__body">Terrain is still being built. Tell us what you are working on and we
+    will get in touch when it opens.</p>
+    <a href="/#contact" class="btn btn-primary btn-lg">Talk to us</a>
+  </div>
+</div>
+
+<main id="main" inert aria-hidden="true">
+
+  <!-- ── 1 · Hero ────────────────────────────────────────────────────────── -->
+  <section class="hero" aria-labelledby="search-returns-results">
+    <div class="container">
+      <div class="hero-inner">
+        <p class="pillar-eyebrow">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect width="12" height="20" x="6" y="2" rx="2"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
+          TIS Terrain
+        </p>
+        <!-- h2, not h1 — the veil owns the h1. aria-labelledby points at this
+             heading's own id, slugified from the copy. Never aria-label="Hero". -->
+        <h2 class="pillar-title" id="search-returns-results">Search returns results.<br>
+          <em>Terrain returns a direction.</em></h2>
+        <p class="pillar-sub">Describe what you are building in a sentence. Terrain shows you who
+        else is in the space and what sits adjacent to it &mdash; laid out so you can see which
+        part of it each of them holds.</p>
+        <div class="pillar-actions">
+          <a href="#how" class="btn btn-primary btn-lg">See how it works</a>
+          <a href="#views" class="btn btn-secondary btn-lg">See what you get</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 2 · The two questions ───────────────────────────────────────────
+       TWO cards in a grid built for three. `.offerings-grid` is
+       repeat(3,1fr) and is overridden to repeat(2,1fr) here rather than
+       changed at source: the grid is the website's, and Signal and
+       Licensing both use it at three. marketing.md §6 records that this is
+       unresolved and that a THIRD CARD MAY NOT BE INVENTED to fill it --
+       a card added to balance a grid decides nothing. ──────────────────── -->
+  <section class="section section--alt offerings" id="questions" aria-labelledby="questions-heading">
+    <div class="container">
+      <h2 id="questions-heading" class="h-section">A founder asks two questions.</h2>
+      <p class="section-dek">Terrain is built to answer them, in that order.</p>
+
+      <div class="offerings-grid offerings-grid--two">
+        <article class="q-card">
+          <span class="q-card-eyebrow">01</span>
+          <h3>Who else is here?</h3>
+          <p>The companies already holding ground around your idea &mdash; and which part of it
+          each of them holds. Merged by holder and by patent family, so one invention filed in five
+          countries counts once instead of five times.</p>
+        </article>
+        <article class="q-card">
+          <span class="q-card-eyebrow">02</span>
+          <h3>What is adjacent?</h3>
+          <p>Neighbouring technology you did not know to look for &mdash; including whoever holds
+          the ground your approach grew out of, which is the party you would license from or design
+          around. Terrain shows you who is where. It cannot tell you why anyone is absent, and it
+          does not pretend to.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3 · The same analysis, and you can run it ───────────────────────
+       The heaviest section. It ran the whitespace argument until
+       2026-09-10; marketing.md §1 and §3 carry what replaced it and why.
+       The class names keep the `gap-` prefix because they are layout, not
+       argument -- renaming them would be a diff across the stylesheet for
+       no reader's benefit, and the port pass folds this CSS into
+       styles.css under whatever names it has then. ────────────────────── -->
+  <section class="section" id="gap" aria-labelledby="gap-heading">
+    <div class="container">
+      <h2 id="gap-heading" class="h-section">An IP analyst could tell you this.</h2>
+      <p class="section-dek">You cannot hire one for a question you have not asked yet.</p>
+
+      <div class="gap-panel">
+        <div>
+          <h3>What the analysis actually is</h3>
+          <p>A grid. Across the top, the technical approaches to your problem &mdash; read out of
+          the patents your sentence found, not out of a list somebody wrote in advance. Down the
+          side, the companies filing against them. Every patent lands in a cell, so you can see in
+          one look <strong>who is working on what</strong>, rather than reading two hundred results
+          and holding it in your head.</p>
+          <p><strong>This is not a new kind of analysis and Terrain does not claim it is.</strong>
+          It is what an IP professional produces, on a system built for one. What it takes is
+          someone who can name the technical breakdown before the first search runs &mdash; which
+          is the thing you came here to find out.</p>
+          <p>Terrain does that part for you. <strong>One sentence, five plain questions, and you
+          approve how it was read.</strong> No vocabulary, no query language, nothing to author in
+          advance. The analysis is on screen beside the patents it was drawn from.</p>
+          <ul class="gap-states">
+            <li><b>It shows who is where</b> Not just who is in the space &mdash; which part of it
+            each of them holds.</li>
+            <li><b>It cannot say why anyone is absent</b> An empty cell means that company has not
+            filed there. Whether that is an opening or a dead end is not something the data
+            knows.</li>
+            <li><b>Nothing runs until you approve it</b> The one place a misreading is cheap to
+            fix is before the search, and that is where Terrain puts it.</li>
+          </ul>
+        </div>
+        <div class="ph ph--panel">PLACEHOLDER — the map<br>technology &times; holder grid</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 4 · How it works ───────────────────────────────────────────────── -->
+  <section class="section section--alt" id="how" aria-labelledby="how-heading">
+    <div class="container">
+      <h2 id="how-heading" class="h-section">How it works.</h2>
+      <p class="section-dek">One box in, a map out. You approve how it read your idea before
+      anything gets searched.</p>
+
+      <div class="steps">
+        <article class="step">
+          <div class="ph ph--step">PLACEHOLDER<br>the composer</div>
+          <span class="step-num">01</span>
+          <h3>Describe it</h3>
+          <p>One box. A sentence about what you are building — or a patent number, a company name,
+          or a classification code if you happen to have one.</p>
+        </article>
+        <article class="step">
+          <div class="ph ph--step">PLACEHOLDER<br>the round</div>
+          <span class="step-num">02</span>
+          <h3>Answer five questions</h3>
+          <p>Plain ones, one at a time, in the same thread. Which of these is closest to what you
+          mean; is it hardware or software; where does it need to hold. Every one can be
+          skipped.</p>
+        </article>
+        <article class="step">
+          <div class="ph ph--step">PLACEHOLDER<br>the reading</div>
+          <span class="step-num">03</span>
+          <h3>Confirm the reading</h3>
+          <p>Terrain says back what it understood, in plain English. Nothing is searched until you
+          approve it. Mistakes are cheap here and expensive everywhere after.</p>
+        </article>
+        <article class="step">
+          <div class="ph ph--step">PLACEHOLDER<br>the working surface</div>
+          <span class="step-num">04</span>
+          <h3>Read the map</h3>
+          <p>The patents it found down one side, the map and five more views beside them, on one
+          screen. Built once, then saved &mdash; come back next month and it opens straight
+          away.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 5 · The views ──────────────────────────────────────────────────
+       SIX cards in a grid built for four. `.quad-grid` is repeat(4,1fr)
+       and wraps to 4 + 2, which is why the two new cards are last: the
+       orphan row is the two whose data is thinnest, not two of the four
+       the product leads on. ────────────────────────────────────────────── -->
+  <section class="section" id="views" aria-labelledby="views-heading">
+    <div class="container">
+      <h2 id="views-heading" class="h-section">Everything over one search.</h2>
+      <p class="section-dek">Six views, on one screen, beside the patents they are drawn from. The
+      map leads.</p>
+
+      <div class="quad-grid">
+        <article class="q-card">
+          <svg class="q-card-ico" viewBox="0 0 24 24" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+          <h3>The map</h3>
+          <p class="q-card-kind">Technology &times; holder</p>
+          <p>Which approaches the space is built on, and which company holds each part of it.
+          Tone is how many; a hatch marks the cells where filings are climbing.</p>
+        </article>
+        <article class="q-card">
+          <svg class="q-card-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <h3>Rivals</h3>
+          <p class="q-card-kind">Who else is here</p>
+          <p>Named holders near your idea, what they hold in scope, and when they last filed. One
+          that stopped filing years ago is a different fact from one filing now.</p>
+        </article>
+        <article class="q-card">
+          <svg class="q-card-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+          <h3>Filings over time</h3>
+          <p class="q-card-kind">How the space is moving</p>
+          <p>Whether the space is early or late, said in words. The most recent stretch is shaded
+          and left out: a patent publishes about eighteen months after it is filed, so that window
+          is not a decline.</p>
+        </article>
+        <article class="q-card">
+          <svg class="q-card-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <h3>Where it is filed</h3>
+          <p class="q-card-kind">Which markets</p>
+          <p>How the filings split across jurisdictions, and what share of them is in yours. A
+          space that is crowded somewhere else is a different problem from one crowded at
+          home.</p>
+        </article>
+        <article class="q-card">
+          <svg class="q-card-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <h3>Live and expired</h3>
+          <p class="q-card-kind">What is still enforceable</p>
+          <p>How much of the crowd is still in force. An expired patent is not an obstacle &mdash;
+          it is prior art, and the two are opposite situations for you.</p>
+        </article>
+        <article class="q-card">
+          <svg class="q-card-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9M12 12v3"/></svg>
+          <h3>Lineage</h3>
+          <p class="q-card-kind">What this grew out of</p>
+          <p>The most-cited filings the rest of the space is built on. If you end up licensing from
+          anyone, or designing around anyone, it is most likely one of these.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 6 · What is deliberately absent ────────────────────────────────── -->
+  <section class="section section--alt narrow-head" id="absent" aria-labelledby="absent-heading">
+    <div class="container">
+      <h2 id="absent-heading" class="h-section">Built for a founder, not an analyst.</h2>
+      <p class="section-dek">Some of what is missing here is missing on purpose.</p>
+
+      <ul class="absent">
+        <li><b>No boolean search box</b><span>Writing a good patent query takes the vocabulary you
+        came here to get. Terrain builds the query from your sentence and keeps it out of
+        sight.</span></li>
+        <li><b>No report to download</b><span>Terrain is software. You log in and search; nothing is
+        produced to order, and there is no document to wait for.</span></li>
+        <li><b>No chart picker</b><span>A shelf of chart types is a shelf of decisions you have no
+        basis to make yet. Six views, chosen for you, in one order.</span></li>
+        <li><b>No verdict on any patent</b><span>Open one and you get its record as published &mdash;
+        claims and all. Results are ranked, and near the top means close to your words: an ordering
+        is not a verdict. What you do not get is Terrain reading a patent for you. Whether one
+        affects you is a legal question, and it is your attorney's call.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── 7 · Pricing — SLOTS, NO NUMBERS. See the CSS note. ─────────────── -->
+  <section class="section" id="pricing" aria-labelledby="pricing-heading">
+    <div class="container">
+      <h2 id="pricing-heading" class="h-section">Pricing.</h2>
+      <p class="section-dek">Self-serve, on a subscription. The tiers are not settled yet.</p>
+
+      <div class="tiers">
+        <article class="tier">
+          <div class="tier-slot">tier name</div>
+          <div class="tier-slot">price</div>
+          <div class="tier-slot">what is included</div>
+        </article>
+        <article class="tier">
+          <div class="tier-slot">tier name</div>
+          <div class="tier-slot">price</div>
+          <div class="tier-slot">what is included</div>
+        </article>
+        <article class="tier">
+          <div class="tier-slot">tier name</div>
+          <div class="tier-slot">price</div>
+          <div class="tier-slot">what is included</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 8 · Attribution ────────────────────────────────────────────────── -->
+  <section class="section section--alt narrow-head" id="innovue" aria-labelledby="innovue-heading">
+    <div class="container">
+      <h2 id="innovue-heading" class="h-section">Powered by Innovue.</h2>
+      <p class="section-dek">Terrain searches the Innovue patent database, and the engine
+      underneath it is one Innovue co-developed.</p>
+      <div class="attrib">
+        <span class="attrib-mark">Powered by Innovue</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer" inert aria-hidden="true">
+  <div class="container footer-cols">
+    <div class="footer-col">
+      <h2>Products</h2>
+      <ul>
+        <li><a href="/product/licensing/">Licensing Platform</a></li>
+        <li><a href="/product/signal/">Patent Intelligence</a></li>
+        <li><a href="/product/terrain/">TIS Terrain</a></li><!-- the third entry the footer needs -->
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h2>Company</h2>
+      <ul><li><a href="/about/">About</a></li><li><a href="/patents/">Owned Patents</a></li></ul>
+    </div>
+    <div class="footer-col">
+      <h2>Resources</h2>
+      <ul><li><a href="/reports/">Reports &amp; Press</a></li></ul>
+    </div>
+    <div class="footer-col">
+      <h2>Contact</h2>
+      <ul><li><a href="/#contact">Contact sales</a></li></ul>
+    </div>
+  </div>
+</footer>
+<div class="footer-baseline" inert aria-hidden="true">
+  <div class="container">
+    <p class="footer-copy">TIS Terrain &middot; Patent Intelligence &middot; Powered by Innovue.
+    Every figure on this page is illustrative.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     site.js's dropdown behaviour, reproduced so the panel is reviewable here.
+     DELETE AT PORT TIME — site.js:414–551 already does all of this, and it
+     needs no edit for a third row because it builds its card array from
+     querySelectorAll('.product-card').
+     ══════════════════════════════════════════════════════════════════════════ -->
+<script>
+(() => {
+  const wrap = document.querySelector('.topnav-dropdown-wrap');
+  const trig = document.getElementById('products-trigger');
+  const menu = document.getElementById('products-menu');
+  if (!wrap || !trig || !menu) return;
+
+  const fine = matchMedia('(hover: hover) and (pointer: fine)');
+  let openT, closeT;
+
+  // ── NEW: the preview swap. site.js has nothing like this today. ──────────
+  // Declared before setOpen because setOpen calls setActive, and a const in
+  // its temporal dead zone throws even under typeof -- a guard there would
+  // read as safe and not be.
+  //
+  // Bound to pointerenter AND focus, so a keyboard user arrowing down the list
+  // sees the preview change too. A :hover-only CSS rule could not do that, and
+  // on a coarse pointer neither fires: the default panel simply stays and a tap
+  // navigates, which is the right behaviour on touch.
+  const rows   = () => [...menu.querySelectorAll('.pm-row')];
+  const panels = () => [...menu.querySelectorAll('.pm-panel')];
+  const DEFAULT = 'licensing';   // row one, in DOM order. docs/marketing.md §4.
+
+  const setActive = (key) => {
+    rows().forEach(r => r.dataset.active = String(r.dataset.product === key));
+    panels().forEach(p => p.dataset.active = String(p.dataset.panel === key));
+  };
+  rows().forEach(r => {
+    r.addEventListener('pointerenter', () => setActive(r.dataset.product));
+    r.addEventListener('focus',        () => setActive(r.dataset.product));
+  });
+
+  const cards = rows;   // what the keyboard cycling below walks
+
+  const setOpen = (on) => {
+    menu.dataset.open = on ? 'true' : 'false';
+    trig.setAttribute('aria-expanded', on ? 'true' : 'false');
+    // Closing resets to row one, so the menu never reopens showing whatever
+    // the pointer happened to be over last time.
+    if (!on) setActive(DEFAULT);
+  };
+  const isOpen = () => menu.dataset.open === 'true';
+
+  // hover intent — 120ms to open, 200ms to close
+  const hoverOpen = () => { if (!fine.matches) return; clearTimeout(closeT); openT = setTimeout(() => setOpen(true), 120); };
+  const hoverShut = () => { if (!fine.matches) return; clearTimeout(openT); closeT = setTimeout(() => setOpen(false), 200); };
+  [wrap, menu].forEach(el => {
+    el.addEventListener('pointerenter', hoverOpen);
+    el.addEventListener('pointerleave', hoverShut);
+  });
+
+  // click only opens; a click while open moves focus into the panel
+  trig.addEventListener('click', () => {
+    if (!isOpen()) { setOpen(true); return; }
+    menu.querySelector('.pm-row')?.focus();
+  });
+
+  trig.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'Enter') {
+      e.preventDefault(); setOpen(true);
+      const list = cards();
+      (list.find(c => c.hasAttribute('aria-current')) || list[0])?.focus();
+    }
+  });
+  menu.addEventListener('keydown', (e) => {
+    const list = cards();
+    const i = list.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); list[(i + 1) % list.length]?.focus(); }
+    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  { e.preventDefault(); list[(i - 1 + list.length) % list.length]?.focus(); }
+    if (e.key === 'Escape') { setOpen(false); trig.focus(); }
+  });
+
+  document.addEventListener('click', (e) => { if (isOpen() && !wrap.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen()) { setOpen(false); trig.focus(); } });
+  addEventListener('scroll', () => { if (isOpen() && scrollY > 64) setOpen(false); }, { passive: true });
+
+  // mobile drawer
+  const drawer = document.getElementById('mobile-drawer');
+  const ovl    = document.getElementById('mobile-overlay');
+  const mTrig  = document.getElementById('mobile-trigger');
+  const mClose = document.getElementById('mobile-close');
+  const drawerSet = (on) => {
+    drawer.dataset.open = on ? 'true' : 'false';
+    ovl.dataset.open    = on ? 'true' : 'false';
+    mTrig.setAttribute('aria-expanded', on ? 'true' : 'false');
+  };
+  mTrig?.addEventListener('click', () => drawerSet(true));
+  mClose?.addEventListener('click', () => drawerSet(false));
+  ovl?.addEventListener('click', () => drawerSet(false));
+
+  const mp = document.getElementById('m-products-trigger');
+  const ms = document.getElementById('m-products-sublist');
+  mp?.addEventListener('click', () => {
+    const on = ms.dataset.open !== 'true';
+    ms.dataset.open = on ? 'true' : 'false';
+    mp.setAttribute('aria-expanded', on ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
