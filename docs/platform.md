@@ -3493,6 +3493,18 @@ proven.
 > claim-reading one — was narrowed rather than kept. **This note's own test is untouched and still
 > governs the four that remain**: an unread marker is still a reading aid, and it is still out.
 
+**Authentication, and the session it implies.** Terrain is self-serve software on a subscription —
+`brief.md` §1 — so there is a login, and nothing in this document specs one. *Recorded 2026-09-11,
+and it was reached from an unexpected direction:* the masthead lockup became a way home, which
+needed a test for *has the founder entered*, and the prototype answers it with a session flag
+(`hasEntered`) because there is no account to ask. **That flag is the shape of the question, not an
+answer to it.** With auth, *entered* is a property of the session and the surfaces the lockup may
+route to follow from it rather than from what has been clicked since page load.
+*Why deferred:* it is plumbing that decides nothing about the product, and specifying it now would
+fix a session model before the surfaces it serves have settled. **The cost of leaving it is named:**
+every "has the founder done X yet" test in the prototype is a page-lifetime flag, so a reload starts
+the founder over, and the real product will not.
+
 **Global jurisdiction + status filter.** "Live patents only" / "US only" as a **persistent control**
 that redraws the map, rivals and trend together. *§7a.5 permits "narrow to live only" as a one-shot
 action from a single cell; what is deferred is the standing control across every widget, which is a

@@ -991,6 +991,35 @@ one working surface beneath the bar.
 switcher, with version history nested inside it · chat · **the control rail** · the account menu.
 `platform.md` §6a.1 governs what may and may not be demoted out of it.
 
+***The lockup is the way home, 2026-09-11.*** It fired `conversation:new` until then — **the same
+action as the New search button twelve pixels to its right**, which is one action offered twice and
+a brand mark doing the job of a labelled control. It now returns the founder to the working screen.
+
+Three states, and the rule is one sentence: **the lockup routes home unless there is no home to
+route to.**
+
+- **On the working screen** it scrolls both columns to the top. A home control that is already home
+  should do the thing that convention expects of it, and *both* columns because this surface has
+  two — returning only one would be a half-answer.
+- **On the points page** it returns to the working screen, in the mode `#usBack` would have used,
+  so the two ways back agree about what returning looks like.
+- **On the conversation it is inert**, on both of the screens that surface can be: the first search,
+  where there is nothing to go back to, and the re-entry from a version revert, where there is —
+  but §4's gate is the product's only correction point and a mark in the chrome should not be the
+  way out of one.
+
+**The visual does not change between those states, and that is the constraint the rest follows
+from.** It stays an `<a>`, keeps its styling and its cursor everywhere, and tells assistive tech
+with `aria-disabled` rather than by greying out or dropping its `href` — both of which change what
+a sighted user sees. *A lockup that changes appearance by screen stops being a fixed point in the
+chrome, which is the whole of what makes it usable as home.* The accessible name promises
+navigation only where navigation happens: *TIS Terrain — back to your results* from the points page,
+and the name alone everywhere else.
+
+*The test is `hasEntered` — has the founder ever reached the working screen — and not "is there a
+set" or "is the map built", which are the set's business and answer a different question. New
+search resets it with everything else.*
+
 **Two things in it are protected by name, and both were protected before the masthead existed.**
 
 - ***The appearance control stays on the bar.*** This section protected it from disappearing at
@@ -1982,6 +2011,41 @@ match*, *best fit*, *most relevant* — because those are readings Terrain would
 info popover carries what it *means*. *The record pane said `Relevance` for the same figure and
 now says `Score` too: one number, one name.*
 
+**The re-rank control joined that bar on 2026-09-11**, immediately after Filter, and the strip it
+came from is gone. It was a `.btn-secondary` inside a collapsing `.set-cta` that opened the moment
+a star made it live, beside the sentence *"Find patents like the one you starred."* The sentence is
+in the heading's popover now, which already carried the same fact in its own words.
+
+*It fits, and that was measured rather than assumed.* The bar's content box is **345px**; Relevance
+is 119 and Filter is 89, so 127 remain. *"Re-rank the list"* at a page-sized `.btn` is 116 — a
+**one-pixel** fit, which is a coincidence and not a fit. **"Re-rank" at the bar's own metrics is
+85**, leaving 32px, and the shorter label is what makes the position a real choice instead of a
+rounding error.
+
+**It takes `.btn-primary`'s fill and `.lm-btn`'s geometry**, and both halves matter. `.btn` is 36px
+and this row is 30px, so a page-sized button would sit six pixels proud of its neighbours; the fill
+is how it draws the eye at all, because §2 leaves no accent to spend and near-black is what
+`CLAUDE.md` reserves for a primary action. **Against two outlined menu triggers, the only filled
+control in the bar is the loudest thing on the surface without a hue existing.**
+
+**The icon is Lucide `list-ordered`.** It was `target` for one pass, reaching for *rank around a
+point*; the plainer reading is the outcome — the list gets a new order — and it cannot be mistaken
+for Restore the way a restart or refresh glyph would be. 15px, `stroke-width: 1.5`, the same as its
+two neighbours, and its silhouette is distinct from both: Relevance is a pair of arrows and Filter
+is a taper.
+
+**Hidden, not disabled**, when there is nothing to rank — the strip used to collapse away entirely,
+so hiding is what preserves the behaviour. And the star's hover background *is* `--surface-sunken`,
+which on an open row it would match, so there it steps to `--track-pressed`.
+
+***A ring was tried and is deleted.*** It traced the button once on arrival —
+`--dur-4`, a conic gradient in `currentColor` — on the reasoning that a one-shot at the moment the
+control appears is the version of "draw the eye" that does not charge its cost on every later
+glance. **It went because it was not wanted, which is a sufficient reason and the honest one.**
+*Two things survive it and are worth keeping written down: a loop would have been worse than a
+one-shot for the reason above, and the fill is doing the work on its own — the only filled control
+in a bar of outlined ones needs no help.*
+
 **The sort and filter controls, added 2026-09-10.** Two menu buttons in the list's bar, `--r-control`
 at 30px, each a trigger plus a popover. **The popover is concentric**: `--r-inner` with `--s-4` of
 padding, so its items take `--r-control` — 8 + 4 = 12. **The roles differ because the acts do**, and
@@ -2186,6 +2250,25 @@ accent to spend and four of the six light reference screens do exactly this. Sec
 `platform.md` §7a.9 is the surface; these are its six components. Restyled from IPtech's account →
 point usage screen, read at `visual-reference/iptech-screenshots-identified/README.md` §2.20. Every
 rule below reads a semantic token, so §10's dark set arrives free and no component here stays light.
+
+***The page had no inline margin at all until 2026-09-11, and the way it happened is the useful
+part.*** `.grid` deliberately carries no inline padding, because on the working screen
+`.panescroll` supplies it. The points page puts `.grid` straight inside `.main`, which is `inset: 0`
+with no padding of its own — **so nothing supplied it, and the cards ran edge to edge at 1440 while
+the `Points` title above them sat 32px in.** Not merely tight: *two edges 32px apart on one page*,
+which is exactly what this file means by aligning to a shared edge. **Both are `--s-16` now** — the
+step the right pane already uses — so the title and the cards share one edge and the page reads at
+the rhythm of the surface it is reached from. Scoped to `.view-map`, because padding `.grid` itself
+would pad it twice inside `.panescroll`.
+
+***It is deliberately not capped, and that was checked rather than tidied.*** A `max-width` is the
+obvious next move: at 1440 these cards are ~1376px against ~988px for the same components on the
+working screen. **The width is carrying content.** *Points over time* is a 91-column chart at ~15px
+a band — already at the width where a column stops being readable — and *What spent them* is a
+five-tile KPI row that wraps if the page narrows. **The card that does look stretched is the
+balance hero**, whose arc meter sits ~1300px from the figure it describes; that is a layout question
+inside one card, and capping the page is the wrong instrument for it. *Recorded as open rather than
+fixed.*
 
 **The balance card · `.bal`.** A figure pair and an arc meter on one row. `figure-xl` for the
 balance, then the allowance in `figure-l` under §1's secondary-figure treatment — `.fig-sub`, weight

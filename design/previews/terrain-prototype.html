@@ -1135,7 +1135,7 @@ a{text-decoration:none;color:inherit}
 /* the resting lede tells the founder to untick and to star. Filtered, it is
    telling them to do something to a list they are not looking at — the same
    reason the re-rank swaps it (design-language.md §7). */
-.is-filtered .set-bar,.is-filtered .set-cta,
+.is-filtered .set-bar,
 .is-filtered .set-excl,.is-filtered .set-run{display:none}
 .is-filtered .set-list{padding-top:0}
 
@@ -1144,6 +1144,30 @@ a{text-decoration:none;color:inherit}
 .main{position:absolute;inset:0;display:flex;flex-direction:column;min-width:0;overflow-y:auto}
 .page-head{display:flex;align-items:flex-end;gap:var(--s-16);
            padding:var(--s-24) var(--s-32) var(--s-16);flex-wrap:wrap}
+/* ── the points page's margins · 2026-09-11 ──────────────────────────────
+   .grid CARRIES NO INLINE PADDING because on the working screen .panescroll
+   supplies it (--s-16 both sides). The points page puts .grid straight inside
+   .main, which is inset:0 with no padding, so nothing supplied it and the
+   cards ran EDGE TO EDGE at 1440 — while the "Points" title above them sat
+   32px in. Not merely tight: two edges 32px apart on one page, which is the
+   thing §7 means by aligning to a shared edge.
+
+   Both are --s-16 now, the step the right pane already uses, so the title and
+   the cards share one edge and this page reads at the same rhythm as the
+   surface it is reached from. Scoped to .view-map rather than added to .grid,
+   because .grid inside .panescroll would then be padded twice.
+
+   NOT CAPPED, and that was checked rather than assumed. A max-width would
+   have been the obvious tidy: at 1440 these cards are ~1376px against ~988px
+   for the same components on the working screen. But the width is carrying
+   content here — "Points over time" is a 91-column chart at ~15px a band,
+   already at the ceiling where a column stops being readable, and "What
+   spent them" is a five-tile KPI row that wraps if the page narrows. The
+   card that DOES look stretched is the balance hero, whose donut sits ~1300px
+   from the figure it describes; that is a layout question inside one card and
+   capping the page is the wrong instrument for it. */
+.view-map .page-head{padding:var(--s-16)}
+.view-map .grid{padding-inline:var(--s-16)}
 .page-head-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-8)}
 .head-meta{display:flex;align-items:center;gap:var(--s-8);flex-wrap:wrap}
 .chip-reopened,.chip-updated{display:none}
@@ -1955,6 +1979,17 @@ a{text-decoration:none;color:inherit}
   padding:var(--s-14) var(--s-20);border-bottom:1px solid var(--border)}
 .set-bar .spacer{flex:1 1 auto}
 
+/* ── the re-rank control, in the bar · 2026-09-11 ────────────────────────
+   .btn IS 36px AND THIS ROW IS 30px. Everything else in the bar is an .lm-btn,
+   so the primary fill is taken from .btn-primary and the geometry from .lm-btn
+   rather than letting a page-sized button sit six pixels proud of its
+   neighbours. Same --r-control, so the three read as one row of controls that
+   happen to differ in weight — which is exactly the difference being drawn. */
+.set-rank{height:30px;padding:0 var(--s-10);font-size:12.5px;gap:var(--s-6)}
+.set-rank:hover{background:var(--ink-hover)}
+
+}
+
 /* ── the list's sort and filter · platform.md §6a.2 ──────────────────────
    MENUS RATHER THAN SEGMENTED CONTROLS, and that is a width decision before
    it is a semantic one. A .seg lays every option out at once and costs their
@@ -2111,26 +2146,21 @@ a{text-decoration:none;color:inherit}
   .set-more-btn:hover svg{color:var(--text-2)}
 }
 /* .set-foot is gone — 2026-09-10. Its note moved into the heading's popover
-   and its button into .set-cta above the list. .set-note survives because
-   the two empty states still use it. */
+   and its button into .set-cta above the list; .set-cta went the same way on
+   2026-09-11 and the button is in .set-bar now, so that note has outlived two
+   homes and the popover has ended up holding both halves. .set-note survives
+   because the two empty states still use it. */
 .set-note{font-size:12.5px;line-height:1.5;color:var(--text-3);margin:0;flex:1 1 200px}
-/* ── the star's prompt · one strip, the .set-run mechanism ──────────────
-   Same grid-template-rows collapse as the panel below, driven from the same
-   expression that enables the button inside it — so the strip cannot be on
-   screen while that button is dead. A sunken ground is what makes it read
-   as a region with a control in it rather than as a row of the list. */
-.set-cta{display:grid;grid-template-rows:0fr;
-  transition:grid-template-rows var(--dur-2) var(--ease)}
-.set-wrap.has-cta .set-cta{grid-template-rows:1fr;transition-duration:var(--dur-3)}
-.set-cta>div{overflow:hidden;min-height:0}
-.set-cta-in{display:flex;align-items:center;gap:var(--s-12);flex-wrap:wrap;
-  padding:var(--s-14) var(--s-20);background:var(--surface-sunken);
-  border-bottom:1px solid var(--border)}
-.set-cta-in .spacer{flex:1 1 auto}
-.set-cta-say{margin:0;flex:1 1 190px;font-size:13px;line-height:1.5;color:var(--text-1)}
-/* the running beat owns the card, so the prompt goes with the rest of the
-   chrome rather than sitting live over a list that is reordering. */
-.set-wrap.is-running .set-cta,.set-wrap[data-built] .set-cta{grid-template-rows:0fr}
+/* ── the star's prompt ───────────────────────────────────────────────────
+   THE STRIP IS GONE, 2026-09-11. It was a grid-template-rows collapse holding
+   a sentence and the re-rank button, opening the moment a star made the button
+   live. The button is in .set-bar now and the sentence is in the heading's
+   popover. What the strip did that mattered — a consequence on screen the
+   moment you star — the button does by ARRIVING, and it arrives somewhere the
+   founder is already looking rather than in a region of its own.
+   *The cost, named: the strip's collapse handed off to .set-run in the same
+   frame, which read as the prompt becoming the work. The beat still opens; it
+   just no longer has anything closing as it does.* */
 
 /* ── the re-baseline panel · THREE states ──────────────────
    rest -> running -> ranked, and the panel is the same collapse in the last
@@ -2325,7 +2355,25 @@ a{text-decoration:none;color:inherit}
            flattens by default, so the nesting is rebuilt inside the menu
            rather than assumed to survive the move.                        -->
   <header class="mast" id="mast">
-    <a class="mast-brand" href="#" data-go="conversation:new" aria-label="TIS Terrain — new search">
+    <!-- THE LOCKUP IS THE WAY HOME, 2026-09-11, and it used to be a second
+         "New search" — the same data-go as the button twelve pixels to its
+         right, which is one action offered twice and a brand mark doing the
+         job of a labelled control. It now returns the founder to the working
+         screen, which is what a masthead lockup is for.
+
+         IT IS INERT ON THE CONVERSATION, both times that surface is reachable:
+         the first search screen, where there is nothing to go back to, and the
+         re-entry from a version revert, where there is — but the gate is the
+         product's only correction point (platform.md §4) and a mark in the
+         chrome should not be the way out of one.
+
+         NO VISUAL CHANGE BETWEEN THE STATES. It stays an <a>, keeps its cursor
+         and its styling everywhere, and says so to assistive tech with
+         aria-disabled rather than by going grey or dropping out of the tab
+         order. A lockup that changes appearance by screen stops being a fixed
+         point in the chrome, which is the whole of what makes it usable as
+         home. -->
+    <a class="mast-brand" id="mastBrand" href="#" aria-label="TIS Terrain">
       <svg class="mark" fill="currentColor" aria-hidden="true"><use href="#tis-mark"/></svg>
       <span class="wordmark">TIS <span>Terrain</span></span>
     </a>
@@ -2591,8 +2639,10 @@ a{text-decoration:none;color:inherit}
                 </button>
                 <span class="info-pop" role="note"><b>Every patent the search found feeds the
                   views beside them.</b> Sorting and filtering change what you are looking at, not
-                  what they count. If one patent is especially close to your idea, star it and we
-                  will re-rank the rest around it.<br><br><b>The figure on the right of each row is
+                  what they count. If one patent is especially close to your idea, star it —
+                  <b>Re-rank</b> appears in the bar above, and orders the rest by how close
+                  they are to the one you starred. No patent enters or leaves; only the
+                  sequence changes.<br><br><b>The figure on the right of each row is
                   the engine's relevance score.</b> It is how close the search put that patent to
                   what you described.<br><br><b>That ordering is a ranking, not a verdict.</b> A
                   patent near the top is close to what you described. It does not mean it affects
@@ -2630,6 +2680,28 @@ a{text-decoration:none;color:inherit}
               </button>
               <div class="lm-menu" id="filtMenu" role="menu" aria-label="Filter the list"></div>
             </div>
+            <!-- THE STAR'S CONSEQUENCE, in the bar since 2026-09-11. It was a
+                 button inside a collapsing strip below this one, beside the
+                 sentence "Find patents like the one you starred." The strip is
+                 gone and the sentence is in the heading's popover, which already
+                 carried the same fact in its own words.
+
+                 IT IS THE ONLY FILLED CONTROL ON THIS SURFACE, and that is now
+                 the WHOLE of how it draws the eye — a one-turn ring traced the
+                 button on arrival for one pass and is deleted: §2 leaves no
+                 accent to spend, and
+                 near-black fill is what CLAUDE.md reserves for a primary action.
+                 Against two outlined menu triggers a filled button is the loudest
+                 thing in a 345px bar without a hue existing.
+
+                 HIDDEN, NOT DISABLED. The strip used to collapse away when there
+                 was nothing to rank, so nothing was on screen; a disabled button
+                 loitering in the bar would be new clutter, and [hidden] takes it
+                 out of the tab order the way #setRestore below already does. -->
+            <button class="btn btn-primary set-rank" id="setRebase" type="button" hidden>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h11"/><path d="M10 12h11"/><path d="M10 18h11"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+              <span>Re-rank</span>
+            </button>
             <!-- THE WAY BACK, and it lives here rather than in the panel because this
                  is where the surface's other undo-shaped control already is. Hidden by
                  [hidden] rather than visibility, so it leaves the tab order and the
@@ -2639,36 +2711,6 @@ a{text-decoration:none;color:inherit}
               original order</button>
             <span class="spacer"></span>
           </div>
-
-          <!-- THE STAR'S CONSEQUENCE, and until 2026-09-10 there was none on
-               screen. Starring filled the star, drew a rail, counted a chip
-               and enabled a button twenty rows below — four quiet signals
-               and no sentence saying what starring was FOR. This is that
-               sentence, with the button beside it.
-
-               IT IS THE SAME COLLAPSE AS .set-run BELOW, deliberately: one
-               mechanism, two strips, handing off to each other. Press the
-               button and this closes as the beat opens, in the same frame,
-               which reads as the prompt becoming the work.
-
-               AND IT IS AT THE TOP. The button used to live in a foot below
-               the list, under a comment claiming it sat "outside the split"
-               and so could not be scrolled out of reach — it was inside
-               .listcol-scroll and it plainly could. A CTA under twenty rows
-               is a CTA nobody sees; this one sits where the founder just
-               starred something. -->
-          <div class="set-cta" id="setCta"><div><div class="set-cta-in">
-            <!-- PLAIN, AND IT SAYS WHAT YOU GET. It read "The rest can be
-                 ordered by how close they are to what you starred" — accurate,
-                 and it described a mechanism rather than an outcome. The count
-                 is not repeated here either: the "N starred" chip in the
-                 heading already carries it, and a sentence, a button and a
-                 chip all counting the same thing is three facts that are one. -->
-            <p class="set-cta-say" id="setCtaSay">Find patents like the one you starred.</p>
-            <span class="spacer"></span>
-            <button class="btn btn-secondary" id="setRebase" type="button" disabled>
-              Re-rank the list</button>
-          </div></div></div>
 
           <!-- THE EVENT, in one slot with two states. It SHIPS EMPTY, and that is
                not tidiness: grid-template-rows:0fr plus overflow:hidden does not
@@ -6850,20 +6892,22 @@ function syncSet(){
      It used to be !stars alone, so a second press replayed the whole beat to an
      identical result.
 
-     ONE EXPRESSION, THREE CONSUMERS. The strip, the button inside it and the
-     sentence inside that are all driven from this, so none of them can
-     disagree — there is no state where a prompt is on screen offering an
+     ONE EXPRESSION, ~~THREE CONSUMERS~~ ONE. It drove the strip, the button
+     inside it and the sentence inside that, so none of the three could
+     disagree; the strip and the sentence went on 2026-09-11 and the button is
+     all that reads it now. The property it was protecting still holds and is
+     now trivial: there is no state where a control is on screen offering an
      action that is already done. */
   var canRank = stars > 0 && sig !== SET_SIG;
-  $('#setRebase').disabled = !canRank;
-  setWrap.classList.toggle('has-cta', canRank);
-  /* a whole templated string per branch, so the plural is part of the
-     sentence rather than glued to it — saySettled's rule, one strip over.
-     Written only while the strip is open: rewriting it as the strip collapses
-     would change the words mid-transition. */
-  if (canRank) $('#setCtaSay').textContent = stars === 1
-    ? 'Find patents like the one you starred.'
-    : 'Find patents like the ones you starred.';
+  /* HIDDEN, NOT DISABLED, since 2026-09-11 — the strip this button used to sit
+     in collapsed away when !canRank, so hiding it in the bar is what preserves
+     the behaviour rather than changing it. #setRestore in the same bar is
+     written the same way, and for the reason its own comment gives: [hidden]
+     takes a control out of the tab order and the a11y tree with it. */
+  $('#setRebase').hidden = !canRank;
+  /* THE SENTENCE IS IN THE HEADING'S POPOVER. It was written here per branch so
+     the plural was part of the sentence rather than glued to it; the popover
+     states the same fact once, unconditionally, and does not have to count. */
   /* THERE IS NO STANDING NOTE TO WRITE. It lived under the list, then had one
      owner in setNoteSay, and on 2026-09-10 it went into the heading's info
      popover — so the only sentence this surface still writes at runtime is
@@ -7212,12 +7256,13 @@ function rebaseline(now){
   if (setWrap.classList.contains('is-running')) return;
   var sig = starSig();
   if (!sig) return;
-  if (sig === SET_SIG) return;         /* belt to the disabled button's braces */
+  if (sig === SET_SIG) return;         /* belt to the hidden button's braces */
 
   function land(){
     SET_RUN = 0;
-    /* captured before anything disables: syncSet is about to kill #setRebase,
-       and a disabled element holding focus drops it to <body> */
+    /* captured before anything hides: syncSet is about to kill #setRebase, and
+       a hidden element holding focus drops it to <body> — the same failure the
+       disabled version had, for the same reason. */
     var was = document.activeElement;
     var prev = SET_ORDER, next = rankOrder(sig), moved = 0, i;
     for (i = 0; i < next.length; i++) if (prev[i] !== next[i]) moved++;
@@ -7238,7 +7283,7 @@ function rebaseline(now){
     setRunSay(saySettled(moved));
     /* a live target or nothing — pnClear's rule. #setRestore has just become
        focusable and is the natural successor to the control that died. */
-    if (was === $('#setRebase') && $('#setRebase').disabled) $('#setRestore').focus();
+    if (was === $('#setRebase') && $('#setRebase').hidden) $('#setRestore').focus();
   }
 
   if (now || REDUCED){ land(); return; }
@@ -7289,7 +7334,7 @@ function setRestore(){
   if (was === $('#setRestore')){
     /* deliberately NOT #setBuild: landing focus on the primary action straight
        after an undo puts a map build one Enter away. */
-    if (!$('#setRebase').disabled) $('#setRebase').focus();
+    if (!$('#setRebase').hidden) $('#setRebase').focus();
     else focusHeading(views.set);
   }
 }
@@ -7516,6 +7561,46 @@ function hashFor(view, mode){
   return 'search';
 }
 
+/* HAS THE FOUNDER EVER REACHED THE WORKING SCREEN. Not "is there a set" or
+   "is the map built" — those are the set's business and they answer a
+   different question. This is the one the lockup asks: is there a results
+   page to go back to. New search resets it with everything else. */
+var hasEntered = false;
+
+/* the lockup, kept in step with the view. Called from go() rather than from
+   swap(), so the one path that changes view is the one path that updates it. */
+function syncBrand(){
+  var b = $('#mastBrand');
+  var view = current && current.getAttribute('data-view');
+  var live = hasEntered && view !== 'conversation';
+  b.setAttribute('aria-label', live && view !== 'work'
+    ? 'TIS Terrain — back to your results' : 'TIS Terrain');
+  /* aria-disabled and not [disabled] or a removed href: the visual has to be
+     identical on every screen, and both of those change it — one greys the
+     control, the other drops the pointer cursor with the link role. */
+  if (live) b.removeAttribute('aria-disabled');
+  else b.setAttribute('aria-disabled','true');
+}
+$('#mastBrand').addEventListener('click', function(e){
+  e.preventDefault();
+  var view = current && current.getAttribute('data-view');
+  if (!hasEntered || view === 'conversation') return;
+  if (view === 'work'){
+    /* already home, so the click takes them to the top of what they are
+       looking at — both columns, because the working screen has two and
+       returning only one of them would be a half-answer. */
+    var opt = { top:0, behavior: REDUCED ? 'auto' : 'smooth' };
+    var ps = $('#paneScroll'), ls = $('#listScroll');
+    if (ps) ps.scrollTo(opt);
+    if (ls) ls.scrollTo(opt);
+    return;
+  }
+  /* from the points page. The same mode #usBack would have used when it came
+     from work, so the two agree about what returning looks like; from anywhere
+     else the working screen is entered plainly. */
+  go('work', usFrom === 'work' ? (usFromMode || 'built') : '');
+});
+
 function go(view, mode){
   if (!views[view]) return;
   /* the points page has to know where the founder came from before it opens,
@@ -7527,9 +7612,12 @@ function go(view, mode){
   infoHideAll();
   if (view === 'conversation' && mode === 'new'){
     resetConversation(); resetMap(); resetSet();
+    /* the results page the lockup would return to no longer exists */
+    hasEntered = false;
   }
-  if (view === 'work') setDash(mode);
+  if (view === 'work'){ setDash(mode); hasEntered = true; }
   swap(view);
+  syncBrand();
   if (!routing && window.history && history.replaceState){
     history.replaceState(null, '', '#' + hashFor(view, mode));
   }

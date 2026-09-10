@@ -636,6 +636,13 @@ Decisions made here that belong in the TIS monorepo, for a deliberate propagatio
   shared and should stay shared. See `design-language.md` §12.
 - The Signal ↔ Terrain boundary → `brand/positioning.md`, and the pillar model needs to show two
   products under Patent Intelligence rather than one.
+- **What the lockup *does*** → possibly `brand/components.md`. Added 2026-09-11. Terrain's masthead
+  lockup is now a home link, which is ordinary web convention and probably needs no upstream rule —
+  **the part that might is the inert state.** On surfaces with nowhere to route, the mark stays
+  visually identical and is marked `aria-disabled` rather than greyed or unlinked, on the reasoning
+  that a lockup which changes appearance by screen stops being a fixed point in the chrome. That is
+  a rule about a mark's behaviour, so it is flagged here rather than assumed to be local.
+  `design-language.md` §7 carries it.
 - **Terrain's row copy in the website's Products menu → `website/` (all nine HTML files).** Added
   2026-09-10, and it is the one item on this list that is a *correction* rather than a new decision.
   [marketing.md](marketing.md) §4 records the row as:
