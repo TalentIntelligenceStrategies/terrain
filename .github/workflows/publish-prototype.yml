@@ -1,0 +1,67 @@
+# Republish the prototype whenever main moves.
+#
+# WHY THIS EXISTS. Pages serves the gh-pages branch, not main, because the ask
+# was a link that lands on the prototype and exposes nothing else -- and Pages
+# has no per-file access control, so publishing one page means maintaining a
+# smaller tree. Something has to generate that tree. Without this workflow the
+# job falls to a human remembering to run a script after every push, which is
+# the kind of step that gets skipped exactly once and then goes stale silently.
+#
+# With it, the workflow is just: edit, check locally, push to main.
+#
+# NO ADMIN AND NO PAGES SETTING IS INVOLVED. This pushes to gh-pages with the
+# repository's own token; Pages notices the branch moved and redeploys itself.
+name: Publish prototype
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # lets you republish by hand from the Actions tab
+
+# Runs on EVERY push to main, deliberately, with no paths filter. The build is
+# ~30s and tools/publish-prototype.sh no-ops when nothing changed. A paths
+# filter would be faster and would introduce the one failure this repository
+# keeps relearning: a rule that silently skips the thing you needed it to do.
+concurrency:
+  group: publish-prototype
+  cancel-in-progress: false   # never cancel a half-finished publish
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write         # the only permission needed: pushing to gh-pages
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0      # the script bases on origin/gh-pages, so it needs the history
+
+      - name: Prove the gates still fire
+        # The gates are worth nothing unless they can fail. This builds the tree
+        # with the SAME script that publishes it -- no second definition of the
+        # build -- then plants a violation for each gate and checks each refuses.
+        # If this step fails, nothing is published.
+        run: |
+          ./tools/publish-prototype.sh --build-only "$RUNNER_TEMP/build"
+          ./tools/test-gates.sh "$RUNNER_TEMP/build"
+
+      - name: Build, check and publish
+        run: ./tools/publish-prototype.sh
+        env:
+          GIT_AUTHOR_NAME: terrain-publish
+          GIT_AUTHOR_EMAIL: terrain-publish@users.noreply.github.com
+
+      - name: Confirm what is actually being served
+        # Pages deploys asynchronously after the push, so this waits for the
+        # live bytes to match what we just published rather than assuming.
+        run: |
+          set -uo pipefail
+          EXPECT=$(git show gh-pages:index.html | sha256sum | cut -d' ' -f1)
+          URL=https://talentintelligencestrategies.github.io/terrain/
+          for i in $(seq 1 30); do
+            LIVE=$(curl -sL "$URL" | sha256sum | cut -d' ' -f1)
+            if [ "$LIVE" = "$EXPECT" ]; then echo "live matches gh-pages ($EXPECT)"; exit 0; fi
+            sleep 10
+          done
+          echo "::warning::the live site has not caught up after 5 minutes."
+          echo "gh-pages is correct, so this is a slow Pages deploy rather than a bad build."

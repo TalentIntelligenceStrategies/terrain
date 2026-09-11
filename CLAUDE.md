@@ -35,7 +35,8 @@ order. Never write copy that describes it in report language.
 ```
 CLAUDE.md            this file — how to work here
 README.md            what a visitor to the public repo reads first
-index.html           the landing page GitHub Pages serves — links the two pages
+index.html           the landing page — links all three previews. NOT SERVED any more:
+                     Pages publishes the gh-pages branch, which is the prototype alone
 docs/brief.md        positioning, naming, the Innovue relationship — what Terrain is
 docs/platform.md     product definition — what gets built, and §9 DEFERRED — NOT IN SCOPE
 docs/design-language.md  tokens, type, components — how it looks
@@ -47,6 +48,9 @@ design/previews/     the case document and the prototype — both maintained dir
 design/previews/terrain-product-page.html  the marketing product page — a SCAFFOLD, built
                      in the website's house style for later transplant into ~/Desktop/TIS/website/
 design/components.md the component manifest — per component, the data shape the engine must return
+tools/               ONLY what regenerates the published branch — publish-prototype.sh,
+                     strip-comments.py, check-publish.py, test-gates.sh
+.github/workflows/   publish-prototype.yml — rebuilds gh-pages on every push to main
 brand/assets/imagery/terrain/  the ONE permitted raster family — see Rules
 brand/favicon.svg    the browser-tab icon — the submark, with its own dark/light block
 brand/logos/tis/     TIS SVGs, copied from the monorepo (read-only, do not edit)
@@ -84,11 +88,71 @@ byte-for-byte, never rendered — so Jekyll was never going to turn `docs/*.md` 
 Nothing here carries front matter and no path starts with `_` or `.`, so a Jekyll build and a raw
 copy produce the same site.*
 
-***The next Pages pass owns what that leaves open.*** *Deploying from a branch runs Jekyll, and two
-things stop being hypothetical: a build failure fails the **whole** deploy rather than one file, and
-any path later added with a `_` prefix is dropped from the output with no error — the same shape as
-the rename that defeated the path-based ignore rule. `touch .nojekyll` is the entire fix if either
-bites. Deploying through a GitHub Actions workflow skips Jekyll and the question does not arise.*
+***That pass happened on 2026-09-11, and what it settled is not what it set out to.*** *Pages went
+live from `main` / root first, and the static-file reasoning above was checked rather than trusted —
+`index.html`, `README.md`, `docs/brief.md` and the prototype all hashed identical to the tree, so
+Jekyll is provably a no-op here. Then the question changed: **the ask was a link that lands on the
+prototype and exposes nothing else**, and Pages has no per-file access control. It serves whatever
+tree it is pointed at. The only lever is to point it at a smaller tree.*
+
+***So there are two branches now, and the split is the whole design.***
+
+| | `main` | `gh-pages` |
+| --- | --- | --- |
+| holds | everything, unchanged | 14 files |
+| is | authored | **generated — never edit it by hand** |
+| is served | **no** | yes, at `talentintelligencestrategies.github.io/terrain/` |
+
+`gh-pages` carries the prototype as `index.html`, the eleven assets it references, and **both OFL
+licences** — this branch redistributes seven subset woff2 on a public host, which is precisely the
+case OFL 1.1 covers. `docs/`, `case.md`, the product page and this file are no longer served at all.
+
+**`index.html` at the root of `main` is now dead**, in the sense that nothing renders it — it is the
+landing page that linked all three previews, and the published site is the prototype alone. It is
+still the right front door if the full set is ever published again, so it stays.
+
+***Two transforms separate the branches, and both are mechanical:*** `../../brand/` → `brand/`
+because the prototype moves to the root, and **every comment stripped**. That second one was 51% of
+the file by weight — dated design decisions, `§`-references into `platform.md`, and the competitive
+read on IPtech's modules. **None of it is client data and all of it is ours**, but it is reasoning
+written for this room, and a link sent outward carried it in view-source. `main` keeps every comment;
+nothing is lost.
+
+***Publishing is automatic, and the workflow is unchanged from what it always was:*** **edit, check
+locally, push to `main`.** `.github/workflows/publish-prototype.yml` runs on every push to `main`,
+rebuilds `gh-pages` and pushes it; Pages redeploys itself about a minute later. *It needs **write**
+access only — admin was needed exactly twice, to enable Pages and to point it at this branch, and
+both are done. No Pages setting is involved in a publish.*
+
+*`tools/publish-prototype.sh` is the same thing runnable by hand, and `--build-only <dir>` assembles
+the tree without publishing. **CI calls that flag rather than repeating the build**, so there is never
+a second definition of what gets published — the tree the gates are tested against is the tree that
+ships.*
+
+***The manual step was the first design and it was wrong.*** *A generated branch plus "remember to run
+the script" is a step that gets skipped exactly once and then the live site is quietly stale. If the
+automation is ever removed, the branch must go back to being served directly rather than left
+depending on someone's memory.*
+
+***`tools/` is new, and it is a real weakening of "no build step" — say so rather than pretending
+otherwise.*** *`index.html` still tells a visitor there is nothing to install, and for the previews
+that stays true; but a generated branch cannot be generated by hand twice running and stay
+byte-identical, and the comment strip in particular is not a thing anyone should do manually. The
+guard is that the directory holds **only** what regenerates the published branch.*
+
+***The gates are in Python, and why is the most useful thing in this section.*** *They were shell
+first, and **three of them silently did not run** — `grep -P` does not exist on macOS, the `node`
+syntax check never fired, and a `fail` inside a pipeline subshell could not stop the publish. **All
+three reported clean.** That is the same failure as the taxonomy that survived a figure scrub and the
+6 MB that a renamed folder slipped past: not a check that was wrong, a check that was never
+consulted. `tools/test-gates.sh` now plants a violation for each of the ten gates and proves it
+refuses. **Add a gate, add its test** — a gate nobody has watched fail is not a gate.*
+
+***So Jekyll still runs, on the smaller tree now,*** *and the two consequences stand: a build failure
+fails the **whole** deploy, and any path added with a `_` prefix is dropped with no error.*
+**`touch .nojekyll` is the entire fix, and the trigger is a `_`-prefixed path, not a broken page** —
+the failure is silent by construction, so nothing will tell you. *On a 14-file generated tree neither
+is likely; on `main` it no longer matters, because `main` is not served.*
 
 ## Rules
 

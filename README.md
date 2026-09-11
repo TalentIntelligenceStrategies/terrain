@@ -86,6 +86,14 @@ if the generated approach is ever wanted back.*
 Four things must hold. Each command prints offending files and nothing otherwise — note the
 `grep -v README.md`, without which this file matches its own patterns and the check never passes.
 
+**Two tool files carry the same exemption, added 2026-09-11, and it is the same reason rather than a
+new one.** `tools/check-publish.py` and `tools/test-gates.sh` are checks 1–4 reimplemented as gates
+on the published branch, so they contain the assignee names and the `data:image` literal as *their
+own search patterns* — and without the exemption checks 3 and 4 match them on every single run. A
+check that always fires is a check nobody reads, which is how the 6 MB in check 1 got staged.
+**The exemption is two literal paths, anchored, no glob**, for the same reason the raster exception
+is three literal paths: rename either file and it stops being exempt.
+
 ```bash
 # 1 · no raster images, except the one permitted family. Still close to an
 #     invariant rather than a list of names: every OTHER raster here would be a
@@ -154,11 +162,11 @@ git ls-files | grep -Ei 'visual-reference|iptech-screenshots|comparison-assets|v
 #     got staged. Every one of these figures is read off a UI that renders
 #     thousands separators, so a leak arrives carrying its comma; the four
 #     that leaked on 2026-09-08 all did.
-git ls-files | grep -v README.md | tr '\n' '\0' \
+git ls-files | grep -vE 'README\.md|^tools/(check-publish\.py|test-gates\.sh)$' | tr '\n' '\0' \
   | xargs -0 grep -lEi 'Tektronix|Nike|Qualcomm|ENANTA|MONOLITHIC|緯穎|富蘭登|光焱|聯享光電|Macroblock|4,50[0-9]|4,49[0-9]|4,438|4,368|10,004|5,566|2,184|78\.5'
 
 # 4 · nothing tracked embeds an image as base64
-git ls-files | grep -v README.md | tr '\n' '\0' | xargs -0 grep -l 'data:image'
+git ls-files | grep -vE 'README\.md|^tools/(check-publish\.py|test-gates\.sh)$' | tr '\n' '\0' | xargs -0 grep -l 'data:image'
 ```
 
 **Check 1 was amended on 2026-09-08 to admit that one family, and the amendment matters more than
