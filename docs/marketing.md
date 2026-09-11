@@ -70,7 +70,7 @@ Recorded because a later session will otherwise re-import them:
 2. **Data anchors and social proof.** Its writing DNA demands memorable numbers repeated three
    times, and its proof section wants traction figures. Terrain has **no customers**, and every
    figure in this repository is illustrative by decision. → Anchors are *true* facts about
-   mechanism instead: the eighteen-month publication lag, family-merging, six views. Where no true
+   mechanism instead: the eighteen-month publication lag, family-merging, the views. Where no true
    number exists the claim is **cut**, not softened into an adjective. **There is no proof section
    and no testimonial on the page.**
 3. **Urgency.** Its marketing voice is "30°C, Persuader, with urgency". Terrain's house voice is

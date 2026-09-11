@@ -1649,7 +1649,7 @@ build by pressing *Build the map* on the set surface (`platform.md` §4b), so *O
 them to confirm the thing they had just asked for. The build now lands on the map on its own, and the
 footer keeps only its note.
 
-***And on 2026-09-10 the build block itself went.*** There is no build screen: the six views resolve
+***And on 2026-09-10 the build block itself went.*** There is no build screen: §6's views resolve
 from skeletons in place in the right pane (`platform.md` §6a.5). **The footer question is settled by
 removal** — there is nowhere to send the founder, because they are already there.
 
@@ -1841,6 +1841,43 @@ is the *easier* of the two, and nothing in the rendering may suggest otherwise.
 
 **It ships against §8's skeleton contract** — the illustrative set carries no per-holder legal status,
 and drawing a shape from numbers we do not hold is the one thing that contract forbids.
+
+### Four M-Map forms — added 2026-09-12
+
+*`platform.md` §6.8–§6.11. The brief was **shadcn's chart grammar in Terrain's palette**, and that
+is what these are: shadcn/Recharts conventions — dashed cartesian grid, recessive ticks, the 2px
+line, the ringed marker, plot margins — rendered entirely in tokens that already existed.
+**No hue was added and §2 was not re-opened.** The `--chart-1…5` categorical palette that ships with
+shadcn is exactly the thing §2 withdrew on 2026-09-05, at five times the scale.*
+
+**Early or late** · connected scatter. `viewBox` **1000 × 300, matching the render width**, so svg
+units are CSS pixels — at 520 the card scaled it ~2× and every 11px label came out at 21px.
+`preserveAspectRatio` is left at its default, unlike the Filings chart: that one stretches because an
+area has no circles in it, and this one has markers that would draw as ellipses. Series
+`--chart-series` at 2px; endpoints `--mark-1` at r=5 with a **2px `--surface` ring**; intermediate
+points r=3.5. **Three labels on twelve points** — first, last, and the axis title.
+
+**Rival momentum** · micro-column strips, one per holder, **all on one shared ceiling**. Columns
+cap at 26px; a zero year takes a **1px `--border` seat** rather than nothing, so the strip reads as a
+timeline with gaps and not as a shorter timeline. Tracked row takes `--mark-1`, the rest
+`--mark-2`. Each row carries a **word** — *rising · slowing · steady · stopped* — because
+`CLAUDE.md` requires every coloured element to carry a word or a shape, and here the word is the
+only thing separating a tracked row from a loud one.
+
+**Where the holders are from** · `shareBars` with a header parameter. **Three rows and the fourth
+folds.** §3.7's cap is enforced by `barStyle()` rather than by discipline: it holds three marks and
+everything past index 2 repeats `--mark-2`.
+
+**Who builds on whom** · directed N×N on **the map's own density ramp**, same
+`gap:1px` over a `--border` ground as `.matrix`, so the two grids on one page cannot drift apart.
+The **diagonal takes `--surface-sunken`, never `--density-0`** — *a holder cannot cite itself* and
+*nobody cites this holder* are different facts and must not share a mark.
+
+***One departure from `dataviz`, and it is deliberate.*** That skill lists **dashed gridlines** as an
+anti-pattern and wants them hairline solid. Every grid in these four is **dashed**, on three grounds:
+§3.5 settled `--chart-grid` as dashed before this pass, the shipped Filings chart draws dashed, and
+shadcn's own `CartesianGrid` — the grammar this pass was asked to follow — is dashed by default.
+**One inconsistent grid across five cards is worse than one departure from a general rule.**
 
 ### The record pane — added 2026-09-09
 

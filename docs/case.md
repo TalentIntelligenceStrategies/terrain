@@ -223,7 +223,7 @@ Everything the 2026-08-31 audit found, with our read on how much each matters to
 > a founder*. What gets built is decided in our own ledger, and where the two disagree the ledger
 > wins.
 
-> **This section rates fifty capabilities; our own ledger carries sixty.** A completeness audit
+> **This section rates fifty capabilities; our own ledger carries sixty-seven.** A completeness audit
 > on 2026-09-07 swept the 23 M-Map/T-Map sidebar captures and all 31 screens against
 > [platform.md](platform.md) §8, and found nine capabilities catalogued in neither document — among
 > them the whole **LOC** classification dimension, the **Invention / Model / Design** patent-type
@@ -747,7 +747,7 @@ the §4 capability that has to be there for it to exist.
 | Sort and filter on the list | — | Relevance, newest, oldest; live or expired; kind. **Both change what the founder is looking at, neither changes what the views count** — which is the whole reason the list can sit permanently beside the map without becoming a curation tool. Computed client-side over data already sent. |
 | The relevance score, top right of each row, labelled | 分數 | **Yours, printed rather than removed, and placed where you place it.** An ordering the engine computed, not a reading Terrain authored — which is why the only word beside it is **Score**, your own 分數 in English. *Strong match*, *best fit* and *most relevant* are readings, and they stay out. |
 | The star — *more like this one* — and the prompt it raises | AI排序 · 關聯性排序 | Star a patent and the list offers to order the rest around it. Optional, and most founders will not need it. **This is the one element that asks for a capability we could not confirm you have** — ranking a set against a supplied patent. If you do not, the list survives and the star comes out. |
-| Six skeletons becoming six views, in place | AI分類Pro | On creation and after a confirmed scope change only. Never on a return visit, or it becomes a loading screen the founder watches daily. |
+| Skeletons becoming the views, in place | AI分類Pro | On creation and after a confirmed scope change only. Never on a return visit, or it becomes a loading screen the founder watches daily. |
 | The `Market` / `Technology` toggle over the views | — | **Your own split, read off your own menu.** `Technology` is the map, because `Tech-Effx › Company` is the one destination reachable under `T-Map` and not under `M-Map`. `Market` is the other five and it lands. |
 | **The map** — technology across, holders down, a count per cell | `Tech-Effx › Company` · 同族合併 · **`Applicant/Assignee Merge`** | Counts are family-merged, so one invention filed in nine countries counts once. **And the assignee merge has to be on**, or one company is five rows of the grid. |
 | The map's caption — two or three plain sentences naming what the grid shows | generated | The view's *finding*, on the card. Not chart literacy homework. |
@@ -807,7 +807,7 @@ assumed.
 ### 6.5 · The honest status of the prototype
 
 The prototype is a real, clickable build of every surface — the conversation, the working surface
-with its list and its six views across the two pages, the record, and the points page — running on
+with its list and its ten views across the two pages, the record, and the points page — running on
 a deliberate contract:
 
 > **Chrome is real. Identities stay bars. Figures are illustrative.**

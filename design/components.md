@@ -1,20 +1,24 @@
 # TIS Terrain — component manifest
 
 > **What each component reads, what it needs from your engine, and which IPtech capability supplies
-> it.** Version **0.9.0**, 2026-09-11 — the three account destinations arrive (`platform.md` §7a.10)
-> and **they ask the engine for nothing at all.** Account settings, Plan & billing and Help are
-> Terrain-owned end to end: a plan, a payment method, an invoice list and a support message are ours
-> or a payment processor's, and not one field on any of them comes from a patent database. The four
-> new controls they needed — **the settings row, the text field, the switch and the inline confirm** —
-> read tokens and nothing else. **The only existing row that moves is the plan shape**, and it moves
-> by gaining a second *reader* rather than a second *definition*.
+> it.** Version **0.10.0**, 2026-09-12 — **four `M-Map` views gain a form**
+> (`platform.md` §6.8–§6.11), so this file gains four rows and `Chord + N×N` moves from §2 to §1
+> with its shape unchanged. **Three of the four ask the engine for something it may not expose per
+> result set**, and that is the point of recording them: a distinct-holder count per year, a
+> per-holder year series, and a citation matrix whose *scope* — within the set, or within the whole
+> corpus — changes every number in it.
 >
 > *A version of this file is not a changelog, so the rows below are rewritten clean rather than
 > struck. **A component contract is the one place a superseded direction must not be left
 > standing** — a reader implementing from it cannot tell which sentence is live. The trail is here
 > in the header and nowhere else.*
 >
-> *0.8.0, 2026-09-10 — Innovue's architecture was adopted (`platform.md` §1a) and the asks got
+> *0.9.0, 2026-09-11 — the three account destinations arrived (`platform.md` §7a.10) and **asked
+> the engine for nothing at all**: a plan, a payment method, an invoice list and a support message
+> are ours or a payment processor's, and the four controls they needed read tokens and nothing else.
+> The only existing row that moved was the plan shape, and it moved by gaining a second *reader*
+> rather than a second *definition*.
+> 0.8.0, 2026-09-10 — Innovue's architecture was adopted (`platform.md` §1a) and the asks got
 > smaller in three places and larger in none: the map's second axis stopped being generated,
 > `outcomes` left the shape entirely, the whole edit contract went with it, the set and the
 > drill-down merged into one list row, and the record gained the engine's relevance score.
@@ -31,9 +35,11 @@
 >
 > The source of truth for every component spec here is
 > [`docs/design-language.md`](../docs/design-language.md) §7; for every capability claim, the
-> **sixty**-row ledger at [`docs/platform.md`](../docs/platform.md) §8. Where this file and those
-> disagree, **they win.** *This said fifty-nine until 2026-09-10 — §8's own headline did too, and
-> its tables never did.*
+> **sixty-seven**-row ledger at [`docs/platform.md`](../docs/platform.md) §8. Where this file and
+> those disagree, **they win.** *This said fifty-nine until 2026-09-10 and sixty until 2026-09-12 —
+> §8's own headline said both, and its tables never did. The jump to sixty-seven is seven `M-Map`
+> groups that had no row there at all, found by walking the menu rather than the screenshots
+> ([`docs/mmap-audit.md`](../docs/mmap-audit.md)).*
 
 **The third column is why this file exists.** Tokens tell you what our interface looks like. The
 data shape tells you what we would be asking your engine to return — which is the half of
@@ -112,6 +118,10 @@ view controls**, so no row here asks the engine for anything a filter would need
 | **Usage bars** · `usBars` | `.hb.ub` — `--mark-off` on every bar, `--surface-sunken` track | Same `runs` array. Shares are computed from it; **no percentage is ever returned**, so the denominator cannot disagree with the bars | Derived. Nothing new |
 | **Columns** · `usColumns`, `usBins`, `usStep` | `--chart-series`, `--border` grid | `{ daily: [{ date, byType: { runType: int } }] }` — **one entry per day, run counts not points**, so the series and the cards cannot drift. Weekly and monthly are binned here, never requested. This is the one genuinely new shape on the page | **The per-run ledger behind the meter, and the page's only real dependency.** `platform.md` §10.34 asked in the form that matters: a balance alone cannot draw this. If only a running total is exposed, this component and the one below do not exist and the rest of the page still does |
 | **Runs list** · `usRecent` | `.ur` on 1px `--border` dividers, `figure-m`, `.seg` sort | `{ recent: [{ date, runType, subject, points: int }] }` — `date` and `subject` are **identities and render as bars**; a rebuild's `subject` is its change label. Sorted client-side by date or cost, so **no `sort` parameter is needed** | Same ledger. Also the join to `platform.md` §5 — every rebuild row is a version of a map, and `subject` is the version's label |
+| **Early or late** · `lifeCycle` | `--chart-series` `--border` `--mark-1` `--surface` (the 2px marker ring), `--text-1/2/3` | `{ perYear: [{ year: int, patents: int, holders: int }] }` — **`holders` is the only new number here.** `patents` is the series the Filings widget already draws, so it must be **the same array**, not a second one computed the same way. *A distinct-holder count per year is a `COUNT(DISTINCT)` and not a sum, which is the whole question §10 has to ask* | **`M-Map › Patent Count › Patent Count - Life Cycle`**, over a supplied result set. No Chinese name recorded. `platform.md` §6.8 |
+| **Rival momentum** · `momentum` | `--mark-1` (tracked) `--mark-2` `--border` / `--border-strong` (the zero seat), `--text-1/2/3` | `{ perHolder: [{ holderIdx: int, perYear: [int] }] }` — one array per holder, **same length and same year basis as the Filings series**, ordered as the Rivals array. *Rows must be comparable, so a holder with no filings in a year needs an explicit `0` rather than a missing entry* | **`M-Map › Company › Trend`** · 宏觀趨勢分析, at the per-holder grain over a supplied set. `platform.md` §6.9 |
+| **Where the holders are from** · `shareBars(rows, total, head)` | Same tokens as the jurisdiction table — `barStyle()` marks, `--surface-sunken` track | `{ origin: [[label: string, count: int]] }` summing to the scope figure. **Three rows maximum and the fourth folds into `Other, N countries`** — not a style rule: `barStyle()` has three marks and everything past index 2 repeats `--mark-2`, so a fourth row draws identically to the second | **`M-Map › Country › Distribution`**, which is the *holder's* country and **not** `Patent Country`. `platform.md` §6.10 |
+| **Who builds on whom** · `citeMatrix` | `--density-0…4` (the map's own ramp), `--surface-sunken` for the diagonal, `--text-inverse` on the darkest step | `{ pairs: [[fromHolderIdx, toHolderIdx, count]] }` — **directed**, and it is the shape §2 specced before this was built. Indices join to the Rivals array. *Pairs with a zero count are omitted, not sent as zeroes; the renderer fills the grid* | **`M-Map › Company › Cross Reference`** · 公司相互引證分析. **Scope is the open question** — citations *within the result set* or within the whole corpus are different numbers, and `case.md` §9 asks it. `platform.md` §6.11 |
 
 ### Three notes on **Confirm step**, **The map's axes** and **The map**
 
@@ -152,6 +162,11 @@ cell. So the interaction that looks most like a new request is the one that make
 
 ## 2 · Specced, not built
 
+*`Chord + N×N` left this section on 2026-09-12 — it is built as **Who builds on whom** in §1,
+and it went in with the shape specced here, unchanged. **That is the only reason this section is
+worth keeping**: a form specced before it is built either survives contact or gets quietly
+re-invented, and this one survived.*
+
 The remaining `Diverge` chart forms, plus one row that needs the data and no chart. **They are
 blocked by data, not by design** — the illustrative set does not carry what they need, and drawing a
 shape from numbers we do not hold is the one thing our skeleton contract forbids. Specs are in
@@ -170,7 +185,6 @@ someone re-derives.*
 | Form | Yours | Data shape it needs | What we hold |
 | --- | --- | --- | --- |
 | **Radar** | `Company › Research Ability` (`04`) | `{ holders: [{ id, rdCapability, patentAge, inventorCount, activeYears }] }` — four axes | One of the four. Capped at three series, one tracked at `--mark-1`, the rest `--mark-off`. **Three overlapping neutral rings is the open problem** — with no hue, a radar's series separate on stroke weight and dash rather than fill |
-| **Chord + N×N** | `Company › Cross Reference` (`08`) | `{ pairs: [[fromHolderIdx, toHolderIdx, count]] }` — a **directed** citation pair matrix | Nothing. Direction is the information; the ribbons are not, so the N×N reuses the density ramp and the diagonal takes `--surface-sunken` |
 | **Expandable tree** | `Company › Activity` (`09` `09b`) | `{ holders: [{ id, activeYears: [year] }] }` — a filing span per holder on one shared axis | Nothing |
 | **Donut + stacked** · *built to skeleton 2026-09-10* | `Company-Legal Status` (`21`) | `{ holders: [{ id, live: int, expired: int }] }` — legal status per holder **for this project** | Screen `21` is a different dataset; mixing them would be worse than a skeleton. Takes the state hues, not `--mark-*` — live and expired are ordinal. **This row has a destination** — *Live and expired*, fourth on `Market`, `platform.md` §6.7. It is drawn and it is still blocked: the shape is real, the numbers are skeleton, and §10.1 is what changes that. **It stays in this table**, because building a form against the skeleton contract is not the same as holding the data |
 | *(no chart)* — the Filings caption | `Patent Count - Life Cycle` (`20`) | `{ perYear: [{ year, patents: int, assignees: int }] }` — **the only row here that feeds a sentence rather than a chart.** Filings per year cannot distinguish a few holders filing hard from many holders arriving, and those are opposite situations for a founder | Nothing. We specced your phase-space trajectory and then withdrew it: your own index calls both charts near-unreadable at ~50 self-crossing labelled points, so Terrain computes the reading and states it in words |

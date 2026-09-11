@@ -224,8 +224,8 @@ moment ends there.*
 | 1 · First run | conversation | The composer, centred, and the question above it. Nothing else. |
 | 2 · Confirm | conversation | **Three beats, all of them turns.** The direction (§4a beat one), then three settings together (§4a beat two), then the reading — *here is how I read that* — with the structure behind a disclosure and the action in the turn after it (§4). Gates the search. |
 | 3 · What was found | working surface | The ranked patents fill the left column, and **every one of them already feeds the views** (§4b, §6a.2). Sort them, filter them, or star one to re-baseline the order. **Nothing is approved and nothing is waited for** — the right pane is already resolving. |
-| 4 · Build | working surface | Six skeletons in the right pane becoming six views, in place (§6a.5). The composer narrates. No stage screen. |
-| 5 · At rest | working surface | Masthead, the list, the six views across the `Market` / `Technology` toggle (§6.5), the standing note of what the map was built on (§6.1). |
+| 4 · Build | working surface | Skeletons in the right pane becoming the §6 views, in place (§6a.5). The composer narrates. No stage screen. |
+| 5 · At rest | working surface | Masthead, the list, the §6 views across the `Market` / `Technology` toggle (§6.5), the standing note of what the map was built on (§6.1). |
 | 6 · Return | working surface | Project switcher → project → straight to moment 5. No search step, no rebuild. |
 
 ***Moments 3, 4 and 5 stopped being separated by navigation and are now separated only by time.***
@@ -412,7 +412,7 @@ views with the axes they are laid out on, and the version history. IPtech calls 
 moment, and they stopped being confirmed at the gate — the reading is (§4), and the axes moved to
 the map. **Amended again 2026-09-10: there are no two lists.** The map is one fixed cut, its columns
 are generated and never vetoed (§6.1), and what the object holds is the reading, the corpus, the
-selection, the six views and the version history.*
+selection, the §6 views and the version history.*
 
 This is what the project switcher lists. It is not a list of conversations; the conversation is how
 the object got shaped, not the object itself. *It was the sidebar's list until 2026-09-10 and it is
@@ -1311,18 +1311,37 @@ per-patent call, which changes the economics and possibly the answer.
 
 ## 6 · The views over the corpus
 
-**Six views, stacked in the right pane of the working surface, in one order:**
+**Ten views, stacked in the right pane of the working surface, in one order:**
 
-| | | |
-| --- | --- | --- |
-| 1 | The map | §6.1 |
-| 2 | Filings over time | §6.3 |
-| 3 | Rivals | §6.2 |
-| 4 | Where it is filed | §6.6 |
-| 5 | Live and expired | §6.7 |
-| 6 | Lineage | §6.4 |
+| | | | |
+| --- | --- | --- | --- |
+| 1 | The map | §6.1 | `Technology` |
+| 2 | Filings over time | §6.3 | `Market` |
+| 3 | Early or late | **§6.8** | `Market` |
+| 4 | Rivals | §6.2 | `Market` |
+| 5 | Rival momentum | **§6.9** | `Market` |
+| 6 | Where the holders are from | **§6.10** | `Market` |
+| 7 | Where it is filed | §6.6 | `Market` |
+| 8 | Live and expired | §6.7 | `Market` |
+| 9 | Who builds on whom | **§6.11** | `Market` |
+| 10 | Lineage | §6.4 | `Market` |
 
-**Numbers are citation keys, not positions**, which is why §6.3 sits second and §6.4 last. §6a is
+***It was six until 2026-09-12, and the four that arrived came from one place.***
+[mmap-audit.md](mmap-audit.md) walked all sixty of IPtech's `M-Map` views and rated eighteen
+**Adopt**; six of those were already on screen and a seventh — `Legal Status › Company-Legal Status`
+— turned out to be **already built** as the per-holder half of §6.7. These four are the remainder.
+*A seventh was planned and is not here: §6.8's sibling on the classification axis. §8.2 records that
+IPC is **a confidence signal only and deliberately never a label**, and two competing technology
+axes on one page is the reason. The ask still asks for it — §8 is explicit that the ask is not
+gated by our scope — and the disagreement is [mmap-audit.md](mmap-audit.md) §6.*
+
+**The order groups the column rather than ranking it:** *when* (2, 3), *who* (4, 5), *where*
+(6, 7), *what is still enforceable* (8), *what it grew out of* (9, 10). Lineage stays last for the
+reason it always did.
+
+**Numbers are citation keys, not positions**, which is why §6.3 sits second and §6.4 last.
+*The four added on 2026-09-12 take §6.8 to §6.11 in the order they were built, which is not the
+order they appear in — same rule, applied to new rows rather than retrofitted to old ones.* §6a is
 the surface; this section is what is on it.
 
 *This section was "The dashboard" and described **two pages behind one toggle**, `Market` and
@@ -1782,7 +1801,7 @@ and is recorded there as a third entry rather than by editing the retraction awa
 | **`Market`** *(lands)* | Filings over time · Rivals · Where it is filed · Live and expired · Lineage | `Patent Count` · `Company` · `Country` · `Legal Status` — every one reachable under **both** maps |
 | **`Technology`** | The map | `T-Map › Tech-Effx › Company` — **the only destination reachable under `T-Map` and not under `M-Map`** |
 
-**This is the table §8 already carried, applied to the six views rather than to IPtech's groups.**
+**This is the table §8 already carried, applied to Terrain's own views rather than to IPtech's groups.**
 §8 records the finding that settles it: `T-Map` is `M-Map` plus a classification filter plus the
 eight `Tech-Effx` entries, and 60 of the 68 destinations sit under both. So there is exactly one
 view here that is *technology* in IPtech's own structure, and it is the map.
@@ -1893,6 +1912,96 @@ whose numbers are not yet real, and §10.1 is what unblocks it.
 
 ---
 
+### 6.8 · Early or late — added 2026-09-12
+
+*`M-Map › Patent Count › Patent Count - Life Cycle`. No Chinese name recorded.*
+
+A connected scatter. **One point per year: how many distinct holders filed, against how many
+patents they filed**, joined in time order. Both axes anchored at zero. Three marks are labelled —
+the first point, the last point, and nothing else — and the caption states the phase in words.
+
+**The founder question is *am I early or late*, and nothing else on the page answers it.** Filings
+over time (§6.3) says the space is growing; it cannot say whether the growth is **new entrants
+arriving** or **the same holders filing more**. Those are opposite facts for a founder. The first
+means the door is open; the second means it is closing.
+
+***This reverses §8.1, and the reversal is narrow enough to state exactly.*** That row decided the
+finding goes in §6.3's caption as a sentence and **not** as a chart, on the ground that IPtech
+renders a phase-space trajectory of ~50 labelled self-crossing points which its own screen index
+calls near-unreadable. **The objection was to fifty labels on a crossing path, not to the form.**
+Twelve points, three labels, and no crossings — because in this set both series rise together — is a
+different object. *And the sentence was never the cost: it is still there, as this widget's caption.
+What §8.1 actually bought was not building a chart before we knew what it would look like.*
+
+**The reading the caption makes, and its limit.** Both rising → *still forming*. Patents rising while
+holders do not → *settling around the holders already in it*. Neither → *flat*. The thresholds are
+deliberately loose, because this is a shape read and a caption that flips on a rounding error is
+worse than one that is slightly coarse. **It never says "mature" or "declining"** — those are
+verdicts about a market, and §7a.3's line is that Terrain renders the record and not an opinion
+about it.
+
+### 6.9 · Rival momentum — added 2026-09-12
+
+*`M-Map › Company › Trend` at the per-holder grain · 宏觀趨勢分析.*
+
+**One strip per rival, twelve years, every strip on the same ceiling.** Micro-columns, not lines,
+and a word beside each — *rising* · *slowing* · *steady* · *stopped* — derived from the first half
+against the second.
+
+**Why columns and not lines, which is the whole design.** The values in a per-holder cut are 0, 1
+and 2. Five lines over twelve years at that range cross constantly and encode nothing; `dataviz`
+prescribes small multiples past ~4 converging series for exactly this. **A shared ceiling is the
+other half**: five strips each normalised to their own maximum would draw a holder with two filings
+at the same height as one with twelve, and the question this card exists to answer is *which of
+these is still filing*.
+
+**What it adds over Rivals (§6.2).** Rivals ranks by count, and §8.1 already records the defect in
+that — ranking by count puts dead portfolios on top. **A holder who stopped filing six years ago is
+a different problem from one still filing now**: the first is a portfolio that will start expiring,
+the second is a company still moving. The count is identical; the fact is not.
+
+*The word is not a caption on the strip — it is the second channel.* `CLAUDE.md` requires every
+coloured element to carry a word or a shape, and the tracked row is distinguished by value alone
+without it.
+
+### 6.10 · Where the holders are from — added 2026-09-12
+
+*`M-Map › Country › Distribution`. No Chinese name recorded.*
+
+Ranked share bars: **which country each holder is based in**. The same table §6.6 uses, with one
+column header changed.
+
+**It is a different question from §6.6 and the two do not match in this set, which is the point of
+carrying both.** Where a company is *based* is not where its patent *bites*. A rival abroad who has
+never filed in the founder's market cannot stop them there; a rival based anywhere who **has** filed
+there can. IPtech separates these into two groups of seven views for the same reason, and
+[mmap-audit.md](mmap-audit.md) §3.3 notes the platform never explains the distinction on screen.
+
+**Three rows, and the fourth folds.** `design-language.md` §3.7 allows three encoded values and a
+fourth folds into *Other*. This is not a stylistic cap here — `barStyle()` has three marks and
+everything past index 2 falls through to `--mark-2`, so a six-row version drew four rows
+identically. *Found by rendering it, not by reading it.*
+
+### 6.11 · Who builds on whom — added 2026-09-12
+
+*`M-Map › Company › Cross Reference` · 公司相互引證分析.*
+
+A **directed N×N**. Rows cite; columns are cited. The diagonal is suppressed — not drawn as a zero,
+because *a holder cannot cite itself* and *nobody cites this holder* are different facts and must
+not share a mark. Cells reuse the map's density ramp, so the two grids on one page are built the
+same way.
+
+**The ring does not survive.** IPtech draws a chord ring **and** the matrix. The ring encodes nothing
+the matrix does not — [mmap-audit.md](mmap-audit.md) §4 finding 1 — and `design/components.md` §2
+had already specced this widget as *"a directed hairline table; direction is the information, the
+ribbons are not"* before anything was built. **The data shape is that spec's, honoured rather than
+re-invented.**
+
+**What a filled column means to a founder.** A holder the others had to build on is the party they
+would most likely be licensing from or designing around. *In the illustrative set that holder is also
+the one §6.9 shows has stopped filing* — which is a real pairing rather than a coincidence of the
+data, and it is the kind of finding neither card produces alone.
+
 ## 6a · The working surface — added 2026-09-10
 
 **One screen, three regions and one overlay.** Everything after the gate happens here.
@@ -1901,7 +2010,7 @@ whose numbers are not yet real, and §10.1 is what unblocks it.
 | --- | --- | --- |
 | The masthead | full width, ~48px tall | §6a.1 |
 | The left column | **420px** | the ranked patents — §6a.2 |
-| The right pane | ~1020px | §6's six views across the `Market` / `Technology` toggle — §6.5 |
+| The right pane | ~1020px | §6's views across the `Market` / `Technology` toggle — §6.5 |
 | *Overlay, right* | covers the pane to a ~200px peek | the patent record — §6a.4 |
 
 *The left column was **340px** until 2026-09-10 and the chat panel was a second overlay over it.
@@ -2206,7 +2315,7 @@ readings Terrain would be authoring.
 
 **The staged build screen is gone. The narration is not.** Moment 4 was a surface of its own: a
 stage list, a progress readout, and a founder watching it. The stages now resolve **in place, in
-the right pane** — each of the six views is a skeleton at the moment the gate is approved and
+the right pane** — each of §6's views is a skeleton at the moment the gate is approved and
 becomes itself as its data arrives.
 
 **Three things this keeps from the screen it replaces**, and they are the parts that carried the
@@ -2379,7 +2488,7 @@ is the test, which never depended on the page:
 
 **And with one surface the honest reading is stricter than it was**: almost nothing is exempt,
 because almost nowhere is left to put a thing. §6.1 still binds everything on it — **nothing may
-state or imply *why* a cell is empty** — and §6's six views are the whole of what a founder is
+state or imply *why* a cell is empty** — and §6's views are the whole of what a founder is
 given.
 
 **Where a widget's full form now lives is genuinely open**, and it is carried at §11 rather than
@@ -3280,7 +3389,7 @@ load-bearing left the sheet; four IPtech **screens** did. The two settings that 
 on both pages — 同族合併 and 名稱統一 — are a closing note rather than a seventh group.
 
 **This section is still the complete record**, and it is now the *only* complete one. §8.1 and §8.2
-carry all 60 rows and every verdict. If the sheet and this ledger disagree, this ledger is right.
+carry all 67 rows and every verdict. If the sheet and this ledger disagree, this ledger is right.
 
 ---
 
@@ -3299,25 +3408,32 @@ in the [screenshot index](../visual-reference/iptech-screenshots-identified/READ
 | Matrix cell → hover popover | — | `31` | What is actually in this cell? | **Diverge** | The drill-down list, §7 | **The sharpest divergence in the ledger.** IPtech's cell has no drill-down: the count is inert and all five links pivot to another chart of the same cell. *Should I care about this?* is a question a pivot menu structurally cannot answer. *And it stays true of the matrix: §8.7 records that Innovue's semantic surface does have a node-to-patents route, so what the engine lacks is the route from a **cell**, not the capability.* |
 | The three zones | 地雷區 · 新興區 · 處女地帶 | blog — *and absent from* `24` | Is this crowded, emerging, or open? | **Omit · cut** · *was Match, held against its own evidence; cut 2026-09-10* | Nowhere — §6.1 dropped the named zones | **Cut for a product reason, not because the evidence finally resolved.** ~~§10.13~~ was never answered and is retired moot: Terrain no longer renders zones, so whether IPtech has them decides nothing. *§8.5 keeps this row as its worked example of holding a verdict against its own evidence — and it is a better example in the past tense than it was live, because it shows the discipline running to completion rather than merely being asserted.* |
 | `M-Map › Company › Count` | 競合分析 | `03` `26` `27` | Who else is here? | **Diverge** | Rivals, §6.2 | Merged by default rather than behind a toggle; live-or-expired on the row; no categorical hues. `26` shows one large holder split across two rows, ranked against itself. |
-| `Company › Trend` | 宏觀趨勢分析 | `05` | Is this space heating up or did it peak? | **Diverge** | Filings over time, §6.3 | Terrain shades the publication-lag window and excludes it from the trend. IPtech draws the raw tail, which reads as a collapse in filings that has not happened. |
+| `Company › Trend` | 宏觀趨勢分析 | `05` | Is this space heating up or did it peak? | **Diverge** | Filings over time, §6.3 — **and §6.9 for the per-holder cut, 2026-09-12** | Terrain shades the publication-lag window and excludes it from the trend. IPtech draws the raw tail, which reads as a collapse in filings that has not happened. |
 | `Company › Share` | — | `07` `29` | How concentrated is this space? | **Omit · later** · *was Diverge; re-verdicted 2026-09-10* | Homeless — §11 | A five-slice pie in five arbitrary hues — and the same data as a ranked share bar printed directly beneath it. Terrain promotes the table IPtech already has. **And the pie's denominator is the selected five, not the corpus:** `29` reads ~26% for a holder with well under a tenth of the corpus. |
 | `Company › Ranking` | — | `11` `11b` | Who is rising? | **Omit · later** · *was Diverge; re-verdicted 2026-09-10* | Homeless — §11 | A butterfly chart split on a base year becomes a ranked list with a delta pill. Note §2.11: ranking by count puts dead portfolios on top — a holder at 100% overdue ranked in the top five. |
 | `Company › Activity` | — | `09` `09b` | Who is still active? | **Omit · later** · *was Diverge; re-verdicted 2026-09-10* | Homeless — §11 | An expandable folder tree becomes a span bar per holder on one shared year axis. |
-| `Company › Cross Reference` | 公司相互引證分析 | `08` | Who builds on whom? | **Omit · later** · *was Diverge; re-verdicted 2026-09-10* | Homeless — §11 | A chord diagram plus an N×N citation matrix becomes a directed hairline table. Direction is the information; the ribbons are not. |
+| `Company › Cross Reference` | 公司相互引證分析 | `08` | Who builds on whom? | **Diverge** · *was Diverge, then `Omit · later` 2026-09-10 when its destination was abolished; **back to Diverge 2026-09-12**, built as §6.11* | **§6.11** | A chord diagram plus an N×N citation matrix becomes a directed hairline table. Direction is the information; the ribbons are not. **This is the clearest case of the category §8.5 names**: it moved to `Omit · later` because a surface of ours was removed, not because we learned anything about IPtech — so when a surface came back it moved straight back, and nothing about the *reasoning* was ever re-opened. |
 | `Company › Research Ability` | — | `04` | Who is investing hardest? | **Omit · later** · *was Diverge; re-verdicted 2026-09-10* | Homeless — §11 | A radar over four incommensurable axes becomes ranked bars, one metric per column. A radar's enclosed area has no meaning when the axes have different units. |
 | `M-Map › Legal Status › Company-Legal Status` | 法律狀態 | `21` | How much of this is still live? | **Diverge** | **Live and expired, §6.7** · *promoted 2026-09-10, renamed the same day*; one word per drill-down row, §7 | The strongest single finding of the platform audit (§2.11). *Terrain spent one word per row on it and nothing else until 2026-09-10, when the `Market` page gave it somewhere to be — a founder in a crowded space needs to know how much of the crowd is still enforceable, and expired filings are prior art rather than obstacles.* Still blocked on §10.1. |
-| `Patent Count › Patent Count - Life Cycle` | — | `20` | Is this space early or late? | **Diverge** | **The Filings caption, §6.3** — a sentence, not a chart | Close to a first-order founder question, and the marketing audit never surfaced it. **Decided 2026-09-04, and the divergence is the form:** IPtech renders a phase-space trajectory of ~50 labelled self-crossing points and its own index calls both charts near-unreadable. Terrain states the finding in words on a caption it already writes. A quadrant-read scatter is the most analyst-shaped form in the set, for a user who does not speak patent — and §6.4 reduced Lineage and Cross Reference on the same reasoning. *It still needs the same input, §10.22; a sentence just degrades more gracefully than a chart if the answer is no.* |
+| `Patent Count › Patent Count - Life Cycle` | — | `20` | Is this space early or late? | **Diverge** | **§6.8 — a chart after all** · *was "the Filings caption, a sentence not a chart"; reversed 2026-09-12* | Close to a first-order founder question, and the marketing audit never surfaced it. **Decided 2026-09-04, and the divergence is the form:** IPtech renders a phase-space trajectory of ~50 labelled self-crossing points and its own index calls both charts near-unreadable. Terrain states the finding in words on a caption it already writes. A quadrant-read scatter is the most analyst-shaped form in the set, for a user who does not speak patent — and §6.4 reduced Lineage and Cross Reference on the same reasoning. ***Reversed 2026-09-12, and the reversal is narrower than it looks.*** The objection above is to **fifty labelled self-crossing points**, not to the form — and §6.8 is twelve points, three labels, no crossings. *What this row actually bought was not building the chart before we knew what it would look like, which is different from deciding it could never be one.* **The sentence was never the cost and is not lost**: it is §6.8's caption. The `Diverge` verdict is untouched, because the divergence was always the form and it still is. *It still needs the same input, §10.22; a sentence just degrades more gracefully than a chart if the answer is no.* |
 | `Project` | 專案 | `19` | Where did my last search go? | **Diverge** | The project rail, §3 | An IPtech project is an analyst-curated folder of thousands. A Terrain project is one idea's persisted result. *The difference is not how many patents it holds — it is who assembles the set.* |
 | Toolbar → `Switch To Ai Insight` | 技術脈絡分析 | `28` | How is this space moving, and where is it heading? | **Diverge** | ~~§7a.4's landscape summary~~ — **struck 2026-09-10 with the chat panel**; homeless, §11 | **This is 技術脈絡分析** — it uses the term for its own output (§2.16). A three-era narrative plus five concepts with representative patents, bilingual headings, cached. §6.4 keeps the most-cited table for v1 and records this as the candidate. Identified by inference, not confirmed — §10.14. |
 | `Company › Inventor Activity` | — | `10` | — | **Omit · cut** | Nothing | Inventor-level analysis is an analyst's frame. A founder competes with companies, not with named engineers. |
 | `Company – Project (M)-IPC`, `Company – Company (M)-IPC` | IPC | `12` `13` | — | **Omit · cut** | Nothing *as a chart* | A radar cross-tab of company against classification to level 4. IPC survives in Terrain in one narrow role only — a confidence signal, §8.2. |
 | `Company – Project (M)-UPC` | UPC | `14` | — | **Omit · cut** | Nothing | A second classification system we never catalogued. Same reasoning; more of it. |
-| `M-Map` multi-chart overview | — | `02` | — | **Omit · cut** | Nothing | Four charts at once with a view-density toggle. Terrain's pane is fixed at six views chosen for the founder; a picker is 68 decisions they cannot make. *Read "the dashboard is fixed at four widgets" until 2026-09-10 — the count moved and the argument did not.* *Menu path unconfirmed — §3 of the index.* |
+| `M-Map` multi-chart overview | — | `02` | — | **Omit · cut** | Nothing | Four charts at once with a view-density toggle. Terrain's pane is a fixed set chosen for the founder; a picker is 68 decisions they cannot make. *Read "the dashboard is fixed at four widgets" until 2026-09-10 and "six views" until 2026-09-12 — **the count has moved three times and the argument has not once.** What the row objects to is the founder being handed the choice, which is independent of how many we make for them.* *Menu path unconfirmed — §3 of the index.* |
 | `Report` | 專利報告 | `30` | — | **Omit · cut** | Nothing | **Confirms its own cut.** Not a document viewer — a configuration screen: twelve settings plus four entity pickers. Generating a report means making a dozen decisions first. Also [brief.md](brief.md) §1: software, not a report. |
 | `Company › Citation` | 公司相互引證分析 | `06` | Is this holder self-referential or building on others? | **Omit · later** | Homeless — §11 | Tech independence and citing rate are real signals. Not v1. |
 | `Patent Count › Trend` | — | m-map menu | Is this whole field growing? | **Diverge** · *+ 2026-09-07* | Filings over time, §6.3 | **A Tier-1 destination that had no row.** §6.3 specs the widget as *filings per year within scope, optionally split by top companies* — corpus-level. The ledger only ever carried `Company › Trend`, which is the per-company one, so the row backing §6.3's own spec was missing. |
 | `Country › Distribution` | — | m-map menu | Where is this filed, and is the US contested? | **Diverge** · *+ 2026-09-07* | **Where it is filed, §6.6** · *designed 2026-09-10* | **The largest single omission found by the 2026-09-07 audit.** [case.md](case.md) §4.H tiers it founder-facing; it appeared nowhere in §8. For a US founder deciding whether a space is crowded *in their market*, this is closer to a first question than most of §6. Distinct from the database-scale row, which is total reach rather than distribution within a result set. §10.5 now has a destination attached, not only a number. |
 | `Tech-Effx › Country`, `Tech-Effx › Country Trend` | — | t-map menu | Which countries hold which parts of the space? | **Omit · later** · *+ 2026-09-07* | — | The matrix with country on an axis. Tiered 3 in [case.md](case.md) §4.H as "wrong axis", and that holds for the *hero*; recorded because the audit's inclusive pass surfaced them and a country cut of the map is not obviously analyst-only for a US buyer. |
+| `Country › Distribution`, `Trend`, `Share` | — | m-map menu | Where are the holders from? | **Diverge** · *+ 2026-09-12* | **§6.10** for Distribution | **The `Country` group had no row of its own** — only `Country › Distribution` under the *patent's* jurisdiction, which is `Patent Country` and a different question. Holder origin and filing jurisdiction do not match in our own illustrative set, which is why both are on the page. |
+| `Patent Country` — 7 views | — | m-map menu | Where is it filed? | **Diverge** · *+ 2026-09-12* | §6.6 | **Catalogued at last.** §6.6 has been built since 2026-09-10 against a row that named `Country › Distribution`, which is the *other* group. The widget was right and the ledger pointed at the wrong menu. |
+| `Inventor` — 4 views, incl. `Inventor Company` | — | m-map menu | Who moved where, and when? | **Omit · later** · *+ 2026-09-12* | Nothing in v1 | **The group had no row**, and `Company › Inventor Activity` below is a different view under a different group. `Inventor Company` is an **affiliation history** — an inventor's employers by year — and [mmap-audit.md](mmap-audit.md) §6 disagrees with the cut below on exactly this: it is a talent signal, and TIS is a talent-intelligence company. Asked for; not built. |
+| `Examiner` — 3 views | — | m-map menu | *(none for this buyer)* | **Omit · cut** · *+ 2026-09-12* | Nothing | Prosecution strategy — for an attorney drafting to a known examiner's habits. A founder has no move that depends on it. **Recorded rather than left absent**: §8's own 2026-09-07 correction is about a roll-up silently dropping groups, and a group with no row reads as an oversight. |
+| `IPC` — 4 views (the standalone group) | — | m-map menu | — | **Omit · cut** | Nothing *as a chart* | Distinct from the `Company – (M)-IPC` cross-tabs already below. Cut for the reason §8.2 gives: **IPC is a confidence signal and deliberately never a label.** Two technology axes on one page — one generated, one standard — and the founder cannot tell which is authoritative. *A widget on this axis was planned for 2026-09-12 and dropped on this row; §6's roster note records it.* |
+| `CPC` — 4 views | — | m-map menu | — | **Omit · cut** · *+ 2026-09-12* | Nothing *as a chart* | Same reasoning, finer scheme. §8.2 carries CPC as a *capability*; it had no row as a **destination**. |
+| `UPC` — 4 views · `LOC` — 4 views | — | m-map menu | — | **Omit · cut** · *+ 2026-09-12* | Nothing | **Empty on every capture.** The USPTO retired USPC for utility patents in 2015; Locarno classifies industrial designs. LOC pairs with §8.2's design-patent row, and the live question there is whether the corpus carries designs at all — not whether we draw this chart. |
 
 ---
 
@@ -3481,7 +3597,13 @@ each other — the balance only ever moves by the per-run cost.*
 
 ### 8.5 · The count
 
-**60 rows across §8.1 and §8.2**, and all 31 identified screens are accounted for. *Was 50 until
+**67 rows across §8.1 and §8.2**, and all 31 identified screens are accounted for.
+***Was 60 until 2026-09-12,*** when [mmap-audit.md](mmap-audit.md)'s walk of all sixty `M-Map`
+views found **seven groups with no row here at all** — `Country`, `Patent Country`, `Inventor`,
+`Examiner`, `IPC`, `CPC`, and `UPC`/`LOC` — and they were added rather than rolled up. *§8.1 carried
+15 rows covering 16 of those 60 views before that pass. The gap was not in the tables' arithmetic,
+which has always balanced; it was that nobody had ever checked the ledger against the **menu**
+rather than against the screenshots.* *Was 50 until
 the 2026-09-07 audit added nine, and this line read **59** from then until 2026-09-10 — one row was
 added in the same pass and never counted. The tables always said 60; the headline did not, and so
 did `case.md` §4, `design/components.md` and §8.7 below. **Recounted from the columns**, which
@@ -3497,12 +3619,26 @@ figure.
 | Verdict | Rows | Note |
 | --- | --- | --- |
 | **Match** | 11 | One hidden, one as a single field, one unverified for our market. *Was 8; AI relevance ranking joined 2026-09-07, family-grouping-has-three-modes joined the same day as a qualified Match; points metering joined 2026-09-08 from `Omit · later`* — **and the derived unit price list joined in the same pass and was never counted, which is why this read 11 until 2026-09-09 and 12 after it.** *Back to 11 on 2026-09-10, by a different route: the three-zones row was cut.* Found by recounting the column rather than by reading the note, which is the only way this kind of error surfaces. |
-| **Diverge** | 15 | ***Was 20 until 2026-09-10.*** Five left in one pass — Share, Ranking, Activity, Cross Reference, Research Ability — when ~~§7a.2~~ abolished the surface every one of them routed to. **They are not cut and they are not built; they are homeless**, and §11 carries the question of where a widget's full form lives. *The seven that "needed a chart form Terrain had never specified" are now two: Legal Status, built as §6.7 on 2026-09-10, and Life Cycle, answered without a chart in §6.3's caption. The other five are the five that left.* |
+| **Diverge** | 18 | ***Was 20 until 2026-09-10.*** Five left in one pass — Share, Ranking, Activity, Cross Reference, Research Ability — when ~~§7a.2~~ abolished the surface every one of them routed to. **They are not cut and they are not built; they are homeless**, and §11 carries the question of where a widget's full form lives. *The seven that "needed a chart form Terrain had never specified" are now two: Legal Status, built as §6.7 on 2026-09-10, and Life Cycle, answered without a chart in §6.3's caption. The other five are the five that left.* |
 | **Omit · later** | 21 | Real, wanted, not v1, not deferred. *Was 13, then 12 when AI relevance ranking left on 2026-09-07; five joined the same day from the audit — Tech-Effx by country, patent type, LOC, the per-patent facts, points metering. **Points metering left again on 2026-09-08**, the only row to enter and leave this verdict, and the reversal is argued under §8.2's table.* **Five more joined 2026-09-10 from `Diverge`** — the homeless Rivals-page rows above. |
 | **Omit · deferred** | 3 | §9 — the fifth §9 entry, IPC drift, is a proposal of ours rather than an IPtech surface, so it has no row. *Was 4; the patent detail page left on 2026-09-09 when §9 entry 1 was un-deferred, and went to `Omit · cut` rather than to `Match` — the pane was built, none of that row's four elements went into it* |
-| **Omit · cut** | 10 | Plus the six items in §8.4 that were never destinations: 技術魚骨-as-diagram, 泡泡圖, figure rotate/mirror, EN→ZH translation, 匯出紀錄, full boolean search. *Was 8; the patent detail page's four elements arrived 2026-09-09 from `Omit · deferred`, and the three zones arrived 2026-09-10 from `Match`* |
+| **Omit · cut** | 14 | Plus the six items in §8.4 that were never destinations: 技術魚骨-as-diagram, 泡泡圖, figure rotate/mirror, EN→ZH translation, 匯出紀錄, full boolean search. *Was 8; the patent detail page's four elements arrived 2026-09-09 from `Omit · deferred`, and the three zones arrived 2026-09-10 from `Match`* |
 
-**11 + 15 + 21 + 3 + 10 = 60.**
+**11 + 18 + 21 + 3 + 14 = 67.**
+
+***Recounted from the columns on 2026-09-12, not from these notes.*** The three that moved:
+**Diverge** gained `Country › Distribution` and `Patent Country` as newly-catalogued destinations
+and took `Company › Cross Reference` back from `Omit · later` when §6.11 gave it a home — so
+`Omit · later` lost one and gained `Inventor`, and nets level at 21. **Omit · cut** gained the four
+groups cut with reasons: `Examiner`, the standalone `IPC`, `CPC`, and `UPC`/`LOC` as one row.
+**Match did not move**, which is the expected shape: these are destinations we had never catalogued,
+not capabilities we had misjudged.
+
+***One row changed verdict on 2026-09-12 and it is the counterpart of the five below.***
+`Company › Cross Reference` went back to `Diverge` because §6.11 built it — a surface of ours
+**returned**. *That is the same category read forwards: the verdict tracked our destinations in both
+directions, and in neither did anything about IPtech change.* §11's destination question is now
+answered for one of the five; four remain homeless.
 
 ***Five rows changed verdict in one pass and none of them changed because we learned anything about
 IPtech.*** They changed because a surface of ours was removed. That is worth naming as a category:
@@ -3518,8 +3654,12 @@ what we build and the section recording what we take had disagreed since 2026-09
 noticed, because no row existed for the destination §6.3 actually needs. That is the failure mode
 §8.5 exists to catch, and it did not.
 
-**Twelve of the fifteen `Diverge` rows are designed and built** in
-`design/previews/terrain-prototype.html`. *This read "twelve of the twenty" until 2026-09-10 — the
+**Sixteen of the eighteen `Diverge` rows are designed and built** in
+`design/previews/terrain-prototype.html`. *Was twelve of fifteen until 2026-09-12: `Country ›
+Distribution` and `Patent Country` were already built as §6.6 and §6.10 before they had rows at all,
+and `Cross Reference` arrived as §6.11 in the same pass. **Two of those three were built against a
+ledger that did not list them**, which is the same defect §8.5 caught in §6.3's trend row and is
+worth naming twice.* *This read "twelve of the twenty" until 2026-09-10 — the
 numerator did not move, because none of the five rows that left was one of the twelve.* Ten came
 from the first pass; `Country › Distribution` was designed 2026-09-10 as §6.6 and Legal Status the
 same day as §6.7. *Share and Ranking were built in the 2026-09-04 visual-language pass and are no
@@ -3640,7 +3780,7 @@ surface has no place in that order, and a feature with nine captures of its own 
 table. Same seven columns, same five verdicts, and the `Capture` column points at flow numbers in
 [`visual-reference/iptech-semantic-search/README.md`](../visual-reference/iptech-semantic-search/README.md).
 
-**It is not counted in §8.5.** The 60 rows and 31 screens there cover §8.1 and §8.2 only, and §8.5
+**It is not counted in §8.5.** The 67 rows and 31 screens there cover §8.1 and §8.2 only, and §8.5
 now says so. Rolling this in would make a completeness claim about a surface we have seen nine screens
 of.
 
@@ -4361,7 +4501,7 @@ the thing you typed into to make it.
   **Do not answer this by inventing an expand-in-place mechanism in the prototype.** §6.5
   already refused that move, and its reason is `CLAUDE.md`'s: it would make a preview the only
   record of a surface. *The honest options are a destination that is not a page, a pane state, or
-  deciding that six views is the product and the nine rows stay `Omit · later` permanently.
+  deciding that the current set is the product and the remaining rows stay `Omit · later` permanently.
   Nothing here picks one.*
 - **Filings and Lineage still have no click-through.** ~~§7a.2~~ logged this as a bug in 2026-09-08
   and half of it is fixed: the map cell and a rival row both filter the list (§6a.3). The other
