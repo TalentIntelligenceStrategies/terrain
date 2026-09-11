@@ -1650,6 +1650,21 @@ card head beside the info button — has nothing to expand to. And the toggle's 
 project metadata) was a real finding about `.page-head`, and there is no `.page-head` with a
 trailing control in it any more.
 
+***The switcher is legible now · 2026-09-11, and it was reported as broken.*** Ten rows of grey
+bars over a search box that is deliberately dead — so the control whose whole job is *which project
+am I in* answered with a placeholder, and the menu read as **content that had failed to load.** The
+open project prints its name (the working screen's heading has printed the same string all along)
+and the versions are numbered `3 · 2 · 1`. The other six projects and the version labels stay bars.
+§8 carries the argument; the short version is that **printing the one project already on screen is
+not the same act as naming a roster.**
+
+*Two mechanical notes, because both were silent failures.* The masthead's own label copied a width
+class from the row's **first** `.sk` — which is the sub-line now, not the name — so it read the
+wrong field; it looks up the name bar by class instead. And `syncProjName` had exactly one caller,
+the row-click handler, so the masthead kept whatever the markup shipped **until the founder switched
+project**. Invisible while both were a `w-md` bar, and not invisible once the open project has a
+name. *It is called at init.*
+
 **Version history — nested under the open project in the project switcher.** *In the map's
 `.page-head` as a popover until 2026-09-10, then in the sidebar for one day, and in the masthead's
 switcher since.* Rows are skeleton version labels, newest tagged `Current`, each with a `Revert`.
@@ -1849,6 +1864,20 @@ one-row list — the founder asked for a patent, not for a list of one.
 gained a sort and filter bar, and 340 stopped holding them.*
 It is where the founder sees what the search caught, and it stays there while the views are drawn
 beside it.
+
+#### The row's year holds a column — added 2026-09-11
+
+The year sits at the **trailing edge**, against the chevron, not after the holder. The holder's bar
+width varies per patent, so twenty years landed at twenty different x positions — and **a column of
+figures that does not align cannot be scanned**, which is the entire reason the year is on the row:
+it is what lets a founder see the list reordered. `.fig` is Inconsolata and tabular, so four digits
+occupy one width and the column is true to the pixel.
+
+***The fix is a pair of rules and the first alone made it worse.*** An auto margin on the year left
+**two** auto margins on the line — the chevron already carried one — and flexbox splits free space
+evenly between them, so the year landed halfway into the gap and still moved with the bar beside it,
+at exactly half the amplitude. *Measured 57px on each side of a 114px gap, which is the tell.* One
+auto, on the leading edge of the trailing **group**, and the year and the chevron travel together.
 
 #### Its head — `Your results`, and one line
 
@@ -2704,7 +2733,7 @@ so every preview shows a populated screen without live data behind it.
 
 | Real English | Grey bar | Illustrative |
 |---|---|---|
-| Nav labels, widget titles, buttons, column headers, captions, legends, empty-state copy, menu rows, axis *titles* | Company names, project names, user name, plan tier, ~~dates, years~~ *(see the third exception)* | Patent counts, cell values, jurisdiction split, axis *values*, filing years |
+| Nav labels, widget titles, buttons, column headers, captions, legends, empty-state copy, menu rows, axis *titles* | Company names, **other** project names, user name, plan tier, patent and application numbers, IPC symbols, inventors, jurisdiction, ~~dates, years~~ *(struck — see the exceptions)* | Patent counts, cell values, jurisdiction split, axis *values*, filing and publication years, version numbers |
 
 **No patent number, no named company, no plausible-looking date.** An *identity* is never invented,
 because an invented one reads as a live example — that is the line as it was written.
@@ -2713,6 +2742,12 @@ because an invented one reads as a live example — that is the line as it was w
 date sort and on the one populated row; the reasoning, and the fact that this is an erosion rather
 than an extension, is the third exception below. **`No named company` is untouched and is the half
 that matters.**
+
+***And again on 2026-09-11, in the same clause and once more nowhere else.*** The date-sort
+qualifier is gone — the year prints on every row in every state — and the record's two dates and the
+switcher's version numbers print with it. **The line is now `no PARTY is invented`**, and `project
+names` in the middle column reads `other project names`: the project the surface is already showing
+in its own heading prints in the switcher too, and the other six stay bars. *All of it is below.*
 
 *The third column is new as of 2026-09-08, and it is a real narrowing of the contract.* It read
 **"Data is a bar. Nothing is invented"** until the prototype was populated, and everything numeric
@@ -2744,6 +2779,18 @@ table above puts in the grey-bar column:
   shape as the two above — a widget whose whole purpose is a *shape* must draw the shape — applied
   to a control: **a date sort over a column of grey bars is an order the founder cannot check**,
   and checking it is the only thing a sort is for. A sort nobody can verify is worse than no sort.
+
+  ***The qualifier is gone · 2026-09-11. The year is on every row in every state,*** and it was
+  removed because the re-rank proved the rule was written one case too narrow. **Measured on the
+  published build:** at rest **one row in twenty** carried any words — the demonstration row — and
+  after a re-rank, in two of three anchors tested, **none did**, because a real reordering scatters
+  that patent and often puts it past the fold. *Reported from outside as "the starred structure
+  doesn't work", which was the correct reading of what was on screen:* the band headings, the chip
+  and the reorder were all present and correct, labelling twenty indistinguishable grey bars.
+  **An order over a column of grey bars is an order the founder cannot check — whatever produced
+  the order.** A re-rank is that, and so is the resting list. *No field was added: the slot existed
+  and held a bar, so §7's four-field cap is untouched, and it is the same figure the date sort and
+  the record already print.*
 - **A real title, status, year and score on ONE row** — patent 0, and no other. Judging a list of
   titles when every title is a bar is not possible, and one populated row is the least that makes
   it possible. *`platform.md` §6a.2 records the request behind it.*
@@ -2774,6 +2821,40 @@ and no real holder is named anywhere, ever.**
 ***The line has moved from "no identity is invented" to "no PARTY is invented", and that is a
 narrower rule.*** Saying so plainly is the point of this entry: the next session will find it
 easier to argue for the holder than this one did, and the answer is still no.
+
+#### The fourth exception is not one — it is that rule applied · 2026-09-11
+
+**The warning above says a third exception is evidence of erosion. This is not a fourth**, and the
+test is the sentence immediately preceding: *no PARTY is invented.* Three more things print, and
+**not one of them is a party, and not one of them is invented**:
+
+| Now prints | What it is | Why it was a bar |
+|---|---|---|
+| `Filed` and `Published` in the record | **Dates.** `filed` is the same figure the row prints; `published` applies the 18-month rule the Filings caption already states on screen, and reads `Not yet published` past the window — the Filings legend's own phrase | They fell through to a `default` bar shared with `Where`. **Nobody had decided them** |
+| `Version 3` · `Version 2` · `Version 1` in the switcher | **A count of the founder's own acts**, which §8 has always put in the real column | Nobody had decided them either |
+| The open project's name in the switcher and the masthead | **A string already on screen** — the working screen's heading has printed it all along | It was a bar in the one control whose job is to say *which project am I in* |
+
+***The `default` case is the finding worth keeping.*** `pnFieldValue` ended with
+`default: return bar('w-xs')` and a comment reading *"filed, published, where"* — **three fields
+grouped by having no case, and it looked like one decision.** It was not: a jurisdiction is an
+identity and §8 makes it a bar deliberately; two dates were bars because no one had reached them.
+**A fall-through default makes an absence of decisions look like a decision** — and a comment
+listing what falls into it makes that worse, because it reads as a roster of considered cases.
+`Where` is alone in the default now and its comment says *why* rather than *which*.
+
+**What stays a bar, and the list is the point:** `Number`, `Application`, `Main IPC`, `IPC`,
+`Holder`, `Inventors`, `Where` — every one an identity. The other six projects in the switcher stay
+bars too: **printing the open project is not the same act as naming a roster**, which would be
+inventing six projects the founder never made. And the version *labels* stay bars, because a label
+is the founder's own description of a change they made and the demo has no source for one — *the
+number says which version, the label would say what changed, and only the first is ours to print.*
+
+**And the demonstration patent's title now renders in the record as well as on the row.** It had
+printed on the row since 2026-09-10 and the record it opened reverted to bars, so the one patent
+with a readable name lost it at the moment the founder asked to read it — *which is the one moment
+it was for.* One patent, one title, both hosts, through a flag set where the patent is chosen rather
+than an `i === 0` test each host had to repeat — and which the record pane could not perform at all,
+since it receives a record and never an index.
 
 ### The options rule — an application, not a third exception
 

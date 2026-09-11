@@ -911,6 +911,14 @@ a{text-decoration:none;color:inherit}
 .proj-dot{width:5px;height:5px;flex:0 0 5px;border-radius:var(--r-pill);
           background:var(--indicator-rest);margin-right:var(--s-2);transition:background var(--dur-1) var(--ease)}
 .proj-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+/* the open project's real name, 2026-09-11. It takes .t-label's size and weight
+   without the class, because these rows are 13px throughout and a second
+   typographic voice in a menu row would read as a different kind of item. One
+   line, clipped rather than wrapped: a project name is an identifier the
+   founder recognises from its start, and a two-line row would break the
+   switcher's even rhythm for the one row that is already marked. */
+.proj-name{font-size:13px;line-height:1.4;font-weight:500;color:var(--text-1);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ── the control rail, on the bar ───────────────────────────────────────
    Two account-level facts true on every surface, so they live in the chrome.
@@ -1867,6 +1875,10 @@ a{text-decoration:none;color:inherit}
 .side-hist{transition:background var(--dur-4) var(--ease)}
 .side-hist.is-target{background:var(--surface-sunken)}
 .hist-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+/* `Version 3` — the numeral is a .fig like every other figure, so it is
+   Inconsolata and tabular and 3 sits under 12 without the column moving. */
+.hist-v{color:var(--text-2)}
+.hist-v .fig{color:var(--text-1)}
 .hist-revert{font-size:12px;font-weight:500;color:var(--text-2);padding:var(--s-4) var(--s-8);
              border-radius:var(--r-chip);flex:0 0 auto;
              transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease),
@@ -1892,6 +1904,25 @@ a{text-decoration:none;color:inherit}
 .drill-row{padding:var(--s-16) 0;border-bottom:1px solid var(--border)}
 .drill-row:last-child{border-bottom:0}
 .drill-meta{display:flex;align-items:center;gap:var(--s-12);padding-top:var(--s-12);flex-wrap:wrap}
+/* ── THE YEAR HOLDS A COLUMN · 2026-09-11 ────────────────────────────────
+   It sat directly after the holder, whose bar width varies per patent (rec.w),
+   so twenty years landed at twenty different x positions. A COLUMN OF FIGURES
+   THAT DOES NOT ALIGN CANNOT BE SCANNED — and scanning is the entire reason
+   the year is on the row: it is what lets a founder see that the list
+   reordered.
+
+   THE AUTO MARGIN MOVES TO THE YEAR AND OFF THE CHEVRON, and that pair is the
+   whole rule. Adding one to the year alone left TWO auto margins on the line,
+   and flexbox splits free space evenly between them — so the year landed
+   halfway into the gap and still moved with the bar, at exactly half the
+   amplitude. Measured 57px on each side of a 114px gap, which is the tell.
+   One auto, on the leading edge of the trailing GROUP, and the year and the
+   chevron travel together.
+
+   THE FIGURES ARE ALREADY TABULAR — .fig is Inconsolata — so four digits
+   occupy one width and the column is true to the pixel rather than nearly. */
+.drill-meta>.fig{margin-inline-start:auto}
+.drill-meta>.fig~.drill-chev{margin-inline-start:0}
 
 /* ── the field list · platform.md §7a.3 ─────────────────────
    THIS WAS THE HANDOFF, and it was a row-level disclosure: the row expanded
@@ -1968,6 +1999,14 @@ a{text-decoration:none;color:inherit}
 .pn-head-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-10)}
 .pn-title{margin:0;outline-offset:3px}
 .pn-name{display:flex;flex-direction:column;gap:var(--s-6)}
+/* THE DEMONSTRATION PATENT'S REAL TITLE, 2026-09-11. It sits where the two
+   title-height bars sit and matches their weight, but ONE STEP DOWN from the
+   17px `.pn-title` above it: "Patent record" names what the pane is and the
+   patent's own title is its subject, so equal size would make the head read as
+   two competing headings. 15px is the bars' own height, so the populated pane
+   and an unpopulated one are the same shape. */
+.pn-name-real{font-size:15px;line-height:1.4;font-weight:500;color:var(--text-1);
+  text-wrap:pretty}
 .pn-meta{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap}
 .pn-body{display:flex;flex-direction:column;gap:var(--s-24);padding-top:var(--s-16)}
 .pn-sec{display:flex;flex-direction:column;gap:var(--s-12)}
@@ -4091,6 +4130,29 @@ function maxOf(rows){
   }, 0);
 }
 
+/* ── THE OPEN PROJECT'S NAME · 2026-09-11 ────────────────────────────────
+   THE STRING IS NOT NEW AND THAT IS THE WHOLE ARGUMENT. The working screen's
+   own title has printed it since the dashboard was built — the project takes
+   its name from the founder's sentence plus the direction picked at §4a beat
+   one — and the switcher rendered the same project as a grey bar. One project,
+   two renderings, and the bar was the one in the control whose entire job is to
+   say WHICH project you are in.
+
+   IT WAS A LITERAL AT THE CALL SITE and is a constant here, because the
+   switcher and the heading disagreeing about the project's name is exactly what
+   a second literal buys.
+
+   DECLARED HERE RATHER THAN BESIDE DEMO_TITLE, and the reason is the bug this
+   file keeps catching: the dashboard's IIFE reads it and runs the moment it is
+   parsed, so a declaration further down the file hoists to `undefined` and the
+   heading would have printed nothing at all. A var is only as early as its
+   ASSIGNMENT.
+
+   NOTHING IS INVENTED. Every other project in the menu stays a bar — naming a
+   roster would be inventing six projects a founder never made, which is a
+   different act from printing the one the surface already shows. */
+var DEMO_PROJECT = 'Drone airframe and body structure';
+
 /* Drone airframe and body structure - the direction picked in the demo.
    COLUMNS ARE THE TECHNOLOGY, and they are the technology in BOTH states of the
    axis switch. ROWS are what the switch changes: what the technology achieves
@@ -4392,7 +4454,7 @@ var CAPTION_SK = $('#mapCaption').innerHTML;
        §4a beat one, not from the sentence alone — "drone" on its own names a
        field rather than a project, and the direction is the founder's own
        narrowing of it. */
-    t.textContent = 'Drone airframe and body structure';
+    t.textContent = DEMO_PROJECT;
   }
 })();
 
@@ -4652,17 +4714,46 @@ var PN_FIELDS = [
 ];
 var PN_ALL = PN_FIELDS.map(function(f){ return f[0]; });
 
+/* THE PUBLICATION YEAR, DERIVED FROM THE RULE THE PRODUCT ALREADY STATES.
+   The Filings widget's own caption says patents "publish about 18 months after
+   filing", so this is not a new invented figure — it is that sentence applied,
+   and a filing late in its year lands in +2 rather than +1, which is what the
+   seed's parity stands in for.
+
+   AND PAST THE WINDOW IT IS REAL ENGLISH, not a date. PN_Y_END is the last year
+   in the window, so a patent filed recently enough has no publication yet — and
+   `Not yet published` is the same phrase the Filings legend uses for exactly
+   this band. A bar there would have hidden a fact the chart beside it states. */
+function pnPublished(rec){
+  var y = rec.filed + 1 + (rec.n % 2);
+  return y > PN_Y_END ? 'Not yet published' : String(y);
+}
 function pnFieldValue(rec, key){
   switch (key){
     case 'kind':      return rec.kind;                 /* real English */
     case 'status':    return statusHTML(rec.status);
+    /* ── THE TWO DATES ARE REAL · 2026-09-11 ─────────────────────────────
+       They fell through to the `default` bar with `where`, which grouped three
+       fields that are not alike: a jurisdiction is an IDENTITY and §8 makes it
+       a bar, and a date is not an identity at all. Nobody had populated them,
+       and the default's own comment listing "filed, published, where" is what
+       made three different decisions look like one.
+
+       `filed` IS THE SAME FIGURE THE ROW PRINTS, deliberately — the row's
+       year, the date sort's key and this field are one value. A record showing
+       a different year from the row that opened it is the "one number with two
+       names" defect the score note above this records. */
+    case 'filed':     return String(rec.filed);
+    case 'published': return pnPublished(rec);
     case 'ipc':       return bars(rec.nIpc, ['w-sm','w-xs','w-sm']);
     case 'inventors': return bars(rec.nInv, ['w-sm','w-sm','w-xs']);
     case 'holder':    return bar('w-lg');
     case 'number':    return bar('w-md');
     case 'appno':     return bar('w-md');
     case 'ipcMain':   return bar('w-sm');
-    default:          return bar('w-xs');              /* filed, published, where */
+    /* `where` alone now, and it is a bar because a jurisdiction is an identity
+       (§8) — not because nothing had been decided about it. */
+    default:          return bar('w-xs');
   }
 }
 function pnFieldsHTML(rec, keys){
@@ -4703,8 +4794,18 @@ function patentPaneHTML(rec, opt){
         : '<h3 class="t-title pn-title" tabindex="-1">Patent record</h3>')
     /* the patent's own title, at the title's height rather than the body's —
        it had no more presence than the Number field below it. bar() already
-       takes a height, so this needs no new helper. */
-    +     '<div class="pn-name">' + bar('w-full','title') + bar('w-lg','title') + '</div>'
+       takes a height, so this needs no new helper.
+
+       AND THE DEMONSTRATION PATENT PRINTS ITS TITLE HERE TOO · 2026-09-11.
+       The row has rendered DEMO_TITLE since 2026-09-10 and the record it opens
+       reverted to bars, so the one patent on this surface with a readable name
+       lost it at the moment the founder asked to read it — which is the one
+       moment it was for. One patent, one title, both hosts. */
+    +     '<div class="pn-name">'
+    +       (rec.demo
+          ? '<span class="pn-name-real">' + DEMO_TITLE + '</span>'
+          : bar('w-full','title') + bar('w-lg','title'))
+    +     '</div>'
     +     '<div class="pn-meta">' + statusHTML(rec.status)
     +       '<span class="t-micro">' + rec.kind + '</span>'
     /* the same number the row carries, and the same rule: an ordering with
@@ -4767,15 +4868,36 @@ var PN_EMPTY = '<div class="pn-empty">'
    seeing before anyone argues about relaxing it. */
 var DEMO_TITLE = 'Foldable quadrotor airframe with load-bearing arm hinges and an '
                + 'integrated motor mount';
-
 /* ═══ drill-down · the list, and now the record beside it ═════════════════
    Four fields per row (platform.md §7) and no more. The chevron points ACROSS
-   rather than down, because the row no longer opens downward.              */
-function drillRowHTML(rec, i, showYear){
-  /* the filtered list keys its rows 'f0', 'f1' … so a strict compare is what
-     keeps the populated row out of a cell drill-down, where it would be
-     claiming a patent is in a cell it was never counted in. */
-  var real = (i === 0);
+   rather than down, because the row no longer opens downward.
+
+   THE showYear ARGUMENT IS GONE · 2026-09-11, and the reason is the whole of
+   why this pass happened. The year rendered only when it was the sort key; the
+   rest of the time that slot held a bar. Measured on the published build after
+   the re-rank became real: ONE row in twenty carried any words at rest — the
+   demonstration patent — and after a re-rank, in two of three anchors tested,
+   NONE did, because the reorder scatters that patent and often puts it past the
+   fold. So the band headings landed over twenty identical grey bars and the
+   whole structure was unreadable: nothing on screen distinguished one row from
+   another except a four-decimal score.
+
+   THE RULE WAS ALREADY WRITTEN, one case narrower. §7 justified showYear as
+   "a date sort over a column of grey bars is an order the founder cannot
+   check — which is the one thing a sort has to let them do." A RE-RANK IS
+   EXACTLY THAT TOO, and so is the resting list. The year is not an identity, so
+   §8's contract never covered it; it fills a slot that already existed, so §7's
+   four-field cap is untouched; and it is the same figure the date sort and the
+   record already print, so nothing gains a second name.                     */
+function drillRowHTML(rec, i){
+  /* THE FLAG, not the row key · 2026-09-11. It was `i === 0`, and the filtered
+     list's 'f0' keys made that safe by accident — a strict compare against a
+     string. `rec.demo` is set in setRecFor and the filter's own patentRec calls
+     never set it, so the populated row still cannot appear in a cell
+     drill-down claiming a patent is in a cell it was never counted in. The
+     record pane reads the same property, which is what it could not do while
+     this was derived from an index the pane never sees. */
+  var real = !!rec.demo;
   return '<div class="drill-row">'
     + '<button class="drill-toggle" type="button" data-pn="' + i + '" aria-current="false">'
     +   '<span class="drill-head">'
@@ -4810,13 +4932,13 @@ function drillRowHTML(rec, i, showYear){
     +     (real
         ? '<span class="drill-holder">ACME Group</span>'
         : '<span class="sk sk-h-micro ' + rec.w + '"></span>')
-    /* THE YEAR APPEARS ONLY WHEN IT IS THE SORT KEY, and it replaces the
-       second bar rather than joining it, so §7's four-field cap holds. A
-       date sort over a column of grey bars is an order the founder cannot
-       check — which is the one thing a sort has to let them do. */
-    +     (showYear || real
-        ? '<span class="fig fig-s">' + rec.filed + '</span>'
-        : '<span class="sk sk-h-micro w-xs"></span>')
+    /* ~~THE YEAR APPEARS ONLY WHEN IT IS THE SORT KEY~~ — **it is always on,
+       2026-09-11.** It still replaces the second bar rather than joining it, so
+       §7's four-field cap holds unchanged. The argument that put it here under
+       a date sort is the argument for every state: an order over a column of
+       grey bars is an order the founder cannot check. See the note on this
+       function for what that cost on the published build. */
+    +     '<span class="fig fig-s">' + rec.filed + '</span>'
     /* the score used to sit HERE, last in the row. It is beside the title now
        — see .drill-score. It is still not a fifth field: it says nothing about
        the patent, only about where the engine put it, which is why it sits
@@ -5072,11 +5194,29 @@ document.addEventListener('click', function(e){
    §5: every confirmed change writes a labelled, revertible version. Revert
    routes through confirm, because a revert is itself a scope change.       */
 var HIST = ['w-lg','w-md','w-xl'];
+/* ── THE VERSIONS ARE NUMBERED · 2026-09-11 ──────────────────────────────
+   Two bars and a Revert, three times over, which told a founder how many
+   versions there were and nothing about which was which. **The number is a
+   real integer under §8** — it counts the founder's own acts, not the data —
+   and it is the one thing about a version that is knowable without the label.
+
+   THE LABEL ITSELF STAYS A BAR, and this is the honest line. A version's label
+   is the founder's own description of a scope change they made; the demo has no
+   source for one, and writing *Narrowed to airframes* would be inventing the
+   founder's words. The number says which version; the label would say what
+   changed, and only the first is ours to print.
+
+   COUNTED FROM THE END so the newest is the highest — HIST[0] is the current
+   version, so a list of three reads 3, 2, 1 downward and `addVersion` pushing
+   onto the front makes the next one 4 without renumbering anything. */
 function renderHist(){
+  var n = HIST.length;
   $('#histList').innerHTML = HIST.map(function(w, i){
     return '<div class="hist-row">'
-      + '<span class="hist-lines"><span class="sk sk-h-label ' + w + '"></span>'
-      +   '<span class="sk sk-h-micro w-sm"></span></span>'
+      + '<span class="hist-lines">'
+      +   '<span class="hist-v t-label">Version '
+      +     '<span class="fig fig-s">' + (n - i) + '</span></span>'
+      +   '<span class="sk sk-h-label ' + w + '"></span></span>'
       + (i === 0
           ? '<span class="hist-tag t-micro">Current</span>'
           : '<button class="hist-revert" data-scope="revert">Revert</button>')
@@ -6791,10 +6931,29 @@ $$('.seg-page .seg-btn').forEach(function(b){
 setPage('market');
 
 /* ═══ sidebar, profile menu, collapse ═════════════════════════════════════ */
+/* ── THE OPEN PROJECT IS POPULATED · 2026-09-11 ──────────────────────────
+   THE MENU READ AS CONTENT THAT HAD FAILED TO LOAD, and that was the report.
+   Seven project names and three version labels, every one a grey bar, over a
+   search box that is deliberately dead (§8's open list) — so the one control
+   whose entire job is *which project am I in* answered it with a placeholder.
+   Opening it, there was not one readable word except the section labels.
+
+   ONE ROW, AND IT INVENTS NOTHING. The open project prints DEMO_PROJECT, which
+   the working screen's own heading has printed all along. The other six stay
+   bars: naming a roster would be inventing six projects the founder never made,
+   which is a different act from printing the one already on screen.
+
+   THE SUB-LINE STAYS A BAR even on the open row. It is an updated-date, and a
+   date here would have to be either fixed — ageing wrong in every later
+   screenshot — or derived from `new Date()`, which §3.6 forbids because these
+   states have to be byte-diffable. The name is the half that was needed. */
 function projHTML(w1, w2, current){
   return '<button class="proj"' + (current ? ' aria-current="true"' : '') + '>'
     + '<span class="proj-dot"></span>'
-    + '<span class="proj-lines"><span class="sk sk-h-label ' + w1 + '"></span>'
+    + '<span class="proj-lines">'
+    +   (current
+        ? '<span class="proj-name">' + DEMO_PROJECT + '</span>'
+        : '<span class="sk sk-h-label ' + w1 + '"></span>')
     +   '<span class="sk sk-h-micro ' + w2 + '"></span></span></button>';
 }
 $('#projGroupA').innerHTML = projHTML('w-lg','w-sm',true) + projHTML('w-md','w-xs') + projHTML('w-xl','w-sm');
@@ -6810,6 +6969,13 @@ function placeHist(){
   if (cur && w) cur.after(w);
 }
 placeHist();
+/* AT INIT, NOT ONLY ON A SWITCH · 2026-09-11. syncProjName had exactly one
+   caller — the .proj click handler — so the masthead kept whatever the markup
+   shipped until the founder switched project. That was invisible while both
+   were a `w-md` bar and is not now: the open project has a name, and the
+   control whose job is to show it would have shown a placeholder until you
+   opened the menu and picked the row that was already current. */
+syncProjName();
 
 /* #history — it opened a popover; it now brings the section into view and
    marks it. A route that silently stops routing is worse than a removed one. */
@@ -6883,7 +7049,27 @@ document.addEventListener('click', function(e){
 function syncProjName(){
   var cur = $('.proj[aria-current="true"]'), lab = $('#projName');
   if (!lab) return;
-  var bar = cur && cur.querySelector('.sk');
+  /* THE REAL NAME WHEN THE OPEN ROW HAS ONE · 2026-09-11. The button exists so
+     the bar says which project you are in without opening the menu, and it said
+     it with a grey bar copied from the row's own grey bar.
+
+     IT READS THE ROW rather than DEMO_PROJECT directly, so the switcher stays
+     the single source of what is open: switch to one of the six bar projects and
+     the masthead goes back to a bar of that row's own width, which is the
+     honest render of a project whose name this surface does not have.
+
+     THE WIDTH LOOKUP HAD TO MOVE WITH IT. It took the FIRST `.sk` in the row,
+     which was the name bar; on the populated row the first `.sk` is now the
+     sub-line, so a blind querySelector would have sized the button off the
+     wrong field. It reads the name bar by class instead. */
+  var name = cur && cur.querySelector('.proj-name');
+  if (name){
+    lab.className = 'mast-proj-name proj-name';
+    lab.textContent = name.textContent;
+    return;
+  }
+  lab.textContent = '';
+  var bar = cur && cur.querySelector('.sk-h-label');
   lab.className = 'mast-proj-name sk sk-h-label ' + (bar
     ? (bar.className.match(/w-[a-z]+/) || ['w-md'])[0] : 'w-md');
 }
@@ -6983,8 +7169,18 @@ var SET_PAGE    = 20;            /* rows before "View more patents" — and per 
 var SET_CEILING = 50;
 
 /* seeded from the row index, so row 7 is the same patent on every render. Never
-   randomised — design-language.md §3.6. */
-function setRecFor(i){ return patentRec(i * 37 + 5); }
+   randomised — design-language.md §3.6.
+
+   THE DEMONSTRATION PATENT CARRIES A FLAG NOW · 2026-09-11, rather than being
+   re-derived from `i === 0` at each host. The row tested the row key and the
+   record pane could not test anything at all — it receives a `rec` and never
+   an index — which is why the row had a title and the record it opened did
+   not. One property, set where the patent is chosen, read by both. */
+function setRecFor(i){
+  var rec = patentRec(i * 37 + 5);
+  if (i === 0) rec.demo = true;
+  return rec;
+}
 function setCount(){ return Math.min(SET_CEILING, DATA.total || 0); }
 var SET_ROWS = { length: setCount() };          /* a length, not a table */
 
@@ -7176,7 +7372,7 @@ function setRowHTML(i){
     + '<button class="set-ctl set-star" type="button" data-star="' + i + '" '
     +   'aria-pressed="' + (SET_STARS[i] ? 'true' : 'false') + '" '
     +   'aria-label="More like this one">' + I.star + '</button>'
-    + drillRowHTML(setRecFor(i), i, SET_SORT !== 'relevance')
+    + drillRowHTML(setRecFor(i), i)
     + '</div>';
 }
 /* THE ONLY RENDERER. It walks SET_ORDER, which is what makes the re-ranked
