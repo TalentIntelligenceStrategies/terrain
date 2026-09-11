@@ -2971,9 +2971,25 @@ page about a plan and a page about consumption answer different questions at dif
 
 #### Pricing is still open, and what the screen assumes is recorded rather than hidden
 
-The figures are illustrative like every figure in this repository, and internally consistent:
-**6,000 points for $600 a quarter is ten cents a point**, which is the arithmetic §8.2's derived unit
-costs already run on. **§11's pricing bullet is not closed by them.**
+***The price renders as `XXX`, and that is a distinction this file keeps everywhere else.*** An
+illustrative **figure** is a convention here — the allowance, the counts and §8.2's derived unit costs
+are representative, internally consistent, and §8 tells the reader so. **A price is not that kind of
+figure.** It is the answer to this bullet's own open question, and a plausible-looking one invites a
+review to argue about whether the number is right instead of whether the *screen* is right. That is
+precisely what `CLAUDE.md` predicts of a placeholder accent, one decision over, and
+`brief.md` §4 records it happening: *a reviewer does not distinguish a chart mark from an accent on
+sight*, and they will not distinguish a placeholder price from a decided one either.
+**`marketing.md` §3 reached this answer first** and its three tier cards carry no numbers at all.
+
+*It is deliberately **not** a skeleton bar.* A bar means *a real value, not ours to print* — a
+founder's name, a holder, a date. `XXX` means *nobody has chosen one yet*. Rendering the second as the
+first would claim a price exists somewhere and is merely being withheld. **The allowance stays a
+figure**, because it is the points page's own and has been illustrative since 2026-09-08, so the shape
+of the plan is legible and only the undecided part is blank.
+
+*This paragraph read "6,000 points for $600 a quarter is ten cents a point, which is the arithmetic
+§8.2's derived unit costs already run on" until 2026-09-12. **The arithmetic was sound and that was
+the problem** — a derivable, internally consistent price is the most convincing kind of invented one.*
 
 ***And the plan name is a skeleton bar, which is the load-bearing choice on that screen.*** An
 allowance and a price are **figures**, and every figure here is illustrative. A tier **name** is a
@@ -2993,9 +3009,13 @@ shape breaks that property unless it reads the same constant. `PLAN`, `PLAN_PRIC
 sit in one block and both `renderUsage` and `renderBilling` read them. If pricing resolves to anything
 that is not an allowance, those three lines and the ring are what change.
 
-#### An alert is not a notification, and the test is the entry
+#### An alert is not a notification, and the test outlived the switch it was written for
 
-Account settings carries **two switches** — *email when a build finishes*, *email when your plan
+***Read the amendment below first: the card this section was written about is gone, and the ruling
+is not.*** It is kept because what it forbids — 專利預警 arriving through a settings page — is a
+thing a later pass will try again, and a rule is easier to apply than to re-derive.
+
+The product has **one** notification switch, on Plan & billing: *email a receipt when the plan
 renews*. §9 defers **filing alerts · 專利預警**, and `marketing.md` §5 forbids alerts or monitoring
 anywhere in the copy, so this needs a test rather than an assurance.
 
@@ -3009,14 +3029,38 @@ and is gone the moment it has sent.
 
 **The limit is where the rule bites.** A digest, a weekly summary, a *new filings near you* row, and a
 standing *live only* or *US only* preference are all the first object wearing the second's clothes,
-and every one of them is refused. *Nothing on that card may watch anything.* It is the same shape as
+and every one of them is refused. *Nothing anywhere may watch anything.* It is the same shape as
 §7a.3's ruling that arrival order is not a reading: the permitted thing and the deferred thing look
 alike from a distance, so the entry carries the test that separates them rather than the conclusion.
 
+> ***Amended 2026-09-12, one day later, and the amendment is a second rule rather than a retreat from
+> the first.*** The card this section described held two switches, and the first — *email when a build
+> finishes* — was reported in review as **false**: Terrain does not send that mail. It was deleted, the
+> receipt moved to Plan & billing under the billing address it is sent to, and the card went with it
+> for having nothing left in it.
+>
+> **The test above is untouched.** It was correct about the *category* — a build-completion email
+> genuinely is a notification and not an alert — and it was answering *may this exist*, which is a
+> different question from *does this exist*. **Being allowed is not the same as being built**, and
+> nothing in this section had asked the second question.
+>
+> ***So the rule that comes out of it, because the mistake is a kind and not an instance:*** **a
+> switch is a claim that the product does the thing when the switch is on.** Every other invented
+> value on these three pages is marked — a name is a grey bar, a price is a figure the reader is told
+> is illustrative, §8 governs the whole of it. **A control carries no such marking.** Nothing about a
+> toggle says *and this is a sketch*, so it was written as a preference and it read as a feature.
+> *A bar can be a placeholder. A switch cannot.*
+>
+> **The general form, for the next surface that has settings on it:** an illustrative *figure* is a
+> convention this repository has and defends; an illustrative *capability* is not a thing, and the
+> two are easy to conflate because they sit on the same screen. **Before adding a control, ask what
+> it would do if it were real, and whether that is something Terrain does.**
+
 #### What is on Account settings, and the two things that are not
 
-Four cards — **Your details** (name, email, password, each an inline edit), **Appearance**,
-**Notifications**, **Your data**.
+Three cards — **Your details** (name, email, password, each an inline edit), **Appearance**, **Your
+data**. *It was four until 2026-09-12: a **Notifications** card sat third and is deleted, for the
+reason recorded in the amendment above.*
 
 ***Appearance is additive and is not a demotion, and this is stated because §6a.1 forbids the thing it
 resembles.*** §6a.1 and `design-language.md` §10.4 both say the theme control may not be demoted into

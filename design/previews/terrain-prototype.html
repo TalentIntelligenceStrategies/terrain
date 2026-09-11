@@ -3766,7 +3766,12 @@ a{text-decoration:none;color:inherit}
 
             <div class="pref">
               <span class="t-label pref-label" id="acctMailL">Email</span>
-              <p class="pref-help">Sign-in address, and where anything you switch on below is sent.</p>
+              <!-- It read "Sign-in address, and where anything you switch on below is
+                   sent" until 2026-09-12, and there is nothing below it to switch
+                   on any more — the Notifications card is deleted. It points at
+                   the billing address instead, which is the mirror of what that
+                   row already says about this one. -->
+              <p class="pref-help">Where you sign in. Receipts go to a separate billing address, on Plan &amp; billing.</p>
               <div class="pref-val" id="acctMailRest">
                 <span class="sk sk-h-body w-lg" id="acctMailBar"></span>
                 <button class="btn btn-ghost" type="button" data-edit="acctMail">Edit</button>
@@ -3833,52 +3838,30 @@ a{text-decoration:none;color:inherit}
           </div>
         </section>
 
-        <!-- TWO SWITCHES, AND THE LIMIT IS THE WHOLE ENTRY. §9 defers
-             filing alerts — "tell me when someone files near my idea" —
-             and marketing.md §5 forbids alerts or monitoring anywhere. A
-             build-complete email is not that object.
+        <!-- ~~THE NOTIFICATIONS CARD~~ · DELETED 2026-09-12, one day old.
+             It held two switches and the first was "Email when a build
+             finishes", which was reported in review as simply FALSE:
+             Terrain does not send that mail, so the row was a control for
+             a capability that does not exist.
 
-             THE TEST, so it is checkable rather than asserted: an ALERT is
-             Terrain telling the founder about THE WORLD; a NOTIFICATION is
-             Terrain telling them about WORK THEY THEMSELVES STARTED. The
-             first watches a corpus, persists, and accumulates into a queue
-             — it is the strongest recurring-value feature in the engine and
-             the named subscription rationale, which is exactly why it may
-             not arrive by the back door. The second stores no state about
-             any patent and is gone the moment it has sent.
+             THE RULE THAT COMES OUT OF IT, because the mistake is a kind
+             and not an instance: A SWITCH IS A CLAIM THAT THE PRODUCT DOES
+             THE THING WHEN IT IS ON. Every other invented value on these
+             pages is a grey bar or a figure the reader is told is
+             illustrative — a control has no such marking, and nothing
+             about a toggle says "and this is a sketch". It was written as
+             a preference and it read as a feature.
 
-             Nothing may be added here that watches anything. A digest, a
-             weekly summary, a "new filings near you" row and a standing
-             filter preference are all the first object wearing the second's
-             clothes. platform.md §7a.10 carries the ruling.
+             The second switch (a renewal receipt) moved to Plan & billing,
+             directly under the billing address it would be sent to, which
+             is where it belonged in the first place: a receipt is billing,
+             not a notification. That left this card holding nothing.
 
-             Each label describes the ON state, so the off state is
-             inferable and nothing is a double negative. -->
-        <section class="card pref-card">
-          <div class="card-head">
-            <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg></span>
-            <h2 class="t-title">Notifications</h2>
-          </div>
-          <div class="card-body pref-body">
-
-            <div class="pref">
-              <span class="t-label pref-label" id="acctBuildL">Email when a build finishes</span>
-              <p class="pref-help" id="acctBuildH">A build takes a few minutes, so you can close Terrain and come back to it.</p>
-              <div class="pref-ctl">
-                <button class="sw" type="button" role="switch" aria-checked="true" aria-labelledby="acctBuildL" aria-describedby="acctBuildH"><span class="sw-knob"></span></button>
-              </div>
-            </div>
-
-            <div class="pref">
-              <span class="t-label pref-label" id="acctRcptL">Email when your plan renews</span>
-              <p class="pref-help" id="acctRcptH">A receipt, once a quarter. Nothing else.</p>
-              <div class="pref-ctl">
-                <button class="sw" type="button" role="switch" aria-checked="true" aria-labelledby="acctRcptL" aria-describedby="acctRcptH"><span class="sw-knob"></span></button>
-              </div>
-            </div>
-
-          </div>
-        </section>
+             THE RULING IT WAS BUILT TO ILLUSTRATE SURVIVES AND IS NOT
+             DELETED — platform.md §7a.10 still carries the alert-versus-
+             notification test, and it matters more now than it did with a
+             card to point at, because what it forbids is 專利預警 arriving
+             through a settings page.                                  -->
 
         <!-- DELETE ONLY, AND THERE IS NO EXPORT ROW. Export is out BY
              DECISION rather than by deferral — platform.md §8.3 records the
@@ -3950,10 +3933,13 @@ a{text-decoration:none;color:inherit}
        one reference to spend is a sentence with a link at the end of it,
        pointing at the page whose subject that is.
 
-       PRICING IS STILL OPEN AT §11 AND THIS DOES NOT CLOSE IT. The figures
-       are illustrative like every figure in this repository, and internally
-       consistent: 6,000 points for $600 a quarter is ten cents a point,
-       which is the same arithmetic the points page's unit costs run on.
+       PRICING IS STILL OPEN AT §11 AND THE SCREEN SAYS SO RATHER THAN
+       GUESSING. The allowance is the points page's own figure, illustrative
+       like every figure here. THE PRICE IS `XXX` — not a number, and not a
+       skeleton bar either. A bar means "a real value, not ours to print";
+       this means "nobody has chosen one yet", and a screen that conflated
+       the two would be claiming a price exists somewhere. marketing.md §3's
+       three tier cards carry no numbers for the same reason.
 
        THE PLAN NAME IS A BAR, and that is the load-bearing choice on this
        screen. An allowance and a price are FIGURES, and every figure here
@@ -3990,12 +3976,26 @@ a{text-decoration:none;color:inherit}
           </div>
           <div class="card-body">
             <span class="sk sk-h-title w-lg" style="margin-bottom:var(--s-12)"></span>
+            <!-- THESE TWO ARE WRITTEN BY renderBilling() ON EVERY OPEN, and the
+                 markup carries what it will write rather than something else.
+                 It shipped `6,000` and `$600` until 2026-09-12 — a comma the
+                 renderer does not use, and a price that had been rejected —
+                 and neither was ever seen on screen, because the renderer
+                 overwrote both before the view became visible.
+
+                 THAT IS THE FAULT, NOT A TIDY-UP: the published branch is
+                 HTML, and view-source on a public URL shows the markup and
+                 not the render. A number nobody agreed to does not stop being
+                 published by being invisible. The prototype has hit the
+                 two-places-one-renders trap once before, on the confirm
+                 card's lede and gate, and that one at least showed the wrong
+                 words to a reader. -->
             <div class="plan-fig">
-              <span class="fig fig-l" id="billAllow">6,000</span>
+              <span class="fig fig-l" id="billAllow">6000</span>
               <span class="t-body" style="color:var(--text-2)">points a quarter</span>
             </div>
             <div class="plan-fig" style="margin-top:var(--s-8)">
-              <span class="fig fig-l" id="billPrice">$600</span>
+              <span class="fig fig-l" id="billPrice">$XXX</span>
               <span class="fig fig-l fig-sub">/ quarter</span>
             </div>
             <p class="t-body" style="margin:var(--s-12) 0 0;color:var(--text-2)">Renews <span class="sk sk-h-body w-md" style="display:inline-block;vertical-align:-2px"></span></p>
@@ -4029,6 +4029,20 @@ a{text-decoration:none;color:inherit}
               <div class="pref-val">
                 <span class="sk sk-h-body w-lg"></span>
                 <button class="btn btn-ghost" type="button" id="billMail">Update</button>
+              </div>
+            </div>
+            <!-- MOVED HERE FROM A NOTIFICATIONS CARD ON 2026-09-12, and the
+                 move is the argument: a receipt is BILLING, and the row it
+                 now sits under is the address it would be sent to. In a
+                 Notifications card it was a preference floating free of the
+                 thing it configures. Its neighbour there — "email when a
+                 build finishes" — was deleted outright as a claim the
+                 product cannot honour, which left that card empty. -->
+            <div class="pref">
+              <span class="t-label pref-label" id="billRcptL">Email a receipt when the plan renews</span>
+              <p class="pref-help" id="billRcptH">Sent to the billing address above, once a quarter. Nothing else goes there.</p>
+              <div class="pref-ctl">
+                <button class="sw" type="button" role="switch" aria-checked="true" aria-labelledby="billRcptL" aria-describedby="billRcptH"><span class="sw-knob"></span></button>
               </div>
             </div>
           </div>
@@ -4138,7 +4152,7 @@ a{text-decoration:none;color:inherit}
             <dl class="hlp-qa">
               <div>
                 <dt>How long does a build take?</dt>
-                <dd>A few minutes. You can close Terrain and come back — the map is waiting when you return, and switching a notification on in Account settings will tell you when it is.</dd>
+                <dd>A few minutes. You can close Terrain and come back — the map is waiting when you return, because a build belongs to the project rather than to the tab you started it in.</dd>
               </div>
               <div>
                 <dt>When do points come back?</dt>
@@ -7313,7 +7327,10 @@ function acctReset(){
    chrome — and the points page prints the same allowance bare as `/ 6000`.
    One number rendered two ways across two pages is the fault worth avoiding
    here. A price is a price and carries the convention prices carry. */
-function money(n){ return '$' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+function money(n){
+  if (typeof n !== 'number') return '$' + n;      /* the XXX placeholder */
+  return '$' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
 function renderBilling(){
   $('#billAllow').textContent = String(PLAN);
   $('#billPrice').textContent = money(PLAN_PRICE);
@@ -9440,12 +9457,24 @@ var PLAN = 6000;                       /* the allowance — the one free figure 
 /* ADDED 2026-09-11 WITH PLAN & BILLING, and they are HERE rather than on that
    page for the reason §11 gives: the allowance "is in one place on purpose",
    so a second surface asserting a plan shape has to read the same block or
-   the property is lost. 6,000 points for $600 a quarter is ten cents a point,
-   which is the arithmetic the unit costs below already run on.
-   ILLUSTRATIVE, like every figure in this repository, and §11's pricing
-   bullet is NOT closed by them — if pricing resolves to something that is
-   not an allowance, these three lines and the ring are what change. */
-var PLAN_PRICE = 600;                  /* per period, illustrative */
+   the property is lost.
+
+   THE PRICE IS `XXX` AND NOT A NUMBER — changed 2026-09-12, and the
+   distinction is the one this file keeps everywhere else. An illustrative
+   FIGURE is a convention here: the allowance, the counts, the unit costs are
+   all representative and internally consistent, and §8 tells the reader so.
+   A PRICE IS NOT THAT KIND OF FIGURE. It is the answer to §11's open
+   question, and a plausible-looking one invites the review to argue about
+   whether $600 is right instead of whether the SCREEN is right — which is
+   exactly what CLAUDE.md predicts a placeholder accent does, one decision
+   over. marketing.md §3 reached the same answer first and its three tier
+   cards carry no numbers at all.
+
+   `XXX` is deliberately not a skeleton bar. A bar means "a real value, not
+   ours to print"; this is "nobody has chosen one yet", and the two should
+   not look alike. It renders in Inconsolata beside the real allowance, so
+   the shape of the plan is legible and only the price is blank. */
+var PLAN_PRICE = 'XXX';                /* §11, open — see above */
 var PLAN_PERIOD = 'quarter';           /* §7a.9: 91 days, 13 weeks, 3 months */
 var POINTS_0 = PLAN - US_SPENT;        /* so the balance cannot contradict the page */
 /* Derived from `32`, not invented: the source screen prints an estimated
