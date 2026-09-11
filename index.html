@@ -176,8 +176,9 @@ a{text-decoration:none;color:inherit}
 .t-title{font-size:17px;line-height:1.3;font-weight:600;letter-spacing:-.005em}
 .t-body{font-size:14px;line-height:1.55}
 .t-label{font-size:13px;line-height:1.4;font-weight:500}
-.t-micro{font-size:10.5px;line-height:1.2;font-weight:500;letter-spacing:.08em;
-         text-transform:uppercase;color:var(--text-3)}
+
+.t-micro,.hf dt,.cf-pair-k{font-size:10.5px;line-height:1.2;font-weight:500;
+         letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
 .fig{font-family:'Inconsolata',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-weight:500}
 .fig-xl{font-size:40px;line-height:1;letter-spacing:-.01em}
 .fig-l{font-size:26px;line-height:1.1}
@@ -222,6 +223,9 @@ a{text-decoration:none;color:inherit}
 .btn-ghost{color:var(--text-2)}
 .btn:active{transform:scale(.97)}
 
+.btn:disabled{opacity:.45;cursor:default}
+.btn:disabled:active{transform:none}
+
 .btn[hidden]{display:none}
 
 .icon-btn{color:var(--text-3);padding:var(--s-6);border-radius:var(--r-chip);display:flex;
@@ -264,9 +268,15 @@ a{text-decoration:none;color:inherit}
 .conv-col{width:100%;max-width:680px;margin-left:auto;margin-right:auto}
 .conv-intro{margin-bottom:var(--s-32)}
 .conv-intro h1{margin:0 0 var(--s-12);text-wrap:balance}
-.conv-sub{margin:0;color:var(--text-2);max-width:52ch}
-.conv-dock{padding-bottom:var(--s-16)}
-.conv-note{margin:var(--s-16) 0 0;font-size:13px;color:var(--text-3);max-width:64ch}
+.conv-sub{margin:0;color:var(--text-2);max-width:52ch;text-wrap:pretty}
+
+.conv-dock{padding-bottom:max(var(--s-16),env(safe-area-inset-bottom))}
+.conv-note{margin:var(--s-16) 0 0;font-size:13px;color:var(--text-3);max-width:64ch;
+      text-wrap:pretty}
+
+.dock-act{padding-top:var(--s-12)}
+.dock-act[hidden]{display:none}
+.dock-act .btn{width:100%}
 .conv-foot{padding:var(--s-12) 0 var(--s-24);display:flex;align-items:baseline;
       justify-content:center;gap:var(--s-6);font-size:14.4px;color:var(--text-3)}
 
@@ -369,26 +379,30 @@ a{text-decoration:none;color:inherit}
                width:var(--strike-w,100%);background:var(--text-3)}
 
 .cf{background:none;border:0;border-radius:0}
-.cf-turn + .cf-turn{margin-top:var(--s-20)}
-.cf-title{margin:0 0 var(--s-4);font-size:15px;line-height:1.5;
-          font-weight:600;color:var(--text-1)}
-.cf-lede{margin:0;color:var(--text-2)}
+
+.cf-turn + .cf-turn{margin-top:var(--s-32)}
+
+.cf-title{margin:0 0 var(--s-4);font-size:17px;line-height:1.3;font-weight:600;
+          letter-spacing:-.005em;color:var(--text-1);text-wrap:balance}
+
+.cf-lede{margin:0;color:var(--text-2);max-width:68ch;text-wrap:pretty}
 .cf-foot{padding:0}
 
 #mxScope{margin-top:var(--s-10)}
-.cf-actions{display:flex;align-items:center;gap:var(--s-12);flex-wrap:wrap;
-            padding:var(--s-12) 0 0}
 
-.cf-actions .spacer{flex:1}
-.cf-note{font-size:12px;color:var(--text-3)}
-
-.cf[data-approved] .cf-actions,.cf[data-approved] .said .btn{display:none}
+.cf[data-approved] .said .btn{display:none}
 .cf[data-approved] .gate{opacity:.6}
+
+.cf[data-editing] .gate{opacity:.6}
 
 .said{background:var(--surface-sunken);border-radius:var(--r-inner);
       padding:var(--s-12) var(--s-14);display:flex;gap:var(--s-16);align-items:flex-start;
       margin:var(--s-16) 0 0}
+
+.said + .said{margin-top:var(--s-12)}
 .said-body{flex:1;min-width:0}
+
+.said .t-micro{color:var(--text-2);margin-bottom:var(--s-12)}
 .said-text{margin:0;color:var(--text-1);line-height:1.6}
 
 .said-edit{display:block;width:100%;resize:none;overflow:hidden;
@@ -404,9 +418,11 @@ a{text-decoration:none;color:inherit}
 
 .gate{display:flex;align-items:flex-start;gap:var(--s-12);padding:var(--s-14) var(--s-16);
       background:var(--state-pending-tint);border-radius:var(--r-inner);
-      margin:0 0 var(--s-4)}
+      margin:0}
 .gate svg{color:var(--state-pending);flex:0 0 18px;margin-top:1px}
-.gate p{margin:0;font-size:13px;line-height:1.6;color:var(--text-1)}
+
+.gate p{margin:0;font-size:14px;line-height:1.6;color:var(--text-1);
+        max-width:68ch;text-wrap:pretty}
 .gate b{font-weight:600}
 
 .bd{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-widget);
@@ -1022,8 +1038,7 @@ a{text-decoration:none;color:inherit}
 .hf{margin:0;padding:var(--s-12) var(--s-14);background:var(--surface-sunken);
       border-radius:var(--r-inner);display:grid;grid-template-columns:auto 1fr;
       gap:var(--s-10) var(--s-14);align-items:center}
-.hf dt{font-size:10.5px;line-height:1.2;font-weight:500;letter-spacing:.08em;
-      text-transform:uppercase;color:var(--text-3);white-space:nowrap}
+.hf dt{white-space:nowrap}
 .hf dd{margin:0;min-width:0;display:flex;flex-wrap:wrap;align-items:center;
       gap:var(--s-6) var(--s-8)}
 
@@ -1081,13 +1096,16 @@ a{text-decoration:none;color:inherit}
 
 .cf-answers .head-meta{gap:var(--s-6)}
 
-#cfAnswerChips{gap:var(--s-14) var(--s-16);align-items:flex-start}
+#cfAnswerChips{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
+  gap:var(--s-16);align-items:start}
 .cf-pair{display:flex;flex-direction:column;gap:var(--s-4);min-width:0}
-.cf-pair-k{font-size:10.5px;line-height:1.2;font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--text-3)}
+
+.cf-pair-k{white-space:nowrap}
 
 .cf-pair-v{font-size:14px;line-height:1.45;color:var(--text-1);
   overflow-wrap:anywhere}
+
+#cfExclChips{gap:var(--s-8)}
 
 .said[hidden]{display:none}
 
@@ -1410,8 +1428,8 @@ a{text-decoration:none;color:inherit}
         <div class="conv-col conv-intro" id="convIntro">
           <h1 class="t-display-1" tabindex="-1" id="convHeading">What are you building?</h1>
           <p class="conv-sub t-body">Describe it in a sentence — or start from a patent number, a
-             company, or a classification code if you have one. TIS Terrain will show you who else
-             is in the space, what sits adjacent to it, and who holds which part.</p>
+             company, or a classification code. TIS Terrain shows you who else is in the space,
+             what sits adjacent, and who holds which part.</p>
         </div>
 
         <div class="conv-col"><div class="thread" id="thread"></div></div>
@@ -1434,7 +1452,13 @@ a{text-decoration:none;color:inherit}
       </div>
       <p class="cmp-status" role="status" aria-live="polite"></p>
     </div>
-            <p class="conv-note" id="convNote">Before we move on, we'll ask you to approve the criteria.</p>
+
+            <div class="dock-act" id="dockAct" hidden>
+              <button class="btn btn-primary" id="cfApprove" data-cf-approve="create">
+                <span id="cfApproveLabel">Approve and search</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </button>
+            </div>
+            <p class="conv-note" id="convNote">We’ll ask you to approve the criteria before we search.</p>
           </div>
         </div>
 
@@ -1776,14 +1800,15 @@ a{text-decoration:none;color:inherit}
   <div id="parked" hidden>
 
     <div class="cf" id="cfCard" role="group" aria-labelledby="cfTitle">
+
       <div class="cf-turn cf-read">
       <h2 class="cf-title" id="cfTitle" tabindex="-1">Here is how we read your idea</h2>
-      <p class="cf-lede t-body" id="cfLede">Correct anything that is wrong before we search — say
-         what is off and I will fix it. This is the one place where a mistake is cheap.</p>
+      <p class="cf-lede t-body" id="cfLede">Correct anything that is wrong — say what is off and
+         I will adjust it.</p>
 
       <div class="said" id="cfSaid">
         <div class="said-body">
-          <div class="t-micro" style="margin-bottom:8px">You said</div>
+          <div class="t-micro">You said</div>
           <p class="said-text" id="cfSaidText"></p>
           <textarea class="said-edit" id="cfSaidEdit" rows="2" hidden
                     aria-label="What you are building"></textarea>
@@ -1798,21 +1823,21 @@ a{text-decoration:none;color:inherit}
 
       <div class="said cf-answers" id="cfAnswers" hidden>
         <div class="said-body">
-          <div class="t-micro" style="margin-bottom:8px">And you told us</div>
+          <div class="t-micro">And you told us</div>
           <div class="head-meta" id="cfAnswerChips"></div>
         </div>
       </div>
 
       <div class="said cf-answers" id="cfExcl" hidden>
         <div class="said-body">
-          <div class="t-micro" style="margin-bottom:8px">And leaving out</div>
+          <div class="t-micro">And leaving out</div>
           <div class="head-meta" id="cfExclChips"></div>
         </div>
       </div>
 
       <div class="said" id="cfChange" hidden>
         <div class="said-body">
-          <div class="t-micro" style="margin-bottom:8px">You asked for</div>
+          <div class="t-micro">You asked for</div>
           <p class="said-text" id="cfChangeText"></p>
         </div>
       </div>
@@ -1821,18 +1846,11 @@ a{text-decoration:none;color:inherit}
       <div class="cf-turn cf-act">
       <div class="gate">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <p id="cfGate"><b>Nothing is searched until you approve this.</b> If we have read your idea
-           wrongly, every view that follows will be confidently wrong — and there is no way to tell
-           from the results alone.</p>
+        <p id="cfGate"><b>Nothing is searched until you approve this.</b> Every result that
+           follows is built from these criteria — if the reading is wrong, the results will be
+           wrong in a way you cannot see.</p>
       </div>
 
-      <div class="cf-actions">
-        <span class="cf-note">You can change any of this later.</span>
-        <span class="spacer"></span>
-        <button class="btn btn-primary" id="cfApprove" data-cf-approve="create">
-          <span id="cfApproveLabel">Approve and search</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </button>
-      </div>
       </div>
     </div>
 
@@ -1878,6 +1896,13 @@ var stage  = $('#stage');
 var app    = $('#app');
 var parked = $('#parked');
 var cfCard = $('#cfCard');
+var dockAct= $('#dockAct');
+
+function dockApprove(state){
+  if (state === 'off'){ dockAct.hidden = true; $('#cfApprove').disabled = false; return; }
+  dockAct.hidden = false;
+  $('#cfApprove').disabled = state === 'gated';
+}
 var bdBlock= $('#bdBlock');
 var conv   = $('#conv');
 var thread = $('#thread');
@@ -2108,8 +2133,8 @@ function scrollToTopOf(node){
 var CF = {
   first:{
     title:'Here is how we read your idea',
-    lede:'Correct anything that is wrong before we search — say what is off and I will fix it. This is the one place where a mistake is cheap.',
-    gate:'<b>Nothing is searched until you approve this.</b> If we have read your idea wrongly, every view that follows will be confidently wrong — and there is no way to tell from the results alone.',
+    lede:'Correct anything that is wrong — say what is off and I will adjust it.',
+    gate:'<b>Nothing is searched until you approve this.</b> Every result that follows is built from these criteria — if the reading is wrong, the results will be wrong in a way you cannot see.',
     cta:'Approve and search', go:'create', said:true
   },
   change:{
@@ -2173,6 +2198,10 @@ function saidEdit(on){
   $('#cfSave').hidden   = !on;
   $('#cfCancel').hidden = !on;
   $('#cfSave').disabled = false;
+
+  if (on) cfCard.setAttribute('data-editing',''); else cfCard.removeAttribute('data-editing');
+  if (!dockAct.hidden) dockApprove(on ? 'gated' : 'live');
+  if (cmpMain) cmpMain.say(on ? 'Finish your edit to approve' : '');
   if (!on){ if (was) $('#cfEdit').focus(); return; }
   box.value = SAID_TEXT;
   saidGrow(box);
@@ -3624,6 +3653,7 @@ function resetConversation(){
   thread.innerHTML = '';
   park(cfCard); park(bdBlock);
   conv.classList.remove('has-thread');
+  dockApprove('off');
   var el = $('.conv-dock'); el.style.transition = ''; el.style.transform = '';
   cmpMain.reset();
   ghostApi.restart();
@@ -3821,6 +3851,8 @@ function gateIsLive(){
 }
 function gateRefine(text){
   finishReveal();
+
+  dockApprove('off');
   pushYou(thread, text);
   gatePending = text;
   var node = document.createElement('div');
@@ -3882,6 +3914,8 @@ thread.addEventListener('click', function(e){
 function pushConfirm(t, mode, into){
   setConfirmMode(mode);
 
+  dockApprove('live');
+
   ghostApi.hint('Tell me what\u2019s off\u2026');
   var w;
   if (into){ settleAnswer(into, cfCard); w = into.wrap; }
@@ -3892,6 +3926,7 @@ function pushConfirm(t, mode, into){
 
 function approveConfirm(mode, now){
   cfCard.setAttribute('data-approved','');
+  dockApprove('off');
   bdBlock.setAttribute('data-mode', mode);     
   var t = cfCard.closest('.thread');
   if (!t) return;
