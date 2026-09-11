@@ -4,6 +4,32 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Terrain — interactive prototype</title>
+
+<!-- How the link renders when it is sent to someone. Added 2026-09-11: the page
+     had a title and nothing else, so Slack showed a bare URL and LinkedIn showed
+     a grey placeholder.
+
+     NO og:image, and that is a decision rather than an omission. og:image has to
+     be a PNG or JPG -- scrapers will not render SVG -- so a preview image would
+     be a NEW RASTER, and the raster rule admits exactly three literal paths. A
+     text card is not worth widening it for. See CLAUDE.md.
+
+     The description deliberately does not say "where the opportunity is", which
+     is what the conversation surface below still says. Two questions, not three.
+
+     noindex keeps it out of search while leaving the link fully working for
+     anyone who has it. -->
+<meta name="description" content="Describe what you're building, and see who else is in the space, what sits adjacent to it, and which part of it each of them holds.">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TIS Patent Intelligence">
+<meta property="og:title" content="Terrain — interactive prototype">
+<meta property="og:description" content="Describe what you're building, and see who else is in the space, what sits adjacent to it, and which part of it each of them holds.">
+<meta property="og:url" content="https://talentintelligencestrategies.github.io/terrain/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Terrain — interactive prototype">
+<meta name="twitter:description" content="Describe what you're building, and see who else is in the space, what sits adjacent to it, and which part of it each of them holds.">
+
 <link rel="icon" href="../../brand/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../../brand/fonts/fonts.css">
 <script>

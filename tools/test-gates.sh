@@ -36,6 +36,8 @@ p_blockcmt() { printf '<style>/* internal note */</style>\n' >> "$1/index.html";
 p_dangling() { printf '<img src="brand/missing-asset.svg">\n' >> "$1/index.html"; }
 p_badjs()    { printf '<script>function (</script>\n' >> "$1/index.html"; }
 p_nolicence(){ rm -f "$1/brand/fonts/OFL-Urbanist.txt"; }
+p_nometa()   { sed -i.bak 's|<meta property="og:title"[^>]*>||' "$1/index.html"; rm -f "$1/index.html.bak"; }
+p_indexable(){ sed -i.bak 's|noindex, nofollow|all|' "$1/index.html"; rm -f "$1/index.html.bak"; }
 
 echo "planting violations against a clean build:"
 run "raster image"          "raster image"        p_raster
@@ -48,6 +50,8 @@ run "block comment survived" "block comment"      p_blockcmt
 run "dangling reference"    "dangling"            p_dangling
 run "broken JavaScript"     "does not parse"      p_badjs
 run "OFL licence removed"   "OFL 1.1"             p_nolicence
+run "link preview tag removed" "meta tag missing"  p_nometa
+run "noindex removed"       "searchable"          p_indexable
 
 echo "and the clean build itself:"
 if out=$(python3 "$CHECK" "$SRC" 2>&1); then

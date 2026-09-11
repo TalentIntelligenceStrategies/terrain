@@ -312,6 +312,13 @@ Four things follow, and they are not stylistic:
   was amended in the same pass — a check that fails on a legitimate file is a check people learn to
   ignore, which is how the 6 MB got staged in the first place.
 
+  ***The rule was tested on 2026-09-11 and it held.*** *A link sent to someone renders a preview
+  card, and an `og:image` would have made it look like a product rather than a bare URL — but
+  `og:image` must be a PNG or JPG, because scrapers will not render SVG. **So the card ships without
+  an image**, and the prototype carries `og:` and `twitter:` text tags only. A nicer unfurl is not
+  worth a fourth literal path; if one is ever wanted, it is a deliberate decision recorded here, not
+  a file quietly added to the branch.*
+
   **It is still a weakening, so it is scoped to three literal paths, no glob.** A rename is still
   refused. A fourth file in that directory is still refused. Verify with
   `git check-ignore -v <path>`. **Adding a product means adding its three paths deliberately, one

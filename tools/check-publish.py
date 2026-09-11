@@ -114,6 +114,23 @@ if any(f.endswith('.woff2') for f in files):
         if lic not in present:
             fail(f"fonts are published without {lic} -- OFL 1.1 requires the notice travel with them")
 
+# 10 · the link preview survives. These are the difference between a link that
+#      reads as a product and one that reads as a broken URL, they live in the
+#      prototype's <head> on main, and nothing else would notice if an edit
+#      dropped them. og:image is absent ON PURPOSE -- it would have to be a
+#      raster, and the raster rule admits three literal paths.
+required = ['name="description"', 'name="robots"', 'property="og:title"',
+            'property="og:description"', 'property="og:url"', 'name="twitter:card"']
+idx = text.get('index.html')
+if idx is None:
+    fail("index.html is missing from the published tree")
+else:
+    for tag in required:
+        if tag not in idx:
+            fail(f"link-preview meta tag missing from index.html: {tag}")
+    if 'noindex' not in idx:
+        fail("index.html is no longer noindex -- the prototype would become searchable")
+
 if fails:
     print(f"REFUSING TO PUBLISH — {len(fails)} problem(s):")
     for m in fails:
