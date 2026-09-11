@@ -662,7 +662,9 @@ a{text-decoration:none;color:inherit}
 .drill-score-k{color:var(--text-3)}
 
 .drill-holder{font-size:12.5px;line-height:1.4;color:var(--text-1)}
-.pn-score{color:var(--text-3);display:inline-flex;align-items:baseline;gap:var(--s-4)}
+
+.pn-score{color:var(--text-3);display:inline-flex;align-items:baseline;
+  gap:var(--s-4);margin-inline-start:auto}
 
 .filter-chip{display:flex;align-items:center;gap:var(--s-8);flex-wrap:wrap;
      padding:var(--s-8) var(--s-10);margin-bottom:var(--s-12);
@@ -1064,10 +1066,15 @@ a{text-decoration:none;color:inherit}
 .pn-name-real{font-size:15px;line-height:1.4;font-weight:500;color:var(--text-1);
   text-wrap:pretty}
 .pn-meta{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap}
+
+.pn-no{color:var(--text-2)}
 .pn-body{display:flex;flex-direction:column;gap:var(--s-24);padding-top:var(--s-16)}
 .pn-sec{display:flex;flex-direction:column;gap:var(--s-12)}
 .pn-sec-h{display:flex;align-items:baseline;gap:var(--s-8);margin:0}
 .pn-lines{display:flex;flex-direction:column;gap:var(--s-8)}
+
+.pn-prose{margin:0;font-size:12.5px;line-height:1.6;color:var(--text-1);
+  text-wrap:pretty}
 
 .pn-claims{margin:0;padding:0;list-style:none;
   display:flex;flex-direction:column;gap:var(--s-16)}
@@ -1098,8 +1105,6 @@ a{text-decoration:none;color:inherit}
 .hf dt:nth-of-type(10),.hf dd:nth-of-type(10){margin-block-start:var(--s-12)}
 
 .pn-sec:first-of-type .pn-lines{max-width:68ch}
-
-.pn-score{flex-direction:column;align-items:flex-start;gap:var(--s-2)}
 
 .pn-cn{text-align:end;justify-self:end}
 
@@ -1163,8 +1168,6 @@ a{text-decoration:none;color:inherit}
 
 .set-rank{height:30px;padding:0 var(--s-10);font-size:12.5px;gap:var(--s-6)}
 .set-rank:hover{background:var(--ink-hover)}
-
-}
 
 .lm{position:relative;flex:0 0 auto}
 .lm-btn{display:inline-flex;align-items:center;gap:var(--s-6);height:30px;
@@ -1280,9 +1283,6 @@ a{text-decoration:none;color:inherit}
 
 .set-wrap.is-running .set-bar,.set-wrap.is-running .set-split{opacity:.45;pointer-events:none;
   transition:opacity var(--dur-2) var(--ease)}
-
-.set-wrap[data-built] .set-bar,.set-wrap[data-built] .set-split,
-.set-wrap[data-built] .set-run{opacity:.5;pointer-events:none}
 
 .bd[data-auto] #bdOpen{display:none}
 .bd[data-auto] .done-note{margin-left:0}
@@ -1407,6 +1407,9 @@ a{text-decoration:none;color:inherit}
     padding-top:var(--s-14);font-size:13px;color:var(--text-2)}
 
 .hlp-qa{margin:0;display:flex;flex-direction:column;gap:var(--s-16)}
+
+.hlp-grp + .hlp-grp{margin-block-start:var(--s-32)}
+.hlp-grp-h{margin:0 0 var(--s-12);color:var(--text-2)}
 .hlp-qa dt{color:var(--text-1);font-size:13px;line-height:1.4;font-weight:500}
 .hlp-qa dd{margin:var(--s-4) 0 0;font-size:13px;line-height:1.6;
     color:var(--text-2);max-width:68ch;text-wrap:pretty}
@@ -1512,7 +1515,7 @@ a{text-decoration:none;color:inherit}
     </a>
 
     <button class="mast-btn mast-new" type="button" data-go="conversation:new">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
       <span>New search</span>
     </button>
 
@@ -2227,23 +2230,76 @@ a{text-decoration:none;color:inherit}
         <section class="card">
           <div class="card-head">
             <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
-            <h2 class="t-title">Before you write</h2>
+            <h2 class="t-title">Common questions</h2>
           </div>
           <div class="card-body">
-            <dl class="hlp-qa">
-              <div>
-                <dt>How long does a build take?</dt>
-                <dd>A few minutes. You can close Terrain and come back — the map is waiting when you return, because a build belongs to the project rather than to the tab you started it in.</dd>
-              </div>
-              <div>
-                <dt>When do points come back?</dt>
-                <dd>At the start of each quarter. Points you have not spent do not carry over, and a build is charged when you approve it rather than when the map finishes drawing.</dd>
-              </div>
-              <div>
-                <dt>Can Terrain tell me whether I am free to file?</dt>
-                <dd>No. Terrain shows you what has already been filed and which company holds it. Whether any of it stands in your way is a legal question, and that one is for a patent attorney.</dd>
-              </div>
-            </dl>
+
+            <div class="hlp-grp">
+              <h3 class="t-micro hlp-grp-h">Your search and your map</h3>
+              <dl class="hlp-qa">
+                <div>
+                  <dt>How long does a build take?</dt>
+                  <dd>A few minutes. You can close Terrain and come back — the map is waiting when you return, because a build belongs to the project rather than to the tab you started it in.</dd>
+                </div>
+                <div>
+                  <dt>Can Terrain tell me whether I am free to file?</dt>
+                  <dd>No. Terrain shows you what has already been filed and which company holds it. Whether any of it stands in your way is a legal question, and that one is for a patent attorney.</dd>
+                </div>
+                <div>
+                  <dt>Why are the rows on the map companies?</dt>
+                  <dd>Because that is the question a founder can act on. Each row is a holder and each column an approach, so a row tells you what one company has built and a column tells you who is working the same way you are. An empty cell means that company has not filed there — it is a fact about them, not about the technology.</dd>
+                </div>
+                <div>
+                  <dt>Where does the patent data come from?</dt>
+                  <dd>The Innovue database — around 180 million records, covering the major offices. Terrain searches it and lays out what it returns; it does not hold a database of its own.</dd>
+                </div>
+                <div>
+                  <dt>Can I change what a map covers after it is built?</dt>
+                  <dd>Not from the map. You can go back to an earlier version of the project, or start a new search. Changing what gets searched costs a fresh run across the whole database, so it goes through the same approval step the first search did.</dd>
+                </div>
+                <div>
+                  <dt>Does sorting or filtering the list change the map?</dt>
+                  <dd>No. Every patent the search returned feeds the views, and it keeps doing so. Sorting and filtering change what you are looking at, not what the views count.</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="hlp-grp">
+              <h3 class="t-micro hlp-grp-h">Points and your plan</h3>
+              <dl class="hlp-qa">
+                <div>
+                  <dt>When do points come back?</dt>
+                  <dd>At the start of each quarter. Points you have not spent do not carry over, and a build is charged when you approve it rather than when the map finishes drawing.</dd>
+                </div>
+                <div>
+                  <dt>What spends points?</dt>
+                  <dd>Building a map. Reading it does not — opening a record, sorting the list, re-ranking it, switching views and reverting to an earlier version are all free, however many times you do them.</dd>
+                </div>
+                <div>
+                  <dt>What happens if I run out?</dt>
+                  <dd>Everything you have already built stays open and stays readable. You cannot start a new build until the next quarter or until you move up a plan.</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="hlp-grp">
+              <h3 class="t-micro hlp-grp-h">Your projects</h3>
+              <dl class="hlp-qa">
+                <div>
+                  <dt>Who can see my projects?</dt>
+                  <dd>Only you. There are no shared workspaces and no seats in Terrain — an account is one person's.</dd>
+                </div>
+                <div>
+                  <dt>Can I send a map to someone else?</dt>
+                  <dd>Not from inside Terrain today. Nothing stops you showing it on your own screen, and telling us you need to send one is useful — it is what decides whether this gets built.</dd>
+                </div>
+                <div>
+                  <dt>What happens to my projects if I close my account?</dt>
+                  <dd>They go, along with the searches and the maps built from them. Nothing is recoverable afterwards, so take what you need out first.</dd>
+                </div>
+              </dl>
+            </div>
+
           </div>
         </section>
 
@@ -3164,7 +3220,61 @@ function pnPublished(rec){
   var y = rec.filed + 1 + (rec.n % 2);
   return y > PN_Y_END ? 'Not yet published' : String(y);
 }
+
+var DEMO_REC = {
+  number:    'US 12,984,117 B2',
+  appno:     'US 18/992,410',
+
+  kind:      'Invention',
+  ipcMain:   'B64U 10/13',
+  ipc:       ['B64U 10/13', 'B64U 30/293', 'B64U 50/19'],
+  holder:    'ACME Group',
+
+  inventors: ['J. Doe', 'R. Roe', 'M. Poe'],
+  where:     'United States'
+};
+
+var DEMO_ABSTRACT = 'An airframe for a rotary-wing unmanned aircraft has four arms '
+  + 'joined to a central body by hinges that carry flight loads rather than passing '
+  + 'them to a separate spar. Each arm folds against the body about an axis inclined '
+  + 'to the rotor plane, stowing within the plan footprint of the body without '
+  + 'removing the rotors. The motor mount is formed as part of the arm end, locating '
+  + 'the stator directly on the load path.';
+var DEMO_CLAIMS = [
+  'An airframe for a rotary-wing unmanned aircraft, comprising: a central body; four '
+    + 'arms, each having a proximal end and a distal end; a hinge joining the proximal '
+    + 'end of each arm to the central body and defining a fold axis inclined to the '
+    + 'rotor plane; and a motor mount formed integrally with the distal end of each '
+    + 'arm, wherein the hinge is arranged to carry flight loads between the arm and '
+    + 'the central body.',
+  'The airframe of claim 1, wherein each hinge is arranged to pass over centre as its '
+    + 'arm reaches the deployed position, such that flight loads seat the joint.',
+  'The airframe of claim 2, further comprising a detent retaining each arm in the '
+    + 'deployed position until a release load is applied.',
+  'The airframe of claim 1, wherein each arm folds against the central body within the '
+    + 'plan footprint of the central body with its rotor attached.',
+  'The airframe of claim 1, wherein the motor mount locates a stator of a drive motor '
+    + 'on the load path between the rotor and the hinge.',
+  'The airframe of claim 5, wherein the motor mount and the arm are formed as a single '
+    + 'moulded composite part.',
+  'The airframe of claim 6, wherein the composite part comprises a foam core enclosed '
+    + 'by a fibre-reinforced skin.',
+  'The airframe of claim 1, wherein the central body encloses a sealed electronics bay, '
+    + 'and the hinge is outboard of the seal.',
+  'The airframe of claim 1, wherein each arm carries a conductor between the central '
+    + 'body and the motor mount, the conductor passing through the hinge on the fold axis.'
+];
+
+var PN_MONO = { number:1, appno:1, ipcMain:1, ipc:1 };
+
+function pnList(items){
+  return items.map(function(v){ return '<span>' + v + '</span>'; }).join('');
+}
 function pnFieldValue(rec, key){
+  if (rec.demo && DEMO_REC.hasOwnProperty(key)){
+    var v = DEMO_REC[key];
+    return Array.isArray(v) ? pnList(v) : v;
+  }
   switch (key){
     case 'kind':      return rec.kind;                 
     case 'status':    return statusHTML(rec.status);
@@ -3186,7 +3296,9 @@ function pnFieldsHTML(rec, keys){
   keys.forEach(function(k){ want[k] = 1; });
   PN_FIELDS.forEach(function(f){
     if (!want[f[0]]) return;
-    out.push('<dt>' + f[1] + '</dt><dd>' + pnFieldValue(rec, f[0]) + '</dd>');
+    out.push('<dt>' + f[1] + '</dt>'
+      + '<dd' + (PN_MONO[f[0]] ? ' class="fig fig-s"' : '') + '>'
+      + pnFieldValue(rec, f[0]) + '</dd>');
   });
   return out.join('');
 }
@@ -3197,8 +3309,11 @@ function patentPaneHTML(rec, opt){
   for (k = 0; k < rec.claims; k++){
     claims.push('<li class="pn-claim">'
       + '<span class="fig fig-s pn-cn">' + (k + 1) + '</span>'
-      + '<span class="pn-lines">'
-      + bars(pnClaimLines(rec, k), ['w-full','w-full','w-lg','w-md']) + '</span>'
+
+      + (rec.demo
+          ? '<span class="pn-prose">' + DEMO_CLAIMS[k] + '</span>'
+          : '<span class="pn-lines">'
+            + bars(pnClaimLines(rec, k), ['w-full','w-full','w-lg','w-md']) + '</span>')
       + '</li>');
   }
   return '<div class="pn">'
@@ -3212,8 +3327,9 @@ function patentPaneHTML(rec, opt){
           ? '<span class="pn-name-real">' + DEMO_TITLE + '</span>'
           : bar('w-full','title') + bar('w-lg','title'))
     +     '</div>'
+
     +     '<div class="pn-meta">' + statusHTML(rec.status)
-    +       '<span class="t-micro">' + rec.kind + '</span>'
+    +       '<span class="fig fig-s pn-no">' + pnFieldValue(rec, 'number') + '</span>'
 
     +       '<span class="pn-score t-micro">Score '
     +         '<span class="fig fig-s">' + rec.score + '</span></span></div>'
@@ -3229,7 +3345,9 @@ function patentPaneHTML(rec, opt){
     +   '<section class="pn-sec">'
     +     '<h4 class="t-micro pn-sec-h">Abstract</h4>'
     +     '<div class="pn-lines">'
-    +       bars(rec.nAbs, ['w-full','w-full','w-full','w-lg']) + '</div>'
+    +       (rec.demo
+            ? '<p class="pn-prose">' + DEMO_ABSTRACT + '</p>'
+            : bars(rec.nAbs, ['w-full','w-full','w-full','w-lg'])) + '</div>'
     +   '</section>'
     +   '<section class="pn-sec">'
     +     '<h4 class="t-micro pn-sec-h">Claims '
@@ -4263,7 +4381,10 @@ function renderBilling(){
 
 var HELP_TOPICS = [
   ['broken',  'Something is not working'],
-  ['plan',    'A question about my plan'],
+  ['results', 'A question about my search results'],
+  ['views',   'A question about the map or the views'],
+  ['plan',    'Points, plan and billing'],
+  ['account', 'My account'],
   ['feedback','Feedback on Terrain'],
   ['other',   'Something else']
 ];
@@ -4908,7 +5029,8 @@ var SET_CEILING = 50;
 
 function setRecFor(i){
   var rec = patentRec(i * 37 + 5);
-  if (i === 0) rec.demo = true;
+
+  if (i === 0){ rec.demo = true; rec.kind = DEMO_REC.kind; }
   return rec;
 }
 function setCount(){ return Math.min(SET_CEILING, DATA.total || 0); }
