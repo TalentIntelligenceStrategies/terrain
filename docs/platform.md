@@ -211,6 +211,14 @@ moment routes through it. **The working surface is a step and a destination at o
 new: moments 3, 4, 5 and 6 all happen on it without it ever being left.* All are reached and left
 without opening a window — §2.1 is unaffected.
 
+***Three surfaces, four destinations — 2026-09-11.*** *§7a.10 added Account settings, Plan & billing
+and Help behind the profile menu, so the points page stopped being the only one. **The surface count
+is untouched and that is the whole distinction**: a surface is somewhere the product happens, a
+destination is somewhere the founder steps off to and returns from in place. Four of them does not
+make a fourth surface, no moment routes through any, and §2.1 is still unaffected. The line above
+would have to change if one of them ever appeared on the path — and the test for that is whether a
+moment ends there.*
+
 | Moment | Surface | What is on screen |
 | --- | --- | --- |
 | 1 · First run | conversation | The composer, centred, and the question above it. Nothing else. |
@@ -2421,6 +2429,36 @@ filed with the phrase it happened to share a sentence with.
 one. [brief.md](brief.md) §4 carries the decision, because the sentence it changes is positioning;
 §4b carries why deleting it was the more active act; §1a records it as conflict 1.
 
+#### Arrival order is not a reading — ruled 2026-09-11
+
+**The record now composes in four groups rather than landing on one frame** (`design-language.md`
+§6). That needed a ruling here before it could ship, because a staged arrival tells the founder an
+order to read in, and this section's whole job is to keep Terrain from telling them anything.
+
+**The ruling: a temporal order that mirrors the document's own order is not a reading. One that
+departs from it is.**
+
+The argument, and the limit is the load-bearing half. A patent document is already ordered —
+bibliographic data, then the abstract, then the claims — and **that order is the document's, not
+ours.** The pane already expresses it *vertically* and nobody has ever called the vertical order an
+opinion. Time is a second axis carrying the same, already-published sequence. Nothing is added,
+nothing is ranked, and the record is identical when the transition does not run.
+
+Set against the elements this section refuses, the difference is clean. **Match highlighting picks
+out which parts are about *you*** — a claim about the founder's situation that Terrain would be
+authoring. **A decode restates the text in other words.** A staged arrival makes no claim about the
+founder at all: it is the same for every patent, every founder and every visit.
+
+**So the limit is where the rule actually bites.** Staging the claims first *because claims matter
+most* would be Terrain ranking the parts of the record, and is refused. **The order may only ever be
+the document's own.** `design-language.md` §7 carries the same limit on the stagger rule it narrowed
+to permit this.
+
+*And the §9 objection, stated so it is not skipped: an unread marker is deferred as an analyst's
+workflow, and a reading order can look like a cousin of one. It is not. **An unread marker is state
+about the founder's progress** — it persists, it differs per patent, and it accumulates into a
+queue. A stagger stores nothing, differs from nothing, and is gone the moment it has run.*
+
 **Three restatements of the old row travel with this and must move in the same pass:**
 [case.md](case.md) §4.D and §6.4, `marketing.md` §5, and
 [`design/components.md`](../design/components.md)'s record row, each of which repeats *no score* as
@@ -2757,14 +2795,16 @@ to direct questions and should carry more weight than the rest:
 - Whether the link expires, and whether it can be revoked.
 
 
-### 7a.9 · The points page — the only destination
+### 7a.9 · The points page — the first destination
 
 **Recorded 2026-09-08.** The standing points balance in the chrome (`design-language.md` §7) is
 now a **link**, and what it opens is a page about spend.
 
 **This amended §2 the way ~~§7a.2~~ did**, taking the surface list to five. *It is **three** since
-2026-09-10 — conversation, the working surface, points — and this page is the only destination
-left.* What survives is the rule ~~§7a.2~~ established, and it survives its author: a destination
+2026-09-10 — conversation, the working surface, points.* ~~*and this page is the only destination
+left.*~~ **It stopped being the only one on 2026-09-11**, when §7a.10 added three more behind the
+profile menu. *The heading above read "the only destination" until then; the rule it was demonstrating
+is what survives, and three more pages obeying it is the rule working rather than the rule weakening.* What survives is the rule ~~§7a.2~~ established, and it survives its author: a destination
 is somewhere the founder goes and returns from **in place**, never a step on the path to a map. No
 moment routes through this page and §2.1's one-tab rule is untouched.
 
@@ -2786,8 +2826,10 @@ product, so a founder wondering where their points went looks at the number.
 (§6a.5), not when the views finish resolving. A balance that ticks while a pane fills would be
 charging for work in progress, and the gate is the last point at which the founder could have
 chosen not to spend it.* A `Plan & billing` row
-exists in the profile menu and is still undesigned (§11 keeps pricing open); this page is **not**
-that screen. It answers *what did I spend* and never *what do I pay*.
+exists in the profile menu and ~~is still undesigned (§11 keeps pricing open)~~ **was designed on
+2026-09-11 at §7a.10**; this page is **not** that screen. It answers *what did I spend* and never
+*what do I pay*. **That sentence is now a boundary between two live screens rather than a note about
+an absent one**, and §7a.10 treats it as the test any later addition to either page has to pass.
 
 #### What it takes from IPtech, and what it refuses
 
@@ -2902,6 +2944,139 @@ of bug rather than the instance.*
   as a footer of prose under five cards that already carry captions and info affordances. What they
   said that was load-bearing is in those: the balance card states the metering rule, and the
   run-type card's affordance states the build-versus-rebuild cost.
+
+### 7a.10 · The account destinations — added 2026-09-11
+
+**Three pages behind the profile menu: Account settings, Plan & billing, Help.** The menu and its
+four rows have existed since 2026-09-10; the rows were inert, and this section is what closes that.
+
+***How they got authorised, because the route matters more than the pages do.*** §9 defers
+authentication, and `design-language.md` §7 and §7a.9 both recorded these destinations as
+**undesigned**, with the same reason: §11 keeps pricing open and a Plan screen would be designing
+against an undecided thing. `CLAUDE.md`'s deferral rule admits exactly one route out — *a session
+explicitly names the item and asks for it* — and a session named all three. **That is the route, used
+as written, and the discipline that comes with it is §9's own:** using it is not a licence to widen
+the item. A session model, a login screen and a password reset were not named and are not here.
+
+#### The division of labour with the points page was written before these existed
+
+§7a.9 says it in one line: *this page answers **what did I spend** and never **what do I pay**.* So
+Plan & billing answers what you pay and never what you spent. **No ring, no usage bars, no run
+breakdown, no second chart.** The single reference to spend is a sentence with a control at the end
+of it — *N points left this quarter* — pointing at the page whose whole subject that is.
+
+*This is the test any later addition to either page has to pass.* A spend figure that appears on the
+billing screen is the two pages growing back together, and the reason they were separated is that a
+page about a plan and a page about consumption answer different questions at different moments.
+
+#### Pricing is still open, and what the screen assumes is recorded rather than hidden
+
+The figures are illustrative like every figure in this repository, and internally consistent:
+**6,000 points for $600 a quarter is ten cents a point**, which is the arithmetic §8.2's derived unit
+costs already run on. **§11's pricing bullet is not closed by them.**
+
+***And the plan name is a skeleton bar, which is the load-bearing choice on that screen.*** An
+allowance and a price are **figures**, and every figure here is illustrative. A tier **name** is a
+*taxonomy* — and the hardest-won rule in `CLAUDE.md` is that a taxonomy survives having its numbers
+replaced. Inventing `Pro` / `Team` / `Enterprise` would put a tier structure nobody has decided into
+a public artifact, where it would read as settled. The menu's own plan line is already a bar and this
+matches it. **`marketing.md` §3's pricing section still holds three tier cards carrying no numbers at all**, and
+the illustrative price does not propagate there: an in-product figure on the screen showing *your* plan is
+a different object from a tier comparison addressed to someone choosing one.
+
+**`Change plan` is present and inert** for the same reason — there are no tiers to change to, and an
+in-product tier picker would have to name them.
+
+***The plan shape stays in one place, and that is now literally true rather than aspirational.*** §11
+says the allowance and the ring *"are in one place on purpose"*, and a second surface asserting a plan
+shape breaks that property unless it reads the same constant. `PLAN`, `PLAN_PRICE` and `PLAN_PERIOD`
+sit in one block and both `renderUsage` and `renderBilling` read them. If pricing resolves to anything
+that is not an allowance, those three lines and the ring are what change.
+
+#### An alert is not a notification, and the test is the entry
+
+Account settings carries **two switches** — *email when a build finishes*, *email when your plan
+renews*. §9 defers **filing alerts · 專利預警**, and `marketing.md` §5 forbids alerts or monitoring
+anywhere in the copy, so this needs a test rather than an assurance.
+
+> **An alert is Terrain telling the founder about *the world*. A notification is Terrain telling them
+> about *work they themselves started*.**
+
+The first watches a corpus, persists, differs per patent, and accumulates into a queue — it is the
+strongest recurring-value feature in the engine and the named subscription rationale, **which is
+exactly why it may not arrive through a settings page**. The second stores no state about any patent
+and is gone the moment it has sent.
+
+**The limit is where the rule bites.** A digest, a weekly summary, a *new filings near you* row, and a
+standing *live only* or *US only* preference are all the first object wearing the second's clothes,
+and every one of them is refused. *Nothing on that card may watch anything.* It is the same shape as
+§7a.3's ruling that arrival order is not a reading: the permitted thing and the deferred thing look
+alike from a distance, so the entry carries the test that separates them rather than the conclusion.
+
+#### What is on Account settings, and the two things that are not
+
+Four cards — **Your details** (name, email, password, each an inline edit), **Appearance**,
+**Notifications**, **Your data**.
+
+***Appearance is additive and is not a demotion, and this is stated because §6a.1 forbids the thing it
+resembles.*** §6a.1 and `design-language.md` §10.4 both say the theme control may not be demoted into
+the account menu, and that a design pass proposing it *"reverses a recorded decision and has to be
+argued as one."* **The masthead control is untouched** — still on the bar, at every width, on every
+surface, and verified so at 500, 760, 1000 and 1440px. A second control over one value is not a
+demotion of the first, and it needed no new code: `applyTheme()` already syncs every
+`[data-theme-set]` on the page, so the settings row joins the existing control rather than shadowing
+it. **One value, one writer, two places to press.**
+
+**There is no export row, and that is the decision being kept rather than a gap.** §7a.0 records the
+file half of export — *PDF, slide, anything downloadable* — being put to the user on 2026-09-04 and
+**explicitly declined**, in favour of a link plus copyable text; §9 says there is no export in v1. So
+it is out **by decision and not only by deferral**, which is the stronger of the two and the reason
+this is a sentence rather than a shrug. So *Your data* is **delete-account only**, and an invoice row's control is **View**, not
+Download — a viewed invoice is a surface, a downloaded one is a file.
+
+**There is no team, no seats and no invite.** §8.3 **cuts** project sharing outright — *read-only
+versus edit, seats and roles are enterprise shape* — which is stronger than deferred.
+
+#### Help is contact-first, and that is honesty about a product with no documentation site
+
+Nothing in any document specced a Help surface before this pass. It is a message composer with a
+topic menu and a reply-time line, and three answers to questions no other surface answers.
+
+**The composer is not reused**, and the reason is the reason §5 has no chat panel: `.cmp` is *one
+component, one size* and its identity is **the thing you type your idea into**. A support field
+wearing it would be a second conversational surface.
+
+**The three answers may not restate labelling.** `design-language.md` §7 says the info popover carries
+explanation only, and the test is whether a screenshot with no popover open still says what the
+founder is looking at — a Help page that hoovered up captions would break the same rule from the other
+side. So the three are a build's wait, when points come back, and **that Terrain shows what has been
+filed and does not tell you whether you can file**, which is `brief.md`'s locked positioning and the
+single most valuable sentence anyone will read on that page.
+
+#### What is inert, as one rule rather than seven exceptions
+
+Change password, *Delete account permanently*, Change plan, both Update controls, an invoice's View,
+and Sign out all do nothing. **Every one of them is an act on an account, and authentication is
+deferred.** What is live is everything that is pure client state: both inline edits, both switches,
+the appearance control, the topic menu and the message. *Naming this as one rule is the point — seven
+separately-explained inert controls is how a scope boundary stops being legible.*
+
+#### Two bugs found on the way in, both filed rather than fixed
+
+Recorded here because §11 carries them and because how they were found is the reusable part: **both
+were found by speccing against the code, not by looking at the screen.**
+
+1. **Three `@container` blocks and no container.** `container-type` appears nowhere in the prototype,
+   so the three `@container` rules on `.set-split-in` and `.drill-pane` have **never run** — the split
+   has never taken two columns and the drill pane has never hidden below 719px, and
+   `design-language.md` §7 specs the `container-type` the prototype never wrote. `.pref` forced the
+   first one into the file, which is how this surfaced.
+2. **`#projMenu` claims `role="menu"` and cannot support it.** It contains a text `<input>`, which APG
+   forbids inside a menu, and has **zero `role="menuitem"` children**, so it announces as an empty
+   menu. The repair is to stop claiming the role — which is also what lets version history stay
+   *nested* rather than flattened, the thing §6a.1 protects by name.
+
+Both change surfaces this pass was not asked to touch, so both are §11 entries.
 
 ## 8 · What Terrain takes from IPtech — the ledger
 
@@ -3545,6 +3720,24 @@ fix a session model before the surfaces it serves have settled. **The cost of le
 every "has the founder done X yet" test in the prototype is a page-lifetime flag, so a reload starts
 the founder over, and the real product will not.
 
+> ***The route out was used against three of its neighbours on 2026-09-11, and this entry is not one
+> of them.*** A session named **Account settings, Plan & billing and Help** and asked for them, and
+> §7a.10 is what was built. **The session model was not named and stays deferred**, which is the
+> distinction this note exists to keep: the three screens are *about* an account and none of them
+> *authenticates* one.
+>
+> **What that costs, stated rather than discovered later.** Seven controls across the three pages are
+> inert — change password, delete the account, change plan, both payment updates, view an invoice,
+> and sign out — because every one of them is an act on an account rather than a setting on a page.
+> §7a.10 records them as **one rule and not seven exceptions**, which is the form that stays legible:
+> seven separately-explained dead controls is how a scope boundary stops being readable and starts
+> being argued with.
+>
+> *And the flag is unchanged. `hasEntered` is still a page-lifetime session flag, the three
+> destinations still read nothing about who is signed in, and every identity on them renders as a
+> grey bar under §8 — which is the same answer this entry already gives, arriving on three more
+> surfaces without needing a new one.*
+
 **Global jurisdiction + status filter.** "Live patents only" / "US only" as a **persistent control**
 that redraws the map, rivals and trend together. *§7a.5 permits "narrow to live only" as a one-shot
 action from a single cell; what is deferred is the standing control across every widget, which is a
@@ -4075,6 +4268,24 @@ the thing you typed into to make it.
   regardless of §1a and it still is** — the masthead won, so nothing ships on the rail, but the
   rail is still in the codebase and the argument for fixing it never depended on which shell won.
   *It is lower priority than it was and it is not closed by not being used.*
+- **Three `@container` blocks in the prototype have never run.** Added 2026-09-11. `container-type`
+  appears nowhere in the file, so the rules on `.set-split-in` and `.drill-pane` are dead: the split
+  has never taken two columns and the drill pane has never hidden below 719px.
+  `design-language.md` §7 specs `container-type: inline-size` on the split and the prototype never
+  wrote it. **Fixing it changes the working surface's layout**, which is why §7a.10 introduced the
+  first container for its own settings row and left these three alone. *It was found by speccing a
+  new component against the file, not by looking at the screen — which is the same way the
+  focus-radius bug in `design-language.md` §7 surfaced in the same pass.*
+
+- **`#projMenu` claims `role="menu"` and cannot support it.** Added 2026-09-11. It contains a text
+  `<input>`, which APG forbids inside a menu, and has **zero `role="menuitem"` children**, so it
+  announces as an empty menu — a worse defect than the missing keyboard `#acctMenu` had, and one that
+  adding arrow keys to it would paper over. The repair is to stop claiming the role: a labelled
+  region, a real list, and a roving tabindex over the rows. **That is also what lets version history
+  stay nested rather than flattened**, which §6a.1 protects by name — so this is a correctness fix and
+  an accessibility one at once. *The focus-return half is already done, because it lives inside
+  `closeMenus()`.*
+
 - How the IPC confidence signal is presented without becoming a statistics lesson (§6.1).
 - Incumbent-vs-startup data source for the rivals widget (§6.2).
 - **What the founder walks away with** — open, and discussed at §7a.8 without being settled. If it
@@ -4101,6 +4312,16 @@ the thing you typed into to make it.
 
   §7a.6 proposes a candidate answer to that gap — watching a cell or a holder — and is itself
   blocked on §10.9. The chain is: §10.9 → §7a.6 → the §9 gap → pricing.
+
+  ***And a second surface inherits the assumption since 2026-09-11, which is recorded rather than
+  hidden for the same reason the first one was.*** §7a.10's Plan & billing screen states the plan
+  outright — an allowance, a price and a period — where the points page stated only the allowance.
+  **It does not close this bullet.** The figures are illustrative and internally consistent at ten
+  cents a point, and the *tier name* is deliberately a **skeleton bar**, because a name is a taxonomy
+  and this bullet has not chosen one. `Change plan` is present and inert for the same reason.
+  **The "one place on purpose" property above is preserved and is now literally true**: `PLAN`,
+  `PLAN_PRICE` and `PLAN_PERIOD` are one block that both screens read, so resolving this bullet
+  changes three lines and the ring rather than two screens.
 
   **There is a second path to the same blocker, recorded 2026-09-04 and deliberately not ranked
   against the first.** §7a.8's option D — a position the founder records, re-checked over time —

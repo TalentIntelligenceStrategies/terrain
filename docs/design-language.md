@@ -796,7 +796,8 @@ component is added was standing in for a rule; the rule is above.*
 --dur-1: 120ms;   hover, press
 --dur-2: 200ms;   popover, chip, tooltip
 --dur-3: 320ms;   the record, composer expansion and collapse
---dur-4: 520ms;   a build stage (platform.md moment 4)
+--dur-4: 520ms;   an assembly, where the staging IS the design —
+                  a build stage (platform.md moment 4) and the record's arrival
 ```
 
 **Which curve, and why it is not simply "morphing takes ease-in-out".** One curve carried everything
@@ -974,13 +975,18 @@ Adopted 2026-08-31. Each is greppable, and §7 of the working plan for that pass
   convenience, and the bar is higher now that the list is empty.
 - **Hover-driven motion sits inside `@media (hover: hover) and (pointer: fine)`.**
 - **Exit is faster than enter**, everywhere, not only on the view swap.
-- **One motion per arrival.** *Added 2026-09-11.* An element that is arriving inside a container
-  that is itself arriving does not get an entrance of its own. The record carried one — `.pn` ran
-  a 200ms `pn-in` keyframe on `--ease` with 4px of Y, inside a container travelling 320ms on
-  `--ease-drawer` — and two curves over two durations on one object reads, at a tenth speed, as the
-  text settling inside a box that is still moving. **A drawer's contents do not fade in after the
-  drawer opens.** `pn-in` is deleted rather than scoped off, the record having one host; two
-  keyframes are left in the prototype, `sweep` and `sweepx`.
+- **Contents do not move *while* their container is moving.** *Added 2026-09-11 as "one motion per
+  arrival"; **narrowed the same day** when the record's arrival was re-specced — see §6's decision
+  above.* The fault this was written for is overlap, and it is unchanged: `.pn` ran a 200ms `pn-in`
+  **keyframe** on `--ease` with 4px of Y **inside** a container still travelling 320ms on
+  `--ease-drawer`, and two curves over two durations on one object reads, at a tenth speed, as the
+  text settling inside a box that is still moving. Being a keyframe, it also restarted from zero
+  when a second row was clicked mid-slide, where the container transition retargeted smoothly.
+  **What the narrowing permits is the case that reproduces neither fault:** transitions, on separate
+  objects, beginning only after the container has stopped. **What it still refuses is the original
+  sentence** — nothing fades in *while the drawer is still opening*. `pn-in` stays deleted; the
+  staging that replaced it is four transitions and no keyframe, and `sweep` and `sweepx` are still
+  the only two keyframes in the prototype.
 - **A container already in place does not move to say its contents changed.** *Added 2026-09-11.*
   Picking a second patent without closing the first is a designed path — the record never covers the
   left list precisely so it can be done — and re-running the slide there would be motion claiming
@@ -988,6 +994,72 @@ Adopted 2026-08-31. Each is greppable, and §7 of the working plan for that pass
   file already specifies for `.set-run-say` and `.rv`, and for the same reason: two records are
   different lengths, so a bare opacity swap reflows the pane and reads as two documents trading
   places rather than one pane changing what it holds.
+
+### The record composes, in reading order · DECIDED 2026-09-11
+
+***This reverses "a drawer's contents do not fade in after the drawer opens", and the reversal is a
+narrowing rather than a repeal.*** The record was reported as *a bit much* on arrival — eleven micro
+labels, eleven bars, an abstract and up to fifteen claims all becoming present on one frame, every
+one of them the same size — and as too fast to read as considered. Five treatments were built and
+compared against identical content; **A was chosen.**
+
+**What ships.** The container travels on `--dur-4` and `--ease-drawer`. Once it has stopped, the
+body's four groups arrive in the record's own order — *what this is* · *how it is identified* ·
+*what it says* · *what it claims* — each `opacity` and `translateY(6px)` over `--dur-3` on `--ease`,
+staggered **50ms**, the thread's own value and the only stagger in the vocabulary. Two properties,
+both compositable; **no blur**, because this is not a crossfade between two strings and `filter`
+over a subtree of shimmering bars repaints it every frame for the length of the reveal.
+
+**`.rec-head` is not a group and may never become one.** Focus moves to `#recTitle` on open, and a
+heading held at `opacity: 0` is the `visibility: hidden` failure above wearing a different property —
+announced and invisible. It is also what keeps the card from reading as an empty box while the body
+arrives, which is the real cost of this choice and is worth naming: **for the length of the container
+the card is present and says nothing.**
+
+**A reopen inside 400ms skips the assembly and still slides.** The `.info.is-instant` precedent —
+*"once one is open the next opens instantly… a founder reading across them should not pay it four
+times"* — and the same window. Escape-then-next-row is the common path on this surface, not an edge,
+and it may not cost a second of composition every time. **The second-patent-while-open path is
+untouched:** the `--dur-1` crossfade, container still, no assembly. *A record reopened is not a
+record assembled*, which is "only a fresh build earns the stagger" applied one surface down.
+
+***Why `--dur-4` rather than a fifth token or a re-timed `--dur-3`.*** `--dur-3` names *the record,
+composer expansion and collapse*; re-timing it would move the composer, which nobody asked for, and
+splitting it would add a duration on the evidence of one surface wanting to feel deliberate — a bar
+§5 sets deliberately high. `--dur-4` named *a build stage*, and §6 licensed unrestrained motion there
+alone, *"where the assembly **is** the design."* **Adopting A makes the record's arrival the second
+member of that gesture rather than an exception to it**, so the annotation widens to name the gesture
+instead of the surface — the same correction the curve table already took when its third row named a
+component rather than a gesture. The build stage is unchanged and still uses it.
+
+**Measured on the built prototype, on the click path** (durations scaled ×7.7 to observe): the four
+groups resolve `transition-delay` `4s / 4.05s / 4.1s / 4.15s` at `0.32s` each, all at `opacity: 0`
+through the container's travel. A reopen inside the window resolves `delay: 0s` and `opacity: 1`.
+Under `prefers-reduced-motion` all four are present at 80ms with no transform.
+
+> ***One measurement is worth keeping because it nearly shipped a wrong rule.*** A first pass read
+> the record as never animating and diagnosed it as a start state committed inside a
+> `visibility: hidden` container; a second class and a second reflow were added, and a long comment
+> written about a *"fifth way to defeat a correct spec."* **It was wrong.** The single-class version
+> works, and what actually differed was the route: `#set-record` lands composed because the demo
+> states are poses, byte-diffable from a clean base. The extra class was removed. **A screenshot of
+> the finished state cannot tell you whether a transition ran** — that is the lesson, and the fix is
+> to read `getComputedStyle` on the real path rather than to look at a picture.
+
+**Two forms were specced and dropped as unbuildable rather than unfashionable.** *A FLIP from the
+clicked row* needs the card to occupy the row's rect, which breaks **the left list is never
+covered** — an invariant this file, `platform.md` §6a, §6a.3 and §6a.4 all state and which live code
+depends on, the right pane being `inert` precisely so the left stays live. It is also not
+implementable: `.panecol` is `overflow: hidden`, so the card clips to nothing and appears to emerge
+from the map. *A sheet from the pane's bottom edge* inverts the `inert` argument — the 200px peek is
+deliberately a vertical sliver showing **no complete control**, and a top peek shows entire widget
+heads and the facet toggle, fully legible and entirely dead.
+
+*One drift surfaced and is **not** settled by this pass: §7 below specs the record as five items —
+the eleven fields, the abstract, the claim set **and the copy control** — while the prototype records
+`THE FOOT IS GONE, 2026-09-10` and renders four. The staging is written against the four that exist.*
+
+
 
 ---
 
@@ -1131,11 +1203,26 @@ conclusion did not move.
   `menuitemcheckbox`. *One of N* and *each independently on or off* is the question, and the
   control it is asked about does not change the answer.
 
-**The profile row and menu.** Avatar, name, plan line — **in the masthead's trailing edge, opening
-downward** into a menu with Account settings, Plan & billing, Help, Sign out. *It opened upward
-from the base of the sidebar until 2026-09-10.* The rows exist; their destinations are undesigned
-this pass, because pricing and whether a free tier exists are open (`platform.md` §11) and a Plan
-screen would be designing against an undecided thing.
+**The profile row and menu.** **In the masthead's trailing edge, opening downward** into a menu with
+Account settings, Plan & billing, Help, Sign out. *It opened upward from the base of the sidebar
+until 2026-09-10.*
+
+*This paragraph said **"Avatar, name, plan line"** until 2026-09-11, and the build has never had the
+name or the plan line on the bar.* The width arithmetic in `platform.md` §1a is the reason and it is
+not a regression: **seven regions in 48px**, and a name is the one of the three that another region
+already carries better — the menu's own `.menu-who` block holds the name and the plan line as bars,
+where there is room for both. **The trigger is an avatar and a chevron.** Corrected here rather than
+in the build, because the build is right.
+
+***And the destinations are no longer undesigned — 2026-09-11.*** This paragraph and `platform.md`
+§7a.9 both read *"the rows exist; their destinations are undesigned this pass, because pricing and
+whether a free tier exists are open (§11) and a Plan screen would be designing against an undecided
+thing."* A session named all three and asked for them, which is the one route out of §9 that
+`CLAUDE.md` admits. **Pricing is still open**: the plan screen takes §7a.9's existing quarterly
+allowance as an assumption it inherits, and §11's bullet is untouched. `platform.md` §7a.10 is the
+record. **Sign out is still inert**, because a session model was not named.
+
+Three rows route and the fourth does not; the four controls the pages needed are specced below.
 
 **The attribution line.** *Powered by* in italic, then Innovue's mark — `brief.md` §3 governs it and
 carries the 2026-09-08 amendment that made it a mark rather than four words. It sits at the foot of
@@ -1176,11 +1263,6 @@ on the dark, which is legal for a logotype and legible, but quiet — and their 
 `<picture>`, because a `<picture>` source query follows the OS and the appearance control has to beat
 the OS; `display: none` also keeps the inactive one out of the accessibility tree, so the name is
 announced once.
-
-**The profile row and menu.** Avatar, name, plan line; opens *upward* into a menu with Account
-settings, Plan & billing, Help, Sign out. The rows exist; their destinations are undesigned this
-pass, because pricing and whether a free tier exists are open (`platform.md` §11) and a Plan screen
-would be designing against an undecided thing.
 
 **The widget card.** `--surface`, radius 16, 1px `--border`, no shadow. Title (`title`) left,
 controls right, **info affordance last in the head**. Caption in `body` at `--text-2` inside the
@@ -1344,6 +1426,16 @@ decorative: it never blocks interaction, and **nothing's visibility depends on i
 §6's blank-screen bug is the standing warning. The confirm card enters as one message and its rows do
 **not** stagger; staggering them would imply the approaches were generated one at a time, which is a
 claim about data the skeleton contract forbids.
+
+***The rule is about ITEMS, and it was narrowed on 2026-09-11 when the record was re-specced.***
+What it forbids is staggering **a set of items that could have been produced separately** — the
+approaches, the rows of a table, the patents in a list — because arriving one at a time is a claim
+that they were *made* one at a time. **It does not reach the regions of a single fetched document.**
+The record's four groups are not four items; they are one published document's own order, and time
+is a second axis expressing the order the page already expresses vertically. **The limit that keeps
+this honest: a temporal order may never depart from the document's own.** Staging the claims first
+because claims matter most would be a reading, and is refused — `platform.md` §7a.3 carries the
+ruling and the same limit.
 
 **Composing, then unfolding.** Between the founder's message and the confirm card the thread holds a
 **wordless sweep** — the shared 1.6s indicator, no text, absolutely positioned so it costs no height
@@ -1762,8 +1854,34 @@ Inventors · Filed · Published · Where · Status** — then the **abstract**, 
 numbers are Inconsolata and tabular like every other figure, carried as content rather than as a
 `list-style` marker.
 
+**The record's type hierarchy · 2026-09-11.** It had three levels of content and one level of type:
+the title bars, the field values, the abstract lines and the claim lines were all `sk-h-body` at
+12px, so **the patent's own title had no more presence than its `Number` field.** Seven changes, no
+field added or removed:
+
+| | |
+| --- | --- |
+| the title | bars at `sk-h-title`, not `sk-h-body` — `bar()` already takes a height |
+| the section headings | `t-label` at `--text-2`. They were `t-micro`, **identical to the eleven `<dt>` labels** — a heading and a leaf label rendering the same |
+| the eleven fields | five clusters — identity · classification · people · dates · where+status — grouped **by space inside the same `<dl>`**, `--s-12` added between against `--s-10` within. No rules drawn |
+| the abstract | `max-width: 68ch`. It was uncapped, which puts real abstract text near 130 characters a line against §4's measure |
+| the score | the figure block's **label above, never beside** — the one place in the product still doing it inline |
+| the claim numbers | `text-align: end`, so `1` and `15` align on their digits rather than only on their left edge |
+| the pane heading | demoted to an eyebrow. `<h2>The patent record</h2>` at `title` was the **largest type on the card**, above a title rendered as bars. It stays an `<h2>` and stays the focus target — it is the pane's accessible name, because the title itself is a bar |
+
+*The `<dl>` grouping is `nth-of-type` and that is safe only because `.hf` has **one** consumer and it
+is always the full eleven. A second field set rendered through it makes this a class on the `<dl>`.*
+
+*Declined: marking claim 1 as the independent claim. Deriving independence means parsing "as claimed
+in claim 1", which §7a.3's test puts on the wrong side. Its greater line count already does the work.*
+
 **The skeleton contract needs no third exception for it**, and that is the test that the shape is
-right. §8 warns that a third exception is evidence the contract is being eroded — so: the field
+right. *It still needs none after the staged arrival of 2026-09-11, and the objection was raised
+explicitly rather than skipped: §8 governs **what renders** — which strings are real, which are bars,
+which figures are illustrative — and a motion sequence changes none of them. The same eleven bars,
+the same real labels and the same illustrative count are on the screen whether the groups arrive
+together or 150ms apart, and under `prefers-reduced-motion` they arrive together. **A third exception
+would be a new class of CONTENT earning the right to be legible**, and nothing here asks for one.* §8 warns that a third exception is evidence the contract is being eroded — so: the field
 *labels*, the section headings, the closed enumerations (`Kind: Utility model`) and the disclaimer are
 real English; **every identifier, the abstract and every claim are bars**; the claim *count* is an
 illustrative figure. Nothing legible about any real patent renders.
@@ -2723,6 +2841,275 @@ be made from the caption failing, not from this row.
 ordinal layers, never both. `--mark-*` means *these things are different*, or *this is the one*;
 `--chart-series`, `--chart-trend` and the density ramp mean *this is more than that*. A chart that
 needs both encodings is two charts.
+
+### The account destinations — four controls, added 2026-09-11
+
+***This is the largest addition to the component vocabulary since dark mode, and the reason is one
+sentence: until this pass the product had nothing you could set.*** Every surface before these three
+was something the founder **read** — a map, a list, a record, a balance — so the file had a button,
+a menu and a segmented control, and no field, no toggle, no checkbox and no modal. Four controls
+arrive together because a settings page cannot be built out of three-quarters of them.
+
+**All four are greppably clean.** No primitive, no raw hex, no inline alpha, no off-scale space, no
+`transition: all`, no transition on a layout property, and no colour: the three greps in §3.2 return
+zero over the component CSS, and the on state of the one stateful control is **value**, not hue.
+
+#### The focus indicator, ruled — and a bug came out with it
+
+**The file was answering "how does a field say it has focus" two ways, and one of the answers was
+invisible.** `.cmp-inner` moves `--border` to `--border-strong` on `:focus-within` and kills the
+outline; `.said-edit` moves `--border-strong` to `--text-2` and kills it too. Measured on
+`--surface`:
+
+| | contrast on `--surface` |
+| --- | --- |
+| `--border` `#E4E4E4` | **1.27:1** |
+| `--border-strong` `#D1D1D1` | **1.53:1** |
+| `--text-2` `#595959` | **6.99:1** |
+
+So the composer's focus signal is a step between **two edges that are both under the 3:1 a focus
+indicator owes** — a state nobody can see — where `.said-edit`'s reads plainly. They look like the
+same decision and are not.
+
+***The ruling: focus is the ring, and the edge does not move.*** The ring is already declared for
+every control on the screen, so a field that swapped an edge instead would be inventing an indicator
+of its own; and an outline survives forced-colours mode, where a swap between two greys does not.
+Hover is where `.fld`'s edge moves, which also keeps the two signals from being confused.
+
+> ***And the global rule had a bug that three new components were about to pay for a fourth time.***
+> `:focus-visible` carried `border-radius: var(--r-chip)`, and `border-radius` there applies to **the
+> element**, not to the outline — so every `--r-control` control in the product (`.btn`, `.lm-btn`,
+> `.mast-btn`, `.meter`, `.pg-back`, `.menu-item`) **visibly snapped 8px → 4px the instant a keyboard
+> reached it.** The two existing overrides re-declare `outline-offset` and never `border-radius`,
+> which is why nobody had hit it. **The declaration is deleted**; the outline follows each element's
+> own curve, which is what it did before the line was added.
+>
+> *The general shape is the one §3.2 already names in a different register: a rule nobody has watched
+> fail is a rule that may already be wrong. This one was found by speccing against it, not by looking
+> at it.*
+
+#### `.pref` — the settings row
+
+A label, optionally one sentence of consequence, and one control at the trailing edge, on `.ur`'s
+hairline — a settings card and a runs list are the same object, dense rows sharing one edge with no
+chrome of their own.
+
+***The divider sits on the LEADING edge and `.ur`'s sits on the trailing one, and that is a fix
+rather than a slip.*** A trailing border plus `:last-child` works only while a row *is* the last
+child — and the *Your data* card puts the inline confirm after its one row, so the row stopped being
+last and kept a line with nothing under it. **A leading border makes that structurally impossible:**
+the first row has none, every row after it draws its own, and whatever follows the group is
+irrelevant. It renders identically. *`.ur` has the same latent fault and nothing has triggered it,
+so it is left alone.*
+
+*The alternative was `:has(+ .dc)`, and **this file has no `:has`, no `:is` and no `:where`
+anywhere** — one rule is not worth introducing a selector idiom the other 2,500 lines do not use.
+
+***A grid and not a flex line, and the help text is the whole reason.*** `align-items: center` on a
+flex row centres a 36px control against label-**plus**-help and drops the switch below the thing it
+switches; `flex-start` pins it to the label's ascender. Both are wrong. The grid puts label and
+control on **row one** and the help on **row two under the label only**, so the control centres
+against the label whether or not help exists. Same finding as `#cfAnswerChips`, earlier the same day.
+
+**The control column reserves 36px in every state**, so a switch row and a field row are the same
+height and nothing moves when a value becomes a field — `.lm-tick`'s reservation, one component over.
+
+**It stacks below 480px of card width, and that is a container query.** A settings card is handed
+whatever width its column has and a viewport query cannot see that. 480 is where a 280px field plus
+the 16px gap leaves under 180px for the label.
+
+> ***This is the first `container-type` in the prototype, and finding that out was the useful part.***
+> Three `@container` blocks already existed — on `.set-split-in` and `.drill-pane` — and **not one of
+> them has ever run**, because nothing anywhere declared a container. §7 below specs
+> `container-type: inline-size` on the split and the prototype never wrote it, so the split has never
+> taken two columns and the drill pane has never hidden below 719px. **Filed at `platform.md` §11 and
+> deliberately not fixed here**: repairing it changes the working surface's layout, which is a
+> different pass with a different review.
+
+**When help text is warranted — three cases, and they are the only three.** The control changes
+something outside its row; *off* does something rather than stopping something; or the setting has a
+cost. It is **not** warranted to restate the label as a sentence, to describe the control, or to say
+*recommended* — which is a judgement rather than a fact about the setting, and is the same instinct
+`platform.md` §7a.3 refuses one surface up when it keeps Terrain to the record and off opinions about
+it. *Stated as the analogy it is: §7a.3 governs the patent record, and nothing in it mentions a
+settings page.* One sentence, capped at 68ch, and **the cap is declared**.
+
+#### `.fld` — the text field
+
+36px, which is `.btn`'s height, because **field-plus-Save is the commonest pairing in the product**
+and two pixels between them reads as a mistake. `--r-control`, `--surface` on a 1px `--border`,
+`--s-10` of inline padding — `.lm-btn`'s and `.said-edit`'s, so the caret lands where every other
+control's label does. `.ta` is the same object at a variable height.
+
+**Disabled is not opacity.** `.btn:disabled` may fade because its label is all there is in it; a
+faded field fades its value to unreadable. The sunken fill, the value at `--text-3`, and
+**`--text-disabled` deliberately unused** — §3.2 reserves it for non-text, and the value in a field
+is text.
+
+***Invalid is weight, not colour, and the reason is narrower than §2's.*** §2 would permit a hue here
+— an error is a discrete state. But the hue it would take is `--state-expired`, which in this product
+means **expired patent** and may be sitting on a chip the founder is reading on the same screen.
+**Two reds meaning two things is worse than no red.** So the edge doubles: an inset 1px `--text-1`
+ring over the border — two pixels of ink and no layout change, where a `border-width` change would
+move the value a pixel right and put a layout property on a state's job. The message beneath carries
+the fact; the edge only says *where*.
+
+**The inline edit takes `saidEdit()`'s contract and not its CSS**, and the split is clean. What
+transfers: the swap is one statement so there is no intermediate frame, Enter saves, Escape cancels
+and **stops propagating** so the document chain never sees it, Save is inert while the field is
+empty, and focus returns to *Edit* **only if an edit was actually open** — the guard that stops a
+re-render stealing focus. What does not: `.said-edit` is a content-sized `<textarea>` with no height,
+sitting on `--surface` inside a `--surface-sunken` box, carrying `--border-strong` — an *active* edge
+— at rest. It stays where it is, as the one place a **sentence** is corrected.
+
+*And there is nothing to load into the field.* §8 renders the founder's own name and address as bars,
+so an inline edit here opens **empty**, and the caret-at-the-end problem `.said-edit` solves cannot
+arise. A saved value marks its bar with `--skeleton-strong`, which is that token's second user.
+
+**Nothing animates**, and `.said-edit`'s reason is the reason: the two states are the same value in
+the same place, and there is no motion that would describe the change. `.pref`'s 36px reservation is
+what makes that survivable — without it the card would jump and the absence of motion would read as
+a glitch rather than as a swap.
+
+#### `.sw` — the switch, and why not a two-option `.seg`
+
+***§7's own finding decides it.*** A segmented control is a `tablist` when it selects one of N and a
+`group` of `aria-pressed` buttons when each is **independently** on or off. **A two-option On/Off seg
+is neither** — it is one boolean drawn as two mutually exclusive buttons, so `aria-pressed` on both
+is false and the honest role is `radio`. `role="switch"` with one `aria-checked` is what the fact
+actually is.
+
+Three more, in descending weight. `.seg` is 24px at 11.5px **because it was sized to the chip metrics
+beside it in `.work-head`**, and a settings row is 13px beside a 36px field — so it would need a size
+override, and the last size override on `.seg` was deleted as a mistake in the same week. A seg costs
+the width of both its labels, so **ten rows have ten different trailing edges where ten switches have
+one**. And reading two labels to learn one fact is two glances.
+
+***On is `--text-1`, which is not an accent.*** It is the fill the star takes, the fill `--mark-1`
+takes for *the entity being tracked*, and the fill `.btn-primary` takes. §2 and §3.7 settled that
+**value** is how this system says *this one is on*; the switch is the fourth application of a settled
+rule rather than a new problem.
+
+**Every number is a step**, and the concentric rule holds **by arithmetic rather than by exemption**:
+a 40×24 track with a 16px knob inset 4 travels 40 − 4 − 16 − 4 = **16**; `--r-pill` on 24 resolves to
+12, `--r-pill` on 16 resolves to 8, and 12 − 4 = 8.
+
+**The knob carries the state and the ring carries the structure.** Measured on `--surface`: the off
+knob is **3.97:1** against its own track and 4.70:1 against the card, both over the 3:1 a component
+state owes; the on track is **15.3:1**. The 1.53:1 ring is the same hairline every bordered control
+in this file has — §5's *elevation is a hairline*, at control scale.
+
+**No glyph in the knob.** A check at stroke 1.5 inside a 16px circle renders as a smudge, and *never
+colour alone* is satisfied twice over already: position is the primary channel and fill the second,
+neither of them a hue. **44px of target**, taken with a pseudo-element so the control grows without
+moving — `.meter`'s device. **Press and travel are one object**: the press is the independent `scale`
+property and the travel is `transform`, both on the knob, so §6's prohibition on contents moving
+inside a moving container has nothing to bite on. *First use of `scale` as a property in the file,
+and that is the reason for it — `transform: scale()` would have had to restate the translate, and the
+two would fight.*
+
+**Disabled keeps the state.** No opacity: a faded switch is a switch whose position cannot be read.
+Position and fill survive and only the press goes, with `--text-disabled` doing exactly the non-text
+job §3.2 reserves it for.
+
+#### `.dc` — the inline confirm
+
+**There is no modal in this product**, no `<dialog>`, and the slide-over is retired. §4's gate is the
+one place the product asks *are you sure* and it does it by being a turn in a conversation rather than
+by covering the screen. So a destructive act confirms **where it lives**: the card grows a region.
+
+`grid-template-rows: 0fr → 1fr`, which is §6's named alternative to a height transition and the
+mechanism `.tmsg-grow` and `.set-run` already use. **Enter `--dur-3`, exit `--dur-2`** — the base rule
+carries the exit and the attribute overrides it, `.set-run`'s shape.
+
+***And nothing inside it moves.*** `.tmsg-grow` fades its contents in while the track is still opening
+and **earns** that, because it is masking a *substitution* — a sweep leaving and a card arriving,
+which is what its blur is for. Nothing is substituted here, so the only motion is the track. Getting
+§6's rule for free is the reward for not needing a crossfade.
+
+**Focus lands on the region, not on a button.** Focusing *Keep* skips the sentence; focusing *Delete*
+puts a keyboard one Space away from something irreversible. The region is a labelled group, so
+entering it announces the heading **and** the consequence before either action is reachable. Escape
+inside it closes it locally and **stops propagating**; Escape from outside is one branch at the
+**tail** of the chain, so the four branches above are untouched.
+
+**The clip comes off once it has landed.** `overflow: hidden` on the grid child clips a 2px ring at
+2px offset, so until `data-done` lands the two buttons have no visible focus state — `.tmsg-answer.is-done`
+is the precedent and the same two lines. Under `prefers-reduced-motion` the open state is **declared
+outright**, clip included, and the JS sets `data-done` synchronously, because there is no
+`transitionend` to hang it on.
+
+***The destructive button is not red, is not filled, and is the quieter of the two.*** §2 has no
+colour for *dangerous* — dangerous is a judgement, not a state, and the only red this system has means
+*expired patent*. A near-black fill is reserved for a surface's **one** primary action, and the
+primary action of a settings card is never deletion. That leaves one lever, which is **which button is
+affirmed** — and giving the border to *Delete* made it the louder half, a nudge toward the
+irreversible thing. **It is inverted: `Keep account` is `.btn-secondary` and `Delete account
+permanently` is `.btn-ghost`.** What makes the act unmistakable is its label and the sentence above
+it. *A pair of verbs that each name their own outcome also cannot be transposed by muscle memory,
+which is the one failure a two-button confirm actually has.*
+
+> ***A typed-confirmation field is specced here and deliberately not built.*** The version worth
+> having types **the thing being destroyed** — the account's own identifier — because that tests that
+> the founder knows what they are deleting, where typing the word `DELETE` tests obedience. **§8 puts
+> the account name in the grey-bar column**, so the string to type is a bar, and *a field that asks
+> you to type a grey bar is not a confirmation.* The rule left in the CSS as a comment records the
+> condition for its return: **if a real account identifier ever prints on screen, the field comes
+> back and it types that, not a word.**
+
+#### The account menu's keyboard
+
+`#acctMenu` has been `role="menu"` with four `role="menuitem"` children since it shipped and had
+**click and Escape and nothing else** — so a screen reader announced *menu, four items* and then
+offered no way to move between them. It now follows the APG menu-button pattern: Arrow keys with
+wrap, Home and End, buffered type-ahead, Enter and Space, and **Tab closes without trapping**. Real
+`focus()` calls on a roving `tabindex`, not `aria-activedescendant` — there is no active descendant
+anywhere in this file and one instance would be a second idiom — and `preventScroll` on all of them,
+because a focus call inside a scroller is what produced the record's lurch.
+
+**The focus return lives inside `closeMenus()`, not at its six call sites.** The guard is *focus is
+inside the menu that is closing*, so an outside click — which has already moved focus — never fires
+it, and all six existing callers get correct behaviour with no edit. `saidEdit()`'s `was` guard in a
+different shape.
+
+*One consequence in the CSS, and it is a real distinction rather than a patch.* `[tabindex="-1"]`
+loses its focus ring, correctly, because a heading focused on arrival should not flash one — but **a
+menu item reached by ArrowDown is a keyboard user navigating**, and hiding the ring there is the whole
+interaction gone. `#acctMenu .menu-item:focus-visible` restores it, inset by 2 so it sits inside the
+item rather than against the menu's own padding.
+
+> ***`#projMenu` carries the same role and does not get this treatment, and that is the more important
+> half.*** It holds a **text input**, which APG forbids outright inside a menu, and it has **zero
+> `role="menuitem"` children**, so it announces as an empty menu. That is a worse defect than a
+> missing keyboard, and adding arrow keys would paper over it. The repair is to **stop claiming the
+> role** — a labelled region, a real list, a roving tabindex over the rows — which is also what lets
+> version history stay *nested* rather than flattened, the thing §7 protects by name. Filed at
+> `platform.md` §11. The focus-return half already covers it, because that half lives in
+> `closeMenus()`.
+
+#### What the three pages did not need
+
+**A measure, and the points page not having one is the contrast worth keeping.** A points-page card
+holds a chart, and a chart wants every pixel of its column — §4's cap is about *reading*, and nothing
+on that page is read across its full width. These three are label-and-control rows, a form and three
+paragraphs: at 1280px an uncapped settings row puts the label at one edge and its switch at the other
+with 1,100px of nothing between, and a textarea at that width is a line of typing at roughly 190
+characters against a cap of 68. **820px, centred**, so the page reads as one column rather than as a
+narrow thing pinned to the left of a wide one.
+
+**And no new page furniture beyond that.** `.card`, `.card-head`, `.grid`, `.page-head`, `.pg-back`,
+`.foot`, `.ur`, `.status`, `.chip`, `.btn`, `.lm` and `.seg` are unchanged, and the attribution line
+took its third, fourth and fifth hosts with no decision to make — which is the *one rule makes a new
+surface free* argument arriving for the second time.
+
+*One trap caught in review and worth recording, because the file already knew about it in four other
+places:* `.card-body` is `display: flex`, and **`display` outranks `[hidden]`**. Help's form and its
+sent state are two card bodies swapping, and without `.card-body[hidden]{display:none}` they render
+at once. `.btn[hidden]`, `.chip[hidden]`, `.card[hidden]` and `.said[hidden]` are each already
+written for exactly this.
+
+
+---
 
 ## 8 · The skeleton contract
 

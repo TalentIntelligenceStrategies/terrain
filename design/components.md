@@ -1,19 +1,24 @@
 # TIS Terrain — component manifest
 
 > **What each component reads, what it needs from your engine, and which IPtech capability supplies
-> it.** Version **0.8.0**, 2026-09-10 — Innovue's architecture is adopted (`platform.md` §1a) and
-> **the asks get smaller in three places and larger in none.** The map's second axis stops being
-> generated: `outcomes` leaves the shape entirely, the rows are assignees read off the patents, and
-> nothing on either axis is editable, so the whole edit contract goes with it. The set and the
-> drill-down merge into **one list row**, because they are now literally one list. And the record
-> may carry the engine's relevance score, which `brief.md` §4 stopped forbidding on the same day.
+> it.** Version **0.9.0**, 2026-09-11 — the three account destinations arrive (`platform.md` §7a.10)
+> and **they ask the engine for nothing at all.** Account settings, Plan & billing and Help are
+> Terrain-owned end to end: a plan, a payment method, an invoice list and a support message are ours
+> or a payment processor's, and not one field on any of them comes from a patent database. The four
+> new controls they needed — **the settings row, the text field, the switch and the inline confirm** —
+> read tokens and nothing else. **The only existing row that moves is the plan shape**, and it moves
+> by gaining a second *reader* rather than a second *definition*.
 >
 > *A version of this file is not a changelog, so the rows below are rewritten clean rather than
 > struck. **A component contract is the one place a superseded direction must not be left
 > standing** — a reader implementing from it cannot tell which sentence is live. The trail is here
 > in the header and nowhere else.*
 >
-> *0.7.0, 2026-09-09 — the patent record arrived. `platform.md` §9's detail-page entry
+> *0.8.0, 2026-09-10 — Innovue's architecture was adopted (`platform.md` §1a) and the asks got
+> smaller in three places and larger in none: the map's second axis stopped being generated,
+> `outcomes` left the shape entirely, the whole edit contract went with it, the set and the
+> drill-down merged into one list row, and the record gained the engine's relevance score.
+> 0.7.0, 2026-09-09 — the patent record arrived. `platform.md` §9's detail-page entry
 > was un-deferred and §7a.3 closed for a record pane, so this file gained **the largest single ask in
 > it** and the handoff row stopped being a shape of its own: it is now a five-field projection of the
 > record. 0.6.0, earlier the same day — the points page lost its cross-card selection, so three of
@@ -99,7 +104,9 @@ view controls**, so no row here asks the engine for anything a filter would need
 | **Project switcher** · the masthead menu | `--surface-sunken` `--text-2`, `--skeleton` | `{ projects: [{ id, name, updatedAt }] }` | **專案** *if* projects live in IPtech and are reachable programmatically; Terrain-owned if not. We do not know which — see §4 |
 | **Delta pill** · `.delta` | `--state-up` `--state-down` + tints, `--r-chip` | `{ value: number, previous: number }` — the same measure at two time points | **None identified.** Specced in the stylesheet and applied nowhere, because we hold one time point — see §4 |
 | **Usage meter** · `renderPoints`, `spendPoints` | `--text-2` `--text-3`, `figure-s` tabular | `{ balance: int, costPerRun: { runType: int } }` — a **balance**, not a percentage and not a quota. The cost is per completed run, so the two numbers are consistent by construction. *The charge lands when the gate is approved, not when the views finish resolving — `platform.md` §6a.5. That is a timing rule and not a shape change.* *`costPerRun` was a single int until 2026-09-08: screen `32` shows the price differs per module by a factor of ten, so one number cannot carry it* | **Usage metering in points** (`platform.md` §8.2, reversed to *Match* 2026-09-08). Which unit it counts is `platform.md` §10.34 — per API call or per UI action — and the answer changes `costPerRun`, not the shape |
-| **Balance card + arc meter** · `renderUsage`, `usRing` | `--surface-sunken` track, `--mark-1` fill, `figure-xl` + `.fig-sub`, `micro` | `{ balance: int, allowance: int, periodEnd: date }` — the **allowance is the new field**, and it is the only thing on any surface that presupposes a plan shape. `periodEnd` renders as a bar | Nothing from the engine. `allowance` and `periodEnd` are **ours**, and they do not exist until pricing closes (`platform.md` §11) |
+| **Balance card + arc meter** · `renderUsage`, `usRing` | `--surface-sunken` track, `--mark-1` fill, `figure-xl` + `.fig-sub`, `micro` | `{ balance: int, allowance: int, periodEnd: date }` — the **allowance is the field that presupposes a plan shape**, and since 2026-09-11 two components read it rather than one. `periodEnd` renders as a bar | Nothing from the engine. `allowance` and `periodEnd` are **ours**, and they do not exist until pricing closes (`platform.md` §11) |
+| **Plan card** · `renderBilling` | `--surface`, `figure-l` + `.fig-sub`, `.sk` for the tier name, `.ur` rows for invoices | `{ planName: string, allowance: int, price: money, period: enum, periodEnd: date, invoices: [{ date, amount: money, status: 'paid' \| 'failed' }] }` — **`planName` and `periodEnd` render as bars, and `status` as a dot plus a word.** `allowance`, `price` and `period` are the *same three values* the balance card above reads, deliberately not a second definition: one block, two readers (`platform.md` §7a.10) | **Nothing from the engine, and nothing from IPtech at all** — the first row in this file whose capability column has nothing to fill it. A plan and an invoice are ours or a payment processor's. It does not exist until pricing closes (`platform.md` §11) |
+| **Support message** · Help's composer | `.ta`, the `.lm` topic menu, `.btn-primary` | `{ topic: enum, body: string, replyTo: email }` — `replyTo` is **not asked for**: it is the account's own address, and it renders as a bar | **None.** Terrain-owned, and deliberately not the `.cmp` composer — `platform.md` §7a.10 carries why a support field may not wear the thing you type your idea into |
 | **Run-type cards** · `usCards`, `usCount` | `.rt`, `--border`, `micro` + `figure-l` + a 12px unit | `{ runs: [{ type, points: int, count: int }] }` **for the whole period**, plus `costPerRun` above. `≈N more` is `balance / costPerRun[type]` and is computed, never returned. *Static — the `selected` flag came out with the isolate control on 2026-09-09* | Derived from the ledger below. The **mapping** from our five run types to your modules is `platform.md` §7a.9 — one map build is `魚骨通` plus `分類通` over every record in the set |
 | **Usage bars** · `usBars` | `.hb.ub` — `--mark-off` on every bar, `--surface-sunken` track | Same `runs` array. Shares are computed from it; **no percentage is ever returned**, so the denominator cannot disagree with the bars | Derived. Nothing new |
 | **Columns** · `usColumns`, `usBins`, `usStep` | `--chart-series`, `--border` grid | `{ daily: [{ date, byType: { runType: int } }] }` — **one entry per day, run counts not points**, so the series and the cards cannot drift. Weekly and monthly are binned here, never requested. This is the one genuinely new shape on the page | **The per-run ledger behind the meter, and the page's only real dependency.** `platform.md` §10.34 asked in the form that matters: a balance alone cannot draw this. If only a running total is exposed, this component and the one below do not exist and the rest of the page still does |
@@ -177,7 +184,15 @@ fifteen times is filler:
 > the shell and its masthead · the project switcher · the profile row and menu · the widget card ·
 > the info affordance · the segmented control, including the `Market` / `Technology` **toggle** ·
 > the list's **sort and filter menus** · the list's **star prompt** · the record's overlay · the
-> composer · the thread and its reveal · buttons · the skeleton bars themselves.
+> composer · the thread and its reveal · buttons · the skeleton bars themselves · **the settings row,
+> the text field, the switch and the inline confirm** · **Account settings and Help entire**.
+
+***Four controls arrived on 2026-09-11 and they are the largest single addition this section has
+taken.*** Until then the product had **nothing you could set** — every surface was something the
+founder read, so the file held a button, a menu and a segmented control, and no field, no toggle, no
+checkbox and no modal. `design-language.md` §7 carries all four specs. *Two of the three new pages
+are listed whole rather than by component, because Account settings and Help are made **entirely** of
+this layer: a name, an address, a preference and a message are not things a patent database knows.*
 
 *Four entries left that list on 2026-09-10: the sidebar's **collapse toggle and its 64px rail**,
 the **slide-over**, the **chat panel** and its overlay machinery, and the **row checkbox**. The
