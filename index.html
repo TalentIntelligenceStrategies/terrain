@@ -584,9 +584,9 @@ a{text-decoration:none;color:inherit}
 .listhead{display:flex;flex-direction:column;gap:var(--s-10);margin-bottom:var(--s-16)}
 .listhead-top{display:flex;align-items:center;gap:var(--s-8)}
 
-.listhead-top .head-count{margin-inline-start:auto}
+.listhead-top #setTitle{margin-inline-end:auto}
 
-.listhead .head-meta:empty{display:none}
+.listhead>.chip{align-self:flex-start}
 
 .listcol-scroll,.panescroll{scrollbar-width:thin;
   scrollbar-color:var(--border-strong) transparent}
@@ -623,7 +623,7 @@ a{text-decoration:none;color:inherit}
      transition:transform var(--dur-2) var(--ease-drawer),
                 visibility 0s linear var(--dur-2)}
 .rec-open .rec{transform:none;visibility:visible;
-     transition:transform var(--dur-3) var(--ease-drawer),visibility 0s linear 0s}
+     transition:transform var(--dur-4) var(--ease-drawer),visibility 0s linear 0s}
 
 .rec.is-swapping .rec-body{opacity:0;filter:blur(2px)}
 .rec-head{display:flex;align-items:center;gap:var(--s-12);flex:0 0 auto;
@@ -1063,6 +1063,34 @@ a{text-decoration:none;color:inherit}
   gap:var(--s-8);min-height:220px;padding:var(--s-32) var(--s-24);text-align:center}
 .pn-empty svg{color:var(--text-disabled)}
 .pn-empty p{margin:0;font-size:13px;line-height:1.55;color:var(--text-3);max-width:34ch}
+
+.pn-stage{opacity:0;transform:translateY(6px)}
+.rec-body .pn-stage{
+  transition:opacity var(--dur-3) var(--ease) var(--stage-delay,0ms),
+             transform var(--dur-3) var(--ease) var(--stage-delay,0ms)}
+
+.rec-body .pn-stage{--stage-delay:calc(var(--dur-4) + var(--i,0) * 50ms)}
+.rec-open .rec-body .pn-stage{opacity:1;transform:none}
+
+.rec-instant .rec-body .pn-stage{transition:none}
+
+.pn-sec-h{font-size:13px;line-height:1.4;font-weight:500;
+          letter-spacing:0;text-transform:none;color:var(--text-2)}
+
+.hf dt:nth-of-type(4),.hf dd:nth-of-type(4),
+.hf dt:nth-of-type(6),.hf dd:nth-of-type(6),
+.hf dt:nth-of-type(8),.hf dd:nth-of-type(8),
+.hf dt:nth-of-type(10),.hf dd:nth-of-type(10){margin-block-start:var(--s-12)}
+
+.pn-sec:first-of-type .pn-lines{max-width:68ch}
+
+.pn-score{flex-direction:column;align-items:flex-start;gap:var(--s-2)}
+
+.pn-cn{text-align:end;justify-self:end}
+
+.rec-head h2{font-size:10.5px;line-height:1.2;font-weight:500;
+             letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.rec-head{padding-block:var(--s-12)}
 .set-listcol{min-width:0}
 @container (min-width:860px){
   .set-split-in{grid-template-columns:minmax(360px,1fr) minmax(400px,1.1fr)}
@@ -1220,8 +1248,7 @@ a{text-decoration:none;color:inherit}
 
 .set-run{display:grid;grid-template-rows:0fr;
   transition:grid-template-rows var(--dur-2) var(--ease)}
-.set-wrap.is-running .set-run,
-.set-wrap.is-ranked .set-run{grid-template-rows:1fr;transition-duration:var(--dur-3)}
+.set-wrap.is-running .set-run{grid-template-rows:1fr;transition-duration:var(--dur-3)}
 .set-run>div{overflow:hidden;min-height:0}
 
 .set-run-in{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap;
@@ -1235,9 +1262,6 @@ a{text-decoration:none;color:inherit}
 .set-run-in .sweep{opacity:0;flex:0 0 auto;
   transition:opacity var(--dur-1) var(--ease)}
 .set-wrap.is-running .set-run-in .sweep{opacity:1}
-
-.set-wrap.is-ranked .set-run-in{background:var(--surface-sunken)}
-.set-wrap.is-ranked .set-run-say{color:var(--text-1)}
 
 .set-wrap.is-running .set-bar,.set-wrap.is-running .set-split{opacity:.45;pointer-events:none;
   transition:opacity var(--dur-2) var(--ease)}
@@ -1302,12 +1326,8 @@ a{text-decoration:none;color:inherit}
   .tmsg-pend{display:none}
   .rv{opacity:1;filter:none}
 
-  .set-wrap.is-running .set-run,
-  .set-wrap.is-ranked .set-run{grid-template-rows:1fr}
+  .set-wrap.is-running .set-run{grid-template-rows:1fr}
   .set-wrap.is-running .set-run-in .sweep{opacity:1}   
-
-  .set-wrap.is-ranked .set-run-in{background:var(--surface-sunken)}
-  .set-wrap.is-ranked .set-run-say{color:var(--text-1)}
 
   .set-band{opacity:1}
 
@@ -1319,6 +1339,8 @@ a{text-decoration:none;color:inherit}
   .ghost.is-out,.ghost.is-in{opacity:1;transform:none}
 
   .rec-open .rec{transform:none;visibility:visible}
+
+  .pn-stage{opacity:1;transform:none}
 }
 </style>
 </head>
@@ -1509,6 +1531,7 @@ a{text-decoration:none;color:inherit}
 
               <h2 class="t-title" tabindex="-1" id="setTitle">Your results</h2>
 
+              <span class="chip" id="setStarChip" hidden></span>
               <span class="chip head-count"><span class="sk sk-h-micro w-sm"
                 style="display:inline-block;vertical-align:-1px"></span> matched</span>
               <span class="info">
@@ -1527,10 +1550,8 @@ a{text-decoration:none;color:inherit}
                   you, and it does not mean the ones below it do not.</span>
               </span>
             </div>
-            <div class="head-meta">
-              <span class="chip" id="setStarChip" hidden></span>
-              <span class="chip" id="setRankChip" hidden></span>
-            </div>
+
+            <span class="chip" id="setRankChip" role="status" aria-live="polite" hidden></span>
           </div>
 
         <p class="set-excl" id="setExcl" hidden></p>
@@ -2737,7 +2758,8 @@ function patentPaneHTML(rec, opt){
     +   '<div class="pn-head-lines">'
     +     (opt.heading === false ? ''
         : '<h3 class="t-title pn-title" tabindex="-1">Patent record</h3>')
-    +     '<div class="pn-name">' + bar('w-full') + bar('w-lg') + '</div>'
+
+    +     '<div class="pn-name">' + bar('w-full','title') + bar('w-lg','title') + '</div>'
     +     '<div class="pn-meta">' + statusHTML(rec.status)
     +       '<span class="t-micro">' + rec.kind + '</span>'
 
@@ -2857,6 +2879,21 @@ function filterChipHTML(){
 
 var recReturn = null;
 
+var recClosedAt = 0;
+var REC_INSTANT_MS = 400;
+
+function stageRecord(body){
+  var pn = $('.pn', body);
+  if (!pn) return;
+  var secs = $$('.pn-sec', pn);
+  [ $('.pn-head-lines', pn), $('.hf', pn), secs[0], secs[1] ]
+    .forEach(function(el, i){
+      if (!el) return;
+      el.classList.add('pn-stage');
+      el.style.setProperty('--i', i);
+    });
+}
+
 function setRowOpen(toggle, on){
   var row = toggle.closest && toggle.closest('.set-row');
   if (!row) return;
@@ -2878,12 +2915,18 @@ function openRecordOverlay(rec, trigger){
     REC_SWAP = setTimeout(function(){
       REC_SWAP = 0;
       body.innerHTML = patentPaneHTML(rec, { close:false, heading:false });
+
+      stageRecord(body);
       pane.classList.remove('is-swapping');
     }, DUR1);
     return;
   }
 
   body.innerHTML = patentPaneHTML(rec, { close:false, heading:false });
+  stageRecord(body);
+
+  app.classList.toggle('rec-instant',
+    REDUCED || (Date.now() - recClosedAt) < REC_INSTANT_MS);
   pane.hidden = false;
 
   pane.offsetHeight;
@@ -2902,6 +2945,7 @@ function recFocusHead(pane){
 function closeRecord(){
   if (!app.classList.contains('rec-open')) return;
   app.classList.remove('rec-open');
+  recClosedAt = Date.now();
 
   if (REC_SWAP){ clearTimeout(REC_SWAP); REC_SWAP = 0; }
   $('#recPane').classList.remove('is-swapping');
@@ -4194,11 +4238,30 @@ function starSig(){
   return out.join(',');
 }
 
+function setAffinity(i, j){
+  var a = setRecFor(i).n, b = setRecFor(j).n;
+  var s = (a + b) % 1009, p = (a * b) % 1009;
+  return (s * s + p * 3 + (a ^ b)) % 1009;
+}
+
 function rankOrder(sig){
-  var mark = {}, out = [], j, parts = sig ? sig.split(',') : [];
+  var mark = {}, rest = [], out = [], j, k, best,
+      parts = sig ? sig.split(',') : [];
   for (j = 0; j < parts.length; j++) mark[+parts[j]] = 1;
-  for (j = 0; j < SET_ORDER_0.length; j++) if ( mark[SET_ORDER_0[j]]) out.push(SET_ORDER_0[j]);
-  for (j = 0; j < SET_ORDER_0.length; j++) if (!mark[SET_ORDER_0[j]]) out.push(SET_ORDER_0[j]);
+  for (j = 0; j < SET_ORDER_0.length; j++){
+    if (mark[SET_ORDER_0[j]]) out.push(SET_ORDER_0[j]);
+
+    else rest.push({ i:SET_ORDER_0[j], at:j, a:0 });
+  }
+
+  for (j = 0; j < rest.length; j++){
+    best = -1;
+    for (k = 0; k < parts.length; k++) best = Math.max(best, setAffinity(rest[j].i, +parts[k]));
+    rest[j].a = best;
+  }
+
+  rest.sort(function(x, y){ return (y.a - x.a) || (x.at - y.at); });
+  for (j = 0; j < rest.length; j++) out.push(rest[j].i);
   return out;
 }
 setRelist();
@@ -4455,8 +4518,7 @@ function setCeiling(n){
 function setRunSay(html, immediate){
   var el = $('#setRunSay'), run = $('#setRun');
 
-  var open = setWrap.classList.contains('is-running')
-          || setWrap.classList.contains('is-ranked');
+  var open = setWrap.classList.contains('is-running');
   if (immediate || REDUCED || !open || !el.innerHTML){ el.innerHTML = html; return; }
   var gen = SET_GEN;
   run.classList.add('is-swapping');
@@ -4497,6 +4559,9 @@ function setReorder(next, before){
   renderSet();                    
   if (REDUCED) return;
 
+  var STEP = 18, CAP = 14;
+  var settle = DUR3 + STEP * CAP;
+
   var bands = $$('.set-band', setList);
   bands.forEach(function(b){ b.style.transition = 'none'; b.style.opacity = '0'; });
   if (bands.length) bands[0].offsetHeight;
@@ -4505,29 +4570,35 @@ function setReorder(next, before){
       if (!b.isConnected) return;
       b.style.transition = ''; b.style.opacity = '';
     });
-  }, DUR3);
-  $$('.set-row', setList).forEach(function(el){
+  }, settle);
+  $$('.set-row', setList).forEach(function(el, idx){
     var was = first[el.getAttribute('data-i')];
+    var lag = Math.min(idx, CAP) * STEP;
 
-    if (was == null) return;
+    if (was == null){
+      el.style.transition = 'none';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(8px)';
+      el.offsetHeight;
+      el.style.transition = 'opacity var(--dur-2) var(--ease) ' + lag + 'ms,'
+                          + 'transform var(--dur-2) var(--ease) ' + lag + 'ms';
+      el.style.opacity = '';
+      el.style.transform = '';
+      setTimeout(function(){
+        el.style.transition = ''; el.style.opacity = ''; el.style.transform = '';
+      }, DUR2 + lag + 40);
+      return;
+    }
     var d = was - el.getBoundingClientRect().top;
     if (!d) return;
     el.style.transition = 'none';
     el.style.transform = 'translateY(' + d + 'px)';
     el.offsetHeight;
-    el.style.transition = 'transform var(--dur-3) var(--ease)';
+    el.style.transition = 'transform var(--dur-3) var(--ease) ' + lag + 'ms';
     el.style.transform = '';
-    setTimeout(function(){ el.style.transition = ''; el.style.transform = ''; }, DUR3 + 40);
+    setTimeout(function(){ el.style.transition = ''; el.style.transform = ''; },
+               DUR3 + lag + 40);
   });
-}
-
-function saySettled(moved){
-  if (!moved) return 'Nothing moved — what you starred was already at the top. What the '
-                   + 'views count has not changed.';
-
-  return '<span class="fig fig-s">' + moved + '</span> patent'
-       + (moved === 1 ? ' moved' : 's moved') + '. What you starred is now at the top — and '
-       + 'what the views count has not changed, only the order.';
 }
 
 function rebaseline(now){
@@ -4540,22 +4611,26 @@ function rebaseline(now){
     SET_RUN = 0;
 
     var was = document.activeElement;
-    var prev = SET_ORDER, next = rankOrder(sig), moved = 0, i;
-    for (i = 0; i < next.length; i++) if (prev[i] !== next[i]) moved++;
     SET_SIG = sig;
     SET_BASELINE = sig.split(',').length;
     setList.setAttribute('aria-busy','false');
-    setReorder(next, function(){
+    setReorder(rankOrder(sig), function(){
+
+      var run = $('#setRun');
+      run.style.transition = 'none';
       setWrap.classList.remove('is-running');
+      run.offsetHeight;
+      run.style.transition = '';
       setWrap.classList.add('is-ranked');      
       $('#setRestore').hidden = false;
 
       var rc = $('#setRankChip');
+      rc.hidden = false;
       rc.innerHTML = 'Re-ranked around <span class="fig fig-s">'
         + SET_BASELINE + '</span> starred';
-      rc.hidden = false;
     });
-    setRunSay(saySettled(moved));
+
+    setRunSay('', true);
 
     if (was === $('#setRebase') && $('#setRebase').hidden) $('#setRestore').focus();
   }
@@ -4580,7 +4655,6 @@ function setRestore(){
   if (!SET_SIG) return;
   var was = document.activeElement;
 
-  setRunSay('The original order is back.', true);
   SET_SIG = ''; SET_BASELINE = 0;
   setReorder(SET_ORDER_0.slice(), function(){
     setWrap.classList.remove('is-ranked');     
