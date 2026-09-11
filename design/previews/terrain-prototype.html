@@ -376,8 +376,12 @@ a{text-decoration:none;color:inherit}
 .t-title{font-size:17px;line-height:1.3;font-weight:600;letter-spacing:-.005em}
 .t-body{font-size:14px;line-height:1.55}
 .t-label{font-size:13px;line-height:1.4;font-weight:500}
-.t-micro{font-size:10.5px;line-height:1.2;font-weight:500;letter-spacing:.08em;
-         text-transform:uppercase;color:var(--text-3)}
+/* ONE DECLARATION, THREE CONSUMERS · 2026-09-11. These five properties were
+   written out verbatim three times — here, .hf dt and .cf-pair-k — so the next
+   label change would have landed in one of three places and looked like a
+   deliberate difference in the other two. */
+.t-micro,.hf dt,.cf-pair-k{font-size:10.5px;line-height:1.2;font-weight:500;
+         letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
 .fig{font-family:'Inconsolata',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-weight:500}
 .fig-xl{font-size:40px;line-height:1;letter-spacing:-.01em}
 .fig-l{font-size:26px;line-height:1.1}
@@ -435,6 +439,14 @@ a{text-decoration:none;color:inherit}
 .btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text-1)}
 .btn-ghost{color:var(--text-2)}
 .btn:active{transform:scale(.97)}
+/* THE PRIMARY ACTION IS GATED WHILE THE SENTENCE IS BEING EDITED, so .btn needs
+   a disabled state for the first time. Disabled rather than hidden: the dock is
+   sticky and carries the button now, and removing it would change the dock's
+   height and jump the thread under an open textarea. The reason is spoken in
+   .cmp-status, which is already the conversation's live region — opacity alone
+   would say something is off without saying what. */
+.btn:disabled{opacity:.45;cursor:default}
+.btn:disabled:active{transform:none}
 /* the third instance of the same trap .chip and .said already carry: the
    display above is an AUTHOR declaration and [hidden]{display:none} is a UA
    one, so author origin wins whatever the specificity. Without this a .btn
@@ -487,9 +499,17 @@ a{text-decoration:none;color:inherit}
 .conv-col{width:100%;max-width:680px;margin-left:auto;margin-right:auto}
 .conv-intro{margin-bottom:var(--s-32)}
 .conv-intro h1{margin:0 0 var(--s-12);text-wrap:balance}
-.conv-sub{margin:0;color:var(--text-2);max-width:52ch}
-.conv-dock{padding-bottom:var(--s-16)}
-.conv-note{margin:var(--s-16) 0 0;font-size:13px;color:var(--text-3);max-width:64ch}
+.conv-sub{margin:0;color:var(--text-2);max-width:52ch;text-wrap:pretty}
+/* the dock carries the gate's primary action, so it is the one piece of
+   sticky chrome that must clear the home indicator */
+.conv-dock{padding-bottom:max(var(--s-16),env(safe-area-inset-bottom))}
+.conv-note{margin:var(--s-16) 0 0;font-size:13px;color:var(--text-3);max-width:64ch;
+      text-wrap:pretty}
+/* the commitment, under the thing that offers the alternative. See the markup
+   for why it is full width rather than right-aligned like .cf-actions was. */
+.dock-act{padding-top:var(--s-12)}
+.dock-act[hidden]{display:none}
+.dock-act .btn{width:100%}
 .conv-foot{padding:var(--s-12) 0 var(--s-24);display:flex;align-items:baseline;
       justify-content:center;gap:var(--s-6);font-size:14.4px;color:var(--text-3)}
 
@@ -655,33 +675,62 @@ a{text-decoration:none;color:inherit}
    happened to the four motion rules written against the old panel — two survive,
    two retire. */
 .cf{background:none;border:0;border-radius:0}
-.cf-turn + .cf-turn{margin-top:var(--s-20)}
-.cf-title{margin:0 0 var(--s-4);font-size:15px;line-height:1.5;
-          font-weight:600;color:var(--text-1)}
-.cf-lede{margin:0;color:var(--text-2)}
+/* 20 -> 32, 2026-09-11. This is the card's ONE group boundary and it was
+   running at 1.25x the 16px gap between the boxes inside the group — under the
+   2x that makes grouping read at all, so the gate looked like a fourth box.
+   With the boxes tightened to 12 it is 2.7x. Every value is a step on the
+   scale: there is no --s-28 and this did not invent one. */
+.cf-turn + .cf-turn{margin-top:var(--s-32)}
+/* 15 -> 17px, 2026-09-11: .t-title, already on the scale. 15px existed here and
+   nowhere else, and it left the most important h2 in the product rendering
+   smaller than body copy on the same screen. */
+.cf-title{margin:0 0 var(--s-4);font-size:17px;line-height:1.3;font-weight:600;
+          letter-spacing:-.005em;color:var(--text-1);text-wrap:balance}
+/* CAPPED, 2026-09-11. .conv-col is 680px and nothing in this card limited the
+   line, so the lede ran ~88 characters and the gate ~95. design-language.md §4
+   has capped body prose at 68ch since it was written — this was not a new rule,
+   it was one nothing in this card enforced. ch caps are already the idiom here
+   (.conv-sub 52, .conv-note 64). */
+.cf-lede{margin:0;color:var(--text-2);max-width:68ch;text-wrap:pretty}
 .cf-foot{padding:0}
 /* the scope sentence sits under the legend, not in it — it qualifies the whole
    grid rather than one tone, and reading it as a fourth legend entry was the
    first thing that went wrong when it shared the row */
 #mxScope{margin-top:var(--s-10)}
-.cf-actions{display:flex;align-items:center;gap:var(--s-12);flex-wrap:wrap;
-            padding:var(--s-12) 0 0}
-
 /* The disclosure that held the two lists was deleted 2026-09-09 along with the
    lists themselves — see setConfirmMode for why they left the gate. Its
    "collapsed is not hidden" rule went with it; nothing at the gate is collapsed
-   now, because nothing at the gate is optional to read. */
-.cf-actions .spacer{flex:1}
-.cf-note{font-size:12px;color:var(--text-3)}
+   now, because nothing at the gate is optional to read.
+
+   .cf-actions AND .cf-note WENT THE SAME WAY 2026-09-11. The row held "You can
+   change any of this later." beside the primary action; the note is deleted and
+   the action moved to .dock-act under the composer. A 12px size left the file
+   with it, which is the kind of saving a deletion is actually worth. */
 /* once approved it stays in the thread as the record of what was approved,
    with every control gone — it is the history, not a live form */
-.cf[data-approved] .cf-actions,.cf[data-approved] .said .btn{display:none}
+.cf[data-approved] .said .btn{display:none}
 .cf[data-approved] .gate{opacity:.6}
+/* and mid-edit it goes quiet for the same reason it goes quiet once approved:
+   the gate is not the live thing on screen. The primary action is disabled in
+   the dock at the same moment, so the two states agree. */
+.cf[data-editing] .gate{opacity:.6}
 
 .said{background:var(--surface-sunken);border-radius:var(--r-inner);
       padding:var(--s-12) var(--s-14);display:flex;gap:var(--s-16);align-items:flex-start;
       margin:var(--s-16) 0 0}
+/* 16 to the lede above, 12 between themselves — the boxes are one group, and a
+   separate rule rather than a changed margin so nothing collapses. */
+.said + .said{margin-top:var(--s-12)}
 .said-body{flex:1;min-width:0}
+/* THE BOX TITLE IS A TITLE, NOT A SIXTH FIELD LABEL. Was four inline
+   style="margin-bottom:8px" in the markup — the only uncontrolled spacing in
+   the card — and at 8px it put "AND YOU TOLD US" directly above "DIRECTION" at
+   the same size and the same tone, where the two read as two labels rather than
+   as a heading and the thing it heads. One step up the neutral ramp and a
+   wider gap, which is the only way §2 has to say this: hierarchy, weight and
+   spacing, never a hue. 12 binds it to the grid more tightly than the grid's
+   own 16px rows bind to each other, which is the relationship it wants. */
+.said .t-micro{color:var(--text-2);margin-bottom:var(--s-12)}
 .said-text{margin:0;color:var(--text-1);line-height:1.6}
 /* ── editing what you said · platform.md §4 ──────────────────────────────
    THE FIELD REPLACES THE SENTENCE IN PLACE, at the same size and on the same
@@ -704,11 +753,16 @@ a{text-decoration:none;color:inherit}
 .said-ctl{display:flex;align-items:center;gap:var(--s-6);flex:0 0 auto}
 .card-note{padding:0 var(--s-20) var(--s-12);color:var(--text-3);font-size:13px;margin:0}
 
+/* the 4px bottom margin cleared .cf-actions, which is gone — the gate is the
+   last thing in the card now and the commitment is one dock below it */
 .gate{display:flex;align-items:flex-start;gap:var(--s-12);padding:var(--s-14) var(--s-16);
       background:var(--state-pending-tint);border-radius:var(--r-inner);
-      margin:0 0 var(--s-4)}
+      margin:0}
 .gate svg{color:var(--state-pending);flex:0 0 18px;margin-top:1px}
-.gate p{margin:0;font-size:13px;line-height:1.6;color:var(--text-1)}
+/* 13 -> 14px: it carries the most consequential sentence on the screen and was
+   rendering smaller than the lede it follows. */
+.gate p{margin:0;font-size:14px;line-height:1.6;color:var(--text-1);
+        max-width:68ch;text-wrap:pretty}
 .gate b{font-weight:600}
 
 /* ── the build block · in the thread, not a screen ──────────
@@ -744,7 +798,10 @@ a{text-decoration:none;color:inherit}
 .stg[data-state="wait"] .st-label{color:var(--text-3)}
 .st-sub{margin-top:7px;display:block}
 .stg[data-state="wait"] .st-sub,.stg[data-state="run"] .st-sub{opacity:0}
-/* note left, CTA right — the same footer shape .cf-actions uses one card up.
+/* note left, CTA right. This was "the same footer shape .cf-actions uses one
+   card up"; .cf-actions is gone as of 2026-09-11 and the gate's action lives in
+   the dock, so this is now the only place the idiom survives — which is right,
+   because the build block is not the gate and has nothing to say no to.
    margin-left:auto on the button keeps it right when the row wraps, which a
    spacer would not. */
 .done{margin-top:var(--s-20);display:flex;align-items:center;gap:var(--s-16);flex-wrap:wrap;
@@ -1840,8 +1897,7 @@ a{text-decoration:none;color:inherit}
 .hf{margin:0;padding:var(--s-12) var(--s-14);background:var(--surface-sunken);
       border-radius:var(--r-inner);display:grid;grid-template-columns:auto 1fr;
       gap:var(--s-10) var(--s-14);align-items:center}
-.hf dt{font-size:10.5px;line-height:1.2;font-weight:500;letter-spacing:.08em;
-      text-transform:uppercase;color:var(--text-3);white-space:nowrap}
+.hf dt{white-space:nowrap}
 .hf dd{margin:0;min-width:0;display:flex;flex-wrap:wrap;align-items:center;
       gap:var(--s-6) var(--s-8)}
 
@@ -1974,13 +2030,22 @@ a{text-decoration:none;color:inherit}
 .qa-skip{color:var(--text-3)}
 /* the round, read back where it is approved — §4a */
 .cf-answers .head-meta{gap:var(--s-6)}
-/* the answer, under the name of the question it answers. The gap between pairs
-   is well over twice the gap inside one, or the column of two lines reads as
-   four unrelated ones. */
-#cfAnswerChips{gap:var(--s-14) var(--s-16);align-items:flex-start}
+/* A GRID, NOT FLEX-WRAP · 2026-09-11. Five answers of wildly different lengths
+   were sized to their own content, so one sentence-length DIRECTION pushed the
+   four short answers out of any rhythm and no label ever lined up with the one
+   under it. auto-fit gives even tracks whatever the values say, and it is the
+   pattern .rt-grid already uses — driven by the space that exists rather than
+   by a media query that cannot see this container.
+
+   The gap between pairs is well over twice the gap inside one, or the column of
+   two lines reads as four unrelated ones. One value now, not 14/16. */
+#cfAnswerChips{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
+  gap:var(--s-16);align-items:start}
 .cf-pair{display:flex;flex-direction:column;gap:var(--s-4);min-width:0}
-.cf-pair-k{font-size:10.5px;line-height:1.2;font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--text-3)}
+/* the five properties are on .t-micro's declaration. "HOW MANY" is the reason
+   for the nowrap: in a narrow track it breaks into two lines and stops reading
+   as one label. */
+.cf-pair-k{white-space:nowrap}
 /* NOT A CHIP, 2026-09-10. These were .chip with a surface fill and a 1px
    border on a sunken ground — a 999px pill that read as a small button and
    was a static <span>. An affordance on something nothing can do to is worse
@@ -1988,6 +2053,11 @@ a{text-decoration:none;color:inherit}
    micro-above-the-value idiom, with nothing borrowed from a control. */
 .cf-pair-v{font-size:14px;line-height:1.45;color:var(--text-1);
   overflow-wrap:anywhere}
+/* NOT the same shape as the answers above: exclusions are label-less phrases,
+   so there is nothing to line up into columns and the grid does not apply. An
+   explicit gap rather than the --s-6 inherited from .cf-answers .head-meta,
+   which was the only reason the two boxes looked different. */
+#cfExclChips{gap:var(--s-8)}
 /* .said carries a display above, which outranks [hidden] on its own */
 .said[hidden]{display:none}
 
@@ -2517,8 +2587,8 @@ a{text-decoration:none;color:inherit}
         <div class="conv-col conv-intro" id="convIntro">
           <h1 class="t-display-1" tabindex="-1" id="convHeading">What are you building?</h1>
           <p class="conv-sub t-body">Describe it in a sentence — or start from a patent number, a
-             company, or a classification code if you have one. TIS Terrain will show you who else
-             is in the space, what sits adjacent to it, and who holds which part.</p>
+             company, or a classification code. TIS Terrain shows you who else is in the space,
+             what sits adjacent, and who holds which part.</p>
         </div>
 
         <div class="conv-col"><div class="thread" id="thread"></div></div>
@@ -2541,7 +2611,31 @@ a{text-decoration:none;color:inherit}
       </div>
       <p class="cmp-status" role="status" aria-live="polite"></p>
     </div>
-            <p class="conv-note" id="convNote">Before we move on, we'll ask you to approve the criteria.</p>
+
+            <!-- THE GATE'S PRIMARY ACTION LIVES HERE, NOT IN THE CARD · 2026-09-11.
+                 It sat at the foot of the confirm card, one card boundary above the
+                 composer — so the two things the founder may do, approve or say what
+                 is off, were in different places. They are one decision, so they are
+                 one zone: the card ends at the gate and the commitment sits under the
+                 thing that offers the alternative.
+
+                 FULL WIDTH, and that is the departure from .cf-actions' note-left /
+                 CTA-right idiom. The send arrow already owns the bottom-right corner;
+                 a right-aligned pill directly beneath it reads as a second send.
+
+                 NO TRANSITION. design-language.md §7 — the confirm card enters as one
+                 message and its rows do not stagger; a dock bar animating on its own
+                 would be a second thing moving for the same reason.
+
+                 It is also where #convNote sits on the empty screen, so the promise
+                 "we'll ask you to approve the criteria" becomes the button that asks.
+                 The two never collide: .conv.has-thread hides the note.          -->
+            <div class="dock-act" id="dockAct" hidden>
+              <button class="btn btn-primary" id="cfApprove" data-cf-approve="create">
+                <span id="cfApproveLabel">Approve and search</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </button>
+            </div>
+            <p class="conv-note" id="convNote">We’ll ask you to approve the criteria before we search.</p>
           </div>
         </div>
 
@@ -3043,14 +3137,17 @@ a{text-decoration:none;color:inherit}
   <div id="parked" hidden>
 
     <div class="cf" id="cfCard" role="group" aria-labelledby="cfTitle">
+      <!-- THE COPY HERE IS A FALLBACK. setConfirmMode overwrites #cfLede and
+           #cfGate from the CF table before the card is ever shown, so a change
+           made only here renders as the old words. Change both. -->
       <div class="cf-turn cf-read">
       <h2 class="cf-title" id="cfTitle" tabindex="-1">Here is how we read your idea</h2>
-      <p class="cf-lede t-body" id="cfLede">Correct anything that is wrong before we search — say
-         what is off and I will fix it. This is the one place where a mistake is cheap.</p>
+      <p class="cf-lede t-body" id="cfLede">Correct anything that is wrong — say what is off and
+         I will adjust it.</p>
 
       <div class="said" id="cfSaid">
         <div class="said-body">
-          <div class="t-micro" style="margin-bottom:8px">You said</div>
+          <div class="t-micro">You said</div>
           <p class="said-text" id="cfSaidText"></p>
           <textarea class="said-edit" id="cfSaidEdit" rows="2" hidden
                     aria-label="What you are building"></textarea>
@@ -3068,7 +3165,7 @@ a{text-decoration:none;color:inherit}
 
       <div class="said cf-answers" id="cfAnswers" hidden>
         <div class="said-body">
-          <div class="t-micro" style="margin-bottom:8px">And you told us</div>
+          <div class="t-micro">And you told us</div>
           <div class="head-meta" id="cfAnswerChips"></div>
         </div>
       </div>
@@ -3079,7 +3176,7 @@ a{text-decoration:none;color:inherit}
            is where it returns, and this is where it shows. -->
       <div class="said cf-answers" id="cfExcl" hidden>
         <div class="said-body">
-          <div class="t-micro" style="margin-bottom:8px">And leaving out</div>
+          <div class="t-micro">And leaving out</div>
           <div class="head-meta" id="cfExclChips"></div>
         </div>
       </div>
@@ -3089,7 +3186,7 @@ a{text-decoration:none;color:inherit}
            has to state what it is gating. -->
       <div class="said" id="cfChange" hidden>
         <div class="said-body">
-          <div class="t-micro" style="margin-bottom:8px">You asked for</div>
+          <div class="t-micro">You asked for</div>
           <p class="said-text" id="cfChangeText"></p>
         </div>
       </div>
@@ -3098,18 +3195,11 @@ a{text-decoration:none;color:inherit}
       <div class="cf-turn cf-act">
       <div class="gate">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <p id="cfGate"><b>Nothing is searched until you approve this.</b> If we have read your idea
-           wrongly, every view that follows will be confidently wrong — and there is no way to tell
-           from the results alone.</p>
+        <p id="cfGate"><b>Nothing is searched until you approve this.</b> Every result that
+           follows is built from these criteria — if the reading is wrong, the results will be
+           wrong in a way you cannot see.</p>
       </div>
 
-      <div class="cf-actions">
-        <span class="cf-note">You can change any of this later.</span>
-        <span class="spacer"></span>
-        <button class="btn btn-primary" id="cfApprove" data-cf-approve="create">
-          <span id="cfApproveLabel">Approve and search</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </button>
-      </div>
       </div>
     </div>
 
@@ -3202,6 +3292,26 @@ var stage  = $('#stage');
 var app    = $('#app');
 var parked = $('#parked');
 var cfCard = $('#cfCard');
+var dockAct= $('#dockAct');
+/* THE GATE'S COMMITMENT, HELD ONE LEVEL OUT OF THE CARD · 2026-09-11.
+   The button is in the composer dock so that approving and saying what is off
+   are one zone rather than two; the consequence is that showing the card and
+   showing its action are now two calls, and every path that ends the gate has
+   to end both. They are here rather than inline so there is one answer to
+   "when is approve available", not five.
+
+     live    the gate is on screen and the reading is settled
+     off     approved, reset, or no gate at all
+     gated   the reading is being edited — visible, disabled, and the reason
+             spoken in .cmp-status, which is already the conversation's live
+             region. Disabled rather than hidden: the dock is sticky, and
+             removing the button would change its height and jump the thread
+             under the open textarea.                                        */
+function dockApprove(state){
+  if (state === 'off'){ dockAct.hidden = true; $('#cfApprove').disabled = false; return; }
+  dockAct.hidden = false;
+  $('#cfApprove').disabled = state === 'gated';
+}
 var bdBlock= $('#bdBlock');
 var conv   = $('#conv');
 var thread = $('#thread');
@@ -3495,8 +3605,8 @@ function scrollToTopOf(node){
 var CF = {
   first:{
     title:'Here is how we read your idea',
-    lede:'Correct anything that is wrong before we search — say what is off and I will fix it. This is the one place where a mistake is cheap.',
-    gate:'<b>Nothing is searched until you approve this.</b> If we have read your idea wrongly, every view that follows will be confidently wrong — and there is no way to tell from the results alone.',
+    lede:'Correct anything that is wrong — say what is off and I will adjust it.',
+    gate:'<b>Nothing is searched until you approve this.</b> Every result that follows is built from these criteria — if the reading is wrong, the results will be wrong in a way you cannot see.',
     cta:'Approve and search', go:'create', said:true
   },
   change:{
@@ -3608,6 +3718,12 @@ function saidEdit(on){
   $('#cfSave').hidden   = !on;
   $('#cfCancel').hidden = !on;
   $('#cfSave').disabled = false;
+  /* you cannot approve a reading you are half way through rewriting. The card
+     goes quiet with it — the same opacity [data-approved] uses, for the same
+     reason: the gate is not the live thing on screen. */
+  if (on) cfCard.setAttribute('data-editing',''); else cfCard.removeAttribute('data-editing');
+  if (!dockAct.hidden) dockApprove(on ? 'gated' : 'live');
+  if (cmpMain) cmpMain.say(on ? 'Finish your edit to approve' : '');
   if (!on){ if (was) $('#cfEdit').focus(); return; }
   box.value = SAID_TEXT;
   saidGrow(box);
@@ -5857,6 +5973,7 @@ function resetConversation(){
   thread.innerHTML = '';
   park(cfCard); park(bdBlock);
   conv.classList.remove('has-thread');
+  dockApprove('off');
   var el = $('.conv-dock'); el.style.transition = ''; el.style.transform = '';
   cmpMain.reset();
   ghostApi.restart();
@@ -6220,6 +6337,9 @@ function gateIsLive(){
 }
 function gateRefine(text){
   finishReveal();
+  /* a read-or-omit question is open and the correction has not landed yet;
+     approving here would search the reading the founder just said was wrong */
+  dockApprove('off');
   pushYou(thread, text);
   gatePending = text;
   var node = document.createElement('div');
@@ -6286,6 +6406,9 @@ thread.addEventListener('click', function(e){
 
 function pushConfirm(t, mode, into){
   setConfirmMode(mode);
+  /* before the scroll below, so scrollToTopOf measures the dock at its real
+     height rather than 48px short of it */
+  dockApprove('live');
   /* the gate's own contextual line — the composer is the way to say what is
      wrong in words, and saying so is what stops it reading as redundant */
   ghostApi.hint('Tell me what\u2019s off\u2026');
@@ -6300,6 +6423,7 @@ function pushConfirm(t, mode, into){
    other thread is what "same component, refining rather than creating" means. */
 function approveConfirm(mode, now){
   cfCard.setAttribute('data-approved','');
+  dockApprove('off');
   bdBlock.setAttribute('data-mode', mode);     /* read by the CTA below */
   var t = cfCard.closest('.thread');
   if (!t) return;

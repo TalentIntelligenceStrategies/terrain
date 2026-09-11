@@ -668,6 +668,10 @@ exception — mixed numeral rendering across a dense table is immediately visibl
 | `display-1` | Urbanist | 34 / 1.15 | 700 | -0.02em |
 | `display-2` | Urbanist | 26 / 1.2 | 700 | -0.015em |
 | `title` | Urbanist | 17 / 1.3 | 600 | -0.005em |
+<!-- the confirm card's h2 ran at 15px until 2026-09-11 — a size that existed there and nowhere
+     else, on the most important heading in the product, rendering smaller than the body copy
+     beside it. It is `title` now. The gate's sentence went 13 -> 14 (`body`) in the same pass,
+     for the same reason: it was set smaller than the lede it follows. -->
 | `body` | Urbanist | 14 / 1.55 | 400 | 0 |
 | `body-strong` | Urbanist | 14 / 1.5 | 500 | 0 |
 | `label` | Urbanist | 13 / 1.4 | 500 | 0 |
@@ -702,6 +706,14 @@ the seven reference screens.
 **Measure** is capped at `68ch` for body prose. Captions under widgets are the longest prose in the
 product and the most likely to be skipped if they sprawl.
 
+> **And it was not enforced, which is worth more than the rule.** Found 2026-09-11: nothing in the
+> confirm card capped anything, so in a 680px column its lede ran ~88 characters and its gate ~95 —
+> the two most-read sentences in the product, both past the rule written three paragraphs up. The
+> cap is not a new decision and the fix was two declarations; the finding is that **a measure rule
+> only holds where something declares it**, and no preview will tell you which containers are
+> missing it. `.conv-sub` and `.conv-note` had theirs from the first build, which is exactly why the
+> gap was invisible — the surface looked like it had a measure discipline.
+
 `brief.md` §1: Terrain is **English only**. No `data-zh`, no bilingual markup, no CJK face.
 
 ---
@@ -710,6 +722,19 @@ product and the most likely to be skipped if they sprawl.
 
 **Space** — `2 4 6 8 10 12 14 16 20 24 32 40 56 72`. Two-based below 16, four-based above.
 Nothing off-scale.
+
+**Group gaps are at least twice the gaps inside the group, or the grouping does not read.** Added
+2026-09-11 from the confirm card, which had it backwards: 20px between its two turns against 16px
+between the boxes inside one of them — 1.25×, so the gate read as a fourth metadata box rather than
+as the thing the card had been building to. It is 32 against 12 now. The scale is the constraint
+that makes this cheap to get right and easy to get wrong: **there is no 28**, so "one step up from
+24" is 32, and the temptation to split the difference is the temptation to add a step.
+
+**A label that heads a box is not a label inside it.** Same pass, same card. `micro` is one role, so
+"AND YOU TOLD US" and the "DIRECTION" beneath it were the same size, the same tracking and the same
+`text-3`, eight pixels apart — two labels, not a heading and its contents. The box title takes
+`text-2` and a 12px gap; §2 has no colour to spend here and does not need any, because hierarchy,
+weight and spacing are what the neutral ramp is for.
 
 `10` and `14` were added 2026-08-31. The scale was 4-based, and the five previews reached past it
 19 times — `--s-10` twelve times, `--s-14` seven — each written as `var(--s-14,14px)` against a

@@ -566,6 +566,30 @@ shows on the result it shaped is indistinguishable from one that was dropped.
 intent model we do not have and must not fake. This answers it inside that constraint rather than
 around it: the product does not guess which kind of act the sentence was, it asks.
 
+### The commitment moved under the composer — 2026-09-11
+
+**Approve and search is not in the card any more. It is in the composer dock, directly beneath the
+field the founder types their correction into.** The two things available at the gate — approve it,
+or say what is off — are one decision, and they were in two places separated by a card boundary. The
+section above argues that typing at the gate is the affordance the whole step exists to make usable;
+putting the commitment a card away from it is the layout saying the opposite.
+
+**It is full width, which is a departure from the note-left / action-right footer the card used.**
+The composer's send arrow already holds the bottom-right corner. A right-aligned action directly
+under it reads as a second send, and the one control the founder must not press by mistake is the
+one that starts the search.
+
+**Three states, and the second is the reason this is written down.** The action is *live* while the
+gate is live; *gone* once approved, on reset, and while a read-or-omit question from the branch above
+is still open — approving there would search the reading the founder just said was wrong; and
+*visible but disabled* while the sentence is being edited, with the reason stated in the composer's
+own status line. Disabled rather than removed: the dock is sticky and carries the button, so removing
+it would change the dock's height and move the thread under an open textarea.
+
+**"You can change any of this later." is deleted.** It sat beside the action softening it, and it is
+the wrong thing to say here — every other line on this screen argues that a mistake at the gate is
+the one mistake the results cannot reveal, and §4b is where changing it later actually belongs.
+
 ### What this step does not do
 
 *Rewritten 2026-09-09. It said "it does not narrow anything", which was true of the two lists and is
