@@ -1456,6 +1456,77 @@ a{text-decoration:none;color:inherit}
 .hb-row[aria-pressed="true"] .hb-n{font-weight:600}
 .hb-row[aria-pressed="true"] .hb-track{background:var(--track-pressed)}
 @media (hover:hover){ .hb-row:hover{background:var(--surface-sunken)} }
+
+/* ══ M-MAP ADDITIONS · 2026-09-12 ═══════════════════════════════════════════
+   Four views from mmap-audit.md with no form here before. NOTHING below reads
+   a --n-* primitive or a raw hex; the two greps that prove it are the same two
+   the dark pass ran, and a component that reads a primitive silently stays
+   light.
+
+   dataviz mark specs are honoured as written except ONE, and the exception is
+   deliberate: it wants hairline SOLID gridlines and every grid below is DASHED.
+   design-language.md §3.5 settled dashed for --chart-grid before this pass, the
+   shipped Filings chart draws dashed, and shadcn's CartesianGrid — the grammar
+   this pass was asked to follow — is dashed by default. One inconsistent grid
+   across five cards is worse than one departure from a general rule.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* ── momentum · one micro-column strip per rival, on ONE shared scale ────────
+   Shared scale is the whole point: five strips each normalised to their own max
+   would draw a holder with two filings the same height as one with twelve, and
+   the card's question is WHICH rival is still filing. */
+.mo{display:flex;flex-direction:column;gap:var(--s-2)}
+.mo-row{display:flex;align-items:center;gap:var(--s-10);padding:var(--s-4) 0}
+.mo-lbl{flex:0 0 116px;display:flex;overflow:hidden}
+.mo-plot{flex:1;display:flex;align-items:flex-end;gap:2px;height:26px;
+         min-width:120px}
+/* every year gets a column; a zero year gets a 1px seat rather than nothing, so
+   the strip reads as a timeline with gaps and not as a shorter timeline. */
+.mo-col{flex:1;min-width:0;border-radius:2px 2px 0 0;background:var(--mark-2);
+        transition:height var(--dur-2) var(--ease),background var(--dur-1) var(--ease)}
+.mo-col[data-z="1"]{background:var(--border);border-radius:1px}
+.mo-row[data-tracked] .mo-col{background:var(--mark-1)}
+.mo-row[data-tracked] .mo-col[data-z="1"]{background:var(--border-strong)}
+.mo-n{flex:0 0 58px;text-align:right;font-size:12.5px;color:var(--text-2);
+      font-variant-numeric:tabular-nums}
+.mo-row[data-tracked] .mo-n{font-weight:600;color:var(--text-1)}
+/* the word IS the encoding, not a caption on it — every coloured element in
+   this system carries a word or a shape, never colour alone. */
+.mo-word{display:block;font-size:11px;color:var(--text-3);font-weight:500}
+.mo-axis{display:flex;justify-content:space-between;padding-inline-start:126px;
+         padding-inline-end:58px;margin-top:var(--s-4)}
+
+/* ── who builds on whom · a DIRECTED N×N, reusing the map's density ramp ─────
+   Same 1px-gap-over-border trick as .matrix, so the two grids on one page are
+   built the same way and cannot drift apart. */
+.xr{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);
+    border-radius:var(--r-inner);overflow:hidden;
+    grid-template-columns:92px repeat(var(--xr-n,5),minmax(0,1fr))}
+.xr-h,.xr-c,.xr-rh{background:var(--surface);min-height:30px;display:flex;
+                   align-items:center;justify-content:center}
+.xr-rh{justify-content:flex-start;padding-inline:var(--s-8)}
+.xr-h{padding:var(--s-6) 2px}
+.xr-c{font-size:12px;color:var(--text-1);font-variant-numeric:tabular-nums}
+.xr-c[data-d="0"]{background:var(--density-0);color:var(--text-3)}
+.xr-c[data-d="1"]{background:var(--density-1)}
+.xr-c[data-d="2"]{background:var(--density-2)}
+.xr-c[data-d="3"]{background:var(--density-3)}
+.xr-c[data-d="4"]{background:var(--density-4);color:var(--text-inverse)}
+/* the diagonal is not a zero — it is a cell that cannot hold a value, and
+   painting it like a zero would make "nobody cites this" and "a holder cannot
+   cite itself" the same mark. */
+.xr-c[data-self]{background:var(--surface-sunken);color:var(--text-disabled)}
+.xr-cap{display:flex;gap:var(--s-16);flex-wrap:wrap;margin-top:var(--s-10);
+        font-size:11px;color:var(--text-3)}
+
+/* ── life cycle · connected scatter ─────────────────────────────────────────
+   preserveAspectRatio is LEFT AT ITS DEFAULT, unlike the Filings chart. That
+   chart stretches because an area has no circles in it; this one has 8px
+   markers, and non-uniform scaling would draw them as ellipses. */
+/* TWO CLASSES, and it has to be: .chart{height:150px} is declared further down
+   the sheet, so a single .lc selector loses on source order and the scatter
+   letterboxes inside a 150px band with its markers stranded in the middle. */
+.chart.lc{height:auto}
 /* widgets stagger in only when the map was just built — never on a return.
    Same rule as the build sequence, one level down. */
 /* .no-anim exists for one frame at a time, and restagger() explains why: the
@@ -1466,19 +1537,35 @@ a{text-decoration:none;color:inherit}
 .grid[data-stagger] .card{opacity:0;transform:translateY(8px);
      transition:opacity var(--dur-3) var(--ease),transform var(--dur-3) var(--ease)}
 .grid[data-stagger].is-in .card{opacity:1;transform:none}
-/* SIX CARDS IN ONE COLUMN, 60ms apart. The delays were 0/60/120/180 across a
-   hero plus a three-card row; the pane is a single column of six now, so the
-   ladder runs the length of it and the last card lands at 300ms — inside the
-   view without the founder waiting on it. Written out rather than looped,
-   because the whole point is that the sequence is legible in the source.
+/* TEN CARDS IN ONE COLUMN, 35ms apart. Written out rather than looped, because
+   the whole point is that the sequence is legible in the source.
+
+   THE STEP CAME DOWN FROM 60ms ON 2026-09-12, and it had to. The column was six
+   cards and is ten since the M-Map pass; at 60ms the last card would land at
+   540ms, which is past the point a stagger reads as one movement and into the
+   founder watching a queue. 35ms puts the tenth at 315ms — almost exactly where
+   the sixth used to land, so the ENTRANCE IS THE SAME LENGTH it always was and
+   only its density changed.
+
+   THE REAL BUG THIS FIXES IS NOT THE DURATION. The ladder stopped at
+   nth-child(6). Four cards were added and every one of them fell through to a
+   0ms delay, so they arrived FIRST — ahead of the three above them — and the
+   stagger read as a shuffle. A written-out ladder is legible, which is why it
+   is written out; it is also silently wrong the moment someone adds a card and
+   does not scroll down here. Adding a card means adding its line.
+
    §7's rule is unchanged: only a FRESH BUILD earns this. A re-count after a
    tick animates nothing, because a stagger says the data was recomputed. */
 .grid[data-stagger].is-in .card:nth-child(1){transition-delay:0ms}
-.grid[data-stagger].is-in .card:nth-child(2){transition-delay:60ms}
-.grid[data-stagger].is-in .card:nth-child(3){transition-delay:120ms}
-.grid[data-stagger].is-in .card:nth-child(4){transition-delay:180ms}
-.grid[data-stagger].is-in .card:nth-child(5){transition-delay:240ms}
-.grid[data-stagger].is-in .card:nth-child(6){transition-delay:300ms}
+.grid[data-stagger].is-in .card:nth-child(2){transition-delay:35ms}
+.grid[data-stagger].is-in .card:nth-child(3){transition-delay:70ms}
+.grid[data-stagger].is-in .card:nth-child(4){transition-delay:105ms}
+.grid[data-stagger].is-in .card:nth-child(5){transition-delay:140ms}
+.grid[data-stagger].is-in .card:nth-child(6){transition-delay:175ms}
+.grid[data-stagger].is-in .card:nth-child(7){transition-delay:210ms}
+.grid[data-stagger].is-in .card:nth-child(8){transition-delay:245ms}
+.grid[data-stagger].is-in .card:nth-child(9){transition-delay:280ms}
+.grid[data-stagger].is-in .card:nth-child(10){transition-delay:315ms}
 
 
 /* ── the inline resolve · platform.md §6a.5 ────────────────────────────
@@ -3616,6 +3703,24 @@ a{text-decoration:none;color:inherit}
                 <span class="sk sk-h-body" style="width:44%"></span>
               </p>
             </section>
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                </span>
+                <h2 class="t-title">Early or late</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-life" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-life" role="note">Each point is one year &mdash; how many companies filed, against how many patents they filed. When both rise together the space is still <b>forming</b>. When patents rise and companies do not, it is <b>consolidating</b> around a few holders.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div id="lifeChart"></div>
+              </div>
+              <p class="caption" id="lifeCaption"></p>
+            </section>
+
 
             <section class="card" data-page="market">
               <div class="card-head">
@@ -3644,6 +3749,25 @@ a{text-decoration:none;color:inherit}
                 </table>
               </div>
             </section>
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="7" y="12" width="3" height="6" rx="1"/><rect x="12" y="8" width="3" height="10" rx="1"/><rect x="17" y="14" width="3" height="4" rx="1"/></svg>
+                </span>
+                <h2 class="t-title">Rival momentum</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-mom" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-mom" role="note">One strip per rival, twelve years, <b>all on the same scale</b>. A rival who stopped filing years ago is a different problem from one still filing now &mdash; the first is a portfolio that will start expiring, the second is a company still moving.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div id="momStrip"></div>
+                <div class="mo-axis"><span class="t-micro">12 years ago</span><span class="t-micro">now</span></div>
+              </div>
+              <p class="caption" id="momCaption"></p>
+            </section>
+
 
             <!-- Where it is filed · platform.md §6.6. The largest single omission
                  the 2026-09-07 audit found: a Diverge row with no design at all.
@@ -3651,6 +3775,24 @@ a{text-decoration:none;color:inherit}
                  protects a real party from being invented, and a country is
                  neither invented nor a party. Five grey wedges would read as
                  nothing. -->
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18"/></svg>
+                </span>
+                <h2 class="t-title">Where the holders are from</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-orig" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-orig" role="note">Where the companies are <b>based</b> &mdash; which is a different question from where the patents were <b>granted</b>. A rival abroad who has not filed in your market cannot stop you there; one based anywhere who <em>has</em> filed there can.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div id="origBars"></div>
+              </div>
+              <p class="caption" id="origCaption"></p>
+            </section>
+
             <section class="card" data-page="market">
               <div class="card-head">
                 <span class="card-icon">
@@ -3702,6 +3844,25 @@ a{text-decoration:none;color:inherit}
                 </div>
               </div>
               <p class="caption" id="legalCaption"></p>
+            </section>
+
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8.2 7.2 10.5 15.8M15.8 7.2 13.5 15.8M8.5 6h7"/></svg>
+                </span>
+                <h2 class="t-title">Who builds on whom</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-xref" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-xref" role="note">A patent cites the earlier work it builds on. <b>Rows cite; columns are cited.</b> A column that fills up is a holder whose work the others had to build on &mdash; the party you would most likely be licensing from, or designing around.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div id="xrefGrid"></div>
+                <div class="xr-cap"><span>Rows cite &rarr; columns are cited</span><span>&mdash; a holder cannot cite itself</span></div>
+              </div>
+              <p class="caption" id="xrefCaption"></p>
             </section>
 
             <section class="card" data-page="market">
@@ -5275,7 +5436,69 @@ SETS.illustrative = {
      the holder with the most patents is mostly still live, and the one at the
      bottom has more expired than live. Those are opposite facts for a
      founder and a flat split would show neither. */
-  legal: { live:88, expired:36, holders:[ {live:9}, {live:9}, {live:5}, {live:6}, {live:2} ] }
+  legal: { live:88, expired:36, holders:[ {live:9}, {live:9}, {live:5}, {live:6}, {live:2} ] },
+
+  /* ── M-MAP ADDITIONS · 2026-09-12 ─────────────────────────────────────────
+     Four views from mmap-audit.md's Adopt column that had no form here. Every
+     figure below is ILLUSTRATIVE and every one is tied to a figure already in
+     this object, because the failure this file keeps catching is two cards
+     printing two totals for one corpus.
+
+     THE INVARIANTS, so a later pass can check them by hand:
+       perHolder rows sum to DATA.rivals[i].p    -> 12 9 8 6 5
+       perHolder grand total                     -> 40, the same 40 legal holds
+       lifecycle.holders is 12 long, as PG_FILINGS is
+       origin sums to DATA.total                 -> 124
+       citedBy counts are a subset of the corpus, not of any other figure
+     ──────────────────────────────────────────────────────────────────────── */
+
+  /* Life cycle · Patent Count > Patent Count - Life Cycle. One point per year:
+     how many distinct holders filed, against how many patents they filed.
+     THE Y SERIES IS PG_FILINGS ITSELF rather than a copy - the Filings card
+     and this card draw the same numbers, so they cannot drift apart. Only the
+     holder count lives here. */
+  lifecycle: [9, 11, 10, 14, 13, 17, 16, 21, 20, 24, 26, 25],
+
+  /* Rival momentum · Company > Trend, the per-holder cut. Corpus-level trend
+     is the Filings card; this is the one that says WHICH rival is still filing.
+     Rows are in DATA.rivals order and each sums to that rival's p.
+     The distribution is the finding and the numbers are chosen for it: one
+     holder stopped six years ago, one arrived late and is accelerating, and
+     the largest is steady. A flat set of five would show none of that. */
+  perHolder: [
+    [0,0,1,1,1,1, 1,2,1,2,1,1],   /* 12 - steady, still filing */
+    [2,2,2,1,1,1, 0,0,0,0,0,0],   /*  9 - stopped, and the last six ARE zero */
+    [0,0,0,0,1,1, 1,1,1,1,1,1],   /*  8 - late, steady */
+    [1,1,1,1,0,0, 0,0,1,0,1,0],   /*  6 - intermittent */
+    [0,0,0,0,0,0, 0,1,1,1,1,1]    /*  5 - newest, accelerating */
+  ],
+
+  /* Who builds on whom · Company > Cross Reference. The shape is the one
+     design/components.md 2 already specced for this widget and it is honoured
+     rather than re-invented: [fromHolderIdx, toHolderIdx, count], DIRECTED.
+     IPtech draws a ring and an N x N table; the ring carries no information the
+     table does not, so only the table survives - mmap-audit.md 4, finding 1.
+
+     The story in these numbers: holder 2 is cited by all four others and cites
+     almost nobody, and holder 2 is ALSO the row that stopped filing in
+     perHolder. That pairing is the point of having both cards. */
+  citedBy: [
+    [0,1,4], [2,1,3], [3,1,2], [4,1,3],
+    [0,2,1], [2,0,1], [3,0,2], [4,0,1], [1,0,1]
+  ],
+
+  /* Where the holders are FROM · Country > Distribution. Distinct from the
+     jurisdiction card, which is where the patents were GRANTED - a founder
+     needs both, and IPtech separates them into two groups of seven for the
+     same reason. Sums to DATA.total.
+
+     THREE ROWS, NOT SIX, and the first draft had six. §3.7 allows three encoded
+     values and a fourth folds into Other — and barStyle() enforces it by
+     accident rather than by check: MARK has three entries and everything past
+     index 2 falls through to --mark-2, so rows 2, 4, 5 and 6 all drew the SAME
+     mark and the legend became a lie. Japan, Germany and South Korea are inside
+     Other; the fold is 12 + 9 + 8 + 6 = 35, and 51 + 38 + 35 = 124. */
+  origin: [ ['China', 51], ['United States', 38], ['Other, seven countries', 35] ]
 };
 
 var DATA = SETS.illustrative;
@@ -6757,10 +6980,13 @@ function sharePie(rows, total, r){
 
 /* the same numbers as a ranked share bar. IPtech prints this table directly
    beneath its own pie — the better chart was already there. */
-function shareBars(rows, total){
+/* `head` added 2026-09-12 — Country > Distribution reuses this table for where
+   a HOLDER is based, and the column header is the only thing that differs. It
+   defaults to the old literal, so the jurisdiction call site did not move. */
+function shareBars(rows, total, head){
   return '<table class="tbl tbl-share">'
        + '<colgroup><col style="width:38%"><col style="width:88px"><col></colgroup>'
-       + '<thead><tr><th class="t-micro">Jurisdiction</th>'
+       + '<thead><tr><th class="t-micro">' + (head || 'Jurisdiction') + '</th>'
        + '<th class="t-micro num">Patents</th>'
        + '<th class="t-micro">Share of scope</th></tr></thead><tbody>'
        + rows.map(function(row, i){
@@ -6829,6 +7055,164 @@ function legalBars(holders, rivals){
       +   '<span class="lb-of"> / ' + p + '</span></span>'
       + '</div>';
   }).join('');
+}
+
+/* ══ M-MAP ADDITIONS · 2026-09-12 · three forms ═════════════════════════════
+   mmap-audit.md rates 18 of M-Map's 60 views Adopt. Six were already on screen
+   and one — Legal Status > Company-Legal Status — turned out to be built
+   already as legalBars(). These are the three that were genuinely missing, plus
+   Country > Distribution, which needs no new function because shareBars()
+   already draws exactly that shape for jurisdiction.
+
+   ALL THREE FOLLOW ONE RULE FROM THE AUDIT. IPtech prints a number on every
+   point of every trend chart — forty labels on a forty-year series — and
+   dataviz names that as an anti-pattern in the same words. Nothing below labels
+   more than the endpoints and the extreme; the table and the tooltip carry the
+   rest, and every card states its finding in a sentence, because the audit's
+   sharpest finding is that sixty IPtech views carry none.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Life cycle · Patent Count > Patent Count - Life Cycle.
+   IPtech draws ~50 labelled, self-crossing points and its own screen index
+   calls the result near-unreadable; platform.md §8.1 read that and concluded
+   the finding should be a SENTENCE and not a chart at all. This reverses that,
+   and the reason is narrow: the objection was to fifty labels on a crossing
+   trajectory, not to the form. Twelve points, three labelled, no crossings —
+   because both series rise together — is a different object. The sentence stays
+   too; it is the caption. */
+function lifeCycle(holders, patents){
+  /* THE VIEWBOX IS THE RENDER WIDTH, and that is the whole reason for these
+     numbers. At 520 wide the card scaled the svg ~2x and every 11px label came
+     out at 21px — the chart read as a poster. A viewBox that matches the space
+     it lands in makes svg units CSS pixels, so 11px text is 11px text. */
+  var W = 1000, H = 300, L = 52, R = 20, T = 22, B = 46;
+  var hx = Math.max.apply(null, holders), py = Math.max.apply(null, patents);
+  var nx = Math.ceil(hx / 5) * 5, ny = Math.ceil(py / 10) * 10;
+  var X = function(v){ return L + (v / nx) * (W - L - R); };
+  var Y = function(v){ return H - B - (v / ny) * (H - T - B); };
+  var pts = holders.map(function(h, i){ return [X(h), Y(patents[i])]; });
+
+  var grid = '', i;
+  for (i = 0; i <= 4; i++){
+    var gy = T + (H - T - B) * i / 4;
+    grid += '<line x1="' + L + '" y1="' + gy.toFixed(1) + '" x2="' + (W - R)
+          + '" y2="' + gy.toFixed(1) + '"/>';
+  }
+  var ticks = '';
+  for (i = 0; i <= 4; i++){
+    var ty = T + (H - T - B) * i / 4, tv = Math.round(ny * (1 - i / 4));
+    ticks += '<text x="' + (L - 10) + '" y="' + (ty + 4).toFixed(1)
+           + '" text-anchor="end">' + tv + '</text>';
+  }
+  for (i = 0; i <= 4; i++){
+    var tx = L + (W - L - R) * i / 4, xv = Math.round(nx * i / 4);
+    ticks += '<text x="' + tx.toFixed(1) + '" y="' + (H - B + 18)
+           + '" text-anchor="middle">' + xv + '</text>';
+  }
+
+  var path = pts.map(function(pt, j){
+    return (j ? 'L' : 'M') + pt[0].toFixed(1) + ',' + pt[1].toFixed(1);
+  }).join(' ');
+
+  /* THREE LABELS, NOT TWELVE — first, last, and nothing else, because with a
+     monotone trajectory the extreme IS the last point. */
+  var last = pts.length - 1;
+  var dots = pts.map(function(pt, j){
+    var key = (j === 0 || j === last);
+    return '<circle cx="' + pt[0].toFixed(1) + '" cy="' + pt[1].toFixed(1) + '" r="'
+      + (key ? 5 : 3.5) + '" fill="' + (key ? 'var(--mark-1)' : 'var(--chart-series)')
+      + '" stroke="var(--surface)" stroke-width="2"/>';
+  }).join('');
+
+  return '<svg class="chart lc" viewBox="0 0 ' + W + ' ' + H + '" role="img"'
+    + ' aria-label="Distinct holders against patents filed, one point per year,'
+    + ' joined in time order. Both rise together.">'
+    + '<g stroke="var(--border)" stroke-dasharray="3 3" stroke-width="1">' + grid + '</g>'
+    + '<g font-size="11" fill="var(--text-3)">' + ticks + '</g>'
+    + '<path d="' + path + '" fill="none" stroke="var(--chart-series)" stroke-width="2"'
+    +   ' stroke-linecap="round" stroke-linejoin="round"/>'
+    + dots
+    + '<text x="' + (pts[0][0] + 10).toFixed(1) + '" y="' + (pts[0][1] + 14).toFixed(1)
+    +   '" font-size="11" fill="var(--text-2)">earliest</text>'
+    + '<text x="' + (pts[last][0] - 8).toFixed(1) + '" y="' + (pts[last][1] - 12).toFixed(1)
+    +   '" font-size="11" font-weight="600" text-anchor="end" fill="var(--text-1)">latest</text>'
+    + '<text x="' + ((L + W - R) / 2) + '" y="' + (H - 4)
+    +   '" font-size="11" text-anchor="middle" fill="var(--text-3)">Distinct holders filing</text>'
+    + '</svg>';
+}
+
+/* Rival momentum · Company > Trend, the per-holder cut.
+   Twelve micro-columns per rival on ONE shared scale. A line would be the
+   obvious form and it is the wrong one here: the values are 0, 1 and 2, so five
+   lines over twelve years cross constantly and say nothing. Columns on a shared
+   ceiling answer the actual question — which of these is still filing — at a
+   glance, and small multiples is what dataviz prescribes past ~4 converging
+   series anyway. */
+function momentum(rows, sel){
+  var max = rows.reduce(function(m, r){
+    return Math.max(m, Math.max.apply(null, r));
+  }, 0) || 1;
+  var W = ['w-md', 'w-lg', 'w-sm', 'w-xs', 'w-md'];
+
+  return '<div class="mo">' + rows.map(function(r, i){
+    var tot = r.reduce(function(a, b){ return a + b; }, 0);
+    var half = r.length >> 1;
+    var early = r.slice(0, half).reduce(function(a, b){ return a + b; }, 0);
+    var late  = r.slice(half).reduce(function(a, b){ return a + b; }, 0);
+    /* the word carries the reading; the strip carries the shape. Neither is
+       load-bearing alone, which is the rule. */
+    var word = late === 0 ? 'stopped'
+             : late > early ? 'rising'
+             : late < early ? 'slowing' : 'steady';
+    var span = r.length;
+    var cols = r.map(function(v, y){
+      var h = v === 0 ? 1 : Math.max(3, Math.round(v / max * 26));
+      var ago = span - 1 - y;
+      /* a title is the cheapest hover there is and it is the one the pie
+         already uses. The row total and the word are printed either way, so
+         nothing here is readable ONLY on hover. */
+      return '<span class="mo-col"' + (v === 0 ? ' data-z="1"' : '')
+           + ' title="' + v + (v === 1 ? ' filing' : ' filings') + ', '
+           + (ago === 0 ? 'this year' : ago + (ago === 1 ? ' year ago' : ' years ago'))
+           + '" style="height:' + h + 'px"></span>';
+    }).join('');
+    return '<div class="mo-row"' + (i === sel ? ' data-tracked' : '') + '>'
+      + '<span class="mo-lbl"><span class="sk sk-h-label ' + W[i] + '"></span></span>'
+      + '<span class="mo-plot">' + cols + '</span>'
+      + '<span class="mo-n">' + tot + '<span class="mo-word">' + word + '</span></span>'
+      + '</div>';
+  }).join('') + '</div>';
+}
+
+/* Who builds on whom · Company > Cross Reference.
+   IPtech draws a ring PLUS an N×N table. The ring encodes nothing the table
+   does not — mmap-audit.md finding 1 — so only the table survives, and
+   design/components.md §2 had already specced this exact shape and this exact
+   reasoning before anything was built. Direction is the information: rows cite,
+   columns are cited. */
+function citeMatrix(pairs, n){
+  var g = [], i, j;
+  for (i = 0; i < n; i++){ g[i] = []; for (j = 0; j < n; j++) g[i][j] = 0; }
+  pairs.forEach(function(p){ g[p[0]][p[1]] = p[2]; });
+  var max = pairs.reduce(function(m, p){ return Math.max(m, p[2]); }, 0) || 1;
+  var W = ['w-sm', 'w-md', 'w-xs', 'w-sm', 'w-xs'];
+
+  var out = '<div class="xr" style="--xr-n:' + n + '" role="table"'
+          + ' aria-label="Citations between holders. Rows cite, columns are cited.">'
+          + '<span class="xr-h"></span>';
+  for (j = 0; j < n; j++)
+    out += '<span class="xr-h"><span class="sk sk-h-micro ' + W[j] + '"></span></span>';
+  for (i = 0; i < n; i++){
+    out += '<span class="xr-rh"><span class="sk sk-h-label ' + W[i] + '"></span></span>';
+    for (j = 0; j < n; j++){
+      if (i === j){ out += '<span class="xr-c" data-self>&mdash;</span>'; continue; }
+      var v = g[i][j];
+      out += '<span class="xr-c" data-d="' + band(v, max) + '"'
+           + (v ? ' title="cited ' + v + (v === 1 ? ' time' : ' times') + '"' : '')
+           + '>' + (v || '') + '</span>';
+    }
+  }
+  return out + '</div>';
 }
 
 /* Ranking · restyled from IPtech's M-Map > Company > Ranking.
@@ -8357,6 +8741,81 @@ function drawDash(){
   if (lc)   lc.innerHTML   = '<b>' + lg.live + ' of the ' + (lg.live + lg.expired)
                            + ' patents in scope are still live.</b> The other ' + lg.expired
                            + ' have expired.';
+
+  /* ── M-Map additions · 2026-09-12 ───────────────────────────────────────
+     EVERY ONE OF THESE WRITES A SENTENCE. mmap-audit.md's seventh finding is
+     that sixty IPtech views carry none between them, and a widget we ship
+     without one repeats the thing we wrote down as the defect. The sentences
+     are DERIVED, never typed — a typed caption is a second source of truth and
+     goes stale the first time a number moves. */
+
+  var lcEl = $('#lifeChart');
+  if (lcEl && DATA.lifecycle){
+    var hs = DATA.lifecycle, ps = PG_FILINGS.slice(-hs.length);
+    lcEl.innerHTML = lifeCycle(hs, ps);
+    var h0 = hs[0], h1 = hs[hs.length - 1], p0 = ps[0], p1 = ps[ps.length - 1];
+    var hg = h1 / h0, pg = p1 / p0;
+    /* both rising -> forming; patents rising faster than holders -> settling
+       around the incumbents. The threshold is deliberately loose: this is a
+       shape read, and a caption that flips on a rounding error is worse than
+       one that is slightly coarse. */
+    var phase = (hg > 1.3 && pg > 1.3) ? 'still forming'
+              : (pg > 1.3)             ? 'settling around the holders already in it'
+                                       : 'flat';
+    var lcc = $('#lifeCaption');
+    if (lcc) lcc.innerHTML = '<b>This space is ' + phase + '.</b> Over these '
+      + hs.length + ' years the number of companies filing went from <b>' + h0
+      + '</b> to <b>' + h1 + '</b>, and filings from <b>' + p0 + '</b> to <b>' + p1
+      + '</b> a year. Both rising together means new entrants are still arriving, '
+      + 'not that the field is closing.';
+  }
+
+  var moEl = $('#momStrip');
+  if (moEl && DATA.perHolder){
+    moEl.innerHTML = momentum(DATA.perHolder, HB_SEL);
+    var half = DATA.perHolder[0].length >> 1;
+    var stopped = DATA.perHolder.filter(function(r){
+      return r.slice(half).reduce(function(x, y){ return x + y; }, 0) === 0;
+    }).length;
+    var moc = $('#momCaption');
+    if (moc) moc.innerHTML = '<b>' + stopped + ' of the ' + DATA.perHolder.length
+      + ' largest holders have filed nothing in six years.</b> Their patents still '
+      + 'stand, but the portfolio has stopped growing and the oldest of it is '
+      + 'closer to expiring than to being extended.';
+  }
+
+  var xrEl = $('#xrefGrid');
+  if (xrEl && DATA.citedBy){
+    var n = DATA.rivals.length;
+    xrEl.innerHTML = citeMatrix(DATA.citedBy, n);
+    var inDeg = [], k;
+    for (k = 0; k < n; k++) inDeg[k] = 0;
+    DATA.citedBy.forEach(function(pr){ inDeg[pr[1]] += pr[2]; });
+    var top = inDeg.indexOf(Math.max.apply(null, inDeg));
+    var citers = DATA.citedBy.filter(function(pr){ return pr[1] === top; }).length;
+    var xrc = $('#xrefCaption');
+    /* "cited by 4 of the other 4" is what the first draft printed and it reads
+       as a typo. When every other holder cites it, say so in words. */
+    var who = citers === n - 1 ? 'every one of the other ' + (n - 1)
+                               : citers + ' of the other ' + (n - 1);
+    var rest = inDeg.reduce(function(x, y){ return x + y; }, 0) - inDeg[top];
+    if (xrc) xrc.innerHTML = '<b>One holder is cited by ' + who + '</b>, '
+      + inDeg[top] + ' times against ' + rest + ' for the rest of them put together. '
+      + '<b>It is also the one that stopped filing.</b> The work this space was built '
+      + 'on sits in a portfolio nobody is adding to &mdash; and the oldest of it is '
+      + 'closer to expiring than to being extended.';
+  }
+
+  var ogEl = $('#origBars');
+  if (ogEl && DATA.origin){
+    ogEl.innerHTML = shareBars(DATA.origin, DATA.total, 'Holder based in');
+    var ogc = $('#origCaption');
+    if (ogc) ogc.innerHTML = '<b>' + DATA.origin[1][1] + ' of the ' + DATA.total
+      + ' patents here are held by US companies</b>, against ' + DATA.origin[0][1]
+      + ' held from ' + DATA.origin[0][0] + '. <b>Where a holder is based is not '
+      + 'where its patent bites</b> &mdash; the card below is that, and the two '
+      + 'do not match.';
+  }
 }
 drawDash();
 
