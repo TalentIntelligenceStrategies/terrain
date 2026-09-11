@@ -1008,11 +1008,22 @@ a{text-decoration:none;color:inherit}
    clamp anywhere in this file, so a button sitting mid-row put a 300px
    popover at x = -72 — off the column, and clipped by .listcol's own
    overflow:hidden. Every card header already solves it this way. */
-.listhead-top .head-count{margin-inline-start:auto}
-/* the row collapses to nothing at rest: both chips left in it are hidden
-   until the founder stars or re-ranks, and an empty flex row with a gap
-   still costs its own margin. */
-.listhead .head-meta:empty{display:none}
+/* THE AUTO MARGIN MOVED TO THE HEADING, 2026-09-11, and it had to. It sat on
+   .head-count, which worked while the count was the first thing after the
+   title and breaks the moment anything joins the row ahead of it — `N starred`
+   would have been stranded beside the heading with the gap opening between two
+   chips that belong together. Pushing from the TITLE'S trailing edge packs the
+   whole trailing group right regardless of which of them are rendered, which
+   is what a row with two conditionally-present chips needs. */
+.listhead-top #setTitle{margin-inline-end:auto}
+/* THE WRAPPER IS GONE AND THE ROW NOW GENUINELY COLLAPSES. `:empty` was the
+   rule here and it never matched once: a div holding a hidden span holds an
+   element child and two whitespace text nodes, so the flex column kept paying
+   its 10px gap for a row that drew nothing. The chip is a direct child now,
+   .chip[hidden] takes it out of the flow for real, and there is no wrapper
+   left to be wrong about. align-self is what stops a 24px pill stretching to
+   the column's full width in a flex-direction:column parent. */
+.listhead>.chip{align-self:flex-start}
 
 /* ── scrollbars · added 2026-09-10 ──────────────────────────────────────
    There was no scrollbar rule in this file at all — every scroller was the
@@ -1118,7 +1129,7 @@ a{text-decoration:none;color:inherit}
      transition:transform var(--dur-2) var(--ease-drawer),
                 visibility 0s linear var(--dur-2)}
 .rec-open .rec{transform:none;visibility:visible;
-     transition:transform var(--dur-3) var(--ease-drawer),visibility 0s linear 0s}
+     transition:transform var(--dur-4) var(--ease-drawer),visibility 0s linear 0s}
 /* SWAPPED BEHIND A FADE when the founder picks a second patent without closing
    the first. Same blur-and-opacity as .set-run-say and .rv, and for the same
    reason: the two records are different lengths, so a bare swap reflows the
@@ -1976,6 +1987,88 @@ a{text-decoration:none;color:inherit}
   gap:var(--s-8);min-height:220px;padding:var(--s-32) var(--s-24);text-align:center}
 .pn-empty svg{color:var(--text-disabled)}
 .pn-empty p{margin:0;font-size:13px;line-height:1.55;color:var(--text-3);max-width:34ch}
+
+/* ── the record composes, in reading order · 2026-09-11 ────────────────────
+   THIS REVERSES "a drawer's contents do not fade in after the drawer opens",
+   and the reversal is narrow rather than a repeal. §6's prohibition is now
+   "contents do not move WHILE their container is moving", and the fault it was
+   written for is untouched: `pn-in` was a 200ms KEYFRAME on --ease running
+   INSIDE a 320ms --ease-drawer container — two curves over two durations on
+   one object, overlapping, and restarting from zero when a second row was
+   clicked mid-slide. What replaces it is four TRANSITIONS on four objects that
+   start only after the container has stopped. Nothing overlaps and nothing is
+   a keyframe, so a reversal retargets smoothly.
+
+   FOUR GROUPS, and the order is the record's own: what this is, then how it is
+   identified, then what it says, then what it claims. NOT a reading of the
+   record — see platform.md §7a.3, which had to rule on exactly that before
+   this could ship.
+
+   .rec-head IS NOT A GROUP and must never become one. Focus moves to #recTitle
+   on open, and §6 already records that a heading which cannot be seen fails
+   silently. A heading held at opacity:0 is that bug wearing opacity. The head
+   is present on frame one, which is also what keeps the card from reading as
+   an empty box while the body arrives.
+
+   TWO PROPERTIES, BOTH COMPOSITABLE. No blur: this is not a crossfade between
+   two strings, and filter:blur() over a subtree of shimmering skeleton bars
+   repaints the whole subtree every frame for the length of the reveal. */
+.pn-stage{opacity:0;transform:translateY(6px)}
+.rec-body .pn-stage{
+  transition:opacity var(--dur-3) var(--ease) var(--stage-delay,0ms),
+             transform var(--dur-3) var(--ease) var(--stage-delay,0ms)}
+/* the wait is the container's own duration, so nothing inside moves until the
+   card has stopped. 50ms is the thread's stagger and the only one in the
+   vocabulary; --i is set per group, the way .tmsg sets it. */
+.rec-body .pn-stage{--stage-delay:calc(var(--dur-4) + var(--i,0) * 50ms)}
+.rec-open .rec-body .pn-stage{opacity:1;transform:none}
+/* reopened inside REC_INSTANT_MS: revealed by the rule above, with nothing to
+   animate. The class is set before .rec-open so it is already in force on the
+   frame the transition would have started. */
+.rec-instant .rec-body .pn-stage{transition:none}
+
+/* ── the record's type hierarchy · 2026-09-11 ───────────────────────────────
+   The card had three levels of content and one level of type: the title bars,
+   the field values, the abstract lines and the claim lines were all
+   sk-h-body at 12px, so the patent's own title had no more presence than its
+   Number field. Seven changes, no field added or removed. */
+
+/* the section headings were t-micro, IDENTICAL to the eleven <dt> labels — a
+   heading and a leaf label rendering the same. Headings take t-label; the
+   <dt>s keep t-micro, so the levels separate without a new type role. */
+.pn-sec-h{font-size:13px;line-height:1.4;font-weight:500;
+          letter-spacing:0;text-transform:none;color:var(--text-2)}
+
+/* eleven fields in one undifferentiated block. Five clusters now — identity ·
+   classification · people · dates · where+status — grouped BY SPACE inside the
+   same <dl>, no rules added. 22px between against 10px within clears the 2x
+   that makes grouping read as grouping. The <dl> has ONE consumer and it is
+   always PN_ALL, so nth-of-type is unambiguous; if a second field set is ever
+   rendered through .hf, this becomes a class on the <dl> instead. */
+.hf dt:nth-of-type(4),.hf dd:nth-of-type(4),
+.hf dt:nth-of-type(6),.hf dd:nth-of-type(6),
+.hf dt:nth-of-type(8),.hf dd:nth-of-type(8),
+.hf dt:nth-of-type(10),.hf dd:nth-of-type(10){margin-block-start:var(--s-12)}
+
+/* the abstract's measure was uncapped: w-full bars in a ~820px card put real
+   abstract text near 130 characters a line against §4's 68ch. */
+.pn-sec:first-of-type .pn-lines{max-width:68ch}
+
+/* the figure block says LABEL ABOVE, NEVER BESIDE (§7), and the score was the
+   one place in the product still doing it inline. */
+.pn-score{flex-direction:column;align-items:flex-start;gap:var(--s-2)}
+
+/* claim numbers are tabular already but were left-aligned in an auto column,
+   so 1 and 15 started at the same x and ended at different ones. */
+.pn-cn{text-align:end;justify-self:end}
+
+/* and the chrome outranked the subject: <h2>The patent record</h2> at t-title
+   17/600 was the largest type on the card, sitting above a title rendered as
+   bars. Demoted to an eyebrow. It STAYS an <h2> and stays the focus target —
+   it is the pane's accessible name, because the title itself is a bar. */
+.rec-head h2{font-size:10.5px;line-height:1.2;font-weight:500;
+             letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.rec-head{padding-block:var(--s-12)}
 .set-listcol{min-width:0}
 @container (min-width:860px){
   .set-split-in{grid-template-columns:minmax(360px,1fr) minmax(400px,1.1fr)}
@@ -2269,22 +2362,46 @@ a{text-decoration:none;color:inherit}
    frame, which read as the prompt becoming the work. The beat still opens; it
    just no longer has anything closing as it does.* */
 
-/* ── the re-baseline panel · THREE states ──────────────────
-   rest -> running -> ranked, and the panel is the same collapse in the last
-   two. It stays open across running->ranked so the founder watches the running
-   line resolve into the result, directly above the list that moved.
+/* ── the re-baseline panel · TWO states ────────────────────
+   rest -> running -> rest. IT WAS THREE, and the third is deleted 2026-09-11.
+   The settled state held a statement — "N patents moved. What you starred is
+   now at the top — and what the views count has not changed, only the order."
+   — in a permanent sunken band above the list.
+
+   WHY IT WENT, and the reasons compound rather than repeat:
+   1. THE FIGURE WENT CONSTANT. It counted positions that changed, which was a
+      real measurement while the re-rank only hoisted the starred rows past
+      their neighbours; now that it re-sequences the whole list it reads 122 of
+      124 every time. A number that never varies is a label wearing a
+      measurement's clothes.
+   2. THE DISCLOSURE HAS A HOME ALREADY. "What the views count has not changed,
+      only the order" was documented as un-relocatable — true only just after a
+      re-rank, so it could not follow the standing note into the heading's
+      popover in 2026-09-10. But the popover's own re-rank paragraph ends "No
+      patent enters or leaves; only the sequence changes", which is that clause,
+      stated durably, about this exact control. It was carrying a fact it had
+      stopped being the only carrier of.
+   3. THREE STANDING CUES SURVIVE IT, and none of them is a transient band: the
+      rank chip in the heading, the two band headings over the rows, and
+      `Restore the original order` arriving in the bar. §6's rule is that motion
+      may never be the only thing carrying a state — it isn't.
+
+   SO THE BEAT STILL OPENS AND NOW IT CLOSES. The running line no longer
+   resolves into a result in place; it collapses, and what is left on screen is
+   the reordered list with the chip above it.
 
    THE ENTER AND THE EXIT ARE DIFFERENT DURATIONS, which is why the base rule
-   carries the exit and the state classes override it — §6 says exit is faster
+   carries the exit and the state class overrides it — §6 says exit is faster
    than enter everywhere, not only on the view swap. */
 .set-run{display:grid;grid-template-rows:0fr;
   transition:grid-template-rows var(--dur-2) var(--ease)}
-.set-wrap.is-running .set-run,
-.set-wrap.is-ranked .set-run{grid-template-rows:1fr;transition-duration:var(--dur-3)}
+.set-wrap.is-running .set-run{grid-template-rows:1fr;transition-duration:var(--dur-3)}
 .set-run>div{overflow:hidden;min-height:0}
-/* symmetric padding, because in the settled state this band is PERMANENT
-   rather than a beat passing through. Asymmetric padding would also move every
-   row the moment the state changed, mid-FLIP. */
+/* symmetric padding. It was symmetric because the settled band was PERMANENT
+   and asymmetry would have moved every row the instant the state changed,
+   mid-FLIP. There is no settled band now and the reason is simpler: this is a
+   beat passing through, and a band that is only ever in transit has no edge to
+   favour. */
 .set-run-in{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap;
   padding:var(--s-14) var(--s-20);font-size:13px;color:var(--text-2)}
 .set-run-in .spacer{flex:1 1 auto}
@@ -2302,12 +2419,11 @@ a{text-decoration:none;color:inherit}
 .set-run-in .sweep{opacity:0;flex:0 0 auto;
   transition:opacity var(--dur-1) var(--ease)}
 .set-wrap.is-running .set-run-in .sweep{opacity:1}
-/* SETTLED. Fill, weight and a word — the three channels §2 leaves open. The
-   band sinks, the statement comes to full weight. NOT a "done" colour: the
-   build's own tick reaches for --state-live and that is one of §2's three
-   permitted places for colour, which this is not. */
-.set-wrap.is-ranked .set-run-in{background:var(--surface-sunken)}
-.set-wrap.is-ranked .set-run-say{color:var(--text-1)}
+/* THE SETTLED TREATMENT IS DELETED with the state it dressed — it was
+   `--surface-sunken` under the band and `--text-1` on the statement, "fill,
+   weight and a word, the three channels §2 leaves open". Nothing reads
+   .is-ranked in this panel now. The class itself is untouched and still
+   load-bearing: it hands the band headings in and the anchor rails out. */
 /* the running beat OWNS THE CARD. pointer-events was on .set-split alone, so
    Re-rank and Build the map sat at 45% opacity and stayed clickable — and
    every control on the bar calls renderSet() on the list being reordered. */
@@ -2315,8 +2431,11 @@ a{text-decoration:none;color:inherit}
   transition:opacity var(--dur-2) var(--ease)}
 /* once the build has started the set is settled — §4b is one pass, so the
    controls stop being live rather than staying available behind the panel.
-   THIS BLOCK MUST STAY LAST: it and the .is-ranked rules are both (0,4,0), so
-   source order is the only thing that makes a built card win. */
+   THIS BLOCK MUST STAY LAST: it and the .is-running rules above are both
+   (0,4,0), so source order is the only thing that makes a built card win.
+   *It cited .is-ranked until 2026-09-11; those rules are deleted and
+   .is-running is the one left at the same weight. The requirement is
+   unchanged.* */
 .set-wrap[data-built] .set-bar,.set-wrap[data-built] .set-split,
 .set-wrap[data-built] .set-run{opacity:.5;pointer-events:none}
 /* a first build opens the map itself, so its footer keeps only the note */
@@ -2393,18 +2512,21 @@ a{text-decoration:none;color:inherit}
   .tmsg-grow>div{overflow:visible;opacity:1;transform:none;filter:none}
   .tmsg-pend{display:none}
   .rv{opacity:1;filter:none}
-  /* the re-baseline panel is declared open in BOTH of its open states, not
+  /* the re-baseline panel is declared open in its ONE open state, not
      shortened — a collapsed grid-template-rows that never ticks would hide the
-     running line, and now the settled statement with it. */
-  .set-wrap.is-running .set-run,
-  .set-wrap.is-ranked .set-run{grid-template-rows:1fr}
+     running line. *It read "BOTH of its open states" until 2026-09-11; the
+     settled one is deleted.* */
+  .set-wrap.is-running .set-run{grid-template-rows:1fr}
   .set-wrap.is-running .set-run-in .sweep{opacity:1}   /* present and still */
-  /* the settled state carries its fill and its weight outright. THE BAND IS
-     THE WHOLE CONFIRMATION HERE — the FLIP is skipped, so a founder on reduced
-     motion learns the list reordered from the headings and the sentence, which
-     is the reason the band earns its place over motion alone. */
-  .set-wrap.is-ranked .set-run-in{background:var(--surface-sunken)}
-  .set-wrap.is-ranked .set-run-say{color:var(--text-1)}
+  /* ~~THE BAND IS THE WHOLE CONFIRMATION HERE~~ — it said that, and the claim
+     was that a founder on reduced motion learns the list reordered from the
+     headings and the settled sentence, which is why the band earned its place
+     over motion alone. THE HALF THAT MATTERED SURVIVES: the FLIP is still
+     skipped here, and what confirms the reorder is still not motion — it is
+     the two band headings below, the rank chip in the heading and the restore
+     control in the bar, all of them standing rather than transient. The
+     sentence was the one carrier that went, and it was never the one doing
+     this job alone. */
   /* no FLIP runs, so there is nothing for the headings to wait for. setReorder
      returns before it hides them; this is the belt to that braces. */
   .set-band{opacity:1}
@@ -2426,6 +2548,10 @@ a{text-decoration:none;color:inherit}
      the founder needs, and it may not wait on a transition — the blank-screen
      bug that rule came from is exactly this failure. */
   .rec-open .rec{transform:none;visibility:visible}
+  /* and every staged group is simply there. Four groups behind three delays is
+     four chances of the 2026-08-31 blank screen, and this is the declaration
+     that makes them survivable. */
+  .pn-stage{opacity:1;transform:none}
 }
 </style>
 </head>
@@ -2762,6 +2888,22 @@ a{text-decoration:none;color:inherit}
                    here it sits with the affordance that explains it, and the
                    row below collapses to nothing until the founder does
                    something worth reporting. -->
+              <!-- THE STAR COUNT SITS LEFT OF THE CORPUS COUNT, 2026-09-11.
+                   It was in .head-meta below, which meant a founder's first
+                   star opened a whole second row to report one word — and it
+                   reported it about 40px from the count it is a subset of.
+                   Two counts about the same list belong on the same line,
+                   and the narrower one reads first: `3 starred` then
+                   `N matched`, which is what the founder did followed by what
+                   they are looking at.
+
+                   IT IS STILL A .chip AND STILL NOT A CONTROL. The rank chip
+                   stays below, and that is not an inconsistency: `N starred`
+                   is a count of the same kind as `N matched` and belongs
+                   beside it, where `Re-ranked around N starred` is a sentence
+                   about the ORDER and would be the longest thing in a 345px
+                   heading row. -->
+              <span class="chip" id="setStarChip" hidden></span>
               <span class="chip head-count"><span class="sk sk-h-micro w-sm"
                 style="display:inline-block;vertical-align:-1px"></span> matched</span>
               <span class="info">
@@ -2780,10 +2922,25 @@ a{text-decoration:none;color:inherit}
                   you, and it does not mean the ones below it do not.</span>
               </span>
             </div>
-            <div class="head-meta">
-              <span class="chip" id="setStarChip" hidden></span>
-              <span class="chip" id="setRankChip" hidden></span>
-            </div>
+            <!-- THE RANK CHIP, AND IT HAS NO WRAPPER ANY MORE. It shared a
+                 .head-meta row with the star chip; that chip has gone up into
+                 the heading row and a flex wrapper around one conditionally
+                 hidden chip is a row that costs its gap to draw nothing.
+
+                 IT IS THE SETTLED STATE'S LIVE REGION SINCE 2026-09-11, which
+                 is a role it inherited rather than gained. The panel's sentence
+                 was this surface's one live region and it is deleted; the chip
+                 is what carries the settled state now, so it is what should
+                 announce it. "Nothing announces twice" still holds — the panel
+                 announces the beat STARTING and is emptied at land, emptying a
+                 live region is silent, and the chip announces only the landing.
+                 Two regions, two moments, never the same fact.
+
+                 IT SHIPS EMPTY AND HIDDEN for the reason .set-run does: a
+                 region registered at load and silent until there is something
+                 true to say is the only kind that reliably announces a later
+                 polite update. -->
+            <span class="chip" id="setRankChip" role="status" aria-live="polite" hidden></span>
           </div>
         <!-- what the founder asked to leave out at the gate travels here, because
              an exclusion that never shows on the result it shaped is indistinguishable
@@ -4544,7 +4701,10 @@ function patentPaneHTML(rec, opt){
     +   '<div class="pn-head-lines">'
     +     (opt.heading === false ? ''
         : '<h3 class="t-title pn-title" tabindex="-1">Patent record</h3>')
-    +     '<div class="pn-name">' + bar('w-full') + bar('w-lg') + '</div>'
+    /* the patent's own title, at the title's height rather than the body's —
+       it had no more presence than the Number field below it. bar() already
+       takes a height, so this needs no new helper. */
+    +     '<div class="pn-name">' + bar('w-full','title') + bar('w-lg','title') + '</div>'
     +     '<div class="pn-meta">' + statusHTML(rec.status)
     +       '<span class="t-micro">' + rec.kind + '</span>'
     /* the same number the row carries, and the same rule: an ordering with
@@ -4757,6 +4917,28 @@ function filterChipHTML(){
    The LEFT list is never covered, which is what makes the peek legible as
    "this came from there".                                               */
 var recReturn = null;
+/* when the record last CLOSED. A reopen inside this window skips the
+   choreography, on the .info.is-instant precedent — "once one is open the next
+   opens instantly… a founder reading across them should not pay it four
+   times." Escape, then the next row, is the common path on this surface and it
+   may not cost a second of assembly every time. Same 400ms as the popover. */
+var recClosedAt = 0;
+var REC_INSTANT_MS = 400;
+
+/* the four groups, tagged after the render so patentPaneHTML stays the single
+   definition of what the record IS. ONLY GROUPS INSIDE .rec-body — the head
+   carries the heading that takes focus and never stages. */
+function stageRecord(body){
+  var pn = $('.pn', body);
+  if (!pn) return;
+  var secs = $$('.pn-sec', pn);
+  [ $('.pn-head-lines', pn), $('.hf', pn), secs[0], secs[1] ]
+    .forEach(function(el, i){
+      if (!el) return;
+      el.classList.add('pn-stage');
+      el.style.setProperty('--i', i);
+    });
+}
 /* the open row's visual, kept in one place because three paths set it and a
    fourth (renderSet) blows the rows away and needs restoreSetCurrent to put it
    back. setAttribute/removeAttribute rather than toggleAttribute, to match how
@@ -4791,12 +4973,29 @@ function openRecordOverlay(rec, trigger){
     REC_SWAP = setTimeout(function(){
       REC_SWAP = 0;
       body.innerHTML = patentPaneHTML(rec, { close:false, heading:false });
+      /* tagged so the groups carry the same classes either way, but the card
+         is already open so they are already revealed: a swap is a content
+         change, not an arrival, and re-running the assembly here would be
+         motion claiming something arrived when nothing did. */
+      /* the groups are tagged so both paths carry the same classes, and they
+         are released on the frame they are made because .rec-open is already
+         on: a swap is a content change, not an arrival, and re-running the
+         assembly would be motion claiming something arrived when nothing did. */
+      stageRecord(body);
       pane.classList.remove('is-swapping');
     }, DUR1);
     return;
   }
 
   body.innerHTML = patentPaneHTML(rec, { close:false, heading:false });
+  stageRecord(body);
+  /* A REOPEN INSIDE THE WINDOW SKIPS THE ASSEMBLY, and the card still slides.
+     Only the staging is charged once: the surface arriving is what tells the
+     founder something happened, and the composition is what costs a second.
+     This is also "only a fresh build earns the stagger" applied one surface
+     down — a record reopened is not a record assembled. */
+  app.classList.toggle('rec-instant',
+    REDUCED || (Date.now() - recClosedAt) < REC_INSTANT_MS);
   pane.hidden = false;
   /* COMMIT THE START STATE BEFORE THE CLASS, NOT AFTER. This read sat below
      the classList.add and could not do the job it was written for: the browser
@@ -4841,6 +5040,7 @@ function recFocusHead(pane){
 function closeRecord(){
   if (!app.classList.contains('rec-open')) return;
   app.classList.remove('rec-open');
+  recClosedAt = Date.now();
   /* a swap in flight would otherwise write into a pane on its way out and
      leave is-swapping set on it, so the next open would fade up from blank */
   if (REC_SWAP){ clearTimeout(REC_SWAP); REC_SWAP = 0; }
@@ -6893,20 +7093,79 @@ function starSig(){
   for (i = 0; i < SET_ROWS.length; i++) if (SET_STARS[i]) out.push(i);
   return out.join(',');
 }
+/* ── CLOSENESS TO AN ANCHOR · what the re-rank orders BY · 2026-09-11 ─────
+   THE RE-RANK USED TO HOIST AND NOTHING ELSE — starred rows to the top, every
+   other patent left in the engine's order — and that is the defect this
+   closes. Star the second row, press Re-rank, and two rows swapped: the panel
+   said "2 patents moved", the band appeared over a list that had not been
+   ranked around anything, and the fix the founder could see was indistinguishable
+   from a control that had misfired. It also under-delivered on what THREE
+   places already promised: §4b says starring "re-ranks the set around it", the
+   heading's popover says it "orders the rest by how close they are to the one
+   you starred", and the band heading says "Ranked around it". Nothing anywhere
+   ever specified the hoist — it was a comment in this function claiming a rule
+   no document had.
+
+   `components.md` fixes what this is standing in for: a re-rank sends
+   `{ anchors: [id] }` and gets `{ order: [id] }` back over the same set. AN
+   ORDER AND NO PER-ROW FIGURE, so there is nothing to print beside a row and
+   this is the whole of the modelling — the client never sees a closeness value
+   and neither may the surface.
+
+   IT IS DELIBERATELY OPAQUE, which is the honest form rather than a shortcut.
+   Semantic closeness is computed from text the row renders as bars, so it is
+   not checkable against anything on screen. An affinity built from what IS on
+   screen would be worse than unavailable, it would be FALSE: weight `status`
+   or `kind` and every live patent clumps under a live anchor, which puts
+   "patents like this one means patents with this legal status" on the screen
+   as a claim Terrain never made. §6.1's rule against asserting WHY governs an
+   ordering exactly as it governs a cell.
+
+   SYMMETRIC IN THE PAIR and non-linear in it. Symmetric because closeness
+   cannot depend on which of two patents the founder happened to star;
+   non-linear because `rec.n` is linear in the row index, so a linear mix
+   sorts into arithmetic runs and prints a visibly regular ladder down the
+   score column — a pattern in illustrative figures reads as generated data,
+   which is §8's whole concern. */
+function setAffinity(i, j){
+  var a = setRecFor(i).n, b = setRecFor(j).n;
+  var s = (a + b) % 1009, p = (a * b) % 1009;
+  return (s * s + p * 3 + (a ^ b)) % 1009;
+}
 /* PURE IN sig, AND COMPUTED FROM SET_ORDER_0 — never composed on the live
    order. Two things follow, and both are load-bearing:
-   1. the rule is "starred rows rise, the rest keep their order", and "the rest"
-      means the ENGINE's order. Composing on the live order would leave a
-      previously-starred row elevated after it was unstarred, so the order would
-      depend on the founder's click history rather than on the current stars.
+   1. the rule is "starred rows rise, and the rest are ordered by closeness to
+      them", and "the rest" is drawn from the ENGINE's order. Composing on the
+      live order would leave a previously-starred row elevated after it was
+      unstarred, so the order would depend on the founder's click history
+      rather than on the current stars.
    2. because it is idempotent there is only ever ONE step between SET_ORDER_0
       and SET_ORDER, so the question of whether a reversal unwinds one level or
       all of them does not arise. No stack, and "restore" means what it says. */
 function rankOrder(sig){
-  var mark = {}, out = [], j, parts = sig ? sig.split(',') : [];
+  var mark = {}, rest = [], out = [], j, k, best,
+      parts = sig ? sig.split(',') : [];
   for (j = 0; j < parts.length; j++) mark[+parts[j]] = 1;
-  for (j = 0; j < SET_ORDER_0.length; j++) if ( mark[SET_ORDER_0[j]]) out.push(SET_ORDER_0[j]);
-  for (j = 0; j < SET_ORDER_0.length; j++) if (!mark[SET_ORDER_0[j]]) out.push(SET_ORDER_0[j]);
+  for (j = 0; j < SET_ORDER_0.length; j++){
+    if (mark[SET_ORDER_0[j]]) out.push(SET_ORDER_0[j]);
+    /* `at` is the engine's own position, carried so the tie-break below can
+       read it after the sort has thrown the array's order away. */
+    else rest.push({ i:SET_ORDER_0[j], at:j, a:0 });
+  }
+  /* CLOSEST TO ANY ANCHOR, not to all of them averaged. Two stars are two
+     separate "more like this one"s, so a patent close to either one rises;
+     averaging would sink a patent that is very close to one and unrelated to
+     the other, which is the opposite of what the founder asked for twice. */
+  for (j = 0; j < rest.length; j++){
+    best = -1;
+    for (k = 0; k < parts.length; k++) best = Math.max(best, setAffinity(rest[j].i, +parts[k]));
+    rest[j].a = best;
+  }
+  /* THE ENGINE'S POSITION BREAKS THE TIE, which keeps the order total and
+     deterministic and leaves the original ranking as the residue — the same
+     role `a - b` plays in the date sort's comparator. */
+  rest.sort(function(x, y){ return (y.a - x.a) || (x.at - y.at); });
+  for (j = 0; j < rest.length; j++) out.push(rest[j].i);
   return out;
 }
 setRelist();
@@ -7286,16 +7545,26 @@ function setCeiling(n){
    letter reads as a glitch rather than as a state change. The generation
    guard is what a header swap never needed and this does — a reset landing
    60ms into a swap would otherwise write stale text into a panel that has
-   been reset. */
+   been reset.
+
+   THE CROSSFADE IS NOW UNEXERCISED, and it is kept rather than deleted. With
+   the settled statement gone there is exactly one sentence — the running line —
+   so nothing ever replaces text that is on screen, and every live call takes
+   the immediate branch below. *The fade existed for running -> settled, two
+   sentences of different lengths in one band.* It stays because the panel is
+   one state away from having two sentences again the moment anything else
+   reports into it, and because §6 records the reasoning; what must not happen
+   is a future second sentence being written with `immediate` because the fade
+   had been removed and nobody noticed it was the point. */
 function setRunSay(html, immediate){
   var el = $('#setRunSay'), run = $('#setRun');
   /* THE CROSSFADE ONLY EARNS ITS 120ms WHEN THE SENTENCE IT REPLACES IS ON
      SCREEN. The panel is collapsed at rest, so fading out of a sentence nobody
      can see spends the reveal on nothing — and the panel would then open on 120
-     frames of empty band before the new text arrived. Restore writes into a
-     panel it is about to close, which is exactly this case. */
-  var open = setWrap.classList.contains('is-running')
-          || setWrap.classList.contains('is-ranked');
+     frames of empty band before the new text arrived.
+     *It read `is-running || is-ranked` until 2026-09-11; there is one open
+     state now.* */
+  var open = setWrap.classList.contains('is-running');
   if (immediate || REDUCED || !open || !el.innerHTML){ el.innerHTML = html; return; }
   var gen = SET_GEN;
   run.classList.add('is-swapping');
@@ -7354,11 +7623,37 @@ function setReorder(next, before){
   SET_ORDER = next;
   renderSet();                    /* the only renderer: syncSet + restoreSetCurrent */
   if (REDUCED) return;
+  /* ── THE STAGGER, AND IT IS KEYED TO THE DESTINATION · 2026-09-11 ───────
+     Every row moved on the same frame until now, which was right while the
+     re-rank only hoisted one row past its neighbours and is wrong now that it
+     re-sequences the whole list: twenty rows crossing each other simultaneously
+     is a shuffle the eye cannot follow, and what it reads as is a list being
+     REPLACED rather than reordered.
+
+     BY DESTINATION, not by source, and that is the whole of why it reads. The
+     starred row's destination is 0, so it leads with no delay and every other
+     row closes in behind it — the list re-forms top-down, in the direction it
+     is read, and the object the founder's own click moved is the one they can
+     follow. Keying it to the source would start the movement wherever the
+     starred row happened to be sitting, which is a position nobody is looking
+     at.
+
+     CAPPED, because the step is per row and the window is twenty of them: 18ms
+     uncapped puts the last row 342ms behind the first and the gesture past a
+     second. Capped at 14 it lands inside --dur-4, the longest envelope §6
+     names. */
+  var STEP = 18, CAP = 14;
+  var settle = DUR3 + STEP * CAP;
   /* beat two: hold the band headings back until the rows have arrived. They
      are hidden with transitions suppressed for one frame — applying opacity:0
      and the transition in the same style change animates TOWARDS zero from
      wherever it gets to, which is the widget-entrance bug design-language.md
-     §6 records at length. */
+     §6 records at length.
+
+     IT WAITS FOR THE STAGGER NOW, not for one row's travel. At DUR3 the
+     heading would arrive over rows still closing in beneath it, which is the
+     overlap this two-beat split exists to prevent — the same defect, one
+     mechanism further on. */
   var bands = $$('.set-band', setList);
   bands.forEach(function(b){ b.style.transition = 'none'; b.style.opacity = '0'; });
   if (bands.length) bands[0].offsetHeight;
@@ -7367,48 +7662,67 @@ function setReorder(next, before){
       if (!b.isConnected) return;
       b.style.transition = ''; b.style.opacity = '';
     });
-  }, DUR3);
-  $$('.set-row', setList).forEach(function(el){
+  }, settle);
+  $$('.set-row', setList).forEach(function(el, idx){
     var was = first[el.getAttribute('data-i')];
-    /* no entry means the row was not on screen a moment ago — paged in, or
-       pushed into the window by a re-rank. It appears at rest, which is the
-       same fallback sortRivals has and never exercises. */
-    if (was == null) return;
+    var lag = Math.min(idx, CAP) * STEP;
+    /* ── ROWS THAT ARRIVE FROM BEYOND THE FOLD · 2026-09-11 ─────────────
+       No entry means the row was not on screen a moment ago. It used to
+       "appear at rest, the same fallback sortRivals has and never exercises"
+       — and the real re-rank exercises it about thirteen times in a
+       twenty-row window, because a genuine reordering of fifty patents must
+       bring some of the other thirty up. Thirteen rows materialising
+       instantly around seven that slide is the list reading as replaced,
+       which is the one thing this surface may not say: no patent enters or
+       leaves, only the sequence changes.
+
+       SO THEY ENTER, in the vocabulary .tmsg already uses for exactly this —
+       8px of Y and opacity over --dur-2, on --ease, on the same stagger.
+       Lighter and shorter than the travel beside it, because arriving from
+       outside the window is a smaller claim than moving within it; and no
+       new token, no second curve. §6's "one motion per arrival" is satisfied
+       rather than dodged: the list is a container already in place, so a row
+       arriving inside it is the only thing arriving. */
+    if (was == null){
+      el.style.transition = 'none';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(8px)';
+      el.offsetHeight;
+      el.style.transition = 'opacity var(--dur-2) var(--ease) ' + lag + 'ms,'
+                          + 'transform var(--dur-2) var(--ease) ' + lag + 'ms';
+      el.style.opacity = '';
+      el.style.transform = '';
+      setTimeout(function(){
+        el.style.transition = ''; el.style.opacity = ''; el.style.transform = '';
+      }, DUR2 + lag + 40);
+      return;
+    }
     var d = was - el.getBoundingClientRect().top;
     if (!d) return;
     el.style.transition = 'none';
     el.style.transform = 'translateY(' + d + 'px)';
     el.offsetHeight;
-    el.style.transition = 'transform var(--dur-3) var(--ease)';
+    el.style.transition = 'transform var(--dur-3) var(--ease) ' + lag + 'ms';
     el.style.transform = '';
-    setTimeout(function(){ el.style.transition = ''; el.style.transform = ''; }, DUR3 + 40);
+    setTimeout(function(){ el.style.transition = ''; el.style.transform = ''; },
+               DUR3 + lag + 40);
   });
 }
 
-/* what the settled panel says. A COUNT OF POSITIONS THAT CHANGED, over the
-   whole list — a real integer, because it counts what the founder did and not
-   what the data says (§8). It measures the depth of the deepest star: star row
-   30 and 31 rows move, which is the honest answer to "what did my act do".
-   Rejected: the starred count (the chip already carries it) and the count
-   within the visible window (a number that changes meaning on paging).
+/* ~~saySettled~~ · DELETED 2026-09-11, and the whole of the settled state with
+   it. It wrote "N patents moved. What you starred is now at the top — and what
+   the views count has not changed, only the order." into the panel, where the
+   band then stayed permanently.
 
-   IT ALSO CARRIES THE DISCLOSURE NOW. A standing note under the list used to
-   say "what the views count has not changed — only the order"; the note went
-   into the heading's popover on 2026-09-10 and that one clause could not go
-   with it, because it is true only just after a re-rank. It is a clause of
-   this sentence instead, which is the only place it is ever needed. */
-function saySettled(moved){
-  if (!moved) return 'Nothing moved — what you starred was already at the top. What the '
-                   + 'views count has not changed.';
-  /* the COUNT leads, because it is the fact the founder does not already have:
-     the chip carries how many they starred and the band heading names which
-     rows they are. And it is a whole templated string per branch rather than a
-     sentence assembled around a variable — the plural is part of the sentence,
-     not glued to it. */
-  return '<span class="fig fig-s">' + moved + '</span> patent'
-       + (moved === 1 ? ' moved' : 's moved') + '. What you starred is now at the top — and '
-       + 'what the views count has not changed, only the order.';
-}
+   THE THREE REASONS ARE ON .set-run's OWN COMMENT and are not repeated here.
+   What belongs at the call site is the one thing that had to be rebuilt rather
+   than removed: the panel now CLOSES at land instead of staying open, and a
+   closing panel above a list playing a FLIP is the defect setReorder's before()
+   callback exists to prevent. See land() below — the collapse is committed, not
+   transitioned, so it is absorbed into the rows' own travel.
+
+   ALSO GONE: the `moved` count, which had no other reader, and the "nothing
+   moved" branch, which had no other caller. */
 
 /* Re-baselining. A re-rank, not a re-search: no gate, no version, because
    §5's three reasons all need a map that does not exist yet. It IS reversible,
@@ -7425,23 +7739,55 @@ function rebaseline(now){
        a hidden element holding focus drops it to <body> — the same failure the
        disabled version had, for the same reason. */
     var was = document.activeElement;
-    var prev = SET_ORDER, next = rankOrder(sig), moved = 0, i;
-    for (i = 0; i < next.length; i++) if (prev[i] !== next[i]) moved++;
     SET_SIG = sig;
     SET_BASELINE = sig.split(',').length;
     setList.setAttribute('aria-busy','false');
-    setReorder(next, function(){
+    setReorder(rankOrder(sig), function(){
+      /* ── THE PANEL'S COLLAPSE IS COMMITTED, NOT TRANSITIONED · 2026-09-11 ──
+         The beat used to stay open at land, so the panel had no height change
+         for the FLIP to fight. It closes now, and a 200ms collapse above a
+         320ms FLIP is exactly the defect this callback was extracted to
+         prevent: the rows would play toward targets measured with the panel
+         open while the panel dragged them up underneath.
+
+         SUPPRESS THE TRANSITION, DROP THE CLASS, READ offsetHeight. That
+         commits the closed height inside this callback — before renderSet()
+         draws and before setReorder measures again — so the panel's height is
+         absorbed into every row's own travel distance and animates AS the
+         FLIP rather than against it. Restoring the inline value costs nothing:
+         grid-template-rows is already 0fr, so the next recalc has 0fr -> 0fr
+         and nothing to tick.
+
+         ONE MOTION, which is also the better reading: the band does not
+         collapse while the list settles, the list settling is what closes it. */
+      var run = $('#setRun');
+      run.style.transition = 'none';
       setWrap.classList.remove('is-running');
+      run.offsetHeight;
+      run.style.transition = '';
       setWrap.classList.add('is-ranked');      /* band in, anchor rails out */
       $('#setRestore').hidden = false;
       /* §8: the matched count belonged to a set that no longer exists, so
          it goes back to being a bar. The contract working, not failing. */
+      /* UNHIDDEN FIRST, THEN WRITTEN, and the order is the whole of whether
+         this announces. [hidden] keeps the chip out of the accessibility tree,
+         so content set while it is hidden is a mutation of a region that is not
+         there — nothing to announce against. Unhide, then mutate, and the
+         polite update lands. It was written in the other order while the chip
+         was not a live region and the order did not matter. */
       var rc = $('#setRankChip');
+      rc.hidden = false;
       rc.innerHTML = 'Re-ranked around <span class="fig fig-s">'
         + SET_BASELINE + '</span> starred';
-      rc.hidden = false;
     });
-    setRunSay(saySettled(moved));
+    /* THE RUNNING LINE IS CLEARED RATHER THAN REPLACED. A collapsed
+       grid-template-rows with overflow:hidden does not remove text from the
+       accessibility tree — the panel ships empty at rest for exactly that
+       reason — so leaving "Re-ranking around what you starred" in a closed
+       band would let a screen reader browse a settled list and read a sentence
+       about an operation that finished. Emptying a live region does not
+       announce, so this is silent. */
+    setRunSay('', true);
     /* a live target or nothing — pnClear's rule. #setRestore has just become
        focusable and is the natural successor to the control that died. */
     if (was === $('#setRebase') && $('#setRebase').hidden) $('#setRestore').focus();
@@ -7479,13 +7825,18 @@ function setRestore(){
   if (setWrap.classList.contains('is-running')) return;
   if (!SET_SIG) return;
   var was = document.activeElement;
-  /* WRITTEN IMMEDIATELY, and the second argument is the whole point. The panel
-     still has height at this instant — a live region mutated inside a collapsed
-     container is a coin toss — but it is about to close over --dur-2, so a
-     120ms crossfade would land the new sentence into a band that is already
-     halfway gone. Nobody reads it either way; what matters is that the
-     mutation is synchronous, so aria-live announces the restore. */
-  setRunSay('The original order is back.', true);
+  /* ~~setRunSay('The original order is back.', true)~~ · DELETED 2026-09-11.
+     Its own comment conceded "nobody reads it either way" — it existed to be
+     announced, on the argument that the panel still had height at that instant
+     so the live region was safe to mutate. THE PANEL HAS NO HEIGHT NOW: the
+     settled state is gone, so a restore writes into a band that is already
+     closed, and invisible text that only a screen-reader user receives is the
+     precise thing .set-run ships empty to avoid.
+
+     WHAT ANNOUNCES THE RESTORE INSTEAD: the rank chip, which is the live region
+     for this surface's settled state and is emptied here by setRankChipRest();
+     and focus, which moves below to a live control. The band headings and the
+     anchor rails swapping back are the standing cues. */
   SET_SIG = ''; SET_BASELINE = 0;
   setReorder(SET_ORDER_0.slice(), function(){
     setWrap.classList.remove('is-ranked');     /* band out, anchor rails back */

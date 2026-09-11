@@ -1858,9 +1858,32 @@ back control already called *your results*. **Two places naming one thing one wa
 
 **The corpus chip moved up into the heading row**, immediately before the info affordance at the
 trailing edge. It had a chip row of its own beneath, which at rest held one visible chip and two
-hidden ones — a whole line for one fact. The row below survives for the star and re-rank chips and
-**collapses to nothing when both are hidden** (`.head-meta:empty{display:none}`), because an empty
-flex row still costs its own margin.
+hidden ones — a whole line for one fact.
+
+***The star chip followed it up, later the same day, and `N starred` now sits immediately to the
+LEFT of `N matched`.*** It was in the row beneath, which meant a founder's first star opened a whole
+second line to report two words — and reported them about 40px from the count they are a subset of.
+**Two counts about the same list belong on the same line**, and the narrower reads first: *what you
+did*, then *what you are looking at*.
+
+**The rank chip stays below, and that is not an inconsistency.** `N starred` is a count of the same
+kind as `N matched`; `Re-ranked around N starred` is a **sentence about the order**, and it would be
+the longest thing in a 345px heading row. *One line holds counts, the line beneath holds the state.*
+
+**The auto margin had to move with it.** It sat on the corpus chip, which works while that chip is
+the first thing after the title and breaks the moment anything joins the row ahead of it — the star
+chip would have been stranded beside the heading with the whole gap opening between two chips that
+belong together. **Pushing from the title's trailing edge** packs the trailing group right whichever
+of them are rendered, which is what a row with two conditionally-present chips needs.
+
+***And the row beneath now genuinely collapses, which it never did.*** It was documented here as
+collapsing via `.head-meta:empty{display:none}` — **a rule that never matched once.** A div holding
+a hidden span holds an element child and two whitespace text nodes, so `:empty` was always false and
+the flex column paid its 10px gap for a row that drew nothing. *Measured after the fix: `.listhead`
+and `.listhead-top` are the same height at rest to the pixel.* **The wrapper is deleted** — the chip
+is a direct child, `.chip[hidden]` takes it out of the flow for real, and there is no container left
+to be wrong about. *A rule whose job is to hide something is invisible when it fails, which is why
+this sat in the document as a solved problem.*
 
 #### Its foot — a foot, not a call to action
 
@@ -2080,22 +2103,81 @@ dot — a figure is a static cue and survives §2's rule that colour may never c
 
 ### The re-rank, and what says it happened — added 2026-09-09
 
-`platform.md` §4b. **The panel above the list has three states, not two**, and it is the same
+`platform.md` §4b. ~~**The panel above the list has three states, not two**, and it is the same
 `grid-template-rows: 0fr → 1fr` collapse in the last two — so the founder watches the running line
-resolve into the result, in place, directly above the list that moved.
+resolve into the result, in place, directly above the list that moved.~~ ***Two states, and the
+settled one is deleted · 2026-09-11.*** The panel is a **beat that passes through** now: it opens
+for the work and closes when the work lands. Nothing resolves in place, because there is no longer
+a result written into the band.
 
 | State | What it is |
 |---|---|
 | Rest | Collapsed, and **the sentence inside it is empty**. Not tidiness: a collapsed `grid-template-rows` with `overflow: hidden` does not remove text from the accessibility tree, so a resting set was letting a screen reader read a sentence about an operation that was not running |
 | Running | Open, the shared 1.6s sweep, *re-ranking around what you starred*. The whole card is dimmed to `.45` **and inert** |
-| Settled | Open, `--surface-sunken`, the statement at `--text-1`, no sweep — **its absence is what says the beat has landed**, because §2 leaves no hue to say it with |
+| ~~Settled~~ | ~~Open, `--surface-sunken`, the statement at `--text-1`, no sweep~~ — **struck 2026-09-11.** The panel returns to Rest at land and the sentence is cleared |
 
-**Enter `--dur-3`, exit `--dur-2`**, written as a base rule carrying the exit with the state classes
+#### Why the settled statement went, and what had to be rebuilt to remove it
+
+**The statement was `N patents moved. What you starred is now at the top — and what the views count
+has not changed, only the order.`** Three reasons, and they compound rather than repeat:
+
+1. **The figure went constant.** It counted positions that changed, which was a real measurement
+   while the re-rank only hoisted the starred rows past their neighbours. Now that the re-rank
+   re-sequences the whole list it reads *122 of 124* every time. **A number that never varies is a
+   label wearing a measurement's clothes** — and the bullet above, written in the same pass that
+   made the re-rank real, defended the constant as *the correct report of an operation that is
+   nearly total*. That was true and it was not sufficient.
+2. **The disclosure already has a home.** *What the views count has not changed, only the order* was
+   recorded here as un-relocatable — true only just after a re-rank, so it could not follow the
+   standing note into the heading's popover in 2026-09-10. **But the popover's own re-rank paragraph
+   ends *No patent enters or leaves; only the sequence changes*,** which is that clause, stated
+   durably, about this exact control. *It had stopped being the only carrier and the document had
+   not noticed.*
+3. **Three standing cues survive it**, none of them transient and none of them motion: the **rank
+   chip** in the heading, the **two band headings** over the rows, and **`Restore the original
+   order`** arriving in the bar. §6's rule is that motion may never be the only thing carrying a
+   state, and it is not.
+
+**What had to be rebuilt is the only interesting part.** The panel used to stay open across
+*running → settled*, so it had **no height change for the FLIP to fight**. It closes now, and a
+200ms collapse above a 320ms FLIP is precisely the defect `setReorder`'s `before()` callback was
+extracted to prevent: the rows would play toward targets measured with the panel open while the
+panel dragged them upward underneath.
+
+***So the collapse is committed, not transitioned.*** Inside `before()` — after the first rects are
+measured, before the rows are drawn — the panel's transition is suppressed, the state class dropped,
+and `offsetHeight` read. The closed height is then in force for the second measurement, so **the
+panel's 48px is absorbed into every row's own travel distance** and animates *as* the FLIP instead
+of against it. *Measured: the panel goes 48.1px → 0 in a single frame, and the starred row's
+translate starts at 504px — the six rows it rises past plus the band the panel vacated.*
+
+**Which is the better reading anyway:** the band does not collapse while the list settles, **the
+list settling is what closes it.** One motion.
+
+**The live region moved to the rank chip.** The panel's sentence was this surface's one live region;
+with the settled statement gone it announces the beat *starting* and nothing else, so the chip —
+which is what carries the settled state — is what announces it. **`role="status"`, `aria-live="polite"`,
+shipped empty and hidden** for the same reason the panel ships empty. *"Nothing announces twice"
+still holds: the panel is emptied at land and emptying a live region is silent, so the two regions
+carry two moments and never the same fact.* **And the chip is unhidden before it is written**, not
+after — `[hidden]` keeps it out of the accessibility tree, so content set while hidden is a mutation
+of a region that is not there.
+
+**`The original order is back.` went too.** Its own note conceded *nobody reads it either way* — it
+existed to be announced, on the argument that the panel still had height at that instant. **It has
+no height now**, so that sentence would be invisible text delivered only to a screen-reader user,
+which is the precise thing the Rest row above exists to prevent. The restore is carried by the chip
+emptying, by focus moving to a live control, and by the bands and rails swapping back.
+
+**Enter `--dur-3`, exit `--dur-2`**, written as a base rule carrying the exit with the state class
 overriding the duration — §6 says exit is faster than enter *everywhere*, not only on the view swap.
-The statement is swapped behind an `opacity` + `blur(2px)` fade, the same masking `.cmp-status`
-already uses and for the same reason: two sentences of different lengths reflow the line, and a bare
-opacity swap reads as two strings trading places rather than one statement changing. **The fade only
-runs when the panel is open** — fading out of a sentence nobody can see spends the reveal on nothing.
+
+***The `opacity` + `blur(2px)` swap is now unexercised, and it is kept.*** It masked *running →
+settled*, two sentences of different lengths in one band; with one sentence left, nothing ever
+replaces text that is on screen and every live call takes the immediate path. **It stays because the
+panel is one state away from having two sentences again**, and because the failure mode of deleting
+it is silent: a future second sentence written with `immediate` because the fade was gone and nobody
+remembered it was the point.
 
 **The band, and the anchor rail, hand off to each other.** One class governs both, so no two markers
 for *what you starred* are ever on screen at once:
@@ -2147,6 +2229,81 @@ settled list. **The reveal clears an inline value rather than setting one**, so 
 opaque *by declaration* and a transition that never ticks costs nothing; and they are hidden with
 transitions suppressed for one frame, which is the widget-entrance bug in §6 avoided rather than
 repeated.
+
+#### The re-rank did not re-rank · fixed 2026-09-11
+
+***Everything above described the motion of a reordering that was barely happening.*** The ordering
+hoisted the starred rows to the top and **left every other patent in the engine's order**. Star the
+second row, press `Re-rank`, and two rows swapped places: the panel reported *2 patents moved*, the
+band appeared over a list that had not been ranked around anything, and the 320ms of movement this
+section specifies at length had two rows to carry it. *What the founder saw was indistinguishable
+from a control that had misfired.*
+
+**Three places already promised otherwise**, which is what makes this a defect and not a change of
+direction — `platform.md` §4b (*re-baselining re-ranks the set around it*), the heading's info
+popover (*orders the rest by how close they are to the one you starred*) and the band heading
+itself (*Ranked around it*). **Nothing anywhere ever specified the hoist.** It was a comment in the
+ordering function asserting a rule no document had, and it read as settled because it was written
+in the same voice as the rules that are.
+
+***The general form, because this is the third instance of it in this file:*** **a comment claiming
+a rule is not a rule.** The taxonomy that survived a figure scrub, the three shell gates that
+reported clean without running, and this — each was a thing everyone believed because something
+in the repository said so in an authoritative tone. *The check is whether a document says it.*
+
+**The rest are ordered by closeness to the anchor now**, drawn from the engine's order and tie-broken
+by it, so the original ranking survives as the residue. Two consequences worth having in writing:
+
+- ~~**`N patents moved` now lands at or near the full length of the list every time.** That reads as a
+  figure gone constant, and it is the correct report of an operation that is nearly total — the old
+  number was small because the old operation was.~~ ***Superseded the same day: the sentence carrying
+  that figure is deleted outright*** — see *Why the settled statement went* below. The defence above
+  was sound as far as it went and did not go far enough; a report nobody needs is not improved by
+  being accurate. *It was also documented as measuring the depth of the deepest star, which the
+  re-rank stopped being true of, and that sentence is struck in the source.*
+- **Nothing new is printed on a row.** `components.md` fixes the engine's half as `{ anchors: [id] }`
+  in, `{ order: [id] }` out — **an order and no per-row figure** — so there is no closeness value for
+  the surface to show. The **score column visibly stops descending**, and that is the evidence the
+  order changed: a founder can see the list is no longer sequenced by the number printed on it, and
+  the band heading names what it is sequenced by instead. They cannot check that the new order really
+  is by closeness, which is a fact about the engine and not something an interface may fake.
+- **And what it is ordered by may not be built from what is on the row.** Weight `status` or `kind`
+  and every live patent clumps under a live anchor — which puts *patents like this one means patents
+  with this legal status* on screen as a claim Terrain never made. §6.1's rule against asserting
+  **why** governs an ordering exactly as it governs a cell, so the ordering key is **opaque by
+  decision**: semantic closeness is computed from the text the row renders as bars.
+
+#### The stagger, keyed to the destination · 2026-09-11
+
+Every row moved on the same frame, which was right for a hoist and is wrong for a re-sequencing.
+**Twenty rows crossing each other simultaneously is a shuffle the eye cannot follow**, and what it
+reads as is a list being *replaced* — the one thing this surface may not say, because no patent
+enters or leaves.
+
+**18ms per row, capped at fourteen**, so the gesture lands inside `--dur-4` rather than running past
+a second. **By destination, not by source**, and that is the whole of why it reads: the starred row's
+destination is `0`, so it leads with no delay and every other row closes in behind it. The list
+re-forms **top-down, in the direction it is read**, and the object the founder's own click moved is
+the one they can follow. *Keying it to the source would start the movement wherever the starred row
+happened to be sitting, which is a position nobody is looking at.*
+
+**The headings wait for the stagger, not for one row's travel.** At `--dur-3` the heading would
+arrive over rows still closing in beneath it — the same overlap the two-beat split above exists to
+prevent, one mechanism further on.
+
+**Rows arriving from beyond the fold get an entrance.** They used to "appear at rest, the same
+fallback `sortRivals` has and never exercises" — and a real re-rank exercises it about **thirteen
+times in a twenty-row window**, because genuinely reordering a hundred-odd patents must bring some
+of the ones below the fold up. Thirteen rows materialising instantly around seven that slide is the
+list reading as replaced again. So they enter in the vocabulary `.tmsg` already uses for exactly
+this: **8px of Y and opacity over `--dur-2` on `--ease`, on the same stagger** — lighter and shorter
+than the travel beside it, because arriving from outside the window is a smaller claim than moving
+within it. No new token and no second curve. **§6's *one motion per arrival* is satisfied rather
+than dodged**: the list is a container already in place, so a row arriving inside it is the only
+thing arriving.
+
+*Both beats are `setReorder`'s, so the **sort** got them too — which is correct and was the point of
+extracting it. The two reorderings on this surface look alike because they are alike.*
 
 **`Restore the original order`** is a `.btn-ghost` in the control bar, beside the sort and filter
 menus. *It sat beside `Clear selection`, because that was where this surface's other reversal

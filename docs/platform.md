@@ -1038,11 +1038,19 @@ and this surface is the one place they are asked to approve a corpus.
 avoid — the surface already suppresses its own star count once the cut chip covers it, on the
 grounds that two chips saying one thing read as two facts.
 
+***And redundancy is what eventually took one of them · 2026-09-11.*** The panel's settled statement
+is gone. **The principle above is the reason, applied to itself**: the chip carried the state, the
+band headings carried which rows, and the sentence had been left restating both plus a disclosure
+the heading's popover already makes. *Three carriers remain, all standing, none of them motion — so
+the requirement this table was written to satisfy is still met.* `design-language.md` §7 carries what
+had to be rebuilt to remove it, which is more interesting than the removal.
+
 | Surface | Fact |
 |---|---|
 | The cut chip | The standing **state** — *re-ranked around N starred* |
 | The lede | The **framing**. The resting lede tells the founder to star something; after a re-rank it would be telling them to do what they have just done |
-| The panel above the list | The **event** — *re-ranking…*, then how many patents moved |
+| The panel above the list | The **event** — *re-ranking…* ~~, then how many patents moved~~. **The settled half is deleted 2026-09-11**: the panel opens for the work and closes when it lands |
+| The band headings | **Which rows** — *what you starred*, then *ranked around it*. Standing, and the row below was always doing this job; it is listed now because it is load-bearing rather than decorative |
 | The control bar | The **way back** |
 
 **The starred rows lift into a labelled band, and the list gains structure rather than just an
@@ -1050,11 +1058,19 @@ order.** Two headings: *what you starred*, and *ranked around it*. Both are stat
 founder did and about the ordering — neither is a claim about the patents underneath, which is what
 keeps them inside §6.1. *Closest matches* would not be admissible; *ranked around it* is.
 
-**The count of what moved is a real integer, not a bar.** §8 splits on whether a number counts the
-founder's own act or describes the data, and *how many patents changed position* is the former. It
-also answers the only question the chip cannot: starring something near the bottom of the list
-shuffles a great deal, and starring the row already at the top shuffles nothing — and the surface
-says *nothing moved* in that case rather than printing a zero.
+~~**The count of what moved is a real integer, not a bar.**~~ ***Struck 2026-09-11 with the sentence
+that printed it.*** It read: *§8 splits on whether a number counts the founder's own act or describes
+the data, and how many patents changed position is the former. It also answers the only question the
+chip cannot: starring something near the bottom of the list shuffles a great deal, and starring the
+row already at the top shuffles nothing — and the surface says* nothing moved *in that case rather
+than printing a zero.*
+
+**The §8 classification was right and the question stopped existing.** *How much does starring this
+row shuffle* only has an interesting answer while the re-rank is a hoist — the depth of the star is
+the whole of it. Once the re-rank re-sequences the list around the anchor, **every star shuffles
+almost everything**, so the figure answers a question nobody is left asking. *The `nothing moved`
+branch went with it: it needed the star to be at the top, and now it would need the entire closeness
+order to agree with the engine's as well.*
 
 ### The way back — added 2026-09-09
 
