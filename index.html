@@ -2002,7 +2002,8 @@ a{text-decoration:none;color:inherit}
 
             <div class="pref">
               <span class="t-label pref-label" id="acctMailL">Email</span>
-              <p class="pref-help">Sign-in address, and where anything you switch on below is sent.</p>
+
+              <p class="pref-help">Where you sign in. Receipts go to a separate billing address, on Plan &amp; billing.</p>
               <div class="pref-val" id="acctMailRest">
                 <span class="sk sk-h-body w-lg" id="acctMailBar"></span>
                 <button class="btn btn-ghost" type="button" data-edit="acctMail">Edit</button>
@@ -2051,32 +2052,6 @@ a{text-decoration:none;color:inherit}
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-
-        <section class="card pref-card">
-          <div class="card-head">
-            <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg></span>
-            <h2 class="t-title">Notifications</h2>
-          </div>
-          <div class="card-body pref-body">
-
-            <div class="pref">
-              <span class="t-label pref-label" id="acctBuildL">Email when a build finishes</span>
-              <p class="pref-help" id="acctBuildH">A build takes a few minutes, so you can close Terrain and come back to it.</p>
-              <div class="pref-ctl">
-                <button class="sw" type="button" role="switch" aria-checked="true" aria-labelledby="acctBuildL" aria-describedby="acctBuildH"><span class="sw-knob"></span></button>
-              </div>
-            </div>
-
-            <div class="pref">
-              <span class="t-label pref-label" id="acctRcptL">Email when your plan renews</span>
-              <p class="pref-help" id="acctRcptH">A receipt, once a quarter. Nothing else.</p>
-              <div class="pref-ctl">
-                <button class="sw" type="button" role="switch" aria-checked="true" aria-labelledby="acctRcptL" aria-describedby="acctRcptH"><span class="sw-knob"></span></button>
-              </div>
-            </div>
-
           </div>
         </section>
 
@@ -2139,12 +2114,13 @@ a{text-decoration:none;color:inherit}
           </div>
           <div class="card-body">
             <span class="sk sk-h-title w-lg" style="margin-bottom:var(--s-12)"></span>
+
             <div class="plan-fig">
-              <span class="fig fig-l" id="billAllow">6,000</span>
+              <span class="fig fig-l" id="billAllow">6000</span>
               <span class="t-body" style="color:var(--text-2)">points a quarter</span>
             </div>
             <div class="plan-fig" style="margin-top:var(--s-8)">
-              <span class="fig fig-l" id="billPrice">$600</span>
+              <span class="fig fig-l" id="billPrice">$XXX</span>
               <span class="fig fig-l fig-sub">/ quarter</span>
             </div>
             <p class="t-body" style="margin:var(--s-12) 0 0;color:var(--text-2)">Renews <span class="sk sk-h-body w-md" style="display:inline-block;vertical-align:-2px"></span></p>
@@ -2175,6 +2151,14 @@ a{text-decoration:none;color:inherit}
               <div class="pref-val">
                 <span class="sk sk-h-body w-lg"></span>
                 <button class="btn btn-ghost" type="button" id="billMail">Update</button>
+              </div>
+            </div>
+
+            <div class="pref">
+              <span class="t-label pref-label" id="billRcptL">Email a receipt when the plan renews</span>
+              <p class="pref-help" id="billRcptH">Sent to the billing address above, once a quarter. Nothing else goes there.</p>
+              <div class="pref-ctl">
+                <button class="sw" type="button" role="switch" aria-checked="true" aria-labelledby="billRcptL" aria-describedby="billRcptH"><span class="sw-knob"></span></button>
               </div>
             </div>
           </div>
@@ -2249,7 +2233,7 @@ a{text-decoration:none;color:inherit}
             <dl class="hlp-qa">
               <div>
                 <dt>How long does a build take?</dt>
-                <dd>A few minutes. You can close Terrain and come back — the map is waiting when you return, and switching a notification on in Account settings will tell you when it is.</dd>
+                <dd>A few minutes. You can close Terrain and come back — the map is waiting when you return, because a build belongs to the project rather than to the tab you started it in.</dd>
               </div>
               <div>
                 <dt>When do points come back?</dt>
@@ -4257,7 +4241,10 @@ function acctReset(){
   dcClose();
 }
 
-function money(n){ return '$' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+function money(n){
+  if (typeof n !== 'number') return '$' + n;      
+  return '$' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
 function renderBilling(){
   $('#billAllow').textContent = String(PLAN);
   $('#billPrice').textContent = money(PLAN_PRICE);
@@ -5512,7 +5499,7 @@ applyTheme(storedTheme(), false);
 
 var PLAN = 6000;                       
 
-var PLAN_PRICE = 600;                  
+var PLAN_PRICE = 'XXX';                
 var PLAN_PERIOD = 'quarter';           
 var POINTS_0 = PLAN - US_SPENT;        
 
