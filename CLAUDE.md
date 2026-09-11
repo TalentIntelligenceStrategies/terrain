@@ -41,6 +41,8 @@ docs/brief.md        positioning, naming, the Innovue relationship — what Terr
 docs/platform.md     product definition — what gets built, and §9 DEFERRED — NOT IN SCOPE
 docs/design-language.md  tokens, type, components — how it looks
 docs/marketing.md    outbound copy for a founder — the product page, the voice chart, the nav
+docs/mmap-audit.md   IPtech's M-Map, sixty views, one row each — the inventory behind the ask.
+                     A view of platform.md §8, never an authority over it
 docs/case.md         outbound — the capability read and the design pass, for management and
                      Innovue. The page renders §0.1–§0.4 and §3–§6; §0.5, §4.H and §7–§10 stay in
                      the record and do not render
@@ -61,6 +63,10 @@ visual-reference/    every capture and crop, gathered here 2026-09-08
   iptech-screenshots/             raw platform captures, 2026-09-02 and 2026-09-04
   iptech-screenshots-identified/  the same, identified and cropped, with a README index
   iptech-semantic-search/         Innovue's semantic search surface, 2026-09-08, with a README index
+  mmap-audit/                     59 captures of IPtech's M-Map, 2026-09-12. A LIVE CLIENT PROJECT:
+                                  assignee, inventor and examiner names, patent numbers, counts, and
+                                  five classification codes that are that landscape's axes.
+                                  docs/mmap-audit.md is the reading; NOTHING from these travels
   visual-inspiration/             reference screens the design language was derived from
   comparison-assets/              crops taken from those captures
 design/previews/iptech-terrain-comparison.html   the side-by-side deck
@@ -168,7 +174,8 @@ is likely; on `main` it no longer matters, because `main` is not served.*
 ## Rules
 
 **Fewer, denser documents.** Add to an existing doc in `docs/` before creating a new file. There
-are **five**, split on purpose:
+are **six**, split on purpose — *five until 2026-09-12; the sixth is `mmap-audit.md` and the bar it
+cleared is below.*
 
 *The rule governs `docs/`, and `README.md` at the root is not a sixth — it is the front door for a
 visitor, and it holds no decision that is not already recorded in one of the five. If it and they
@@ -196,6 +203,29 @@ Three were deliberate exceptions, and the bar each cleared is the point:
 None of the three is a licence for a sixth. A new file needs a distinct **kind** of content and a
 distinct **reader**, not just a distinct topic — and both `case.md` and `marketing.md` are *views*
 of the other three, so when they and those three disagree, the three win.
+
+***A fourth exception, 2026-09-12, and it is the first one that is not about Terrain.***
+`mmap-audit.md` is a **per-view inventory of somebody else's product** — IPtech's `M-Map` module,
+sixty views walked from 59 captures. The other five are Terrain's own positioning, build, look,
+argument and copy; this is a record of what a vendor ships. Its reader is whoever writes a widget or
+an ask and needs the record at **menu grain**, which nothing else carries:
+`platform.md` §8.1 is one row per *screen we photographed* and stops at sixteen of the sixty.
+
+**What makes it a document rather than a section of §8, stated plainly, because the pull the other
+way is real.** §8 is the ledger of *what Terrain takes*, and every row there carries a verdict about
+our scope. An inventory that is **gated by our verdicts is the exact coupling §8 itself cut on
+2026-09-07** — *a capability left off the ask is one Innovue never tells us about.* Keeping the
+inventory outside §8 is what lets it record all sixty views, including the twenty we skip and the
+three places it **disagrees** with §8's own verdicts. Folding it in would make those disagreements
+unsayable.
+
+**It is a view of §8, not an authority over it.** Where the two disagree about what gets *built*,
+§8 wins, and `mmap-audit.md` §6 records the disagreement rather than resolving it quietly.
+
+**`tmap-audit.md` is the seventh and it is already authorised**, on the same bar and for the same
+reader, covering `T-Map`'s eight `Tech-Effx` entries. **That is the end of the family.** An audit
+file is admissible for a *module of somebody else's product we have walked end to end*; it is not a
+licence for a file per topic.
 
 **Deferred means deferred.** `docs/platform.md` §9 is marked `DEFERRED — NOT IN SCOPE`. Nothing in
 it is built, specced further, wireframed, or designed against unless the session explicitly names
