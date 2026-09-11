@@ -536,6 +536,9 @@ a{text-decoration:none;color:inherit}
           background:var(--indicator-rest);margin-right:var(--s-2);transition:background var(--dur-1) var(--ease)}
 .proj-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
 
+.proj-name{font-size:13px;line-height:1.4;font-weight:500;color:var(--text-1);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
 .meter{display:flex;align-items:baseline;gap:var(--s-6);min-width:0;flex:0 0 auto;
        padding:var(--s-4) var(--s-8);border-radius:var(--r-control);
        transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease),
@@ -1007,6 +1010,9 @@ a{text-decoration:none;color:inherit}
 .side-hist{transition:background var(--dur-4) var(--ease)}
 .side-hist.is-target{background:var(--surface-sunken)}
 .hist-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+
+.hist-v{color:var(--text-2)}
+.hist-v .fig{color:var(--text-1)}
 .hist-revert{font-size:12px;font-weight:500;color:var(--text-2);padding:var(--s-4) var(--s-8);
              border-radius:var(--r-chip);flex:0 0 auto;
              transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease),
@@ -1032,6 +1038,9 @@ a{text-decoration:none;color:inherit}
 .drill-row:last-child{border-bottom:0}
 .drill-meta{display:flex;align-items:center;gap:var(--s-12);padding-top:var(--s-12);flex-wrap:wrap}
 
+.drill-meta>.fig{margin-inline-start:auto}
+.drill-meta>.fig~.drill-chev{margin-inline-start:0}
+
 .drill-toggle{display:block;width:100%;text-align:left;padding:0}
 .drill-chev{color:var(--text-3);display:flex;flex:0 0 auto;
       margin-inline-start:auto;transition:transform var(--dur-1) var(--ease)}
@@ -1048,6 +1057,9 @@ a{text-decoration:none;color:inherit}
 .pn-head-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-10)}
 .pn-title{margin:0;outline-offset:3px}
 .pn-name{display:flex;flex-direction:column;gap:var(--s-6)}
+
+.pn-name-real{font-size:15px;line-height:1.4;font-weight:500;color:var(--text-1);
+  text-wrap:pretty}
 .pn-meta{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap}
 .pn-body{display:flex;flex-direction:column;gap:var(--s-24);padding-top:var(--s-16)}
 .pn-sec{display:flex;flex-direction:column;gap:var(--s-12)}
@@ -2373,6 +2385,8 @@ function maxOf(rows){
   }, 0);
 }
 
+var DEMO_PROJECT = 'Drone airframe and body structure';
+
 SETS.illustrative = {
   populated: true,
   total: 124,
@@ -2546,7 +2560,7 @@ var CAPTION_SK = $('#mapCaption').innerHTML;
     t.className = 't-title dash-title';
     t.removeAttribute('style');
 
-    t.textContent = 'Drone airframe and body structure';
+    t.textContent = DEMO_PROJECT;
   }
 })();
 
@@ -2720,17 +2734,25 @@ var PN_FIELDS = [
 ];
 var PN_ALL = PN_FIELDS.map(function(f){ return f[0]; });
 
+function pnPublished(rec){
+  var y = rec.filed + 1 + (rec.n % 2);
+  return y > PN_Y_END ? 'Not yet published' : String(y);
+}
 function pnFieldValue(rec, key){
   switch (key){
     case 'kind':      return rec.kind;                 
     case 'status':    return statusHTML(rec.status);
+
+    case 'filed':     return String(rec.filed);
+    case 'published': return pnPublished(rec);
     case 'ipc':       return bars(rec.nIpc, ['w-sm','w-xs','w-sm']);
     case 'inventors': return bars(rec.nInv, ['w-sm','w-sm','w-xs']);
     case 'holder':    return bar('w-lg');
     case 'number':    return bar('w-md');
     case 'appno':     return bar('w-md');
     case 'ipcMain':   return bar('w-sm');
-    default:          return bar('w-xs');              
+
+    default:          return bar('w-xs');
   }
 }
 function pnFieldsHTML(rec, keys){
@@ -2759,7 +2781,11 @@ function patentPaneHTML(rec, opt){
     +     (opt.heading === false ? ''
         : '<h3 class="t-title pn-title" tabindex="-1">Patent record</h3>')
 
-    +     '<div class="pn-name">' + bar('w-full','title') + bar('w-lg','title') + '</div>'
+    +     '<div class="pn-name">'
+    +       (rec.demo
+          ? '<span class="pn-name-real">' + DEMO_TITLE + '</span>'
+          : bar('w-full','title') + bar('w-lg','title'))
+    +     '</div>'
     +     '<div class="pn-meta">' + statusHTML(rec.status)
     +       '<span class="t-micro">' + rec.kind + '</span>'
 
@@ -2795,9 +2821,9 @@ var PN_EMPTY = '<div class="pn-empty">'
 var DEMO_TITLE = 'Foldable quadrotor airframe with load-bearing arm hinges and an '
                + 'integrated motor mount';
 
-function drillRowHTML(rec, i, showYear){
+function drillRowHTML(rec, i){
 
-  var real = (i === 0);
+  var real = !!rec.demo;
   return '<div class="drill-row">'
     + '<button class="drill-toggle" type="button" data-pn="' + i + '" aria-current="false">'
     +   '<span class="drill-head">'
@@ -2817,9 +2843,7 @@ function drillRowHTML(rec, i, showYear){
         ? '<span class="drill-holder">ACME Group</span>'
         : '<span class="sk sk-h-micro ' + rec.w + '"></span>')
 
-    +     (showYear || real
-        ? '<span class="fig fig-s">' + rec.filed + '</span>'
-        : '<span class="sk sk-h-micro w-xs"></span>')
+    +     '<span class="fig fig-s">' + rec.filed + '</span>'
 
     +     '<span class="drill-chev">' + CHEV_R + '</span>'
     +   '</span>'
@@ -2969,11 +2993,15 @@ document.addEventListener('click', function(e){
 });
 
 var HIST = ['w-lg','w-md','w-xl'];
+
 function renderHist(){
+  var n = HIST.length;
   $('#histList').innerHTML = HIST.map(function(w, i){
     return '<div class="hist-row">'
-      + '<span class="hist-lines"><span class="sk sk-h-label ' + w + '"></span>'
-      +   '<span class="sk sk-h-micro w-sm"></span></span>'
+      + '<span class="hist-lines">'
+      +   '<span class="hist-v t-label">Version '
+      +     '<span class="fig fig-s">' + (n - i) + '</span></span>'
+      +   '<span class="sk sk-h-label ' + w + '"></span></span>'
       + (i === 0
           ? '<span class="hist-tag t-micro">Current</span>'
           : '<button class="hist-revert" data-scope="revert">Revert</button>')
@@ -4068,7 +4096,10 @@ setPage('market');
 function projHTML(w1, w2, current){
   return '<button class="proj"' + (current ? ' aria-current="true"' : '') + '>'
     + '<span class="proj-dot"></span>'
-    + '<span class="proj-lines"><span class="sk sk-h-label ' + w1 + '"></span>'
+    + '<span class="proj-lines">'
+    +   (current
+        ? '<span class="proj-name">' + DEMO_PROJECT + '</span>'
+        : '<span class="sk sk-h-label ' + w1 + '"></span>')
     +   '<span class="sk sk-h-micro ' + w2 + '"></span></span></button>';
 }
 $('#projGroupA').innerHTML = projHTML('w-lg','w-sm',true) + projHTML('w-md','w-xs') + projHTML('w-xl','w-sm');
@@ -4080,6 +4111,8 @@ function placeHist(){
   if (cur && w) cur.after(w);
 }
 placeHist();
+
+syncProjName();
 
 var histT = null;
 function revealHist(){
@@ -4138,7 +4171,15 @@ document.addEventListener('click', function(e){
 function syncProjName(){
   var cur = $('.proj[aria-current="true"]'), lab = $('#projName');
   if (!lab) return;
-  var bar = cur && cur.querySelector('.sk');
+
+  var name = cur && cur.querySelector('.proj-name');
+  if (name){
+    lab.className = 'mast-proj-name proj-name';
+    lab.textContent = name.textContent;
+    return;
+  }
+  lab.textContent = '';
+  var bar = cur && cur.querySelector('.sk-h-label');
   lab.className = 'mast-proj-name sk sk-h-label ' + (bar
     ? (bar.className.match(/w-[a-z]+/) || ['w-md'])[0] : 'w-md');
 }
@@ -4171,7 +4212,11 @@ var SET_PAGE    = 20;
 
 var SET_CEILING = 50;
 
-function setRecFor(i){ return patentRec(i * 37 + 5); }
+function setRecFor(i){
+  var rec = patentRec(i * 37 + 5);
+  if (i === 0) rec.demo = true;
+  return rec;
+}
 function setCount(){ return Math.min(SET_CEILING, DATA.total || 0); }
 var SET_ROWS = { length: setCount() };          
 
@@ -4272,7 +4317,7 @@ function setRowHTML(i){
     + '<button class="set-ctl set-star" type="button" data-star="' + i + '" '
     +   'aria-pressed="' + (SET_STARS[i] ? 'true' : 'false') + '" '
     +   'aria-label="More like this one">' + I.star + '</button>'
-    + drillRowHTML(setRecFor(i), i, SET_SORT !== 'relevance')
+    + drillRowHTML(setRecFor(i), i)
     + '</div>';
 }
 
