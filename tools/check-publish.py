@@ -108,6 +108,54 @@ for f, t in text.items():
         if r.returncode:
             fail(f"script {i} in {f} does not parse: {r.stderr.strip().splitlines()[0][:140]}")
 
+# 8a · every <style> block's braces balance. THIS GATE EXISTS BECAUSE ONE DID
+#      NOT, and the bug shipped: a single orphaned `}` sat above
+#      `.lm{position:relative}` in the prototype. At the top level CSS does not
+#      discard a stray brace -- it starts a qualified rule, takes `}` as the
+#      beginning of a selector, and swallows everything through the NEXT
+#      `{...}`. So the brace and the rule after it were parsed as one bogus
+#      rule and both were dropped.
+#
+#      IT REPORTED NOTHING. No console error, and the rules on either side
+#      parsed normally, so the only symptom was that every list menu opened
+#      550px from its button. gate 8 does this for JavaScript; nothing did it
+#      for CSS, which is the whole of why it survived.
+def css_depth_errors(css):
+    """Brace depth over a stylesheet, ignoring comments and strings."""
+    out = []
+    i, n, depth = 0, len(css), 0
+    line = 1
+    while i < n:
+        c = css[i]
+        if css[i:i+2] == '/*':
+            j = css.find('*/', i+2); j = n if j < 0 else j+2
+            line += css.count('\n', i, j); i = j; continue
+        if c in '"\'':
+            q = c; j = i+1
+            while j < n:
+                if css[j] == '\\': j += 2; continue
+                if css[j] == q: j += 1; break
+                j += 1
+            line += css.count('\n', i, j); i = j; continue
+        if c == '\n': line += 1
+        elif c == '{': depth += 1
+        elif c == '}':
+            depth -= 1
+            if depth < 0:
+                out.append(f"stray '}}' at stylesheet line {line}")
+                depth = 0        # keep going, report every one
+        i += 1
+    if depth > 0:
+        out.append(f"{depth} unclosed block(s) at end of stylesheet")
+    return out
+
+for f, t in text.items():
+    if not t or not f.endswith('.html'):
+        continue
+    for blk in re.findall(r'<style[^>]*>(.*?)</style>', t, re.S | re.I):
+        for m in css_depth_errors(blk):
+            fail(f"unbalanced CSS in {f}: {m} -- a stray brace silently eats the rule after it")
+
 # 9 · the OFL licences travel with the fonts (OFL 1.1, public redistribution)
 if any(f.endswith('.woff2') for f in files):
     for lic in ('brand/fonts/OFL-Urbanist.txt', 'brand/fonts/OFL-Inconsolata.txt'):

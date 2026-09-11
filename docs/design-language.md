@@ -1312,6 +1312,14 @@ exactly why it may not be demoted into a popover.*
 **The figure block.** `micro` label, then the figure in Inconsolata, then an optional delta pill.
 The label is always above, never beside.
 
+*Narrowed 2026-09-12, and the narrowing is what the rule always meant.* **"Above, never beside"
+governs the figure block — this component**: a label over a figure, read as a unit, on its own.
+It does **not** govern a figure sitting in a row of peers. The record's meta row carries a status
+chip, an identifier and the relevance score across one line; stacking one of those three made the
+shortest item the tallest and broke the row it belonged to. *A meta row is read across, a figure
+block is read at.* The figure block keeps the rule everywhere it is actually a figure block — the
+points page, the widgets, the deltas.
+
 **The delta pill.** Radius 999, tinted background, arrow glyph + number. The only place `--state-up`
 and `--state-down` appear.
 
@@ -1865,7 +1873,7 @@ field added or removed:
 | the section headings | `t-label` at `--text-2`. They were `t-micro`, **identical to the eleven `<dt>` labels** — a heading and a leaf label rendering the same |
 | the eleven fields | five clusters — identity · classification · people · dates · where+status — grouped **by space inside the same `<dl>`**, `--s-12` added between against `--s-10` within. No rules drawn |
 | the abstract | `max-width: 68ch`. It was uncapped, which puts real abstract text near 130 characters a line against §4's measure |
-| the score | the figure block's **label above, never beside** — the one place in the product still doing it inline |
+| the score | the figure block's **label above, never beside** — the one place in the product still doing it inline. ***Reversed 2026-09-12***, and §7 carries the narrowing: this row applied a figure-block rule to something that is not a figure block. The score is inline again and sits at the **trailing edge** of the meta row, opposite the status chip |
 | the claim numbers | `text-align: end`, so `1` and `15` align on their digits rather than only on their left edge |
 | the pane heading | demoted to an eyebrow. `<h2>The patent record</h2>` at `title` was the **largest type on the card**, above a title rendered as bars. It stays an `<h2>` and stays the focus target — it is the pane's accessible name, because the title itself is a bar |
 
@@ -3242,6 +3250,68 @@ with a readable name lost it at the moment the founder asked to read it — *whi
 it was for.* One patent, one title, both hosts, through a flag set where the patent is chosen rather
 than an `i === 0` test each host had to repeat — and which the record pane could not perform at all,
 since it receives a record and never an index.
+
+### The demonstration record renders in full — 2026-09-12, and this one IS an exception
+
+**The entry above turned on *no PARTY is invented*. This crosses that line, so it is argued rather
+than filed under the rule it breaks.** One record — the demonstration patent, seed 5, the single row
+`rec.demo` is set on — now renders every one of its eleven fields, its abstract and its nine claims
+as real English. `Number`, `Application`, `Main IPC`, `IPC`, `Holder`, `Inventors` and `Where` all
+came off the bar list, and three of those are identities of parties.
+
+**What it fixes first is a defect, not a look.** The demonstration *row* has printed `ACME Group`
+since 2026-09-11 while the *record it opens* showed a grey bar for Holder. That is verbatim the bug
+fixed one entry above for the title — *the one patent with a readable name losing it at the moment
+the founder asks to read it* — and it had simply been missed on the field beside it.
+
+**The argument for the rest of it.** §7a.3 claims that Terrain renders the record and never an
+opinion about it, and that claim is the whole of what separates this product from a summariser.
+Eleven bars, an abstract of bars and nine claims of bars is a *shape*: it cannot demonstrate the
+claim and it cannot falsify it either. A founder deciding whether Terrain is worth paying for is
+deciding whether it renders a patent well, and until this pass nothing on screen answered that.
+**One record is enough. A second would be a corpus**, and that is the line.
+
+***The narrowed test, which is what this entry is actually for.*** The old test was *no party is
+invented*. The replacement is one word longer and one degree narrower:
+
+> **No party is invented. A party may be NAMED only by a name whose entire cultural function is to
+> be recognisably fictional.**
+
+`ACME` already passed this for companies; **`Doe`, `Roe` and `Poe` are the legal system's own device
+for a person whose name is not known**, and they carry the same property — a reader who has never
+heard of the convention still cannot mistake `J. Doe` for an engineer. *This is the same move the
+ACME entry made and it has the same failure mode: a plausible-sounding invention fails it. `M. Kowalczyk`
+would be a real person's name with no owner, which is worse than a bar and worse than `M. Poe`.*
+
+**Three fields are not exceptions at all, on the test the entry above set.** IPC symbols (`B64U 10/13`)
+are a public classification vocabulary — the same footing as `Utility model` and `Live`, which §8 has
+never made bars. `Where` reading `United States` is Terrain's own geography vocabulary, the `Anywhere ·
+United States · Europe` row from the options rule below. `Kind` was already real.
+
+**The numbers are deliberately unissued, and that is load-bearing.** `US 12,984,117 B2` sits well above
+where US grants had reached, so it resolves to nothing. **A well-formed number inside the issued range
+would name a real patent with a real assignee**, which is fabrication rather than illustration — the
+one failure mode a patent number has that a company name does not. *It has a finite life: issuance
+reaches it eventually, and when it does the number moves up. That is a maintenance note, not a
+defence.*
+
+**The kind is overridden at source, not in the renderer**, and the reason generalises. Seed 5 yields
+`Utility model`; the United States has no utility model, so a record printing both contradicted
+itself in two adjacent fields. It is set on the record in `setRecFor` because **the Filter facet reads
+`rec.kind`** — a record that *said* Invention while *filtering* as a Utility model would vanish from a
+list it claimed to belong to. **One value, one answer, every consumer.**
+
+**The abstract and the claim set are written from scratch** about a foldable quadrotor airframe,
+following the demonstration title and the matrix's own columns. Never derived from a real record:
+a landscape modelled on one that exists comes with a plausible distribution for free, **and the
+labels travel with it** — which is what two scrubs of this repository were spent on. The claims are
+a real dependency tree, 1 independent and 2–9 dependent, because a flat list of nine independent
+claims is not what a patent looks like and what one looks like is the thing a founder is there to
+learn.
+
+**Everything else is unchanged and must stay so.** Every other record, every list row, every matrix
+row and every rival is bars. The exception is one seed, and the test that keeps it from spreading is
+that a second populated record would need its own argument here and would not get one.
 
 ### The options rule — an application, not a third exception
 

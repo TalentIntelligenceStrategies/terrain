@@ -2056,6 +2056,39 @@ a third, silently.*
    changed — only the order*, which is true only in the moment after a re-rank; it is a clause of
    the settled sentence in the beat panel instead.
 
+#### Sort and Filter were dead on the built surface for two reasons — found and fixed 2026-09-12
+
+**Point 3 above was true in this document and false on screen.** Both list menus could be opened and
+neither did anything visible. Two independent defects, and the second is the more useful one.
+
+**1 · A stray `}` in the stylesheet ate `.lm{position:relative}`.** One orphaned closing brace, left
+behind by a deleted block, sat directly above that rule. At the top level CSS does not discard a
+stray brace: it begins a qualified rule, takes `}` as the start of a selector, and **swallows
+everything up to and including the next `{…}`** — so the brace and the rule after it were parsed as
+one bogus rule and both were dropped. `.lm-btn` on the very next line parsed normally, so the
+controls looked perfect. But with no positioning context, every menu resolved its `position:absolute`
+against the whole left column and opened around 550px below its button at the column's edge.
+
+***It reported nothing.*** No console error, no visual break, nine working rules after it. **A
+brace-depth check over the `<style>` block finds it in a second, and nothing was running one** —
+which is the same finding as the three shell gates that could not fail and the taxonomy that survived
+a figure scrub. The tooling gates the published tree; it does not gate the stylesheet.
+
+**2 · `[data-built]` froze the bar forever.** `.set-wrap[data-built] .set-bar, .set-split, .set-run`
+set `opacity:.5; pointer-events:none`, and it was correct when written: the set was a **pre-build
+screen** with its own *Build the map* button, §4b was one pass, and the controls stopped being live
+when the pass ended. **§1a put the list permanently on screen**; `data-built` lands at the gate and
+only a new search clears it. So a flag meaning *this pass is over* came to mean *from now on*, and
+Relevance, Filter and Re-rank were dimmed and unclickable for the whole life of the working surface.
+
+The whole rule is deleted rather than trimmed. It disabled **Re-rank on the identical mistaken
+grounds** — point 3 lists starring and re-ranking beside sorting and filtering — and `.set-split` in
+that selector was a dead class with zero occurrences in the markup.
+
+***The general case, which is why this is recorded at all:*** a rule outlived the surface it was
+written for and went on being enforced against a surface it had never been argued about. **A
+disabled control is indistinguishable from a decision**, so nothing looked wrong.
+
 **What the founder can still do to the list, and the line all three sit on the safe side of:**
 
 | Act | What it changes | What it does not |
@@ -3084,18 +3117,44 @@ versus edit, seats and roles are enterprise shape* — which is stronger than de
 #### Help is contact-first, and that is honesty about a product with no documentation site
 
 Nothing in any document specced a Help surface before this pass. It is a message composer with a
-topic menu and a reply-time line, and three answers to questions no other surface answers.
+topic menu and a reply-time line, and answers to questions no other surface answers.
+
+***Three answers became twelve, and four topics became seven — 2026-09-12.*** The card was called
+*Before you write* and sat above the form; it is **Common questions** below the form now, in three
+groups — *Your search and your map · Points and your plan · Your projects*. **Three answers above a
+contact form read as a hurdle before writing. Twelve below it is a page worth reading**, and the
+original three are unchanged inside it.
+
+**The topic menu is a promise, not just a router.** A founder reading *A question about my search
+results* learns the results are something we answer for before they have typed anything. `Something
+is not working` stays first and stays the default, because the founder most likely to open Help is
+the one whose thing is broken; `Something else` stays last, because a catch-all anywhere else stops
+the entries after it being read. **No sign-in topic** — authentication is §9 item 2 and deferred, and
+a topic naming it would advertise a surface that does not exist.
 
 **The composer is not reused**, and the reason is the reason §5 has no chat panel: `.cmp` is *one
 component, one size* and its identity is **the thing you type your idea into**. A support field
 wearing it would be a second conversational surface.
 
-**The three answers may not restate labelling.** `design-language.md` §7 says the info popover carries
+**No answer may restate labelling, and that is the rule to check a thirteenth against.** `design-language.md` §7 says the info popover carries
 explanation only, and the test is whether a screenshot with no popover open still says what the
 founder is looking at — a Help page that hoovered up captions would break the same rule from the other
-side. So the three are a build's wait, when points come back, and **that Terrain shows what has been
-filed and does not tell you whether you can file**, which is `brief.md`'s locked positioning and the
-single most valuable sentence anyone will read on that page.
+side. So every question answers something **no other surface states** — a build's wait, when points
+come back, what spends them, who can see a project, and **that Terrain shows what has been filed and
+does not tell you whether you can file**, which is `brief.md`'s locked positioning and the single
+most valuable sentence anyone will read on that page.
+
+**Two of the twelve are the honest ones and they earn their place.** *Why are the rows on the map
+companies?* is the only place the product explains that an empty cell is a fact about that holder
+rather than open ground — §6.1 forbids the interface saying it, and a founder still asks. *Can I
+change what a map covers after it is built?* states §5's recorded cost plainly instead of letting a
+founder discover it by looking for a control that is not there.
+
+**They stay open — no accordion.** The original note said three one-line answers behind toggles are
+*three controls hiding two sentences*; at twelve that premise is gone, and the conclusion survives on
+a different argument. **The questions are the scan target** and the answers run one to three lines,
+so collapsing would add a click to every answer to save scrolling past ones already short enough to
+skip. Paragraph-length answers would reopen it.
 
 #### What is inert, as one rule rather than seven exceptions
 

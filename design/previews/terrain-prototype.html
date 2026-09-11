@@ -1241,7 +1241,10 @@ a{text-decoration:none;color:inherit}
    URBANIST, NOT INCONSOLATA. It matches the year's size and colour, not its
    typeface: .fig is for numerals and a company name is text. */
 .drill-holder{font-size:12.5px;line-height:1.4;color:var(--text-1)}
-.pn-score{color:var(--text-3);display:inline-flex;align-items:baseline;gap:var(--s-4)}
+/* the score sits at the TRAILING EDGE of the meta row — margin-inline-start,
+   not margin-left, because the row mirrors under RTL like everything else. */
+.pn-score{color:var(--text-3);display:inline-flex;align-items:baseline;
+  gap:var(--s-4);margin-inline-start:auto}
 
 /* ── the filter · §6a.3 ────────────────────────────────────────────────
    The chip sits ABOVE the list and never in the views, because a filter is a
@@ -2030,10 +2033,19 @@ a{text-decoration:none;color:inherit}
 .pn-name-real{font-size:15px;line-height:1.4;font-weight:500;color:var(--text-1);
   text-wrap:pretty}
 .pn-meta{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap}
+/* the patent number is a FIGURE and takes Inconsolata like every other one
+   — it is the one field on this row a founder retypes or pastes, and a
+   proportional face is where a 1 and an l stop being distinguishable. */
+.pn-no{color:var(--text-2)}
 .pn-body{display:flex;flex-direction:column;gap:var(--s-24);padding-top:var(--s-16)}
 .pn-sec{display:flex;flex-direction:column;gap:var(--s-12)}
 .pn-sec-h{display:flex;align-items:baseline;gap:var(--s-8);margin:0}
 .pn-lines{display:flex;flex-direction:column;gap:var(--s-8)}
+/* REAL TEXT WHERE THE BARS WERE. 1.6 is the bars' own rhythm, so a
+   populated record and a skeleton one run at the same lines-per-inch and
+   read as one component in two states rather than as two components. */
+.pn-prose{margin:0;font-size:12.5px;line-height:1.6;color:var(--text-1);
+  text-wrap:pretty}
 /* the claims. An <ol> because that is what a claim set is -- numbered, and the
    numbers are cited by number. They carry their own figures rather than a
    list-style marker so the numerals are Inconsolata and tabular like every
@@ -2115,9 +2127,21 @@ a{text-decoration:none;color:inherit}
    abstract text near 130 characters a line against §4's 68ch. */
 .pn-sec:first-of-type .pn-lines{max-width:68ch}
 
-/* the figure block says LABEL ABOVE, NEVER BESIDE (§7), and the score was the
-   one place in the product still doing it inline. */
-.pn-score{flex-direction:column;align-items:flex-start;gap:var(--s-2)}
+/* ── THE SCORE IS INLINE AGAIN, AND THE RULE IS NARROWER · 2026-09-12 ────
+   This stacked it — `flex-direction:column` — on the grounds that §7 says a
+   figure block puts its LABEL ABOVE, NEVER BESIDE. The rule is kept and it
+   is now scoped to what it was always describing: THE FIGURE BLOCK, a micro
+   label over an Inconsolata figure with an optional delta pill, which is a
+   thing you read on its own.
+
+   THE SCORE IN .pn-meta IS NOT ONE. It sits in a row of peers — a status
+   chip, an identifier, an ordering — and stacking one of three made the
+   shortest item the tallest, which is the opposite of what the rule is for.
+   A meta row is read across; a figure block is read at.
+
+   The figure block keeps the rule everywhere it actually applies: the points
+   page, the widgets, the deltas. design-language.md §7 carries the narrowing
+   and the 2026-09-11 record table records that this row of it was reversed. */
 
 /* claim numbers are tabular already but were left-aligned in an auto column,
    so 1 and 15 started at the same x and ended at different ones. */
@@ -2249,7 +2273,23 @@ a{text-decoration:none;color:inherit}
 .set-rank{height:30px;padding:0 var(--s-10);font-size:12.5px;gap:var(--s-6)}
 .set-rank:hover{background:var(--ink-hover)}
 
-}
+/* ── A STRAY `}` STOOD HERE, AND IT ATE THE RULE BELOW · 2026-09-12 ───────
+   One orphaned closing brace, left behind by a deleted block. At the top
+   level CSS does not ignore one: per the Syntax spec it begins a qualified
+   rule, takes `}` as the start of a selector, and swallows everything up to
+   and including the NEXT `{...}`. So the brace and `.lm{position:relative;
+   flex:0 0 auto}` were parsed as a single bogus rule and both were dropped.
+
+   EXACTLY ONE RULE, WHICH IS WHY NOBODY SAW IT. .lm-btn on the next line
+   parsed fine, so the controls looked completely normal — but .lm had no
+   position, so every .lm-menu resolved its `position:absolute` against
+   #listcol instead of its own wrapper and opened around 550px below the
+   button at the column's left edge. Sort and Filter appeared to do nothing.
+
+   THE LESSON IS THE ONE THIS FILE KEEPS RELEARNING: the failure was silent
+   by construction. No console error, no visual break, and the nine rules
+   after it all worked. A brace-depth check over the <style> block finds it
+   in a second and nothing was running one. */
 
 /* ── the list's sort and filter · platform.md §6a.2 ──────────────────────
    MENUS RATHER THAN SEGMENTED CONTROLS, and that is a width decision before
@@ -2490,15 +2530,29 @@ a{text-decoration:none;color:inherit}
    every control on the bar calls renderSet() on the list being reordered. */
 .set-wrap.is-running .set-bar,.set-wrap.is-running .set-split{opacity:.45;pointer-events:none;
   transition:opacity var(--dur-2) var(--ease)}
-/* once the build has started the set is settled — §4b is one pass, so the
-   controls stop being live rather than staying available behind the panel.
-   THIS BLOCK MUST STAY LAST: it and the .is-running rules above are both
-   (0,4,0), so source order is the only thing that makes a built card win.
-   *It cited .is-ranked until 2026-09-11; those rules are deleted and
-   .is-running is the one left at the same weight. The requirement is
-   unchanged.* */
-.set-wrap[data-built] .set-bar,.set-wrap[data-built] .set-split,
-.set-wrap[data-built] .set-run{opacity:.5;pointer-events:none}
+/* ── THE BUILT-SET FREEZE IS DELETED · 2026-09-12 ─────────────────────────
+   It read `.set-wrap[data-built] .set-bar,.set-split,.set-run
+   {opacity:.5;pointer-events:none}`, and it was right when it was written:
+   the set was a PRE-BUILD SCREEN with its own Build the map button, §4b was
+   one pass, and the controls stopped being live once the pass was over.
+
+   THE LIST NEVER LEAVES THE SCREEN NOW. §1a put it permanently in the left
+   column; `data-built` lands at the gate and only a new search clears it. So
+   a flag meaning "this pass is over" came to mean "from now on", and
+   Relevance, Filter and Re-rank sat at half opacity and pointer-events:none
+   for the whole life of the working surface — present, and doing nothing.
+
+   AND THE DOCUMENT SAYS THE OPPOSITE OUTRIGHT. platform.md §6a.2 point 3:
+   sorting, filtering, starring and re-ranking are all ways of LOOKING at one
+   corpus, and not one of them is a scope change. Nothing on this list needs
+   freezing, because nothing on it can change what was searched.
+
+   THE GENERAL CASE IS THE USEFUL PART: a rule outlived the surface it was
+   written for, and went on being enforced against a surface it had never
+   been argued about. It reported nothing, because a disabled control looks
+   exactly like a decision.
+
+   .set-split went with it unmourned — zero occurrences in the markup. */
 /* a first build opens the map itself, so its footer keeps only the note */
 .bd[data-auto] #bdOpen{display:none}
 .bd[data-auto] .done-note{margin-left:0}
@@ -2804,9 +2858,28 @@ a{text-decoration:none;color:inherit}
     border-top:1px solid var(--border);margin-top:var(--s-16);
     padding-top:var(--s-14);font-size:13px;color:var(--text-2)}
 /* the help answers. A description list, because each is a question and its
-   answer — and no <details>, because three one-line answers that collapse
-   are three controls hiding two sentences. */
+   answer — and no <details>, WHICH IS NOW A NARROWER CLAIM THAN IT WAS. It
+   read "three one-line answers that collapse are three controls hiding two
+   sentences", and at twelve that premise is simply gone. The conclusion
+   survives on a different argument, recorded beside the markup: the
+   questions are the scan target and the answers run one to three lines, so
+   collapsing would add a click to every answer to save scrolling past ones
+   already short enough to skip. Paragraph-length answers would reopen it,
+   and .dc is the pattern to copy if they ever arrive. */
 .hlp-qa{margin:0;display:flex;flex-direction:column;gap:var(--s-16)}
+/* ── THE GROUPS ARE SPACE, NOT RULES · 2026-09-12 ─────────────────────────
+   --s-32 between groups against --s-16 between pairs is the 2x that makes
+   grouping read as grouping rather than as noise — the same arithmetic the
+   record's five field clusters use, and the reason no divider is drawn
+   between them either. The heading is the only new mark on the card.
+
+   ONE COLUMN, and the page's 820px cap is the reason. Two would be ~390px
+   each, which breaks nothing typographically but makes the reading order
+   ambiguous: nothing on the card tells a reader whether a two-column FAQ
+   runs down or across. The groups already do the work a second column
+   would, and they do it without asking that question. */
+.hlp-grp + .hlp-grp{margin-block-start:var(--s-32)}
+.hlp-grp-h{margin:0 0 var(--s-12);color:var(--text-2)}
 .hlp-qa dt{color:var(--text-1);font-size:13px;line-height:1.4;font-weight:500}
 .hlp-qa dd{margin:var(--s-4) 0 0;font-size:13px;line-height:1.6;
     color:var(--text-2);max-width:68ch;text-wrap:pretty}
@@ -3027,8 +3100,17 @@ a{text-decoration:none;color:inherit}
       <span class="wordmark">TIS <span>Terrain</span></span>
     </a>
 
+    <!-- LUCIDE `zoom-in`, NOT `plus` · 2026-09-12. The plus said "new" and said
+         nothing about what a new one IS, on the one control that starts the
+         only act the product has. The magnifier says search; the plus inside
+         it survives from the icon it replaces and says which search.
+
+         AND NOT PLAIN `search`, deliberately: the project menu's Find a
+         project field already carries that glyph twelve rows below this
+         button, and one glyph on two different acts in one masthead is the
+         thing §9's "assembled from parts" test is about. -->
     <button class="mast-btn mast-new" type="button" data-go="conversation:new">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
       <span>New search</span>
     </button>
 
@@ -4143,26 +4225,112 @@ a{text-decoration:none;color:inherit}
           </div>
         </section>
 
+        <!-- ══ COMMON QUESTIONS ═══════════════════════════════════════════
+             THIS WAS "Before you write" AND THREE ANSWERS. The three are
+             still here, unchanged, and they are still the ones §7a.10
+             argued for; what changed is that three answers sitting above a
+             contact form read as a hurdle before writing rather than as a
+             page worth reading. Twelve, grouped, is a page.
+
+             THE RULE THAT GOVERNS EVERY ANSWER HERE, and it is the one
+             thing to check before adding a thirteenth: §7a.10 says the
+             answers MAY NOT RESTATE LABELLING. design-language.md §7 makes
+             the same demand of the info popover from the other side — the
+             test is whether a screenshot with no popover open still says
+             what the founder is looking at. So a Help page that hoovered
+             up captions would break it in reverse, and every question
+             below answers something NO OTHER SURFACE STATES.
+
+             THREE GROUPS, BY SPACE AND NOT BY RULES. --s-32 between groups
+             against --s-16 between pairs clears the 2x that makes grouping
+             read as grouping, which is the same arithmetic the record's
+             own five field clusters use. No dividers drawn.
+
+             AND NO <details>, WHICH IS THE OLD NOTE NARROWED RATHER THAN
+             REPEALED. It read "three one-line answers that collapse are
+             three controls hiding two sentences", and at twelve that
+             premise is simply gone — twelve controls hiding twelve
+             answers is a different trade. The conclusion survives on a
+             different argument: THE QUESTIONS ARE THE SCAN TARGET, the
+             answers are one to three lines, and a founder looking for
+             "can it tell me whether I am free to file" finds it by
+             reading down the bold line either way. Collapsing would add a
+             click to every answer to save scrolling past ones already
+             short enough to skip. If the answers ever grow to paragraphs,
+             this is the note to reopen — .dc is the pattern to copy. -->
         <section class="card">
           <div class="card-head">
             <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
-            <h2 class="t-title">Before you write</h2>
+            <h2 class="t-title">Common questions</h2>
           </div>
           <div class="card-body">
-            <dl class="hlp-qa">
-              <div>
-                <dt>How long does a build take?</dt>
-                <dd>A few minutes. You can close Terrain and come back — the map is waiting when you return, because a build belongs to the project rather than to the tab you started it in.</dd>
-              </div>
-              <div>
-                <dt>When do points come back?</dt>
-                <dd>At the start of each quarter. Points you have not spent do not carry over, and a build is charged when you approve it rather than when the map finishes drawing.</dd>
-              </div>
-              <div>
-                <dt>Can Terrain tell me whether I am free to file?</dt>
-                <dd>No. Terrain shows you what has already been filed and which company holds it. Whether any of it stands in your way is a legal question, and that one is for a patent attorney.</dd>
-              </div>
-            </dl>
+
+            <div class="hlp-grp">
+              <h3 class="t-micro hlp-grp-h">Your search and your map</h3>
+              <dl class="hlp-qa">
+                <div>
+                  <dt>How long does a build take?</dt>
+                  <dd>A few minutes. You can close Terrain and come back — the map is waiting when you return, because a build belongs to the project rather than to the tab you started it in.</dd>
+                </div>
+                <div>
+                  <dt>Can Terrain tell me whether I am free to file?</dt>
+                  <dd>No. Terrain shows you what has already been filed and which company holds it. Whether any of it stands in your way is a legal question, and that one is for a patent attorney.</dd>
+                </div>
+                <div>
+                  <dt>Why are the rows on the map companies?</dt>
+                  <dd>Because that is the question a founder can act on. Each row is a holder and each column an approach, so a row tells you what one company has built and a column tells you who is working the same way you are. An empty cell means that company has not filed there — it is a fact about them, not about the technology.</dd>
+                </div>
+                <div>
+                  <dt>Where does the patent data come from?</dt>
+                  <dd>The Innovue database — around 180 million records, covering the major offices. Terrain searches it and lays out what it returns; it does not hold a database of its own.</dd>
+                </div>
+                <div>
+                  <dt>Can I change what a map covers after it is built?</dt>
+                  <dd>Not from the map. You can go back to an earlier version of the project, or start a new search. Changing what gets searched costs a fresh run across the whole database, so it goes through the same approval step the first search did.</dd>
+                </div>
+                <div>
+                  <dt>Does sorting or filtering the list change the map?</dt>
+                  <dd>No. Every patent the search returned feeds the views, and it keeps doing so. Sorting and filtering change what you are looking at, not what the views count.</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="hlp-grp">
+              <h3 class="t-micro hlp-grp-h">Points and your plan</h3>
+              <dl class="hlp-qa">
+                <div>
+                  <dt>When do points come back?</dt>
+                  <dd>At the start of each quarter. Points you have not spent do not carry over, and a build is charged when you approve it rather than when the map finishes drawing.</dd>
+                </div>
+                <div>
+                  <dt>What spends points?</dt>
+                  <dd>Building a map. Reading it does not — opening a record, sorting the list, re-ranking it, switching views and reverting to an earlier version are all free, however many times you do them.</dd>
+                </div>
+                <div>
+                  <dt>What happens if I run out?</dt>
+                  <dd>Everything you have already built stays open and stays readable. You cannot start a new build until the next quarter or until you move up a plan.</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="hlp-grp">
+              <h3 class="t-micro hlp-grp-h">Your projects</h3>
+              <dl class="hlp-qa">
+                <div>
+                  <dt>Who can see my projects?</dt>
+                  <dd>Only you. There are no shared workspaces and no seats in Terrain — an account is one person's.</dd>
+                </div>
+                <div>
+                  <dt>Can I send a map to someone else?</dt>
+                  <dd>Not from inside Terrain today. Nothing stops you showing it on your own screen, and telling us you need to send one is useful — it is what decides whether this gets built.</dd>
+                </div>
+                <div>
+                  <dt>What happens to my projects if I close my account?</dt>
+                  <dd>They go, along with the searches and the maps built from them. Nothing is recoverable afterwards, so take what you need out first.</dd>
+                </div>
+              </dl>
+            </div>
+
           </div>
         </section>
 
@@ -5590,7 +5758,136 @@ function pnPublished(rec){
   var y = rec.filed + 1 + (rec.n % 2);
   return y > PN_Y_END ? 'Not yet published' : String(y);
 }
+/* ═══ THE DEMONSTRATION RECORD, POPULATED IN FULL · 2026-09-12 ════════════
+   THE THIRD EXCEPTION TO §8, and design-language.md §8 says to treat a third
+   as evidence the contract is eroding. So it is argued here rather than
+   slipped in, and §8 carries the same argument in the document.
+
+   WHAT IT FIXES FIRST is a defect, not a look: the demo ROW has printed
+   `ACME Group` since 2026-09-11 while the RECORD it opens showed a grey bar
+   for Holder. That is verbatim the bug fixed once already for the title —
+   the one patent on this surface with a readable name losing it at the
+   moment the founder asks to read it, which is the one moment it is for.
+
+   WHY A RECORD IS THE RIGHT PLACE FOR IT. Eleven bars, an abstract of bars
+   and nine claims of bars is a shape, and a founder cannot tell from a shape
+   whether Terrain renders a patent well. §7a.3's whole claim — Terrain
+   renders the record and never an opinion about it — is unfalsifiable until
+   one record is legible. One is enough; a second would be a corpus.
+
+   THE DEVICE THAT KEEPS IT FROM READING AS A LIVE EXAMPLE is the one §8
+   already accepted for the holder. ACME works because it is commerce's own
+   placeholder, and design-language.md is explicit that a PLAUSIBLE invention
+   — Northaven Aerostructures — fails the same test. INVENTORS TAKE THE LEGAL
+   SYSTEM'S EQUIVALENT: Doe, Roe and Poe are what a court calls a person whose
+   name it does not have. Same property, and it travels: a reader who does not
+   know the convention still cannot mistake them for three real engineers.
+
+   THE NUMBERS ARE DELIBERATELY UNISSUED. US grants are sequential and sat
+   near 12.4M in 2026, so 12,984,117 resolves to nothing today — which is the
+   point, because a well-formed number in the ISSUED range would name a real
+   patent with a real assignee, and that is fabrication rather than
+   illustration. IT HAS A FINITE LIFE and that is recorded rather than hoped
+   away: issuance reaches it eventually, and when it does this number needs
+   moving up, not defending.
+
+   IPC SYMBOLS ARE NOT AN EXCEPTION AT ALL. B64U is the public classification
+   scheme for unmanned aircraft; a symbol is a shared vocabulary in the same
+   way `Utility model` and `Live` are, and §8 has never made those bars.
+
+   WHAT IS STILL A BAR EVERYWHERE ELSE: every other record, every list row,
+   every matrix row and every rival. The exception is ONE SEED, and the test
+   that keeps it from spreading is that a second populated record would need
+   its own argument in §8 and would not get one.                           */
+var DEMO_REC = {
+  number:    'US 12,984,117 B2',
+  appno:     'US 18/992,410',
+  /* THE SEED SAYS `Utility model` AND IT HAS TO BE OVERRIDDEN. The United
+     States has no utility model, so once `Where` prints real English the
+     record contradicts itself in two adjacent fields. The demo answers
+     United States at the fifth question; the kind follows it. */
+  kind:      'Invention',
+  ipcMain:   'B64U 10/13',
+  ipc:       ['B64U 10/13', 'B64U 30/293', 'B64U 50/19'],
+  holder:    'ACME Group',
+  /* THREE, because the seed's nInv is 3 — the count was already decided and
+     this only gives it names. */
+  inventors: ['J. Doe', 'R. Roe', 'M. Poe'],
+  where:     'United States'
+};
+/* THE ABSTRACT AND THE CLAIM SET, AS PUBLISHED. §7a.3 puts both in the
+   RENDERED column — "claim text, as published", "the abstract, as published"
+   — against match highlighting and a plain-English decode in the column
+   beside it. They were bars only because nothing had written them, which is
+   a different thing from a decision, and the pane has been claiming since
+   2026-09-10 that Terrain renders a record rather than an opinion about one.
+   Nine claims of grey bars can neither support that claim nor contradict it.
+
+   WRITTEN FROM SCRATCH, about a foldable quadrotor airframe, following
+   DEMO_TITLE and the matrix's own columns — folding arm and hinge,
+   integrated motor mount, moulded composite shell, foam-core sandwich
+   panel, sealed electronics bay. NEVER DERIVED FROM A CLIENT'S RECORD, and
+   the reason is the one that cost this repository two scrubs: a landscape
+   modelled on a real one comes with a plausible distribution for free, and
+   the labels travel with it. A domain nobody has hired us about.
+
+   THE CLAIM SET IS A REAL DEPENDENCY TREE — 1 independent, 2-9 dependent,
+   two of them dependent on a dependent. A flat list of nine independent
+   claims is not what a patent looks like, and what a patent looks like is
+   the one thing a founder is on this surface to learn. The count is the
+   seed's own rec.claims, unchanged, so nothing downstream of it moves. */
+var DEMO_ABSTRACT = 'An airframe for a rotary-wing unmanned aircraft has four arms '
+  + 'joined to a central body by hinges that carry flight loads rather than passing '
+  + 'them to a separate spar. Each arm folds against the body about an axis inclined '
+  + 'to the rotor plane, stowing within the plan footprint of the body without '
+  + 'removing the rotors. The motor mount is formed as part of the arm end, locating '
+  + 'the stator directly on the load path.';
+var DEMO_CLAIMS = [
+  'An airframe for a rotary-wing unmanned aircraft, comprising: a central body; four '
+    + 'arms, each having a proximal end and a distal end; a hinge joining the proximal '
+    + 'end of each arm to the central body and defining a fold axis inclined to the '
+    + 'rotor plane; and a motor mount formed integrally with the distal end of each '
+    + 'arm, wherein the hinge is arranged to carry flight loads between the arm and '
+    + 'the central body.',
+  'The airframe of claim 1, wherein each hinge is arranged to pass over centre as its '
+    + 'arm reaches the deployed position, such that flight loads seat the joint.',
+  'The airframe of claim 2, further comprising a detent retaining each arm in the '
+    + 'deployed position until a release load is applied.',
+  'The airframe of claim 1, wherein each arm folds against the central body within the '
+    + 'plan footprint of the central body with its rotor attached.',
+  'The airframe of claim 1, wherein the motor mount locates a stator of a drive motor '
+    + 'on the load path between the rotor and the hinge.',
+  'The airframe of claim 5, wherein the motor mount and the arm are formed as a single '
+    + 'moulded composite part.',
+  'The airframe of claim 6, wherein the composite part comprises a foam core enclosed '
+    + 'by a fibre-reinforced skin.',
+  'The airframe of claim 1, wherein the central body encloses a sealed electronics bay, '
+    + 'and the hinge is outboard of the seal.',
+  'The airframe of claim 1, wherein each arm carries a conductor between the central '
+    + 'body and the motor mount, the conductor passing through the hinge on the fold axis.'
+];
+
+/* WHICH VALUES ARE FIGURES, and it is the split the two typefaces exist for.
+   A number and a classification symbol are read character by character and
+   retyped into somebody else's field; a name and a jurisdiction are read as
+   words. Inconsolata for the first, the text face for the second.
+
+   THE CLASS GOES ON THE <dd>, not on the value, and that is what makes it
+   safe: .fig sets a family, a numeric variant and a weight, none of which a
+   skeleton bar has any text to render. So the mono fields carry it whether
+   they hold the demonstration's real English or every other record's bars,
+   and there is no second code path to keep in step. */
+var PN_MONO = { number:1, appno:1, ipcMain:1, ipc:1 };
+/* an array field is one <span> per element; .hf dd is already a wrapping flex
+   row with its own gap, which is what spaced the bars these replace. */
+function pnList(items){
+  return items.map(function(v){ return '<span>' + v + '</span>'; }).join('');
+}
 function pnFieldValue(rec, key){
+  if (rec.demo && DEMO_REC.hasOwnProperty(key)){
+    var v = DEMO_REC[key];
+    return Array.isArray(v) ? pnList(v) : v;
+  }
   switch (key){
     case 'kind':      return rec.kind;                 /* real English */
     case 'status':    return statusHTML(rec.status);
@@ -5623,7 +5920,9 @@ function pnFieldsHTML(rec, keys){
   keys.forEach(function(k){ want[k] = 1; });
   PN_FIELDS.forEach(function(f){
     if (!want[f[0]]) return;
-    out.push('<dt>' + f[1] + '</dt><dd>' + pnFieldValue(rec, f[0]) + '</dd>');
+    out.push('<dt>' + f[1] + '</dt>'
+      + '<dd' + (PN_MONO[f[0]] ? ' class="fig fig-s"' : '') + '>'
+      + pnFieldValue(rec, f[0]) + '</dd>');
   });
   return out.join('');
 }
@@ -5645,8 +5944,13 @@ function patentPaneHTML(rec, opt){
   for (k = 0; k < rec.claims; k++){
     claims.push('<li class="pn-claim">'
       + '<span class="fig fig-s pn-cn">' + (k + 1) + '</span>'
-      + '<span class="pn-lines">'
-      + bars(pnClaimLines(rec, k), ['w-full','w-full','w-lg','w-md']) + '</span>'
+      /* one claim, one span, whichever it holds — the demonstration's text or
+         every other record's bars. The grid, the tabular numeral and the
+         end-aligned number belong to the claim, not to its content. */
+      + (rec.demo
+          ? '<span class="pn-prose">' + DEMO_CLAIMS[k] + '</span>'
+          : '<span class="pn-lines">'
+            + bars(pnClaimLines(rec, k), ['w-full','w-full','w-lg','w-md']) + '</span>')
       + '</li>');
   }
   return '<div class="pn">'
@@ -5668,8 +5972,19 @@ function patentPaneHTML(rec, opt){
           ? '<span class="pn-name-real">' + DEMO_TITLE + '</span>'
           : bar('w-full','title') + bar('w-lg','title'))
     +     '</div>'
+    /* ── THE NUMBER, NOT THE KIND · 2026-09-12 ──────────────────────────
+       This printed rec.kind — "Utility model" — beside the status. A kind is
+       a property of the record and it already has its own row in the <dl>
+       below; what a founder needs at the head of a record they are about to
+       quote to counsel is WHICH RECORD IT IS. The number is the only field
+       that answers that, and it was eight rows down among the eleven.
+
+       NOTHING IS LOST. `Kind` keeps its <dl> row and the Filter facet still
+       reads rec.kind, so the one place it was load-bearing is untouched.
+       Off the demonstration record this is a bar, exactly as the Number
+       field below it is a bar — §8, an identifier is an identity. */
     +     '<div class="pn-meta">' + statusHTML(rec.status)
-    +       '<span class="t-micro">' + rec.kind + '</span>'
+    +       '<span class="fig fig-s pn-no">' + pnFieldValue(rec, 'number') + '</span>'
     /* the same number the row carries, and the same rule: an ordering with
        no word beside it. It is here as well as on the row because the record
        is where a founder decides whether to act, and a figure they saw in a
@@ -5690,7 +6005,9 @@ function patentPaneHTML(rec, opt){
     +   '<section class="pn-sec">'
     +     '<h4 class="t-micro pn-sec-h">Abstract</h4>'
     +     '<div class="pn-lines">'
-    +       bars(rec.nAbs, ['w-full','w-full','w-full','w-lg']) + '</div>'
+    +       (rec.demo
+            ? '<p class="pn-prose">' + DEMO_ABSTRACT + '</p>'
+            : bars(rec.nAbs, ['w-full','w-full','w-full','w-lg'])) + '</div>'
     +   '</section>'
     +   '<section class="pn-sec">'
     +     '<h4 class="t-micro pn-sec-h">Claims '
@@ -7354,9 +7671,26 @@ function renderBilling(){
    §7's rule, and its reason: the failure mode of a hand-written menu is a
    row that looks selectable and does nothing. One of four, so
    menuitemradio, which is the same distinction sort and filter turn on. */
+/* ── SEVEN, NOT FOUR · 2026-09-12 ────────────────────────────────────────
+   Four topics routed a message and told the founder almost nothing about what
+   Terrain expects to be asked. THE LIST IS A PROMISE — a founder reading
+   "A question about my search results" learns that the results are something
+   we answer for, before they have typed anything.
+
+   THE TWO ENDS ARE FIXED. `broken` stays first and stays the default, because
+   the founder most likely to open Help at all is the one whose thing is not
+   working; `other` stays last, because a catch-all anywhere else in a list
+   stops the entries after it being read.
+
+   NO SIGN-IN TOPIC, deliberately. Authentication is platform.md §9 item 2 and
+   is deferred; a topic naming it would advertise a surface that does not
+   exist. `My account` is the page that does. */
 var HELP_TOPICS = [
   ['broken',  'Something is not working'],
-  ['plan',    'A question about my plan'],
+  ['results', 'A question about my search results'],
+  ['views',   'A question about the map or the views'],
+  ['plan',    'Points, plan and billing'],
+  ['account', 'My account'],
   ['feedback','Feedback on Terrain'],
   ['other',   'Something else']
 ];
@@ -8432,7 +8766,17 @@ var SET_CEILING = 50;
    not. One property, set where the patent is chosen, read by both. */
 function setRecFor(i){
   var rec = patentRec(i * 37 + 5);
-  if (i === 0) rec.demo = true;
+  /* THE KIND IS OVERRIDDEN AT SOURCE, not in the renderer, and the difference
+     matters. Seed 5 yields `Utility model`; the United States has no utility
+     model, so once `Where` prints real English the record contradicts itself
+     in two adjacent fields.
+
+     PUTTING IT HERE RATHER THAN IN pnFieldValue IS THE WHOLE POINT: the Filter
+     facet reads rec.kind, so a record that SAID Invention while filtering as a
+     Utility model would vanish from a list it claimed to belong to — one value
+     with two answers, which is the defect the score note already records once.
+     One override, every consumer. */
+  if (i === 0){ rec.demo = true; rec.kind = DEMO_REC.kind; }
   return rec;
 }
 function setCount(){ return Math.min(SET_CEILING, DATA.total || 0); }

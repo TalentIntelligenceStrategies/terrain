@@ -145,8 +145,19 @@ first, and **three of them silently did not run** — `grep -P` does not exist o
 syntax check never fired, and a `fail` inside a pipeline subshell could not stop the publish. **All
 three reported clean.** That is the same failure as the taxonomy that survived a figure scrub and the
 6 MB that a renamed folder slipped past: not a check that was wrong, a check that was never
-consulted. `tools/test-gates.sh` now plants a violation for each of the ten gates and proves it
+consulted. `tools/test-gates.sh` now plants a violation for each of the twelve gates and proves it
 refuses. **Add a gate, add its test** — a gate nobody has watched fail is not a gate.*
+
+***The twelfth gate was added 2026-09-12 and it is the argument for the rule, not an illustration of
+it.*** *A single stray `}` sat above `.lm{position:relative}` in the prototype and shipped. CSS does
+not discard a top-level stray brace — it starts a qualified rule, takes `}` as the beginning of a
+selector, and **swallows everything through the next `{...}`** — so the brace and the rule after it
+were parsed as one bogus rule and both were dropped. **Exactly one rule, which is why nobody saw it:**
+the declarations either side parsed normally, nothing appeared in the console, and the only symptom
+was that the list's Sort and Filter menus opened 550px from their buttons. Gate 8 had been running
+`node --check` over every script block since the gates were written; **nothing did the equivalent for
+CSS**, and that is the whole of why it survived. The gate is a brace-depth scan, and running it
+against the commit before the fix prints the line number.*
 
 ***So Jekyll still runs, on the smaller tree now,*** *and the two consequences stand: a build failure
 fails the **whole** deploy, and any path added with a `_` prefix is dropped with no error.*

@@ -35,6 +35,9 @@ p_comment()  { printf '<!-- design note: cut in §6.1 -->\n' >> "$1/index.html";
 p_blockcmt() { printf '<style>/* internal note */</style>\n' >> "$1/index.html"; }
 p_dangling() { printf '<img src="brand/missing-asset.svg">\n' >> "$1/index.html"; }
 p_badjs()    { printf '<script>function (</script>\n' >> "$1/index.html"; }
+# the one that shipped: a stray `}` eats the rule after it, silently
+p_straybrace(){ printf '<style>}\n.probe{position:relative}</style>\n' >> "$1/index.html"; }
+p_unclosed()  { printf '<style>.probe{position:relative</style>\n' >> "$1/index.html"; }
 p_nolicence(){ rm -f "$1/brand/fonts/OFL-Urbanist.txt"; }
 p_nometa()   { sed -i.bak 's|<meta property="og:title"[^>]*>||' "$1/index.html"; rm -f "$1/index.html.bak"; }
 p_indexable(){ sed -i.bak 's|noindex, nofollow|all|' "$1/index.html"; rm -f "$1/index.html.bak"; }
@@ -49,6 +52,8 @@ run "HTML comment survived" "HTML comment"        p_comment
 run "block comment survived" "block comment"      p_blockcmt
 run "dangling reference"    "dangling"            p_dangling
 run "broken JavaScript"     "does not parse"      p_badjs
+run "stray CSS brace"       "stray"               p_straybrace
+run "unclosed CSS block"    "unclosed block"      p_unclosed
 run "OFL licence removed"   "OFL 1.1"             p_nolicence
 run "link preview tag removed" "meta tag missing"  p_nometa
 run "noindex removed"       "searchable"          p_indexable
