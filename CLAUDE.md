@@ -52,6 +52,9 @@ design/previews/terrain-product-page.html  the marketing product page — a SCAF
 design/components.md the component manifest — per component, the data shape the engine must return
 tools/               ONLY what regenerates the published branch — publish-prototype.sh,
                      strip-comments.py, check-publish.py, test-gates.sh
+.claude/skills/      procedures that get RUN more than once. module-audit is the first and it
+                     exists because T-Map is a scheduled second run of the M-Map pass. Tracked
+                     on purpose — see Rules
 .github/workflows/   publish-prototype.yml — rebuilds gh-pages on every push to main
 brand/assets/imagery/terrain/  the ONE permitted raster family — see Rules
 brand/favicon.svg    the browser-tab icon — the submark, with its own dark/light block
@@ -226,6 +229,22 @@ unsayable.
 reader, covering `T-Map`'s eight `Tech-Effx` entries. **That is the end of the family.** An audit
 file is admissible for a *module of somebody else's product we have walked end to end*; it is not a
 licence for a file per topic.
+
+***`.claude/skills/` is tracked, added 2026-09-12, and the reason is narrow.*** A skill is a
+procedure the model runs; this one — `module-audit` — is the M-Map pass written down while it was
+fresh, **because T-Map is the same pass on a different module and it is already scoped.** It is
+tracked rather than kept in `~/.claude/` because it cites *this repository's* gates, rules and
+section numbers, and a method that does not travel with the repo is one the next person has to
+rediscover.
+
+**What it may hold, and what it may not.** A skill records **how we work** — the pass order, the
+scrub, the checks, the bugs that only a render catches. **It is not a second source of truth about
+the product.** Where it and `docs/` disagree, `docs/` wins, and the skill should be pointing at a
+section rather than restating it. *It is subject to every rule here, the client-data boundary
+included: the `M-Map` skill names IPtech's menu and none of its data.*
+
+**One skill per procedure, not per task.** If a second skill ever looks necessary, the test is the
+same one the sixth document had to clear: a distinct **kind** of work and a distinct **reader**.
 
 **Deferred means deferred.** `docs/platform.md` §9 is marked `DEFERRED — NOT IN SCOPE`. Nothing in
 it is built, specced further, wireframed, or designed against unless the session explicitly names
