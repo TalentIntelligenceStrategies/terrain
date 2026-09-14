@@ -360,6 +360,8 @@ a{text-decoration:none;color:inherit}
 .cmp-send-load{opacity:0;filter:blur(2px)}
 .cmp.is-working .cmp-send-glyph{opacity:0;filter:blur(2px)}
 .cmp.is-working .cmp-send-load{opacity:1;filter:none}
+
+.cmp.is-working .cmp-send{background:none;color:var(--text-1)}
 .cmp-status{margin:var(--s-8) 0 0;font-size:12px;color:var(--text-3);min-height:17px;
       transition:opacity var(--dur-2) var(--ease),filter var(--dur-2) var(--ease)}
 .cmp-status.is-swap{opacity:0;filter:blur(2px)}
@@ -369,6 +371,50 @@ a{text-decoration:none;color:inherit}
 .sweep::after{content:"";position:absolute;top:0;bottom:0;width:45%;border-radius:inherit;
        background:currentColor;animation:sweepx var(--cycle) linear infinite}
 @keyframes sweepx{0%{transform:translateX(-120%)}100%{transform:translateX(255%)}}
+
+.dmx-root{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;
+  --dmx-cycle:1500ms;
+  --dmx-opacity-base:0.16;--dmx-opacity-mid:0.32;--dmx-opacity-peak:1}
+.dmx-root.dmx-matrix-3{--dmx-cycle:1500ms}
+.dmx-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  grid-template-rows:repeat(5,minmax(0,1fr))}
+.dmx-dot{border-radius:999px;display:block;background:currentColor;
+  opacity:calc(0.5 * (var(--dmx-opacity-base) + var(--dmx-opacity-mid)));
+  will-change:opacity}
+.dmx-path-3{
+  animation:dmx-ripple-3 calc(0.68 * var(--dmx-cycle) * var(--dmx-speed,1))
+            cubic-bezier(0.42,0,0.58,1) infinite;
+  animation-delay:calc(var(--dmx-path,0) * 0.19 * var(--dmx-cycle) * var(--dmx-speed,1))}
+@keyframes dmx-ripple-3{
+  0%,100%{opacity:var(--dmx-opacity-base)}
+  3%     {opacity:calc(0.62 * var(--dmx-opacity-mid) + 0.38 * var(--dmx-opacity-base))}
+  6%     {opacity:calc(0.35 * var(--dmx-opacity-peak) + 0.65 * var(--dmx-opacity-mid))}
+  10%    {opacity:var(--dmx-opacity-peak)}
+  14%    {opacity:calc(0.35 * var(--dmx-opacity-peak) + 0.65 * var(--dmx-opacity-mid))}
+  17%    {opacity:calc(0.62 * var(--dmx-opacity-mid) + 0.38 * var(--dmx-opacity-base))}
+  20%    {opacity:var(--dmx-opacity-base)}
+}
+
+.pane-wait{min-height:360px;display:grid;place-items:center}
+.pane-wait[hidden]{display:none}
+
+.is-wait{display:grid;place-items:center}
+.is-wait>.dmx-root{grid-area:1/1}
+
+.card-body.is-wait,.rec-body.is-wait{display:grid;place-items:center}
+
+.card-body.is-wait{padding-block:var(--s-16)}
+
+.set-list.is-wait{grid-template-rows:auto 1fr;justify-items:center}
+.set-list.is-wait>.filter-chip{justify-self:stretch;width:auto}
+
+.set-list.is-wait>.dmx-root{grid-row:2;align-self:center;justify-self:center}
+
+#setMore[data-waiting]>*:not(.set-more-wait){display:none}
+
+.set-more-wait{display:inline-grid;place-items:center;height:20px}
+
+#setMore[data-waiting]{background:none;padding:0;margin-inline-end:0;cursor:default}
 
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-widget);
       display:flex;flex-direction:column;min-width:0}
@@ -631,7 +677,6 @@ a{text-decoration:none;color:inherit}
 .rec-open .rec{transform:none;visibility:visible;
      transition:transform var(--dur-4) var(--ease-drawer),visibility 0s linear 0s}
 
-.rec.is-swapping .rec-body{opacity:0;filter:blur(2px)}
 .rec-head{display:flex;align-items:center;gap:var(--s-12);flex:0 0 auto;
           padding:var(--s-16) var(--s-20);border-bottom:1px solid var(--border)}
 .rec-head h2{flex:1;min-width:0;margin:0}
@@ -785,22 +830,72 @@ a{text-decoration:none;color:inherit}
 .hb-row[aria-pressed="true"] .hb-track{background:var(--track-pressed)}
 @media (hover:hover){ .hb-row:hover{background:var(--surface-sunken)} }
 
+.mo{display:flex;flex-direction:column;gap:var(--s-2)}
+.mo-row{display:flex;align-items:center;gap:var(--s-10);padding:var(--s-4) 0}
+.mo-lbl{flex:0 0 116px;display:flex;overflow:hidden}
+.mo-plot{flex:1;display:flex;align-items:flex-end;gap:2px;height:26px;
+         min-width:120px}
+
+.mo-col{flex:1;min-width:0;border-radius:2px 2px 0 0;background:var(--mark-2);
+        transition:height var(--dur-2) var(--ease),background var(--dur-1) var(--ease)}
+.mo-col[data-z="1"]{background:var(--border);border-radius:1px}
+.mo-row[data-tracked] .mo-col{background:var(--mark-1)}
+.mo-row[data-tracked] .mo-col[data-z="1"]{background:var(--border-strong)}
+.mo-n{flex:0 0 58px;text-align:right;font-size:12.5px;color:var(--text-2);
+      font-variant-numeric:tabular-nums}
+.mo-row[data-tracked] .mo-n{font-weight:600;color:var(--text-1)}
+
+.mo-word{display:block;font-size:11px;color:var(--text-3);font-weight:500}
+.mo-axis{display:flex;justify-content:space-between;padding-inline-start:126px;
+         padding-inline-end:58px;margin-top:var(--s-4)}
+
+.mo-named .mo-lbl{flex-basis:164px}
+.mo-t{font-size:12px;line-height:1.25;color:var(--text-2);display:-webkit-box;
+      -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mo-row[data-tracked] .mo-t{color:var(--text-1);font-weight:600}
+.mo-axis-named{padding-inline-start:174px}
+
+.xr{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);
+    border-radius:var(--r-inner);overflow:hidden;
+    grid-template-columns:92px repeat(var(--xr-n,5),minmax(0,1fr))}
+.xr-h,.xr-c,.xr-rh{background:var(--surface);min-height:30px;display:flex;
+                   align-items:center;justify-content:center}
+.xr-rh{justify-content:flex-start;padding-inline:var(--s-8)}
+.xr-h{padding:var(--s-6) 2px}
+.xr-c{font-size:12px;color:var(--text-1);font-variant-numeric:tabular-nums}
+.xr-c[data-d="0"]{background:var(--density-0);color:var(--text-3)}
+.xr-c[data-d="1"]{background:var(--density-1)}
+.xr-c[data-d="2"]{background:var(--density-2)}
+.xr-c[data-d="3"]{background:var(--density-3)}
+.xr-c[data-d="4"]{background:var(--density-4);color:var(--text-inverse)}
+
+.xr-c[data-self]{background:var(--surface-sunken);color:var(--text-disabled)}
+.xr-cap{display:flex;gap:var(--s-16);flex-wrap:wrap;margin-top:var(--s-10);
+        font-size:11px;color:var(--text-3)}
+
+.chart.lc{height:auto}
+
 .grid.no-anim .card,.grid.no-anim .card-body{transition:none!important}
 .grid[data-stagger] .card{opacity:0;transform:translateY(8px);
      transition:opacity var(--dur-3) var(--ease),transform var(--dur-3) var(--ease)}
 .grid[data-stagger].is-in .card{opacity:1;transform:none}
 
 .grid[data-stagger].is-in .card:nth-child(1){transition-delay:0ms}
-.grid[data-stagger].is-in .card:nth-child(2){transition-delay:60ms}
-.grid[data-stagger].is-in .card:nth-child(3){transition-delay:120ms}
-.grid[data-stagger].is-in .card:nth-child(4){transition-delay:180ms}
-.grid[data-stagger].is-in .card:nth-child(5){transition-delay:240ms}
-.grid[data-stagger].is-in .card:nth-child(6){transition-delay:300ms}
+.grid[data-stagger].is-in .card:nth-child(2){transition-delay:29ms}
+.grid[data-stagger].is-in .card:nth-child(3){transition-delay:58ms}
+.grid[data-stagger].is-in .card:nth-child(4){transition-delay:87ms}
+.grid[data-stagger].is-in .card:nth-child(5){transition-delay:116ms}
+.grid[data-stagger].is-in .card:nth-child(6){transition-delay:145ms}
+.grid[data-stagger].is-in .card:nth-child(7){transition-delay:174ms}
+.grid[data-stagger].is-in .card:nth-child(8){transition-delay:203ms}
+.grid[data-stagger].is-in .card:nth-child(9){transition-delay:232ms}
+.grid[data-stagger].is-in .card:nth-child(10){transition-delay:261ms}
+.grid[data-stagger].is-in .card:nth-child(11){transition-delay:290ms}
+.grid[data-stagger].is-in .card:nth-child(12){transition-delay:319ms}
 
 .grid.is-building{pointer-events:none}
-.grid.is-building .card-body,.grid.is-building .caption{opacity:.45;
-     transition:opacity var(--dur-3) var(--ease)}
-.grid.is-building .card{transition:opacity var(--dur-3) var(--ease)}
+
+.card.is-resolving .caption{visibility:hidden}
 
 .set-list{transition:opacity var(--dur-1) var(--ease)}
 
@@ -1260,6 +1355,8 @@ a{text-decoration:none;color:inherit}
 @media (hover:hover){
   .set-more-btn:hover{background:var(--surface-sunken);color:var(--text-1)}
   .set-more-btn:hover svg{color:var(--text-2)}
+
+  #setMore[data-waiting]:hover{background:none}
 }
 
 .set-note{font-size:12.5px;line-height:1.5;color:var(--text-3);margin:0;flex:1 1 200px}
@@ -1459,6 +1556,8 @@ a{text-decoration:none;color:inherit}
   .sk::after{display:none}                    
   .sweep::after{width:100%;opacity:.5}        
 
+  .dmx-dot{opacity:var(--rest)!important}
+
   .view.is-active{opacity:1;visibility:visible;transform:none}
 
   .dc[data-open]{grid-template-rows:1fr}
@@ -1485,7 +1584,6 @@ a{text-decoration:none;color:inherit}
 
   .set-run.is-swapping .set-run-say{opacity:1;filter:none}
 
-  .rec.is-swapping .rec-body{opacity:1;filter:none}
   .set-wrap.is-running .set-bar,.set-wrap.is-running .set-listcol{opacity:.45}
   .ghost.is-out,.ghost.is-in{opacity:1;transform:none}
 
@@ -1621,7 +1719,7 @@ a{text-decoration:none;color:inherit}
           <span class="cmp-hint"></span>
           <button class="cmp-send" type="button" disabled aria-label="Send">
             <span class="cmp-send-glyph"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></span>
-            <span class="cmp-send-load"><span class="sweep"></span></span>
+            <span class="cmp-send-load"></span>
           </button>
         </div>
       </div>
@@ -1796,6 +1894,43 @@ a{text-decoration:none;color:inherit}
               </p>
             </section>
 
+            <section class="card" data-page="technology" hidden>
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 16h8"/><path d="M7 11h12"/><path d="M7 6h3"/></svg>
+                </span>
+                <h2 class="t-title">What this space is made of</h2>
+                <span class="info">
+                  <button class="info-btn" type="button" aria-expanded="false"
+                          aria-controls="info-mix" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                  <span class="info-pop" id="info-mix" role="note"><b>Every patent your search returned, grouped by the approach it takes.</b> The map above lays out only the eight largest holders, so the figures in its column headings are smaller than these &mdash; that is two different questions, not a disagreement. <b>How big is this part of the space</b> is this card; <b>how much of it those eight hold</b> is the map.</span>
+                </span>
+              </div>
+              <div class="card-body">
+                <div id="techMix"></div>
+              </div>
+              <p class="caption" id="techMixCaption"></p>
+            </section>
+
+            <section class="card" data-page="technology" hidden>
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </span>
+                <h2 class="t-title">Which part is moving</h2>
+                <span class="info">
+                  <button class="info-btn" type="button" aria-expanded="false"
+                          aria-controls="info-tmom" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                  <span class="info-pop" id="info-tmom" role="note">One strip per approach, twelve years, <b>all on the same scale</b> so the rows are comparable to each other rather than each to itself. <b>The biggest part of a space and the fastest-moving part are rarely the same one</b> &mdash; a crowded approach that stopped growing and a small one still climbing are different bets, and the size ranking above cannot tell them apart.</span>
+                </span>
+              </div>
+              <div class="card-body">
+                <div id="techMom"></div>
+                <div class="mo-axis mo-axis-named"><span class="t-micro">12 years ago</span><span class="t-micro">now</span></div>
+              </div>
+              <p class="caption" id="techMomCaption"></p>
+            </section>
+
             <section class="card" data-page="market">
               <div class="card-head">
                 <span class="card-icon">
@@ -1821,6 +1956,23 @@ a{text-decoration:none;color:inherit}
                 <span class="sk sk-h-body" style="width:88%;margin-bottom:5px"></span>
                 <span class="sk sk-h-body" style="width:44%"></span>
               </p>
+            </section>
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                </span>
+                <h2 class="t-title">Early or late</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-life" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-life" role="note">Each point is one year &mdash; how many companies filed, against how many patents they filed. When both rise together the space is still <b>forming</b>. When patents rise and companies do not, it is <b>consolidating</b> around a few holders.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div id="lifeChart"></div>
+              </div>
+              <p class="caption" id="lifeCaption"></p>
             </section>
 
             <section class="card" data-page="market">
@@ -1849,6 +2001,42 @@ a{text-decoration:none;color:inherit}
                   <tbody id="rivalBody"></tbody>
                 </table>
               </div>
+            </section>
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="7" y="12" width="3" height="6" rx="1"/><rect x="12" y="8" width="3" height="10" rx="1"/><rect x="17" y="14" width="3" height="4" rx="1"/></svg>
+                </span>
+                <h2 class="t-title">Rival momentum</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-mom" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-mom" role="note">One strip per rival, twelve years, <b>all on the same scale</b>. A rival who stopped filing years ago is a different problem from one still filing now &mdash; the first is a portfolio that will start expiring, the second is a company still moving.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div id="momStrip"></div>
+                <div class="mo-axis"><span class="t-micro">12 years ago</span><span class="t-micro">now</span></div>
+              </div>
+              <p class="caption" id="momCaption"></p>
+            </section>
+
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18"/></svg>
+                </span>
+                <h2 class="t-title">Where the holders are from</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-orig" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-orig" role="note">Where the companies are <b>based</b> &mdash; which is a different question from where the patents were <b>granted</b>. A rival abroad who has not filed in your market cannot stop you there; one based anywhere who <em>has</em> filed there can.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div id="origBars"></div>
+              </div>
+              <p class="caption" id="origCaption"></p>
             </section>
 
             <section class="card" data-page="market">
@@ -1895,6 +2083,25 @@ a{text-decoration:none;color:inherit}
                 </div>
               </div>
               <p class="caption" id="legalCaption"></p>
+            </section>
+
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8.2 7.2 10.5 15.8M15.8 7.2 13.5 15.8M8.5 6h7"/></svg>
+                </span>
+                <h2 class="t-title">Who builds on whom</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-xref" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-xref" role="note">A patent cites the earlier work it builds on. <b>Rows cite; columns are cited.</b> A column that fills up is a holder whose work the others had to build on &mdash; the party you would most likely be licensing from, or designing around.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div id="xrefGrid"></div>
+                <div class="xr-cap"><span>Rows cite &rarr; columns are cited</span><span>&mdash; a holder cannot cite itself</span></div>
+              </div>
+              <p class="caption" id="xrefCaption"></p>
             </section>
 
             <section class="card" data-page="market">
@@ -2407,6 +2614,51 @@ function esc(t){
 var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var DUR1 = 120, DUR2 = 200, DUR3 = 320;
 
+var DMX_REST3 = [0.045, 0.2323, 0.4173, 0.6507, 0.884];
+
+function dmxDrift(){
+  var N = 3, DOT = 6, PAD = 1, SPEED = 1.15;
+  var span = DOT * N + PAD * (N - 1);                              
+  var root = document.createElement('div');
+  root.className = 'dmx-root dmx-matrix-3';
+  root.setAttribute('aria-hidden', 'true');
+  root.style.width = span + 'px'; root.style.height = span + 'px';
+  root.style.setProperty('--dmx-speed', String(1 / SPEED));
+  root.style.setProperty('--dmx-opacity-base', '0.06');
+  root.style.setProperty('--dmx-opacity-mid', '0.38');
+  var grid = document.createElement('div');
+  grid.className = 'dmx-grid'; grid.style.gap = PAD + 'px';
+  grid.style.gridTemplateColumns = 'repeat(3,minmax(0,1fr))';
+  grid.style.gridTemplateRows = 'repeat(3,minmax(0,1fr))';
+  for (var i = 0; i < N * N; i++){
+    var band = Math.floor(i / N) + (i % N);
+    var dot = document.createElement('span');
+    dot.className = 'dmx-dot dmx-path-3';
+    dot.style.width = DOT + 'px'; dot.style.height = DOT + 'px';
+    dot.style.setProperty('--dmx-path', String(band / 4));
+    dot.style.setProperty('--rest', String(DMX_REST3[band]));
+    grid.appendChild(dot);
+  }
+  root.appendChild(grid); return root;
+}
+
+function waitOn(el, min){
+  if (!el) return;
+  var h = Math.max(el.offsetHeight || 0, min || 0);
+  if (h) el.style.minHeight = h + 'px';
+  el.classList.add('is-wait');
+  el.innerHTML = '';
+  el.appendChild(dmxDrift());
+}
+function landIn(el, html){
+  if (!el) return;
+  el.classList.remove('is-wait');
+  el.style.minHeight = '';
+  if (html != null) el.innerHTML = html;
+}
+
+var BEAT = { page: 2340, card: 1610, row: 1350, rec: 1460 };
+
 var stage  = $('#stage');
 var app    = $('#app');
 var parked = $('#parked');
@@ -2876,6 +3128,19 @@ SETS.illustrative = {
   mxCols: ['Moulded composite shell','Tubular space frame','Foam-core sandwich panel',
            'Snap-fit tool-free housing','Folding arm and hinge','Integrated motor mount',
            'Sealed electronics bay','Twin-layer impact skin'],
+
+  colPatents: [32, 17, 17, 20, 9, 12, 13, 4],
+
+  colYears: [
+    [4,5,4,4,3,3,2,2,2,1,1,1],
+    [3,2,2,2,1,1,2,1,1,1,1,0],
+    [0,1,1,1,1,1,2,2,2,2,2,2],
+    [0,0,1,1,1,2,2,3,3,3,2,2],
+    [2,2,1,1,1,1,1,0,0,0,0,0],
+    [1,1,1,1,1,1,1,1,1,1,1,1],
+    [0,0,0,1,1,1,1,2,2,2,2,1],
+    [0,0,0,0,0,0,0,1,1,1,1,0]
+  ],
   outcomeRows: [
     { t:'Lighter',            n:[6,4,5,1,2,3,1,0], rise:[]  },
     { t:'More rigid',         n:[14,3,2,0,1,1,0,0], rise:[] },
@@ -2914,7 +3179,24 @@ SETS.illustrative = {
 
   jurisdiction: [ ['CN',66], ['US',47], ['JP',3], ['KR',3], ['DE',3], ['GB',1], ['SE',1] ],
 
-  legal: { live:88, expired:36, holders:[ {live:9}, {live:9}, {live:5}, {live:6}, {live:2} ] }
+  legal: { live:88, expired:36, holders:[ {live:9}, {live:9}, {live:5}, {live:6}, {live:2} ] },
+
+  lifecycle: [9, 11, 10, 14, 13, 17, 16, 21, 20, 24, 26, 25],
+
+  perHolder: [
+    [0,0,1,1,1,1, 1,2,1,2,1,1],   
+    [2,2,2,1,1,1, 0,0,0,0,0,0],   
+    [0,0,0,0,1,1, 1,1,1,1,1,1],   
+    [1,1,1,1,0,0, 0,0,1,0,1,0],   
+    [0,0,0,0,0,0, 0,1,1,1,1,1]    
+  ],
+
+  citedBy: [
+    [0,1,4], [2,1,3], [3,1,2], [4,1,3],
+    [0,2,1], [2,0,1], [3,0,2], [4,0,1], [1,0,1]
+  ],
+
+  origin: [ ['China', 51], ['United States', 38], ['Other, seven countries', 35] ]
 };
 
 var DATA = SETS.illustrative;
@@ -3397,6 +3679,8 @@ function drillRowHTML(rec, i){
 
 var FILTER = null;                       
 
+var SET_WAIT = false, SET_WAIT_T = 0;
+
 function cellFilter(kind, meta){
   meta = meta || {};
 
@@ -3411,7 +3695,11 @@ function cellFilter(kind, meta){
     n:    meta.n != null ? meta.n : 0,
     seed: meta.seed != null ? meta.seed : 1
   };
+
+  SET_WAIT = true;
   renderSet();
+  clearTimeout(SET_WAIT_T);
+  SET_WAIT_T = setTimeout(function(){ SET_WAIT = false; renderSet(); }, BEAT.row);
   var chip = $('#setFilterChip');
   if (chip){
     var clr = $('.filter-x', chip);
@@ -3478,20 +3766,30 @@ function openRecordOverlay(rec, trigger){
     if (REC_SWAP) clearTimeout(REC_SWAP);
 
     recFocusHead(pane);
-    if (REDUCED){ body.innerHTML = patentPaneHTML(rec, { close:false, heading:false }); return; }
-    pane.classList.add('is-swapping');
+
+    waitOn(body, 160);
     REC_SWAP = setTimeout(function(){
       REC_SWAP = 0;
-      body.innerHTML = patentPaneHTML(rec, { close:false, heading:false });
+      landIn(body, patentPaneHTML(rec, { close:false, heading:false }));
 
       stageRecord(body);
-      pane.classList.remove('is-swapping');
-    }, DUR1);
+    }, BEAT.rec);
     return;
   }
 
-  body.innerHTML = patentPaneHTML(rec, { close:false, heading:false });
-  stageRecord(body);
+  var instant = (Date.now() - recClosedAt) < REC_INSTANT_MS;
+  if (instant){
+    body.innerHTML = patentPaneHTML(rec, { close:false, heading:false });
+    stageRecord(body);
+  } else {
+    waitOn(body, 180);
+    if (REC_SWAP) clearTimeout(REC_SWAP);
+    REC_SWAP = setTimeout(function(){
+      REC_SWAP = 0;
+      landIn(body, patentPaneHTML(rec, { close:false, heading:false }));
+      stageRecord(body);
+    }, BEAT.rec);
+  }
 
   app.classList.toggle('rec-instant',
     REDUCED || (Date.now() - recClosedAt) < REC_INSTANT_MS);
@@ -3515,8 +3813,7 @@ function closeRecord(){
   app.classList.remove('rec-open');
   recClosedAt = Date.now();
 
-  if (REC_SWAP){ clearTimeout(REC_SWAP); REC_SWAP = 0; }
-  $('#recPane').classList.remove('is-swapping');
+  if (REC_SWAP){ clearTimeout(REC_SWAP); REC_SWAP = 0; landIn($('#recBody'), null); }
   $('#paneScroll').removeAttribute('inert');
   escDrop('rec');
   var pane = $('#recPane');
@@ -3629,7 +3926,8 @@ function applyScopeChange(){
     mxRows = mxRows.slice(1);
     renderMatrix();
     if (last && last.parentNode) last.remove();
-    restagger();
+
+    resolveDash();
   }
   if (REDUCED) land(); else setTimeout(land, DUR2 + 20);
 }
@@ -3733,20 +4031,22 @@ function sharePie(rows, total, r){
        + ' stroke="var(--border-strong)" stroke-width="1"/></svg>';
 }
 
-function shareBars(rows, total){
+function shareBars(rows, total, head, flat){
   return '<table class="tbl tbl-share">'
        + '<colgroup><col style="width:38%"><col style="width:88px"><col></colgroup>'
-       + '<thead><tr><th class="t-micro">Jurisdiction</th>'
+       + '<thead><tr><th class="t-micro">' + (head || 'Jurisdiction') + '</th>'
        + '<th class="t-micro num">Patents</th>'
        + '<th class="t-micro">Share of scope</th></tr></thead><tbody>'
        + rows.map(function(row, i){
            var pct = (row[1] / total * 100);
-           return '<tr><td><span class="cellpair"><span class="dot" style="'
-                + barStyle(i) + '"></span>'
+           var fill = flat ? 'background:var(--mark-' + (i === 0 ? '1' : '2') + ')'
+                           : barStyle(i);
+           return '<tr><td><span class="cellpair">'
+                + (flat ? '' : '<span class="dot" style="' + barStyle(i) + '"></span>')
                 + row[0] + '</span></td>'
                 + '<td class="num"><span class="fig-m">' + row[1] + '</span></td>'
                 + '<td class="share-cell"><span class="bar-t"><span class="bar-f" style="width:'
-                + pct.toFixed(1) + '%;' + barStyle(i) + '"></span></span>'
+                + pct.toFixed(1) + '%;' + fill + '"></span></span>'
                 + '<span class="bar-n">' + pct.toFixed(1) + '%</span></td></tr>';
          }).join('')
        + '</tbody></table>';
@@ -3784,6 +4084,123 @@ function legalBars(holders, rivals){
       +   '<span class="lb-of"> / ' + p + '</span></span>'
       + '</div>';
   }).join('');
+}
+
+function lifeCycle(holders, patents){
+
+  var W = 1000, H = 300, L = 52, R = 20, T = 22, B = 46;
+  var hx = Math.max.apply(null, holders), py = Math.max.apply(null, patents);
+  var nx = Math.ceil(hx / 5) * 5, ny = Math.ceil(py / 10) * 10;
+  var X = function(v){ return L + (v / nx) * (W - L - R); };
+  var Y = function(v){ return H - B - (v / ny) * (H - T - B); };
+  var pts = holders.map(function(h, i){ return [X(h), Y(patents[i])]; });
+
+  var grid = '', i;
+  for (i = 0; i <= 4; i++){
+    var gy = T + (H - T - B) * i / 4;
+    grid += '<line x1="' + L + '" y1="' + gy.toFixed(1) + '" x2="' + (W - R)
+          + '" y2="' + gy.toFixed(1) + '"/>';
+  }
+  var ticks = '';
+  for (i = 0; i <= 4; i++){
+    var ty = T + (H - T - B) * i / 4, tv = Math.round(ny * (1 - i / 4));
+    ticks += '<text x="' + (L - 10) + '" y="' + (ty + 4).toFixed(1)
+           + '" text-anchor="end">' + tv + '</text>';
+  }
+  for (i = 0; i <= 4; i++){
+    var tx = L + (W - L - R) * i / 4, xv = Math.round(nx * i / 4);
+    ticks += '<text x="' + tx.toFixed(1) + '" y="' + (H - B + 18)
+           + '" text-anchor="middle">' + xv + '</text>';
+  }
+
+  var path = pts.map(function(pt, j){
+    return (j ? 'L' : 'M') + pt[0].toFixed(1) + ',' + pt[1].toFixed(1);
+  }).join(' ');
+
+  var last = pts.length - 1;
+  var dots = pts.map(function(pt, j){
+    var key = (j === 0 || j === last);
+    return '<circle cx="' + pt[0].toFixed(1) + '" cy="' + pt[1].toFixed(1) + '" r="'
+      + (key ? 5 : 3.5) + '" fill="' + (key ? 'var(--mark-1)' : 'var(--chart-series)')
+      + '" stroke="var(--surface)" stroke-width="2"/>';
+  }).join('');
+
+  return '<svg class="chart lc" viewBox="0 0 ' + W + ' ' + H + '" role="img"'
+    + ' aria-label="Distinct holders against patents filed, one point per year,'
+    + ' joined in time order. Both rise together.">'
+    + '<g stroke="var(--border)" stroke-dasharray="3 3" stroke-width="1">' + grid + '</g>'
+    + '<g font-size="11" fill="var(--text-3)">' + ticks + '</g>'
+    + '<path d="' + path + '" fill="none" stroke="var(--chart-series)" stroke-width="2"'
+    +   ' stroke-linecap="round" stroke-linejoin="round"/>'
+    + dots
+    + '<text x="' + (pts[0][0] + 10).toFixed(1) + '" y="' + (pts[0][1] + 14).toFixed(1)
+    +   '" font-size="11" fill="var(--text-2)">earliest</text>'
+    + '<text x="' + (pts[last][0] - 8).toFixed(1) + '" y="' + (pts[last][1] - 12).toFixed(1)
+    +   '" font-size="11" font-weight="600" text-anchor="end" fill="var(--text-1)">latest</text>'
+    + '<text x="' + ((L + W - R) / 2) + '" y="' + (H - 4)
+    +   '" font-size="11" text-anchor="middle" fill="var(--text-3)">Distinct holders filing</text>'
+    + '</svg>';
+}
+
+function momentum(rows, sel, labels){
+  var max = rows.reduce(function(m, r){
+    return Math.max(m, Math.max.apply(null, r));
+  }, 0) || 1;
+  var W = ['w-md', 'w-lg', 'w-sm', 'w-xs', 'w-md'];
+
+  return '<div class="mo' + (labels ? ' mo-named' : '') + '">' + rows.map(function(r, i){
+    var tot = r.reduce(function(a, b){ return a + b; }, 0);
+    var half = r.length >> 1;
+    var early = r.slice(0, half).reduce(function(a, b){ return a + b; }, 0);
+    var late  = r.slice(half).reduce(function(a, b){ return a + b; }, 0);
+
+    var word = late === 0 ? 'stopped'
+             : late > early ? 'rising'
+             : late < early ? 'slowing' : 'steady';
+    var span = r.length;
+    var cols = r.map(function(v, y){
+      var h = v === 0 ? 1 : Math.max(3, Math.round(v / max * 26));
+      var ago = span - 1 - y;
+
+      return '<span class="mo-col"' + (v === 0 ? ' data-z="1"' : '')
+           + ' title="' + v + (v === 1 ? ' filing' : ' filings') + ', '
+           + (ago === 0 ? 'this year' : ago + (ago === 1 ? ' year ago' : ' years ago'))
+           + '" style="height:' + h + 'px"></span>';
+    }).join('');
+    return '<div class="mo-row"' + (i === sel ? ' data-tracked' : '') + '>'
+      + '<span class="mo-lbl">'
+      + (labels ? '<span class="mo-t">' + esc(labels[i]) + '</span>'
+                : '<span class="sk sk-h-label ' + W[i] + '"></span>')
+      + '</span>'
+      + '<span class="mo-plot">' + cols + '</span>'
+      + '<span class="mo-n">' + tot + '<span class="mo-word">' + word + '</span></span>'
+      + '</div>';
+  }).join('') + '</div>';
+}
+
+function citeMatrix(pairs, n){
+  var g = [], i, j;
+  for (i = 0; i < n; i++){ g[i] = []; for (j = 0; j < n; j++) g[i][j] = 0; }
+  pairs.forEach(function(p){ g[p[0]][p[1]] = p[2]; });
+  var max = pairs.reduce(function(m, p){ return Math.max(m, p[2]); }, 0) || 1;
+  var W = ['w-sm', 'w-md', 'w-xs', 'w-sm', 'w-xs'];
+
+  var out = '<div class="xr" style="--xr-n:' + n + '" role="table"'
+          + ' aria-label="Citations between holders. Rows cite, columns are cited.">'
+          + '<span class="xr-h"></span>';
+  for (j = 0; j < n; j++)
+    out += '<span class="xr-h"><span class="sk sk-h-micro ' + W[j] + '"></span></span>';
+  for (i = 0; i < n; i++){
+    out += '<span class="xr-rh"><span class="sk sk-h-label ' + W[i] + '"></span></span>';
+    for (j = 0; j < n; j++){
+      if (i === j){ out += '<span class="xr-c" data-self>&mdash;</span>'; continue; }
+      var v = g[i][j];
+      out += '<span class="xr-c" data-d="' + band(v, max) + '"'
+           + (v ? ' title="cited ' + v + (v === 1 ? ' time' : ' times') + '"' : '')
+           + '>' + (v || '') + '</span>';
+    }
+  }
+  return out + '</div>';
 }
 
 var HB_SEL = 0;                                    
@@ -4440,6 +4857,11 @@ function helpReset(){
 }
 syncHelpTopic();
 
+(function(){
+  var slot = $('.cmp-send-load', $('#cmpMain'));
+  if (slot) slot.appendChild(dmxDrift());
+})();
+
 var cmpMain = initComposer($('#cmpMain'), { onSubmit: function(t){
   if (gateIsLive()) gateRefine(t); else askMain(t);
 } });
@@ -4751,13 +5173,15 @@ function approveConfirm(mode, now){
 
   if (mode !== 'rebuild'){
 
-    if (now || REDUCED){ go('work','new'); buildFromSet(false); return; }
+    if (now){ go('work','new'); buildFromSet(false); return; }
     cmpMain.work(true);
     cmpMain.say('Searching the patent database');
+
+    SET_WAIT = true; renderSet();
     setTimeout(function(){
       go('work','new');
       buildFromSet(true);
-    }, 1000);
+    }, 2600);   
     return;
   }
 
@@ -4771,9 +5195,11 @@ var escOrder = [];
 function escPush(k){ escOrder = [k].concat(escOrder.filter(function(x){ return x !== k; })); }
 function escDrop(k){ escOrder = escOrder.filter(function(x){ return x !== k; }); }
 
-function drawDash(){
+function drawDash(only){
+  function want(n){ return !only || only === n; }
+
   var host = $('#dashChart');
-  if (host) host.innerHTML = filingsChart(12) + axisRow(12);
+  if (want('filings') && host) host.innerHTML = filingsChart(12) + axisRow(12);
 
   if (!DATA.populated) return;
 
@@ -4783,25 +5209,196 @@ function drawDash(){
   var ratio = tail / head;
   var word = ratio > 1.6 ? 'growing' : ratio < 0.7 ? 'slowing' : 'flat';
   var dc = $('#dashCaption');
-  if (dc) dc.innerHTML = '<b>This space is ' + word + '.</b> Filings have gone from about '
+  if (want('filings') && dc) dc.innerHTML = '<b>This space is ' + word + '.</b> Filings have gone from about '
         + Math.round(head / 5) * 5 + ' a year to about ' + Math.round(tail / 5) * 5
         + '. The shaded window is the most recent ~18 months, which is excluded because '
         + 'patents publish about 18 months after filing &mdash; it is not a decline.';
 
   var pie = $('#jurPie'), jb = $('#jurBars'), jc = $('#jurCaption');
-  if (pie) pie.innerHTML = sharePie(JUR, JUR_TOTAL, 62);
-  if (jb)  jb.innerHTML  = shareBars(JUR, JUR_TOTAL);
-  if (jc)  jc.innerHTML  = '<b>' + JUR[0][1] + ' of the ' + JUR_TOTAL + ' filings here are in the '
+  if (want('jur') && pie) pie.innerHTML = sharePie(JUR, JUR_TOTAL, 62);
+  if (want('jur') && jb)  jb.innerHTML  = shareBars(JUR, JUR_TOTAL);
+  if (want('jur') && jc)  jc.innerHTML  = '<b>' + JUR[0][1] + ' of the ' + JUR_TOTAL + ' filings here are in the '
                          + 'United States.</b> A patent only protects the country it is granted in.';
 
   var lg = DATA.legal, ring = $('#legalRing'), lb = $('#legalBars'), lc = $('#legalCaption');
-  if (ring) ring.innerHTML = legalDonut(lg.live, lg.expired);
-  if (lb)   lb.innerHTML   = legalBars(lg.holders, DATA.rivals);
-  if (lc)   lc.innerHTML   = '<b>' + lg.live + ' of the ' + (lg.live + lg.expired)
+  if (want('legal') && ring) ring.innerHTML = legalDonut(lg.live, lg.expired);
+  if (want('legal') && lb)   lb.innerHTML   = legalBars(lg.holders, DATA.rivals);
+  if (want('legal') && lc)   lc.innerHTML   = '<b>' + lg.live + ' of the ' + (lg.live + lg.expired)
                            + ' patents in scope are still live.</b> The other ' + lg.expired
                            + ' have expired.';
+
+  var lcEl = $('#lifeChart');
+  if (want('life') && lcEl && DATA.lifecycle){
+    var hs = DATA.lifecycle, ps = PG_FILINGS.slice(-hs.length);
+    lcEl.innerHTML = lifeCycle(hs, ps);
+    var h0 = hs[0], h1 = hs[hs.length - 1], p0 = ps[0], p1 = ps[ps.length - 1];
+    var hg = h1 / h0, pg = p1 / p0;
+
+    var phase = (hg > 1.3 && pg > 1.3) ? 'still forming'
+              : (pg > 1.3)             ? 'settling around the holders already in it'
+                                       : 'flat';
+    var lcc = $('#lifeCaption');
+    if (lcc) lcc.innerHTML = '<b>This space is ' + phase + '.</b> Over these '
+      + hs.length + ' years the number of companies filing went from <b>' + h0
+      + '</b> to <b>' + h1 + '</b>, and filings from <b>' + p0 + '</b> to <b>' + p1
+      + '</b> a year. Both rising together means new entrants are still arriving, '
+      + 'not that the field is closing.';
+  }
+
+  var moEl = $('#momStrip');
+  if (want('mom') && moEl && DATA.perHolder){
+    moEl.innerHTML = momentum(DATA.perHolder, HB_SEL);
+    var half = DATA.perHolder[0].length >> 1;
+    var stopped = DATA.perHolder.filter(function(r){
+      return r.slice(half).reduce(function(x, y){ return x + y; }, 0) === 0;
+    }).length;
+    var moc = $('#momCaption');
+    if (moc) moc.innerHTML = '<b>' + stopped + ' of the ' + DATA.perHolder.length
+      + ' largest holders have filed nothing in six years.</b> Their patents still '
+      + 'stand, but the portfolio has stopped growing and the oldest of it is '
+      + 'closer to expiring than to being extended.';
+  }
+
+  var xrEl = $('#xrefGrid');
+  if (want('xref') && xrEl && DATA.citedBy){
+    var n = DATA.rivals.length;
+    xrEl.innerHTML = citeMatrix(DATA.citedBy, n);
+    var inDeg = [], k;
+    for (k = 0; k < n; k++) inDeg[k] = 0;
+    DATA.citedBy.forEach(function(pr){ inDeg[pr[1]] += pr[2]; });
+    var top = inDeg.indexOf(Math.max.apply(null, inDeg));
+    var citers = DATA.citedBy.filter(function(pr){ return pr[1] === top; }).length;
+    var xrc = $('#xrefCaption');
+
+    var who = citers === n - 1 ? 'every one of the other ' + (n - 1)
+                               : citers + ' of the other ' + (n - 1);
+    var rest = inDeg.reduce(function(x, y){ return x + y; }, 0) - inDeg[top];
+    if (xrc) xrc.innerHTML = '<b>One holder is cited by ' + who + '</b>, '
+      + inDeg[top] + ' times against ' + rest + ' for the rest of them put together. '
+      + '<b>It is also the one that stopped filing.</b> The work this space was built '
+      + 'on sits in a portfolio nobody is adding to &mdash; and the oldest of it is '
+      + 'closer to expiring than to being extended.';
+  }
+
+  var ogEl = $('#origBars');
+  if (want('orig') && ogEl && DATA.origin){
+    ogEl.innerHTML = shareBars(DATA.origin, DATA.total, 'Holder based in');
+    var ogc = $('#origCaption');
+    if (ogc) ogc.innerHTML = '<b>' + DATA.origin[1][1] + ' of the ' + DATA.total
+      + ' patents here are held by US companies</b>, against ' + DATA.origin[0][1]
+      + ' held from ' + DATA.origin[0][0] + '. <b>Where a holder is based is not '
+      + 'where its patent bites</b> &mdash; the card below is that, and the two '
+      + 'do not match.';
+  }
+
+  var mixEl = $('#techMix');
+  if (want('mix') && mixEl && DATA.colPatents){
+    var mixRows = DATA.mxCols.map(function(w, c){ return [w, DATA.colPatents[c]]; })
+                             .sort(function(a, b){ return b[1] - a[1]; });
+    mixEl.innerHTML = shareBars(mixRows, DATA.total, 'Approach', true);
+    var top3 = mixRows.slice(0, 3).reduce(function(t, r){ return t + r[1]; }, 0);
+    var conc = top3 / DATA.total;
+
+    var shape = conc > 0.7 ? 'concentrated in a few approaches'
+              : conc > 0.5 ? 'uneven'
+                           : 'spread fairly evenly';
+    var mxc = $('#techMixCaption');
+    if (mxc) mxc.innerHTML = '<b>This space is ' + shape + '.</b> '
+      + mixRows[0][0] + ' is the largest part of it at <b>' + mixRows[0][1]
+      + ' of the ' + DATA.total + '</b> patents your search returned, and the '
+      + 'three largest together hold <b>' + top3 + '</b>. The smallest, '
+      + mixRows[mixRows.length - 1][0].toLowerCase() + ', holds <b>'
+      + mixRows[mixRows.length - 1][1] + '</b>. <b>Size is not the same as '
+      + 'opportunity</b> &mdash; the card below says which of these are still '
+      + 'moving.';
+  }
+
+  var tmEl = $('#techMom');
+  if (want('tmom') && tmEl && DATA.colYears){
+
+    var tmOrder = DATA.mxCols.map(function(w, c){ return c; })
+                    .sort(function(a, b){ return DATA.colPatents[b] - DATA.colPatents[a]; });
+    tmEl.innerHTML = momentum(tmOrder.map(function(c){ return DATA.colYears[c]; }), -1,
+                              tmOrder.map(function(c){ return DATA.mxCols[c]; }));
+    var half = DATA.colYears[0].length >> 1;
+    var reads = DATA.colYears.map(function(r){
+      var e = r.slice(0, half).reduce(function(a, b){ return a + b; }, 0);
+      var l = r.slice(half).reduce(function(a, b){ return a + b; }, 0);
+      return { early:e, late:l, word: l === 0 ? 'stopped'
+                                  : l > e ? 'rising' : l < e ? 'slowing' : 'steady' };
+    });
+    var growing = reads.filter(function(x){ return x.word === 'rising'; }).length;
+    var big = 0;
+    DATA.colPatents.forEach(function(n, c){ if (n > DATA.colPatents[big]) big = c; });
+    var small = 0;
+    DATA.colPatents.forEach(function(n, c){ if (n < DATA.colPatents[small]) small = c; });
+    var half2 = DATA.colYears[0].length - half;
+    var tmc = $('#techMomCaption');
+    if (tmc) tmc.innerHTML = '<b>' + growing + ' of the ' + DATA.colYears.length
+      + ' approaches here are still growing</b>, and the largest is '
+      + (reads[big].word === 'rising' ? 'one of them' : 'not one of them')
+      + '. ' + DATA.mxCols[big] + ' holds <b>' + DATA.colPatents[big]
+      + '</b> patents and is <b>' + reads[big].word + '</b>; '
+      + DATA.mxCols[small].toLowerCase() + ' holds <b>' + DATA.colPatents[small]
+      + '</b> and has <b>' + reads[small].late + ' of them in the last '
+      + half2 + ' years</b>. <b>A crowded approach that stopped growing and a '
+      + 'small one still climbing are different bets</b>, and the ranking above '
+      + 'cannot tell them apart.';
+  }
 }
 drawDash();
+
+var DASH = [
+  ['filings', '#dashChart'],
+  ['jur',     '#jurPie'],
+  ['legal',   '#legalRing'],
+  ['life',    '#lifeChart'],
+  ['mom',     '#momStrip'],
+  ['xref',    '#xrefGrid'],
+  ['orig',    '#origBars'],
+  ['mix',     '#techMix'],
+  ['tmom',    '#techMom']
+];
+
+var DASH_STEP = 495, dashTimers = [], DASH_OWNS_ENTRANCE = false;
+
+function dashSteps(){
+  var out = [];
+  DASH.forEach(function(d){
+    var host = $(d[1]); if (!host) return;
+    var card = host.closest && host.closest('.card'); if (!card) return;
+    var body = host.closest('.card-body') || card.querySelector('.card-body');
+    if (body) out.push({ name: d[0], card: card, body: body });
+  });
+  return out;
+}
+function dashRest(){
+  dashTimers.forEach(clearTimeout); dashTimers = [];
+}
+
+function resolveDash(onDone){
+  dashRest();
+  var steps = dashSteps();
+  steps.forEach(function(s){
+    s.card.classList.add('is-resolving');
+
+    waitOn(s.body, 96);
+  });
+  var i = 0;
+  function next(){
+    if (i >= steps.length){
+      if (onDone) onDone();
+      return;
+    }
+    var s = steps[i++];
+    landIn(s.body, '');
+    s.card.classList.remove('is-resolving');
+    drawDash(s.name);
+    dashTimers.push(setTimeout(next, DASH_STEP));
+  }
+
+  dashTimers.push(setTimeout(next, DASH_STEP));
+}
 
 document.addEventListener('click', function(e){
   var t = e.target;
@@ -4814,6 +5411,8 @@ $('#bdOpen').addEventListener('click', function(){
 
   var apply = bdBlock.getAttribute('data-mode') === 'rebuild';
   bdBlock.removeAttribute('data-mode');
+
+  if (apply) DASH_OWNS_ENTRANCE = true;
   go('work','built');
 
   if (apply) setTimeout(applyScopeChange, REDUCED ? 0 : DUR2 + 20);
@@ -4881,8 +5480,34 @@ document.addEventListener('click', function(e){
   placeHist();
   syncProjName();
   closeMenus();
+
   go('work','reopened');               
+  reopenProject();
 });
+
+function reopenProject(){
+  var grid = $('#grid'), pane = $('#paneScroll');
+  dashRest();
+  
+  SET_WAIT = 'blank'; renderSet();
+  grid.hidden = true;
+  var wait = $('#paneWait');
+  if (!wait){
+    wait = document.createElement('div');
+    wait.id = 'paneWait'; wait.className = 'pane-wait is-wait';
+    wait.setAttribute('aria-hidden', 'true');
+    grid.parentNode.insertBefore(wait, grid);
+  }
+  wait.hidden = false;
+  wait.innerHTML = '';
+  wait.appendChild(dmxDrift());
+  setTimeout(function(){
+    SET_WAIT = false; renderSet();
+    wait.hidden = true; wait.innerHTML = '';
+    grid.hidden = false;
+    drawDash();
+  }, BEAT.page);
+}
 
 var pb = $('#profileBtn'), projBtn = $('#projBtn');
 pb.addEventListener('click', function(){
@@ -5139,6 +5764,23 @@ function setRowHTML(i){
 
 function renderSet(){
 
+  if (SET_WAIT){
+    setList.innerHTML = FILTER ? filterChipHTML() : '';
+    setList.classList.add('is-wait');
+
+    var scroller = $('#listScroll');
+    var avail = scroller ? scroller.clientHeight : 0;
+    setList.style.minHeight = (avail > 240 ? avail : 360) + 'px';
+
+    if (SET_WAIT !== 'blank'){
+      setList.appendChild(dmxDrift());
+    }
+    $('#setMoreWrap').hidden = true;
+    return;
+  }
+  setList.classList.remove('is-wait');
+  setList.style.minHeight = '';
+
   if (FILTER){
     var f = [], k;
     for (k = 0; k < FILTER.n; k++){
@@ -5360,9 +6002,21 @@ document.addEventListener('click', function(e){
 });
 
 $('#setMore').addEventListener('click', function(){
-  SET_SHOWN = Math.min(SET_SHOWN + SET_PAGE, SET_ROWS.length);
-  renderSet();
-  
+
+  var btn = $('#setMore');
+  if (btn.hasAttribute('data-waiting')) return;
+  btn.setAttribute('data-waiting','');
+  var slot = document.createElement('span');
+  slot.className = 'set-more-wait is-wait';
+  slot.appendChild(dmxDrift());
+  btn.appendChild(slot);
+  setTimeout(function(){
+    btn.removeAttribute('data-waiting');
+    slot.remove();
+    SET_SHOWN = Math.min(SET_SHOWN + SET_PAGE, SET_ROWS.length);
+    renderSet();
+    
+  }, BEAT.row);
 });
 
 function setCeiling(n){
@@ -5541,10 +6195,21 @@ function buildFromSet(auto){
     cmpMain.work(false); cmpMain.say('');
     go('work','built');
   };
-  if (!auto || REDUCED){ settle(); return; }
+
+  if (!auto){ SET_WAIT = false; renderSet(); dashRest(); drawDash(); settle(); return; }
+
+  if (SET_WAIT) renderSet();
+
   cmpMain.work(true);
   cmpMain.say('Laying out the map');
-  setTimeout(settle, 900);
+
+  DASH_OWNS_ENTRANCE = true;
+  resolveDash();
+  setTimeout(function(){
+    SET_WAIT = false;
+    renderSet();
+    settle();
+  }, BEAT.page);
 }
 
 function setScopeChip(){
@@ -5644,7 +6309,15 @@ function setDash(mode){
 
   setScopeChip();
 
-  if (mode === 'built'){ restagger(); return; }
+  if (mode === 'built'){
+
+    if (DASH_OWNS_ENTRANCE){
+      DASH_OWNS_ENTRANCE = false;
+      var g = $('#grid'); g.classList.remove('is-in'); g.removeAttribute('data-stagger');
+      return;
+    }
+    restagger(); return;
+  }
   var grid = $('#grid');
   grid.classList.remove('is-in');
   grid.removeAttribute('data-stagger');
