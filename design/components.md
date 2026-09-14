@@ -1,12 +1,29 @@
 # TIS Terrain — component manifest
 
 > **What each component reads, what it needs from your engine, and which IPtech capability supplies
-> it.** Version **0.10.0**, 2026-09-12 — **four `M-Map` views gain a form**
-> (`platform.md` §6.8–§6.11), so this file gains four rows and `Chord + N×N` moves from §2 to §1
-> with its shape unchanged. **Three of the four ask the engine for something it may not expose per
-> result set**, and that is the point of recording them: a distinct-holder count per year, a
-> per-holder year series, and a citation matrix whose *scope* — within the set, or within the whole
-> corpus — changes every number in it.
+> it.** Version **0.12.0**, 2026-09-14 — **two rows, and neither is a new component.** The
+> `Technology` page went from one card to three: `shareBars` gained a `flat` parameter and
+> `momentum` gained `labels`, and both new widgets are those functions with one argument more.
+> **Three of this file's rows now ask the engine for something per technology column rather than per
+> holder** — and the newest of them, a year series per column, is the **most doubtful ask in the
+> file**, because IPtech's own version of that view renders with both axes collapsed to a single
+> cell. We have never seen the data laid out. `platform.md` §10.57–§10.59 ask; the card ships
+> against illustrative figures and says so.
+>
+> *Version 0.11.0, 2026-09-14 — the `T-Map` walk added no component and changed one
+> claim.* [`docs/tmap-audit.md`](../docs/tmap-audit.md) rated all eight `Tech-Effx` entries and
+> both Adopts were already built, so no row is added. What moved is the map's row: its supplying
+> capability, **`T-Map › Tech-Effx › Company`**, finally has a ledger row of its own — this file
+> has cited it as the map's source since 0.8.0 while `platform.md` §8.1 carried it folded inside a
+> different destination — and the captures show **the holder axis arrives collapsed**, so the
+> shape this file asks for is the *expanded* state of a view we have only seen shut. That is
+> `platform.md` §10.55, and it is now the sharpest open question against any row here.
+>
+> *Version 0.10.0, 2026-09-12 — four `M-Map` views gained a form (`platform.md` §6.8–§6.11), this
+> file gained four rows and `Chord + N×N` moved from §2 to §1 with its shape unchanged. Three of
+> the four asked the engine for something it may not expose per result set: a distinct-holder count
+> per year, a per-holder year series, and a citation matrix whose scope — within the set, or within
+> the whole corpus — changes every number in it.*
 >
 > *A version of this file is not a changelog, so the rows below are rewritten clean rather than
 > struck. **A component contract is the one place a superseded direction must not be left
@@ -35,11 +52,13 @@
 >
 > The source of truth for every component spec here is
 > [`docs/design-language.md`](../docs/design-language.md) §7; for every capability claim, the
-> **sixty-seven**-row ledger at [`docs/platform.md`](../docs/platform.md) §8. Where this file and
-> those disagree, **they win.** *This said fifty-nine until 2026-09-10 and sixty until 2026-09-12 —
-> §8's own headline said both, and its tables never did. The jump to sixty-seven is seven `M-Map`
-> groups that had no row there at all, found by walking the menu rather than the screenshots
-> ([`docs/mmap-audit.md`](../docs/mmap-audit.md)).*
+> **seventy-one**-row ledger at [`docs/platform.md`](../docs/platform.md) §8. Where this file and
+> those disagree, **they win.** *This said fifty-nine until 2026-09-10, sixty until 2026-09-12 and
+> sixty-seven until 2026-09-14 — §8's own headline said each of them, and its tables never did.
+> Both jumps are destinations that had no row at all, found by walking the menu rather than the
+> screenshots: seven `M-Map` groups ([`docs/mmap-audit.md`](../docs/mmap-audit.md)), then five of
+> `T-Map`'s eight `Tech-Effx` entries ([`docs/tmap-audit.md`](../docs/tmap-audit.md)) — **one of
+> which is the capability the map row below has cited as its own source all along.***
 
 **The third column is why this file exists.** Tokens tell you what our interface looks like. The
 data shape tells you what we would be asking your engine to return — which is the half of
@@ -122,6 +141,8 @@ view controls**, so no row here asks the engine for anything a filter would need
 | **Rival momentum** · `momentum` | `--mark-1` (tracked) `--mark-2` `--border` / `--border-strong` (the zero seat), `--text-1/2/3` | `{ perHolder: [{ holderIdx: int, perYear: [int] }] }` — one array per holder, **same length and same year basis as the Filings series**, ordered as the Rivals array. *Rows must be comparable, so a holder with no filings in a year needs an explicit `0` rather than a missing entry* | **`M-Map › Company › Trend`** · 宏觀趨勢分析, at the per-holder grain over a supplied set. `platform.md` §6.9 |
 | **Where the holders are from** · `shareBars(rows, total, head)` | Same tokens as the jurisdiction table — `barStyle()` marks, `--surface-sunken` track | `{ origin: [[label: string, count: int]] }` summing to the scope figure. **Three rows maximum and the fourth folds into `Other, N countries`** — not a style rule: `barStyle()` has three marks and everything past index 2 repeats `--mark-2`, so a fourth row draws identically to the second | **`M-Map › Country › Distribution`**, which is the *holder's* country and **not** `Patent Country`. `platform.md` §6.10 |
 | **Who builds on whom** · `citeMatrix` | `--density-0…4` (the map's own ramp), `--surface-sunken` for the diagonal, `--text-inverse` on the darkest step | `{ pairs: [[fromHolderIdx, toHolderIdx, count]] }` — **directed**, and it is the shape §2 specced before this was built. Indices join to the Rivals array. *Pairs with a zero count are omitted, not sent as zeroes; the renderer fills the grid* | **`M-Map › Company › Cross Reference`** · 公司相互引證分析. **Scope is the open question** — citations *within the result set* or within the whole corpus are different numbers, and `case.md` §9 asks it. `platform.md` §6.11 |
+| **What this space is made of** · `shareBars(rows, total, head, flat)` | `--mark-1` (largest row) `--mark-2` (the rest), `--surface-sunken` track, `--text-1/2/3` | `{ colPatents: [int] }` — **one figure per technology column, over the WHOLE result set**, index-aligned with the map's columns and summing to the scope figure. *This is deliberately **not** the map's own column totals, which sum to the eight holders laid out rather than to the corpus — a caller returning one where the other is meant puts two unexplained numbers on one page* | **`T-Map › Tech-Effx › 1D Matrix`** over a supplied result set. `platform.md` §6.12 |
+| **Which part is moving** · `momentum(rows, sel, labels)` | Same tokens as Rival momentum, plus `--text-1/2` on the named label | `{ colYears: [[int]] }` — one year series per technology column, **same length and same year basis as the Filings series**, index-aligned with the columns, and **each row summing to its `colPatents` entry**. *A column with no filings in a year needs an explicit `0`* | **`T-Map › Tech-Effx › Company Trend`**, at the per-column grain over a supplied set. **The most doubtful ask in this file**: IPtech's own version renders with both axes collapsed to a single cell, so we have never seen this data laid out at all — `platform.md` §10.57–§10.59. `platform.md` §6.13 |
 
 ### Three notes on **Confirm step**, **The map's axes** and **The map**
 

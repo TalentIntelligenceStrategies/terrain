@@ -224,7 +224,7 @@ moment ends there.*
 | 1 · First run | conversation | The composer, centred, and the question above it. Nothing else. |
 | 2 · Confirm | conversation | **Three beats, all of them turns.** The direction (§4a beat one), then three settings together (§4a beat two), then the reading — *here is how I read that* — with the structure behind a disclosure and the action in the turn after it (§4). Gates the search. |
 | 3 · What was found | working surface | The ranked patents fill the left column, and **every one of them already feeds the views** (§4b, §6a.2). Sort them, filter them, or star one to re-baseline the order. **Nothing is approved and nothing is waited for** — the right pane is already resolving. |
-| 4 · Build | working surface | Skeletons in the right pane becoming the §6 views, in place (§6a.5). The composer narrates. No stage screen. |
+| 4 · Build | working surface | Each of §6's views resolving in place in the right pane, a loader in it until its own data lands (§6a.5). The composer narrates. No stage screen. |
 | 5 · At rest | working surface | Masthead, the list, the §6 views across the `Market` / `Technology` toggle (§6.5), the standing note of what the map was built on (§6.1). |
 | 6 · Return | working surface | Project switcher → project → straight to moment 5. No search step, no rebuild. |
 
@@ -528,7 +528,7 @@ say something.
 **Sequence. The two lists left this step, and the reason is an ordering error rather than a layout
 one.** They were approaches and outcomes derived from **the sentence**, shown for approval **before a
 single patent had been retrieved**. But the matrix is computed over a result set — IPtech's own screen
-`24` draws its 8 × 8 over 102 retrieved patents. **The axes are an output of the corpus, not an input
+`24` draws its 8 × 8 over a retrieved set. **The axes are an output of the corpus, not an input
 to it.** Approving them here asked the founder to veto a guess; §6.1a asks them to veto a result.
 
 *This retires the disclosure written the same morning, and the "collapsed is not hidden" argument with
@@ -1311,7 +1311,7 @@ per-patent call, which changes the economics and possibly the answer.
 
 ## 6 · The views over the corpus
 
-**Ten views, stacked in the right pane of the working surface, in one order:**
+**Twelve views, stacked in the right pane of the working surface, in one order:**
 
 | | | | |
 | --- | --- | --- | --- |
@@ -1325,6 +1325,8 @@ per-patent call, which changes the economics and possibly the answer.
 | 8 | Live and expired | §6.7 | `Market` |
 | 9 | Who builds on whom | **§6.11** | `Market` |
 | 10 | Lineage | §6.4 | `Market` |
+| 11 | What this space is made of | **§6.12** | `Technology` |
+| 12 | Which part is moving | **§6.13** | `Technology` |
 
 ***It was six until 2026-09-12, and the four that arrived came from one place.***
 [mmap-audit.md](mmap-audit.md) walked all sixty of IPtech's `M-Map` views and rated eighteen
@@ -1334,6 +1336,25 @@ per-patent call, which changes the economics and possibly the answer.
 IPC is **a confidence signal only and deliberately never a label**, and two competing technology
 axes on one page is the reason. The ask still asks for it — §8 is explicit that the ask is not
 gated by our scope — and the disagreement is [mmap-audit.md](mmap-audit.md) §6.*
+
+***Twelve since 2026-09-14, and the two that arrived came from a question the audit had not been
+asked.*** [tmap-audit.md](tmap-audit.md) rated the eight `Tech-Effx` entries **2 Adopt, 3 Ask,
+3 Skip** and concluded the module yielded **no new widget** — both Adopts were already on screen.
+**That conclusion was right about what it was measuring and it was measuring the wrong thing.** It
+rated *destinations one for one*: does Terrain take this menu entry as a view. The question that
+produced §6.12 and §6.13 was *what can a founder use, built from what these captures show*, and
+against that one two of the eight carry questions nothing in Terrain answers.
+
+**So both new views reverse a rating this document's own sibling wrote six hours earlier**, and
+§8.1 carries the argument in the cells rather than overwriting the verdicts. *`1D Matrix` was
+"merged into the map's column totals, not a second widget"; `Company Trend` was **Ask** because it
+ships as a 1 × 1 collapsed cell — and that was an objection to IPtech's rendering, not to the
+question, which is the same shape as [mmap-audit.md](mmap-audit.md) §6's `Life Cycle` reversal.*
+
+***The rule this is the second instance of.*** An audit rates what a vendor ships. **It does not
+enumerate what we could build from what a vendor ships**, and reading a `Skip` or an `Ask` column as
+a build backlog gets that backwards in both directions. The audit's ratings stand as written;
+[tmap-audit.md](tmap-audit.md) §6 records what changed and why.
 
 **The order groups the column rather than ranking it:** *when* (2, 3), *who* (4, 5), *where*
 (6, 7), *what is still enforceable* (8), *what it grew out of* (9, 10). Lineage stays last for the
@@ -1401,7 +1422,7 @@ short form is that the founder now has no veto over either axis and §4's gate i
 correction point in the product.
 
 **Where the axes come from.** Both are outputs of the corpus, not inputs to it. The matrix is
-computed over a result set — IPtech's own screen `24` draws its 8 × 8 over 102 retrieved patents —
+computed over a result set — IPtech's own screen `24` draws its 8 × 8 over a retrieved set —
 so the columns appear for the first time on the map, over what the search actually returned. The
 rows are read off the patents themselves and were never generated at all.
 
@@ -1798,8 +1819,8 @@ and is recorded there as a third entry rather than by editing the retraction awa
 
 | Page | Views | Source |
 | --- | --- | --- |
-| **`Market`** *(lands)* | Filings over time · Rivals · Where it is filed · Live and expired · Lineage | `Patent Count` · `Company` · `Country` · `Legal Status` — every one reachable under **both** maps |
-| **`Technology`** | The map | `T-Map › Tech-Effx › Company` — **the only destination reachable under `T-Map` and not under `M-Map`** |
+| **`Market`** *(lands)* | Filings over time · Early or late · Rivals · Rival momentum · Where the holders are from · Where it is filed · Live and expired · Who builds on whom · Lineage | `Patent Count` · `Company` · `Country` · `Legal Status` — every one reachable under **both** maps |
+| **`Technology`** | The map | `T-Map › Tech-Effx › Company` — one of the **eight** `Tech-Effx` entries, which are the only destinations reachable under `T-Map` and not under `M-Map`. *This cell said "the only destination" until 2026-09-14; §8.3 has always said eight, and [tmap-audit.md](tmap-audit.md) §3 walked them. It is the only one Terrain **takes**, which is a different claim.* |
 
 **This is the table §8 already carried, applied to Terrain's own views rather than to IPtech's groups.**
 §8 records the finding that settles it: `T-Map` is `M-Map` plus a classification filter plus the
@@ -1815,6 +1836,14 @@ view here that is *technology* in IPtech's own structure, and it is the map.
   and it looks thin. It is accepted for now on the grounds that the map is the largest thing in the
   product and does not read as a thin page — and because the alternative, inventing a Terrain split
   that is not IPtech's, is the thing §8 warns against doing to somebody else's menu.
+  ***It stopped being true on 2026-09-14.*** The page holds **three** views: the map, §6.12 and
+  §6.13. *A sentence written here earlier the same day — "the page is one view because the source
+  has one view" — lasted a few hours and is struck rather than edited away, because the reasoning
+  that produced it is the thing worth keeping: the `T-Map` walk found no further **destination** to
+  adopt, and that was true and remains true.* **What it did not follow from was that there was
+  nothing to build.** §6.12 and §6.13 are both derived from entries the walk rated `Adopt` and
+  `Ask`; neither is a new destination. *The `Market` list above said five and is nine; it was stale
+  from 2026-09-12 and is corrected in place, because it is the sentence the split is argued from.*
 - **The hero is not on the landing page.** §6.1 makes the map the hero and §6.3 says it is what you
   see without scrolling. With `Market` landing, the founder's first screen is Filings. **This is the
   one decision in this section most likely to be wrong**, and flipping the default to `Technology`
@@ -2001,6 +2030,50 @@ re-invented.**
 would most likely be licensing from or designing around. *In the illustrative set that holder is also
 the one §6.9 shows has stopped filing* — which is a real pairing rather than a coincidence of the
 data, and it is the kind of finding neither card produces alone.
+
+### 6.12 · What this space is made of — added 2026-09-14
+
+*`T-Map › Tech-Effx › 1D Matrix`.*
+
+The generated technology columns as a **ranked list** — approach, patents, share — largest first.
+The map is read **across**, holder by holder; this is read **down**. *How big is this part of the
+space* is a different question from *who holds it*, and the grid makes a reader do arithmetic to
+answer the first.
+
+***The denominators differ, and the card says so rather than hoping nobody notices.*** This card is
+the **whole corpus**; the map's column headings are the **eight largest holders**, which is 51 of the
+124. So the same column reads 32 here and 14 there. Both are true, they answer different questions,
+and **two unexplained figures for one column is precisely the "two totals for one corpus" fault this
+build keeps catching** — so the info note states the difference and the map's own standing scope
+sentence sits directly above it.
+
+**No per-row mark, and that is a fix.** `barStyle()` holds three marks and repeats past index 2, so
+eight categories would draw six identical swatches. In a list ordered by size the label carries
+identity and the bar length carries magnitude; a hue would be carrying nothing, which `CLAUDE.md`
+forbids. What survives is the largest row against the rest — `MARK`'s own *tracked entity* pattern —
+and the caption names it in words.
+
+### 6.13 · Which part is moving — added 2026-09-14
+
+*`T-Map › Tech-Effx › Company Trend`, in the form `(Main) IPC - Trend` uses.*
+
+One micro-column strip per technology column, twelve years, **all on one shared ceiling**, each row
+carrying a derived word — *rising · slowing · steady · stopped*. It is §6.9's component with
+`labels`, and the pair is deliberate: **§6.9 says who is still moving, this says what is.**
+
+**Rows are sorted by size, the same order §6.12 uses.** The two cards list the same eight things and
+are scanned together; in column order here and size order there, row three would be a different
+approach on each and the pair would stop being readable as a pair.
+
+***Why it is worth a card at all, stated as the finding it produces.*** The largest part of the space
+and the fastest-moving part are rarely the same one, and a ranked list cannot tell them apart. In the
+illustrative set the biggest approach is **slowing** while the smallest has **all** of its filings in
+the last six years — two different bets, invisible on §6.12 alone.
+
+**The data is the open question, and the card does not pretend otherwise.** A per-column year series
+may not be computable over a supplied result set at all; §10.57–§10.59 ask, and IPtech's own
+`Company Trend` arrives as a 1 × 1 collapsed cell. [components.md](../design/components.md) carries
+the shape as an engine ask rather than an assumption.
 
 ## 6a · The working surface — added 2026-09-10
 
@@ -2325,9 +2398,40 @@ decisions:
   becomes a loading screen the founder watches daily.
 - **A rebuild is visibly shorter than the first build**, and it says so. Only what changed is
   re-run.
-- **A progress indication claims only completed work** — `design-language.md` §6. A skeleton that
-  becomes a widget is a truer claim than a bar that fills, because each view resolves when *that
-  view* is ready rather than when a percentage says so.
+- **A progress indication claims only completed work** — `design-language.md` §6. A view that
+  resolves when *that view* is ready is a truer claim than a bar that fills, because a percentage
+  asserts a fraction nobody measured.
+
+***Amended 2026-09-14, and it is the sentence above that changed.*** *It read "a skeleton that
+becomes a widget is a truer claim than a bar that fills", and the comparison was sound while the
+alternatives were a skeleton and a progress bar. It stopped being the whole answer once the third
+option existed.*
+
+***A skeleton cannot mean "loading", because it already means something else.*** §8 is the skeleton
+contract: a bar is a value **this product refuses to invent** — a holder's name, a filing date, a
+relevance reading. Those bars are **permanent**. They are on the screen at rest, on a return visit,
+and in every screenshot we have ever taken, and they shimmer the whole time.
+
+So a screen that is working and a screen that has arrived were rendering **the same device**, and
+the founder had no way to tell which they were looking at. *That is not a small cost: the moment
+they most need to know whether the system is still thinking is the moment they are deciding whether
+to trust what is on screen.*
+
+**The rule, stated so it can be checked: a loader means work is happening; a bar means a value is
+withheld.** A region that is resolving is **empty, with the loader in it**. The bars appear when the
+data lands, marking the parts that are not ours to print. The two are never on screen in the same
+region at the same time, and either one alone is now unambiguous.
+
+**What this does not change.** Each view still resolves on its own, still fires on creation and a
+confirmed scope change only, still never on a return visit, and the composer still carries the
+narration. The costs recorded below are untouched. **What changed is only what occupies a region
+while it waits** — and the argument for per-view resolution is *stronger* under this rule, because
+ten regions each holding a loader visibly finish at different moments where ten skeleton blocks
+did not read as finishing at all.
+
+*The prototype implements this as of 2026-09-14, and implementing it is what split `drawDash()`
+into a per-view resolve — the lifecycle this section had specified since it was written and which
+nothing had ever provided.*
 
 **What it costs, and why it was still right.** A stage list could name the stages — *searching ·
 classifying · laying out the map* — and an inline resolve cannot without putting labels on
@@ -3389,7 +3493,7 @@ load-bearing left the sheet; four IPtech **screens** did. The two settings that 
 on both pages — 同族合併 and 名稱統一 — are a closing note rather than a seventh group.
 
 **This section is still the complete record**, and it is now the *only* complete one. §8.1 and §8.2
-carry all 67 rows and every verdict. If the sheet and this ledger disagree, this ledger is right.
+carry all 71 rows and every verdict. If the sheet and this ledger disagree, this ledger is right.
 
 ---
 
@@ -3404,7 +3508,11 @@ in the [screenshot index](../visual-reference/iptech-screenshots-identified/READ
 | `Fishbone` — 3-step wizard | 技術魚骨 | `17` | What is my idea made of? | **Diverge** | The confirm gate, §4 | The mechanism is essential; the diagram never appears. To a founder a fishbone is an artifact from someone else's profession. Confirmed as a wizard whose branches render in Chinese — §0. |
 | `Hierarchy` — classification workbench | 分類通 | `25` | *(none — this is analyst labour)* | **Omit · cut** | Nothing | **The most important row in this table.** It is where an analyst builds the taxonomy, assigns patents to it by hand, and bins what does not fit — the recycle bin held 41 of ~158. This is the work Terrain exists to remove, not a feature to match. |
 | `View` — record list + AI Skim | AI速讀Pro | `18` | Should I care about this one? | **Diverge** | The drill-down row's first field, §7 | AI Skim is a real paragraph, better than the marketing audit assumed. Terrain takes one line of it per row, not the paragraph. |
-| `T-Map › Tech-Effx › Matrix` | 技術功效矩陣 | `24` `15` `16` `22` `23` | Where is the ground already taken, and where is it open? | **Diverge** | **The hero**, §6.1 | IPtech draws sized bubbles with the count beneath; Terrain fills the cell. A bubble encodes magnitude by area — the least accurately-read channel there is — and leaves an empty cell looking like a low one. A filled cell reads as a region of a map. |
+| **`T-Map › Tech-Effx › Company`** | — | `16`, t-map menu | Which part of the space does each holder hold? | **Diverge** | **The hero**, §6.1 | ***Split out of the `Matrix` row 2026-09-14 — it had never had a row of its own.*** This is what §6.1 actually is, what [components.md](../design/components.md) names as the map's supplying capability, and what §8.3 calls *"one entry of eight under one group of one map"* — and the ledger was carrying it folded inside a different destination. IPtech draws sized bubbles with the count beneath; Terrain fills the cell. **A bubble spends size and tone on the same value**, so the channel is paid for twice and neither is read precisely, and an empty cell looks like a low one. A filled cell reads as a region of a map. [tmap-audit.md](tmap-audit.md) §3 adds the finding that bears on §10.55: **the holder axis arrives collapsed to a single roll-up row**, so the eight holders §6.1 lays out are not something this view hands a caller by default. |
+| `T-Map › Tech-Effx › Matrix` | 技術功效矩陣 | `24` `15` `22` `23` | Which approaches address which outcomes? | **Omit · later** · *was the hero's row until 2026-09-14* | — | **This is not the view the map takes.** It is 技術 × 功效, and ~~§10.2~~ retired the outcome axis moot on 2026-09-10 — nothing in Terrain consumes a 功效 scheme. *The row is `later` rather than `cut` for ~~§10.2~~'s own stated reason: the scheme exists and is selectable, so what is gone is the requirement rather than the capability.* **Its founder question read *"where is the ground already taken, and where is it open"* until 2026-09-14**, which is the absence framing `CLAUDE.md` forbids outright and which the three-zones row below was cut for. |
+| **`Tech-Effx › 1D Matrix`** | — | t-map menu | What is this space made of? | **Diverge** · *+ 2026-09-14 as `Match`; re-verdicted the same day* | §6.12, and the map's column headings | **Catalogued and then built, both on 2026-09-14.** The row read `Match` — *already on screen as the map's column header totals* — for the few hours between the audit and the build, and that was a claim about the **figures** rather than about the **question**. The headings answer *what do these eight holders hold here*, summing to 51; §6.12 answers *how big is this part of the space*, summing to 124. **Same column, two numbers, two questions**, which is why §6.12 carries a note saying so. `Diverge` rather than `Match` because the form is ours: IPtech ships a one-row grid with a `Direction` control, and this is a ranked list with shares. |
+| **`Tech-Effx › Company Trend`** | — | t-map menu | Which part of this space is moving? | **Diverge** · *+ 2026-09-14 as `Omit · later`; re-verdicted the same day* | §6.13 | **The objection was to the rendering, not to the question**, and the row did not separate them. IPtech's version arrives as a **1 × 1 grid with both axes collapsed**, which is not a chart; the question underneath it — *which part of my space is accelerating* — is one nothing else in Terrain answers. That is the same distinction [mmap-audit.md](mmap-audit.md) §6 drew for `Life Cycle`, reached again independently. **Built against illustrative data with the dependency stated**: a per-column year series may not be computable over a supplied result set, §10.57–§10.59, and `components.md` carries it as an ask rather than an assumption. |
+| **`Tech-Effx › Inventor`, `Tech-Effx › Inventor Trend`** | — | t-map menu | *(none for this buyer)* | **Omit · cut** · *+ 2026-09-14* | Nothing | The same cut §8.4 already makes on `Company › Inventor Activity`: **a founder competes with companies, not with named engineers.** Recorded rather than left blank, because an uncatalogued destination reads as an oversight. |
 | Matrix cell → hover popover | — | `31` | What is actually in this cell? | **Diverge** | The drill-down list, §7 | **The sharpest divergence in the ledger.** IPtech's cell has no drill-down: the count is inert and all five links pivot to another chart of the same cell. *Should I care about this?* is a question a pivot menu structurally cannot answer. *And it stays true of the matrix: §8.7 records that Innovue's semantic surface does have a node-to-patents route, so what the engine lacks is the route from a **cell**, not the capability.* |
 | The three zones | 地雷區 · 新興區 · 處女地帶 | blog — *and absent from* `24` | Is this crowded, emerging, or open? | **Omit · cut** · *was Match, held against its own evidence; cut 2026-09-10* | Nowhere — §6.1 dropped the named zones | **Cut for a product reason, not because the evidence finally resolved.** ~~§10.13~~ was never answered and is retired moot: Terrain no longer renders zones, so whether IPtech has them decides nothing. *§8.5 keeps this row as its worked example of holding a verdict against its own evidence — and it is a better example in the past tense than it was live, because it shows the discipline running to completion rather than merely being asserted.* |
 | `M-Map › Company › Count` | 競合分析 | `03` `26` `27` | Who else is here? | **Diverge** | Rivals, §6.2 | Merged by default rather than behind a toggle; live-or-expired on the row; no categorical hues. `26` shows one large holder split across two rows, ranked against itself. |
@@ -3444,7 +3552,7 @@ photograph. Evidence is the source that established them.
 
 | Capability | ZH | Evidence | The founder question | Verdict | Where in Terrain | Why |
 | --- | --- | --- | --- | --- | --- | --- |
-| Auto-generated technology structure | AI魚骨 | blog, `17` | What is my idea made of? | **Match, hidden** | Generates the matrix's **columns** — one axis, since 2026-09-10 | The mechanism carries the product. The artifact never appears. `24` shows the structures it produces are compound and specific — `自主導航 / 操控 / 通訊（含 GPS-denied）` — which is the bar **§10.43 and §10.44** have to clear. *This row said "the confirm card's rows **and** the matrix's axes" until 2026-09-09, which counted one output twice because it appeared on two surfaces; "the matrix's axes" until 2026-09-10, when the second axis stopped being generated. The bar was ~~§10.2~~'s until it was retired moot.* |
+| Auto-generated technology structure | AI魚骨 | blog, `17` | What is my idea made of? | **Match, hidden** | Generates the matrix's **columns** — one axis, since 2026-09-10 | The mechanism carries the product. The artifact never appears. `24` shows the structures it produces are compound and specific — a slash-joined phrase naming a capability, its control mode and a parenthesised operating condition — which is the bar **§10.43 and §10.44** have to clear. *This row said "the confirm card's rows **and** the matrix's axes" until 2026-09-09, which counted one output twice because it appeared on two surfaces; "the matrix's axes" until 2026-09-10, when the second axis stopped being generated. The bar was ~~§10.2~~'s until it was retired moot.* |
 | Auto-clustering + relevance ranking | AI分類Pro | product page / blog | — | **Match** | The map's rows and columns | Turns a result set into a structure without the founder classifying anything. |
 | Plain-language one-line summary | AI速讀Pro | product page, `18` | Should I care about this one? | **Match** | Drill-down field 1, §7 | Blocked on §10.11 — whether it runs in bulk across a result set. Without it the list degrades into titles. |
 | Applicant name unification | 名稱統一 · 名稱合併 | changelog, `03` `26` | Who else is here? | **Diverge** | Rivals, on by default | **A toolbar toggle the user must press**, not a default. `26` shows one large holder as two rows. §10.4 asks whether the coverage reaches US startups; that split suggests it does not reliably reach large US names either. |
@@ -3489,6 +3597,16 @@ renders the M-Map result exactly.
 
 **So `T-Map` is not a second analysis engine. It is `M-Map` plus a classification filter, with the
 eight `Tech-Effx` entries on top.** The 60 shared entries are one analysis reachable two ways.
+
+***Verified end to end 2026-09-14, and it held.*** This was settled from **two** screens being
+identical; [tmap-audit.md](tmap-audit.md) walked the whole `T-Map` menu from 69 captures and counted
+**68 views across 12 groups** — the eleven inherited, plus `Tech-Effx`. The inherited groups
+reproduce `M-Map`'s labels *including its typos*, which is the strongest available evidence that the
+two menus share a definition. **One correction to the shape as stated:** the `Classification` strip
+sits on the sixty inherited views and **not** on `Tech-Effx`, which has a different toolbar
+altogether — so the filter is what `T-Map` adds *to the views it shares*, rather than a property of
+the module. *The filter was empty on all 69 captures, so what it does when set is still unobserved;
+§10.58 asks.*
 
 IPtech has **68 distinct analyses.** [case.md](case.md) §4.H's honest range of 68–128 collapses to
 its lower bound, and **§10.12 was struck on that basis 2026-09-04** — we answered it ourselves. Its
@@ -3597,7 +3715,7 @@ each other — the balance only ever moves by the per-run cost.*
 
 ### 8.5 · The count
 
-**67 rows across §8.1 and §8.2**, and all 31 identified screens are accounted for.
+**71 rows across §8.1 and §8.2**, and all 31 identified screens are accounted for.
 ***Was 60 until 2026-09-12,*** when [mmap-audit.md](mmap-audit.md)'s walk of all sixty `M-Map`
 views found **seven groups with no row here at all** — `Country`, `Patent Country`, `Inventor`,
 `Examiner`, `IPC`, `CPC`, and `UPC`/`LOC` — and they were added rather than rolled up. *§8.1 carried
@@ -3619,12 +3737,38 @@ figure.
 | Verdict | Rows | Note |
 | --- | --- | --- |
 | **Match** | 11 | One hidden, one as a single field, one unverified for our market. *Was 8; AI relevance ranking joined 2026-09-07, family-grouping-has-three-modes joined the same day as a qualified Match; points metering joined 2026-09-08 from `Omit · later`* — **and the derived unit price list joined in the same pass and was never counted, which is why this read 11 until 2026-09-09 and 12 after it.** *Back to 11 on 2026-09-10, by a different route: the three-zones row was cut.* Found by recounting the column rather than by reading the note, which is the only way this kind of error surfaces. |
-| **Diverge** | 18 | ***Was 20 until 2026-09-10.*** Five left in one pass — Share, Ranking, Activity, Cross Reference, Research Ability — when ~~§7a.2~~ abolished the surface every one of them routed to. **They are not cut and they are not built; they are homeless**, and §11 carries the question of where a widget's full form lives. *The seven that "needed a chart form Terrain had never specified" are now two: Legal Status, built as §6.7 on 2026-09-10, and Life Cycle, answered without a chart in §6.3's caption. The other five are the five that left.* |
-| **Omit · later** | 21 | Real, wanted, not v1, not deferred. *Was 13, then 12 when AI relevance ranking left on 2026-09-07; five joined the same day from the audit — Tech-Effx by country, patent type, LOC, the per-patent facts, points metering. **Points metering left again on 2026-09-08**, the only row to enter and leave this verdict, and the reversal is argued under §8.2's table.* **Five more joined 2026-09-10 from `Diverge`** — the homeless Rivals-page rows above. |
+| **Diverge** | 20 | ***Was 20 until 2026-09-10.*** Five left in one pass — Share, Ranking, Activity, Cross Reference, Research Ability — when ~~§7a.2~~ abolished the surface every one of them routed to. **They are not cut and they are not built; they are homeless**, and §11 carries the question of where a widget's full form lives. *The seven that "needed a chart form Terrain had never specified" are now two: Legal Status, built as §6.7 on 2026-09-10, and Life Cycle, answered without a chart in §6.3's caption. The other five are the five that left.* |
+| **Omit · later** | 22 | Real, wanted, not v1, not deferred. *Was 13, then 12 when AI relevance ranking left on 2026-09-07; five joined the same day from the audit — Tech-Effx by country, patent type, LOC, the per-patent facts, points metering. **Points metering left again on 2026-09-08**, the only row to enter and leave this verdict, and the reversal is argued under §8.2's table.* **Five more joined 2026-09-10 from `Diverge`** — the homeless Rivals-page rows above. |
 | **Omit · deferred** | 3 | §9 — the fifth §9 entry, IPC drift, is a proposal of ours rather than an IPtech surface, so it has no row. *Was 4; the patent detail page left on 2026-09-09 when §9 entry 1 was un-deferred, and went to `Omit · cut` rather than to `Match` — the pane was built, none of that row's four elements went into it* |
-| **Omit · cut** | 14 | Plus the six items in §8.4 that were never destinations: 技術魚骨-as-diagram, 泡泡圖, figure rotate/mirror, EN→ZH translation, 匯出紀錄, full boolean search. *Was 8; the patent detail page's four elements arrived 2026-09-09 from `Omit · deferred`, and the three zones arrived 2026-09-10 from `Match`* |
+| **Omit · cut** | 15 | Plus the six items in §8.4 that were never destinations: 技術魚骨-as-diagram, 泡泡圖, figure rotate/mirror, EN→ZH translation, 匯出紀錄, full boolean search. *Was 8; the patent detail page's four elements arrived 2026-09-09 from `Omit · deferred`, and the three zones arrived 2026-09-10 from `Match`* |
 
-**11 + 18 + 21 + 3 + 14 = 67.**
+**11 + 20 + 22 + 3 + 15 = 71.**
+
+***Recounted again the same day, after §6.12 and §6.13 were built.*** **The row count did not move**
+and two verdicts did: `Tech-Effx › 1D Matrix` `Match` → `Diverge` and `Tech-Effx › Company Trend`
+`Omit · later` → `Diverge`, both argued in their cells. *Both rows were **hours** old — added by the
+`T-Map` walk that morning and re-verdicted by the build that afternoon — and the trail is kept
+anyway, because a row that changed verdict inside a day is exactly the one a later reader will
+assume was always that way.* **This is the counterpart of 2026-09-12's five**: the verdicts tracked
+our destinations, and nothing about IPtech changed.
+
+***Recounted from the columns again on 2026-09-14, after [tmap-audit.md](tmap-audit.md) walked
+`T-Map`.*** **Four rows joined §8.1 and one was split in two**, all of them `Tech-Effx`
+destinations that had never been catalogued: **`Company`** — *the source of the hero*, which had
+been folded inside the `Matrix` row — plus **`1D Matrix`** (`Match`, and already on screen as the
+map's column totals), **`Company Trend`** (`Omit · later`), and **`Inventor`** with
+**`Inventor Trend`** as one row (`Omit · cut`). The `Matrix` row kept its number and lost the
+hero, moving `Diverge` → `Omit · later`. **So `Diverge` did not move**, which is the expected
+shape and the same one the `M-Map` pass produced: these are destinations we had never catalogued,
+not capabilities we had misjudged.
+
+***That is the second time a module walk has found whole destinations missing from this ledger, and
+the pattern is now worth naming.*** `M-Map`'s walk found **seven groups** with no row; `T-Map`'s
+found **five entries of eight**, including the one the product's hero is built on. Both times the
+tables' arithmetic balanced perfectly and both times the ledger had been checked against the
+**screenshots** rather than against the **menu**. §8.5's standing note says recounting from the
+columns is the only way this kind of error surfaces; the sharper rule is that **a ledger keyed to
+what we photographed cannot notice what we never opened.**
 
 ***Recounted from the columns on 2026-09-12, not from these notes.*** The three that moved:
 **Diverge** gained `Country › Distribution` and `Patent Country` as newly-catalogued destinations
@@ -3654,7 +3798,7 @@ what we build and the section recording what we take had disagreed since 2026-09
 noticed, because no row existed for the destination §6.3 actually needs. That is the failure mode
 §8.5 exists to catch, and it did not.
 
-**Sixteen of the eighteen `Diverge` rows are designed and built** in
+**Eighteen of the twenty `Diverge` rows are designed and built** in
 `design/previews/terrain-prototype.html`. *Was twelve of fifteen until 2026-09-12: `Country ›
 Distribution` and `Patent Country` were already built as §6.6 and §6.10 before they had rows at all,
 and `Cross Reference` arrived as §6.11 in the same pass. **Two of those three were built against a
@@ -3677,7 +3821,7 @@ naming as a pattern rather than treating as three coincidences.
 
 **Read the `Diverge` rows first.** They are where the product actually is. A `Match` row says we
 kept something; a `Diverge` row says we understood what it was for and disagreed about the form. The
-argument to Innovue lives in fifteen of these **sixty** rows, and in five more that were `Diverge`
+argument to Innovue lives in fifteen of these **seventy-one** rows, and in five more that were `Diverge`
 last week. *The headline read "fifty-nine" until 2026-09-10 — the tables never did.*
 
 **One discipline this ledger holds to.** A verdict records a decision, not an impression. Where the
@@ -3780,7 +3924,7 @@ surface has no place in that order, and a feature with nine captures of its own 
 table. Same seven columns, same five verdicts, and the `Capture` column points at flow numbers in
 [`visual-reference/iptech-semantic-search/README.md`](../visual-reference/iptech-semantic-search/README.md).
 
-**It is not counted in §8.5.** The 67 rows and 31 screens there cover §8.1 and §8.2 only, and §8.5
+**It is not counted in §8.5.** The 71 rows and 31 screens there cover §8.1 and §8.2 only, and §8.5
 now says so. Rolling this in would make a completeness claim about a surface we have seen nine screens
 of.
 
@@ -3987,8 +4131,12 @@ action from a single cell; what is deferred is the standing control across every
 different object with a different cost.*
 *Why deferred:* the map caption states the same fact for a fraction of the cost. The filter is the
 expensive version of that insight — though it is also the most persuasive single interaction
-available, since watching a minefield thin into open ground is the moment a US founder understands
-what they are looking at. Strong candidate for the next pass.
+available, since watching two thirds of a rival's row stop being enforceable is the moment a US
+founder understands what they are looking at. Strong candidate for the next pass.
+*The sentence here read "watching a minefield thin into open ground" until 2026-09-14. It was
+written before §1a, it used the zone framing `CLAUDE.md` bans outright, and it had also become
+false: the rows are holders, so a status filter does not uncover open ground — it shows which of a
+holder's filings still bite. **Prose corrected; the deferral is untouched.***
 
 **Tech × application matrix · 技術應用矩陣, and a toggle between column sets.** Columns become
 industries — agriculture, delivery, filming, defence — instead of outcomes.
@@ -4332,7 +4480,7 @@ share a backend.
 
     **What it asks, and why it is a different question from generation.** ~~§10.2~~ asked whether a
     scheme can be *generated*; this asks *when*, and the failure is different. Screen `24` draws its
-    matrix over 102 retrieved patents, so the axis plainly can be derived from a corpus — what we do
+    matrix over a retrieved set, so the axis plainly can be derived from a corpus — what we do
     not know is whether that derivation is available as a step we can call **after** a search, on
     the set that search returned.
 
@@ -4385,6 +4533,15 @@ a requirement rather than a question.**
     one. *This is a capture request, not a capability question, and it is the cheapest item on this
     list to satisfy.*
 
+    ***Partly answered by the `T-Map` walk, 2026-09-14, and sharpened rather than closed.***
+    `visual-reference/tmap-audit/` holds the view, and it is **not** degenerate the way screen `16`
+    was — the technology axis is laid out in full. **But the holder axis arrives closed**, collapsed
+    to a single `+ Assignee` roll-up row, and no capture expands it. So of the three unknowns, the
+    middle one is answered — **it is a tree, and the tree is shut** — and the other two are not.
+    **The request is now specific: expand it, and show us what is underneath.** §10.59 asks whether
+    that closed state is the product's default or this account's, which is the part that decides
+    whether §6.1's *top eight holders* is something the engine hands us or something we assemble.
+
 56. **`Applicant/Assignee Merge` must be on, and it must be on by default for us.** *Recorded as a
     hard requirement rather than as a question, which no other item on this list is.* The toggle
     defaults **off**: screen `03` shows one holder across **5 rows**, and `11b` shows two more at
@@ -4401,6 +4558,35 @@ a requirement rather than a question.**
     reopened. Pairs with §10.4 (does 名稱統一 cover US startups at all) and §10.33 (are the six
     merge toggles request parameters or UI state) — **§10.33 is the one that decides whether this
     requirement is even expressible**, and it was written as a front-end curiosity.
+
+**Four added 2026-09-14 from the `T-Map` walk ([tmap-audit.md](tmap-audit.md)). Every one of them is
+about the module the hero's source lives in, and §10.55 above is amended rather than closed.**
+
+57. **What are the two figures in every `Tech-Effx` cell?** Each cell prints `N (M)` and **nothing
+    on screen, in a legend, or in a tooltip says what either number is.** The parenthesised series
+    sums to the corpus; the other does not. *This is not a curiosity.* §6.1's map renders one number
+    per cell and its caption is derived from that number — so **which of these two we are reading
+    decides what the caption says**, and there is no data table under this view to check it against
+    the way every `M-Map` view has one.
+
+58. **What does the `Classification` field do once it is set?** It is the **entire** difference
+    between `M-Map` and `T-Map` — sixty destinations exist twice over because of it — and it was
+    empty on all 69 captures, so we have never seen it work. Does it scope to one branch of the
+    technology scheme, does it take more than one, and do the sixty **recompute** against the
+    narrowed set or merely **re-filter** a result already computed? *The second would make it a
+    view control; the first makes it a second engine call, and §10.8's cost question applies.*
+
+59. **Do the `Tech-Effx` axes arrive collapsed for everyone?** Seven of the eight entries render
+    with the entity axis closed to a single roll-up row — `Company`, `Country` and `Inventor` are
+    then the same eight figures, and the three `Trend` entries are the same single cell. **We cannot
+    tell whether that is the product's default or this account's saved view state.** It bears
+    directly on §10.55: if it is the default, then the view Terrain's hero is built on returns **no
+    holders at all** until something expands it, and *that* is the call we need to be able to make.
+
+60. **What else do `XClass` and `YClass` offer, and what do their filter funnels filter?** Both are
+    dropdowns and both carry a funnel icon; neither was ever opened. `Analysis Type` likewise sits
+    on `Patents` with other values behind it. **§6.1 is one fixed cut of this object** and we chose
+    it deliberately, but we chose it without knowing what the alternatives are.
 
 ---
 

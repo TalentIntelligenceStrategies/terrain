@@ -223,7 +223,7 @@ Everything the 2026-08-31 audit found, with our read on how much each matters to
 > a founder*. What gets built is decided in our own ledger, and where the two disagree the ledger
 > wins.
 
-> **This section rates fifty capabilities; our own ledger carries sixty-seven.** A completeness audit
+> **This section rates fifty capabilities; our own ledger carries seventy-one.** A completeness audit
 > on 2026-09-07 swept the 23 M-Map/T-Map sidebar captures and all 31 screens against
 > [platform.md](platform.md) §8, and found nine capabilities catalogued in neither document — among
 > them the whole **LOC** classification dimension, the **Invention / Model / Design** patent-type
@@ -1219,7 +1219,7 @@ rather build the second layer of your product than a parallel first one.
     against.
 52. **Can the technology axis be computed over a result set we hand you, rather than only when the
     fishbone is first built — and can `Tech-Effx › Company` then be drawn over that set?** Your own
-    populated matrix is drawn over 102 retrieved patents, so the axis clearly can come from a
+    populated matrix is drawn over a retrieved set, so the axis clearly can come from a
     corpus. What we do not know is whether that step is callable **after** a search, on the set it
     returned. **It decides what the map's columns are describing.** If they are computed from what
     came back, the caption can say *this approach holds 32 of the 124* and mean it. If they can
@@ -1241,14 +1241,14 @@ rather build the second layer of your product than a parallel first one.
     not, and a rendered image of the claims would make the whole pane unbuildable. Screen `25`
     shows a record view with a decode, so the text is plainly held somewhere; what we cannot see is
     whether it is reachable as the published text rather than only as a reading of it.
-55. **Could we see `Tech-Effx › Company` populated?** This is a capture request rather than a
-    capability question, and it is the cheapest thing on this list to satisfy. The only screen we
-    hold of that view is **degenerate** — a single 1 × 1 cell — and the only populated matrix we
-    hold is 技術 × 功效. **So our hero widget is designed against a view none of us has seen with
-    data in it.** Three things we cannot answer from what we have: how many assignee rows does it
-    lay out, do they collapse into a tree the way your assignee list does, and does it paginate?
-    We take the top eight and say so on the card; if the engine already has an opinion about that
-    number, we would rather use it than author a second one.
+55. **Could we see `Tech-Effx › Company` with its holder axis opened?** A capture request rather
+    than a capability question, and the cheapest thing on this list to satisfy. We have now seen the
+    view, and the technology axis lays out in full — but **the holder axis arrives closed**, rolled
+    up into a single `Assignee` row with a `+` on it, and we have never seen what is underneath.
+    **Our hero widget is designed against the open state of a view we have only seen shut.** Two
+    things we still cannot answer: how many rows does it lay out once expanded, and does it
+    paginate? We take the top eight and say so on the card; if the engine already has an opinion
+    about that number, we would rather use it than author a second one.
 56. **`Applicant/Assignee Merge` has to be on, and on by default for our calls.** *A requirement
     rather than a question, and the only one in this document.* The toggle defaults off, and on the
     screens we hold it puts one US company across **five** rows, and two more across four and five.
@@ -1260,6 +1260,27 @@ rather build the second layer of your product than a parallel first one.
     which asks whether 名稱統一 reaches US startups at all, and with §9.33 — **and §9.33 is the one
     that decides whether this requirement is even expressible**, since it asks whether the six
     merge toggles are request parameters or interface state.
+57. **What are the two numbers in every `Tech-Effx` cell?** Each cell prints one figure with a
+    second in brackets, and we cannot find anything on the screen that says what either is — no
+    legend, no tooltip, and no data table under this view the way every `M-Map` view has one. One of
+    the two series adds up to the size of the result set and the other does not. **We ask because
+    our map prints one number per cell and writes its caption from it**, so which of the two we are
+    reading changes what that sentence claims.
+58. **What does the `Classification` field do once it is set?** As far as we can tell it is the
+    whole of what `T-Map` adds to `M-Map` — the same sixty analyses, reachable a second way because
+    of it — and it was empty on every screen we hold, so we have never seen it work. Does it scope
+    to one branch of the technology structure, will it take more than one, and do the sixty
+    **recompute** against the narrowed set or **re-filter** something already computed? The
+    difference matters to us on cost as much as on meaning.
+59. **Do the `Tech-Effx` entries arrive with their axes collapsed for everyone?** On our screens
+    seven of the eight open with the entity axis rolled up, which makes `Company`, `Country` and
+    `Inventor` render the same figures and the three `Trend` entries render a single cell. **We
+    cannot tell whether that is how the product ships or something saved on the account we were
+    shown.** It decides whether the view our map is built on returns holders to a caller, or returns
+    one row and waits to be asked.
+60. **What else can `XClass` and `YClass` be set to, and what do the funnels beside them filter?**
+    We have built against one fixed cut of this object on purpose. We would rather know what we
+    chose against.
 
 ### The design is not waiting on design decisions
 

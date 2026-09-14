@@ -885,13 +885,33 @@ the prototype with `--force-prefers-reduced-motion`; it is invisible to code rev
 CSS reads as correct. **Nothing a user needs to see may depend on a transition having run.**
 Reduced motion must never mean reduced information, and that includes no information at all.
 
-***Open, recorded 2026-09-09.*** *Reduced motion currently skips §4b's re-rank **beat**, not only its
-motion — the same branch serves "render this synchronously for a screenshot" and "this founder asked
-for less movement", and those are not the same request. The sweep is already flattened rather than
-removed by the rule above, so the beat could honestly run with a still indicator, and a founder who
-asked for less movement did not ask to be told an engine call is instant. Left as it was rather than
-changed quietly, because which way it should go is a decision for this section and not for an
-implementation pass.*
+***~~Open, recorded 2026-09-09.~~ CLOSED 2026-09-14, and it went the way the open note leaned.***
+*The question was whether reduced motion should skip §4b's re-rank **beat**, or only its motion.*
+
+**The beat runs. The indicator is present and still.** A wait the system is genuinely having is
+**information**, and the rule three paragraphs above is that reduced motion may never mean reduced
+information. Telling a founder who asked for less movement that an engine call was instant is not
+less movement, it is a different and false account of what happened.
+
+**The two requests are now separated, which is what kept this open.** One branch served both
+*"render this synchronously for a screenshot"* and *"this founder asked for less movement"*, and
+they are not the same request:
+
+| | wants |
+| --- | --- |
+| `prefers-reduced-motion` | the beat, with every indicator flat and still |
+| a screenshot path | no beat at all, everything at its end state, synchronously |
+
+*The screenshot path keeps the instant branch and is reached by its own flag, not by a media query.*
+
+**What this obliges, everywhere.** An indicator under reduced motion is **present, visible and
+motionless** — never removed, never shortened, never resolved early. `.sk::after` goes flat, the
+sweep goes to full width at `.5`, and a dot loader declares the positional opacity ramp it would
+otherwise animate through. *Forced-colours and a screenshot will both show the indicator; that is
+the point of declaring it rather than animating to it.*
+
+*Settled with the eight waits §6a.5's per-view resolve added on 2026-09-14 — eight more instances
+of an open question is the point at which it stops being cheap to leave open.*
 
 **Press feedback is not optional either.** Every pressable element takes `scale(.97)` on `:active`
 over `--dur-1`. A control that does not depress reads as dead no matter how correct its colour is,
@@ -902,6 +922,26 @@ and then sticks.
 **One indicator cycle per page, 1.6s, `linear`.** The skeleton shimmer and the build's running-stage
 sweep share a single value, so several things working at once read as one system working rather than
 as three unsynchronised timers. Any indicator added later takes the same 1.6s.
+
+***One indicator now departs from it, deliberately, and the departure is recorded rather than
+quietly taken — 2026-09-14.*** *The dot-matrix loader §6a.5 puts in every wait runs at **887ms**,
+the timing of the library it was ported from. It does not divide 1.6s.*
+
+***The reason is reproduction, not preference.*** *It is somebody else's component, adopted as
+issued, and retiming it is the kind of edit that makes a ported thing subtly not the thing you
+chose. The same argument that keeps Innovue's mark in Innovue's blue (`brief.md` §3) applies to a
+borrowed motion: reproduce it, or do not borrow it.*
+
+***And the cost is real, so it is written down rather than argued away.*** *A card can hold a 1.6s
+shimmering bar and an 887ms loader at once, and the two beats drift against each other. The
+sentence above says why that is a cost — several things working at once should read as one system
+working. **This is the one place in the product where they do not**, and if a surface ever reads as
+busy rather than as working, this is the first thing to look at and the cheapest thing to change.*
+
+***The rule itself is unchanged for anything we design.*** *An indicator **we** write still takes
+1.6s and `linear`. What is licensed here is narrow: an indicator adopted whole from elsewhere may
+keep its own cycle, and it must be named here when it does. **There is one.** A second would need
+the same paragraph written for it.*
 
 **A progress bar may only claim what has finished.** The build bar advances on **completed stages** —
 `scaleX(completed / total)` — never on elapsed time. Faking determinate progress for an unknown wait
@@ -985,8 +1025,37 @@ Adopted 2026-08-31. Each is greppable, and §7 of the working plan for that pass
   **What the narrowing permits is the case that reproduces neither fault:** transitions, on separate
   objects, beginning only after the container has stopped. **What it still refuses is the original
   sentence** — nothing fades in *while the drawer is still opening*. `pn-in` stays deleted; the
-  staging that replaced it is four transitions and no keyframe, and `sweep` and `sweepx` are still
-  the only two keyframes in the prototype.
+  staging that replaced it is four transitions and no keyframe.
+
+  ***There are three keyframes now, not two — 2026-09-14, and this is the written reason the rule
+  above demands.*** *`sweep` and `sweepx` are joined by `dmx-ripple-3`, the dot-matrix loader §6a.5
+  puts in every wait. The bar for a new keyframe is that it does something a transition cannot, and
+  it clears that bar for the same reason the first two did: **constant, indeterminate motion with no
+  end state to transition to.** A loader that resolved would be asserting a duration, which §6
+  forbids one paragraph above.*
+
+  ***ONE LOADER, ONE SIZE, EVERY WAIT — and getting there took three arrangements.*** *A 36px grid
+  for regions with a 20px one inside controls; then a single 36px mark everywhere; now a single
+  **20px** mark everywhere, from the column to a card to the record to the "show more" button.*
+
+  ***What the two rejected pairs have in common is the useful part.*** *Both were defensible in the
+  abstract — one split on meaning, a travelling trail for *being built* against a pulse for *being
+  changed*; the other on fit, a big mark for a region and a small one for a control. **Both read as
+  an inconsistency on screen.** A second indicator asks *why is this one different*, which is never
+  a question about the data, and it does not stop asking merely because there is a good answer.
+  **Nobody reads two indicators as a vocabulary.***
+
+  ***And the size is small on purpose, which is worth recording because it looks like an oversight.***
+  *20px in a ~986px card is about 2% of its width. A loader is a mark meaning "working", not a thing
+  that fills the region it is waiting on. **If one ever reads as too faint, the fix is its opacity,
+  never its size** — the moment a loader's size varies by region it has begun carrying information,
+  and at that point it is a chart.*
+
+  ***What is NOT licensed by this.*** *The keyframe is an **animation of one property, `opacity`, on
+  one class of element**, ported from a library as issued. A fourth needs its own argument, and
+  "there are already three" is not one. **The test is unchanged and it is the test that matters:
+  could a transition have done this?** For anything with a start state and an end state the answer
+  is yes, and the answer to whether it may be a keyframe is then no.
 - **A container already in place does not move to say its contents changed.** *Added 2026-09-11.*
   Picking a second patent without closing the first is a designed path — the record never covers the
   left list precisely so it can be done — and re-running the slide there would be motion claiming
@@ -1369,9 +1438,21 @@ you type into on the map is visibly the thing you typed into to make it.
 - Enter submits, Shift+Enter newlines.
 
 **The composer carries the working state; you never navigate to a loading screen.** On submit the
-textarea disables, the send glyph crossfades to the shared 1.6s sweep under `filter: blur(2px)`, and
+textarea disables, the send glyph crossfades to the dot loader under `filter: blur(2px)`, and
 the wording under the bar changes. The blur is there because two glyphs crossfading in one 32px box
 otherwise read as two objects overlapping rather than one thing changing.
+
+***It was the 1.6s sweep until 2026-09-14, and the reason it changed is consistency rather than
+taste.*** *Approving the gate is the heaviest wait in the product — a search across 180M records —
+and it was the one such moment still marked by a different device from every other wait on the
+founder's path. The list, the views, the record and the pagination control all carry the dot
+loader; the button that starts the whole thing carried a travelling bar. **Two marks for one kind
+of event is the inconsistency §6's keyframe note keeps arriving at from the other direction.**
+The crossfade, the blur and the 32px box are untouched — only what fades in has changed.*
+
+*`.sweep` keeps its other three homes: the build stage list, the thread's pending answer and the
+re-rank band. Those are not regions waiting on data — they are **a line of text saying something is
+happening**, and a 16×3 bar sits on a text baseline where a 20px grid stands taller than the line.*
 
 *Where that wording sits differs by instance, for a structural reason.* In the conversation the
 status is its own line below the card. In the docked form it **replaces the hint text inside the
@@ -1878,6 +1959,43 @@ anti-pattern and wants them hairline solid. Every grid in these four is **dashed
 §3.5 settled `--chart-grid` as dashed before this pass, the shipped Filings chart draws dashed, and
 shadcn's own `CartesianGrid` — the grammar this pass was asked to follow — is dashed by default.
 **One inconsistent grid across five cards is worse than one departure from a general rule.**
+
+### Two technology forms — added 2026-09-14
+
+*`platform.md` §6.12–§6.13. **Neither is a new component.** One is `shareBars` with its marks
+suppressed, the other is `momentum` with labels, and both extensions are one optional parameter on a
+function that already shipped. That is the whole entry, and it is worth saying plainly: the T-Map
+pass produced no new chart form, it produced two new **questions** answered with forms we had.*
+
+**What this space is made of** · `shareBars(rows, total, head, flat)`. **`flat` suppresses the
+per-row mark, and it is a fix rather than an option.** `barStyle()` holds three marks and repeats
+`--mark-2` past index 2, so eight categories draw six identical swatches and the key becomes a lie —
+the same cap §3.7 records, meeting a list long enough to break it. **In a list ordered by size the
+label carries identity and the bar length carries magnitude**, so a per-row hue is carrying nothing,
+and §2's rule is that colour carries information or it is not there. What survives is the one
+distinction worth drawing — the largest row `--mark-1`, the rest `--mark-2` — which is `MARK`'s own
+*tracked entity* pattern, and **the caption names it in words** so the tone is never the only carrier.
+
+**Which part is moving** · `momentum(rows, sel, labels)`. The row label was a skeleton bar because
+holder names are bars **by decision**; technology columns are generated words and render as words.
+`.mo-named` widens the label column to 164px and `.mo-t` clamps to two lines — *a third line pushes
+the 26px plot off the row's centre line* — and `.mo-axis-named` takes the same basis plus the same
+gap, written immediately beside it so the two cannot drift. **Passing labels also removes a latent
+fault:** `W` is five widths wide, so a sixth unlabelled row would read `undefined`, render a bar with
+no width class, and — per §8's skeleton contract — come out 0px tall, which reads as a missing value
+rather than a redacted one.
+
+***One rule this pair establishes, and it is about pairs rather than charts.*** The two cards list
+the same eight things and are read together, so **both sort by size**. In column order on one and
+size order on the other, row three is a different approach on each and the pair stops being legible
+as a pair. *Where two cards on one page enumerate the same set, they share an order.*
+
+***And the stagger step is derived, not chosen.*** The budget is a ~320ms entrance; six cards took
+60ms, ten took 35ms, **twelve take 29ms**. The ladder is written out per `nth-child` because the
+sequence should be legible in the source, and `nth-child` counts across **both** pages — `#grid`
+holds Market's and Technology's cards together and hides one set — so a Technology card added after
+the map pushes every Market card down a rung. That is intended: DOM order groups by page so a page's
+cards sit together in the reading order.
 
 ### The record pane — added 2026-09-09
 

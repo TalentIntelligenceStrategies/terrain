@@ -651,6 +651,23 @@ a{text-decoration:none;color:inherit}
 .cmp-send-load{opacity:0;filter:blur(2px)}
 .cmp.is-working .cmp-send-glyph{opacity:0;filter:blur(2px)}
 .cmp.is-working .cmp-send-load{opacity:1;filter:none}
+/* ***AND THE BUTTON STOPS BEING A BUTTON WHILE IT WORKS.*** The control is
+   :disabled for the length of the wait, so it falls back to the base rule's
+   --surface-sunken fill -- a filled circle sitting behind the loader, reading
+   as something you could press again, which is the one thing it is not. Same
+   reasoning as the list's "show more", and the same fix.
+
+   The 32px box stays: it is what holds the crossfade's two absolutely-
+   positioned spans, and collapsing it would move the composer's bottom row.
+   Only the fill goes, and it goes on --dur-1 with the transition the base
+   rule already declares.
+
+   THE COLOUR IS RAISED TO --text-1 in the same breath. The resting button is
+   --text-3 because it is a dimmed affordance; a loader is not an affordance,
+   and every other loader in the product inherits --text-1. Left at --text-3
+   this one mark would have been quietly lighter than the nine identical ones
+   it is meant to match. */
+.cmp.is-working .cmp-send{background:none;color:var(--text-1)}
 .cmp-status{margin:var(--s-8) 0 0;font-size:12px;color:var(--text-3);min-height:17px;
       transition:opacity var(--dur-2) var(--ease),filter var(--dur-2) var(--ease)}
 .cmp-status.is-swap{opacity:0;filter:blur(2px)}
@@ -662,6 +679,166 @@ a{text-decoration:none;color:inherit}
 .sweep::after{content:"";position:absolute;top:0;bottom:0;width:45%;border-radius:inherit;
        background:currentColor;animation:sweepx var(--cycle) linear infinite}
 @keyframes sweepx{0%{transform:translateX(-120%)}100%{transform:translateX(255%)}}
+
+/* ── the dot loaders · platform.md §6a.5 ───────────────────────────────
+   A LOADER MEANS WORK IS HAPPENING; A BAR MEANS A VALUE IS WITHHELD. That is
+   §6a.5 as amended 2026-09-14, and it is the whole reason these exist. `.sk`
+   already meant something — §8's refusal to invent a holder's name — and it
+   meant it PERMANENTLY, on a resting screen and in every screenshot. A region
+   that was working and a region that had arrived were rendering the same
+   device, so the founder could not tell which they were looking at at exactly
+   the moment that matters most.
+
+   So a resolving region is EMPTY WITH A LOADER IN IT, and the bars appear when
+   the data lands. The two are never in one region at once.
+
+   ─── ONE LOADER, ONE SIZE, EVERY WAIT · DRIFT TL AT 20px ─────────────────
+   The column, a card, the record, the pane, the list's "show more" button --
+   all the same 20px mark. There is no second loader and no size variation.
+
+   ***THREE ARRANGEMENTS WERE TRIED AND THIS IS THE ONE THAT SURVIVED LOOKING
+   AT IT.*** A big grid for regions and a small one for controls; then one
+   36px mark everywhere; now one 20px mark everywhere. Each earlier pair was
+   defensible in the abstract and each read as an inconsistency on screen --
+   a second indicator asks "why is this one different", which is never a
+   question about the data, and it does not stop asking it just because the
+   answer is a good one.
+
+   ***THE COST IS NAMED SO IT IS NOT REDISCOVERED.*** 20px in a ~986px card is
+   about 2% of its width, which is small. That was measured, seen and chosen:
+   a loader is a mark meaning "working", not a thing that fills the space it
+   is waiting on. If it ever reads as too faint the fix is the mark's own
+   opacity, NOT its size -- the moment size varies by region it has started
+   carrying information, and then it is a chart.
+
+   ***IT WAS TWO FOR A DAY AND THAT WAS THE WRONG CALL.*** Drift TL carried the
+   smaller waits on the theory that a travelling trail should mean "being
+   built" and a quiet pulse "being changed", and the distinction did not
+   survive contact with the product. Two consequences, both bad:
+
+   1 · IT WAS NOT LEGIBLE. Nobody reads two indicators as a vocabulary. They
+       read them as two things, and then as an inconsistency — the question a
+       second loader raises is "why is this one different", which is not a
+       question about the data.
+   2 · IT DRAGGED IN SCALING. The smaller loader was lost in a 986px card, so
+       the span started following the region, and then no two waits on the
+       screen were the same object. A loader is a fixed mark meaning "working";
+       the moment its size carries information, it is a chart.
+
+   So: one mark, one size, no variants, no region scaling. Whatever region is
+   waiting, that is what sits in it. **A second loader now needs the argument
+   the first one did not have to make.**
+
+   *Drift TL and the size-scaling are DELETED rather than left unused --
+   dmx-ripple-3 went with them and the file is back to three keyframes.
+   terrain-loading-lab.html keeps both loaders as the reference it is.*
+
+   ─── `.sweep` IS UNTOUCHED AND KEEPS ALL FOUR OF ITS SLOTS ───────────────
+   The send button, the build stage, the pending answer and the re-rank band
+   were each judged on their merits, and the answer was the same every time:
+   .sweep is 16x3 and those hosts are 32px, 18px, 22px and a text baseline.
+   Drift TL's own span is 20px, so it is larger than three of the four and
+   would stand taller than the fourth's line. These take only new ground.
+
+   ─── FOUR KEYFRAMES NOW, AND THAT IS WRITTEN DOWN ────────────────────────
+   design-language.md §6 prohibited a third without a written reason; the
+   reason is recorded there as of 2026-09-14 and it is the same one that
+   licensed sweep and sweepx: constant, indeterminate motion with no end state
+   to transition to. A loader that resolved would assert a duration.
+
+   ─── AND THEY DO NOT TAKE --cycle, WHICH IS A REAL COST ──────────────────
+   1111ms and 887ms, the timings of the library they were ported from. §6's
+   one-cycle rule is amended to permit exactly this — an indicator adopted
+   whole may keep its own cycle — and to say what it costs: a card can hold a
+   1.6s bar and an 887ms loader at once. If a surface ever reads as busy
+   rather than as working, this is the first thing to look at. ── */
+.dmx-root{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;
+  --dmx-cycle:1500ms;
+  --dmx-opacity-base:0.16;--dmx-opacity-mid:0.32;--dmx-opacity-peak:1}
+.dmx-root.dmx-matrix-3{--dmx-cycle:1500ms}
+.dmx-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  grid-template-rows:repeat(5,minmax(0,1fr))}
+.dmx-dot{border-radius:999px;display:block;background:currentColor;
+  opacity:calc(0.5 * (var(--dmx-opacity-base) + var(--dmx-opacity-mid)));
+  will-change:opacity}
+.dmx-path-3{
+  animation:dmx-ripple-3 calc(0.68 * var(--dmx-cycle) * var(--dmx-speed,1))
+            cubic-bezier(0.42,0,0.58,1) infinite;
+  animation-delay:calc(var(--dmx-path,0) * 0.19 * var(--dmx-cycle) * var(--dmx-speed,1))}
+@keyframes dmx-ripple-3{
+  0%,100%{opacity:var(--dmx-opacity-base)}
+  3%     {opacity:calc(0.62 * var(--dmx-opacity-mid) + 0.38 * var(--dmx-opacity-base))}
+  6%     {opacity:calc(0.35 * var(--dmx-opacity-peak) + 0.65 * var(--dmx-opacity-mid))}
+  10%    {opacity:var(--dmx-opacity-peak)}
+  14%    {opacity:calc(0.35 * var(--dmx-opacity-peak) + 0.65 * var(--dmx-opacity-mid))}
+  17%    {opacity:calc(0.62 * var(--dmx-opacity-mid) + 0.38 * var(--dmx-opacity-base))}
+  20%    {opacity:var(--dmx-opacity-base)}
+}
+
+/* THE WHOLE RIGHT PANE, WAITING. One region and one loader, for the one case
+   where nothing on screen belongs to the project being opened. It REPLACES the
+   grid rather than covering it: a scrim over ten stale cards would be showing
+   the previous project's numbers behind a veil, which is worse than showing
+   nothing, because it is showing something wrong. */
+.pane-wait{min-height:360px;display:grid;place-items:center}
+.pane-wait[hidden]{display:none}
+
+/* A WAITING REGION. min-height is set inline from the height the region had
+   before it emptied, so a card does not collapse to the loader's 20px and the
+   grid does not reflow twice per resolve -- the same reason .cmp-status
+   reserves 17px for a line it does not yet have. */
+.is-wait{display:grid;place-items:center}
+.is-wait>.dmx-root{grid-area:1/1}
+/* ***THESE THREE ARE NOT REDUNDANT AND THAT IS THE WHOLE NOTE.*** `.is-wait`
+   alone is (0,1,0), and so are `.card-body`, `.set-list` and `.rec-body` --
+   which are declared LATER in this sheet, so their `display:flex` won on
+   source order and the grid centring above never applied to them. The loader
+   then sat at the top of the region rather than in the middle of it, which
+   looks like a layout bug and was one.
+
+   Two-class selectors, not !important: the point is to beat a rule of equal
+   specificity declared further down, and that is exactly what one extra class
+   does. */
+.card-body.is-wait,.rec-body.is-wait{display:grid;place-items:center}
+/* .card-body is padded 0 top and 16 bottom, so centring inside the CONTENT
+   box put the loader 8px above the card's visual middle. Symmetric padding
+   for the length of the wait only -- the landed card keeps its own spacing,
+   which is set for a chart sitting under a heading rather than for a mark
+   floating in an empty box. */
+.card-body.is-wait{padding-block:var(--s-16)}
+/* the column is the one waiting region that can hold something ALREADY TRUE
+   while it waits — the filter chip, which states the cut the founder just
+   made. So it stacks rather than centring everything into one cell: chip at
+   the top where it always sits, loader centred in what is left. */
+.set-list.is-wait{grid-template-rows:auto 1fr;justify-items:center}
+.set-list.is-wait>.filter-chip{justify-self:stretch;width:auto}
+/* ROW 2 ALWAYS, chip or no chip. Left to flow the loader lands in row 1 --
+   the chip's row -- and sits hard against the top of the column when there is
+   no chip to displace it, which reads as a thing stuck under the toolbar
+   rather than as the column working. With no chip row 1 collapses to 0 and
+   the 1fr below it is the whole region. */
+.set-list.is-wait>.dmx-root{grid-row:2;align-self:center;justify-self:center}
+/* the foot's button, mid-request. Sized to the label it replaces so the bar
+   does not change width while it waits — the same reserve .cmp-status makes
+   for a line it does not have yet. */
+/* EVERYTHING the button holds goes, not just its label. Hiding the label
+   alone left the chevron floating beside the loader -- two marks where the
+   control is one thing doing one thing. */
+#setMore[data-waiting]>*:not(.set-more-wait){display:none}
+/* NO WIDTH OF ITS OWN. It had min-width:88px, reserving the label's width so
+   the bar would not resize -- but the button sits at the end of a flex row
+   after a spacer, so all that reserve did was centre the loader inside an
+   invisible 88px box and hold it ~34px off the right edge it belongs on.
+   Nothing else in the foot moves when it shrinks, because everything to its
+   left is pushed by the spacer rather than pulled by it. */
+.set-more-wait{display:inline-grid;place-items:center;height:20px}
+/* ***AND THE BUTTON STOPS LOOKING LIKE A BUTTON WHILE IT WORKS.*** The pill
+   behind the loader was .set-more-btn:hover -- --surface-sunken, painted
+   because the pointer is still over the control the founder just pressed. A
+   filled pill around an indicator reads as a button you could press again,
+   which is the one thing it is not for the length of the wait. The chrome
+   goes, the loader stays, and the hit target is unchanged underneath. */
+#setMore[data-waiting]{background:none;padding:0;margin-inline-end:0;cursor:default}
 
 /* ── the widget card ────────────────────────────────────────
    design-language.md §7: surface, radius 16, one hairline, no shadow. Depth
@@ -1157,13 +1334,16 @@ a{text-decoration:none;color:inherit}
                 visibility 0s linear var(--dur-2)}
 .rec-open .rec{transform:none;visibility:visible;
      transition:transform var(--dur-4) var(--ease-drawer),visibility 0s linear 0s}
-/* SWAPPED BEHIND A FADE when the founder picks a second patent without closing
-   the first. Same blur-and-opacity as .set-run-say and .rv, and for the same
-   reason: the two records are different lengths, so a bare swap reflows the
-   pane and reads as two documents trading places rather than one pane changing
-   what it holds. The container does not move — it is already where it belongs,
-   and sliding it again would be motion claiming something arrived. */
-.rec.is-swapping .rec-body{opacity:0;filter:blur(2px)}
+/* ~~SWAPPED BEHIND A FADE~~ — the fade is gone, 2026-09-14, and the rule with
+   it. `.rec.is-swapping .rec-body{opacity:0;filter:blur(2px)}` styled a 120ms
+   crossfade for the founder picking a second patent without closing the first.
+   That duration was right for text trading places and wrong for a record
+   arriving, so the body now waits on a loader instead (§6a.5) and NOTHING ADDS
+   THE CLASS ANY MORE.
+
+   Deleted rather than left, because a rule nothing can match is a rule the
+   next reader has to disprove. The reasoning it carried is not lost — the
+   container still does not move, and that rule is in §6 where it belongs. */
 .rec-head{display:flex;align-items:center;gap:var(--s-12);flex:0 0 auto;
           padding:var(--s-16) var(--s-20);border-bottom:1px solid var(--border)}
 .rec-head h2{flex:1;min-width:0;margin:0}
@@ -1495,6 +1675,18 @@ a{text-decoration:none;color:inherit}
 .mo-word{display:block;font-size:11px;color:var(--text-3);font-weight:500}
 .mo-axis{display:flex;justify-content:space-between;padding-inline-start:126px;
          padding-inline-end:58px;margin-top:var(--s-4)}
+/* ── the NAMED variant · one strip per technology column ─────────────────────
+   Rival momentum's rows are bars because holder names are bars by decision;
+   these rows are generated words and render as words, so the label column
+   carries text and needs the room. Two lines then it clips - a third would
+   push the 26px plot off the row's centre line. The axis foot takes the same
+   basis plus the same gap, and the two are written next to each other so they
+   cannot drift apart. */
+.mo-named .mo-lbl{flex-basis:164px}
+.mo-t{font-size:12px;line-height:1.25;color:var(--text-2);display:-webkit-box;
+      -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mo-row[data-tracked] .mo-t{color:var(--text-1);font-weight:600}
+.mo-axis-named{padding-inline-start:174px}
 
 /* ── who builds on whom · a DIRECTED N×N, reusing the map's density ramp ─────
    Same 1px-gap-over-border trick as .matrix, so the two grids on one page are
@@ -1540,50 +1732,75 @@ a{text-decoration:none;color:inherit}
 /* TEN CARDS IN ONE COLUMN, 35ms apart. Written out rather than looped, because
    the whole point is that the sequence is legible in the source.
 
-   THE STEP CAME DOWN FROM 60ms ON 2026-09-12, and it had to. The column was six
-   cards and is ten since the M-Map pass; at 60ms the last card would land at
-   540ms, which is past the point a stagger reads as one movement and into the
-   founder watching a queue. 35ms puts the tenth at 315ms — almost exactly where
-   the sixth used to land, so the ENTRANCE IS THE SAME LENGTH it always was and
-   only its density changed.
+   THE STEP IS DERIVED FROM THE CARD COUNT, NOT CHOSEN. The budget is a ~320ms
+   entrance: past that a stagger stops reading as one movement and becomes the
+   founder watching a queue. Six cards at 60ms was 300ms; ten at 35ms was 315ms;
+   TWELVE AT 29ms IS 319ms. The entrance has been the same length through three
+   card counts and only its density has changed — so when the next card arrives,
+   divide ~320 by the new last index rather than picking a number.
 
-   THE REAL BUG THIS FIXES IS NOT THE DURATION. The ladder stopped at
+   THE REAL BUG THIS GUARDS IS NOT THE DURATION. The ladder once stopped at
    nth-child(6). Four cards were added and every one of them fell through to a
    0ms delay, so they arrived FIRST — ahead of the three above them — and the
-   stagger read as a shuffle. A written-out ladder is legible, which is why it
+   stagger read as a shuffle.
+
+   AND nth-child COUNTS ACROSS BOTH PAGES, which is the part that catches
+   people: #grid holds every card of both the Market and the Technology view and
+   hides one set with [hidden], so a Technology card added after the map takes
+   rungs 2 and 3 and pushes every Market card down two. That is intended — DOM
+   order groups by page so the two Technology cards sit with the map in the
+   reading order — and it means Market now opens at 3 x the step rather than at
+   0ms. 87ms is imperceptible; splitting a page's cards across the grid to avoid
+   it would not be. A written-out ladder is legible, which is why it
    is written out; it is also silently wrong the moment someone adds a card and
    does not scroll down here. Adding a card means adding its line.
 
    §7's rule is unchanged: only a FRESH BUILD earns this. A re-count after a
    tick animates nothing, because a stagger says the data was recomputed. */
 .grid[data-stagger].is-in .card:nth-child(1){transition-delay:0ms}
-.grid[data-stagger].is-in .card:nth-child(2){transition-delay:35ms}
-.grid[data-stagger].is-in .card:nth-child(3){transition-delay:70ms}
-.grid[data-stagger].is-in .card:nth-child(4){transition-delay:105ms}
-.grid[data-stagger].is-in .card:nth-child(5){transition-delay:140ms}
-.grid[data-stagger].is-in .card:nth-child(6){transition-delay:175ms}
-.grid[data-stagger].is-in .card:nth-child(7){transition-delay:210ms}
-.grid[data-stagger].is-in .card:nth-child(8){transition-delay:245ms}
-.grid[data-stagger].is-in .card:nth-child(9){transition-delay:280ms}
-.grid[data-stagger].is-in .card:nth-child(10){transition-delay:315ms}
+.grid[data-stagger].is-in .card:nth-child(2){transition-delay:29ms}
+.grid[data-stagger].is-in .card:nth-child(3){transition-delay:58ms}
+.grid[data-stagger].is-in .card:nth-child(4){transition-delay:87ms}
+.grid[data-stagger].is-in .card:nth-child(5){transition-delay:116ms}
+.grid[data-stagger].is-in .card:nth-child(6){transition-delay:145ms}
+.grid[data-stagger].is-in .card:nth-child(7){transition-delay:174ms}
+.grid[data-stagger].is-in .card:nth-child(8){transition-delay:203ms}
+.grid[data-stagger].is-in .card:nth-child(9){transition-delay:232ms}
+.grid[data-stagger].is-in .card:nth-child(10){transition-delay:261ms}
+.grid[data-stagger].is-in .card:nth-child(11){transition-delay:290ms}
+.grid[data-stagger].is-in .card:nth-child(12){transition-delay:319ms}
 
 
 /* ── the inline resolve · platform.md §6a.5 ────────────────────────────
-   THE STAGE SCREEN IS GONE and this is what replaced it: the six views sit
-   at their skeleton state while the build runs, and each becomes itself as
-   its own data lands.
+   THE STAGE SCREEN IS GONE and this is what replaced it: each of the views
+   resolves in place, a loader in it until its own data lands.
 
-   IT CLAIMS ONLY COMPLETED WORK — §6's rule for a progress indication, and
-   a skeleton satisfies it more honestly than a bar did. A bar asserts a
-   fraction; a skeleton asserts nothing except that this thing is not here
-   yet, and a card that resolves is a card whose data actually arrived.
+   IT CLAIMS ONLY COMPLETED WORK — §6's rule for a progress indication. A bar
+   asserts a fraction nobody measured; a card that resolves is a card whose
+   data actually arrived.
 
-   The shimmer is `linear` and unbounded, because it is CONSTANT MOTION
-   rather than a transition to somewhere — the same reason .sk uses it. */
+   ***THE BLANKET DIM WENT ON 2026-09-14, AND WHY IT LASTED SO LONG IS THE
+   USEFUL PART.*** This rule used to read `.card-body, .caption {opacity:.45}`
+   over the whole grid — ONE state for TEN cards — and the comment above it
+   claimed each view "becomes itself as its own data lands". THE COMMENT WAS
+   DESCRIBING A LIFECYCLE THE CODE DID NOT HAVE: drawDash() filled every card
+   in a single call, so there was nothing per-card to express and a dim over
+   all ten was the only thing that could be written. The promise sat here,
+   accurate as a specification and false as a description, for four days.
+
+   *A spec and its implementation disagreeing is ordinary. A spec and the
+   COMMENT ON ITS OWN IMPLEMENTATION disagreeing is the thing to watch for:
+   nothing reads a comment, so nothing can contradict it.*
+
+   drawDash(name) and resolveDash() are the lifecycle. What survives here is
+   pointer-events, because a card that is still resolving must not be
+   clickable, and that was always the half of this rule doing real work. */
 .grid.is-building{pointer-events:none}
-.grid.is-building .card-body,.grid.is-building .caption{opacity:.45;
-     transition:opacity var(--dur-3) var(--ease)}
-.grid.is-building .card{transition:opacity var(--dur-3) var(--ease)}
+/* the caption holds its box and stops speaking. visibility rather than a
+   dim, because a caption at .45 is a caption being READ — it describes data
+   that is no longer on screen — and visibility also takes it out of the
+   accessibility tree, which opacity does not. */
+.card.is-resolving .caption{visibility:hidden}
 
 /* ── the cell filter · §6a.3 ───────────────────────────────────────────
    THE LIST DOES NOT SLIDE, and that is a decision rather than an omission.
@@ -2532,6 +2749,9 @@ a{text-decoration:none;color:inherit}
 @media (hover:hover){
   .set-more-btn:hover{background:var(--surface-sunken);color:var(--text-1)}
   .set-more-btn:hover svg{color:var(--text-2)}
+  /* the hover fill is what drew the pill round the loader, so it is refused
+     for the length of the wait rather than merely overridden elsewhere */
+  #setMore[data-waiting]:hover{background:none}
 }
 /* .set-foot is gone — 2026-09-10. Its note moved into the heading's popover
    and its button into .set-cta above the list; .set-cta went the same way on
@@ -3051,6 +3271,14 @@ a{text-decoration:none;color:inherit}
   *,*::before,*::after{transition-property:none!important;animation:none!important}
   .sk::after{display:none}                    /* shimmer goes flat, never off */
   .sweep::after{width:100%;opacity:.5}        /* so does the sweep */
+  /* AND SO DOES THE LOADER -- present, visible, motionless. --rest is set per
+     dot at build time from the library's own idle formula, so the grid holds
+     the positional ramp it would otherwise animate through rather than going
+     to one flat tone. §6's open item was CLOSED on this, 2026-09-14: the beat
+     still runs under reduced motion, because a wait the system is genuinely
+     having is information, and a founder who asked for less movement did not
+     ask to be told an engine call was instant. */
+  .dmx-dot{opacity:var(--rest)!important}
 
   .view.is-active{opacity:1;visibility:visible;transform:none}
 
@@ -3116,7 +3344,6 @@ a{text-decoration:none;color:inherit}
      swap class would blank the pane outright for DUR1 rather than fade it.
      The JS guards on REDUCED too; this is the declaration that makes the
      guard's absence survivable. */
-  .rec.is-swapping .rec-body{opacity:1;filter:none}
   .set-wrap.is-running .set-bar,.set-wrap.is-running .set-listcol{opacity:.45}
   .ghost.is-out,.ghost.is-in{opacity:1;transform:none}
   /* §6: prefers-reduced-motion DECLARES END STATES rather than collapsing
@@ -3326,7 +3553,7 @@ a{text-decoration:none;color:inherit}
           <span class="cmp-hint"></span>
           <button class="cmp-send" type="button" disabled aria-label="Send">
             <span class="cmp-send-glyph"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></span>
-            <span class="cmp-send-load"><span class="sweep"></span></span>
+            <span class="cmp-send-load"></span>
           </button>
         </div>
       </div>
@@ -3428,10 +3655,16 @@ a{text-decoration:none;color:inherit}
                fresh build earns the stagger.
 
                THE SPLIT IS IPTECH'S OWN, and it is lopsided because theirs
-               is: `Tech-Effx › Company` is the only destination reachable
-               under `T-Map` and not under `M-Map`, and it is the map. Every
-               other view is sourced from a group under both, so all five sit
-               on `Market`, and `Market` lands. -->
+               is: `Tech-Effx` is the one group reachable under `T-Map` and
+               not under `M-Map`, and the cut of it we take is the map. Every
+               other view is sourced from a group under both, so all nine sit
+               on `Market`, and `Market` lands.
+
+               THE T-MAP WALK CONFIRMED THERE IS NOTHING ELSE TO PUT HERE.
+               Eight `Tech-Effx` entries, seven of them this same object with
+               an axis swapped or collapsed; `1D Matrix` is the column totals
+               the header already prints. The page is one view because the
+               source has one view. -->
           <div class="seg seg-page" role="tablist" aria-label="Which views to show">
             <button class="seg-btn" type="button" role="tab" data-page="market"
                     aria-selected="true">Market</button>
@@ -3637,7 +3870,7 @@ a{text-decoration:none;color:inherit}
 
       </div>
 
-      <!-- ── the right pane · §6's six views, map first ───────────────── -->
+      <!-- ── the right pane · §6's twelve views, map first ───────────────── -->
       <div class="panecol" id="panecol">
         <div class="panescroll" id="paneScroll">
 
@@ -3672,6 +3905,68 @@ a{text-decoration:none;color:inherit}
                 <span class="sk sk-h-body" style="width:78%;margin-bottom:5px"></span>
                 <span class="sk sk-h-body" style="width:41%"></span>
               </p>
+            </section>
+
+            <!-- ── §6.12 · what this space is made of ──────────────────────
+                 T-Map > Tech-Effx > 1D Matrix. The map is read ACROSS - who
+                 holds what - and this is read DOWN. tmap-audit.md rated 1D
+                 Matrix "merged into the map's column totals, not a second
+                 widget"; that is reversed here and the reversal is argued in
+                 platform.md 8.1 rather than applied quietly.
+
+                 THE DENOMINATORS DIFFER ON PURPOSE AND THE CARD SAYS SO. This
+                 card is the corpus, 124. The map's column headers are the eight
+                 largest holders, 51. Neither is wrong and they are not the same
+                 question, which is exactly why a reader meeting 32 here and 14
+                 there needs telling. -->
+            <section class="card" data-page="technology" hidden>
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 16h8"/><path d="M7 11h12"/><path d="M7 6h3"/></svg>
+                </span>
+                <h2 class="t-title">What this space is made of</h2>
+                <span class="info">
+                  <button class="info-btn" type="button" aria-expanded="false"
+                          aria-controls="info-mix" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                  <span class="info-pop" id="info-mix" role="note"><b>Every patent your search returned, grouped by the approach it takes.</b> The map above lays out only the eight largest holders, so the figures in its column headings are smaller than these &mdash; that is two different questions, not a disagreement. <b>How big is this part of the space</b> is this card; <b>how much of it those eight hold</b> is the map.</span>
+                </span>
+              </div>
+              <div class="card-body">
+                <div id="techMix"></div>
+              </div>
+              <p class="caption" id="techMixCaption"></p>
+            </section>
+
+            <!-- ── §6.13 · which part is moving ────────────────────────────
+                 T-Map > Tech-Effx > Company Trend, which tmap-audit.md rated
+                 Ask because it ships as a 1x1 collapsed cell. The objection was
+                 to the RENDERING, not to the question - the same shape as
+                 mmap-audit.md's Life Cycle reversal - so it is built and the
+                 promotion is argued in platform.md 8.1.
+
+                 REUSES momentum() with labels. Rival momentum is the same
+                 component over holders, and the two sitting on different pages
+                 is deliberate: one says WHO is still moving, this says WHAT is.
+                 The data is illustrative and the engine may not expose a series
+                 per column at all - platform.md 10.57 to 10.59, and the card
+                 does not pretend otherwise. -->
+            <section class="card" data-page="technology" hidden>
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </span>
+                <h2 class="t-title">Which part is moving</h2>
+                <span class="info">
+                  <button class="info-btn" type="button" aria-expanded="false"
+                          aria-controls="info-tmom" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                  <span class="info-pop" id="info-tmom" role="note">One strip per approach, twelve years, <b>all on the same scale</b> so the rows are comparable to each other rather than each to itself. <b>The biggest part of a space and the fastest-moving part are rarely the same one</b> &mdash; a crowded approach that stopped growing and a small one still climbing are different bets, and the size ranking above cannot tell them apart.</span>
+                </span>
+              </div>
+              <div class="card-body">
+                <div id="techMom"></div>
+                <div class="mo-axis mo-axis-named"><span class="t-micro">12 years ago</span><span class="t-micro">now</span></div>
+              </div>
+              <p class="caption" id="techMomCaption"></p>
             </section>
 
             <section class="card" data-page="market">
@@ -4675,6 +4970,132 @@ function esc(t){
 var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 var DUR1 = 120, DUR2 = 200, DUR3 = 320;
 
+/* ═══ THE LOADERS · platform.md §6a.5 ═════════════════════════════════════
+   Two dot grids, ported from zzzzshawn/matrix at that library's own props and
+   timings. Prism Sweep is dotm-square-5, Drift TL is dotm-3x3-3. The licence
+   is a Custom Proprietary License which permits use in a product and forbids
+   republishing either as a standalone reusable component -- so they may live
+   here and may not be lifted into a component library of ours.
+
+   WHAT A WAIT LOOKS LIKE IS NOW A LOADER, NOT A SKELETON. §6a.5, amended
+   2026-09-14. A bar is §8's refusal to invent a value and is permanent; a
+   loader is work in flight and goes when the work does.
+
+   THE ORDER IS THE WHOLE LOADER and it is ported as the loop rather than as
+   the table it produces, so it stays checkable against its source. Prism
+   Sweep walks the anti-diagonals boustrophedon-wise -- even diagonals rows
+   descending, odd ascending -- and the alternation is what makes it read as
+   one continuous trail rather than a wavefront that jumps back each time.  ═══ */
+/* ═══ DRIFT TL · dotm-3x3-3 — THE CONTROL LOADER ═════════════════════════
+   The second loader is back, 2026-09-14, with ONE job and a rule that is
+   about fit rather than meaning:
+
+     A REGION gets Prism Sweep at 36px.  A CONTROL gets Drift TL at 20px.
+
+   That is a better rule than the one it replaces. The first attempt split
+   them on meaning — a trail for "being built", a pulse for "being changed" —
+   and nobody reads two indicators as a vocabulary; they read them as an
+   inconsistency. **Fit is not a claim about the data**, so it raises no such
+   question: a 36px grid does not go inside a 20px-tall button, and forcing it
+   made the list's foot grow by 16px every time somebody asked for one more
+   page.
+
+   ONE CONTROL USES IT and the rule is not an invitation. If a third loader is
+   ever proposed, the test is the one in design-language.md §6: could a
+   transition have done this?
+
+   The five band values are precomputed: the library reaches them through
+   wave3PathOpacityFromNorm then remapOpacityToTriplet, and porting both to
+   recover five constants would be carrying its generality to produce a fixed
+   answer. Band 4 checks by hand: raw 0.88, between SOURCE_MID .34 and
+   SOURCE_PEAK .94, so .38 + .56 * ((.88-.34)/.60) = 0.884. */
+var DMX_REST3 = [0.045, 0.2323, 0.4173, 0.6507, 0.884];
+
+function dmxDrift(){
+  var N = 3, DOT = 6, PAD = 1, SPEED = 1.15;
+  var span = DOT * N + PAD * (N - 1);                              /* 20 */
+  var root = document.createElement('div');
+  root.className = 'dmx-root dmx-matrix-3';
+  root.setAttribute('aria-hidden', 'true');
+  root.style.width = span + 'px'; root.style.height = span + 'px';
+  root.style.setProperty('--dmx-speed', String(1 / SPEED));
+  root.style.setProperty('--dmx-opacity-base', '0.06');
+  root.style.setProperty('--dmx-opacity-mid', '0.38');
+  var grid = document.createElement('div');
+  grid.className = 'dmx-grid'; grid.style.gap = PAD + 'px';
+  grid.style.gridTemplateColumns = 'repeat(3,minmax(0,1fr))';
+  grid.style.gridTemplateRows = 'repeat(3,minmax(0,1fr))';
+  for (var i = 0; i < N * N; i++){
+    var band = Math.floor(i / N) + (i % N);
+    var dot = document.createElement('span');
+    dot.className = 'dmx-dot dmx-path-3';
+    dot.style.width = DOT + 'px'; dot.style.height = DOT + 'px';
+    dot.style.setProperty('--dmx-path', String(band / 4));
+    dot.style.setProperty('--rest', String(DMX_REST3[band]));
+    grid.appendChild(dot);
+  }
+  root.appendChild(grid); return root;
+}
+
+/* ═══ waitOn / landIn — the one pair that starts and ends every new wait ═══
+   THE HEIGHT IS CAPTURED BEFORE THE REGION EMPTIES. Without it a card body
+   collapses to the loader's 20px, the grid reflows, and it reflows again when
+   the data lands -- two layout jumps to say one thing arrived. Reserving what
+   was there means the only thing that changes is what is inside it.
+
+   On first paint there is no previous height to capture, so `min` is the
+   floor: a region that has never been filled still has to be tall enough to
+   hold a loader without clipping it. */
+function waitOn(el, min){
+  if (!el) return;
+  var h = Math.max(el.offsetHeight || 0, min || 0);
+  if (h) el.style.minHeight = h + 'px';
+  el.classList.add('is-wait');
+  el.innerHTML = '';
+  el.appendChild(dmxDrift());
+}
+function landIn(el, html){
+  if (!el) return;
+  el.classList.remove('is-wait');
+  el.style.minHeight = '';
+  if (html != null) el.innerHTML = html;
+}
+/* A BEAT THE SYSTEM IS ACTUALLY HAVING. The prototype's own convention for a
+   round trip is 700-1000ms (askMain 900, gateApply 700, approveConfirm 1000)
+   and these sit inside it. REDUCED does NOT shorten or skip it -- §6's open
+   item was closed on exactly that point, 2026-09-14 -- it only stills the
+   indicator, which the media query above does on its own. The screenshot path
+   is a separate flag and is the one that may resolve instantly. */
+var BEAT = { page: 2340, card: 1610, row: 1350, rec: 1460 };
+/* ***ROUGHLY DOUBLED · 2026-09-14, and the reason is not that the old numbers
+   were wrong but that they were the wrong KIND of number.*** They came from
+   the prototype's existing convention for a simulated round trip -- 700-1000ms,
+   which askMain and gateApply use -- and that convention was set for a model
+   call on one sentence. A SEARCH ACROSS 180M RECORDS PLUS CLASSIFICATION IS
+   NOT THAT, and at 900ms the results arrived fast enough to read as a lookup
+   into something already held rather than as a search that went somewhere.
+
+   §10.8 still lists real latency as an open question, so none of this is a
+   measurement and none of it is a claim: the elapsed counter remains the only
+   honest duration on any surface. What these numbers buy is that the WAIT IS
+   LEGIBLE AS A WAIT, which is the thing the founder is actually judging when
+   they decide whether the answer was worth asking for.
+
+   If the engine turns out to be fast, these come DOWN rather than the
+   indicators coming out -- a fast search is a feature and pretending to be
+   slow would be the same error as pretending to be fast.
+
+   ***+30% again on 2026-09-14, judged on screen rather than calculated.***
+   The doubling above put Approve-to-settled at 5.5s and it still read as
+   quick for what it claims to be doing. These are the same numbers times 1.3,
+   and the search beat with them: 2600ms before the view swaps, then nine
+   views over ~4.5s. **Total is now about 7 seconds.**
+
+   *Note what the arithmetic does here, because it caught me out once: the
+   column's wait and the views' resolve RUN CONCURRENTLY, so the total is
+   2600 + max(BEAT.page, 9 x DASH_STEP), not the sum of all three. Adding them
+   up predicts 9.5s and the screen shows 7.1s.* */
+
 var stage  = $('#stage');
 var app    = $('#app');
 var parked = $('#parked');
@@ -5381,6 +5802,39 @@ SETS.illustrative = {
   mxCols: ['Moulded composite shell','Tubular space frame','Foam-core sandwich panel',
            'Snap-fit tool-free housing','Folding arm and hinge','Integrated motor mount',
            'Sealed electronics bay','Twin-layer impact skin'],
+  /* CORPUS-LEVEL patents per technology column, and it is DELIBERATELY NOT what
+     the map's own column headers print. colTotal() sums holderRows and comes to
+     51 - the eight largest holders - while these sum to DATA.total, 124. BOTH
+     ARE TRUE AND THEY ANSWER DIFFERENT QUESTIONS: the header says what the
+     holders on the map hold here, this says how big this part of the space is.
+     The two cards below carry a scope line saying so, because two figures for
+     one column with no explanation is the "two totals for one corpus" fault
+     this file keeps catching.
+
+     The figures are outcomeRows' column sums, which is where DATA.finding's
+     "32 of the 124" already comes from - so the composition card and the map's
+     own sentence quote the same number. */
+  colPatents: [32, 17, 17, 20, 9, 12, 13, 4],
+  /* TWELVE YEARS PER TECHNOLOGY COLUMN, the same window as PG_FILINGS and
+     lifecycle. EVERY ROW SUMS TO ITS colPatents ENTRY and the grand total is
+     DATA.total - so the strip, the composition list and the map's finding
+     cannot disagree.
+
+     The words the strips derive come out 4 rising, 3 slowing, 1 steady, which
+     is the point of the widget rather than a coincidence of the numbers: the
+     largest part of this space is the one that stopped growing, and the two
+     smallest are the two still moving. A set that read the same way in every
+     row would demonstrate nothing. */
+  colYears: [
+    [4,5,4,4,3,3,2,2,2,1,1,1],
+    [3,2,2,2,1,1,2,1,1,1,1,0],
+    [0,1,1,1,1,1,2,2,2,2,2,2],
+    [0,0,1,1,1,2,2,3,3,3,2,2],
+    [2,2,1,1,1,1,1,0,0,0,0,0],
+    [1,1,1,1,1,1,1,1,1,1,1,1],
+    [0,0,0,1,1,1,1,2,2,2,2,1],
+    [0,0,0,0,0,0,0,1,1,1,1,0]
+  ],
   outcomeRows: [
     { t:'Lighter',            n:[6,4,5,1,2,3,1,0], rise:[]  },
     { t:'More rigid',         n:[14,3,2,0,1,1,0,0], rise:[] },
@@ -6378,6 +6832,11 @@ function drillRowHTML(rec, i){
    list follows the map, the map does not follow the list. Filtering changes
    nothing about what the views count. The ticks are what do that.        */
 var FILTER = null;                       /* { kind, label, rowBar, col, n, seed } */
+/* THE COLUMN IS WAITING ON ROWS. A flag rather than a class, because the one
+   renderer replaces #setList wholesale — a class set on the list would be
+   written over by the next renderSet() and the state would vanish silently.
+   Whatever is true here is what the next render draws. */
+var SET_WAIT = false, SET_WAIT_T = 0;
 
 function cellFilter(kind, meta){
   meta = meta || {};
@@ -6395,7 +6854,26 @@ function cellFilter(kind, meta){
     n:    meta.n != null ? meta.n : 0,
     seed: meta.seed != null ? meta.seed : 1
   };
+  /* ═══ A CELL IS A QUERY · §6a.5, 2026-09-14 ═════════════════════════════
+     components.md is explicit that filtering to a cell "sends nothing" —— the
+     client already holds every patent's cell — and that is true of the CUT.
+     It is not true of the rows: these are different patents with a different
+     count, and the 120ms opacity settle this used to get is the duration of a
+     hover, not of a fetch.
+
+     THE CHIP IS WRITTEN FIRST AND THE ROWS WAIT. The chip states the cut the
+     founder just made, which is the half that is genuinely already known, and
+     §6.1 governs every word of it: it may say what was filtered and may never
+     say why anything is or is not in the result.
+
+     SIXTY-FOUR TARGETS, so the beat is the short one. The whole design of the
+     map is that trying another cell stays cheap; a page-length wait here
+     would make the map something you commit to rather than something you
+     poke at. */
+  SET_WAIT = true;
   renderSet();
+  clearTimeout(SET_WAIT_T);
+  SET_WAIT_T = setTimeout(function(){ SET_WAIT = false; renderSet(); }, BEAT.row);
   var chip = $('#setFilterChip');
   if (chip){
     var clr = $('.filter-x', chip);
@@ -6492,27 +6970,72 @@ function openRecordOverlay(rec, trigger){
        The heading is #recTitle and does not change, so it is stable to land on
        while the body behind it is still fading. */
     recFocusHead(pane);
-    if (REDUCED){ body.innerHTML = patentPaneHTML(rec, { close:false, heading:false }); return; }
-    pane.classList.add('is-swapping');
+    /* ***THE CROSSFADE WAS NOT A WAIT, AND THAT IS WHAT CHANGED · 2026-09-14.***
+       DUR1 is 120ms, which is the right duration for text trading places and
+       the wrong one for a record arriving: eleven identifiers, an abstract and
+       up to fifteen claims that this row does not hold. At any real latency the
+       blur finished and left an empty pane with nothing in it saying why.
+
+       So the body waits. The container still does not move — §6's rule that a
+       container already in place does not move to say its contents changed is
+       untouched, and the title bar holds throughout — but what fills the body
+       for the length of the fetch is a loader rather than a fade.
+
+       The beat runs under reduced motion; only the indicator stills. */
+    waitOn(body, 160);
     REC_SWAP = setTimeout(function(){
       REC_SWAP = 0;
-      body.innerHTML = patentPaneHTML(rec, { close:false, heading:false });
-      /* tagged so the groups carry the same classes either way, but the card
-         is already open so they are already revealed: a swap is a content
-         change, not an arrival, and re-running the assembly here would be
-         motion claiming something arrived when nothing did. */
+      landIn(body, patentPaneHTML(rec, { close:false, heading:false }));
       /* the groups are tagged so both paths carry the same classes, and they
          are released on the frame they are made because .rec-open is already
          on: a swap is a content change, not an arrival, and re-running the
          assembly would be motion claiming something arrived when nothing did. */
       stageRecord(body);
-      pane.classList.remove('is-swapping');
-    }, DUR1);
+    }, BEAT.rec);
     return;
   }
 
-  body.innerHTML = patentPaneHTML(rec, { close:false, heading:false });
-  stageRecord(body);
+  /* ═══ THE RECORD IS FETCHED, SO THE BODY WAITS · §6a.5, 2026-09-14 ═══════
+     Eleven identifiers, an abstract and up to fifteen claims — components.md
+     calls this "the single largest ask in this file" and none of it is in the
+     row that was clicked. The pane used to render it synchronously from a
+     seed, so the only thing that said anything had happened was the slide.
+
+     THE HEAD IS PRESENT THROUGHOUT AND THAT IS A RULE, not a convenience:
+     §6 is explicit that a heading held at opacity 0 is the visibility:hidden
+     failure wearing a different property — announced and invisible. #recTitle
+     is real English, it is there for the length of the container, and it says
+     nothing about the patent because the patent has not arrived.
+
+     THE LOADER IS MOUNTED BEFORE THE SLIDE, which is allowed and worth saying
+     why: §6 forbids CONTENTS MOVING while their container moves, meaning
+     contents arriving or transitioning mid-travel. A loader is constant
+     motion with no arrival — the same category as the shimmer that already
+     runs on the record's bars while it slides, which §6 describes without
+     objecting to.
+
+     A REOPEN INSIDE 400ms STILL SKIPS ALL OF IT. The record is the one that
+     was just there, so there is nothing to fetch and nothing to wait for —
+     §6's "a wait the system is not actually having" applies exactly. */
+  /* ***AND THIS TEST IS NOT `REDUCED`, WHICH IS THE WHOLE POINT OF §6's CLOSED
+     ITEM.*** The line below still sends REDUCED to `rec-instant`, because that
+     class skips the ASSEMBLY — a motion, and reduced motion may skip motion.
+     The FETCH is not a motion. A founder who asked for less movement did not
+     ask to be told the record was already on the client. Two different
+     questions, and they had one answer until 2026-09-14. */
+  var instant = (Date.now() - recClosedAt) < REC_INSTANT_MS;
+  if (instant){
+    body.innerHTML = patentPaneHTML(rec, { close:false, heading:false });
+    stageRecord(body);
+  } else {
+    waitOn(body, 180);
+    if (REC_SWAP) clearTimeout(REC_SWAP);
+    REC_SWAP = setTimeout(function(){
+      REC_SWAP = 0;
+      landIn(body, patentPaneHTML(rec, { close:false, heading:false }));
+      stageRecord(body);
+    }, BEAT.rec);
+  }
   /* A REOPEN INSIDE THE WINDOW SKIPS THE ASSEMBLY, and the card still slides.
      Only the staging is charged once: the surface arriving is what tells the
      founder something happened, and the composition is what costs a second.
@@ -6565,10 +7088,9 @@ function closeRecord(){
   if (!app.classList.contains('rec-open')) return;
   app.classList.remove('rec-open');
   recClosedAt = Date.now();
-  /* a swap in flight would otherwise write into a pane on its way out and
-     leave is-swapping set on it, so the next open would fade up from blank */
-  if (REC_SWAP){ clearTimeout(REC_SWAP); REC_SWAP = 0; }
-  $('#recPane').classList.remove('is-swapping');
+  /* a swap in flight would otherwise write into a pane on its way out, and
+     now also leave a loader mounted in a body nobody is looking at */
+  if (REC_SWAP){ clearTimeout(REC_SWAP); REC_SWAP = 0; landIn($('#recBody'), null); }
   $('#paneScroll').removeAttribute('inert');
   escDrop('rec');
   var pane = $('#recPane');
@@ -6753,7 +7275,30 @@ function applyScopeChange(){
     mxRows = mxRows.slice(1);
     renderMatrix();
     if (last && last.parentNode) last.remove();
-    restagger();
+    /* ═══ THE VIEWS ARE RE-RUN, AND UNTIL 2026-09-14 THEY WERE NOT ══════════
+       ***THIS WAS A BUG AND IT IS WORTH NAMING AS ONE.*** A scope change
+       narrowed the map and dropped a rival row, then called restagger() — and
+       the other nine views FADED IN CARRYING THE NUMBERS FROM THE PREVIOUS
+       SCOPE. drawDash() ran exactly once, at module init, and nothing ever
+       called it again. So the entrance animation said ten things had been
+       rebuilt while nine of them had not been touched.
+
+       *It was invisible for the reason these always are: the widgets are
+       skeleton-backed, the figures are illustrative, and a stale illustrative
+       figure looks exactly like a fresh one. On real data it would have been
+       a founder reading last scope's rival counts under this scope's map.*
+
+       A REBUILD IS VISIBLY SHORTER THAN A BUILD — §6a.5, and this is where
+       that gets to be true rather than asserted. Only what changed is re-run,
+       so the views resolve one at a time exactly as they do on a first build
+       and there are simply fewer of them in flight at once.
+
+       resolveDash() REPLACES the restagger() that stood here: §6 forbids two
+       motions on one object, and a card that fades in and then resolves is
+       exactly that. No flag is set — this path reaches restagger directly
+       rather than through setDash, so there is nothing to suppress and a flag
+       left standing here would eat the NEXT build's entrance instead. */
+    resolveDash();
   }
   if (REDUCED) land(); else setTimeout(land, DUR2 + 20);
 }
@@ -6983,7 +7528,15 @@ function sharePie(rows, total, r){
 /* `head` added 2026-09-12 — Country > Distribution reuses this table for where
    a HOLDER is based, and the column header is the only thing that differs. It
    defaults to the old literal, so the jurisdiction call site did not move. */
-function shareBars(rows, total, head){
+/* `flat` suppresses the per-row mark, and it is a FIX rather than an option.
+   barStyle() holds three marks and repeats --mark-2 past index 2, so a list of
+   eight categories draws six identical swatches and the key becomes a lie. In a
+   list ordered by size the LABEL carries identity and the BAR LENGTH carries
+   magnitude, so a per-row hue is carrying nothing - CLAUDE.md: colour carries
+   information, or it is not there. What survives is the one distinction worth
+   drawing, the largest row against the rest, which is MARK's own "a tracked
+   entity" pattern and is named in the caption rather than left to the eye. */
+function shareBars(rows, total, head, flat){
   return '<table class="tbl tbl-share">'
        + '<colgroup><col style="width:38%"><col style="width:88px"><col></colgroup>'
        + '<thead><tr><th class="t-micro">' + (head || 'Jurisdiction') + '</th>'
@@ -6991,12 +7544,14 @@ function shareBars(rows, total, head){
        + '<th class="t-micro">Share of scope</th></tr></thead><tbody>'
        + rows.map(function(row, i){
            var pct = (row[1] / total * 100);
-           return '<tr><td><span class="cellpair"><span class="dot" style="'
-                + barStyle(i) + '"></span>'
+           var fill = flat ? 'background:var(--mark-' + (i === 0 ? '1' : '2') + ')'
+                           : barStyle(i);
+           return '<tr><td><span class="cellpair">'
+                + (flat ? '' : '<span class="dot" style="' + barStyle(i) + '"></span>')
                 + row[0] + '</span></td>'
                 + '<td class="num"><span class="fig-m">' + row[1] + '</span></td>'
                 + '<td class="share-cell"><span class="bar-t"><span class="bar-f" style="width:'
-                + pct.toFixed(1) + '%;' + barStyle(i) + '"></span></span>'
+                + pct.toFixed(1) + '%;' + fill + '"></span></span>'
                 + '<span class="bar-n">' + pct.toFixed(1) + '%</span></td></tr>';
          }).join('')
        + '</tbody></table>';
@@ -7148,13 +7703,23 @@ function lifeCycle(holders, patents){
    ceiling answer the actual question — which of these is still filing — at a
    glance, and small multiples is what dataviz prescribes past ~4 converging
    series anyway. */
-function momentum(rows, sel){
+/* `labels` is optional and the default is unchanged: holder rows are skeleton
+   bars BY DECISION, so the no-labels path is the one Rival momentum uses. The
+   technology columns ARE named - they are generated words, not holder names -
+   so this takes them rather than growing a second function.
+
+   Same precedent as shareBars() gaining `head` on 2026-09-12, and the same
+   reason. Note W below is five wide: without labels a sixth row would read
+   W[5] === undefined and render a bar with no width class, which the sk()
+   comment warns renders 0px tall and reads as a missing value. Passing labels
+   removes that path rather than papering over it. */
+function momentum(rows, sel, labels){
   var max = rows.reduce(function(m, r){
     return Math.max(m, Math.max.apply(null, r));
   }, 0) || 1;
   var W = ['w-md', 'w-lg', 'w-sm', 'w-xs', 'w-md'];
 
-  return '<div class="mo">' + rows.map(function(r, i){
+  return '<div class="mo' + (labels ? ' mo-named' : '') + '">' + rows.map(function(r, i){
     var tot = r.reduce(function(a, b){ return a + b; }, 0);
     var half = r.length >> 1;
     var early = r.slice(0, half).reduce(function(a, b){ return a + b; }, 0);
@@ -7177,7 +7742,10 @@ function momentum(rows, sel){
            + '" style="height:' + h + 'px"></span>';
     }).join('');
     return '<div class="mo-row"' + (i === sel ? ' data-tracked' : '') + '>'
-      + '<span class="mo-lbl"><span class="sk sk-h-label ' + W[i] + '"></span></span>'
+      + '<span class="mo-lbl">'
+      + (labels ? '<span class="mo-t">' + esc(labels[i]) + '</span>'
+                : '<span class="sk sk-h-label ' + W[i] + '"></span>')
+      + '</span>'
       + '<span class="mo-plot">' + cols + '</span>'
       + '<span class="mo-n">' + tot + '<span class="mo-word">' + word + '</span></span>'
       + '</div>';
@@ -8148,6 +8716,26 @@ syncHelpTopic();
    "Tell me what's off…" threw away five answers and asked them all again — the
    one affordance the two-turn gate exists to make usable did the most
    destructive thing on the surface. */
+/* ═══ THE SEND BUTTON'S WAIT · design-language.md §7, amended 2026-09-14 ═══
+   Approving the gate starts the heaviest wait in the product, and it was the
+   last one still marked by a different device from every other wait on the
+   founder's path -- a 16x3 travelling bar where the list, the views, the
+   record and the pagination control all show the dot loader.
+
+   THE CROSSFADE IS UNTOUCHED. §7's mechanism is two absolutely-positioned
+   spans in one 32px box trading places under filter:blur(2px), and that is
+   still exactly what happens; only what fades IN has changed. 20px in a 32px
+   button leaves 6px each side, which is the same inset the glyph it replaces
+   sits at.
+
+   Built here rather than written into the markup because it is nine elements
+   with per-dot custom properties, and a loader that lives in the HTML is one
+   nobody can change in one place. */
+(function(){
+  var slot = $('.cmp-send-load', $('#cmpMain'));
+  if (slot) slot.appendChild(dmxDrift());
+})();
+
 var cmpMain = initComposer($('#cmpMain'), { onSubmit: function(t){
   if (gateIsLive()) gateRefine(t); else askMain(t);
 } });
@@ -8648,13 +9236,38 @@ function approveConfirm(mode, now){
        time on screen. The composer carries it, the way it carries every other
        wait in the product — you never navigate to a loader (design-language
        §7). No second progress block: the build has the only one. */
-    if (now || REDUCED){ go('work','new'); buildFromSet(false); return; }
+    /* ***`now` STAYS, `REDUCED` GOES — 2026-09-14.*** This read
+       `if (now || REDUCED)`, and those two are the pair design-language.md §6
+       kept an open item about for five days: ONE BRANCH SERVING TWO REQUESTS.
+       `now` is the hash router landing on a built state for a screenshot and
+       genuinely wants no beat. `prefers-reduced-motion` is a founder asking
+       for less MOVEMENT, and answering it by claiming a search across 180M
+       records was instant is not less movement — it is a false account of
+       what happened.
+
+       The item is closed in §6 on exactly this: the beat runs, and the media
+       query stills every indicator inside it. */
+    if (now){ go('work','new'); buildFromSet(false); return; }
     cmpMain.work(true);
     cmpMain.say('Searching the patent database');
+    /* THE LIST STARTS WAITING HERE, BEFORE THE VIEW SWAP, and the ordering is
+       the whole point. The work view is still off screen, so nobody sees this
+       happen — and when it arrives a second later the column is already in its
+       waiting state rather than briefly showing a hundred ranked patents that
+       this search has not returned yet. Set it after the swap and there is one
+       frame of the previous result, which is the frame that says the search
+       was theatre. */
+    /* SET_WAIT, not waitOn(). waitOn reserves the height the region had, which
+       is what stops a card body collapsing round a 20px loader -- and on a
+       scrolling list of twenty rows that height is 2167px, so it reserved the
+       lot and centred the loader 1383px down, well below the fold. The column
+       has its own wait branch in renderSet() for exactly this reason: one
+       renderer, one place that decides what a waiting list looks like. */
+    SET_WAIT = true; renderSet();
     setTimeout(function(){
       go('work','new');
       buildFromSet(true);
-    }, 1000);
+    }, 2600);   /* the search itself — scaled with BEAT, see the note there */
     return;
   }
 
@@ -8701,9 +9314,22 @@ function escDrop(k){ escOrder = escOrder.filter(function(x){ return x !== k; });
    of aria-pressed buttons when each is independently on or off.          */
 
 /* ═══ the Market hero and its two new widgets ═════════════════════════════ */
-function drawDash(){
+/* ONE STEP PER CARD · platform.md §6a.5, 2026-09-14.
+   drawDash() with no argument is exactly what it always was: fill everything,
+   synchronously, which is what a first paint and a return visit want. Passing
+   a name fills ONLY that card, which is what gives §6a.5 the per-view
+   lifecycle it has specified since it was written and never had -- the reason
+   the pane could only ever dim as one block.
+
+   The guard is added to each block's OWN condition rather than by cutting the
+   function into nine, because every block's derivation is the caption's only
+   source and moving one away from the chart it describes is how the two drift
+   apart. `want` is the whole mechanism. */
+function drawDash(only){
+  function want(n){ return !only || only === n; }
+
   var host = $('#dashChart');
-  if (host) host.innerHTML = filingsChart(12) + axisRow(12);
+  if (want('filings') && host) host.innerHTML = filingsChart(12) + axisRow(12);
 
   if (!DATA.populated) return;
 
@@ -8724,21 +9350,21 @@ function drawDash(){
   var ratio = tail / head;
   var word = ratio > 1.6 ? 'growing' : ratio < 0.7 ? 'slowing' : 'flat';
   var dc = $('#dashCaption');
-  if (dc) dc.innerHTML = '<b>This space is ' + word + '.</b> Filings have gone from about '
+  if (want('filings') && dc) dc.innerHTML = '<b>This space is ' + word + '.</b> Filings have gone from about '
         + Math.round(head / 5) * 5 + ' a year to about ' + Math.round(tail / 5) * 5
         + '. The shaded window is the most recent ~18 months, which is excluded because '
         + 'patents publish about 18 months after filing &mdash; it is not a decline.';
 
   var pie = $('#jurPie'), jb = $('#jurBars'), jc = $('#jurCaption');
-  if (pie) pie.innerHTML = sharePie(JUR, JUR_TOTAL, 62);
-  if (jb)  jb.innerHTML  = shareBars(JUR, JUR_TOTAL);
-  if (jc)  jc.innerHTML  = '<b>' + JUR[0][1] + ' of the ' + JUR_TOTAL + ' filings here are in the '
+  if (want('jur') && pie) pie.innerHTML = sharePie(JUR, JUR_TOTAL, 62);
+  if (want('jur') && jb)  jb.innerHTML  = shareBars(JUR, JUR_TOTAL);
+  if (want('jur') && jc)  jc.innerHTML  = '<b>' + JUR[0][1] + ' of the ' + JUR_TOTAL + ' filings here are in the '
                          + 'United States.</b> A patent only protects the country it is granted in.';
 
   var lg = DATA.legal, ring = $('#legalRing'), lb = $('#legalBars'), lc = $('#legalCaption');
-  if (ring) ring.innerHTML = legalDonut(lg.live, lg.expired);
-  if (lb)   lb.innerHTML   = legalBars(lg.holders, DATA.rivals);
-  if (lc)   lc.innerHTML   = '<b>' + lg.live + ' of the ' + (lg.live + lg.expired)
+  if (want('legal') && ring) ring.innerHTML = legalDonut(lg.live, lg.expired);
+  if (want('legal') && lb)   lb.innerHTML   = legalBars(lg.holders, DATA.rivals);
+  if (want('legal') && lc)   lc.innerHTML   = '<b>' + lg.live + ' of the ' + (lg.live + lg.expired)
                            + ' patents in scope are still live.</b> The other ' + lg.expired
                            + ' have expired.';
 
@@ -8750,7 +9376,7 @@ function drawDash(){
      goes stale the first time a number moves. */
 
   var lcEl = $('#lifeChart');
-  if (lcEl && DATA.lifecycle){
+  if (want('life') && lcEl && DATA.lifecycle){
     var hs = DATA.lifecycle, ps = PG_FILINGS.slice(-hs.length);
     lcEl.innerHTML = lifeCycle(hs, ps);
     var h0 = hs[0], h1 = hs[hs.length - 1], p0 = ps[0], p1 = ps[ps.length - 1];
@@ -8771,7 +9397,7 @@ function drawDash(){
   }
 
   var moEl = $('#momStrip');
-  if (moEl && DATA.perHolder){
+  if (want('mom') && moEl && DATA.perHolder){
     moEl.innerHTML = momentum(DATA.perHolder, HB_SEL);
     var half = DATA.perHolder[0].length >> 1;
     var stopped = DATA.perHolder.filter(function(r){
@@ -8785,7 +9411,7 @@ function drawDash(){
   }
 
   var xrEl = $('#xrefGrid');
-  if (xrEl && DATA.citedBy){
+  if (want('xref') && xrEl && DATA.citedBy){
     var n = DATA.rivals.length;
     xrEl.innerHTML = citeMatrix(DATA.citedBy, n);
     var inDeg = [], k;
@@ -8807,7 +9433,7 @@ function drawDash(){
   }
 
   var ogEl = $('#origBars');
-  if (ogEl && DATA.origin){
+  if (want('orig') && ogEl && DATA.origin){
     ogEl.innerHTML = shareBars(DATA.origin, DATA.total, 'Holder based in');
     var ogc = $('#origCaption');
     if (ogc) ogc.innerHTML = '<b>' + DATA.origin[1][1] + ' of the ' + DATA.total
@@ -8816,8 +9442,158 @@ function drawDash(){
       + 'where its patent bites</b> &mdash; the card below is that, and the two '
       + 'do not match.';
   }
+
+  /* ── §6.12 · what this space is made of ──────────────────────────────────
+     Ranked by size over the WHOLE corpus, which is why the denominator is
+     DATA.total and not axisScope(). The map's headers are the other figure and
+     the info note carries the difference. */
+  var mixEl = $('#techMix');
+  if (want('mix') && mixEl && DATA.colPatents){
+    var mixRows = DATA.mxCols.map(function(w, c){ return [w, DATA.colPatents[c]]; })
+                             .sort(function(a, b){ return b[1] - a[1]; });
+    mixEl.innerHTML = shareBars(mixRows, DATA.total, 'Approach', true);
+    var top3 = mixRows.slice(0, 3).reduce(function(t, r){ return t + r[1]; }, 0);
+    var conc = top3 / DATA.total;
+    /* a shape read, and the thresholds are loose on purpose - a caption that
+       flips on a rounding error is worse than one that is slightly coarse. */
+    var shape = conc > 0.7 ? 'concentrated in a few approaches'
+              : conc > 0.5 ? 'uneven'
+                           : 'spread fairly evenly';
+    var mxc = $('#techMixCaption');
+    if (mxc) mxc.innerHTML = '<b>This space is ' + shape + '.</b> '
+      + mixRows[0][0] + ' is the largest part of it at <b>' + mixRows[0][1]
+      + ' of the ' + DATA.total + '</b> patents your search returned, and the '
+      + 'three largest together hold <b>' + top3 + '</b>. The smallest, '
+      + mixRows[mixRows.length - 1][0].toLowerCase() + ', holds <b>'
+      + mixRows[mixRows.length - 1][1] + '</b>. <b>Size is not the same as '
+      + 'opportunity</b> &mdash; the card below says which of these are still '
+      + 'moving.';
+  }
+
+  /* ── §6.13 · which part is moving ────────────────────────────────────────
+     The word per row is momentum()'s own; this re-derives it for the sentence
+     rather than reading it back off the DOM, which would make the render the
+     source of truth for its own caption. */
+  var tmEl = $('#techMom');
+  if (want('tmom') && tmEl && DATA.colYears){
+    /* SORTED BY SIZE, the same order the card above uses. The two cards list
+       the same eight things and a reader scans them together - in column order
+       here and size order there, row three would be a different approach on
+       each and the pair stops being readable as a pair. Sorting is done on an
+       index so the labels and the series cannot come apart. */
+    var tmOrder = DATA.mxCols.map(function(w, c){ return c; })
+                    .sort(function(a, b){ return DATA.colPatents[b] - DATA.colPatents[a]; });
+    tmEl.innerHTML = momentum(tmOrder.map(function(c){ return DATA.colYears[c]; }), -1,
+                              tmOrder.map(function(c){ return DATA.mxCols[c]; }));
+    var half = DATA.colYears[0].length >> 1;
+    var reads = DATA.colYears.map(function(r){
+      var e = r.slice(0, half).reduce(function(a, b){ return a + b; }, 0);
+      var l = r.slice(half).reduce(function(a, b){ return a + b; }, 0);
+      return { early:e, late:l, word: l === 0 ? 'stopped'
+                                  : l > e ? 'rising' : l < e ? 'slowing' : 'steady' };
+    });
+    var growing = reads.filter(function(x){ return x.word === 'rising'; }).length;
+    var big = 0;
+    DATA.colPatents.forEach(function(n, c){ if (n > DATA.colPatents[big]) big = c; });
+    var small = 0;
+    DATA.colPatents.forEach(function(n, c){ if (n < DATA.colPatents[small]) small = c; });
+    var half2 = DATA.colYears[0].length - half;
+    var tmc = $('#techMomCaption');
+    if (tmc) tmc.innerHTML = '<b>' + growing + ' of the ' + DATA.colYears.length
+      + ' approaches here are still growing</b>, and the largest is '
+      + (reads[big].word === 'rising' ? 'one of them' : 'not one of them')
+      + '. ' + DATA.mxCols[big] + ' holds <b>' + DATA.colPatents[big]
+      + '</b> patents and is <b>' + reads[big].word + '</b>; '
+      + DATA.mxCols[small].toLowerCase() + ' holds <b>' + DATA.colPatents[small]
+      + '</b> and has <b>' + reads[small].late + ' of them in the last '
+      + half2 + ' years</b>. <b>A crowded approach that stopped growing and a '
+      + 'small one still climbing are different bets</b>, and the ranking above '
+      + 'cannot tell them apart.';
+  }
 }
 drawDash();
+
+/* ═══ THE PER-VIEW RESOLVE · platform.md §6a.5 ════════════════════════════
+   "Each of §6's views resolving in place in the right pane, a loader in it
+   until its own data lands." That is moment 4, and until 2026-09-14 the
+   prototype could not do it: drawDash() filled every card in one call, so the
+   only thing the build could express was .grid.is-building -- ONE dim over
+   all ten, which says the pane is working and cannot say which part of it
+   still is.
+
+   The order is the reading order of the page, not the order of the code. The
+   founder's eye starts at the Market hero, so that is what lands first, and
+   a card that lands is a card they can start reading while the rest arrive.
+
+   STAGGERED, NOT SIMULTANEOUS, AND THE STAGGER IS THE CLAIM. Ten regions
+   finishing at ten moments is the honest picture of ten queries returning;
+   ten finishing together would be a blanket dim wearing a loader. design-
+   language.md §6's stagger rule permits this and in fact describes it: what
+   it forbids is staggering things that could NOT have been produced
+   separately, and these are ten separate engine calls.                  ═══ */
+var DASH = [
+  ['filings', '#dashChart'],
+  ['jur',     '#jurPie'],
+  ['legal',   '#legalRing'],
+  ['life',    '#lifeChart'],
+  ['mom',     '#momStrip'],
+  ['xref',    '#xrefGrid'],
+  ['orig',    '#origBars'],
+  ['mix',     '#techMix'],
+  ['tmom',    '#techMom']
+];
+/* 380, doubled with the beats above. The nine cards then span ~3.4s, which
+   is what makes the pane read as filling rather than as flickering: at 190 the
+   whole grid resolved inside two seconds and the staggering was barely
+   perceptible as sequence. */
+var DASH_STEP = 495, dashTimers = [], DASH_OWNS_ENTRANCE = false;
+
+function dashSteps(){
+  var out = [];
+  DASH.forEach(function(d){
+    var host = $(d[1]); if (!host) return;
+    var card = host.closest && host.closest('.card'); if (!card) return;
+    var body = host.closest('.card-body') || card.querySelector('.card-body');
+    if (body) out.push({ name: d[0], card: card, body: body });
+  });
+  return out;
+}
+function dashRest(){
+  dashTimers.forEach(clearTimeout); dashTimers = [];
+}
+
+/* Every card into its waiting state at once -- they all start working at the
+   same moment, because they do -- and out of it one at a time. */
+function resolveDash(onDone){
+  dashRest();
+  var steps = dashSteps();
+  steps.forEach(function(s){
+    s.card.classList.add('is-resolving');
+    /* 96px is a floor, not a guess at the content: on a first build the body
+       has never been filled, so there is no previous height to reserve and
+       something has to stop the card collapsing round a 20px loader. */
+    waitOn(s.body, 96);
+  });
+  var i = 0;
+  function next(){
+    if (i >= steps.length){
+      if (onDone) onDone();
+      return;
+    }
+    var s = steps[i++];
+    landIn(s.body, '');
+    s.card.classList.remove('is-resolving');
+    drawDash(s.name);
+    dashTimers.push(setTimeout(next, DASH_STEP));
+  }
+  /* THE FIRST CARD WAITS TOO. Calling next() directly here landed it in the
+     same frame its loader was mounted, so the Market hero -- the first thing
+     the founder looks at -- resolved instantly while the nine behind it took
+     a beat each. That reads as the hero being cached and the rest being slow,
+     which is a claim about the engine nobody made. One interval before the
+     first land, and every card is a card that took some time. */
+  dashTimers.push(setTimeout(next, DASH_STEP));
+}
 
 document.addEventListener('click', function(e){
   var t = e.target;
@@ -8835,6 +9611,12 @@ $('#bdOpen').addEventListener('click', function(){
      confirmation. */
   var apply = bdBlock.getAttribute('data-mode') === 'rebuild';
   bdBlock.removeAttribute('data-mode');
+  /* ON A REBUILD THE RESOLVE OWNS THE ENTRANCE, so the stagger that
+     setDash('built') would fire on the next line is suppressed. Without this
+     the cards stagger in, and then applyScopeChange's land() resolves them
+     220ms later — two motions on one object, which §6 prohibits, and the
+     second one restarts cards the first had just finished. */
+  if (apply) DASH_OWNS_ENTRANCE = true;
   go('work','built');
   /* THE MAP MOVES AFTER THE NAVIGATION, not during it. The rebuild's changes
      used to land behind the panel that hosted this, so the act that confirmed
@@ -8950,8 +9732,71 @@ document.addEventListener('click', function(e){
   placeHist();
   syncProjName();
   closeMenus();
+  /* ═══ A DIFFERENT PROJECT IS A DIFFERENT SESSION'S RESULTS · 2026-09-14 ══
+     `go('work','reopened')` is right that a return NEVER REBUILDS — §2, and
+     setDash('reopened') removes the stagger for exactly that reason. But it
+     was also landing another project's entire working surface in one frame:
+     a ranked list and ten views, none of which the client holds.
+
+     So nothing animates, and everything waits. Those are not in conflict:
+     §2's rule is that a return does not replay the BUILD, not that fetching
+     a different project is free. The map is not redrawn, no version is
+     written and no points are spent; what happens is that the surface is
+     empty until the new project's data is there.
+
+     ONE LOADER FOR THE SCREEN, not eleven. Nothing on screen belongs to this
+     project yet, so there is no region whose content is "being changed" —
+     the whole surface is being built, which is the Prism Sweep half of the
+     rule. Eleven loaders would say eleven separate things were resolving,
+     and at this moment they are one thing. */
   go('work','reopened');               /* §2: a return never rebuilds */
+  reopenProject();
 });
+
+/* The whole working surface, waiting. Deliberately NOT resolveDash(): that
+   expresses ten views resolving independently, which is the build. This is
+   one fetch of one project. */
+/* ***THIS DID THE OPPOSITE OF WHAT THE COMMENT ABOVE IT SAYS, AND SHIPPED ·
+   FIXED 2026-09-14.*** It put a loader in every card and another in the
+   column -- thirteen -- while the note said, in as many words, "one loader
+   for the screen, not eleven. Eleven loaders would say eleven separate things
+   were resolving." The comment was the design and the code was a copy of
+   resolveDash() with the stagger removed.
+
+   *Worth naming the shape of the mistake rather than just correcting it: the
+   comment was written first and was right, and the implementation drifted
+   from it inside one function. Nothing reads a comment, so nothing caught it
+   -- the same class of failure as the .grid.is-building note that described a
+   per-card lifecycle for four days while the code filled every card at once.*
+
+   THE DIFFERENCE IS REAL AND NOT COSMETIC. Ten loaders say ten things are
+   resolving independently, which is true of a BUILD -- ten engine calls
+   returning at ten moments. Opening another project is ONE fetch of one
+   session's results, and nothing on screen belongs to it yet. One region,
+   one wait, one indicator. */
+function reopenProject(){
+  var grid = $('#grid'), pane = $('#paneScroll');
+  dashRest();
+  /* the column empties and carries NO loader of its own — the screen has one */
+  SET_WAIT = 'blank'; renderSet();
+  grid.hidden = true;
+  var wait = $('#paneWait');
+  if (!wait){
+    wait = document.createElement('div');
+    wait.id = 'paneWait'; wait.className = 'pane-wait is-wait';
+    wait.setAttribute('aria-hidden', 'true');
+    grid.parentNode.insertBefore(wait, grid);
+  }
+  wait.hidden = false;
+  wait.innerHTML = '';
+  wait.appendChild(dmxDrift());
+  setTimeout(function(){
+    SET_WAIT = false; renderSet();
+    wait.hidden = true; wait.innerHTML = '';
+    grid.hidden = false;
+    drawDash();
+  }, BEAT.page);
+}
 
 var pb = $('#profileBtn'), projBtn = $('#projBtn');
 pb.addEventListener('click', function(){
@@ -9437,6 +10282,44 @@ function setRowHTML(i){
    paths that used to undo it. Paging pages down the ORDER for free; there is
    nothing to add once the renderer reads the right thing. */
 function renderSet(){
+  /* ── WAITING ON THE ENGINE · §6a.5 ─────────────────────────────────────
+     FIRST, because it outranks every other state this function can draw. A
+     column that is waiting is EMPTY WITH A LOADER IN IT: not rows, not
+     skeleton rows, and not the filter's empty note. §6a.5 as amended
+     2026-09-14 — a bar means a value is withheld and a loader means work is
+     happening, and drawing bars here would say the rows had arrived carrying
+     nothing rather than that they have not arrived.
+
+     The chip survives when there is a filter, and that is the one exception:
+     it states the cut the founder just made, which is the half already known.
+     Its own count is the filter's, so it is true before the rows land. */
+  if (SET_WAIT){
+    setList.innerHTML = FILTER ? filterChipHTML() : '';
+    setList.classList.add('is-wait');
+    /* ***THE COLUMN, NOT A BOX IN THE COLUMN.*** This was 360px, and 360 in a
+       592px panel put the loader at the centre of the top two thirds -- which
+       reads as a thing stuck below the toolbar rather than as the panel
+       waiting. It takes the scroller's own height so the loader lands on the
+       panel's centre line, which is where the eye goes when a region is
+       empty. The fallback matters: on first paint the scroller has no
+       measured height yet. */
+    var scroller = $('#listScroll');
+    var avail = scroller ? scroller.clientHeight : 0;
+    setList.style.minHeight = (avail > 240 ? avail : 360) + 'px';
+    /* 'blank' is the column waiting WITHOUT an indicator of its own, and it
+       has exactly one caller: opening another project, where a single loader
+       carries the whole surface. Two indicators for one fetch would say two
+       separate things were resolving. Every other wait here is the column's
+       own and gets its own. */
+    if (SET_WAIT !== 'blank'){
+      setList.appendChild(dmxDrift());
+    }
+    $('#setMoreWrap').hidden = true;
+    return;
+  }
+  setList.classList.remove('is-wait');
+  setList.style.minHeight = '';
+
   /* ── FILTERED · platform.md §6a.3 ──────────────────────────────────────
      A cell or a rival narrows what is shown and changes NOTHING else: the
      ticks are untouched, the views do not redraw, and the standing note does
@@ -9770,9 +10653,36 @@ document.addEventListener('click', function(e){
    they held in the bar — they change what you are LOOKING at, which is the
    only kind of act this list has left. platform.md §6a.2.                  */
 $('#setMore').addEventListener('click', function(){
-  SET_SHOWN = Math.min(SET_SHOWN + SET_PAGE, SET_ROWS.length);
-  renderSet();
-  /* reading further is not deciding — §4b. Nothing about the order moves. */
+  /* ═══ THE NEXT PAGE IS A REQUEST · §6a.5, 2026-09-14 ════════════════════
+     This landed twenty more rows in the same frame as the click, with nothing
+     at all in between — not even a disabled button. It is the next page of a
+     search across 180M records.
+
+     THE BUTTON CARRIES THE WAIT because the button is what was pressed, and
+     the count beside it holds because it is already true. The rows above are
+     untouched: they arrived and they are still here, so emptying the column
+     would claim the whole list was being re-fetched when only the next slice
+     is. That is the Drift TL half of the rule — content is on screen and part
+     of it is changing.
+
+     Guarded against a second press: the button hides for the length of the
+     beat rather than going disabled, because §4b deleted a persistent
+     disabled state on this bar for a reason worth repeating — "a disabled
+     control looks exactly like a decision." */
+  var btn = $('#setMore');
+  if (btn.hasAttribute('data-waiting')) return;
+  btn.setAttribute('data-waiting','');
+  var slot = document.createElement('span');
+  slot.className = 'set-more-wait is-wait';
+  slot.appendChild(dmxDrift());
+  btn.appendChild(slot);
+  setTimeout(function(){
+    btn.removeAttribute('data-waiting');
+    slot.remove();
+    SET_SHOWN = Math.min(SET_SHOWN + SET_PAGE, SET_ROWS.length);
+    renderSet();
+    /* reading further is not deciding — §4b. Nothing about the order moves. */
+  }, BEAT.row);
 });
 
 /* ── the answer arrives ─────────────────────────────────────────────────
@@ -10107,7 +11017,7 @@ $('#setRestore').addEventListener('click', setRestore);
 
 /* ── the build, inline · platform.md §6a.5 ────────────────────────────────
    THE STAGE SCREEN IS GONE. Moment 4 was a surface: a stage list, a progress
-   readout, and a founder watching it. The six views resolve IN PLACE now,
+   readout, and a founder watching it. The twelve views resolve IN PLACE now,
    each leaving its skeleton as its own data lands, and the composer carries
    the narration — which is where every other working state in this product
    already lives, so there is one place for "what is it doing right now"
@@ -10141,10 +11051,43 @@ function buildFromSet(auto){
     cmpMain.work(false); cmpMain.say('');
     go('work','built');
   };
-  if (!auto || REDUCED){ settle(); return; }
+  /* !auto is the hash router arriving at a built state directly — a screenshot
+     path and a deep link, neither of which is a founder watching a build. It
+     lands everything at once and always did. */
+  if (!auto){ SET_WAIT = false; renderSet(); dashRest(); drawDash(); settle(); return; }
+
+  /* ***RE-RENDER THE WAITING COLUMN NOW THAT THE PANEL IS ON SCREEN.*** The
+     column was put into its wait in approveConfirm, one view swap earlier and
+     deliberately so -- the results must not flash before the search resolves.
+     But a hidden panel has NO MEASURED HEIGHT, so the loader was centring in
+     the 360px fallback and landing in the middle of the top two thirds. The
+     swap has happened by the time this runs, so the same idempotent render
+     now measures the real 592px and the loader lands on the panel's centre.
+
+     *This is the third time in this file that a measurement taken before a
+     view was visible has come back 0 and quietly produced a wrong layout.
+     Measure after the swap, or do not measure.* */
+  if (SET_WAIT) renderSet();
+
   cmpMain.work(true);
   cmpMain.say('Laying out the map');
-  setTimeout(settle, 900);
+
+  /* ***REDUCED NO LONGER SHORT-CIRCUITS THIS, and that is the change.*** It
+     used to share the `!auto` branch, which meant a founder who asked for less
+     movement was told a search across 180M records was instant. design-
+     language.md §6's open item was closed on exactly that point 2026-09-14:
+     THE BEAT RUNS, and the media query stills every indicator inside it. The
+     screenshot path is `!auto` above and is the one that may resolve at once.
+
+     The left column and the ten views start working in the same frame, because
+     they do, and they finish at their own moments, because they do that too. */
+  DASH_OWNS_ENTRANCE = true;
+  resolveDash();
+  setTimeout(function(){
+    SET_WAIT = false;
+    renderSet();
+    settle();
+  }, BEAT.page);
 }
 
 /* The map's standing note of what it was built on — §6.1. Both numbers, on
@@ -10311,7 +11254,20 @@ function setDash(mode){
   setScopeChip();
   /* §2: nothing animates on a return, and a re-count is not an arrival.
      Only a fresh build earns the staggered entrance. */
-  if (mode === 'built'){ restagger(); return; }
+  if (mode === 'built'){
+    /* ***AND A BUILD THAT RESOLVED PER-CARD HAS ALREADY HAD ITS ENTRANCE.***
+       §6 prohibits two motions on one object. The stagger existed to give ten
+       cards an arrival when they were filled in one call and had none; each
+       card now arrives when its own data lands, which IS the arrival. Running
+       both would fade in a card that has been on screen for a second, and the
+       stagger would restart the ones still resolving from opacity 0. */
+    if (DASH_OWNS_ENTRANCE){
+      DASH_OWNS_ENTRANCE = false;
+      var g = $('#grid'); g.classList.remove('is-in'); g.removeAttribute('data-stagger');
+      return;
+    }
+    restagger(); return;
+  }
   var grid = $('#grid');
   grid.classList.remove('is-in');
   grid.removeAttribute('data-stagger');

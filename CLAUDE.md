@@ -43,6 +43,8 @@ docs/design-language.md  tokens, type, components — how it looks
 docs/marketing.md    outbound copy for a founder — the product page, the voice chart, the nav
 docs/mmap-audit.md   IPtech's M-Map, sixty views, one row each — the inventory behind the ask.
                      A view of platform.md §8, never an authority over it
+docs/tmap-audit.md   IPtech's T-Map — the eight Tech-Effx entries walked, and the shared sixty by
+                     citation rather than repeated. Same bar, same reader. THE END OF THE FAMILY
 docs/case.md         outbound — the capability read and the design pass, for management and
                      Innovue. The page renders §0.1–§0.4 and §3–§6; §0.5, §4.H and §7–§10 stay in
                      the record and do not render
@@ -177,7 +179,7 @@ is likely; on `main` it no longer matters, because `main` is not served.*
 ## Rules
 
 **Fewer, denser documents.** Add to an existing doc in `docs/` before creating a new file. There
-are **six**, split on purpose — *five until 2026-09-12; the sixth is `mmap-audit.md` and the bar it
+are **seven**, split on purpose — *five until 2026-09-12; the sixth is `mmap-audit.md` and the bar it
 cleared is below.*
 
 *The rule governs `docs/`, and `README.md` at the root is not a sixth — it is the front door for a
@@ -225,10 +227,13 @@ unsayable.
 **It is a view of §8, not an authority over it.** Where the two disagree about what gets *built*,
 §8 wins, and `mmap-audit.md` §6 records the disagreement rather than resolving it quietly.
 
-**`tmap-audit.md` is the seventh and it is already authorised**, on the same bar and for the same
-reader, covering `T-Map`'s eight `Tech-Effx` entries. **That is the end of the family.** An audit
-file is admissible for a *module of somebody else's product we have walked end to end*; it is not a
-licence for a file per topic.
+**`tmap-audit.md` is the seventh, and it was written 2026-09-14** on the same bar and for the same
+reader, covering `T-Map`'s eight `Tech-Effx` entries and citing `mmap-audit.md` for the shared sixty
+rather than repeating them. **That is the end of the family.** An audit file is admissible for a
+*module of somebody else's product we have walked end to end*; it is not a licence for a file per
+topic. *The walk added no view and no component, and both facts are recorded in `platform.md` §6 and
+`design/components.md` rather than left as silence — a pass that changes nothing has to say so, or
+the next reader cannot tell it happened.*
 
 ***`.claude/skills/` is tracked, added 2026-09-12, and the reason is narrow.*** A skill is a
 procedure the model runs; this one — `module-audit` — is the M-Map pass written down while it was
@@ -332,6 +337,22 @@ assignee names, and it only ever knew the two it had been told. A check built fr
 found cannot recognise the next one.* **When a capture of a real project enters a session — a
 screenshot pasted into chat included — grep the tree for every proper noun on it before doing
 anything else.** *That is what found this one; the check block reported clean throughout.*
+
+***It happened a third and fourth time on 2026-09-14, and what they add is a limit on what a clean
+sweep proves.*** The `T-Map` walk swept 140 items and found **an outcome-axis label** sitting in
+`docs/platform.md` §8.2 as a citation, and **the client project's corpus size** in four places
+including the outbound `docs/case.md`. *The `M-Map` sweep six days earlier had run 51 nouns, found
+nothing, and written down that the tree was clean.* **It was honest and it was too broad: neither
+leak was ever on an `M-Map` screen, so no list built from those captures could have contained them.**
+
+**So the rule gains a second half.** A sweep is only as wide as the capture set that feeds it.
+**Report what you checked, never that the tree is clean** — *these nouns are absent* is a claim the
+evidence supports; *the tree is clean* is not, and writing it down stops the next person looking.
+
+*Two classes of hit are expected and are not leaks, recorded so they are not re-raised: **IPtech's
+own interface strings**, which are a vendor's published product and ordinary competitive ground, and
+**published classification class prefixes** that the worked example legitimately shares — check the
+full symbol before calling it a match.*
 
 Four things follow, and they are not stylistic:
 

@@ -41,7 +41,19 @@ says everything it says. Nothing below depends on a label.
 
 *Swept before a line was written, as `CLAUDE.md` instructs when a capture of a real project enters a
 session:* 51 proper nouns and 12 classification codes from the captures, grepped against the whole
-tracked tree. **Zero hits.** The tree is clean and this document keeps it that way.
+tracked tree. **Zero hits**, and this document keeps it that way.
+
+> ***That sweep was honest and its conclusion was too broad. Amended 2026-09-14.***
+> This paragraph read *"the tree is clean"*. It was not. The `T-Map` walk
+> ([tmap-audit.md](tmap-audit.md)) swept **140** items from a different module's captures and found
+> **two** — an outcome-axis label sitting in [platform.md](platform.md) §8.2 as a citation, and the
+> project's corpus size in four places including the outbound [case.md](case.md). Neither was ever
+> on an `M-Map` screen, so no list built from these 59 captures could have contained them.
+>
+> **The rule that follows is the one `CLAUDE.md` did not yet have.** It already says *a check built
+> from leaks already found cannot recognise the next one*. The sharper form is: **a sweep is only as
+> wide as the capture set that feeds it, and a clean sweep licenses no claim beyond the module it
+> was built from.** Say *these nouns are absent*, never *the tree is clean*.
 
 > **`check-publish.py` gate 3 did not and could not help.** It matches a hardcoded list of names
 > from leaks already found, and **not one entity in these 59 captures is on it**. That is precisely

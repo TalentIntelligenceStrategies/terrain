@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terrain — the working state</title>
+<meta name="robots" content="noindex, nofollow">
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     TERRAIN — THE WORKING STATE. A preview, not a product surface.
+
+     Two dot-matrix loaders, ported from somebody else's library and rendered
+     in Terrain's own pill. It says "I am working" where §7 already puts that
+     state: the composer, not a loading screen of its own.
+
+     Below the two reference pills are EIGHT IN-CONTEXT SPECIMENS -- the eight
+     moments in the prototype where a founder waits on the engine and the
+     interface currently shows nothing, or shows something too small to
+     survive real latency. Their own banner carries the rule under test, the
+     reason .sweep was left in place, and the contradiction with §6a.5.
+
+     ─── WHAT THESE ARE, AND WHERE THEY CAME FROM ───────────────────────────
+
+     Both are from github.com/zzzzshawn/matrix, a library of 60+ dot-matrix
+     loaders. They are named here by the names that library gives them:
+
+       PRISM SWEEP · dotm-square-5 · DotmSquare5 · 5x5
+         A snake-style trail traversing the grid on alternating diagonals.
+
+       DRIFT TL    · dotm-3x3-3   · Dotm3x3_3   · 3x3
+         Diagonal bands pulsing in sequence from the top-left corner toward
+         the bottom-right.
+
+     LICENCE. That project is NOT MIT. It ships a Custom Proprietary License
+     (Copyright (c) 2026 dot-matrix contributors) which GRANTS use in
+     commercial and non-commercial products and PROHIBITS republishing a
+     component as a standalone reusable component or as part of another
+     component library. A loader used inside a Terrain preview is permitted
+     use; lifting either of these into a component library of ours is not.
+
+     ─── WHAT WAS PORTED, AND WHAT WAS LEFT BEHIND ──────────────────────────
+
+     The upstream components are React over a 1228-line stylesheet covering
+     every loader in the library. What is here is the subset these two
+     configurations actually touch: two rule blocks, two keyframe sets, the
+     grid, the dot, and the reduced-motion block.
+
+     DELIBERATELY NOT PORTED, because nothing here reaches it: bloom and halo
+     (both off in these configs, so dmxBloomRootActive() is false and no glow
+     renders), the dmx-inactive machinery (pattern is "full", so all 34 dots
+     are active and none is ever masked), the square / diamond / hearts dot
+     shapes, and the colour presets with their gradients. Build what the
+     reference is, not a matrix around it.
+
+     COLOUR IS UNAFFECTED BY THE HOUSE RULE. Upstream's `color` prop defaults
+     to currentColor, so every dot inherits --text-1 and carries its value in
+     OPACITY ALONE. There is no hue in either loader, in either theme, and the
+     two things that could have introduced one — colorPreset and bloom's glow —
+     are the two things left behind above.
+
+     ─── THE TIMINGS ARE UPSTREAM'S, AND THAT IS A DIVERGENCE ───────────────
+
+     RECORDED RATHER THAN HIDDEN. design-language.md §6 says: "One indicator
+     cycle per page, 1.6s, linear. Any indicator added later takes the same
+     1.6s." These two do not. They run at upstream's own timings, which is a
+     deliberate instruction to reproduce the reference rather than to restate
+     it in this system's tempo:
+
+       PRISM SWEEP  1111.1ms  linear                        (1500 x 1/1.35)
+                    delay = order x 44.44ms, order 0..24 -> 0..1066.7ms
+       DRIFT TL      887.0ms  cubic-bezier(.42,0,.58,1)  (.68 x 1500 x 1/1.15)
+                    delay = path x 247.83ms, path 0..1  -> 0..247.8ms
+
+     Neither divides 1.6s, so these are two free-running timers on a page whose
+     motion section exists to prevent exactly that. THE NARRATION STILL RUNS ON
+     TERRAIN'S 1.6s, from one timer shared by both pills, so the text beat is
+     in tempo even where the dots are not.
+
+     IF EITHER LOADER IS EVER ADOPTED INTO THE PRODUCT, THE TIMING QUESTION
+     REOPENS AGAINST §6. It is not settled by having shipped in a lab.
+
+     ***AND IT IS NOW VISIBLE RATHER THAN THEORETICAL.*** The eight specimens
+     below put these loaders inside prototype chrome, beside skeleton bars
+     whose shimmer runs at --cycle, 1.6s. So a single card can carry a 1.6s
+     bar and an 887ms loader at once, and the two beats drift against each
+     other where §6 asks for one system working. That was chosen deliberately
+     -- reproduce the reference rather than restate it in this tempo -- and it
+     is the first thing to look at if a specimen reads as busy rather than as
+     working.
+
+     ─── WHAT IS NOT NEGOTIABLE ─────────────────────────────────────────────
+
+     REDUCED MOTION DECLARES THE END STATE. §6: declare the end states, never
+     shorten the duration. Upstream branches in React and returns a static
+     positional opacity ramp; a vanilla port cannot branch at build time, so
+     every dot carries that ramp inline as --rest and the media query reveals
+     it. Both loaders go STILL AND VISIBLE — Prism Sweep as a diagonal
+     gradient, Drift TL as five bands. An indicator that vanishes for a founder
+     who asked for less movement has told them less, and reduced motion may
+     never mean reduced information.
+
+     The gating is a media query rather than an inline opacity ON PURPOSE.
+     Inline opacity would show through during the initial animation-delay —
+     there is no fill-mode — and the first second of playback would then not be
+     the reference's. Under the query, normal playback is upstream's exactly.
+
+     IT CLAIMS NOTHING. No progress bar, no completion state. §6 forbids
+     asserting a wait the system is not actually having.
+     ═══════════════════════════════════════════════════════════════════════ -->
+
+<link rel="icon" href="../../brand/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../brand/fonts/fonts.css">
+<script>
+/* Before first paint, and it has to be. A stored choice applied from the main
+   script at the bottom of <body> paints one light frame on the way to a dark
+   page, which is the single most visible defect a theme toggle can ship with.
+   try/catch because a private window throws on localStorage rather than
+   returning null, and an exception here would take the stylesheet with it.
+
+   THE TOGGLE IS GONE WITH THE REST OF THE CONTROL BAR; this stays, because
+   ?theme=light and ?theme=dark are now the only way to reach both palettes. */
+(function(){
+  var q = /[?&]theme=(light|dark)\b/.exec(location.search);
+  if (q){ document.documentElement.setAttribute('data-theme', q[1]); return; }
+  /* DARK BY DEFAULT, which is a divergence from the house pattern and is here
+     because the reference these are matched against is a dark surface and the
+     loaders are meant to be judged on one. "System" is still stored
+     explicitly, so a stored choice beats this default on the next load. */
+  try{var t=localStorage.getItem('terrain-theme');
+      if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);return;}
+      if(t==='system') return;}catch(e){}
+  document.documentElement.setAttribute('data-theme','dark');
+})();
+</script>
+<style>
+/* ─── TOKENS. Inlined per CLAUDE.md — no shared token stylesheet, no build
+   step. Copied verbatim from terrain-prototype.html:79-353, both dark
+   selectors included and duplicated on purpose (the media query so an unset
+   preference follows the system, the attribute so an explicit choice beats
+   the system in BOTH directions). The typefaces are the one shared thing. ─── */
+html{color-scheme:light dark;background:var(--ground)}
+:root[data-theme="light"]{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+:root{
+  /* neutral ramp — even in L*, true neutral (R = G = B) */
+  --n-0:#FFFFFF; --n-1:#FCFCFC; --n-2:#F6F6F6; --n-3:#F0F0F0;
+  --n-4:#E4E4E4; --n-5:#D1D1D1; --n-6:#B0B0B0; --n-7:#6F6F6F;
+  --n-8:#595959; --n-9:#383838; --n-10:#252525;
+
+  /* semantic — components read only these */
+  --ground:var(--n-2); --surface:var(--n-0); --surface-sunken:var(--n-3);
+  --border:var(--n-4); --border-strong:var(--n-5); --focus:var(--n-10);
+  --text-1:var(--n-10); --text-2:var(--n-8); --text-3:var(--n-7);
+  --text-disabled:var(--n-6); --text-inverse:#FAFAFA;
+  /* three more semantics, added with the dark pass. Each replaced a component
+     that was reaching past --n-* into the ramp: §10 makes dark cheap only if
+     no component reads a primitive, and eleven of them did. */
+  --ink-hover:var(--n-9);        /* hover on an ink fill — the only ink state */
+  --indicator-rest:var(--n-5);   /* a dot or ring for a thing not yet current */
+  --track-pressed:var(--n-4);    /* a bar track under the selected row */
+
+  /* state — the only colour in the system */
+  --state-live:#1B6B45;    --state-live-tint:#E4F1EA;
+  --state-expired:#A32B21; --state-expired-tint:#FAE9E7;
+  --state-pending:#7A5200; --state-pending-tint:#FBF0D9;
+  --state-up:var(--state-live); --state-down:var(--state-expired);
+
+  /* density — count only, no verdict */
+  --density-0:#F6F6F6; --density-1:#DDDDDD; --density-2:#BBBBBB;
+  --density-3:#909090; --density-4:#5E5E5E;
+
+  /* chart layers — trend is near-black, so the palette is now only the
+     three state hues. Amber carried no information (design-language.md §3.5). */
+  --chart-series:#595959; --chart-trend:var(--n-10);
+  /* the excluded window was --chart-excluded #A32B21 until 2026-09-04. Red is
+     the expired hue: it said this data is BAD where the fact is that it is NOT
+     YET KNOWN, and it was the loudest thing on the dashboard while marking the
+     least important information. Same error the amber trend made in §3.5. */
+  --chart-unknown:var(--n-3);
+
+  /* categorical · design-language.md §3.7 — THE HUE IS GONE, 2026-09-05.
+     One ink, one mid-grey, one texture. No hue anywhere in this system.
+
+     What stood here was one sampled hue, shipped 2026-09-04 as --mark-1, the
+     mark meaning "the entity being tracked". Withdrawn the next day, and the
+     reason is the one CLAUDE.md gives for holding the accent open: a hue that
+     loud becomes the thing every reviewer reviews instead of the structure.
+     It also put the prototype in conflict with case.md §6.4, which says colour
+     appears in exactly three places, none of them a chart mark.
+
+     Its own contrast note said the rest. At 1.26:1 on white it needed a ring
+     at 9px, a semibold count beside it, an ink circle round the pie and a
+     printed number on every bar: five reliefs to make one mark legible is the
+     design telling you the mark is wrong.
+
+     So the encoding moves from hue to VALUE, which is what every other layer
+     in this sheet already does. --mark-1 is the darkest thing on the card,
+     and being darkest is what "this is the one" now means. That reads in
+     greyscale, in print and under forced colours with no second channel
+     needed, and it retires both collisions the hue spent a section clearing:
+     nothing here can land 15 deg off a status hue, because nothing here has
+     a hue.
+
+     Measured. On --surface #FFFFFF: --mark-1 15.32:1, --mark-2 5.03:1, both
+     over the 3:1 a data mark needs, where the hue was a fifth of it. On the
+     bar track #F0F0F0: 13.44:1 and 4.41:1. L* separation is 32 points
+     (14.7 to 46.8), and --mark-3 arrives as texture on top of that.
+
+     Cap is still THREE encoded values. A fourth folds into Other, or the
+     chart becomes small multiples. There is no --mark-4, deliberately. */
+  --mark-1:var(--n-10);   /* first encoded value, or the entity being tracked */
+  --mark-2:var(--n-7);    /* second encoded value */
+  /* third encoded value, ALWAYS a 45deg hatch — never a third solid, and that
+     is a limit of the ramp rather than a preference. The next step down from
+     --mark-2 is --n-6 #B0B0B0 at 2.17:1 on white and 1.90:1 on the bar track,
+     so a third solid either fails the 3:1 a mark needs or sits between the
+     ramp's steps: #8A8A8A would clear it at 3.45:1 and is not on the ramp,
+     and adding a step there breaks §3.1's claim that the ramp is even in L*.
+     That trade was recorded once already, on the darker-mark detour, and it
+     was turned down then for the same reason. Texture is what separates a
+     third value without a hue, so the third value keeps it at every scale and
+     only the PITCH changes with area. */
+  --mark-3:var(--n-10);
+  /* the line-scale rendering of --mark-3 — same 40% duty cycle as the SVG
+     pattern, half the pitch, for a 9px key dot or an 8px bar where the 6px
+     pattern draws one diagonal line and reads as a rendering fault. The CSS
+     twin was deleted earlier on 2026-09-04 because nothing used it: barStyle()
+     sent every HTML-scale mark to --mark-3 solid. With the hue gone there is
+     no third solid left to send it to, so it is back, and now it is load
+     bearing. One rendering rule either way — area marks take the pattern,
+     line-scale marks take this, and both are the same category. */
+  --mark-3-hatch:repeating-linear-gradient(45deg,var(--mark-3) 0 1.2px,var(--surface) 1.2px 3px);
+  /* NOT a fourth value — the absence of one. Everything a chart shows but does
+     not encode: the four holders you are not tracking. Recessive on purpose,
+     because dataviz wants context to sit behind the mark that carries the
+     point, and five near-black bars made the card heavier than its finding.
+
+     It shares --n-7 with --mark-2 now, the way it used to share it with
+     --mark-3. Same licence, same reason: a chart uses --mark-2 or --mark-off,
+     never both. Two or three encoded categories leave no unencoded field, and
+     a chart that has a field encodes exactly one thing. If one ever needs
+     both, --mark-off moves and the marks stay.
+
+     It stays at --n-7 rather than following the mark down the ramp. Moved
+     there from --n-6 on measured separation while --mark-1 was briefly
+     darker, and kept: against a #252525 mark the field is 32 L* points clear,
+     and --n-6 would have put the unselected bars at 1.90:1 on their own
+     track, which is context that has stopped reading as a bar. */
+  --mark-off:var(--n-7);
+
+  /* skeleton */
+  --skeleton:var(--n-4); --skeleton-shimmer:var(--n-3);
+  /* a bar the founder has acted on — starred, or edited in the confirm card.
+     One step darker, so "changed" reads without leaving the skeleton grammar. */
+  --skeleton-strong:var(--n-5);
+
+  /* composited over a coloured surface, so these cannot be flat neutrals */
+  --cell-mark:rgba(37,37,37,.14); --cell-mark-inverse:rgba(250,250,250,.30);
+  --scrim:rgba(37,37,37,.18);
+  /* the 1px ring on a 9px legend key. Alpha for the same reason as the two
+     above: it sits on --surface in the key and on a slice in the chart. */
+  --key-ring:rgba(37,37,37,.24);
+
+  /* space · radius · elevation · motion */
+  --s-2:2px; --s-4:4px; --s-6:6px; --s-8:8px; --s-10:10px; --s-12:12px;
+  --s-14:14px; --s-16:16px; --s-20:20px; --s-24:24px; --s-32:32px;
+  --s-40:40px; --s-56:56px; --s-72:72px;
+  --r-chip:4px; --r-seg:6px; --r-control:8px; --r-inner:12px;
+  --r-widget:16px; --r-shell:20px; --r-pill:999px;
+  --shadow-float:0 1px 2px rgba(37,37,37,.04), 0 8px 24px -6px rgba(37,37,37,.10);
+  /* the same elevation as a filter, for the clipped composer: clip-path would
+     eat a box-shadow, but a filter on the unclipped parent sees the clip. */
+  --shadow-drop:drop-shadow(0 1px 1px rgba(37,37,37,.05)) drop-shadow(0 6px 16px rgba(37,37,37,.10));
+  /* three curves. --ease for anything the founder initiated; --ease-in-out for
+     system-driven movement only, because it is flat at the start; --ease-drawer
+     for the slide-over. Constant motion is linear. design-language.md §6.      */
+  --ease:cubic-bezier(.2,0,0,1);
+  --ease-in-out:cubic-bezier(.77,0,.175,1);
+  --ease-drawer:cubic-bezier(.32,.72,0,1);
+  --dur-1:120ms; --dur-2:200ms; --dur-3:320ms; --dur-4:520ms;
+  --cycle:1.6s;                     /* one indicator cycle for the whole page */
+}
+
+/* ── dark · design-language.md §10 ─────────────────────────────
+   §10 is a contract with two halves and this is both of them.
+
+   The mechanical half: dark redefines SEMANTIC TOKENS ONLY and touches no
+   component rule. Two selectors carry the identical list — the media query so
+   an unset preference follows the system, the attribute so an explicit choice
+   beats the system in BOTH directions. That is why the media query is written
+   :not([data-theme="light"]) rather than bare: without it, choosing light on a
+   dark OS would do nothing.
+
+   The half that is not mechanical: this is not an inversion. Surfaces stop
+   being fills, and the state hues are picked against this ground rather than
+   lightened from their light values. Every number in the comments below was
+   measured, the same way §3.3 and §3.4 measure the light set.
+
+   The list is duplicated on purpose. CSS has no way to share a declaration
+   block between two selectors, and the alternative — a third indirection
+   layer of --dark-* primitives — buys nothing and hides which value is live. */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+  /* neutral — a re-step, not an inversion. The ground/surface step is 1.06
+     against 1.08 in light, so --border does the separating that the step does
+     there. §10's reading of the dark reference screen. */
+  --ground:#141414; --surface:#1A1A1A; --surface-sunken:#101010;
+  --border:#2E2E2E; --border-strong:#454545; --focus:#F0F0F0;
+  --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
+  --text-disabled:#5A5A5A; --text-inverse:#141414;
+  /* --text-1 is the primary fill and --text-inverse its label, so a near-black
+     button becomes a near-white one with no component rule changing. */
+  --ink-hover:#FFFFFF; --indicator-rest:#4A4A4A; --track-pressed:#2A2A2A;
+
+  /* state — chosen against this ground, never lightened from the light pair.
+     A dusty sage, an oxblood and a dull gold, which is what §10 asks for.
+     live 7.71 on surface / 7.10 on tint · expired 6.59 / 6.32 ·
+     pending 7.42 / 7.04. The light set measures 6.49, 7.18 and 6.92. */
+  --state-live:#84B899;    --state-live-tint:#18241D;
+  --state-expired:#D98B80; --state-expired-tint:#2A1A17;
+  --state-pending:#C9A45C; --state-pending-tint:#251E10;
+
+  /* density — re-stepped, and the L* gaps keep the light ramp's shape:
+     10.7 / 12.2 / 15.5 / 20.3 against 8.8 / 12.2 / 16.1 / 19.9. --density-0 is
+     --ground, exactly as it is in light, so an open cell reads as nothing at
+     1.06 against the card and the 1px gridlines carry the grid. Text flips to
+     inverse at --density-4 and only there, as in light. */
+  --density-0:#141414; --density-1:#2A2A2A; --density-2:#454545;
+  --density-3:#6A6A6A; --density-4:#9E9E9E;
+  /* #6A6A6A rather than the even #6E6E6E: the even step lands text-1 at 4.47
+     and reopens the dead zone at step 3 the light ramp was tuned to remove. */
+
+  --chart-series:#A8A8A8; --chart-trend:#F0F0F0; --chart-unknown:#242424;
+
+  /* the marks invert as VALUE, which is the whole point of retiring the hue:
+     --mark-1 is again the most prominent thing on the card, it is simply the
+     lightest here rather than the darkest. 15.96 and 5.04 on surface, 39.1 L*
+     points apart against 32.1 in light. --mark-off keeps sharing its value with
+     --mark-2 exactly as it shares --n-7 in light — a chart uses one or the
+     other, never both, so the collision cannot happen. */
+  --mark-1:#F5F5F5; --mark-2:#8A8A8A; --mark-3:#F5F5F5; --mark-off:#8A8A8A;
+  /* --mark-3-hatch is not redefined: it reads --mark-3 and --surface, so the
+     stripes and the ground between them both invert on their own. */
+
+  /* the sweep is still the lighter band, so it still reads as a sweep */
+  --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
+
+  --cell-mark:rgba(245,245,245,.16); --cell-mark-inverse:rgba(20,20,20,.34);
+  --scrim:rgba(0,0,0,.55); --key-ring:rgba(245,245,245,.30);
+
+  /* an ink shadow is invisible on ink. These go black and heavier, and the
+     hairline is doing most of the work regardless. */
+  --shadow-float:0 1px 2px rgba(0,0,0,.40), 0 8px 24px -6px rgba(0,0,0,.55);
+  --shadow-drop:drop-shadow(0 1px 1px rgba(0,0,0,.40)) drop-shadow(0 6px 16px rgba(0,0,0,.50));
+  }
+}
+:root[data-theme="dark"]{
+  /* neutral — a re-step, not an inversion. The ground/surface step is 1.06
+     against 1.08 in light, so --border does the separating that the step does
+     there. §10's reading of the dark reference screen. */
+  --ground:#141414; --surface:#1A1A1A; --surface-sunken:#101010;
+  --border:#2E2E2E; --border-strong:#454545; --focus:#F0F0F0;
+  --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
+  --text-disabled:#5A5A5A; --text-inverse:#141414;
+  /* --text-1 is the primary fill and --text-inverse its label, so a near-black
+     button becomes a near-white one with no component rule changing. */
+  --ink-hover:#FFFFFF; --indicator-rest:#4A4A4A; --track-pressed:#2A2A2A;
+
+  /* state — chosen against this ground, never lightened from the light pair.
+     A dusty sage, an oxblood and a dull gold, which is what §10 asks for.
+     live 7.71 on surface / 7.10 on tint · expired 6.59 / 6.32 ·
+     pending 7.42 / 7.04. The light set measures 6.49, 7.18 and 6.92. */
+  --state-live:#84B899;    --state-live-tint:#18241D;
+  --state-expired:#D98B80; --state-expired-tint:#2A1A17;
+  --state-pending:#C9A45C; --state-pending-tint:#251E10;
+
+  /* density — re-stepped, and the L* gaps keep the light ramp's shape:
+     10.7 / 12.2 / 15.5 / 20.3 against 8.8 / 12.2 / 16.1 / 19.9. --density-0 is
+     --ground, exactly as it is in light, so an open cell reads as nothing at
+     1.06 against the card and the 1px gridlines carry the grid. Text flips to
+     inverse at --density-4 and only there, as in light. */
+  --density-0:#141414; --density-1:#2A2A2A; --density-2:#454545;
+  --density-3:#6A6A6A; --density-4:#9E9E9E;
+  /* #6A6A6A rather than the even #6E6E6E: the even step lands text-1 at 4.47
+     and reopens the dead zone at step 3 the light ramp was tuned to remove. */
+
+  --chart-series:#A8A8A8; --chart-trend:#F0F0F0; --chart-unknown:#242424;
+
+  /* the marks invert as VALUE, which is the whole point of retiring the hue:
+     --mark-1 is again the most prominent thing on the card, it is simply the
+     lightest here rather than the darkest. 15.96 and 5.04 on surface, 39.1 L*
+     points apart against 32.1 in light. --mark-off keeps sharing its value with
+     --mark-2 exactly as it shares --n-7 in light — a chart uses one or the
+     other, never both, so the collision cannot happen. */
+  --mark-1:#F5F5F5; --mark-2:#8A8A8A; --mark-3:#F5F5F5; --mark-off:#8A8A8A;
+  /* --mark-3-hatch is not redefined: it reads --mark-3 and --surface, so the
+     stripes and the ground between them both invert on their own. */
+
+  /* the sweep is still the lighter band, so it still reads as a sweep */
+  --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
+
+  --cell-mark:rgba(245,245,245,.16); --cell-mark-inverse:rgba(20,20,20,.34);
+  --scrim:rgba(0,0,0,.55); --key-ring:rgba(245,245,245,.30);
+
+  /* an ink shadow is invisible on ink. These go black and heavier, and the
+     hairline is doing most of the work regardless. */
+  --shadow-float:0 1px 2px rgba(0,0,0,.40), 0 8px 24px -6px rgba(0,0,0,.55);
+  --shadow-drop:drop-shadow(0 1px 1px rgba(0,0,0,.40)) drop-shadow(0 6px 16px rgba(0,0,0,.50));
+}
+/* §6: nobody asked to watch the theme change. Without this every property in
+   the sheet that carries a colour cross-fades at once and the page reads as
+   melting rather than switching. The class is on for one frame. */
+:root.theme-switching *,
+:root.theme-switching *::before,
+:root.theme-switching *::after{transition:none!important}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--ground); color:var(--text-1);
+  font-family:'Urbanist',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:14px; line-height:1.55; font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:var(--s-40); padding:var(--s-40) var(--s-24);
+}
+/* THE RESET AND NOT .mast-brand. The brand lockup was the only <a> in the file
+   and it rendered underlined -- not from a rule but from the absence of one,
+   which is why grepping for text-decoration found nothing to fix. Reset it
+   here so the next <a> added does not reintroduce it. */
+a{text-decoration:none;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:var(--r-chip)}
+
+/* ── type roles. Four, not fourteen: the cube's spec row and control bar took
+   the rest with them, and a role nothing renders is a role nobody maintains.
+   The full set is in terrain-prototype.html if one is wanted back. ── */
+.t-body{font-size:14px;line-height:1.55}
+.t-micro{font-size:10.5px;line-height:1.2;font-weight:500;
+         letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.fig{font-family:'Inconsolata',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-weight:500}
+.fig-s{font-size:12.5px;line-height:1.4}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   THE LOADERS. A trimmed port of zzzzshawn/matrix loaders/styles.css --
+   the subset these two configurations touch, and nothing else.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* --dmx-cycle is the library's own base loop at speed 1, NOT Terrain's
+   --cycle. The two are deliberately different and the header says why. */
+.dmx-root{
+  display:inline-flex; align-items:center; justify-content:center;
+  vertical-align:middle;
+  --dmx-cycle:1500ms;
+  /* rest / mid / bright. Prism Sweep takes these three as they stand; Drift TL
+     overrides base and mid inline, exactly as its gallery props do. */
+  --dmx-opacity-base:0.16; --dmx-opacity-mid:0.32; --dmx-opacity-peak:1;
+}
+/* upstream re-declares the same 1500ms on the 3x3 root. Carried rather than
+   folded away: it is the seam where the library could retime one grid without
+   touching the other, and flattening it here would hide that. */
+.dmx-root.dmx-matrix-3{--dmx-cycle:1500ms}
+
+.dmx-grid{display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  grid-template-rows:repeat(5,minmax(0,1fr))}
+
+/* background is currentColor rather than upstream's var(--dmx-dot-fill,...):
+   that variable is only ever set by the colour presets, and the presets are
+   the gradients this port refuses. With no preset, upstream resolves the fill
+   to currentColor, so this is the same pixel by a shorter path. */
+.dmx-dot{
+  border-radius:999px; display:block; background:currentColor;
+  /* the tone a dot holds before its delay elapses and between its flashes */
+  opacity:calc(0.5 * (var(--dmx-opacity-base) + var(--dmx-opacity-mid)));
+  transform-origin:center; will-change:opacity;
+}
+
+/* PRISM SWEEP. The delay is what makes it a trail rather than a blink: 25 dots
+   on one 1111ms loop, each started 44.44ms after the one before it in
+   diagonal-snake order, so the bright stop travels the path. */
+.dmx-diagonal-snake{
+  animation:dmx-diagonal-snake calc(var(--dmx-cycle) * var(--dmx-speed,1)) linear infinite;
+  animation-delay:calc(
+    var(--dmx-diagonal-snake-order,0) * 0.04 * var(--dmx-cycle) * var(--dmx-speed,1)
+  );
+}
+
+/* DRIFT TL. Same mechanism, five bands instead of 25 steps -- every dot on a
+   diagonal shares a --dmx-path and so flashes together. */
+.dmx-path-3{
+  animation:dmx-ripple-3 calc(0.68 * var(--dmx-cycle) * var(--dmx-speed,1))
+            cubic-bezier(0.42,0,0.58,1) infinite;
+  animation-delay:calc(var(--dmx-path,0) * 0.19 * var(--dmx-cycle) * var(--dmx-speed,1));
+}
+
+/* The --dmx-bloom-level stop on every keyframe below is upstream's and is NOT
+   reproduced: it drives the bloom drop-shadow, bloom is off in both configs,
+   and an unregistered custom property does not interpolate anyway. */
+@keyframes dmx-diagonal-snake{
+  0%,100%{ opacity:calc(0.5 * var(--dmx-opacity-base)) }
+  8%     { opacity:var(--dmx-opacity-peak) }
+  16%    { opacity:calc(0.5 * var(--dmx-opacity-peak) + 0.4 * var(--dmx-opacity-mid) + 0.1 * var(--dmx-opacity-base)) }
+  24%    { opacity:calc(0.25 * var(--dmx-opacity-peak) + 0.45 * var(--dmx-opacity-mid) + 0.3 * var(--dmx-opacity-base)) }
+  32%    { opacity:calc(0.5 * var(--dmx-opacity-mid) + 0.5 * var(--dmx-opacity-base)) }
+  40%    { opacity:calc(0.75 * var(--dmx-opacity-base)) }
+}
+/* the flash is over by 20% and the remaining 80% is rest, which is what makes
+   Drift TL read as a pulse crossing the grid rather than as a breathing grid */
+@keyframes dmx-ripple-3{
+  0%,100%{ opacity:var(--dmx-opacity-base) }
+  3%     { opacity:calc(0.62 * var(--dmx-opacity-mid) + 0.38 * var(--dmx-opacity-base)) }
+  6%     { opacity:calc(0.35 * var(--dmx-opacity-peak) + 0.65 * var(--dmx-opacity-mid)) }
+  10%    { opacity:var(--dmx-opacity-peak) }
+  14%    { opacity:calc(0.35 * var(--dmx-opacity-peak) + 0.65 * var(--dmx-opacity-mid)) }
+  17%    { opacity:calc(0.62 * var(--dmx-opacity-mid) + 0.38 * var(--dmx-opacity-base)) }
+  20%    { opacity:var(--dmx-opacity-base) }
+}
+
+/* ═══ the status pill. §7 already puts the working state in the composer, so
+   this is the shape it takes there rather than a loading screen of its own. ═══
+
+   Proportions taken from the reference -- loader hard against a small left
+   inset, a long right one, 12px between, fully round, and NO drop shadow: it
+   carries a 1px inset ring and nothing else. Terrain's --surface on --ground
+   with a --border hairline is that same figure in this system's values.
+
+   --slot is 36px for BOTH pills, which is Prism Sweep's span and not Drift
+   TL's 20px. Sizing each pill to its own loader would make the two different
+   heights and the row would stop reading as a row; the smaller loader centres
+   in its box instead. That is a layout decision on Terrain's side and changes
+   nothing about either loader. */
+.pill{display:inline-flex;align-items:center;gap:var(--s-12);
+  --slot:36px;
+  height:calc(var(--slot) + var(--s-16));
+  padding-inline:var(--s-8) var(--s-32);border-radius:var(--r-pill);
+  background:var(--surface);border:1px solid var(--border)}
+.slot{width:var(--slot);height:var(--slot);flex:0 0 auto;
+  display:grid;place-items:center}
+
+/* Two beats, crossfading under blur. §7: "One string held for the whole wait
+   reads as a fixed timer; two read as work being done." The blur is §7's too --
+   two strings crossfading in one box otherwise read as two objects overlapping
+   rather than one thing changing. Grid-stacked so the pill never resizes. */
+.narr{display:grid;color:var(--text-3);font-size:17px;line-height:1.45}
+.narr span{grid-area:1/1;white-space:nowrap;
+  transition:opacity var(--dur-2) var(--ease),filter var(--dur-2) var(--ease)}
+.narr span[data-on="0"]{opacity:0;filter:blur(2px)}
+
+/* ═══ page ═══ */
+.lab{display:flex;align-items:flex-start;gap:var(--s-40);flex-wrap:wrap;justify-content:center}
+.spec{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s-12);margin:0}
+.cap{display:flex;align-items:baseline;gap:var(--s-10);padding-inline-start:var(--s-8)}
+.cap .fig-s{color:var(--text-3)}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   THE EIGHT MOMENTS. Where the loaders go, and what the founder sees there.
+
+   ─── THE RULE THESE SPECIMENS ARE TESTING ───────────────────────────────
+
+   A SKELETON BAR IN TERRAIN DOES NOT MEAN "LOADING". `.sk` is the skeleton
+   contract (platform.md §8): values the product REFUSES TO INVENT -- holder
+   names, filing dates, relevance text. Those bars are permanent and they
+   shimmer forever. They are not a wait; they are a refusal.
+
+   So the rule under test here is: DOTS MEAN LOADING, BARS MEAN WITHHELD.
+   A region that is working is EMPTY WITH A LOADER IN IT. Bars appear only
+   once the data has landed, marking the values that are not ours to print.
+
+   ***THIS CONTRADICTS A RECORDED DECISION AND THE CONTRADICTION IS THE
+   POINT OF BUILDING IT.*** platform.md §6a.5 says the opposite outright --
+   "each of §6's views is a skeleton at the moment the gate is approved and
+   becomes itself as its data arrives... a skeleton that becomes a widget is
+   a truer claim than a bar that fills". Under §6a.5 the loading state IS the
+   skeleton; under the rule here it is the loader and the skeleton is what
+   the arrival leaves behind. These are different products.
+
+   IF THIS SURVIVES THE SCREEN, §6a.5 IS AMENDED IN THE SAME PASS. docs/ is
+   the source of truth and a preview may never become the only record of a
+   decision. Nothing here settles it.
+
+   ─── WHICH LOADER, AND WHY IT IS NOT ABOUT SIZE ─────────────────────────
+
+   PRISM SWEEP where a whole region is empty and the founder is waiting on it
+   to exist. DRIFT TL where content is already on screen and part of it is
+   being changed.
+
+   That gives one reliable read: a travelling trail means THIS IS BEING BUILT,
+   a small pulse means THIS IS BEING CHANGED. The weights follow from it
+   rather than driving it -- 36px has room to travel and needs a region to
+   travel in; 20px sits inside chrome that is already there.
+
+   ─── `.sweep` KEEPS ALL FOUR OF ITS SLOTS ───────────────────────────────
+
+   The prototype's existing wordless indicator was judged slot by slot, not
+   replaced by rule, and the verdict was the same in every one: SIZE. It is
+   16x3 and it lives in a 32px send button, an 18px stage icon, a 22px
+   absolutely-positioned bubble and a strip beside 14px text. Drift TL's own
+   span is 20px, so it is larger than three of the four hosts and would stand
+   taller than the fourth's text line.
+
+   SO THE LOADERS TAKE ONLY NEW TERRITORY. Every specimen below is a place
+   that shows NOTHING today, or shows something too small to survive real
+   latency. Nothing that already works is replaced.
+
+   ─── MEASUREMENTS ARE THE PROTOTYPE'S OWN ───────────────────────────────
+
+   420px column, 16px widget radius, 20px shell radius, the record's 200px
+   peek, .set-bar at 14/20, .set-row at 20 block and 10/16 inline, .card-head
+   at 14/20/10, .set-more at 14/20. Copied rather than eyeballed, so a
+   proportion that reads wrong here reads wrong there.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.moments{display:flex;flex-direction:column;gap:var(--s-56);width:100%;max-width:1060px}
+.moment{margin:0;display:flex;flex-direction:column;gap:var(--s-16)}
+.m-cap{display:flex;flex-direction:column;gap:var(--s-6)}
+.m-name{display:flex;align-items:baseline;gap:var(--s-10);flex-wrap:wrap}
+.m-n{color:var(--text-3);font-size:12.5px}
+.m-which{color:var(--text-3)}
+.m-why{margin:0;color:var(--text-2);font-size:13px;line-height:1.6;max-width:64ch}
+.m-stage{display:flex;gap:var(--s-24);flex-wrap:wrap;align-items:flex-start}
+.m-lbl{margin:0 0 var(--s-8)}
+.spacer{flex:1 1 auto}
+
+/* ── the surfaces, at the prototype's measurements ─────────────────────
+   The column carries a full border and a radius where the real one carries
+   only border-right and no radius: there it sits against a masthead and a
+   pane that close it, and here it is alone on a ground. A specimen that
+   floated with one edge would read as a rendering fault rather than as a
+   column. Everything inside it is the real value. */
+.s-col{flex:0 0 420px;width:420px;max-width:100%;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--r-widget);overflow:hidden}
+.s-bar{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap;
+  padding:var(--s-14) var(--s-20);border-bottom:1px solid var(--border)}
+.s-row{display:grid;grid-template-columns:auto 1fr;align-items:start;gap:var(--s-16);
+  padding-block:var(--s-20);padding-inline:var(--s-10) var(--s-16);
+  border-bottom:1px solid var(--border)}
+.s-row:last-child{border-bottom:0}
+.s-rowmeta{display:flex;align-items:center;gap:var(--s-10);margin-top:var(--s-10)}
+/* the loading region. min-height is the height the rows it replaces occupy,
+   so the column does not resize as the data lands -- the same reason
+   .cmp-status reserves 17px for a line it does not yet have. */
+.s-empty{display:grid;place-items:center;padding:var(--s-20)}
+.s-card{background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-widget);display:flex;flex-direction:column;min-width:0;flex:1 1 300px}
+.s-head{display:flex;align-items:center;gap:var(--s-8) var(--s-12);flex-wrap:wrap;
+  padding:var(--s-14) var(--s-20) var(--s-10)}
+.s-body{padding:0 var(--s-20) var(--s-16);flex:1;display:flex;flex-direction:column;
+  min-width:0;justify-content:center}
+/* a loader is a block inside a COLUMN flex, where justify-content works on the
+   MAIN axis -- vertical here -- so it centres the loader top-to-bottom and
+   leaves it hard against the left edge. align-items is the other axis, and it
+   is set only on the bodies that actually host one. */
+.s-body[data-loader]{align-items:center}
+.s-cap{border-top:1px solid var(--border);margin:0 var(--s-20);
+  padding:var(--s-12) 0 var(--s-14)}
+.s-more{display:flex;align-items:center;gap:var(--s-12);
+  padding:var(--s-14) var(--s-20);border-top:1px solid var(--border)}
+.s-chip{display:flex;align-items:center;gap:var(--s-8);flex-wrap:wrap;
+  padding:var(--s-8) var(--s-10);margin:var(--s-12);
+  border:1px solid var(--border-strong);border-radius:var(--r-control);
+  background:var(--surface-sunken)}
+/* the record. left:200px in the real pane is the peek of the map underneath;
+   here the peek is rendered as its own strip so the specimen carries the one
+   thing §6a.4 says the overlay must never lose. */
+.s-peek{display:flex;gap:0;align-items:stretch;background:var(--surface-sunken);
+  border:1px solid var(--border);border-radius:var(--r-shell);overflow:hidden;
+  width:100%;max-width:640px}
+.s-peek-strip{flex:0 0 60px;border-right:1px solid var(--border);
+  display:grid;place-items:center;padding:var(--s-12)}
+.s-rec{flex:1 1 auto;background:var(--surface);display:flex;flex-direction:column;min-width:0}
+.s-rechead{padding:var(--s-16) var(--s-20) var(--s-12);border-bottom:1px solid var(--border)}
+.s-recbody{padding:var(--s-20);flex:1;display:flex;flex-direction:column;
+  gap:var(--s-10);justify-content:center;min-height:150px}
+.s-grid{display:flex;flex-wrap:wrap;gap:var(--s-16);width:100%}
+/* the whole-screen specimen. Rendered at real measurements and scaled as one
+   block, so the 420:1020 ratio between column and pane is exact rather than
+   approximated by two numbers chosen to fit. */
+/* transform does not affect layout, so the wrapper reserves the UNSCALED
+   height unless it is told otherwise: 420 * .62 = 260.4. Without this the
+   specimen leaves 160px of dead ground under it and reads as a broken box. */
+.s-scale{width:100%;overflow:hidden;height:261px}
+.s-scale>div{transform:scale(.62);transform-origin:0 0;width:1440px;height:420px}
+.s-app{display:flex;flex-direction:column;height:420px;border:1px solid var(--border);
+  border-radius:var(--r-widget);overflow:hidden;background:var(--surface)}
+/* full width, above both columns -- the real masthead spans the screen and is
+   its own region (§6a). Nesting it in the column made the column look like a
+   page and the pane look like a sibling of the wrong thing. */
+.s-mast{flex:0 0 48px;border-bottom:1px solid var(--border);display:flex;
+  align-items:center;gap:var(--s-12);padding-inline:var(--s-20)}
+.s-appmain{flex:1 1 auto;display:flex;min-height:0}
+.s-appcol{flex:0 0 420px;width:420px;border-right:1px solid var(--border)}
+.s-apppane{flex:1 1 auto;display:grid;place-items:center;background:var(--ground)}
+
+/* ── the skeleton, ported verbatim from the prototype ──────────────────
+   Needed here because half the point of these specimens is that a loader and
+   a skeleton bar must not be mistaken for each other. Testing that with an
+   approximation of the bar would test nothing. --cycle is already in the
+   token block above at 1.6s, which is what the real shimmer runs at -- and
+   the loaders beside it run at the repo's 1111ms and 887ms. THAT MISMATCH IS
+   VISIBLE HERE AND IS THE DECISION RECORDED IN THE HEADER, not an oversight. */
+.sk{display:block;border-radius:3px;background:var(--skeleton);position:relative;overflow:hidden}
+.sk::after{content:"";position:absolute;inset:0;transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent,var(--skeleton-shimmer),transparent);
+  animation:sweep var(--cycle) linear infinite}
+@keyframes sweep{to{transform:translateX(100%)}}
+.sk-h-micro{height:9px}  .sk-h-label{height:11px}
+.sk-h-body{height:12px}  .sk-h-title{height:15px}
+.sk-h-fig{height:26px}
+.w-xs{width:28px} .w-sm{width:52px} .w-md{width:88px}
+.w-lg{width:132px} .w-xl{width:180px} .w-full{width:100%}
+
+/* ═══ REDUCED MOTION. §6: declare the end states, never shorten the duration.
+   The recorded failure is a real one -- under forced reduced motion a view
+   transition never ticked and the screen rendered blank.
+
+   Every dot is PRESENT AND STILL at the position it holds in its own path:
+   Prism Sweep as a diagonal gradient running 0.16 -> 0.94 along the snake
+   order, Drift TL as five bands. That is §3.6's "shimmer goes flat, never off"
+   one surface down. The narration keeps saying what is happening, and its beat
+   keeps running -- somebody who asked for less movement did not ask to be told
+   less about what the system is doing.
+
+   --rest is set per dot in the build below, from upstream's own idle formulas.
+   .dmx-dot is (0,1,0) and !important, so it beats both the * rule above it and
+   the animation origin that would otherwise win. ═══ */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-property:none!important;animation:none!important}
+  .dmx-dot{opacity:var(--rest)!important}
+  /* the prototype's own line, carried with the bar it governs: a skeleton
+     that vanished would stop reading as absent data and start reading as a
+     grey design element. Flat, never off. */
+  .sk::after{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="lab">
+
+  <figure class="spec">
+    <div class="pill">
+      <span class="slot" data-loader="prism"></span>
+      <!-- ONE role="status" ON THE PAGE, and it is this one. Two live regions
+           saying the same sentence at the same moment is two announcements,
+           and the second pill's narration is therefore aria-hidden. The dot
+           grids are aria-hidden too: the text carries the meaning, the dots
+           are its picture. -->
+      <span class="narr t-body" role="status">
+        <span data-on="1">Reading your idea</span>
+        <span data-on="0">Drafting the criteria</span>
+      </span>
+    </div>
+    <figcaption class="cap">
+      <span class="t-micro">Prism Sweep</span>
+      <span class="fig fig-s">dotm-square-5</span>
+    </figcaption>
+  </figure>
+
+  <figure class="spec">
+    <div class="pill">
+      <span class="slot" data-loader="drift"></span>
+      <span class="narr t-body" aria-hidden="true">
+        <span data-on="1">Reading your idea</span>
+        <span data-on="0">Drafting the criteria</span>
+      </span>
+    </div>
+    <figcaption class="cap">
+      <span class="t-micro">Drift TL</span>
+      <span class="fig fig-s">dotm-3x3-3</span>
+    </figcaption>
+  </figure>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     THE EIGHT. Ordered by where they fall in one founder's session.
+
+     Chosen from 25 moments that plausibly hit the engine. The other 17 are
+     either already carried by the composer (the four conversation beats), or
+     already have the fullest affordance in the product (the re-rank: sweep,
+     open band, dimmed bar and aria-busy), or are near-duplicates of one of
+     these eight.
+
+     WHAT IS DELIBERATELY ABSENT IS THE LARGER HALF. Roughly eighteen further
+     moments are PROVABLY LOCAL and get nothing, because design-language.md §6
+     is explicit that "a wait the system is not actually having is the one
+     thing an indicator may never assert" -- restoring the original order,
+     the Market/Technology toggle, starring, sorting the rivals table,
+     tracking a holder, clearing a filter, every menu, the theme control. The
+     prototype says it of itself at setRestore: "Faking latency here would be
+     inventing a wait."
+     ═══════════════════════════════════════════════════════════════════════ -->
+
+<div class="moments">
+
+  <!-- ── 1 ─────────────────────────────────────────────────────────────
+       The column is populated before the search resolves and is never
+       dimmed or emptied, so today the ranked patents are simply there. -->
+  <figure class="moment">
+    <figcaption class="m-cap">
+      <span class="m-name">
+        <span class="fig fig-s m-n">01</span>
+        <span class="t-title">Post-search &middot; the left panel</span>
+        <span class="t-micro m-which">Prism Sweep</span>
+      </span>
+      <p class="m-why">The ranked patents are being retrieved. The column has no rows yet,
+        so the loader sits where the first one will land and the region holds its height.</p>
+    </figcaption>
+    <div class="m-stage">
+      <div class="s-col">
+        <div class="s-bar">
+          <span class="t-label">Relevance</span><span class="spacer"></span>
+          <span class="t-label">Filter</span>
+        </div>
+        <div class="s-empty" style="min-height:216px" data-loader="prism"></div>
+      </div>
+    </div>
+  </figure>
+
+  <!-- ── 2 ─────────────────────────────────────────────────────────────
+       platform.md §6a.5 promises each view "becomes itself as its own data
+       lands". What is built is .grid.is-building, ONE blanket dim at .45
+       over all ten cards, because drawDash() runs once and there is no
+       per-widget lifecycle to hang the promise on. This is the promise. -->
+  <figure class="moment">
+    <figcaption class="m-cap">
+      <span class="m-name">
+        <span class="fig fig-s m-n">02</span>
+        <span class="t-title">Post-search &middot; the right pane</span>
+        <span class="t-micro m-which">Drift TL, one per view</span>
+      </span>
+      <p class="m-why">Each view resolves when its own data arrives, so the pane fills in
+        pieces rather than all at once. Two have landed and carry their bars; one is still
+        working. The prototype dims all ten together instead.</p>
+    </figcaption>
+    <div class="s-grid">
+      <div class="s-card">
+        <div class="s-head"><span class="t-label">Rivals</span></div>
+        <div class="s-body">
+          <span class="sk sk-h-fig w-lg" style="margin-bottom:10px"></span>
+          <span class="sk sk-h-body w-full" style="margin-bottom:7px"></span>
+          <span class="sk sk-h-body" style="width:72%"></span>
+        </div>
+        <div class="s-cap"><span class="sk sk-h-body" style="width:64%"></span></div>
+      </div>
+      <div class="s-card">
+        <div class="s-head"><span class="t-label">Filings over time</span></div>
+        <div class="s-body" style="min-height:118px" data-loader="drift"></div>
+        <div class="s-cap"><span class="sk sk-h-body" style="width:52%"></span></div>
+      </div>
+      <div class="s-card">
+        <div class="s-head"><span class="t-label">Live and expired</span></div>
+        <div class="s-body">
+          <span class="sk sk-h-fig w-md" style="margin-bottom:10px"></span>
+          <span class="sk sk-h-body w-full" style="margin-bottom:7px"></span>
+          <span class="sk sk-h-body" style="width:58%"></span>
+        </div>
+        <div class="s-cap"><span class="sk sk-h-body" style="width:70%"></span></div>
+      </div>
+    </div>
+  </figure>
+
+  <!-- ── 3 ─────────────────────────────────────────────────────────────
+       The head stays because the title is known and was known before the
+       refresh started. Emptying it too would claim the card had become a
+       different card. -->
+  <figure class="moment">
+    <figcaption class="m-cap">
+      <span class="m-name">
+        <span class="fig fig-s m-n">03</span>
+        <span class="t-title">One widget refreshing</span>
+        <span class="t-micro m-which">Drift TL</span>
+      </span>
+      <p class="m-why">The card keeps its title &mdash; that was known before the refresh
+        began &mdash; and only the body carries the wait. Nothing around it moves.</p>
+    </figcaption>
+    <div class="m-stage">
+      <div class="s-card" style="flex:0 0 320px">
+        <div class="s-head"><span class="t-label">Where it is filed</span></div>
+        <div class="s-body" style="min-height:130px" data-loader="drift"></div>
+        <div class="s-cap"><span class="sk sk-h-body" style="width:66%"></span></div>
+      </div>
+    </div>
+  </figure>
+
+  <!-- ── 4 ─────────────────────────────────────────────────────────────
+       Eleven identifiers, an abstract and up to fifteen claims -- none of
+       which the row holds. design-language.md is explicit that the heading
+       is present throughout: "a heading held at opacity:0 is the
+       visibility:hidden failure wearing a different property -- announced
+       and invisible". So the head is real English and the body waits. -->
+  <figure class="moment">
+    <figcaption class="m-cap">
+      <span class="m-name">
+        <span class="fig fig-s m-n">04</span>
+        <span class="t-title">The record opening</span>
+        <span class="t-micro m-which">Prism Sweep</span>
+      </span>
+      <p class="m-why">Eleven identifiers, an abstract and up to fifteen claims, none of
+        which the row holds. The heading is present for the length of the container and says
+        nothing; the peek of the pane underneath stays visible throughout.</p>
+    </figcaption>
+    <div class="m-stage">
+      <div class="s-peek">
+        <div class="s-peek-strip"><span class="sk sk-h-body w-xs"></span></div>
+        <div class="s-rec">
+          <div class="s-rechead"><span class="t-title">Patent record</span></div>
+          <div class="s-recbody" style="align-items:center" data-loader="prism"></div>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <!-- ── 5 ─────────────────────────────────────────────────────────────
+       The one moment that already has something, and the something is
+       wrong for the job: .rec.is-swapping crossfades the body under
+       blur(2px) over DUR1, 120ms. That is a content change played at the
+       speed of a content change, and at real latency it finishes long
+       before the record does. Both frames shown, because the whole question
+       is whether the second one reads as the same pane. -->
+  <figure class="moment">
+    <figcaption class="m-cap">
+      <span class="m-name">
+        <span class="fig fig-s m-n">05</span>
+        <span class="t-title">A different patent selected</span>
+        <span class="t-micro m-which">Drift TL</span>
+      </span>
+      <p class="m-why">The pane is already open, so the title bar holds and only the body
+        changes. Today this is a 120ms crossfade under blur &mdash; which is a crossfade, not
+        a wait, and finishes long before the record arrives.</p>
+    </figcaption>
+    <div class="m-stage">
+      <div style="flex:1 1 280px;max-width:320px">
+        <p class="t-micro m-lbl">Landed</p>
+        <div class="s-peek" style="max-width:none">
+          <div class="s-rec">
+            <div class="s-rechead"><span class="t-title">Patent record</span></div>
+            <div class="s-recbody" style="justify-content:flex-start">
+              <span class="sk sk-h-title w-full"></span>
+              <span class="sk sk-h-body" style="width:78%"></span>
+              <span class="sk sk-h-body w-full"></span>
+              <span class="sk sk-h-body" style="width:64%"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1 1 280px;max-width:320px">
+        <p class="t-micro m-lbl">Swapping</p>
+        <div class="s-peek" style="max-width:none">
+          <div class="s-rec">
+            <div class="s-rechead"><span class="t-title">Patent record</span></div>
+            <div class="s-recbody" style="align-items:center" data-loader="drift"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <!-- ── 6 ─────────────────────────────────────────────────────────────
+       The next page of search results, and today there is nothing at all --
+       not even a disabled button. The count stays because it is already
+       true; the button carries the wait because the button is what was
+       pressed. -->
+  <figure class="moment">
+    <figcaption class="m-cap">
+      <span class="m-name">
+        <span class="fig fig-s m-n">06</span>
+        <span class="t-title">Show twenty more</span>
+        <span class="t-micro m-which">Drift TL</span>
+      </span>
+      <p class="m-why">The next page of results. The foot keeps the count it already has and
+        the button carries the wait, because the button is what the founder pressed.</p>
+    </figcaption>
+    <div class="m-stage">
+      <div class="s-col">
+        <div class="s-row">
+          <span class="sk sk-h-body w-xs"></span>
+          <span>
+            <span class="sk sk-h-body w-full" style="margin-bottom:6px"></span>
+            <span class="sk sk-h-body" style="width:74%"></span>
+            <span class="s-rowmeta"><span class="sk sk-h-micro w-sm"></span>
+              <span class="sk sk-h-micro w-md"></span></span>
+          </span>
+        </div>
+        <div class="s-more">
+          <span class="t-label" style="color:var(--text-3)">Showing 20 of 124</span>
+          <span class="spacer"></span>
+          <span data-loader="drift"></span>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <!-- ── 7 ─────────────────────────────────────────────────────────────
+       The chip is written BEFORE the rows arrive, and that ordering is the
+       design: it states the cut the founder just made, which is the one
+       thing already known. §6.1 governs the wording -- it may say what was
+       filtered and may never say why anything is or is not in the result. -->
+  <figure class="moment">
+    <figcaption class="m-cap">
+      <span class="m-name">
+        <span class="fig fig-s m-n">07</span>
+        <span class="t-title">Filtering from a map cell</span>
+        <span class="t-micro m-which">Drift TL</span>
+      </span>
+      <p class="m-why">A different set of patents over the same corpus. The chip states the
+        cut immediately, because that is the part already known; the rows below it are being
+        fetched. Sixty-four cells, so trying another has to stay cheap.</p>
+    </figcaption>
+    <div class="m-stage">
+      <div class="s-col">
+        <div class="s-chip">
+          <span class="t-label">From this cell</span>
+          <span class="sk sk-h-micro w-md"></span>
+        </div>
+        <div class="s-empty" style="min-height:152px" data-loader="drift"></div>
+      </div>
+    </div>
+  </figure>
+
+  <!-- ── 8 ─────────────────────────────────────────────────────────────
+       setDash('reopened') explicitly REMOVES the stagger -- "a return never
+       rebuilds" -- which is correct for a return that is instant and wrong
+       for one that loads another project's results. Nothing on screen
+       belongs to the new project yet, so nothing on screen may be dressed
+       as though it does.
+
+       Scaled as one block at .62 so the 420:1020 ratio is the real one. -->
+  <figure class="moment">
+    <figcaption class="m-cap">
+      <span class="m-name">
+        <span class="fig fig-s m-n">08</span>
+        <span class="t-title">Opening a different project</span>
+        <span class="t-micro m-which">Prism Sweep</span>
+      </span>
+      <p class="m-why">A whole session's results. Nothing on screen belongs to the new
+        project yet, so one loader carries the screen rather than ten carrying their own
+        regions. Shown at 0.62 scale; the column and pane are at their real 420 and 1020.</p>
+    </figcaption>
+    <div class="s-scale">
+      <div>
+        <div class="s-app">
+          <div class="s-mast"><span class="sk sk-h-label w-md"></span></div>
+          <div class="s-appmain">
+            <div class="s-appcol"></div>
+            <div class="s-apppane" data-loader="prism"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ═══ THE PROPS ══════════════════════════════════════════════════════════
+   Not invented. These are the two entries the upstream gallery renders each
+   loader with, from lib/loader-gallery-preview-props.ts:
+
+     dotm-square-5  { size: 36, dotSize: 5, pattern: "full", speed: 1.35 }
+     dotm-3x3-3     { size: 24, dotSize: 6, cellPadding: 1, speed: 1.15,
+                      opacityBase: 0.06, opacityMid: 0.38, pattern: "full" }
+
+   speed is INVERSE in the CSS: upstream sets --dmx-speed to 1/speed and every
+   duration multiplies by it, so a larger speed is a shorter loop.
+
+   pattern "full" is why there is no mask here. Every other pattern the library
+   offers -- diamond, outline, cross, rings, rose -- switches some dots off,
+   and both of these switch none off. 25 dots and 9 dots, all active.    ═══ */
+
+/* ═══ PRISM SWEEP · dotm-square-5 ════════════════════════════════════════
+   THE ORDER IS THE WHOLE LOADER. Ported as the loop rather than as the table
+   it produces, so it stays checkable against its source --
+   buildDiagonalSnakeOrderToIndexMap() in loaders/core/grid-paths.ts.
+
+   A boustrophedon walk of the anti-diagonals: for each diagonal d = row + col
+   from 0 to 2(N-1), even d walks its rows descending and odd d ascending. The
+   alternation is what makes it a continuous snake instead of a wavefront that
+   jumps back to the start of each diagonal.                              ═══ */
+function diagonalSnakeOrder(n){
+  var order=new Array(n*n), t=0, d, r;
+  for(d=0; d<=(n-1)*2; d++){
+    var rowStart=Math.max(0, d-(n-1)), rowEnd=Math.min(n-1, d);
+    if(d%2===0){ for(r=rowEnd; r>=rowStart; r--){ order[r*n+(d-r)]=t++; } }
+    else       { for(r=rowStart; r<=rowEnd; r++){ order[r*n+(d-r)]=t++; } }
+  }
+  return order;
+}
+
+function buildPrismSweep(){
+  var N=5, SIZE=36, DOT=5, SPEED=1.35;
+  /* getMatrix5Layout(36, 5): floor((36 - 25) / 4) = 2, and the span stays at
+     `size` rather than at the dots-plus-gaps total, which is upstream's. */
+  var gap=Math.max(1, Math.floor((SIZE - DOT*N)/(N-1)));
+  var order=diagonalSnakeOrder(N), MAXO=N*N-1;
+
+  var root=document.createElement('div');
+  root.className='dmx-root';
+  root.setAttribute('aria-hidden','true');
+  root.style.width=SIZE+'px'; root.style.height=SIZE+'px';
+  root.style.setProperty('--dmx-speed', String(1/SPEED));
+
+  var grid=document.createElement('div');
+  grid.className='dmx-grid'; grid.style.gap=gap+'px';
+
+  for(var i=0;i<N*N;i++){
+    var dot=document.createElement('span');
+    dot.className='dmx-dot dmx-diagonal-snake';
+    dot.style.width=DOT+'px'; dot.style.height=DOT+'px';
+    dot.style.setProperty('--dmx-diagonal-snake-order', String(order[i]));
+    /* the reduced-motion end state, upstream's idle formula verbatim:
+       0.16 + pathNorm * 0.78, pathNorm = order / 24. remapOpacityToTriplet is
+       a no-op on this one -- it returns its input unchanged unless a triplet
+       override was passed, and dotm-square-5 passes none. */
+    dot.style.setProperty('--rest', (0.16 + (order[i]/MAXO)*0.78).toFixed(4));
+    grid.appendChild(dot);
+  }
+  root.appendChild(grid);
+  return root;
+}
+
+/* ═══ DRIFT TL · dotm-3x3-3 ══════════════════════════════════════════════
+   Direction "tl-br", so path = (row + col) / 4 -- tlBrPath3NormFromIndex in
+   loaders/core/grid-paths-3.ts. Five diagonal bands, corner to corner.
+
+   THE REST VALUES ARE PRECOMPUTED AND THAT IS DELIBERATE. Upstream reaches
+   them through two functions, and porting both to recover five constants would
+   be carrying the library's generality to produce a fixed answer:
+
+     wave3PathOpacityFromNorm(path)          base .06  mid .38  peak .88
+       -> 0.06, 0.22, 0.38, 0.63, 0.88
+     remapOpacityToTriplet(v, .06, .38, -)   which DOES fire here, because
+       opacityBase and opacityMid are overridden; opacityPeak is not, so the
+       target peak falls back to SOURCE_PEAK_OPACITY 0.94
+       -> 0.045, 0.2323, 0.4173, 0.6507, 0.884
+
+   Check one by hand if this is ever edited: band 4 is path 1, so the raw value
+   is 0.88, which sits between SOURCE_MID 0.34 and SOURCE_PEAK 0.94, giving
+   progress (0.88 - 0.34) / 0.60 = 0.9 and 0.38 + 0.56 * 0.9 = 0.884.     ═══ */
+var DRIFT_REST=[0.045, 0.2323, 0.4173, 0.6507, 0.884];
+
+function buildDriftTL(){
+  var N=3, DOT=6, PAD=1, SPEED=1.15;
+  /* getMatrix3Layout with cellPadding set: `size` is ignored for layout and
+     the span becomes dotSize * 3 + cellPadding * 2 = 20px. Drift TL is
+     genuinely smaller than Prism Sweep; that is the library's spec, not a
+     mistake, and the 36px slot is what keeps the two pills the same height. */
+  var span=DOT*N + PAD*(N-1);
+
+  var root=document.createElement('div');
+  root.className='dmx-root dmx-matrix-3';
+  root.setAttribute('aria-hidden','true');
+  root.style.width=span+'px'; root.style.height=span+'px';
+  root.style.setProperty('--dmx-speed', String(1/SPEED));
+  root.style.setProperty('--dmx-opacity-base','0.06');
+  root.style.setProperty('--dmx-opacity-mid','0.38');
+
+  var grid=document.createElement('div');
+  grid.className='dmx-grid'; grid.style.gap=PAD+'px';
+  /* the grid rule is written for 5 tracks; the 3x3 overrides both axes inline,
+     which is exactly what DotMatrix3Base does */
+  grid.style.gridTemplateColumns='repeat('+N+',minmax(0,1fr))';
+  grid.style.gridTemplateRows='repeat('+N+',minmax(0,1fr))';
+
+  for(var i=0;i<N*N;i++){
+    var row=Math.floor(i/N), col=i%N, band=row+col;
+    var dot=document.createElement('span');
+    dot.className='dmx-dot dmx-path-3';
+    dot.style.width=DOT+'px'; dot.style.height=DOT+'px';
+    dot.style.setProperty('--dmx-path', String(band/((N-1)*2)));
+    dot.style.setProperty('--rest', String(DRIFT_REST[band]));
+    grid.appendChild(dot);
+  }
+  root.appendChild(grid);
+  return root;
+}
+
+/* ONE MOUNT LOOP, not one call per host. There are ten loader hosts now --
+   two reference pills and eight specimens -- and a hand-written append per
+   host is a list that goes stale the first time a specimen is added and
+   nobody notices, because a missing loader looks exactly like a specimen
+   whose region is meant to be empty. */
+[].forEach.call(document.querySelectorAll('[data-loader]'), function(host){
+  host.appendChild(host.getAttribute('data-loader') === 'prism'
+    ? buildPrismSweep() : buildDriftTL());
+});
+
+/* ═══ THE NARRATION ══════════════════════════════════════════════════════
+   §7's two beats, verbatim: "One string held for the whole wait reads as a
+   fixed timer; two read as work being done."
+
+   ONE TIMER FOR BOTH PILLS. Two intervals would drift apart within a minute
+   and the page would read as two unrelated things rather than as one surface
+   shown twice. This is Terrain's --cycle of 1.6s, doubled -- the dots run on
+   the library's clock, the text runs on ours, and the header says why.
+
+   It keeps running under reduced motion. The crossfade is flattened by the
+   media query, so the strings swap rather than blur, but the beat itself is
+   information and §6 flattens motion without removing it.               ═══ */
+var CYCLE=1600;
+var narrs=[].slice.call(document.querySelectorAll('.narr'));
+function setNarr(k){
+  narrs.forEach(function(n){
+    var sp=n.children;
+    for(var i=0;i<sp.length;i++) sp[i].setAttribute('data-on', i===k ? '1' : '0');
+  });
+}
+var narrI=0;
+setNarr(0);
+setInterval(function(){ narrI = narrI ? 0 : 1; setNarr(narrI); }, CYCLE*2);
+
+})();
+</script>
+</body>
+</html>
