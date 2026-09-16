@@ -151,6 +151,54 @@ offers no button to tab to.
 
 ---
 
+## The engine seam
+
+`js/ports.mjs` is `design/components.md` §1 made executable: **32 named ports**, one per
+data-bearing row, plus a typedef for each shape and a `NullEngine` that implements every port by
+refusing.
+
+**Every port resolves to `{ok:true, data}` or `{ok:false, code, retryable}`.** Each clause earns its
+place:
+
+- **A failure is a response and is not an empty one.** *No patents matched* is an answer; *the search
+  did not run* is not. A component that cannot tell them apart renders "nothing found" over an
+  outage. An empty array is not a failure signal.
+- **Partial success is the normal case**, which is why every view is its own port. A response that
+  can only be wholly good or wholly bad forces the surface to blank nine working views to report one
+  broken one.
+- **The reason is machine-readable; the sentence is ours.** Never return prose for display — our copy
+  states the fix rather than the fault, and a message we did not write cannot be made true of our
+  interface.
+- **`retryable` is part of the answer**, and it is exactly what `failHTML(say, act)` consumes.
+  `true` → pass an `act` and the block offers *Try again*. `false` → pass none, and the block says
+  there is no way forward **by having no button**.
+
+**`null` on an identity field means render the skeleton bar, and it is the only thing that means
+that.** A real engine returning real names then changes nothing but the presence of a value — no
+renderer branches on whether the data is real. **`null` and `'XXX'` stay distinct**: one is *this
+value exists and we decline to print it*, the other is *nobody has chosen one yet*, and they render
+through different paths on purpose.
+
+`NullEngine` **is not a stub.** It is what `app/` runs against when `demo/` is deleted, and every
+surface has to say *this did not run* rather than throw. It is also the check that no component
+secretly needs data to draw its own chrome — a surface that cannot render against it cannot render
+its own failure state either.
+
+### The three zones
+
+| | |
+| --- | --- |
+| `app/js/**`, `app/partials/**` | the contract. **Never holds data** |
+| `demo/**` | fake data and the fake engine. **Deletable entirely** |
+| the seam | **one import line** in `js/main.mjs`, under a banner |
+
+`check-app.py` fails the build if `demo/` is imported anywhere else, so deleting the directory leaves
+one broken line rather than a search. **Never bend a component toward the demo data's shape; bend the
+fake engine toward the contract** — a component shaped around the fake engine is a component that
+breaks against the real one.
+
+---
+
 ## The four `!important`s
 
 An inventory, so that a fifth has to argue for itself.
