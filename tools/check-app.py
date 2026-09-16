@@ -254,17 +254,26 @@ for p in APP_CSS:
              " It is INVALID at computed-value time, so the property silently takes its "
              "INITIAL value -- 1, for opacity")
 
-# Every row of the interface table must name a property something actually
-# reads, or the table is documentation of a property that no longer exists.
+# Every row of the interface table must name a property that EXISTS SOMEWHERE
+# -- read by a stylesheet, declared by one, or set by a module.
+#
+# SCOPED ACROSS app/ AND THE PROTOTYPE ON PURPOSE. While the extraction is in
+# flight the table describes the contract being delivered, so a property whose
+# stylesheet has not been split out yet is ahead of the code rather than dead.
+# What this still catches is the one thing that matters: a row naming a
+# property that exists NOWHERE, which is a row that outlived its property.
 if iface:
-    read_anywhere = set()
-    for p in APP_CSS:
-        read_anywhere |= set(re.findall(r'var\(\s*(--[\w-]+)', strip_comments_css(texts[p])))
-    stale = [t for t in sorted(iface) if t not in read_anywhere and t not in declared]
-    if stale and APP_JS:
-        fail(f"app/README.md lists {stale} as set by JavaScript, but no stylesheet reads them "
-             f"and no stylesheet declares them. A table row for a property nothing reads is a "
-             f"row that outlived its property")
+    everywhere = set()
+    for p in list(texts):
+        t = texts[p]
+        everywhere |= set(re.findall(r'var\(\s*(--[\w-]+)', t))
+        everywhere |= set(re.findall(r'''setProperty\(\s*['"](--[\w-]+)['"]''', t))
+        everywhere |= set(re.findall(r'(--[\w-]+)\s*:', t))
+    stale = [t for t in sorted(iface) if t not in everywhere]
+    if stale:
+        fail(f"app/README.md's interface table lists {stale}, which nothing anywhere reads, "
+             f"declares or sets. A row that outlived its property is worse than no table, "
+             f"because gate B trusts it")
 
 
 
@@ -285,7 +294,14 @@ for p in APP_CSS + APP_JS:
 # THIS IS THE ONE BUG CLASS THE FILE SPLIT INTRODUCES FOR FREE: the module that
 # writes the attribute and the file that styles it are now in different
 # directories, so a rename on one side is silent on the other.
-if APP_JS:
+# TURNS ON WITH app/js/surfaces/, and not before. The check compares the
+# modules that WRITE an attribute against the stylesheets that STYLE it, so
+# until the surface modules exist there is nothing on one side of the
+# comparison and the check would only report that the extraction is unfinished
+# -- which is not what it is for, and a check that fires on a known-incomplete
+# tree is a check people learn to skip.
+SURFACES = walk('app/js/surfaces', ('.mjs',))
+if SURFACES:
     alljs = '\n'.join(texts[p] for p in APP_JS)
     styled = set()
     for p in APP_CSS:
@@ -319,6 +335,7 @@ if len(demo_importers) > 1:
 # must be 99-reduced-motion.css -- 20 of its 28 rules are same-specificity
 # overrides declaring END STATES, which is what prevents the blank-screen
 # failure design-language.md §6 records from a real incident.
+linked_anywhere = set()
 for p in APP_HTML:
     t = texts[p]
     links = re.findall(r'<link[^>]+href="(styles/[^"]+\.css)"', t)
@@ -327,18 +344,28 @@ for p in APP_HTML:
     for l in links:
         if not os.path.exists(os.path.join(ROOT, 'app', l)):
             fail(f"{p}: links {l}, which does not exist")
-    on_disk = [os.path.basename(c) for c in APP_CSS]
-    linked  = [os.path.basename(l) for l in links]
-    missing = [c for c in on_disk if c not in linked and c != 'tokens.css']
-    if missing:
-        fail(f"{p}: {missing} exist in app/styles/ and are linked by nothing. "
-             f"A stylesheet nobody links is a stylesheet nobody knows is dead")
-    if linked and linked[-1] != '99-reduced-motion.css':
+    linked = [os.path.basename(l) for l in links]
+    linked_anywhere |= set(linked)
+    # ORDER IS CHECKED PER PAGE, because order is a property of a page.
+    if linked[-1] != '99-reduced-motion.css':
         fail(f"{p}: the last stylesheet is {linked[-1]}, not 99-reduced-motion.css. "
              f"It declares end states at the same specificity and MUST win")
+    nums = [int(m.group(1)) for m in (re.match(r'^(\d\d)-', c) for c in linked) if m]
+    if nums != sorted(nums):
+        fail(f"{p}: the stylesheets are linked out of numeric order ({linked}). "
+             f"The number IS the cascade, so the tag order has to match it")
     if any('@import' in b for b in re.findall(r'<style[^>]*>(.*?)</style>', t, re.S)):
         fail(f"{p}: @import serialises discovery and hides which file a rule came from; "
              f"use one <link> per stylesheet")
+
+# COLLECTIVELY, not per page: lab.html legitimately links a stylesheet
+# index.html does not. What is not allowed is a stylesheet NO page links.
+if APP_HTML:
+    on_disk = [os.path.basename(c) for c in APP_CSS]
+    orphans = [c for c in on_disk if c not in linked_anywhere]
+    if orphans:
+        fail(f"{orphans} exist in app/styles/ and no page links them. "
+             f"A stylesheet nobody links is a stylesheet nobody knows is dead")
 
 
 # ── the JavaScript parses ─────────────────────────────────────────────────

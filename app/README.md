@@ -107,6 +107,42 @@ while every grep for the token found it present and correct.
 
 ---
 
+## `js/core/` — the behaviour layer, and the part a rewrite gets subtly wrong
+
+Fourteen modules, dependency-free, each exercised by `lab.html`. **This is the deliverable.** Every
+one of them encodes a rule that reads as an implementation detail and is not:
+
+| Module | The rule it carries |
+| --- | --- |
+| `dom` | `esc` is used in exactly one place — the exclusion chips. Everywhere else renders typed text with `textContent` |
+| `motion` | `reduced()` is read **live**, never cached. The prototype read it once at parse time, so turning reduced motion on mid-session moved the CSS and left the JS behind |
+| `loader` | One mark, one size, no variants, no region scaling. Third-party motion: permitted in the product, **not** republishable as a standalone component |
+| `wait` | `waitOn` captures `offsetHeight` **before** emptying. `failIn` deliberately does **not** clear `minHeight`. `failHTML`'s retry button is optional **by rule** |
+| `button-wait` | Re-applies the label as `aria-label`, because `display:none` children are excluded from the accessible name. Not `disabled` — that drops focus to `<body>` |
+| `beat` | `BEAT` is the engine's, `SAVE_MS` is ours, and the second is not a rounding of the first. **Reduced motion does not shorten or skip a beat** |
+| `generation` | A counter per channel. The third line — `if (stale(…)) return` in every deferred callback — is the one people forget |
+| `timers` | A scope that can cancel everything it started. 66 timer calls in the prototype, each cleared or not by hand |
+| `armed` | A **registry**, so `disarmAll()` cannot miss a flag. The hand-maintained checklist it replaces said "the list has to stay whole" and lived inside the router being deleted |
+| `focus` | `preventScroll` is the fix for the record jumping. `isConnected` before restoring — a row re-rendered by a re-rank is the ordinary case |
+| `esc-stack` | Escape closes the most recent. One overlay left; the stack is what makes a second one safe |
+| `live-region` | Clears and re-sets after 60ms so an **identical** second failure announces. Unhides **before** writing |
+| `roving` | One tab stop per group; the stop moves with focus so leaving and returning lands where the founder was |
+| `delegate` | `closest`, not `matches` — the founder clicks the label inside the button |
+
+### The numbered checks
+
+`lab.html` states each check, proves it in the DOM, and returns a verdict. Press **Run every check**,
+or call `window.runAll()` from a script — it is the same definition either way, because a bench that
+only renders is a bench somebody has to look at, and these are exactly the faults looking cannot
+catch.
+
+**Three of them need a person.** The DOM check proves the live region was cleared and re-set; it
+cannot prove a screen reader spoke. **Verify checks 3, 4 and 9 with VoiceOver**: an identical second
+failure announces twice, a button keeps its name through a wait, and a failure with no way forward
+offers no button to tab to.
+
+---
+
 ## The four `!important`s
 
 An inventory, so that a fifth has to argue for itself.

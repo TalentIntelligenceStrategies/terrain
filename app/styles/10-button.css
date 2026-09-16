@@ -1,0 +1,96 @@
+/* ══ 10 · BUTTON ══════════════════════════════════════════════════════════
+   THE PRIMARY ACTION READS --accent, NOT --text-1 (design-language.md §3.8,
+   site 1 of 3). They resolve to the same near-black today, which is what makes
+   the repaint reviewable by a screenshot that must be identical -- and they
+   will not resolve to the same thing for long.
+
+   EVERY :hover IS IN THE GATED BLOCK AT THE FOOT OF THIS FILE, and every
+   declaration outside it describes the control rather than hovering it. Both
+   halves are gates: check-app.py refuses an ungated :hover (it applies on TAP
+   and sticks until something else is tapped) and refuses a BASE RULE INSIDE
+   the gate (it never applies on a coarse pointer, and no screenshot at any
+   width can catch that).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── shared controls ────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-8);
+     border-radius:var(--r-control);font-size:13px;font-weight:500;padding:0 var(--s-14);
+     height:36px;white-space:nowrap;
+     transition:background var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
+/* §3.8 SITE 1 OF 3 — THE PRIMARY ACTION. Reads the accent slot rather than
+   --text-1, so the repaint is a token edit and not a hunt. The alias resolves
+   to the same near-black today, which is what makes this change reviewable by
+   a screenshot that must be identical. One filled button per surface. */
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text-1)}
+.btn-ghost{color:var(--text-2)}
+.btn:active{transform:scale(.97)}
+/* THE PRIMARY ACTION IS GATED WHILE THE SENTENCE IS BEING EDITED, so .btn needs
+   a disabled state for the first time. Disabled rather than hidden: the dock is
+   sticky and carries the button now, and removing it would change the dock's
+   height and jump the thread under an open textarea. The reason is spoken in
+   .cmp-status, which is already the conversation's live region — opacity alone
+   would say something is off without saying what. */
+.btn:disabled{opacity:.45;cursor:default}
+.btn:disabled:active{transform:none}
+/* ── a control that is unavailable FOR A REASON · platform.md §9.3 ─────────
+   SAME PIXELS, DIFFERENT TREE. `disabled` removes a button from the tab order,
+   so a keyboard or screen-reader user can never land on it and never meets the
+   sentence explaining why it will not act -- they hear the reason announced
+   once, in passing, and afterwards it is unreachable. `aria-disabled` keeps the
+   control focusable and lets aria-describedby carry the reason to it on every
+   visit. Activation is blocked in the handler instead, which is the trade this
+   makes: the platform stops enforcing it, so we must.
+
+   It is not a general replacement for `disabled`. The composer's send button
+   and the account Save stay natively disabled, because "there is nothing typed
+   yet" is a state the founder can see and does not need read to them. */
+/* ***NOT OPACITY, AND design-language.md §7 ALREADY SAID SO — 2026-09-16.***
+   "Disabled is not opacity, and neither is invalid. A button may fade because
+   its label is all there is in it." THAT LICENCE DOES NOT COVER A FILLED
+   BUTTON: .btn-secondary has a fill as well as a label, and at 45% the fill
+   and the label fade TOWARDS EACH OTHER. Measured on Plan & billing, light
+   theme: Change plan came out rgb(157,157,157) on rgb(152,152,152) --
+   ***1.06:1***, which is a label you cannot read at all. Dark was 4.05:1 and
+   the ghost buttons 2.73:1 dark, 2.07:1 light.
+
+   It was written for the gate's Approve, which is .btn-primary -- near-black
+   fill, inverse label, a contrast budget wide enough to survive being halved.
+   Phase 5 pointed it at .btn-secondary and .btn-ghost and the budget was not
+   there. The fix is the one §7 gives the FIELD in the next sentence: take the
+   sunken fill and keep the text legible.
+
+   AND IT IS NOT A CONTRAST EXEMPTION QUESTION. WCAG excuses an inactive
+   control, and that excuse is exactly wrong here: platform.md §10 keeps these
+   focusable BECAUSE the founder is meant to read them and learn what is not
+   ready. A treatment that makes the label unreadable defeats what the
+   treatment is for. */
+/* --text-2 AND NOT --text-3, measured rather than guessed. §3.1 tunes --text-3
+   for micro-labels ON --surface; on --surface-sunken it lands at 4.41:1 in
+   light, which is under 4.5 for 13px at weight 500. THE FILL IS THE SIGNAL
+   AND THE TEXT STAYS LEGIBLE -- §7's field rule exactly, one component over. */
+.btn[aria-disabled="true"]{background:var(--surface-sunken);color:var(--text-2);
+      border-color:var(--border);cursor:default}
+.btn[aria-disabled="true"] svg{color:var(--text-3)}
+.btn[aria-disabled="true"]:active{transform:none}
+/* ── WHAT IS INERT SAYS SO · platform.md §10, 2026-09-15 ──────────────────
+   The same two declarations for the menu row, because Sign out is the one
+   inert control that is not a .btn. Written out rather than folded into the
+   selector above: .menu-item has no :active transform to cancel and adding it
+   to that rule would imply it did.
+
+   THE NOTE IS THE PAGE'S, NOT THE CONTROL'S. §10 is one rule and not seven
+   exceptions, so it is stated once per surface -- seven notices would read as
+   seven separate faults rather than as one thing that is not built yet. What
+   makes the control itself legible is aria-disabled, which keeps it focusable
+   so aria-describedby can carry this sentence to a screen reader on every
+   visit. .btn[disabled] would take it out of the tab order and the reason
+   with it -- the argument the gate's own gated state records above. */
+
+/* ── hover, gated ── every rule here NAMES :hover; nothing else may. ── */
+@media (hover:hover) and (pointer:fine){
+  .btn-primary:hover{background:var(--accent-hover)}
+  .btn-secondary:hover{background:var(--surface-sunken)}
+  .btn-ghost:hover{background:var(--surface-sunken)}
+  .icon-btn:hover{color:var(--text-1);background:var(--surface-sunken)}
+}

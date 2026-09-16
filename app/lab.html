@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terrain — primitive bench</title>
+<link rel="icon" href="../brand/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../brand/fonts/fonts.css">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/01-bench.css">
+<link rel="stylesheet" href="styles/04-loader.css">
+<link rel="stylesheet" href="styles/05-wait-fail.css">
+<link rel="stylesheet" href="styles/10-button.css">
+<link rel="stylesheet" href="styles/99-reduced-motion.css">
+<script>
+(function(){
+  var q = /[?&]theme=(light|dark)\b/.exec(location.search);
+  if (q){ document.documentElement.setAttribute('data-theme', q[1]); return; }
+  try{var t=localStorage.getItem('terrain-theme');
+      if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}
+})();
+</script>
+</head>
+<body>
+
+<!-- The four shell regions, because live-region.mjs writes into them and a
+     bench that stubs them is a bench that cannot show the 60ms re-announce. -->
+<p class="sr-only" id="alertRegion" role="alert"></p>
+<p class="sr-only" id="sayConversation" role="status" aria-live="polite"></p>
+<p class="sr-only" id="sayList" role="status" aria-live="polite"></p>
+<p class="sr-only" id="sayViews" role="status" aria-live="polite"></p>
+<p class="sr-only" id="sayDestination" role="status" aria-live="polite"></p>
+
+<header class="bench-head">
+  <h1>Primitive bench</h1>
+  <p>Every <code>core/</code> module against a fake host. <strong>The numbered checks below are the
+     ones the extraction has to pass</strong> — each states what it is proving, so a failure says
+     what broke rather than that something did.</p>
+  <p class="bench-run"><button class="btn btn-primary" id="runAll" type="button">Run every check</button>
+     <span id="runOut" role="status" aria-live="polite"></span></p>
+</header>
+
+<main class="bench">
+
+  <section class="bench-case">
+    <h2>1 · A region reserves its height and does not jump twice</h2>
+    <p><code>waitOn</code> captures <code>offsetHeight</code> <em>before</em> emptying. Without it the
+       body collapses to the loader’s 20px, the grid reflows, and it reflows again when data lands —
+       two layout jumps to say one thing arrived.</p>
+    <div class="bench-host"><div class="card-body" id="h1">Content tall enough to measure.<br>A second line.<br>A third.</div></div>
+    <p><button class="btn btn-secondary" data-act="wait1" type="button">Wait</button>
+       <button class="btn btn-secondary" data-act="land1" type="button">Land</button>
+       <button class="btn btn-secondary" data-act="fail1" type="button">Fail</button></p>
+  </section>
+
+  <section class="bench-case">
+    <h2>2 · A failure keeps the reserved height</h2>
+    <p><code>failIn</code> deliberately does <em>not</em> clear <code>minHeight</code>. Real content
+       sets its own height; a sentence does not, and the region would collapse — which is the fault
+       the reserve exists to prevent, at the moment it bites hardest.</p>
+    <div class="bench-host"><div class="card-body" id="h2">Four lines.<br>Of content.<br>To give it.<br>A height.</div></div>
+    <p><button class="btn btn-secondary" data-act="fail2" type="button">Wait, then fail</button></p>
+  </section>
+
+  <section class="bench-case">
+    <h2>3 · An <em>identical</em> second failure announces twice</h2>
+    <p>A live region re-set to the string it already holds is a mutation several screen readers do not
+       announce, so the second press of the same button would be silent. <code>sayFailure</code>
+       clears and re-sets after 60ms. <strong>Verify with VoiceOver</strong> — the DOM check below
+       proves the clear happened, not that it was spoken.</p>
+    <p><button class="btn btn-secondary" data-act="say" type="button">Announce the same failure</button>
+       <span class="bench-note" id="sayN">announced 0 times</span></p>
+  </section>
+
+  <section class="bench-case">
+    <h2>4 · A button keeps its accessible name through a wait</h2>
+    <p>The CSS hides every child with <code>display:none</code>, and display:none content is excluded
+       from the accessible name computation — so for the length of the beat the button announced as a
+       button with <em>no name at all</em>. Nothing visual shows it.</p>
+    <p><button class="btn btn-secondary" id="b4" data-act="btnwait" type="button">Show more</button>
+       <span class="bench-note" id="b4n">—</span></p>
+  </section>
+
+  <section class="bench-case">
+    <h2>5 · A stale generation no-ops</h2>
+    <p>A deferred callback that lands after its state has gone writes into a surface nobody is looking
+       at. Press <em>Start</em> then <em>Start</em> again before the first lands: only the second
+       should write.</p>
+    <p><button class="btn btn-secondary" data-act="gen" type="button">Start (600ms)</button>
+       <span class="bench-note" id="genOut">—</span></p>
+  </section>
+
+  <section class="bench-case">
+    <h2>6 · Escape unwinds in order</h2>
+    <p>The stack is what makes a second overlay safe. Open three, press Escape three times, and they
+       close most-recent first.</p>
+    <p><button class="btn btn-secondary" data-act="esc" type="button">Open three</button>
+       <span class="bench-note" id="escOut">—</span></p>
+  </section>
+
+  <section class="bench-case">
+    <h2>7 · <code>REDUCED</code> is live, and a beat is not shortened by it</h2>
+    <p>Read through <code>reduced()</code>, never cached: the prototype read it once at parse time, so
+       turning reduced motion on mid-session moved the CSS and left the JavaScript behind.</p>
+    <p class="bench-note" id="redOut">—</p>
+  </section>
+
+  <section class="bench-case">
+    <h2>8 · The loader, at rest and in motion</h2>
+    <p>One mark, one size, no variants. Under reduced motion it is present, visible and motionless —
+       and the dots hold the positional ramp rather than going flat.</p>
+    <div class="bench-host bench-loaders" id="h8"></div>
+  </section>
+
+  <section class="bench-case">
+    <h2>9 · <code>failHTML</code> offers a way forward only where there is one</h2>
+    <p>The retry button is optional <strong>by rule</strong>: a block with no way forward says so by
+       having no button rather than by having a dead one.</p>
+    <div class="bench-host" id="h9"></div>
+  </section>
+
+  <section class="bench-case">
+    <h2>10 · <code>armed</code> cannot have an incomplete list</h2>
+    <p>Registering is the only way to create a flag, so <code>disarmAll()</code> cannot miss one —
+       which the hand-maintained nine-flag checklist in the router could.</p>
+    <p><button class="btn btn-secondary" data-act="armed" type="button">Arm three, disarm all</button>
+       <span class="bench-note" id="armOut">—</span></p>
+  </section>
+
+</main>
+
+<script type="module" src="js/lab.mjs"></script>
+</body>
+</html>
