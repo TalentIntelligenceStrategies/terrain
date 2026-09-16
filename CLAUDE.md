@@ -2,457 +2,273 @@
 
 ## What this folder is
 
-The working directory for **TIS Terrain**, a new English-native, self-serve SaaS product in the
-TIS Patent Intelligence pillar. It is in the **design and definition** phase: positioning, naming,
-and UX intent are being settled here before any application code exists.
+The working directory for **TIS Terrain**, an English-native, self-serve SaaS product in the TIS
+Patent Intelligence pillar. It is in the **design and definition** phase: there is a working
+prototype and four documents, and no application code.
 
-This folder is **deliberately outside** the TIS brand monorepo (`~/Desktop/TIS`). That is a
-decision, not an accident — see "Relationship to the TIS monorepo" below. Do not relocate it
-without reading that section.
+This folder is **deliberately outside** the TIS brand monorepo (`~/Desktop/TIS`). That is a decision,
+not an accident — see "Relationship to the TIS monorepo" at the bottom.
 
 ## The product, in one paragraph
 
 Terrain is patent search with strategic direction, for founders working out where their idea sits.
-You arrive with a concept — filed, mid-filing, or nowhere near it — and Terrain shows you who else
-is in the space, which technology is adjacent to yours, and which part of it each of them holds.
-Self-serve software on a subscription, searching the full Innovue patent database. Read
-[docs/brief.md](docs/brief.md) before doing any substantive work; it carries the positioning and
-the list of what is still open.
+You arrive with a concept — filed, mid-filing, or nowhere near it — and Terrain shows you who else is
+in the space, which technology is adjacent to yours, and which part of it each of them holds.
+Self-serve software on a subscription, searching the full Innovue patent database.
 
-***Two questions, not three, since 2026-09-10.*** *Where are the gaps?* was dropped when Innovue's
-architecture was adopted: the map's rows are **holders** now, and an empty cell on a Technology ×
-Assignee grid means *this company has not filed there*, which is a competitor's profile and not
-open ground. **Never write copy that says Terrain shows absence, whitespace or open ground**, and
-never reintroduce the zone names Crowded / Emerging / Open. What makes it a product rather than a
-search box is **legibility and self-serve** — the same analysis an IP professional runs, operable
-by the founder who has the question. `docs/brief.md` §1 and `docs/platform.md` §1a carry it.
+**Two questions:** *who else is here?* and *what is adjacent?* What makes it a product rather than a
+search box is **legibility and self-serve** — the same analysis an IP professional runs, operable by
+the founder who has the question.
 
-Terrain is **software, not a report** — the user logs in and searches, nothing is human-produced to
+**Terrain is software, not a report.** The user logs in and searches; nothing is human-produced to
 order. Never write copy that describes it in report language.
+
+**The map's rows are holders.** An empty cell means *this company has not filed against that
+approach* — a fact about them, not about the technology. `docs/brief.md` §1 carries the test for what
+may and may not be said about it, and it is a test rather than a ban: statements about *these
+holders* are admissible, statements about *this technology being unclaimed* are not.
+
+## The prototype is the reference
+
+**`design/previews/terrain-prototype.html` is what was decided.** The documents describe it. Where a
+document and the prototype disagree, the prototype wins and the document is stale — which is the
+reverse of the rule that governed this folder while the definition was being written, and it is the
+right way round now that there is a working thing to read.
+
+That does **not** make the prototype the place to record a decision. Settle it in `docs/`, then build
+it. A design decision that exists only as a diff is a decision nobody can find.
 
 ## Structure
 
 ```
 CLAUDE.md            this file — how to work here
 README.md            what a visitor to the public repo reads first
-index.html           the landing page — links all three previews. NOT SERVED any more:
-                     Pages publishes the gh-pages branch, which is the prototype alone
-docs/brief.md        positioning, naming, the Innovue relationship — what Terrain is
-docs/platform.md     product definition — what gets built, and §9 DEFERRED — NOT IN SCOPE
-docs/design-language.md  tokens, type, components — how it looks
-docs/marketing.md    outbound copy for a founder — the product page, the voice chart, the nav
-docs/mmap-audit.md   IPtech's M-Map, sixty views, one row each — the inventory behind the ask.
-                     A view of platform.md §8, never an authority over it
-docs/tmap-audit.md   IPtech's T-Map — the eight Tech-Effx entries walked, and the shared sixty by
-                     citation rather than repeated. Same bar, same reader. THE END OF THE FAMILY
-docs/case.md         outbound — the capability read and the design pass, for management and
-                     Innovue. The page renders §0.1–§0.4 and §3–§6; §0.5, §4.H and §7–§10 stay in
-                     the record and do not render
-design/previews/     the case document and the prototype — both maintained directly
-design/previews/terrain-product-page.html  the marketing product page — a SCAFFOLD, built
-                     in the website's house style for later transplant into ~/Desktop/TIS/website/
-design/components.md the component manifest — per component, the data shape the engine must return
+
+docs/                FOUR FILES. See "Four documents" below.
+  brief.md           what Terrain IS — positioning, the name, Innovue, locked, the accent
+  platform.md        what gets BUILT — the PRD, reverse-written from the prototype
+  design-language.md how it LOOKS — tokens, type, space, motion, the skeleton contract
+
+design/
+  components.md      what the ENGINE must return, per component
+  previews/
+    terrain-prototype.html    the product
+    terrain-loading-lab.html  the loader bench
+
 tools/               ONLY what regenerates the published branch — publish-prototype.sh,
                      strip-comments.py, check-publish.py, test-gates.sh
-.claude/skills/      procedures that get RUN more than once. module-audit is the first and it
-                     exists because T-Map is a scheduled second run of the M-Map pass. Tracked
-                     on purpose — see Rules
 .github/workflows/   publish-prototype.yml — rebuilds gh-pages on every push to main
 brand/assets/imagery/terrain/  the ONE permitted raster family — see Rules
 brand/favicon.svg    the browser-tab icon — the submark, with its own dark/light block
 brand/logos/tis/     TIS SVGs, copied from the monorepo (read-only, do not edit)
-brand/fonts/         7 self-hosted woff2 + fonts.css + the two OFL licences — see Typefaces
+brand/fonts/         7 self-hosted woff2 + fonts.css + the two OFL licences
 
-    LOCAL ONLY — present in the working tree, excluded by .gitignore, never pushed:
-visual-reference/    every capture and crop, gathered here 2026-09-08
-  iptech-screenshots/             raw platform captures, 2026-09-02 and 2026-09-04
-  iptech-screenshots-identified/  the same, identified and cropped, with a README index
-  iptech-semantic-search/         Innovue's semantic search surface, 2026-09-08, with a README index
-  mmap-audit/                     59 captures of IPtech's M-Map, 2026-09-12. A LIVE CLIENT PROJECT:
-                                  assignee, inventor and examiner names, patent numbers, counts, and
-                                  five classification codes that are that landscape's axes.
-                                  docs/mmap-audit.md is the reading; NOTHING from these travels
-  visual-inspiration/             reference screens the design language was derived from
-  comparison-assets/              crops taken from those captures
+    LOCAL ONLY — in the working tree, excluded by .gitignore, never pushed:
+visual-reference/    every capture and crop of IPtech
+  iptech-screenshots/ · iptech-screenshots-identified/ · iptech-semantic-search/
+  mmap-audit/        59 captures of a LIVE CLIENT PROJECT — assignee, inventor and examiner
+                     names, patent numbers, counts, and that landscape's own axes.
+                     NOTHING from these travels.
+  visual-inspiration/ · comparison-assets/
 design/previews/iptech-terrain-comparison.html   the side-by-side deck
 design/previews/iptech-feature-request.html      the capability ask addressed to Innovue
-brand/logos/innovue/ Innovue SVGs — a third party's marks, cited but not redistributed.
-                     ONE exception is tracked and published: Innovue_Logo_Blue_eng_inline.svg,
-                     which the product's attribution line renders. See Logos.
+brand/logos/innovue/ a third party's marks. TWO exceptions are tracked and published —
+                     Innovue_Logo_Blue_eng_inline.svg and Innovue_Logo_Light_eng_inline.svg,
+                     which the theme-aware attribution line renders. See Logos.
 ```
 
-Add directories when work actually needs them, not in advance. When application code arrives it
-goes in `app/`, and that decision gets recorded in `docs/brief.md` first.
+Add directories when work actually needs them, not in advance. When application code arrives it goes
+in `app/`, and that decision gets recorded in `docs/brief.md` first.
 
-*Three tracked previews, and `index.html` links all three.* **A fourth existed for one day and is
-deleted.** `innovue-proposal.html` rendered Innovue's proposed architecture with its five conflicts
-marked on screen, and it cleared the bar a fourth preview needs — somebody else's architecture,
-addressed to the room deciding whether to adopt it. **That room adopted it** (`docs/platform.md`
-§1a), so the prototype renders the architecture as Terrain's own and a second page rendering it as
-a proposal is a view of a decision rather than of a question. *That is the general test for
-retiring a preview, and it is worth having: a preview earns its place by being about a question
-nothing else asks. When the question closes, so does the preview.*
+## Publishing
 
-*There is no `.nojekyll`, and the reason first recorded for one was wrong. It was committed and
-removed on 2026-09-08. Markdown with no YAML front matter is a Jekyll **static file** — copied
-byte-for-byte, never rendered — so Jekyll was never going to turn `docs/*.md` into site content.
-Nothing here carries front matter and no path starts with `_` or `.`, so a Jekyll build and a raw
-copy produce the same site.*
-
-***That pass happened on 2026-09-11, and what it settled is not what it set out to.*** *Pages went
-live from `main` / root first, and the static-file reasoning above was checked rather than trusted —
-`index.html`, `README.md`, `docs/brief.md` and the prototype all hashed identical to the tree, so
-Jekyll is provably a no-op here. Then the question changed: **the ask was a link that lands on the
-prototype and exposes nothing else**, and Pages has no per-file access control. It serves whatever
-tree it is pointed at. The only lever is to point it at a smaller tree.*
-
-***So there are two branches now, and the split is the whole design.***
+**Two branches, and the split is the whole design.**
 
 | | `main` | `gh-pages` |
 | --- | --- | --- |
-| holds | everything, unchanged | 14 files |
+| holds | everything | 14 files |
 | is | authored | **generated — never edit it by hand** |
 | is served | **no** | yes, at `talentintelligencestrategies.github.io/terrain/` |
 
 `gh-pages` carries the prototype as `index.html`, the eleven assets it references, and **both OFL
 licences** — this branch redistributes seven subset woff2 on a public host, which is precisely the
-case OFL 1.1 covers. `docs/`, `case.md`, the product page and this file are no longer served at all.
+case OFL 1.1 covers.
 
-**`index.html` at the root of `main` is now dead**, in the sense that nothing renders it — it is the
-landing page that linked all three previews, and the published site is the prototype alone. It is
-still the right front door if the full set is ever published again, so it stays.
+**Pages has no per-file access control**, so publishing the prototype without publishing `docs/` means
+pointing Pages at a smaller tree. Two transforms separate the branches and both are mechanical:
+`../../brand/` → `brand/`, and **every comment stripped** — 51% of the file by weight. None of it is
+client data and all of it is ours, but it is reasoning written for this room, and a link sent outward
+carried it in view-source.
 
-***Two transforms separate the branches, and both are mechanical:*** `../../brand/` → `brand/`
-because the prototype moves to the root, and **every comment stripped**. That second one was 51% of
-the file by weight — dated design decisions, `§`-references into `platform.md`, and the competitive
-read on IPtech's modules. **None of it is client data and all of it is ours**, but it is reasoning
-written for this room, and a link sent outward carried it in view-source. `main` keeps every comment;
-nothing is lost.
+**The workflow is: edit, check locally, push to `main`.**
+`.github/workflows/publish-prototype.yml` runs on every push to `main`, rebuilds `gh-pages` and
+pushes it; Pages redeploys itself about a minute later. No Pages setting is involved in a publish.
 
-***Publishing is automatic, and the workflow is unchanged from what it always was:*** **edit, check
-locally, push to `main`.** `.github/workflows/publish-prototype.yml` runs on every push to `main`,
-rebuilds `gh-pages` and pushes it; Pages redeploys itself about a minute later. *It needs **write**
-access only — admin was needed exactly twice, to enable Pages and to point it at this branch, and
-both are done. No Pages setting is involved in a publish.*
+`tools/publish-prototype.sh` is the same thing by hand, and `--build-only <dir>` assembles the tree
+without publishing. **CI calls that flag rather than repeating the build**, so the tree the gates are
+tested against is the tree that ships.
 
-*`tools/publish-prototype.sh` is the same thing runnable by hand, and `--build-only <dir>` assembles
-the tree without publishing. **CI calls that flag rather than repeating the build**, so there is never
-a second definition of what gets published — the tree the gates are tested against is the tree that
-ships.*
+**The gates are in Python, and why is the most useful thing here.** They were shell first, and **three
+of them silently did not run** — `grep -P` does not exist on macOS, the `node` syntax check never
+fired, and a `fail` inside a pipeline subshell could not stop the publish. **All three reported
+clean.** `tools/test-gates.sh` plants a violation for **every** gate and proves it
+refuses. **Add a gate, add its test** — a gate nobody has watched fail is not a gate.
 
-***The manual step was the first design and it was wrong.*** *A generated branch plus "remember to run
-the script" is a step that gets skipped exactly once and then the live site is quietly stale. If the
-automation is ever removed, the branch must go back to being served directly rather than left
-depending on someone's memory.*
-
-***`tools/` is new, and it is a real weakening of "no build step" — say so rather than pretending
-otherwise.*** *`index.html` still tells a visitor there is nothing to install, and for the previews
-that stays true; but a generated branch cannot be generated by hand twice running and stay
-byte-identical, and the comment strip in particular is not a thing anyone should do manually. The
-guard is that the directory holds **only** what regenerates the published branch.*
-
-***The gates are in Python, and why is the most useful thing in this section.*** *They were shell
-first, and **three of them silently did not run** — `grep -P` does not exist on macOS, the `node`
-syntax check never fired, and a `fail` inside a pipeline subshell could not stop the publish. **All
-three reported clean.** That is the same failure as the taxonomy that survived a figure scrub and the
-6 MB that a renamed folder slipped past: not a check that was wrong, a check that was never
-consulted. `tools/test-gates.sh` now plants a violation for each of the twelve gates and proves it
-refuses. **Add a gate, add its test** — a gate nobody has watched fail is not a gate.*
-
-***The twelfth gate was added 2026-09-12 and it is the argument for the rule, not an illustration of
-it.*** *A single stray `}` sat above `.lm{position:relative}` in the prototype and shipped. CSS does
-not discard a top-level stray brace — it starts a qualified rule, takes `}` as the beginning of a
-selector, and **swallows everything through the next `{...}`** — so the brace and the rule after it
-were parsed as one bogus rule and both were dropped. **Exactly one rule, which is why nobody saw it:**
-the declarations either side parsed normally, nothing appeared in the console, and the only symptom
-was that the list's Sort and Filter menus opened 550px from their buttons. Gate 8 had been running
-`node --check` over every script block since the gates were written; **nothing did the equivalent for
-CSS**, and that is the whole of why it survived. The gate is a brace-depth scan, and running it
-against the commit before the fix prints the line number.*
-
-***So Jekyll still runs, on the smaller tree now,*** *and the two consequences stand: a build failure
-fails the **whole** deploy, and any path added with a `_` prefix is dropped with no error.*
-**`touch .nojekyll` is the entire fix, and the trigger is a `_`-prefixed path, not a broken page** —
-the failure is silent by construction, so nothing will tell you. *On a 14-file generated tree neither
-is likely; on `main` it no longer matters, because `main` is not served.*
+**Jekyll still runs, on the smaller tree.** Two consequences stand: a build failure fails the whole
+deploy, and any path added with a `_` prefix is dropped with no error. **`touch .nojekyll` is the
+entire fix, and the trigger is a `_`-prefixed path, not a broken page** — the failure is silent by
+construction, so nothing will tell you.
 
 ## Rules
 
-**Fewer, denser documents.** Add to an existing doc in `docs/` before creating a new file. There
-are **seven**, split on purpose — *five until 2026-09-12; the sixth is `mmap-audit.md` and the bar it
-cleared is below.*
+### Four documents
 
-*The rule governs `docs/`, and `README.md` at the root is not a sixth — it is the front door for a
-visitor, and it holds no decision that is not already recorded in one of the five. If it and they
-disagree, they win. `PLAN.md` and `KICKOFF-PROMPT.md` used to sit here as operational state; both
-were deleted 2026-09-08 when the repo went public, being tooling rather than product.*
-`brief.md` is what Terrain *is*, `platform.md` is what gets *built*,
-`design-language.md` is how it *looks*, `case.md` is the argument sent *outward*, `marketing.md` is
-what a *customer* is told. A folder full of near-duplicate markdown is how the definition phase
-stops being legible.
+**`docs/` holds three files and `design/components.md` is the fourth.** They split by *reader*:
 
-Three were deliberate exceptions, and the bar each cleared is the point:
+- `brief.md` — what Terrain **is**. For anyone deciding whether this is the right product.
+- `platform.md` — what gets **built**. For anyone building it.
+- `design-language.md` — how it **looks**. For anyone designing against it.
+- `components.md` — what the **engine** must return. For an engineer on the other side of the API.
 
-- `design-language.md`, 2026-08-31 — tokens, type scale and component specs are a different kind of
-  content, and folding them into `platform.md` would have roughly doubled it.
-- `case.md`, 2026-09-01 — the other three are **internal working documents that record decisions**;
-  this one is **outbound**, addressed to TIS management and to Innovue. Different audience,
-  different tone, different lifecycle. Putting an argument aimed at Innovue inside `brief.md` would
-  stop that file being scannable as the answer to *what is Terrain*.
-- `marketing.md`, 2026-09-08 — outbound too, but to a **different outward reader**: a prospective
-  founder, who was in neither room. `case.md` argues a direction to the people funding and building
-  it; this sells the product to the person using it. Different reader, and a different kind of
-  content — conversion copy rather than an argument. Folding a hero headline into `case.md` would
-  put marketing copy inside a document addressed to a vendor.
+**A fifth needs a distinct *kind* of content and a distinct *reader*, not just a distinct topic.**
+`README.md` is not a fifth — it is the front door for a visitor and holds no decision that is not
+already in one of the four. If it and they disagree, they win.
 
-None of the three is a licence for a sixth. A new file needs a distinct **kind** of content and a
-distinct **reader**, not just a distinct topic — and both `case.md` and `marketing.md` are *views*
-of the other three, so when they and those three disagree, the three win.
+**Add to an existing document before creating a new file.** A folder of near-duplicate markdown is how
+the definition phase stops being legible.
 
-***A fourth exception, 2026-09-12, and it is the first one that is not about Terrain.***
-`mmap-audit.md` is a **per-view inventory of somebody else's product** — IPtech's `M-Map` module,
-sixty views walked from 59 captures. The other five are Terrain's own positioning, build, look,
-argument and copy; this is a record of what a vendor ships. Its reader is whoever writes a widget or
-an ask and needs the record at **menu grain**, which nothing else carries:
-`platform.md` §8.1 is one row per *screen we photographed* and stops at sixteen of the sixty.
+### Present tense
 
-**What makes it a document rather than a section of §8, stated plainly, because the pull the other
-way is real.** §8 is the ledger of *what Terrain takes*, and every row there carries a verdict about
-our scope. An inventory that is **gated by our verdicts is the exact coupling §8 itself cut on
-2026-09-07** — *a capability left off the ask is one Innovue never tells us about.* Keeping the
-inventory outside §8 is what lets it record all sixty views, including the twenty we skip and the
-three places it **disagrees** with §8's own verdicts. Folding it in would make those disagreements
-unsayable.
+**These documents describe what is, not how it got there.** No amendment trails, no struck sections,
+no dated corrections, no *this read X until Y*. Git history is the record of how a decision was
+reached; the document is the decision.
 
-**It is a view of §8, not an authority over it.** Where the two disagree about what gets *built*,
-§8 wins, and `mmap-audit.md` §6 records the disagreement rather than resolving it quietly.
+**Where a rule would look arbitrary to a new reader, one sentence says why** — and the why is the
+argument, not the chronology.
 
-**`tmap-audit.md` is the seventh, and it was written 2026-09-14** on the same bar and for the same
-reader, covering `T-Map`'s eight `Tech-Effx` entries and citing `mmap-audit.md` for the shared sixty
-rather than repeating them. **That is the end of the family.** An audit file is admissible for a
-*module of somebody else's product we have walked end to end*; it is not a licence for a file per
-topic. *The walk added no view and no component, and both facts are recorded in `platform.md` §6 and
-`design/components.md` rather than left as silence — a pass that changes nothing has to say so, or
-the next reader cannot tell it happened.*
+### Lift a rule by narrowing it
 
-***`.claude/skills/` is tracked, added 2026-09-12, and the reason is narrow.*** A skill is a
-procedure the model runs; this one — `module-audit` — is the M-Map pass written down while it was
-fresh, **because T-Map is the same pass on a different module and it is already scoped.** It is
-tracked rather than kept in `~/.claude/` because it cites *this repository's* gates, rules and
-section numbers, and a method that does not travel with the repo is one the next person has to
-rediscover.
+When a rule stops serving, **replace it with a narrower one that can actually be applied.** Deleting
+it outright leaves a vacuum that the next session fills with a guess. Three rules were lifted this way
+on 2026-09-15 — the no-accent rule, the absence prohibition, and the deferred-scope fence — and each
+has a successor that is checkable:
 
-**What it may hold, and what it may not.** A skill records **how we work** — the pass order, the
-scrub, the checks, the bugs that only a render catches. **It is not a second source of truth about
-the product.** Where it and `docs/` disagree, `docs/` wins, and the skill should be pointing at a
-section rather than restating it. *It is subject to every rule here, the client-data boundary
-included: the `M-Map` skill names IPtech's menu and none of its data.*
+- Terrain **has** an accent (green), and `design-language.md` §3.8 says the three places it may appear
+  and the places it may not.
+- Copy **may** describe a holder's absence and **may not** describe the territory as empty, with the
+  test written out in `brief.md` §1.
+- `platform.md` §12 is an **ordered list of what is not next**, each with what would start it — not a
+  fence, and not a backlog either.
 
-**One skill per procedure, not per task.** If a second skill ever looks necessary, the test is the
-same one the sixth document had to clear: a distinct **kind** of work and a distinct **reader**.
+### Colour carries information, or it is not there
 
-**Deferred means deferred.** `docs/platform.md` §9 is marked `DEFERRED — NOT IN SCOPE`. Nothing in
-it is built, specced further, wireframed, or designed against unless the session explicitly names
-the item and asks for it. If a task appears to require a deferred item, stop and say so rather than
-building it. Deferral here is a scope decision, not a backlog.
+Four permitted places and no more: discrete states, direction of change, the chart layers, and the
+accent. No gradient, no decorative colour, no tinted background.
 
-**`docs/` is the source of truth; everything rendered is a view of it.** Same discipline as the
-parent monorepo: settle the decision in markdown, then build the preview. Never let a design
-preview become the only record of a decision.
+**Colour encodes direction, never desirability.** No green-means-good anywhere. The density ramp stays
+tonal and the filings series stays neutral, because the interface may not imply *why* a cell is empty
+— and a green cell or a green rising trend line does exactly that. Every coloured element also carries
+a word or a shape; never colour alone.
 
-**One exception, and it is a real weakening rather than a clarification.** `design/previews/` holds
-one outbound document, `terrain-the-case.html` — four sections and a prototype tab — and it is
-**maintained directly**. A Python build generated it from `docs/case.md` until 2026-09-08; the build
-was removed with the packaging it existed for, when hosting made a single self-contained file
-pointless.
+**The accent is for controls, never for data.** A primary action, a focus ring, a selected control.
+Not a chart series, not a map cell, not a status. `design-language.md` §3.8 is the rule and
+`brief.md` §5 is the decision. **The prototype has not been repainted** — applying it is a separate,
+visible pass.
 
-So the case document is the one rendered thing that is **not** automatically a view of its source.
-`docs/case.md` is still the record of the argument, and it still wins where the two disagree — but
-nothing enforces that any more. **Change both, in the same pass.** If they drift, the markdown is
-right and the page is stale. `git show b96f61a:deliverables/build.py` has the generator if the
-generated approach is ever wanted back.
+**Innovue's blue may only ever appear inside the Innovue mark itself.** In a border, a chip, a chart
+or a button, it has been misread.
 
-*It was three documents plus a standalone comparison deck until 2026-09-04, then one document with
-the deck ingested into section 4. The deck's panels came out on 2026-09-08 with the screenshots.*
+**And the rule describes two palettes.** Dark is a swap of 40 semantic tokens with no component rule
+touched. **No component may read a primitive (`--n-*`) or a raw hex**; two greps prove it, and eleven
+violations had to be fixed before the pass could work. A component that reads a primitive is a
+component that silently stays light.
 
-**And the outbound document carries the conclusion, not the history of reaching it.** Amendment
-trails, retractions and dated corrections stay in `brief.md` and `platform.md`, which are working
-records. `case.md` is a view for a reader who was not in the room.
+### Icons come from Lucide, and nothing else
 
-**Design previews inline their own tokens.** Each file in `design/previews/` carries its own token
-block — no shared token stylesheet, no build step. There is no design system here yet, and
-prematurely extracting one is the most likely way to lock in a bad early guess. Extract shared
-tokens only once three previews independently want the same value.
+No Heroicons, no Feather, no Material, no one-off SVGs pulled from a search result. Mixing sets is
+immediately visible in the stroke weight and the corner radius, and it reads as an interface assembled
+from parts.
 
-*The typefaces are the one shared thing, since 2026-09-08.* Every page links
-`brand/fonts/fonts.css` rather than inlining seven base64 payloads, because these are served from a
-repository now instead of sent as attachments — the inlining existed only to survive being emailed,
-and it cost 0.9 MB across two files. **Tokens are still inlined and must stay that way**; a linked
-font stylesheet locks nothing, a linked token sheet would.
+### Previews inline their own tokens
 
-*There was one recorded exception between 2026-09-03 and 2026-09-08: `design/tokens/` held a
-generated token extraction built for handoff to Innovue. **It is deleted.** A copy of
-`docs/design-language.md` in another format is regenerable from the document at any time, and
-carrying it meant carrying a second thing to keep in sync. `design/components.md` — the per-component
-data-shape manifest — was never part of that extraction and survives, because it is not a copy of
-anything. **Previews still inline their own token blocks and must continue to.** `document.css`,
-the case document's stylesheet, went with the build on 2026-09-08 — its rules live inline in the
-page they style.*
+Each file in `design/previews/` carries its own token block — no shared token stylesheet, no build
+step. Extract a shared token only once three previews independently want the same value.
+
+*The typefaces are the one shared thing.* Every page links `brand/fonts/fonts.css` rather than
+inlining seven base64 payloads. **Tokens stay inlined**; a linked font stylesheet locks nothing, a
+linked token sheet would.
+
+### The client-data boundary
 
 **This is a public repository, and the boundary is client data, not Innovue's features.** Innovue
-markets IPtech's capabilities publicly, so reading them, rating them and arguing with them is
-ordinary competitive work and it stays. What may never be published is a **client's data** or a
-**patent landscape that is not ours** — the real project, its counts, the assignee names, the
-account's billing telemetry. Those were removed at source on 2026-09-08 and replaced with
-illustrative figures.
+markets IPtech's capabilities publicly, so reading them, rating them and arguing with them is ordinary
+competitive work. What may never be published is a **client's data** or a **patent landscape that is
+not ours**.
 
-***That removal was incomplete, and finding out how is the most useful thing in this section.***
-*On 2026-09-09 the prototype was still carrying the client project's `Tech-Effx` **taxonomy** —
-both axes, eight labels each, translated one-for-one into English and in the same order. The
-2026-09-08 pass had replaced every **figure** and left every **label**. It was removed the same day
-by rewriting the worked example as a drone-airframe landscape written from scratch.*
+**A scrub that changes the numbers and keeps the labels has not removed the landscape.** A taxonomy is
+the most valuable thing on the screen — it is what the analyst was paid for — and it survives
+translation, reordering and having its counts replaced. **Check the axis labels, the row names, the
+column headers and the category lists, not just the digits.**
 
-***The lesson generalises, so it is a rule and not an anecdote: a scrub that changes the numbers and
-keeps the labels has not removed the landscape.*** *A taxonomy is the most valuable thing on the
-screen — it is what the analyst was paid for — and it survives translation, reordering and having
-its counts replaced. **Check the axis labels, the row names, the column headers and the category
-lists, not just the digits.***
+**A client's category list is client data in prose exactly as much as in an array.** In a prototype it
+sits in a data array and looks like data; in a document it sits inside a sentence, in parentheses,
+reading as a *citation*. It is the same landscape. The test for whether it may stay is whether the
+surrounding argument would survive its deletion.
 
-***It happened again, and the second instance is worse than the first.*** *Found 2026-09-10:
-`docs/platform.md` §0 had been carrying a **different** client's six-branch taxonomy since it was
-written — that client's own name as the first branch — through the 2026-09-08 figure scrub, through
-the 2026-09-09 taxonomy sweep, and into the public repository. The 2026-09-09 pass fixed the
-prototype and did not look at the prose.*
+**When a capture of a real project enters a session — a screenshot pasted into chat included — grep
+the tree for every proper noun on it before doing anything else.** `README.md` check 3 is a record of
+leaks already found, never a definition of what a leak looks like: it cannot recognise a name it has
+not been told, and every entry in it was caught this way rather than by running it.
 
-***Why prose is the harder case, and the rule that follows.*** *In the prototype a taxonomy sits in a
-data array and looks like data. In a working document it sits inside a sentence, in parentheses,
-reading as a **citation** — evidence for a claim rather than a payload. It is the same landscape.
-**A client's category list is client data in prose exactly as much as in an array**, and the test for
-whether it may stay is whether the surrounding argument would survive its deletion. Here the finding
-was *six branches, two levels, every count zero, all of it in Chinese*, and not one of those depended
-on a label.*
+**Report what you checked, never that the tree is clean.** A sweep is only as wide as the capture set
+that feeds it. *These nouns are absent* is a claim the evidence supports; *the tree is clean* is not,
+and writing it down stops the next person looking.
 
-***And the check did not catch it, which is the most useful part.*** `README.md` *check 3 greps for
-assignee names, and it only ever knew the two it had been told. A check built from leaks already
-found cannot recognise the next one.* **When a capture of a real project enters a session — a
-screenshot pasted into chat included — grep the tree for every proper noun on it before doing
-anything else.** *That is what found this one; the check block reported clean throughout.*
+Four things follow:
 
-***It happened a third and fourth time on 2026-09-14, and what they add is a limit on what a clean
-sweep proves.*** The `T-Map` walk swept 140 items and found **an outcome-axis label** sitting in
-`docs/platform.md` §8.2 as a citation, and **the client project's corpus size** in four places
-including the outbound `docs/case.md`. *The `M-Map` sweep six days earlier had run 51 nouns, found
-nothing, and written down that the tree was clean.* **It was honest and it was too broad: neither
-leak was ever on an `M-Map` screen, so no list built from those captures could have contained them.**
-
-**So the rule gains a second half.** A sweep is only as wide as the capture set that feeds it.
-**Report what you checked, never that the tree is clean** — *these nouns are absent* is a claim the
-evidence supports; *the tree is clean* is not, and writing it down stops the next person looking.
-
-*Two classes of hit are expected and are not leaks, recorded so they are not re-raised: **IPtech's
-own interface strings**, which are a vendor's published product and ordinary competitive ground, and
-**published classification class prefixes** that the worked example legitimately shares — check the
-full symbol before calling it a match.*
-
-Four things follow, and they are not stylistic:
-
-- **Every figure in the prototype and in `docs/` is illustrative.** The distribution is
-  representative and the arithmetic is internally consistent; no number is a real filing count. If
-  you change one, say so where the document claims provenance, and keep the invariants — the matrix
-  sums to the scope figure, the finding quotes the true maximum, the rivals total matches its own
-  sentence. Nothing checks this for you — the build that used to is gone.
+- **Every figure in the prototype and in `docs/` is illustrative.** No number is a real filing count.
+  If you change one, keep the invariants in `platform.md` §13. Nothing checks this for you.
 - **Never name a real holder as data.** Holder names render as skeleton bars by decision. Inventing
-  one reads as a live example, and transliterating a real one is fabrication — both are worse than
-  a bar.
-- **A worked example is written from scratch, never derived from a client's.** Added 2026-09-09
-  after the taxonomy above. The temptation is real, because a landscape modelled on one that exists
-  has a plausible distribution for free — and that is exactly what makes the labels travel with it.
-  **Pick a domain nobody has hired us about.** *One scoped exception is in force and it is the only
-  one: `platform.md` §4a's five direction options are observed output from Innovue's own semantic
-  surface, rendered as real words rather than bars. Observed is not invented, they are nobody's
-  client data, and the argument and its limits are recorded in §4a.*
-- **The screenshots and the deck stay local.** They render a client's data as pixels. Nothing in a
-  published artifact may embed them. Before any push, run the four checks in `README.md`.
+  one reads as a live example; transliterating a real one is fabrication. Both are worse than a bar.
+- **A worked example is written from scratch, never derived from a client's.** The temptation is real,
+  because a landscape modelled on one that exists has a plausible distribution for free — and that is
+  exactly what makes the labels travel with it. **Pick a domain nobody has hired us about.** *One
+  scoped exception is in force: the five direction options at the narrowing step are observed output
+  from Innovue's own semantic surface, rendered as real words rather than bars. Observed is not
+  invented, and they are nobody's client data.*
+- **The captures stay local.** They render a client's data as pixels. Nothing in a published artifact
+  may embed them. Before any push, run the four checks in `README.md`.
 
-  **`.gitignore` is a hint; the raster rule is the mechanism.** `*.png` and friends are refused
-  wholesale. That rule exists because the path-based one failed: the mood-board folder was renamed
-  outside the repo on 2026-09-08, the ignore entry stopped matching, and `git add -A` staged 6 MB of
-  it while the name-based check reported clean.
+### The raster rule
 
-  **There is now exactly one exception, added 2026-09-08, and it is the only one.**
-  `brand/assets/imagery/terrain/` holds three files — `terrain-forest.jpg` at 640×413 plus
-  `terrain-forest-400.webp` and `terrain-forest-640.webp` — the gradient thumbnail Terrain's row
-  needs in the TIS website's Products menu, in the same three-file shape as its siblings
-  `licensing-warm-v2` and `signal-cool`. 48 KB total. The multi-megabyte PNG and 2560px variants
-  were deliberately not copied.
+**`.gitignore` is a hint; the raster rule is the mechanism.** `*.png` and friends are refused
+wholesale, because the path-based rule failed once: a folder was renamed outside the repo, the ignore
+entry stopped matching, and `git add -A` staged 6 MB of it while the name-based check reported clean.
 
-  **Why it clears the rule:** the rule's premise was that every raster here is a capture of a third
-  party's product or a mood board, and neither is ours to publish. These are *ours*, and they are
-  marketing assets meant to be published. Neither reason applies. The sentence that used to say
-  this repository "legitimately holds no raster images" is no longer true, and `README.md`'s check 1
-  was amended in the same pass — a check that fails on a legitimate file is a check people learn to
-  ignore, which is how the 6 MB got staged in the first place.
+**There is exactly one exception.** `brand/assets/imagery/terrain/` holds three files —
+`terrain-forest.jpg` at 640×413 plus the 400 and 640 `.webp` variants — Terrain's own gradient
+thumbnail for the TIS website's Products menu. 48 KB total. They are **ours** and meant to be
+published, so neither reason behind the rule applies.
 
-  ***The rule was tested on 2026-09-11 and it held.*** *A link sent to someone renders a preview
-  card, and an `og:image` would have made it look like a product rather than a bare URL — but
-  `og:image` must be a PNG or JPG, because scrapers will not render SVG. **So the card ships without
-  an image**, and the prototype carries `og:` and `twitter:` text tags only. A nicer unfurl is not
-  worth a fourth literal path; if one is ever wanted, it is a deliberate decision recorded here, not
-  a file quietly added to the branch.*
+**It is scoped to three literal paths, no glob.** A rename is refused. A fourth file in that directory
+is refused. Verify with `git check-ignore -v <path>`. **Adding a product means adding its three paths
+deliberately, one line each** — if that ever feels tedious enough to replace with a glob, that is the
+guard working.
 
-  **It is still a weakening, so it is scoped to three literal paths, no glob.** A rename is still
-  refused. A fourth file in that directory is still refused. Verify with
-  `git check-ignore -v <path>`. **Adding a product means adding its three paths deliberately, one
-  line each** — if that ever feels tedious enough to replace with a glob, that is the guard working.
-  **Do not add any other raster to this repository**, and understand that each one you add removes a
-  little more of the guard that catches the next rename.
+*A consequence worth knowing: the published prototype ships without an `og:image`, because one would
+have to be a PNG or JPG — scrapers will not render SVG. The link unfurls as text. A nicer card is not
+worth a fourth literal path.*
 
-**Do not invent brand law.** Terrain is a TIS product, but this folder is not the TIS brand system.
-If a decision here changes something that belongs upstream — a token, a logo rule, a component,
-the Innovue attribution phrasing — say so in the session and record it in `docs/brief.md`, then
-leave it for a deliberate propagation pass. Never edit the monorepo from this folder.
+### Do not invent brand law
 
-**Colour carries information, or it is not there.** Superseded the monochrome-wireframe rule on
-2026-08-31; the reasoning is in `docs/design-language.md` §2. Colour is permitted in exactly three
-places: discrete states (live / expired, published / not yet published), direction of change on a delta
-pill, and the three chart layers. No accent, no brand colour, no gradient, no decorative colour —
-Terrain still has no accent decision, and a placeholder one becomes the thing everyone reviews
-instead of the structure.
+Terrain is a TIS product, but this folder is not the TIS brand system. If a decision here changes
+something that belongs upstream — a token, a logo rule, a component, the Innovue attribution phrasing
+— say so in the session and record it in `docs/brief.md` §7, then leave it for a deliberate
+propagation pass. **Never edit the monorepo from this folder.**
 
-*This rule governs the **product interface**. The marketing page is a different surface with a
-different system, and conflating them is the likeliest way to get this wrong.* The TIS website
-gives every surface one accent (`--surface-accent-signal`, `--surface-accent-licensing`) and a
-gradient thumbnail, both rationed; Terrain's slot there wants a green, and
-`brand/assets/imagery/terrain/` is that gradient. **Green was named as the intended direction on
-2026-09-08 and is still not a recorded decision**, so `design/previews/terrain-product-page.html`
-ships hueless with the accent slot marked and empty. Two separate decisions, recorded separately in
-`docs/brief.md` §4. A green marketing page is **not** licence to put green in the product. Primary actions are near-black fill. Everything else is the neutral ramp,
-carrying meaning with hierarchy, weight and spacing.
+### No emoji
 
-*One scoped exception, 2026-09-08: **Innovue's mark, in Innovue's blue, on the attribution line** —
-`Powered by` at the foot of the product's surfaces. It is a third party's mark reproduced as issued,
-not a hue Terrain has chosen, which is the same argument that already permits their blue on the
-outbound masthead. **Terrain still has no accent.** The test that keeps this from spreading: the blue
-may only ever appear inside the Innovue mark itself. In a border, a chip, a chart or a button, it has
-been misread. `docs/brief.md` §3 carries the reasoning.*
-
-*And the rule now describes two palettes. Dark mode landed 2026-09-08 against `docs/design-language.md`
-§10 — same rule, same three permitted places, 41 semantic tokens redefined and no component rule
-touched. **No component may read a primitive (`--n-*`) or a raw hex**; two greps outside `:root` prove
-it, and eleven violations had to be fixed before the pass could work. A component that reads a
-primitive is a component that silently stays light.*
-
-**And colour encodes direction, never desirability.** No green-means-good anywhere. The matrix
-density ramp stays tonal grey and the filings series stays neutral, because `platform.md` §6.1
-forbids the interface implying *why* a cell is empty — and a green "open" cell or a green rising
-trend line does exactly that. Every coloured element also carries a word or a shape; never colour
-alone.
-
-**Icons come from Lucide, and nothing else.** No Heroicons, no Feather, no Material, no one-off
-SVGs pulled from a search result. Mixing sets is immediately visible in the stroke weight and
-corner radius, and it reads as an interface assembled from parts.
-
-**No emoji.** Plain commit messages, and never an AI-attribution trailer of any kind.
+Plain commit messages, and never an AI-attribution trailer of any kind.
 
 ## Typefaces
 
@@ -463,15 +279,14 @@ Two, carried over from TIS and locked:
 | Text and display | **Urbanist** |
 | Numerals, figures, monospace | **Inconsolata** |
 
-**Terrain is English-only.** No Chinese surface, so no CJK face is in this folder — that is a
-decision, not an omission. Don't add one, and don't write bilingual markup or `data-zh` attributes
-out of habit from the parent site.
+**Terrain is English-only.** No Chinese surface, so no CJK face is in this folder — a decision, not an
+omission. Don't add one, and don't write bilingual markup or `data-zh` attributes out of habit from
+the parent site.
 
-`brand/fonts/` holds the 7 self-hosted woff2 files, `fonts.css`, and the two OFL licences —
-`OFL-Urbanist.txt` and `OFL-Inconsolata.txt`. The woff2 came from the marketing site's subset build
-with paths rewritten relative to the CSS file, and **the licences must stay with them**: these are
-subsets, which OFL permits, and OFL 1.1 requires the notice travel with the Font Software wherever
-it is redistributed. This repository is public, so that is not theoretical.
+`brand/fonts/` holds the 7 self-hosted woff2, `fonts.css`, and the two OFL licences. **The licences
+must stay with them**: these are subsets, which OFL permits, and OFL 1.1 requires the notice travel
+with the Font Software wherever it is redistributed. This repository is public, so that is not
+theoretical.
 
 Every page links it — no server, no build step:
 
@@ -479,63 +294,52 @@ Every page links it — no server, no build step:
 <link rel="stylesheet" href="../../brand/fonts/fonts.css">
 ```
 
-If a Chinese surface is ever needed, Noto Sans TC lives in the marketing site's subset build at
-`~/Desktop/TIS/website/assets/build/fonts/` — but note it is **split across four subset files**,
-each with its own `unicode-range`. All four are required, and dropping one doesn't fail loudly; it
-silently falls back to a system CJK face for part of the character set. Copy the `@font-face` block
-with the files rather than reconstructing it.
+**Render and look at the PNG when you touch font loading** — a missing typeface falls back to a system
+face and reports nothing.
 
-Verified headlessly on 2026-09-08, after the inlined base64 was replaced by this link: all seven
-faces resolve in both pages over `file://`. **Render and look at the PNG when you touch font
-loading** — a missing typeface falls back to a system face and reports nothing.
+If a Chinese surface is ever needed, Noto Sans TC lives in the marketing site's subset build at
+`~/Desktop/TIS/website/assets/build/fonts/` — but it is **split across four subset files**, each with
+its own `unicode-range`. All four are required, and dropping one silently falls back to a system CJK
+face for part of the character set. Copy the `@font-face` block with the files rather than
+reconstructing it.
 
 ## Logos
 
 `brand/logos/` holds the TIS and Innovue SVGs, copied from
 `~/Desktop/TIS/website/designs/assets/logos/` with original filenames intact so references stay
-greppable against the parent system. Treat them as read-only. Use the `_eng` variants — the `_ch`
-and `_dual` files are kept only in case a Chinese surface is ever needed, which it currently isn't.
+greppable against the parent system. **Treat them as read-only.** Use the `_eng` variants.
 
-Terrain is an **endorsed sub-brand**: the TIS mark appears in the lockup, Terrain is the product
-name. Innovue appears as **attribution only** — a "Powered by Innovue" line and the database cited
-in body copy where it does credibility work. Innovue never enters the product name or the primary
-lockup. The reasons are in `docs/brief.md`; they are commercial, not aesthetic.
+Terrain is an **endorsed sub-brand**: the TIS mark appears in the lockup, Terrain is the product name.
+Innovue appears as **attribution only** — *Powered by Innovue* at the foot of every surface, rendered
+as their own mark, and the database cited in body copy where it does credibility work. **Innovue never
+enters the product name or the primary lockup.** The reasons are commercial, not aesthetic, and they
+are in `docs/brief.md` §3.
 
-*Two recorded exceptions, both scoped, both in `docs/brief.md` §3.* **2026-09-07:** Innovue's mark
-appears in the masthead of an outbound document, in their own brand blue — attribution on a document
-addressed to them, not an accent entering Terrain's palette. **2026-09-08:** the product's own
-attribution line renders their mark rather than the words alone, on the dashboard, the set, the
-widget page and the conversation surface. The naming half of the rule is untouched — Innovue is still
-not in the product name and not in the primary lockup, and the TIS submark is still the only mark in
-the sidebar.
+**Two of the eight Innovue SVGs are tracked**, because a published page cannot reference a file that
+is not published: the tight-cropped `_eng_inline` variants in blue and in white, since the line is
+theme-aware. The rule reads `brand/logos/innovue/*` and not `brand/logos/innovue/`, because **git will
+not descend into an excluded directory and a `!` negation under one silently does nothing** — the
+wrong form fails exactly like the right one until you run `git check-ignore`.
 
-**That second one changed `.gitignore`, and the change is easy to get wrong.** A published page
-cannot reference a file that is not published, so **two** of the eight Innovue SVGs are now tracked —
-the tight-cropped `_eng_inline` variants in blue and in white, because the line is theme-aware and
-renders their primary in light and their own white mark in dark. The other six stay out. The
-rule reads `brand/logos/innovue/*` and not `brand/logos/innovue/`, because **git will not descend
-into an excluded directory and a `!` negation under one silently does nothing** — the wrong form
-fails exactly like the right one until you run `git check-ignore`.
-
-**The favicon is the one new brand asset**, `brand/favicon.svg` — the submark's three polygons with
-their own `prefers-color-scheme` block, because an external favicon cannot inherit `currentColor` the
-way the inlined submark does. It is a new file, not an edit to `brand/logos/tis/`, which stays
-read-only. **SVG, and it has to be**: the raster rule below refuses a `.ico` or a `.png`, and the
-cost of that is Safari, whose SVG-favicon support is partial. Note it follows the *browser's* colour
-scheme rather than Terrain's own theme control, and nothing can change that.
+**`brand/favicon.svg` is the one new brand asset** — the submark's three polygons with their own
+`prefers-color-scheme` block, because an external favicon cannot inherit `currentColor` the way the
+inlined submark does. It is a new file, not an edit to `brand/logos/tis/`, which stays read-only.
+**SVG, and it has to be**: the raster rule refuses a `.ico` or a `.png`, and the cost is Safari, whose
+SVG-favicon support is partial. It follows the *browser's* colour scheme rather than Terrain's own
+theme control, and nothing can change that.
 
 ## Relationship to the TIS monorepo
 
-The monorepo's root `CLAUDE.md` governs any working directory beneath it, and its project memory
-is keyed to that path. Building Terrain inside it would inherit the brand DAG, the snapshot-resync
+The monorepo's root `CLAUDE.md` governs any working directory beneath it, and its project memory is
+keyed to that path. Building Terrain inside it would inherit the brand DAG, the snapshot-resync
 obligations, the changelog law, and a PostToolUse brand-sync hook — all correct for a surface
-consuming a settled brand system, all premature for a product whose positioning is still moving.
-The real risk was never a broken build; it was an agent helpfully routing Terrain's components into
+consuming a settled brand system, all premature for a product whose positioning is still moving. The
+real risk was never a broken build; it was an agent helpfully routing Terrain's components into
 `brand/components.md` and locking the design to existing tokens during the exact phase that needs
 latitude.
 
-The cost of the split is a propagation step later. Record upstream-affecting decisions in
-`docs/brief.md` as they are made so that step stays a merge and not an excavation.
+The cost of the split is a propagation step later. **Record upstream-affecting decisions in
+`docs/brief.md` §7 as they are made** so that step stays a merge and not an excavation.
 
 **Graduation:** once positioning and design direction lock, Terrain becomes a surface folder in the
 monorepo with its own repo — the established pattern (`operations-site/`, `capital/`) — or stays

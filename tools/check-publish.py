@@ -156,13 +156,63 @@ for f, t in text.items():
         for m in css_depth_errors(blk):
             fail(f"unbalanced CSS in {f}: {m} -- a stray brace silently eats the rule after it")
 
-# 9 · the OFL licences travel with the fonts (OFL 1.1, public redistribution)
+# 9 · every :hover is gated behind @media (hover:hover).
+#
+#     WHY THIS IS A GATE AND NOT A REVIEW NOTE. On a touch screen an ungated
+#     hover state applies on TAP and stays applied until something else is
+#     tapped, so the control reads as held down long after the act finished.
+#     Nothing on a desktop shows it, no screenshot catches it, and the file had
+#     exactly one -- .set-rank, written beside its component instead of into
+#     the hover block below it, and so missed by position rather than by
+#     argument. That is the failure mode a gate is for: a rule everyone agrees
+#     with, broken by where a line was typed.
+def ungated_hovers(css):
+    out, i, n2, line, start = [], 0, len(css), 1, 0
+    stack = []                       # one entry per open block: hover-gated?
+    while i < n2:
+        c = css[i]
+        if css[i:i+2] == '/*':
+            j = css.find('*/', i+2); j = n2 if j < 0 else j+2
+            line += css.count('\n', i, j); i = j; continue
+        if c in '"\'':
+            q = c; j = i+1
+            while j < n2:
+                if css[j] == '\\': j += 2; continue
+                if css[j] == q: j += 1; break
+                j += 1
+            line += css.count('\n', i, j); i = j; continue
+        if c == '\n': line += 1
+        elif c == '{':
+            prelude = ' '.join(css[start:i].split())
+            # an at-rule prelude carries ':hover' as a FEATURE, not a selector
+            if ':hover' in prelude and not prelude.startswith('@') and not any(stack):
+                out.append((line, prelude[-80:]))
+            stack.append(prelude.startswith('@media')
+                         and 'hover:hover' in prelude.replace(' ', ''))
+            start = i + 1
+        elif c == '}':
+            if stack: stack.pop()
+            start = i + 1
+        elif c == ';':
+            start = i + 1
+        i += 1
+    return out
+
+for f, t in text.items():
+    if not t or not f.endswith('.html'):
+        continue
+    for blk in re.findall(r'<style[^>]*>(.*?)</style>', t, re.S | re.I):
+        for ln, sel in ungated_hovers(blk):
+            fail(f"ungated :hover in {f} at stylesheet line {ln}: {sel} "
+                 f"-- wrap it in @media (hover:hover) or it sticks after a tap")
+
+# 10 · the OFL licences travel with the fonts (OFL 1.1, public redistribution)
 if any(f.endswith('.woff2') for f in files):
     for lic in ('brand/fonts/OFL-Urbanist.txt', 'brand/fonts/OFL-Inconsolata.txt'):
         if lic not in present:
             fail(f"fonts are published without {lic} -- OFL 1.1 requires the notice travel with them")
 
-# 10 · the link preview survives. These are the difference between a link that
+# 11 · the link preview survives. These are the difference between a link that
 #      reads as a product and one that reads as a broken URL, they live in the
 #      prototype's <head> on main, and nothing else would notice if an edit
 #      dropped them. og:image is absent ON PURPOSE -- it would have to be a
