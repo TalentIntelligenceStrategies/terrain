@@ -1,0 +1,51 @@
+/* ══ 04 · THE LOADER ═════════════════════════════════════════════════════
+   ONE MARK, ONE SIZE, NO VARIANTS, NO REGION SCALING. Whatever region is
+   waiting, this is what sits in it. A second loader needs the argument the
+   first one did not have to make -- there were two for a day and it was the
+   wrong call: nobody reads two indicators as a vocabulary, they read them as
+   an inconsistency, and the question a second loader raises is "why is this
+   one different", which is not a question about the data.
+
+   THE FIVE COMPONENT-SCOPED PROPERTIES LIVE HERE, on .dmx-root and not on
+   :root (design-language.md §3.9). A loader's idle opacity is not a fact
+   about the interface, and declaring it on the root invites a second
+   component to read it. check-app.py gate C refuses a custom property on
+   :root outside tokens.css; this file is why the tier exists.
+
+   --dmx-opacity-base and --dmx-opacity-mid are the CSS-DEFAULT-PLUS-JS-
+   OVERRIDE pattern: the class declares the value, JavaScript may move it per
+   instance with setProperty, and app/README.md's interface table is the list.
+
+   IT DOES NOT TAKE --cycle, AND THAT IS A REAL COST. The timings are the
+   library's own. design-language.md §6's one-cycle rule is amended to permit
+   exactly this -- an indicator adopted whole may keep its own cycle -- and to
+   say what it costs: a card can hold a 1.6s bar and an 887ms loader at once.
+   If a surface ever reads as busy rather than as working, look here first.
+
+   THIRD-PARTY, AND THE LICENCE NOTE MATTERS: the motion is ported from an
+   upstream indicator. It is permitted in the product and may not be
+   republished as a standalone component.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.dmx-root{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;
+  --dmx-cycle:1500ms;
+  --dmx-opacity-base:0.16;--dmx-opacity-mid:0.32;--dmx-opacity-peak:1}
+.dmx-root.dmx-matrix-3{--dmx-cycle:1500ms}
+.dmx-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  grid-template-rows:repeat(5,minmax(0,1fr))}
+.dmx-dot{border-radius:999px;display:block;background:currentColor;
+  opacity:calc(0.5 * (var(--dmx-opacity-base) + var(--dmx-opacity-mid)));
+  will-change:opacity}
+.dmx-path-3{
+  animation:dmx-ripple-3 calc(0.68 * var(--dmx-cycle) * var(--dmx-speed,1))
+            cubic-bezier(0.42,0,0.58,1) infinite;
+  animation-delay:calc(var(--dmx-path,0) * 0.19 * var(--dmx-cycle) * var(--dmx-speed,1))}
+@keyframes dmx-ripple-3{
+  0%,100%{opacity:var(--dmx-opacity-base)}
+  3%     {opacity:calc(0.62 * var(--dmx-opacity-mid) + 0.38 * var(--dmx-opacity-base))}
+  6%     {opacity:calc(0.35 * var(--dmx-opacity-peak) + 0.65 * var(--dmx-opacity-mid))}
+  10%    {opacity:var(--dmx-opacity-peak)}
+  14%    {opacity:calc(0.35 * var(--dmx-opacity-peak) + 0.65 * var(--dmx-opacity-mid))}
+  17%    {opacity:calc(0.62 * var(--dmx-opacity-mid) + 0.38 * var(--dmx-opacity-base))}
+  20%    {opacity:var(--dmx-opacity-base)}
+}

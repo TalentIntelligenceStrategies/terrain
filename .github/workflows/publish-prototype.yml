@@ -36,6 +36,21 @@ jobs:
         with:
           fetch-depth: 0      # the script bases on origin/gh-pages, so it needs the history
 
+      - name: Gate the SOURCE tree
+        # BEFORE the build, because the build reads the source. These two cover
+        # what check-publish.py structurally cannot: it walks the GENERATED
+        # tree, where comments are stripped and app/ does not exist, so the
+        # five gates that read <style> and <script> blocks find nothing to read
+        # the moment CSS and JS leave the HTML -- and report clean.
+        #
+        # sync-tokens.py --check is the half that makes "one authored copy of
+        # the tokens" true rather than intended: it refuses a token region that
+        # differs from app/styles/tokens.css by a single byte, comments
+        # included, and a publish cannot proceed past it.
+        run: |
+          python3 tools/check-app.py
+          python3 tools/sync-tokens.py --check
+
       - name: Prove the gates still fire
         # The gates are worth nothing unless they can fail. This builds the tree
         # with the SAME script that publishes it -- no second definition of the

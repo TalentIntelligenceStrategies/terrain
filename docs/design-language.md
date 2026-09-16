@@ -247,12 +247,22 @@ hatch's mean.
 **Terrain's accent is green.** [`brief.md`](brief.md) §5 is the decision and carries the reasoning;
 this section is how it behaves.
 
-**Two tokens, both themed:**
+**Three tokens, all themed:**
 
 ```
---accent        the fill
---accent-ink    text and glyphs on that fill
+--accent          the fill
+--accent-ink      text and glyphs on that fill
+--accent-hover    hover on an accent fill
 ```
+
+**The third is not an afterthought.** `--ink-hover` is one step along the *neutral* ramp, which is
+the correct hover for a near-black fill and turns a green button grey the day the accent lands. A
+hover on an accent is a measured darker accent and cannot be derived from the accent by a formula,
+so it is its own token in all three blocks.
+
+**`--focus` is derived from `--accent`, not declared beside it.** One edit moves the primary fill,
+the selected control and the ring together, which is what makes site 2 below true by construction
+rather than by discipline. §3.9 carries the tier.
 
 **Where it appears — three places, and they are the whole list:**
 
@@ -277,12 +287,58 @@ this section is how it behaves.
   `#1A1A1A` is how a control silently stops meeting contrast. §10.3's table gains two rows when the
   specific green is chosen.
 
-**Not yet applied.** The prototype ships with near-black primary fills, which is what the no-accent
-rule left behind. Repainting is a separate pass and a visible one.
+**The slot exists and is read; the hue does not.** All three tokens are declared in
+`app/styles/tokens.css` **aliased to the ink pair**, and the three sites above read them today. That
+is a faithful description of what ships — near-black primary fills, which is what the no-accent rule
+left behind — rather than a placeholder, and it makes the repaint a **three-value edit in each of the
+three token blocks** instead of a hunt through the stylesheet.
+
+Declaring them aliased rather than omitting them is the point: tokens that exist and are read by
+nothing leave the repaint a hunt anyway. A loud sentinel value was the other option and was turned
+down — it violates §2's one rule and it would ship the day somebody forgot.
 
 **Innovue's blue is not an accent and never becomes one.** `#006CB6` appears inside the Innovue mark
 on the attribution line and nowhere else — a third party's mark reproduced as issued.
 [`brief.md`](brief.md) §3 carries the test.
+
+### 3.9 · The five tiers, and the fourth one nothing had written down
+
+`app/styles/tokens.css` is the one authored copy of every token and **the only file permitted to
+declare a custom property on `:root`** — which makes §3.2's exemption a *file* rather than a list of
+blocks that goes stale. `tools/check-app.py` refuses one declared anywhere else.
+
+| Tier | Count | Declared | The rule |
+| --- | --- | --- | --- |
+| **primitive** | 11 | `:root`, once | `--n-0`…`--n-10`. **No component may read one.** |
+| **scale** | 29 | `:root`, once | `--s-*` `--r-*` `--dur-*` `--ease*` `--cycle`. Invariant by construction: a step is not a different size at night. |
+| **semantic** | 42 | **all three blocks** | This is the dark contract. §10.1. |
+| **derived** | 5 | `:root`, once | Resolves *through* a themed token, so it inverts for free. **Never add one to a dark block.** |
+| **component-scoped** | 5 | on the component's own class | Never on `:root`, never read outside that component. |
+
+**The file is ordered by theme-variance, not by document section**, so *the three blocks carry the
+same names in the same order* is a one-line assertion and **added to light, forgot dark** is
+impossible to commit. The cost is that `--shadow-float` and `--shadow-drop` sit under §5 here and in
+the themed half there; that mismatch is exactly why the file is not organised by §.
+
+**The derived five** are `--state-up`, `--state-down`, `--chart-grid`, `--mark-3-hatch` and
+`--focus`. A literal for any of them inside a dark block would pin the value to one palette **while
+reading as perfectly correct CSS** — the same failure mode as a component reading a primitive.
+`--mark-3-hatch` is the clearest case: it re-reads `--mark-3` and `--surface` at use time, so the
+stripes and the ground between them invert together.
+
+**The component-scoped five** are `--dmx-cycle`, `--dmx-opacity-base`, `--dmx-opacity-mid`,
+`--dmx-opacity-peak` and `--stage-delay`. They are declared on the component's own class because
+that is their scope: a loader's idle opacity is not a fact about the interface, and putting it on
+`:root` would invite a second component to read it.
+
+**`--dmx-opacity-*` is the pattern to copy: a CSS default plus a JS override.** The class declares
+the value, JavaScript may raise or lower it per instance with `setProperty`, and **every read site
+carries a fallback**. That last clause is the load-bearing one. `opacity` does not inherit, so a
+`var()` whose property is set by nothing and whose read has no fallback is *invalid at
+computed-value time* and the property takes its **initial** value — for `opacity`, `1`. That turned
+the reduced-motion loader into a solid block at full strength while every grep for the token found
+it present. `check-app.py` refuses a `var()` that is declared nowhere, has no fallback, and is not
+in `app/README.md`'s interface table.
 
 ---
 
@@ -696,10 +752,24 @@ The list is **duplicated on purpose.** CSS cannot share a declaration block betw
 a third indirection layer of `--dark-*` primitives buys nothing and hides which value is live.
 Whatever writes one writes both.
 
-**40 semantic tokens, and no component rule.** `html` also moves from `color-scheme:light` to
-`color-scheme:light dark`, with each `[data-theme]` pinning its own — that is what makes scrollbars,
-form controls and the canvas behind the page follow the theme instead of staying light under a dark
-page.
+**42 semantic tokens**, and **this is the one place that count appears** — a number repeated in two
+files is a number that drifts in one of them, and this one did. §3.9 carries the tier it belongs to:
+the primitives, the scale and the derived five are *not* in it, and a dark block that redefined one
+of them would be the bug rather than the contract. `tools/check-app.py` asserts that all three blocks
+carry the same names in the same order, so this number is checked rather than remembered.
+
+`html` also moves from `color-scheme:light` to `color-scheme:light dark`, with each `[data-theme]`
+pinning its own — that is what makes scrollbars, form controls and the canvas behind the page follow
+the theme instead of staying light under a dark page.
+
+**"And no component rule" is true with exactly two exceptions, and they are named rather than
+waved at.** `.foot-mark-light` and `.foot-mark-dark` on the attribution line are swapped by a theme
+selector reaching into a component class — a **second dark mechanism outside the tokens**. The
+sentence is amended rather than the stylesheet, because the alternative is worse: a custom property
+cannot carry an `src`, and tokenising the mark into a `background-image` would drop the `alt` on a
+third party's mark. The exception is scoped to **those two literal selectors, no glob** — the same
+shape as the raster rule — and `check-app.py` gate E refuses a theme selector combined with anything
+else.
 
 **The prerequisite is the whole cost**, and it is §3.2's rule. Re-run the two greps before touching
 this section.

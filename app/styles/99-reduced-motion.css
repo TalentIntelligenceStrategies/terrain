@@ -1,0 +1,126 @@
+/* ══ 99 · REDUCED MOTION ══ THIS FILE MUST LOAD LAST ════════════════════
+   20 of the 28 rules below are SAME-SPECIFICITY OVERRIDES declaring end
+   states. Same specificity means order decides, so a stylesheet loading after
+   this one silently wins and the end state never lands. check-app.py asserts
+   that the last <link> in the manifest is this file.
+
+   AND THIS IS WHY THERE IS NO @layer. Inside a layer, !important REVERSES
+   layer order -- an important declaration in an earlier layer beats one in a
+   later layer. Three of the file's four !importants are in this block, and
+   this block must be the thing that wins. Layer it last and its importants
+   become the weakest in the sheet, which is the blank-screen failure
+   design-language.md §6 records from a real incident, reintroduced by the
+   mechanism chosen to prevent it. Numeric prefixes plus a gated manifest
+   deliver what the layer was wanted for, with none of that.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── reduced motion — flat, never absent ──────────────────
+   Every state below is declared outright rather than left to an animation
+   or transition to arrive at. Nothing here depends on motion having *run*:
+   a collapsed-to-1ms transition that never ticks would otherwise leave the
+   view at opacity 0 and the whole screen blank. Reduced motion must never
+   mean reduced information — design-language.md §6.                      */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-property:none!important;animation:none!important}
+  .sk::after{display:none}                    /* shimmer goes flat, never off */
+  .sweep::after{width:100%;opacity:.5}        /* so does the sweep */
+  /* AND SO DOES THE LOADER -- present, visible, motionless. --rest is set per
+     dot at build time from the library's own idle formula, so the grid holds
+     the positional ramp it would otherwise animate through rather than going
+     to one flat tone. §6's open item was CLOSED on this, 2026-09-14: the beat
+     still runs under reduced motion, because a wait the system is genuinely
+     having is information, and a founder who asked for less movement did not
+     ask to be told an engine call was instant. */
+  /* THE FALLBACK IS NOT DECORATION. `opacity` does not inherit, so --rest
+     unset makes this declaration invalid at computed-value time and opacity
+     takes its INITIAL value of 1: every dot renders at full strength, the
+     positional ramp is gone, and the loader is a solid block. It cannot
+     happen in this file, because the same function that builds the DOM sets
+     --rest on every dot -- and it happens the moment anyone ships this markup
+     statically, which is the handoff case exactly. The fallback is the flat
+     tone the base rule already computes, so a JS-less loader renders present
+     and visible rather than solid. */
+  .dmx-dot{opacity:var(--rest, calc(0.5 * (var(--dmx-opacity-base) + var(--dmx-opacity-mid))))!important}
+
+  .view.is-active{opacity:1;visibility:visible;transform:none}
+
+  /* THE CONFIRM IS OPEN IN ITS OPEN STATE, declared outright. A collapsed
+     track that never ticks would hide the consequence AND both actions —
+     a blank region in the one place on any surface that sits between a
+     founder and something irreversible. The clip comes off here too,
+     because there is no transitionend to hang data-done on: without it the
+     two buttons have no visible focus ring. dcOpen() sets data-done
+     synchronously when REDUCED; this is the belt to that braces.
+
+     THE OTHER THREE NEW COMPONENTS NEED NOTHING, and the test is the point.
+     .pref animates nothing at all and its stacking is a container query.
+     .fld's only transition is border-color on hover, which the blanket
+     property:none above already stops, and the inline edit swaps with no
+     motion by design. .sw's on state is a DECLARATION — the knob carries
+     translateX(var(--s-16)) outright — so with transitions off the knob is
+     simply at the far end. Nothing here waits on a transition having run,
+     which is what §6 asks and is why there is nothing to write. */
+  .dc[data-open]{grid-template-rows:1fr}
+  .dc[data-open]>div{overflow:visible}
+
+  /* the build lands on its final frame, every narration line present. The
+     runner declares the same states in JS; this is the belt to that braces. */
+  .prog-bar{transform:none}
+  .stg .st-wait,.stg .st-run{opacity:0}
+  .stg .st-done{opacity:1}
+  .stg .st-label{color:var(--text-1)}
+  .stg .st-sub{opacity:1}
+  .done{opacity:1;transform:none}
+
+  /* anything that would otherwise fade or rise into place is simply there */
+  .grid[data-stagger] .card{opacity:1;transform:none}
+  .tmsg{opacity:1;transform:none}
+  .tmsg-grow{grid-template-rows:auto}
+  .tmsg-grow>div{overflow:visible;opacity:1;transform:none;filter:none}
+  .tmsg-pend{display:none}
+  .rv{opacity:1;filter:none}
+  /* the re-baseline panel is declared open in its ONE open state, not
+     shortened — a collapsed grid-template-rows that never ticks would hide the
+     running line. *It read "BOTH of its open states" until 2026-09-11; the
+     settled one is deleted.* */
+  .set-wrap.is-running .set-run{grid-template-rows:1fr}
+  /* and the failed band for the same reason, which is the sharper case of it:
+     the running line is one of two carriers, but the failure SENTENCE IS THE
+     ONLY THING THAT SAYS THE OPERATION DID NOT HAPPEN. A collapsed band that
+     never ticks open would leave a founder on reduced motion pressing Sort and
+     watching nothing change, with no statement anywhere that it was tried. */
+  .set-wrap.is-failed .set-run{grid-template-rows:1fr}
+  .set-wrap.is-running .set-run-in .sweep{opacity:1}   /* present and still */
+  /* ~~THE BAND IS THE WHOLE CONFIRMATION HERE~~ — it said that, and the claim
+     was that a founder on reduced motion learns the list reordered from the
+     headings and the settled sentence, which is why the band earned its place
+     over motion alone. THE HALF THAT MATTERED SURVIVES: the FLIP is still
+     skipped here, and what confirms the reorder is still not motion — it is
+     the two band headings below, the rank chip in the heading and the restore
+     control in the bar, all of them standing rather than transient. The
+     sentence was the one carrier that went, and it was never the one doing
+     this job alone. */
+  /* no FLIP runs, so there is nothing for the headings to wait for. setReorder
+     returns before it hides them; this is the belt to that braces. */
+  .set-band{opacity:1}
+  /* and a fade that never ticks may not be what hides the sentence — this is
+     the blank-screen failure of 2026-08-31 in miniature. The blur goes with it:
+     transition-property:none does not unset a filter that is declared on a
+     class, so without this the sentence would sit blurred permanently. */
+  .set-run.is-swapping .set-run-say{opacity:1;filter:none}
+  /* and the record's body for the same reason — with transitions off, the
+     swap class would blank the pane outright for DUR1 rather than fade it.
+     The JS guards on REDUCED too; this is the declaration that makes the
+     guard's absence survivable. */
+  .set-wrap.is-running .set-bar,.set-wrap.is-running .set-listcol{opacity:.45}
+  .ghost.is-out,.ghost.is-in{opacity:1;transform:none}
+  /* §6: prefers-reduced-motion DECLARES END STATES rather than collapsing
+     durations. The record is open rather than mid-slide, which is the state
+     the founder needs, and it may not wait on a transition — the blank-screen
+     bug that rule came from is exactly this failure. */
+  .rec-open .rec{transform:none;visibility:visible}
+  /* and every staged group is simply there. Four groups behind three delays is
+     four chances of the 2026-08-31 blank screen, and this is the declaration
+     that makes them survivable. */
+  .pn-stage{opacity:1;transform:none}
+}

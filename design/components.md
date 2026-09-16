@@ -230,11 +230,13 @@ masthead and to the foot of the right pane, and neither gained or lost a data de
 moving.*
 
 **No component in Terrain references a primitive or a raw hex**, and dark mode is therefore a swap of
-semantic tokens with no component CSS touched. **The count lives in
-[`design-language.md`](../docs/design-language.md) §10.1 and nowhere else**, with that document's
-§10.3 carrying the measured values — a number repeated in two files is a number that drifts in one of them, and this one did:
-it read **41** here, which is the *loading lab's* count. The lab carries the same list plus `--scrim`,
-which §3.2 says does not exist in the product. The number had been read off the wrong file.
+semantic tokens with two named component exceptions — the two `.foot-mark-*` selectors on the
+attribution line, which a custom property cannot carry because it cannot carry an `src`.
+
+**The count lives in [`design-language.md`](../docs/design-language.md) §10.1 and nowhere else**,
+with that document's §10.3 carrying the measured values and its §3.9 the five tiers. It is not
+repeated here, because a number repeated in two files is a number that drifts in one of them, and
+this one did — the figure that stood here was counted off the loading lab rather than the product.
 
 *The claim above was also **false when it was written**, which is the part worth keeping.* Eleven
 components reached past the semantics into `--n-*` or wrote an alpha inline, and every one of them

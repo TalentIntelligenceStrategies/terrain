@@ -55,8 +55,13 @@ design/
     terrain-prototype.html    the product
     terrain-loading-lab.html  the loader bench
 
+app/                 the frontend, extracted from the prototype. NEVER PUBLISHED
+  README.md          the handoff document — how to run it is its first line
+  index.html         the shell; styles/ the numbered stylesheets
+demo/                fake data and the fake engine — deletable, imported once
+
 brand/               fonts, logos, the favicon, and one permitted image family
-tools/               only what regenerates the published branch
+tools/               everything CI or a publish runs, and every one can refuse
 .github/workflows/   publish-prototype.yml — rebuilds gh-pages on every push to main
 ```
 
@@ -65,8 +70,17 @@ distinct *reader*, not just a distinct topic. `CLAUDE.md` carries the rule.
 
 ## Editing
 
-**No build step.** The prototype inlines its own tokens and links the shared font stylesheet. Edit
+**No build step.** The prototype carries its own tokens and links the shared font stylesheet. Edit
 the file, open it in a browser, look at it.
+
+**The tokens have one author.** [`app/styles/tokens.css`](app/styles/tokens.css) is it; every other
+copy is a region between sentinels written by `tools/sync-tokens.py --write` and verified byte for
+byte by `--check`, which CI runs before the publish. Edit the region in a page and the check reverts
+it — edit `tokens.css` and run `--write`.
+
+**`app/` needs a server**, because `<script type="module">` is CORS-fetched and a `file://` origin is
+opaque. `python3 -m http.server`, then `localhost:8000/app/`. The prototype keeps the open-the-file
+property; `app/` cannot.
 
 **Publishing is automatic.** Push to `main`; the workflow rebuilds `gh-pages` and Pages redeploys
 about a minute later. `tools/publish-prototype.sh` is the same thing runnable by hand, and

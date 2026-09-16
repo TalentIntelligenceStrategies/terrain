@@ -193,10 +193,11 @@ visible pass.
 **Innovue's blue may only ever appear inside the Innovue mark itself.** In a border, a chip, a chart
 or a button, it has been misread.
 
-**And the rule describes two palettes.** Dark is a swap of 40 semantic tokens with no component rule
-touched. **No component may read a primitive (`--n-*`) or a raw hex**; two greps prove it, and eleven
-violations had to be fixed before the pass could work. A component that reads a primitive is a
-component that silently stays light.
+**And the rule describes two palettes.** Dark is a swap of **42 semantic tokens** — `design-language.md`
+§10.1 is the one place that number lives — with **two named component exceptions and no others**, the
+two `.foot-mark-*` selectors on the attribution line. **No component may read a primitive (`--n-*`) or
+a raw hex**; eleven violations had to be fixed before the pass could work. A component that reads a
+primitive is a component that silently stays light, and `tools/check-app.py` is what refuses one now.
 
 ### Icons come from Lucide, and nothing else
 
@@ -223,9 +224,15 @@ list is duplicated — and a value diff passes while all of it drifts.
 
 **Inside the sentinels the prototype does not win.** That is the one exception to the reference rule
 and it is narrow on purpose: two sources of truth is the silent-drift failure this repository keeps
-relearning, and a generated region has exactly one. A page may declare its own tokens *below* the
-closing sentinel, and the loading lab does — `--scrim` lives there. **The two IPtech previews stay
-out of it**: they exist to argue with this system rather than conform to it.
+relearning, and a generated region has exactly one. A page **may** declare its own tokens *below* the
+closing sentinel; **no page currently does**, and the loading lab's `--scrim` — the only candidate —
+went instead, because nothing read it and `design-language.md` §3.2 says there is no scrim.
+
+**`app/index.html` is not a target and links `app/styles/tokens.css` instead.** The rule exists so a
+page opened from a download works with nothing beside it; `app/` cannot do that under any
+circumstances, so a third generated copy beside the authored one would be drift risk bought for
+nothing. **The two IPtech previews stay out of it**: they exist to argue with this system rather than
+conform to it.
 
 *The typefaces are the other shared thing.* Every page links `brand/fonts/fonts.css` rather than
 inlining seven base64 payloads. A linked font stylesheet locks nothing; a linked token sheet would,

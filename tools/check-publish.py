@@ -11,7 +11,14 @@ Every gate here is exercised by tools/test-gates.sh against planted
 violations. If you add a gate, add a test with it.
 """
 import io, os, re, subprocess, sys, tempfile
-from html.parser import HTMLParser
+
+# The three CSS scanners live in cssgates.py so that this file and
+# check-app.py share ONE definition of each. Two copies of a scanner is two
+# places for one of them to stop being true -- and that is not hypothetical:
+# both copies once glued a preceding comment into the selector, which this
+# file could never see because it only ever runs on the comment-stripped tree.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from cssgates import css_depth_errors, ungated_hovers, base_rules_in_hover_gate
 
 root = sys.argv[1]
 fails = []
@@ -120,35 +127,6 @@ for f, t in text.items():
 #      parsed normally, so the only symptom was that every list menu opened
 #      550px from its button. gate 8 does this for JavaScript; nothing did it
 #      for CSS, which is the whole of why it survived.
-def css_depth_errors(css):
-    """Brace depth over a stylesheet, ignoring comments and strings."""
-    out = []
-    i, n, depth = 0, len(css), 0
-    line = 1
-    while i < n:
-        c = css[i]
-        if css[i:i+2] == '/*':
-            j = css.find('*/', i+2); j = n if j < 0 else j+2
-            line += css.count('\n', i, j); i = j; continue
-        if c in '"\'':
-            q = c; j = i+1
-            while j < n:
-                if css[j] == '\\': j += 2; continue
-                if css[j] == q: j += 1; break
-                j += 1
-            line += css.count('\n', i, j); i = j; continue
-        if c == '\n': line += 1
-        elif c == '{': depth += 1
-        elif c == '}':
-            depth -= 1
-            if depth < 0:
-                out.append(f"stray '}}' at stylesheet line {line}")
-                depth = 0        # keep going, report every one
-        i += 1
-    if depth > 0:
-        out.append(f"{depth} unclosed block(s) at end of stylesheet")
-    return out
-
 for f, t in text.items():
     if not t or not f.endswith('.html'):
         continue
@@ -166,38 +144,6 @@ for f, t in text.items():
 #     the hover block below it, and so missed by position rather than by
 #     argument. That is the failure mode a gate is for: a rule everyone agrees
 #     with, broken by where a line was typed.
-def ungated_hovers(css):
-    out, i, n2, line, start = [], 0, len(css), 1, 0
-    stack = []                       # one entry per open block: hover-gated?
-    while i < n2:
-        c = css[i]
-        if css[i:i+2] == '/*':
-            j = css.find('*/', i+2); j = n2 if j < 0 else j+2
-            line += css.count('\n', i, j); i = j; continue
-        if c in '"\'':
-            q = c; j = i+1
-            while j < n2:
-                if css[j] == '\\': j += 2; continue
-                if css[j] == q: j += 1; break
-                j += 1
-            line += css.count('\n', i, j); i = j; continue
-        if c == '\n': line += 1
-        elif c == '{':
-            prelude = ' '.join(css[start:i].split())
-            # an at-rule prelude carries ':hover' as a FEATURE, not a selector
-            if ':hover' in prelude and not prelude.startswith('@') and not any(stack):
-                out.append((line, prelude[-80:]))
-            stack.append(prelude.startswith('@media')
-                         and 'hover:hover' in prelude.replace(' ', ''))
-            start = i + 1
-        elif c == '}':
-            if stack: stack.pop()
-            start = i + 1
-        elif c == ';':
-            start = i + 1
-        i += 1
-    return out
-
 for f, t in text.items():
     if not t or not f.endswith('.html'):
         continue
@@ -205,6 +151,23 @@ for f, t in text.items():
         for ln, sel in ungated_hovers(blk):
             fail(f"ungated :hover in {f} at stylesheet line {ln}: {sel} "
                  f"-- wrap it in @media (hover:hover) or it sticks after a tap")
+
+# 9a · THE INVERSE OF 9, and nothing caught it for as long as only 9 existed.
+#      .pg-back's entire base rule -- display, height, padding, radius, gap,
+#      transition and :active -- sat INSIDE @media (hover:hover) and
+#      (pointer:fine). On a coarse pointer at or above the 1024px floor (an
+#      iPad Pro in landscape, a touch laptop) the Back control on all four
+#      destination pages fell back to the bare button reset, while every grep
+#      for the base rule found it present and correct.
+#
+#      NO SCREENSHOT AT ANY WIDTH CATCHES THIS on the machine that took it.
+for f, t in text.items():
+    if not t or not f.endswith('.html'):
+        continue
+    for blk in re.findall(r'<style[^>]*>(.*?)</style>', t, re.S | re.I):
+        for ln, sel in base_rules_in_hover_gate(blk):
+            fail(f"base rule inside a hover gate in {f} at stylesheet line {ln}: {sel} "
+                 f"-- it never applies on a coarse pointer; only :hover rules belong there")
 
 # 10 · the OFL licences travel with the fonts (OFL 1.1, public redistribution)
 if any(f.endswith('.woff2') for f in files):

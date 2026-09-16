@@ -133,23 +133,119 @@
 })();
 </script>
 <style>
-/* ─── TOKENS. Inlined per CLAUDE.md — no shared token stylesheet, no build
-   step. Copied verbatim from terrain-prototype.html:79-353, both dark
-   selectors included and duplicated on purpose (the media query so an unset
-   preference follows the system, the attribute so an explicit choice beats
-   the system in BOTH directions). The typefaces are the one shared thing. ─── */
+/* ── TOKENS ── GENERATED. DO NOT EDIT BETWEEN THE SENTINELS. ──────────
+   Authored in app/styles/tokens.css and written here by
+   tools/sync-tokens.py --write. --check verifies it byte for byte and CI runs
+   that before the publish, so an edit made here is reverted rather than kept.
+
+   The bytes are in this page on purpose: CLAUDE.md requires every page to
+   carry its own tokens, because a prototype somebody opens from a download
+   has to work with nothing beside it. INSIDE THE SENTINELS THE PROTOTYPE DOES
+   NOT WIN — the one exception to the reference rule, and narrow on purpose.
+   The typefaces are the other shared thing, and they are linked, not inlined.
+   ───────────────────────────────────────────────────────────────────── */
+/* ══ tokens · generated ══ */
+/* ══════════════════════════════════════════════════════════════════════════
+   TIS Terrain — tokens. THE ONE AUTHORED COPY.
+
+   Every other copy of this block is generated. tools/sync-tokens.py --write
+   writes it into the region between the sentinels in the prototype, the
+   loading lab and app/index.html; --check verifies all three BYTE FOR BYTE and
+   CI runs it before the publish. A value diff would pass while the comments
+   drifted, and the comments are where the measured contrast ratios live.
+
+   THE FILE IS ORDERED BY THEME-VARIANCE, NOT BY DOCUMENT SECTION. That is what
+   makes "the three blocks carry the same names in the same order" a one-line
+   assertion, and it makes ADDED TO LIGHT, FORGOT DARK — whose symptom is a
+   component that silently stays light and throws nothing — impossible to
+   commit. Safe, because custom properties resolve by cascade, not by position.
+
+   The cost is that a token does not sit where design-language.md discusses it:
+   --shadow-float and --shadow-drop are under §5 "Space, radius, elevation"
+   there and are THEMED, so they are in the themed half here. That mismatch is
+   the reason the file is not organised by §.
+
+   FIVE TIERS, and the rule for each is on its own block:
+     1 primitive  11   no component may read one
+     2 scale      29   invariant by construction
+     3 semantic   41   declared in all three blocks — this is the dark contract
+     4 derived     5   resolves THROUGH a themed token. Never in a dark block
+     5 component   —   not here at all. On the component's own class,
+                       design-language.md §3.9
+
+   THIS IS THE ONLY FILE PERMITTED TO DECLARE A CUSTOM PROPERTY ON :root.
+   check-app.py gate C refuses one anywhere else, which turns §3.2's exemption
+   into a FILE rather than a list of blocks that goes stale.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* both schemes declared, so the scrollbars, form controls and the canvas
+   behind the page follow the theme. [data-theme] pins it once the founder
+   has chosen — the attribute is what the toggle writes. */
 html{color-scheme:light dark;background:var(--ground)}
 :root[data-theme="light"]{color-scheme:light}
 :root[data-theme="dark"]{color-scheme:dark}
+
+
+/* ── 1 · PRIMITIVE ─────────────────────────────────────────────────────────
+   NO COMPONENT MAY READ ONE. A component that reads --n-* is a component that
+   stays light and throws nothing, logs nothing, and reads as correct CSS.
+   design-language.md §3.2; check-app.py gate A refuses it. */
 :root{
   /* neutral ramp — even in L*, true neutral (R = G = B) */
   --n-0:#FFFFFF; --n-1:#FCFCFC; --n-2:#F6F6F6; --n-3:#F0F0F0;
   --n-4:#E4E4E4; --n-5:#D1D1D1; --n-6:#B0B0B0; --n-7:#6F6F6F;
   --n-8:#595959; --n-9:#383838; --n-10:#252525;
+}
 
-  /* semantic — components read only these */
+
+/* ── 2 · SCALE ─────────────────────────────────────────────────────────────
+   Invariant by construction: a step, a radius and a duration are the same in
+   both themes, and a dark block that redefined one would be saying the
+   interface is a different size at night. */
+:root{
+  --s-2:2px; --s-4:4px; --s-6:6px; --s-8:8px; --s-10:10px; --s-12:12px;
+  --s-14:14px; --s-16:16px; --s-20:20px; --s-24:24px; --s-32:32px;
+  --s-40:40px; --s-56:56px; --s-72:72px;
+  --r-chip:4px; --r-seg:6px; --r-control:8px; --r-inner:12px;
+  --r-widget:16px; --r-shell:20px; --r-pill:999px;
+  /* three curves. --ease for anything the founder initiated; --ease-in-out for
+     system-driven movement only, because it is flat at the start; --ease-drawer
+     for the slide-over. Constant motion is linear. design-language.md §6.      */
+  --ease:cubic-bezier(.2,0,0,1);
+  --ease-in-out:cubic-bezier(.77,0,.175,1);
+  --ease-drawer:cubic-bezier(.32,.72,0,1);
+  --dur-1:120ms; --dur-2:200ms; --dur-3:320ms; --dur-4:520ms;
+  --cycle:1.6s;                     /* one indicator cycle for the whole page */
+}
+
+
+/* ── 3 · SEMANTIC · light ──────────────────────────────────────────────────
+   COMPONENTS READ ONLY THESE. The next three blocks carry the same 41 names in
+   the same order, and check-app.py gate D refuses any drift between them.   */
+:root{
   --ground:var(--n-2); --surface:var(--n-0); --surface-sunken:var(--n-3);
-  --border:var(--n-4); --border-strong:var(--n-5); --focus:var(--n-10);
+  --border:var(--n-4); --border-strong:var(--n-5);
+  /* THE ACCENT SLOT · brief.md §5, design-language.md §3.8.
+     Green is decided. The specific hue, its dark value and the ink that sits
+     on it are NOT, so both are ALIASED TO THE INK PAIR here — which is a
+     faithful description of what ships today ("the prototype ships with
+     near-black primary fills") rather than a placeholder. The three permitted
+     use sites already read these, so the repaint is a two-value edit in each
+     of the three blocks and not a hunt.
+
+     Declaring them aliased rather than omitting them is the whole point:
+     tokens that exist and are read by NOTHING leave the repaint a hunt anyway.
+     A loud sentinel value was the other option and was turned down — it
+     violates §2's one rule and it would ship the day somebody forgot.
+
+     THERE ARE THREE, NOT TWO. --accent-hover exists because --ink-hover is a
+     NEUTRAL: it is one step along the neutral ramp, which is the correct hover
+     for a near-black fill and turns a green button GREY the day the accent
+     lands. A hover on an accent fill is a measured darker accent and cannot be
+     derived from the accent by a formula, so it is its own semantic token in
+     all three blocks. It is aliased to --ink-hover's value today, so nothing
+     moves until the hue does. */
+  --accent:var(--n-10); --accent-ink:#FAFAFA; --accent-hover:var(--n-9);
   --text-1:var(--n-10); --text-2:var(--n-8); --text-3:var(--n-7);
   --text-disabled:var(--n-6); --text-inverse:#FAFAFA;
   /* three more semantics, added with the dark pass. Each replaced a component
@@ -163,20 +259,18 @@ html{color-scheme:light dark;background:var(--ground)}
   --state-live:#1B6B45;    --state-live-tint:#E4F1EA;
   --state-expired:#A32B21; --state-expired-tint:#FAE9E7;
   --state-pending:#7A5200; --state-pending-tint:#FBF0D9;
-  --state-up:var(--state-live); --state-down:var(--state-expired);
 
   /* density — count only, no verdict */
   --density-0:#F6F6F6; --density-1:#DDDDDD; --density-2:#BBBBBB;
   --density-3:#909090; --density-4:#5E5E5E;
 
   /* chart layers — trend is near-black, so the palette is now only the
-     three state hues. Amber carried no information (design-language.md §3.5). */
-  --chart-series:#595959; --chart-trend:var(--n-10);
-  /* the excluded window was --chart-excluded #A32B21 until 2026-09-04. Red is
+     three state hues. Amber carried no information (design-language.md §3.5).
+     The excluded window was --chart-excluded #A32B21 until 2026-09-04. Red is
      the expired hue: it said this data is BAD where the fact is that it is NOT
      YET KNOWN, and it was the loudest thing on the dashboard while marking the
      least important information. Same error the amber trend made in §3.5. */
-  --chart-unknown:var(--n-3);
+  --chart-series:#595959; --chart-trend:var(--n-10); --chart-unknown:var(--n-3);
 
   /* categorical · design-language.md §3.7 — THE HUE IS GONE, 2026-09-05.
      One ink, one mid-grey, one texture. No hue anywhere in this system.
@@ -185,8 +279,9 @@ html{color-scheme:light dark;background:var(--ground)}
      mark meaning "the entity being tracked". Withdrawn the next day, and the
      reason is the one CLAUDE.md gives for holding the accent open: a hue that
      loud becomes the thing every reviewer reviews instead of the structure.
-     It also put the prototype in conflict with case.md §6.4, which says colour
-     appears in exactly three places, none of them a chart mark.
+     It also put the prototype in conflict with the colour rule, which admits
+     four places and no more — and a chart mark is not one of them
+     (CLAUDE.md, design-language.md §3.8).
 
      Its own contrast note said the rest. At 1.26:1 on white it needed a ring
      at 9px, a semibold count beside it, an ink circle round the pie and a
@@ -207,81 +302,44 @@ html{color-scheme:light dark;background:var(--ground)}
      (14.7 to 46.8), and --mark-3 arrives as texture on top of that.
 
      Cap is still THREE encoded values. A fourth folds into Other, or the
-     chart becomes small multiples. There is no --mark-4, deliberately. */
-  --mark-1:var(--n-10);   /* first encoded value, or the entity being tracked */
-  --mark-2:var(--n-7);    /* second encoded value */
-  /* third encoded value, ALWAYS a 45deg hatch — never a third solid, and that
-     is a limit of the ramp rather than a preference. The next step down from
-     --mark-2 is --n-6 #B0B0B0 at 2.17:1 on white and 1.90:1 on the bar track,
-     so a third solid either fails the 3:1 a mark needs or sits between the
-     ramp's steps: #8A8A8A would clear it at 3.45:1 and is not on the ramp,
-     and adding a step there breaks §3.1's claim that the ramp is even in L*.
-     That trade was recorded once already, on the darker-mark detour, and it
-     was turned down then for the same reason. Texture is what separates a
-     third value without a hue, so the third value keeps it at every scale and
-     only the PITCH changes with area. */
-  --mark-3:var(--n-10);
-  /* the line-scale rendering of --mark-3 — same 40% duty cycle as the SVG
-     pattern, half the pitch, for a 9px key dot or an 8px bar where the 6px
-     pattern draws one diagonal line and reads as a rendering fault. The CSS
-     twin was deleted earlier on 2026-09-04 because nothing used it: barStyle()
-     sent every HTML-scale mark to --mark-3 solid. With the hue gone there is
-     no third solid left to send it to, so it is back, and now it is load
-     bearing. One rendering rule either way — area marks take the pattern,
-     line-scale marks take this, and both are the same category. */
-  --mark-3-hatch:repeating-linear-gradient(45deg,var(--mark-3) 0 1.2px,var(--surface) 1.2px 3px);
-  /* NOT a fourth value — the absence of one. Everything a chart shows but does
-     not encode: the four holders you are not tracking. Recessive on purpose,
-     because dataviz wants context to sit behind the mark that carries the
-     point, and five near-black bars made the card heavier than its finding.
+     chart becomes small multiples. There is no --mark-4, deliberately.
 
-     It shares --n-7 with --mark-2 now, the way it used to share it with
-     --mark-3. Same licence, same reason: a chart uses --mark-2 or --mark-off,
-     never both. Two or three encoded categories leave no unencoded field, and
-     a chart that has a field encodes exactly one thing. If one ever needs
-     both, --mark-off moves and the marks stay.
+     --mark-3 is the third encoded value and is ALWAYS a 45deg hatch — never a
+     third solid, and that is a limit of the ramp rather than a preference. The
+     next step down from --mark-2 is --n-6 #B0B0B0 at 2.17:1 on white and
+     1.90:1 on the bar track, so a third solid either fails the 3:1 a mark
+     needs or sits between the ramp's steps. Texture is what separates a third
+     value without a hue. The hatch itself is DERIVED — tier 4 below.
 
-     It stays at --n-7 rather than following the mark down the ramp. Moved
-     there from --n-6 on measured separation while --mark-1 was briefly
-     darker, and kept: against a #252525 mark the field is 32 L* points clear,
-     and --n-6 would have put the unselected bars at 1.90:1 on their own
-     track, which is context that has stopped reading as a bar. */
+     --mark-off is NOT a fourth value — it is the absence of one. Everything a
+     chart shows but does not encode: the four holders you are not tracking.
+     Recessive on purpose, because dataviz wants context to sit behind the mark
+     that carries the point. It shares --n-7 with --mark-2: a chart uses one or
+     the other, never both, so the collision cannot happen. */
+  --mark-1:var(--n-10); --mark-2:var(--n-7); --mark-3:var(--n-10);
   --mark-off:var(--n-7);
 
-  /* skeleton */
-  --skeleton:var(--n-4); --skeleton-shimmer:var(--n-3);
-  /* a bar the founder has acted on — starred, or edited in the confirm card.
-     One step darker, so "changed" reads without leaving the skeleton grammar. */
-  --skeleton-strong:var(--n-5);
+  /* skeleton. --skeleton-strong is a bar the founder has acted on — starred,
+     or edited in the confirm card. One step darker, so "changed" reads without
+     leaving the skeleton grammar. */
+  --skeleton:var(--n-4); --skeleton-shimmer:var(--n-3); --skeleton-strong:var(--n-5);
 
-  /* composited over a coloured surface, so these cannot be flat neutrals */
+  /* composited over a coloured surface, so these cannot be flat neutrals.
+     --key-ring is the 1px ring on a 9px legend key: alpha for the same reason,
+     it sits on --surface in the key and on a slice in the chart. */
   --cell-mark:rgba(37,37,37,.14); --cell-mark-inverse:rgba(250,250,250,.30);
-  --scrim:rgba(37,37,37,.18);
-  /* the 1px ring on a 9px legend key. Alpha for the same reason as the two
-     above: it sits on --surface in the key and on a slice in the chart. */
   --key-ring:rgba(37,37,37,.24);
 
-  /* space · radius · elevation · motion */
-  --s-2:2px; --s-4:4px; --s-6:6px; --s-8:8px; --s-10:10px; --s-12:12px;
-  --s-14:14px; --s-16:16px; --s-20:20px; --s-24:24px; --s-32:32px;
-  --s-40:40px; --s-56:56px; --s-72:72px;
-  --r-chip:4px; --r-seg:6px; --r-control:8px; --r-inner:12px;
-  --r-widget:16px; --r-shell:20px; --r-pill:999px;
+  /* elevation. THEMED, which is why it is here rather than with the scale:
+     an ink shadow is invisible on ink. --shadow-drop is the same elevation as
+     a filter, for the clipped composer — clip-path would eat a box-shadow, but
+     a filter on the unclipped parent sees the clip. */
   --shadow-float:0 1px 2px rgba(37,37,37,.04), 0 8px 24px -6px rgba(37,37,37,.10);
-  /* the same elevation as a filter, for the clipped composer: clip-path would
-     eat a box-shadow, but a filter on the unclipped parent sees the clip. */
   --shadow-drop:drop-shadow(0 1px 1px rgba(37,37,37,.05)) drop-shadow(0 6px 16px rgba(37,37,37,.10));
-  /* three curves. --ease for anything the founder initiated; --ease-in-out for
-     system-driven movement only, because it is flat at the start; --ease-drawer
-     for the slide-over. Constant motion is linear. design-language.md §6.      */
-  --ease:cubic-bezier(.2,0,0,1);
-  --ease-in-out:cubic-bezier(.77,0,.175,1);
-  --ease-drawer:cubic-bezier(.32,.72,0,1);
-  --dur-1:120ms; --dur-2:200ms; --dur-3:320ms; --dur-4:520ms;
-  --cycle:1.6s;                     /* one indicator cycle for the whole page */
 }
 
-/* ── dark · design-language.md §10 ─────────────────────────────
+
+/* ── 3 · SEMANTIC · dark · design-language.md §10 ──────────────────────────
    §10 is a contract with two halves and this is both of them.
 
    The mechanical half: dark redefines SEMANTIC TOKENS ONLY and touches no
@@ -305,7 +363,13 @@ html{color-scheme:light dark;background:var(--ground)}
      against 1.08 in light, so --border does the separating that the step does
      there. §10's reading of the dark reference screen. */
   --ground:#141414; --surface:#1A1A1A; --surface-sunken:#101010;
-  --border:#2E2E2E; --border-strong:#454545; --focus:#F0F0F0;
+  --border:#2E2E2E; --border-strong:#454545;
+  /* the accent slot, aliased to the ink pair here exactly as in light: the
+     near-black fill becomes a near-white one, which is what ships today. The
+     specific green needs a value MEASURED against this ground — a hue chosen
+     against white and carried unchanged into dark is how a component silently
+     stops meeting contrast (brief.md §5). */
+  --accent:#F0F0F0; --accent-ink:#141414; --accent-hover:#FFFFFF;
   --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
   --text-disabled:#5A5A5A; --text-inverse:#141414;
   /* --text-1 is the primary fill and --text-inverse its label, so a near-black
@@ -324,11 +388,11 @@ html{color-scheme:light dark;background:var(--ground)}
      10.7 / 12.2 / 15.5 / 20.3 against 8.8 / 12.2 / 16.1 / 19.9. --density-0 is
      --ground, exactly as it is in light, so an open cell reads as nothing at
      1.06 against the card and the 1px gridlines carry the grid. Text flips to
-     inverse at --density-4 and only there, as in light. */
+     inverse at --density-4 and only there, as in light.
+     #6A6A6A rather than the even #6E6E6E: the even step lands text-1 at 4.47
+     and reopens the dead zone at step 3 the light ramp was tuned to remove. */
   --density-0:#141414; --density-1:#2A2A2A; --density-2:#454545;
   --density-3:#6A6A6A; --density-4:#9E9E9E;
-  /* #6A6A6A rather than the even #6E6E6E: the even step lands text-1 at 4.47
-     and reopens the dead zone at step 3 the light ramp was tuned to remove. */
 
   --chart-series:#A8A8A8; --chart-trend:#F0F0F0; --chart-unknown:#242424;
 
@@ -337,16 +401,17 @@ html{color-scheme:light dark;background:var(--ground)}
      lightest here rather than the darkest. 15.96 and 5.04 on surface, 39.1 L*
      points apart against 32.1 in light. --mark-off keeps sharing its value with
      --mark-2 exactly as it shares --n-7 in light — a chart uses one or the
-     other, never both, so the collision cannot happen. */
+     other, never both, so the collision cannot happen.
+     --mark-3-hatch is NOT redefined anywhere: it is tier 4, and it reads
+     --mark-3 and --surface, so the stripes and the ground between them both
+     invert on their own. */
   --mark-1:#F5F5F5; --mark-2:#8A8A8A; --mark-3:#F5F5F5; --mark-off:#8A8A8A;
-  /* --mark-3-hatch is not redefined: it reads --mark-3 and --surface, so the
-     stripes and the ground between them both invert on their own. */
 
   /* the sweep is still the lighter band, so it still reads as a sweep */
   --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
 
   --cell-mark:rgba(245,245,245,.16); --cell-mark-inverse:rgba(20,20,20,.34);
-  --scrim:rgba(0,0,0,.55); --key-ring:rgba(245,245,245,.30);
+  --key-ring:rgba(245,245,245,.30);
 
   /* an ink shadow is invisible on ink. These go black and heavier, and the
      hairline is doing most of the work regardless. */
@@ -359,7 +424,13 @@ html{color-scheme:light dark;background:var(--ground)}
      against 1.08 in light, so --border does the separating that the step does
      there. §10's reading of the dark reference screen. */
   --ground:#141414; --surface:#1A1A1A; --surface-sunken:#101010;
-  --border:#2E2E2E; --border-strong:#454545; --focus:#F0F0F0;
+  --border:#2E2E2E; --border-strong:#454545;
+  /* the accent slot, aliased to the ink pair here exactly as in light: the
+     near-black fill becomes a near-white one, which is what ships today. The
+     specific green needs a value MEASURED against this ground — a hue chosen
+     against white and carried unchanged into dark is how a component silently
+     stops meeting contrast (brief.md §5). */
+  --accent:#F0F0F0; --accent-ink:#141414; --accent-hover:#FFFFFF;
   --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
   --text-disabled:#5A5A5A; --text-inverse:#141414;
   /* --text-1 is the primary fill and --text-inverse its label, so a near-black
@@ -378,11 +449,11 @@ html{color-scheme:light dark;background:var(--ground)}
      10.7 / 12.2 / 15.5 / 20.3 against 8.8 / 12.2 / 16.1 / 19.9. --density-0 is
      --ground, exactly as it is in light, so an open cell reads as nothing at
      1.06 against the card and the 1px gridlines carry the grid. Text flips to
-     inverse at --density-4 and only there, as in light. */
+     inverse at --density-4 and only there, as in light.
+     #6A6A6A rather than the even #6E6E6E: the even step lands text-1 at 4.47
+     and reopens the dead zone at step 3 the light ramp was tuned to remove. */
   --density-0:#141414; --density-1:#2A2A2A; --density-2:#454545;
   --density-3:#6A6A6A; --density-4:#9E9E9E;
-  /* #6A6A6A rather than the even #6E6E6E: the even step lands text-1 at 4.47
-     and reopens the dead zone at step 3 the light ramp was tuned to remove. */
 
   --chart-series:#A8A8A8; --chart-trend:#F0F0F0; --chart-unknown:#242424;
 
@@ -391,22 +462,58 @@ html{color-scheme:light dark;background:var(--ground)}
      lightest here rather than the darkest. 15.96 and 5.04 on surface, 39.1 L*
      points apart against 32.1 in light. --mark-off keeps sharing its value with
      --mark-2 exactly as it shares --n-7 in light — a chart uses one or the
-     other, never both, so the collision cannot happen. */
+     other, never both, so the collision cannot happen.
+     --mark-3-hatch is NOT redefined anywhere: it is tier 4, and it reads
+     --mark-3 and --surface, so the stripes and the ground between them both
+     invert on their own. */
   --mark-1:#F5F5F5; --mark-2:#8A8A8A; --mark-3:#F5F5F5; --mark-off:#8A8A8A;
-  /* --mark-3-hatch is not redefined: it reads --mark-3 and --surface, so the
-     stripes and the ground between them both invert on their own. */
 
   /* the sweep is still the lighter band, so it still reads as a sweep */
   --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
 
   --cell-mark:rgba(245,245,245,.16); --cell-mark-inverse:rgba(20,20,20,.34);
-  --scrim:rgba(0,0,0,.55); --key-ring:rgba(245,245,245,.30);
+  --key-ring:rgba(245,245,245,.30);
 
   /* an ink shadow is invisible on ink. These go black and heavier, and the
      hairline is doing most of the work regardless. */
   --shadow-float:0 1px 2px rgba(0,0,0,.40), 0 8px 24px -6px rgba(0,0,0,.55);
   --shadow-drop:drop-shadow(0 1px 1px rgba(0,0,0,.40)) drop-shadow(0 6px 16px rgba(0,0,0,.50));
 }
+
+
+/* ── 4 · DERIVED ───────────────────────────────────────────────────────────
+   EACH RESOLVES THROUGH A THEMED TOKEN, SO IT INVERTS FOR FREE. None of them
+   may ever be added to a dark block: a literal there would pin the value to
+   one palette while reading as perfectly correct CSS, which is the same
+   failure mode as a component reading a primitive.
+
+   Declared after the dark blocks on purpose, so that "the three blocks above
+   carry the same names in the same order" is true of the blocks and nothing
+   else has to be excepted from it. Position is otherwise irrelevant — custom
+   properties resolve by cascade. */
+:root{
+  /* direction of change, which is the one place the state hues are reused for
+     something that is not a legal status. design-language.md §3.3. */
+  --state-up:var(--state-live); --state-down:var(--state-expired);
+  /* dashed gridlines, values inside the plot. §3.5. */
+  --chart-grid:var(--border);
+  /* the line-scale rendering of --mark-3 — same 40% duty cycle as the SVG
+     pattern, half the pitch, for a 9px key dot or an 8px bar where the 6px
+     pattern draws one diagonal line and reads as a rendering fault. It reads
+     --mark-3 AND --surface, which is why it is late-bound rather than
+     redefined in dark: the stripes and the ground between them invert
+     together. One rendering rule either way — area marks take the SVG
+     pattern, line-scale marks take this, and both are the same category. */
+  --mark-3-hatch:repeating-linear-gradient(45deg,var(--mark-3) 0 1.2px,var(--surface) 1.2px 3px);
+  /* THE FOCUS RING IS THE ACCENT. §3.8 names three places the accent may
+     appear and this is one of them, so it derives rather than being declared
+     twice — one edit to --accent moves the primary fill, the selected control
+     and the ring together. It resolved to the same near-black/near-white pair
+     before this became an alias, so the repaint is visible in exactly the
+     three places §3.8 permits and nowhere else. */
+  --focus:var(--accent);
+}
+/* ══ end tokens ══ */
 /* §6: nobody asked to watch the theme change. Without this every property in
    the sheet that carries a colour cross-fades at once and the page reads as
    melting rather than switching. The class is on for one frame. */
