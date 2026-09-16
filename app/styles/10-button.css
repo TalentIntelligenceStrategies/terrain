@@ -87,6 +87,22 @@
    visit. .btn[disabled] would take it out of the tab order and the reason
    with it -- the argument the gate's own gated state records above. */
 
+/* THE ICON BUTTON — a control whose whole label is its glyph. Same states as
+   .btn, smaller target and chip radius, and it lives here rather than with the
+   chip it sits beside in the markup: a component file is a family, not a
+   neighbourhood. */
+.icon-btn{color:var(--text-3);padding:var(--s-6);border-radius:var(--r-chip);display:flex;
+          transition:color var(--dur-1) var(--ease),background var(--dur-1) var(--ease),
+                     transform var(--dur-1) var(--ease)}
+.icon-btn:active{transform:scale(.94)}
+
+/* THE AUTHOR-VERSUS-UA TRAP, third instance. .btn's display is an AUTHOR
+   declaration and [hidden]{display:none} is a USER-AGENT one, so author origin
+   wins whatever the specificity and a .btn given [hidden] STAYS ON SCREEN.
+   `Show more` was doing exactly that. Specificity-protected at (0,2,0), so it
+   may sit in any file in any order and still win.  */
+.btn[hidden]{display:none}
+
 /* ── hover, gated ── every rule here NAMES :hover; nothing else may. ── */
 @media (hover:hover) and (pointer:fine){
   .btn-primary:hover{background:var(--accent-hover)}

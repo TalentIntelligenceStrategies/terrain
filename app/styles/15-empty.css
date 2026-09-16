@@ -1,0 +1,34 @@
+/* ══ 15 · EMPTY ══════════════════════════════════════════════════════════
+   AN EMPTY LIST IS NOT A LIST OF BARS, and that is the whole distinction this
+   file carries. A bar says a value EXISTS AND IS BEING WITHHELD; a list with
+   nothing in it has no values to withhold, so three grey rows where a founder
+   has no projects CLAIM THREE PROJECTS whose names we decline to print. It is
+   the same distinction the loader draws against the bar, one component up.
+
+   NEITHER SENTENCE IS AN ACTION, and that is deliberate rather than an
+   omission: none of the three empty states is filled by a control the founder
+   can press from where they are standing. A project comes from a search, a
+   version from a change, an invoice from a renewal. Inventing a button for
+   each would be an empty state pointing at nothing.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── AN EMPTY LIST IS NOT A LIST OF BARS · design-language.md §8 ──────────
+   A bar says a value exists and is being withheld; a list with nothing in it
+   has no values to withhold, so three grey rows where a founder has no
+   projects claim three projects whose names we decline to print. The same
+   distinction the loader draws against the bar, one component up.
+
+   TWO SENTENCES AND THE SECOND IS QUIETER: what this place is, then what
+   fills it. Neither is an action here, because none of the three is filled by
+   a control the founder can press from where they are standing -- a project
+   comes from a search, a version from a change, an invoice from a renewal.
+   Inventing a button for each would be an empty state pointing at nothing. */
+.empty-note{margin:0;padding:var(--s-12);font-size:13px;line-height:1.55;
+      color:var(--text-2);max-width:60ch;text-wrap:pretty}
+.empty-note .empty-then{display:block;margin-block-start:var(--s-2);color:var(--text-3)}
+/* DESCENDANT, not a child: the invoices live in their own div inside the card
+   body, so `>` matched nothing and the note sat indented past the heading it
+   belonged under. The menu keeps the inset, because its rows have one. */
+.card-body .empty-note{padding:var(--s-4) 0}
+.menu-note{margin:0;padding:var(--s-4) var(--s-12) var(--s-8);
+      font-size:12px;line-height:1.5;color:var(--text-3)}

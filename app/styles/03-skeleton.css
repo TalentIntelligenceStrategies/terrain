@@ -1,0 +1,30 @@
+/* ══ 03 · SKELETON ══════════════════════════════════════════════════════════
+   A BAR IS NOT A LOADER AND THE DIFFERENCE IS PERMANENCE. A bar says a value
+   EXISTS AND IS BEING WITHHELD and stays; a loader says work is in flight and
+   goes when the work does. design-language.md §8.
+
+   In the engine contract this is one rule: **null on an identity field means
+   render the skeleton bar, and it is the only thing that means that.** A real
+   engine returning real names then changes nothing but the presence of a
+   value. `XXX` is a DIFFERENT refusal -- nobody has chosen a price yet -- and
+   it renders through a different path on purpose.
+
+   THE SHIMMER GOES FLAT UNDER REDUCED MOTION, NEVER OFF (99-reduced-motion.css).
+   A skeleton that vanished would stop reading as absent data and start reading
+   as a grey design element.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── skeleton ───────────────────────────────────────────── */
+.sk{display:block;border-radius:3px;background:var(--skeleton);position:relative;overflow:hidden}
+.sk::after{
+  content:"";position:absolute;inset:0;transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent,var(--skeleton-shimmer),transparent);
+  animation:sweep var(--cycle) linear infinite;
+}
+@keyframes sweep{to{transform:translateX(100%)}}
+.sk-h-micro{height:9px}  .sk-h-label{height:11px}
+.sk-h-body{height:12px}  .sk-h-title{height:15px}
+.sk-h-fig{height:26px}   .sk-h-fig-xl{height:34px}
+.w-xs{width:28px} .w-sm{width:52px} .w-md{width:88px}
+.w-lg{width:132px} .w-xl{width:180px} .w-full{width:100%}
+.sk-circle{border-radius:var(--r-pill)}

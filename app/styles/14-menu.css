@@ -1,0 +1,77 @@
+/* ══ 14 · MENU ═════════════════════════════════════════════════════════════
+   ONLY ONE MAY BE OPEN. Both close on a DOCUMENT-level listener, which is
+   also what makes Escape and a click on a third menu work -- and is why the
+   scrim that claimed to catch the outside click was deleted along with its
+   token: nothing referenced it, and a dead full-viewport node at z-index 50
+   is one visibility flip away from covering the product.
+
+   A MENU FLATTENS BY DEFAULT and the project switcher is the protected
+   exception (design-language.md §7): a version is OF a project, so the
+   version block nests under the open project rather than sitting beside it.
+
+   THE SELECTED STATE IS §3.8's ACCENT SITE 3, on the LABEL. The row's fill
+   stays neutral -- a filled accent row inside a menu would be a second
+   primary action on the surface.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── the two masthead menus ─────────────────────────────────────────────
+   ONLY ONE MAY BE OPEN, and the project switcher carries the version block
+   nested under the open project. design-language.md §7 protects that nesting
+   by name: a menu flattens by default, and a version is OF a project. */
+.mast-menu-wrap{position:relative;flex:0 0 auto}
+.mast-menu{position:absolute;top:calc(100% + var(--s-6));min-width:260px;
+      background:var(--surface);border:1px solid var(--border);border-radius:var(--r-inner);
+      box-shadow:var(--shadow-float);padding:var(--s-8);transform-origin:top center;
+      opacity:0;visibility:hidden;transform:translateY(-4px) scale(.97);z-index:7;
+      transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
+                 visibility 0s linear var(--dur-2)}
+.mast-menu-proj{left:0;width:300px;max-height:min(70vh,540px);overflow-y:auto}
+#acctMenu{right:0;left:auto;min-width:220px}
+.proj-open #projMenu,.menu-open #acctMenu{opacity:1;visibility:visible;transform:none;
+      transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
+                 visibility 0s linear 0s}
+.menu-who{display:flex;flex-direction:column;gap:5px;padding:var(--s-8)}
+
+/* ~~.side-search~~ DELETED 2026-09-15 · Find a project had no listener, and
+   the reason it never grew one is the more useful half: IT CANNOT WORK HERE
+   AND NOT BECAUSE IT WAS UNFINISHED. §8 renders every project name but the
+   open one as a bar, so six of the seven rows have no text to match — a
+   founder could not type a name they are not shown, and any keystroke would
+   hide six rows for being unnamed rather than for not matching. A control
+   that promises a filter it cannot perform on 6/7 of its list is worse than
+   no control, and wiring it would have been the worse of the audit's two
+   options rather than the more thorough one.
+
+   IT COMES BACK WHEN THE NAMES DO. Nothing about the design was wrong; the
+   demonstration data cannot support it. */
+
+.side-section{margin:var(--s-16) 0 var(--s-6);padding:0 var(--s-8)}
+.side-section:first-of-type{margin-top:var(--s-6)}
+.proj{display:flex;align-items:center;gap:var(--s-10);width:100%;text-align:left;
+      padding:var(--s-8);border-radius:var(--r-control);margin-bottom:var(--s-2);
+      transition:background var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
+.proj:active{transform:scale(.985)}
+.proj[aria-current="true"]{background:var(--surface-sunken)}
+.proj[aria-current="true"] .proj-dot{background:var(--text-1)}
+.proj-dot{width:5px;height:5px;flex:0 0 5px;border-radius:var(--r-pill);
+          background:var(--indicator-rest);margin-right:var(--s-2);transition:background var(--dur-1) var(--ease)}
+.proj-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+/* the open project's real name, 2026-09-11. It takes .t-label's size and weight
+   without the class, because these rows are 13px throughout and a second
+   typographic voice in a menu row would read as a different kind of item. One
+   line, clipped rather than wrapped: a project name is an identifier the
+   founder recognises from its start, and a two-line row would break the
+   switcher's even rhythm for the one row that is already marked. */
+.proj-name{font-size:13px;line-height:1.4;font-weight:500;color:var(--text-1);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── MOVED HERE FROM THE RESET SECTION, and it is safe to move because it
+   wins on SPECIFICITY wherever it lands rather than on order.
+
+   A ROVING TABINDEX IS NOT A PROGRAMMATIC FOCUS TARGET, and the reset's
+   [tabindex="-1"]:focus{outline:none} cannot tell them apart. A heading
+   focused on arrival should not flash a ring -- but a menu item reached by
+   ArrowDown is a keyboard user NAVIGATING, and hiding the ring there is the
+   whole interaction gone. Inset by 2 so it sits inside the item rather than
+   against the menu's own 8px of padding. */
+#acctMenu .menu-item:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}

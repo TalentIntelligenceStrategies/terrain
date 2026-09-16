@@ -35,13 +35,21 @@ discovery, so each file is found only after the one importing it has parsed, and
 a rule came from in DevTools. `tools/check-app.py` asserts that the tag list matches what is on disk
 and that `99-reduced-motion.css` is **last**.
 
-| | |
-| --- | --- |
-| `00`–`05` | foundation — tokens, reset, type, skeleton, loader, wait/fail |
-| `10`–`15` | primitives — button, chip, field, inline-confirm, menu, empty |
-| `20`–`21` | layout — shell, surface |
-| `30`–`37` | components — conversation, card, map, chart, list, record, destination, attribution |
-| `99` | reduced motion, **which must load last** |
+| | | |
+| --- | --- | --- |
+| `tokens` `01`–`05` | foundation — tokens, reset, type, skeleton, loader, wait/fail | **extracted** |
+| `10`–`15` | primitives — button, chip, field, inline-confirm, menu, empty | **extracted** |
+| `20`–`21` | layout — shell, surface | to come |
+| `30`–`37` | components — conversation, card, map, chart, list, record, destination, attribution | to come |
+| `98` | the bench, `lab.html` only — numbered into the same manifest so it cannot drift into testing something else | **extracted** |
+| `99` | reduced motion, **which must load last** | **extracted** |
+
+**Two rules the split had to get right, both recorded where they bite.**
+`05-wait-fail.css` has its own number because `.card-body.is-wait` and `.rec-body.is-wait` span two
+component families *for the same reason* — they share one **contract**, not one appearance, and the
+JavaScript half is `core/wait.mjs`. And `#acctMenu .menu-item:focus-visible` sat in the reset section
+and belongs to the shell; it moved to `14-menu.css`, which is safe because it wins on **specificity**
+wherever it lands rather than on order.
 
 **`99-reduced-motion.css` must load last because 20 of its 28 rules are same-specificity overrides
 declaring end states.** Same specificity means order decides.

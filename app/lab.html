@@ -7,10 +7,18 @@
 <link rel="icon" href="../brand/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../brand/fonts/fonts.css">
 <link rel="stylesheet" href="styles/tokens.css">
-<link rel="stylesheet" href="styles/01-bench.css">
+<link rel="stylesheet" href="styles/01-reset.css">
+<link rel="stylesheet" href="styles/02-type.css">
+<link rel="stylesheet" href="styles/03-skeleton.css">
 <link rel="stylesheet" href="styles/04-loader.css">
 <link rel="stylesheet" href="styles/05-wait-fail.css">
 <link rel="stylesheet" href="styles/10-button.css">
+<link rel="stylesheet" href="styles/11-chip.css">
+<link rel="stylesheet" href="styles/12-field.css">
+<link rel="stylesheet" href="styles/13-inline-confirm.css">
+<link rel="stylesheet" href="styles/14-menu.css">
+<link rel="stylesheet" href="styles/15-empty.css">
+<link rel="stylesheet" href="styles/98-bench.css">
 <link rel="stylesheet" href="styles/99-reduced-motion.css">
 <script>
 (function(){
@@ -125,6 +133,86 @@
        which the hand-maintained nine-flag checklist in the router could.</p>
     <p><button class="btn btn-secondary" data-act="armed" type="button">Arm three, disarm all</button>
        <span class="bench-note" id="armOut">—</span></p>
+  </section>
+
+
+  <section class="bench-case">
+    <h2>11 · The primitives, in both themes</h2>
+    <p>Step 3’s checkpoint: every primitive rendered from its own numbered stylesheet, with
+       <strong>no <code>--n-*</code> and no raw hex outside <code>tokens.css</code></strong> — which
+       <code>check-app.py</code> gate A refuses rather than trusts. Load
+       <a href="?theme=dark">?theme=dark</a> and <a href="?theme=light">?theme=light</a>: nothing below
+       has a component rule for dark.</p>
+
+    <h3 class="bench-sub">Type roles · 02</h3>
+    <div class="bench-host">
+      <p class="t-display-1">Display 1</p>
+      <p class="t-display-2">Display 2</p>
+      <p class="t-title">Title</p>
+      <p class="t-body">Body — what a founder actually reads.</p>
+      <p class="t-label">Label</p>
+      <p class="t-micro">Micro label</p>
+      <p><span class="fig fig-xl">248</span> <span class="fig fig-l">51</span>
+         <span class="fig fig-m">2 700</span> <span class="fig fig-s">1 350</span>
+         <span class="fig fig-s fig-sub">of 4 000</span></p>
+    </div>
+
+    <h3 class="bench-sub">Skeleton · 03 — a bar is not a loader</h3>
+    <div class="bench-host">
+      <span class="sk sk-h-title w-lg"></span>
+      <span class="sk sk-h-body w-xl" style="margin-top:8px"></span>
+      <span class="sk sk-h-micro w-md" style="margin-top:8px"></span>
+      <span class="sk sk-h-fig w-sm" style="margin-top:8px"></span>
+    </div>
+
+    <h3 class="bench-sub">Button · 10</h3>
+    <div class="bench-host">
+      <button class="btn btn-primary" type="button">Approve and search</button>
+      <button class="btn btn-secondary" type="button">Secondary</button>
+      <button class="btn btn-ghost" type="button">Ghost</button>
+      <button class="btn btn-secondary" type="button" disabled>Disabled</button>
+      <button class="btn btn-secondary" type="button" aria-disabled="true"
+              aria-describedby="inertWhy">Not ready yet</button>
+      <p class="inert-note" id="inertWhy">Unavailable <em>for a reason</em> — <code>aria-disabled</code>
+         keeps it focusable so this sentence reaches a screen reader on every visit.
+         <code>disabled</code> would take it out of the tab order and the reason with it.</p>
+    </div>
+
+    <h3 class="bench-sub">Chip, status and delta · 11 — never colour alone</h3>
+    <div class="bench-host">
+      <span class="chip">Filter: one cell</span>
+      <span class="status status-live"><span class="dot"></span>Live</span>
+      <span class="status status-expired"><span class="dot"></span>Expired</span>
+      <span class="delta delta-up">▲ 12</span>
+      <span class="delta delta-down">▼ 4</span>
+    </div>
+
+    <h3 class="bench-sub">Field, switch and the preference row · 12</h3>
+    <div class="bench-host">
+      <div class="pref-card">
+        <div class="pref">
+          <span class="pref-label t-label">Email</span>
+          <span class="pref-val"><input class="fld" type="email" value="founder@example.com"></span>
+        </div>
+        <div class="pref">
+          <span class="pref-label t-label">Invalid, and it states the fix</span>
+          <span class="pref-val"><input class="fld" type="email" aria-invalid="true" value="not-an-email"></span>
+        </div>
+        <div class="pref">
+          <span class="pref-label t-label">Email me a receipt</span>
+          <span class="pref-val">
+            <button class="sw" type="button" role="switch" aria-checked="true" aria-label="Email me a receipt">
+              <span class="sw-knob"></span></button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="bench-sub">Empty · 15 — an empty list is not a list of bars</h3>
+    <div class="bench-host">
+      <p class="empty-note">No projects yet.
+        <span class="empty-then">Your first search saves one here.</span></p>
+    </div>
   </section>
 
 </main>

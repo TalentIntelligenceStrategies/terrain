@@ -1,0 +1,40 @@
+/* ══ 01 · RESET ═══════════════════════════════════════════════════════════
+   THE FOCUS RING READS --focus, WHICH IS NOW DERIVED FROM --accent
+   (design-language.md §3.8, site 2 of 3). One edit to --accent moves the ring,
+   the primary fill and the selected control together.
+
+   #acctMenu .menu-item:focus-visible IS IN 20-shell.css, NOT HERE. It sat in
+   this section in the prototype and it is a shell rule; moving it is safe
+   because it wins on specificity wherever it lands, which is the reason it can
+   be moved at all.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--ground); color:var(--text-1);
+  font-family:'Urbanist',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:14px; line-height:1.55; font-weight:400;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+input{font:inherit}
+/* THE RESET AND NOT .mast-brand. The brand lockup was the only <a> in the file
+   and it rendered underlined -- not from a rule but from the absence of one,
+   which is why grepping for text-decoration found nothing to fix. Reset it
+   here so the next <a> added does not reintroduce it. */
+a{text-decoration:none;color:inherit}
+/* THE RADIUS CAME OFF ON 2026-09-11 AND THIS IS A FIX, not a restyle.
+   border-radius here applied to the ELEMENT, not to the outline — so every
+   --r-control control in the product (.btn, .lm-btn, .mast-btn, .meter,
+   .pg-back, .menu-item) visibly snapped 8px -> 4px the instant a keyboard
+   reached it, and the two existing overrides re-declare offset and never
+   radius, so nobody had hit it. The outline follows each element's own
+   curve now, which is what it did before the declaration was added and
+   what it should always have done.
+
+   Found while speccing the field and the switch: three new components were
+   about to carry a :focus-visible radius override apiece, which is the same
+   bug paid for a fourth time. design-language.md §7 has the ruling. */
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[tabindex="-1"]:focus,[tabindex="-1"]:focus-visible{outline:none}

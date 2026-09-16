@@ -1,0 +1,56 @@
+/* ══ 02 · TYPE ════════════════════════════════════════════════════════════
+   A ROLE IS FAMILY, SIZE, WEIGHT AND TRACKING TOGETHER, which is what
+   design-language.md §4 says and what the .fig selector list now matches. It
+   was split in half once -- .fig held family plus tabular-nums, .fig-m held
+   only a size -- so the role was two classes that had to travel together, and
+   NINE MARKUP SITES CARRIED ONLY ONE. Every one rendered a numeral in Urbanist
+   and five lost tabular-nums with it, which is what puts a column of counts
+   out of alignment. It is invisible by construction: a numeral in the wrong
+   face at the right size is still a numeral, and no screenshot at any width
+   says which face drew it. The two that were caught were caught by reading the
+   computed style.
+
+   ── .t-micro,.hf dt,.cf-pair-k IS A LEAK WITH A BETTER FIX THAN MOVE-OR-KEEP.
+   Both `<dt>` and .cf-pair-k are emitted by JS string builders, so the third
+   option is to add `t-micro` to those two generated class lists and DELETE the
+   two foreign selectors -- which removes the leak rather than relocating it,
+   and is the pattern the rest of the sheet already uses. It stands until
+   35-record.css and 30-conversation.css are extracted with their renderers;
+   do it then, in the same pass, not as a CSS-only edit.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── type roles ─────────────────────────────────────────── */
+.t-display-1{font-size:34px;line-height:1.15;font-weight:700;letter-spacing:-.02em}
+.t-display-2{font-size:26px;line-height:1.2;font-weight:700;letter-spacing:-.015em}
+.t-title{font-size:17px;line-height:1.3;font-weight:600;letter-spacing:-.005em}
+.t-body{font-size:14px;line-height:1.55}
+.t-label{font-size:13px;line-height:1.4;font-weight:500}
+/* ONE DECLARATION, THREE CONSUMERS · 2026-09-11. These five properties were
+   written out verbatim three times — here, .hf dt and .cf-pair-k — so the next
+   label change would have landed in one of three places and looked like a
+   deliberate difference in the other two. */
+.t-micro,.hf dt,.cf-pair-k{font-size:10.5px;line-height:1.2;font-weight:500;
+         letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+/* THE SIZE CLASSES CARRY THE FAMILY, and that is the whole point of this
+   selector list. .fig held family + tabular-nums + weight while .fig-m held
+   only a size, so the role was two classes that had to travel together and
+   NINE MARKUP SITES CARRIED ONLY ONE -- the matrix counts, the donut's
+   figure, the holder-bar counts, the usage rows, the cost table. Every one
+   of them rendered a numeral in Urbanist, and five lost tabular-nums with
+   it, which is what puts a column of counts out of alignment.
+
+   It is invisible by construction: a numeral in the wrong face at the right
+   size is still a numeral, and no screenshot at any width says which face
+   drew it. The two that were caught were caught by reading the computed
+   style, not the page. design-language.md §4 names these as ROLES -- family,
+   size, weight and tracking together -- so the CSS now matches the document
+   rather than splitting a role in half and hoping both halves get used.
+
+   .fig stays, because three sites spell it and it costs nothing. */
+.fig,.fig-xl,.fig-l,.fig-m,.fig-s{font-family:'Inconsolata',ui-monospace,monospace;
+     font-variant-numeric:tabular-nums;font-weight:500}
+.fig-xl{font-size:40px;line-height:1;letter-spacing:-.01em}
+.fig-l{font-size:26px;line-height:1.1}
+.fig-m{font-size:15px;line-height:1.4}
+.fig-s{font-size:12.5px;line-height:1.4}
+.fig-sub{font-weight:400;opacity:.55}   /* the secondary-figure treatment */
