@@ -196,6 +196,16 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
 - **The `Market` / `Technology` toggle**, and the split is IPtech's rather than ours. `Technology`
   being a three-view page is faithful to the source; inventing a more balanced split would be
   inventing a structure that is not theirs.
+- **Application code goes in `app/`, and it is framework-agnostic** — plain CSS files, semantic HTML
+  partials, vanilla ES modules. No framework, no preprocessor, no bundler. The team receiving this
+  writes CSS, and a custom property is the one interchange format every stack consumes; a
+  preprocessor variable also resolves at build time, which the theme swap cannot survive. `app/` is
+  the reference implementation and [`app/README.md`](../app/README.md) is what an engineer reads
+  first.
+- **`app/` does not publish.** The prototype stays the published artifact. Publishing means pointing
+  Pages at a tree, and the transform that makes the prototype publishable — every comment stripped —
+  runs on one file. Both halves of that are in `CLAUDE.md` under Publishing, and changing either
+  changes this line first.
 
 ---
 

@@ -726,7 +726,16 @@ a{text-decoration:none;color:inherit}
    the animation origin that would otherwise win. ═══ */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-property:none!important;animation:none!important}
-  .dmx-dot{opacity:var(--rest)!important}
+  /* THE FALLBACK IS NOT DECORATION. `opacity` does not inherit, so --rest
+     unset makes this declaration invalid at computed-value time and opacity
+     takes its INITIAL value of 1: every dot renders at full strength, the
+     positional ramp is gone, and the loader is a solid block. It cannot
+     happen in this file, because the same function that builds the DOM sets
+     --rest on every dot -- and it happens the moment anyone ships this markup
+     statically, which is the handoff case exactly. The fallback is the flat
+     tone the base rule already computes, so a JS-less loader renders present
+     and visible rather than solid. */
+  .dmx-dot{opacity:var(--rest, calc(0.5 * (var(--dmx-opacity-base) + var(--dmx-opacity-mid))))!important}
   /* the prototype's own line, carried with the bar it governs: a skeleton
      that vanished would stop reading as absent data and start reading as a
      grey design element. Flat, never off. */

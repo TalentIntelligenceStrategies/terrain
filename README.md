@@ -6,9 +6,9 @@ You arrive with a concept — filed, mid-filing, or nowhere near it — and Terr
 in the space, which technology is adjacent to yours, and which part of it each of them holds.
 Self-serve software on a subscription, searching the full Innovue patent database.
 
-Terrain is a TIS product in the Patent Intelligence pillar. It is in the **design and definition**
-phase: this repository holds the definition and one working prototype. There is no application code
-yet.
+Terrain is a TIS product in the Patent Intelligence pillar. This repository holds the definition,
+one working prototype, and [`app/`](app/) — the frontend being extracted from that prototype so the
+interface can be built on rather than read.
 
 ---
 

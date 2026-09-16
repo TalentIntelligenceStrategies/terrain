@@ -115,6 +115,13 @@ html{color-scheme:light dark;background:var(--ground)}
      YET KNOWN, and it was the loudest thing on the dashboard while marking the
      least important information. Same error the amber trend made in §3.5. */
   --chart-unknown:var(--n-3);
+  /* DERIVED, and that is the whole declaration: it resolves THROUGH --border,
+     so it inverts with the theme for free and must never be added to a dark
+     block -- a literal there would pin the gridlines to one palette while
+     reading as correct. It is named in design-language.md §2 and §3.5 and was
+     defined nowhere, with the two grids reaching past it to var(--border)
+     directly. A token nothing reads is a token the next person deletes. */
+  --chart-grid:var(--border);
 
   /* categorical · design-language.md §3.7 — THE HUE IS GONE, 2026-09-05.
      One ink, one mid-grey, one texture. No hue anywhere in this system.
@@ -1056,7 +1063,7 @@ a{text-decoration:none;color:inherit}
 .card-head .info{margin-left:auto}
 .strike{position:relative}
 .strike::after{content:"";position:absolute;left:0;top:50%;height:1px;
-               width:var(--strike-w,100%);background:var(--text-3)}
+               width:100%;background:var(--text-3)}
 
 /* ── the confirm card · platform.md §4, now in the thread ───
    Bordered once. The two sections inside it carry no border of their own:
@@ -3474,6 +3481,34 @@ a{text-decoration:none;color:inherit}
    narrow thing pinned to the left of a wide one.                        */
 .view-acct .page-head,.view-acct .grid{max-width:820px;margin-inline:auto;width:100%}
 
+/* ── the Back control on all four destination pages ──────────────────────
+   THIS HAD NO BASE RULE at all — only the hover. It inherited the bare
+   button reset: no flex, so the arrow and the label were inline siblings
+   with no gap; no padding, so the hover background painted tight to the
+   glyphs; no radius. It is shaped like .mast-btn now, which is the other
+   place a label-plus-glyph control sits in chrome. The negative inline-start
+   margin is optical: it pulls the arrow out to the layout edge so the label
+   reads flush with the h1 beneath it, while the hit area keeps its padding.
+
+   AND THEN THE FIX LANDED INSIDE THE HOVER GATE, which is the failure worth
+   recording rather than the original absence. Every declaration below sat
+   between @media (hover:hover) and (pointer:fine) { … }, so on a coarse
+   pointer at or above the 1024px floor — an iPad Pro in landscape, a touch
+   laptop — the control fell back to the bare reset again and the base rule
+   read as present in every grep for it. Only the four :hover declarations
+   belong in that block; they are the only ones that describe a hover.
+
+   check-app.py gate F is the inverse of the publish gate for an ungated
+   :hover, and it exists because of this: a base rule inside a hover gate is
+   invisible to every screenshot at every width on the machine that took it. */
+.pg-back{display:inline-flex;align-items:center;gap:var(--s-6);align-self:flex-start;
+  height:30px;padding:0 var(--s-10);margin-inline-start:calc(-1 * var(--s-10));
+  border-radius:var(--r-control);font-size:13px;font-weight:500;color:var(--text-2);
+  transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease),
+             transform var(--dur-1) var(--ease)}
+.pg-back:active{transform:scale(.97)}
+.pg-back svg{flex:0 0 auto;color:var(--text-3)}
+
 
 @media (hover:hover) and (pointer:fine){
   .side-collapse:hover{color:var(--text-1);background:var(--surface-sunken)}
@@ -3497,22 +3532,8 @@ a{text-decoration:none;color:inherit}
   .sw:not(:disabled):hover{box-shadow:inset 0 0 0 1px var(--text-3)}
   .sw[aria-checked="true"]:not(:disabled):hover{background:var(--ink-hover);box-shadow:none}
   .expand-btn:hover{color:var(--text-1);background:var(--surface-sunken)}
-  /* THIS HAD NO BASE RULE — only the hover below. It inherited the bare button
-   reset: no flex, so the arrow and the label were inline siblings with no
-   gap; no padding, so the hover background painted tight to the glyphs; no
-   radius. It is shaped like .mast-btn now, which is the other place a
-   label-plus-glyph control sits in chrome. The negative inline-start margin
-   is optical: it pulls the arrow out to the layout edge so the label reads
-   flush with the h1 beneath it, while the hit area keeps its padding. */
-.pg-back{display:inline-flex;align-items:center;gap:var(--s-6);align-self:flex-start;
-  height:30px;padding:0 var(--s-10);margin-inline-start:calc(-1 * var(--s-10));
-  border-radius:var(--r-control);font-size:13px;font-weight:500;color:var(--text-2);
-  transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease),
-             transform var(--dur-1) var(--ease)}
-.pg-back:active{transform:scale(.97)}
-.pg-back svg{flex:0 0 auto;color:var(--text-3)}
-.pg-back:hover svg{color:var(--text-2)}
-.pg-back:hover{color:var(--text-1);background:var(--surface-sunken)}
+  .pg-back:hover svg{color:var(--text-2)}
+  .pg-back:hover{color:var(--text-1);background:var(--surface-sunken)}
   .drill-row.is-expandable:hover{background:var(--surface-sunken)}
   .set-ctl:hover{color:var(--text-1);background:var(--surface-sunken)}
   /* an open row IS --surface-sunken, so the hover above would be invisible on
@@ -3542,7 +3563,16 @@ a{text-decoration:none;color:inherit}
      still runs under reduced motion, because a wait the system is genuinely
      having is information, and a founder who asked for less movement did not
      ask to be told an engine call was instant. */
-  .dmx-dot{opacity:var(--rest)!important}
+  /* THE FALLBACK IS NOT DECORATION. `opacity` does not inherit, so --rest
+     unset makes this declaration invalid at computed-value time and opacity
+     takes its INITIAL value of 1: every dot renders at full strength, the
+     positional ramp is gone, and the loader is a solid block. It cannot
+     happen in this file, because the same function that builds the DOM sets
+     --rest on every dot -- and it happens the moment anyone ships this markup
+     statically, which is the handoff case exactly. The fallback is the flat
+     tone the base rule already computes, so a JS-less loader renders present
+     and visible rather than solid. */
+  .dmx-dot{opacity:var(--rest, calc(0.5 * (var(--dmx-opacity-base) + var(--dmx-opacity-mid))))!important}
 
   .view.is-active{opacity:1;visibility:visible;transform:none}
 
@@ -8291,7 +8321,7 @@ function lifeCycle(holders, patents){
   return '<svg class="chart lc" viewBox="0 0 ' + W + ' ' + H + '" role="img"'
     + ' aria-label="Distinct holders against patents filed, one point per year,'
     + ' joined in time order. Both rise together.">'
-    + '<g stroke="var(--border)" stroke-dasharray="3 3" stroke-width="1">' + grid + '</g>'
+    + '<g stroke="var(--chart-grid)" stroke-dasharray="3 3" stroke-width="1">' + grid + '</g>'
     + '<g font-size="11" fill="var(--text-3)">' + ticks + '</g>'
     + '<path d="' + path + '" fill="none" stroke="var(--chart-series)" stroke-width="2"'
     +   ' stroke-linecap="round" stroke-linejoin="round"/>'
@@ -8523,7 +8553,7 @@ function filingsChart(years){
 
   return '<svg class="chart chart-lg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none"'
     + ' role="img" aria-label="Filings per year. The final period is shaded and excluded as incomplete.">'
-    + '<g stroke="var(--border)" stroke-dasharray="3 3" stroke-width="1">' + grid + '</g>'
+    + '<g stroke="var(--chart-grid)" stroke-dasharray="3 3" stroke-width="1">' + grid + '</g>'
     + '<path d="' + area + '" fill="var(--chart-series)" opacity=".08"/>'
     + '<path d="' + line + '" fill="none" stroke="var(--chart-series)" stroke-width="2"'
     +   ' stroke-linecap="round" stroke-linejoin="round"/>'

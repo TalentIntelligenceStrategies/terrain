@@ -633,3 +633,12 @@ changes one figure has to carry the rest.
 - **Pricing.** The allowance, the price, and the tier structure are all open, which is why the plan
   screen prints `XXX` and a bar rather than guessing.
 - **Whether Terrain sits on Innovue's semantic search surface or beside it.**
+- **What a re-rank costs.** §8.1 carries both answers and they cannot both be right: the cost table
+  prices it at **4 points**, and the paragraph three lines below lists re-ranking among the things
+  that are **free, however many times**. Neither line has been changed, because the two readings are
+  different products rather than different wordings. *Free* follows from *building spends points and
+  reading does not* — a re-rank re-sequences a corpus already paid for and adds no patent to it.
+  *Charged* follows from it being a real engine call over the whole corpus, which a sort is not; but
+  it makes the star a metered control, and nothing on the working surface says so. Whichever way it
+  settles, §6.3 and [`components.md`](../design/components.md)'s list row both assert *free* today
+  and move with it.

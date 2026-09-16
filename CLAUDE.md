@@ -3,8 +3,8 @@
 ## What this folder is
 
 The working directory for **TIS Terrain**, an English-native, self-serve SaaS product in the TIS
-Patent Intelligence pillar. It is in the **design and definition** phase: there is a working
-prototype and four documents, and no application code.
+Patent Intelligence pillar. The definition is settled — a working prototype and four documents —
+and `app/` is the frontend being extracted from the prototype so the work can be handed over.
 
 This folder is **deliberately outside** the TIS brand monorepo (`~/Desktop/TIS`). That is a decision,
 not an accident — see "Relationship to the TIS monorepo" at the bottom.
@@ -52,11 +52,18 @@ docs/                FOUR FILES. See "Four documents" below.
 design/
   components.md      what the ENGINE must return, per component
   previews/
-    terrain-prototype.html    the product
+    terrain-prototype.html    the product — THE REFERENCE, and it stays published
     terrain-loading-lab.html  the loader bench
 
-tools/               ONLY what regenerates the published branch — publish-prototype.sh,
-                     strip-comments.py, check-publish.py, test-gates.sh
+app/                 the frontend, extracted from the prototype. NEVER PUBLISHED
+  README.md          THE HANDOFF DOCUMENT — how to run it is its first line
+  index.html · lab.html · partials/ · styles/ · js/core/ · js/surfaces/ · js/charts/
+demo/                fake data and the fake engine. A SIBLING of app/, deletable,
+                     imported exactly once — see "The demo seam" in app/README.md
+
+tools/               everything CI or a publish runs, and every one of them can refuse —
+                     publish-prototype.sh, strip-comments.py, check-publish.py,
+                     check-app.py, sync-tokens.py, cssgates.py, test-gates.sh
 .github/workflows/   publish-prototype.yml — rebuilds gh-pages on every push to main
 brand/assets/imagery/terrain/  the ONE permitted raster family — see Rules
 brand/favicon.svg    the browser-tab icon — the submark, with its own dark/light block
@@ -77,8 +84,8 @@ brand/logos/innovue/ a third party's marks. TWO exceptions are tracked and publi
                      which the theme-aware attribution line renders. See Logos.
 ```
 
-Add directories when work actually needs them, not in advance. When application code arrives it goes
-in `app/`, and that decision gets recorded in `docs/brief.md` first.
+Add directories when work actually needs them, not in advance — and a decision about where code goes
+is recorded in `docs/brief.md` before the directory exists. `app/` and `demo/` are in §4 Locked.
 
 ## Publishing
 
@@ -134,6 +141,10 @@ construction, so nothing will tell you.
 `README.md` is not a fifth — it is the front door for a visitor and holds no decision that is not
 already in one of the four. If it and they disagree, they win.
 
+**`app/README.md` is not a fifth either, on the same terms** — the front door for `app/`, holding no
+rule that is not already in one of the four. That constraint is what keeps it honest: **if it ever
+states a rule that is not in `design-language.md`, the rule is in the wrong file.**
+
 **Add to an existing document before creating a new file.** A folder of near-duplicate markdown is how
 the definition phase stops being legible.
 
@@ -149,9 +160,9 @@ argument, not the chronology.
 ### Lift a rule by narrowing it
 
 When a rule stops serving, **replace it with a narrower one that can actually be applied.** Deleting
-it outright leaves a vacuum that the next session fills with a guess. Three rules were lifted this way
-on 2026-09-15 — the no-accent rule, the absence prohibition, and the deferred-scope fence — and each
-has a successor that is checkable:
+it outright leaves a vacuum that the next session fills with a guess. **Five rules have been lifted
+this way, and each successor is checkable** — three by a document that says exactly what is permitted,
+two by a script that refuses:
 
 - Terrain **has** an accent (green), and `design-language.md` §3.8 says the three places it may appear
   and the places it may not.
@@ -159,6 +170,10 @@ has a successor that is checkable:
   test written out in `brief.md` §1.
 - `platform.md` §12 is an **ordered list of what is not next**, each with what would start it — not a
   fence, and not a backlog either.
+- Tokens are no longer *inlined by hand*; they are **inlined by a generator with a byte-level
+  check**, and `sync-tokens.py --check` is the successor to the honour system.
+- `tools/` is no longer *only what regenerates the published branch*; it is **everything CI or a
+  publish runs, that can refuse** — a fence one step out, and still a fence.
 
 ### Colour carries information, or it is not there
 
@@ -189,14 +204,48 @@ No Heroicons, no Feather, no Material, no one-off SVGs pulled from a search resu
 immediately visible in the stroke weight and the corner radius, and it reads as an interface assembled
 from parts.
 
-### Previews inline their own tokens
+### Every page carries its own tokens, and one file authors them
 
-Each file in `design/previews/` carries its own token block — no shared token stylesheet, no build
-step. Extract a shared token only once three previews independently want the same value.
+**No page fetches a token stylesheet.** A prototype somebody opens from a download has to work with
+nothing beside it, and that is the whole reason the original rule existed — so the bytes stay in the
+page. What moved is only *where the block is authored*.
 
-*The typefaces are the one shared thing.* Every page links `brand/fonts/fonts.css` rather than
-inlining seven base64 payloads. **Tokens stay inlined**; a linked font stylesheet locks nothing, a
-linked token sheet would.
+`app/styles/tokens.css` is **the one authored copy**. Every other copy is a region between
+
+```
+/* ══ tokens · generated ══ */  …  /* ══ end tokens ══ */
+```
+
+written by `tools/sync-tokens.py --write` and verified **byte-for-byte** by `--check`, which CI runs
+before the publish. Byte-for-byte and not value-for-value: the block carries ~130 lines of
+irreplaceable reasoning — every measured contrast ratio, the withdrawn `--mark-1` hue, why the dark
+list is duplicated — and a value diff passes while all of it drifts.
+
+**Inside the sentinels the prototype does not win.** That is the one exception to the reference rule
+and it is narrow on purpose: two sources of truth is the silent-drift failure this repository keeps
+relearning, and a generated region has exactly one. A page may declare its own tokens *below* the
+closing sentinel, and the loading lab does — `--scrim` lives there. **The two IPtech previews stay
+out of it**: they exist to argue with this system rather than conform to it.
+
+*The typefaces are the other shared thing.* Every page links `brand/fonts/fonts.css` rather than
+inlining seven base64 payloads. A linked font stylesheet locks nothing; a linked token sheet would,
+which is why the tokens are copied into each page rather than fetched by it.
+
+### What belongs in `tools/`
+
+**Every file in `tools/` is run by CI or by a publish, and every one of them can refuse.** Three kinds
+qualify and there is no fourth:
+
+- **It builds the published tree** — `publish-prototype.sh`, `strip-comments.py`.
+- **It refuses** — `check-publish.py` gates the generated tree; `check-app.py` and
+  `sync-tokens.py --check` gate the **source** tree, which the generated tree cannot see. That second
+  half is the whole reason this rule moved: the five publish gates that read `<style>` and `<script>`
+  blocks go dark the moment CSS and JS leave the HTML, and nothing in the built tree can replace them.
+- **It proves a gate fires** — `test-gates.sh`.
+
+**A generator that writes into the tree is admissible only when it also checks.** `sync-tokens.py`
+qualifies because `--check` exists and CI runs it; a `--write` with no `--check` would be a second
+source of truth with a script to spread it.
 
 ### The client-data boundary
 
