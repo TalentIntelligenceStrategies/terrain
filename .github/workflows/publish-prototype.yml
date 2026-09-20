@@ -47,9 +47,18 @@ jobs:
         # the tokens" true rather than intended: it refuses a token region that
         # differs from app/styles/tokens.css by a single byte, comments
         # included, and a publish cannot proceed past it.
+        #
+        # check-figures.mjs is the arithmetic. platform.md §13's own header
+        # said "nothing checks these automatically" and the prototype's comment
+        # at 6493 says the sums were checked by hand "because the build that
+        # used to check it is gone". This is that build, back. It is the one
+        # gate here whose failures are INVISIBLE ON SCREEN -- every figure it
+        # compares renders as a plausible integer either way -- which is
+        # precisely why it has to be mechanical.
         run: |
           python3 tools/check-app.py
           python3 tools/sync-tokens.py --check
+          node    tools/check-figures.mjs
 
       - name: Prove the gates still fire
         # The gates are worth nothing unless they can fail. This builds the tree

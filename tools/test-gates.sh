@@ -110,7 +110,26 @@ runsrc() { # runsrc <name> <expected-substring> <checker-args> <setup-fn>
   fi
 }
 
+runnode() { # runnode <name> <expected-substring> <checker-args> <setup-fn>
+  # The same contract as runsrc, for a gate written in node rather than python.
+  # A separate helper rather than sniffing the extension inside runsrc: which
+  # interpreter a gate needs is the gate's business and ought to be readable at
+  # the call site, not inferred from a filename.
+  local name=$1 want=$2 checker=$3 fn=$4
+  local d; d=$(mktemp -d); mirror "$d"
+  $fn "$d"
+  local out; out=$(cd "$d" && node $checker 2>&1); local rc=$?
+  rm -rf "$d"
+  if [ $rc -ne 0 ] && grep -qi -- "$want" <<<"$out"; then
+    printf '  PASS  %-34s (refused: %s)\n' "$name" "$want"; pass=$((pass+1))
+  else
+    printf '  FAIL  %-34s (rc=%s, wanted %q)\n' "$name" "$rc" "$want"
+    sed 's/^/          /' <<<"$out" | head -4; fail=$((fail+1))
+  fi
+}
+
 TOK=app/styles/tokens.css
+PROTO=design/previews/terrain-prototype.html
 
 # ── sync · the region must match tokens.css BYTE for byte ──
 s_value()    { sed -i.bak 's|--border:#2E2E2E|--border:#2E2E2F|' "$1/design/previews/terrain-prototype.html"; rm -f "$1"/design/previews/*.bak; }
@@ -144,6 +163,19 @@ m_mirror(){ printf '.probe.is-selected{color:var(--text-1)}\n' > "$1/app/styles/
 x_demo()  { mkdir -p "$1/app/js" "$1/demo"; printf 'export const x=1\n' > "$1/demo/engine.mjs";
             printf "import {x} from '../../demo/engine.mjs'\nexport const y=x\n" > "$1/app/js/probe.mjs"; }
 
+# ── §13 · the arithmetic. Each of these is one figure moved and nothing else,
+#    which is exactly the pass platform.md §13 warns about: "a pass that
+#    changes one figure has to carry the rest." Every one renders as a
+#    plausible integer, so none of them is visible on screen.
+g_shown()  { sed -i.bak 's|  holderShown: 51,|  holderShown: 52,|' "$1/$PROTO"; rm -f "$1"/design/previews/*.bak; }
+g_rival()  { sed -i.bak 's|rivals: \[ {p:12,i:7}|rivals: [ {p:13,i:7}|' "$1/$PROTO"; rm -f "$1"/design/previews/*.bak; }
+g_origin() { sed -i.bak "s|\['Other, seven countries', 35\]|['Other, seven countries', 34]|" "$1/$PROTO"; rm -f "$1"/design/previews/*.bak; }
+g_legal()  { sed -i.bak 's|legal: { live:88, expired:36|legal: { live:88, expired:35|' "$1/$PROTO"; rm -f "$1"/design/previews/*.bak; }
+g_jur()    { sed -i.bak "s|\['China', 66\], \['Other, five countries', 11\]|['China', 66], ['Other, five countries', 12]|" "$1/$PROTO"; rm -f "$1"/design/previews/*.bak; }
+g_col()    { sed -i.bak 's|  colPatents: \[32, 17, 17, 20, 9, 12, 13, 4\],|  colPatents: [33, 17, 17, 20, 9, 12, 13, 4],|' "$1/$PROTO"; rm -f "$1"/design/previews/*.bak; }
+g_name()   { sed -i.bak "s|{ t:null, lbl:'w-md', n:\[5,2,1,2,0,1,1,0\]|{ t:'Northaven', lbl:'w-md', n:[5,2,1,2,0,1,1,0]|" "$1/$PROTO"; rm -f "$1"/design/previews/*.bak; }
+g_life()   { sed -i.bak 's|  lifecycle: \[9, 11, 10, 14, 13, 17, 16, 21, 20, 24, 26, 25\],|  lifecycle: [9, 11, 10, 14, 13, 17, 16, 21, 20, 24, 26],|' "$1/$PROTO"; rm -f "$1"/design/previews/*.bak; }
+
 echo
 echo "planting violations against the source tree:"
 runsrc "token region · value edited"   "byte for byte"   "tools/sync-tokens.py --check" s_value
@@ -160,6 +192,17 @@ runsrc "F · base rule in a hover gate" "base rule inside" "tools/check-app.py" 
 runsrc "mirror class for an ARIA state" "mirrors an ARIA" "tools/check-app.py"          m_mirror
 runsrc "a second demo/ import"         "imported exactly once" "tools/check-app.py"     x_demo
 
+echo
+echo "planting arithmetic violations · platform.md §13:"
+runnode "I1 · shown no longer the sum"  "I1"  "tools/check-figures.mjs" g_shown
+runnode "I2 · a rival's count drifts"   "I2"  "tools/check-figures.mjs" g_rival
+runnode "I3 · origin stops summing"     "I3"  "tools/check-figures.mjs" g_origin
+runnode "I4 · live+expired off by one"  "I4"  "tools/check-figures.mjs" g_legal
+runnode "I5 · jurisdiction overshoots"  "I5"  "tools/check-figures.mjs" g_jur
+runnode "C1 · colYears vs colPatents"   "C1"  "tools/check-figures.mjs" g_col
+runnode "I1b · a holder row is named"   "I1b" "tools/check-figures.mjs" g_name
+runnode "C4 · lifecycle is eleven long" "C4"  "tools/check-figures.mjs" g_life
+
 echo "and the clean source tree itself:"
 for c in "tools/check-app.py" "tools/sync-tokens.py --check"; do
   if out=$(python3 $c 2>&1); then
@@ -168,6 +211,11 @@ for c in "tools/check-app.py" "tools/sync-tokens.py --check"; do
     printf '  FAIL  %-34s\n' "${c#tools/} REJECTS a clean tree"; sed 's/^/          /' <<<"$out" | head -6; fail=$((fail+1))
   fi
 done
+if out=$(node tools/check-figures.mjs 2>&1); then
+  printf '  PASS  %-34s (%s)\n' "check-figures.mjs accepts it" "$(tail -1 <<<"$out" | xargs | cut -c1-60)"; pass=$((pass+1))
+else
+  printf '  FAIL  %-34s\n' "check-figures.mjs REJECTS a clean tree"; sed 's/^/          /' <<<"$out" | grep FAIL | head -6; fail=$((fail+1))
+fi
 
 echo
 echo "$pass passed, $fail failed"

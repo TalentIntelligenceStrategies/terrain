@@ -7271,12 +7271,30 @@ var PN_MONO = { number:1, appno:1, ipcMain:1, ipc:1 };
 /* an array field is one <span> per element; .hf dd is already a wrapping flex
    row with its own gap, which is what spaced the bars these replace. */
 function pnList(items){
-  return items.map(function(v){ return '<span>' + v + '</span>'; }).join('');
+  return items.map(function(v){ return '<span>' + esc(v) + '</span>'; }).join('');
 }
+/* ── esc() ON EVERY PATENT FIELD · the five real-English sites ─────────────
+   esc() was written for the gate's exclusion chips and its own note at 5474
+   scoped it there: "the founder's own typed words reach innerHTML in exactly
+   one place". THAT STOPPED BEING TRUE when the demonstration record started
+   printing real English — a title, an abstract, nine claims and eleven fields
+   now reach innerHTML, and none of them went through it.
+
+   NOTHING RENDERS DIFFERENTLY TODAY. Every DEMO_* constant is plain ASCII, so
+   this changes no byte of the published page, and that is exactly why it had
+   to be fixed on purpose rather than when something broke: the defect is
+   invisible until the engine is wired up, and then it is everywhere at once.
+   A patent title carries `&` as a matter of course (`Rotor & stator`), claim
+   language carries `<` (`<30 dB`), and quoted terms carry `"`.
+
+   THE ESCAPING IS AT THE EMISSION SITE, not inside the constants, because the
+   constants are also read by the bench and by anything else that wants the
+   text rather than the markup. One rule: whatever is concatenated into an
+   innerHTML string goes through esc() on the way. */
 function pnFieldValue(rec, key){
   if (rec.demo && DEMO_REC.hasOwnProperty(key)){
     var v = DEMO_REC[key];
-    return Array.isArray(v) ? pnList(v) : v;
+    return Array.isArray(v) ? pnList(v) : esc(v);
   }
   switch (key){
     case 'kind':      return rec.kind;                 /* real English */
@@ -7338,7 +7356,7 @@ function patentPaneHTML(rec, opt){
          every other record's bars. The grid, the tabular numeral and the
          end-aligned number belong to the claim, not to its content. */
       + (rec.demo
-          ? '<span class="pn-prose">' + DEMO_CLAIMS[k] + '</span>'
+          ? '<span class="pn-prose">' + esc(DEMO_CLAIMS[k]) + '</span>'
           : '<span class="pn-lines">'
             + bars(pnClaimLines(rec, k), ['w-full','w-full','w-lg','w-md']) + '</span>')
       + '</li>');
@@ -7359,7 +7377,7 @@ function patentPaneHTML(rec, opt){
        moment it was for. One patent, one title, both hosts. */
     +     '<div class="pn-name">'
     +       (rec.demo
-          ? '<span class="pn-name-real">' + DEMO_TITLE + '</span>'
+          ? '<span class="pn-name-real">' + esc(DEMO_TITLE) + '</span>'
           : bar('w-full','title') + bar('w-lg','title'))
     +     '</div>'
     /* ── THE NUMBER, NOT THE KIND · 2026-09-12 ──────────────────────────
@@ -7396,7 +7414,7 @@ function patentPaneHTML(rec, opt){
     +     '<h4 class="t-micro pn-sec-h">Abstract</h4>'
     +     '<div class="pn-lines">'
     +       (rec.demo
-            ? '<p class="pn-prose">' + DEMO_ABSTRACT + '</p>'
+            ? '<p class="pn-prose">' + esc(DEMO_ABSTRACT) + '</p>'
             : bars(rec.nAbs, ['w-full','w-full','w-full','w-lg'])) + '</div>'
     +   '</section>'
     +   '<section class="pn-sec">'
@@ -7472,7 +7490,7 @@ function drillRowHTML(rec, i){
     +   '<span class="drill-head">'
     +     '<span class="drill-title">'
     +       (real
-        ? '<span class="drill-name">' + DEMO_TITLE + '</span>'
+        ? '<span class="drill-name">' + esc(DEMO_TITLE) + '</span>'
         : '<span class="sk sk-h-body w-full" style="margin-bottom:6px"></span>'
           + '<span class="sk sk-h-body" style="width:74%"></span>')
     +     '</span>'
@@ -11363,7 +11381,24 @@ function setRecFor(i){
      Utility model would vanish from a list it claimed to belong to — one value
      with two answers, which is the defect the score note already records once.
      One override, every consumer. */
-  if (i === 0){ rec.demo = true; rec.kind = DEMO_REC.kind; }
+  /* ── AND THE CLAIM COUNT, for the same reason and in the same place ─────
+     patentPaneHTML loops `k < rec.claims` and reads DEMO_CLAIMS[k]. The seed
+     gives `claims: 4 + (n % 12)` — 4 to 15 — and DEMO_CLAIMS has NINE entries.
+
+     IT WORKS TODAY BY EXACT COINCIDENCE: setRecFor(0) seeds patentRec(5), so
+     n is 5 and 4 + 5 is 9. Change the stride, the offset, or the number of
+     claims written and the pane draws `undefined` inside a .pn-prose, under an
+     <h4> printing a count the list below does not reach.
+
+     HERE RATHER THAN IN patentPaneHTML, by the same argument the kind override
+     above makes: one override at source, every consumer. Fixing it in the
+     renderer would leave the heading and the list disagreeing, which is the
+     "one number with two names" defect this file keeps catching. */
+  if (i === 0){
+    rec.demo   = true;
+    rec.kind   = DEMO_REC.kind;
+    rec.claims = DEMO_CLAIMS.length;
+  }
   return rec;
 }
 function setCount(){ return Math.min(SET_CEILING, DATA.total || 0); }
