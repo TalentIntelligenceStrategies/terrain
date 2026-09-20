@@ -55,7 +55,26 @@ jobs:
         # gate here whose failures are INVISIBLE ON SCREEN -- every figure it
         # compares renders as a plausible integer either way -- which is
         # precisely why it has to be mechanical.
+        #
+        # NODE WAS ALREADY REQUIRED HERE, and that is worth knowing before
+        # reaching for actions/setup-node. check-app.py and check-publish.py
+        # both shell out to `node --check` to verify the JavaScript still
+        # parses, and both refuse by name when it is missing. What
+        # check-figures.mjs changes is the FLOOR, not the dependency:
+        # `node --check` runs on almost any node, while `node:` prefixed ESM
+        # imports and flatMap need 14.13 and up. ubuntu-latest ships 22.
+        #
+        # NO actions/setup-node, DELIBERATELY. Pinning would trade a version
+        # number to maintain for a risk that is already loud: this step runs
+        # under `bash -e`, so a node that is missing or too old exits non-zero
+        # and fails the publish rather than skipping a gate. The version is
+        # PRINTED instead, so the day a future runner does break it the log says
+        # which node it was on the line above the error rather than leaving
+        # somebody to guess. If determinism is ever wanted over legibility, it
+        # is one `uses:` away -- and it would then cover all three gates rather
+        # than the one that prompted the question.
         run: |
+          node --version
           python3 tools/check-app.py
           python3 tools/sync-tokens.py --check
           node    tools/check-figures.mjs

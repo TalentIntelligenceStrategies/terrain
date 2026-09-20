@@ -16,6 +16,22 @@
      browser — which is what lets it run in CI beside check-app.py and
      sync-tokens.py --check.
 
+   WHAT IT NEEDS TO RUN
+     node 14.13 or newer, and nothing else. `node:` prefixed ESM imports and
+     flatMap are the whole of it — no optional chaining, no top-level await, no
+     dependencies, no package.json. Kept that way ON PURPOSE: a gate that blocks
+     a publish should not also be the thing that dates fastest.
+
+     THIS FILE DID NOT ADD NODE TO THE BUILD; IT RAISED THE FLOOR. check-app.py
+     and check-publish.py have always run `node --check` over the JavaScript,
+     and both refuse by name when it is absent. `node --check` runs on nearly
+     any node; this needs 14.13. That is the whole of the difference, and it is
+     the number to check against a runner rather than "does it have node".
+
+     tools/test-gates.sh probes for those two features before running the eight
+     §13 gates, and says so by name if they are missing — otherwise a missing
+     node reports as an arithmetic failure and points at the data.
+
    Usage:  node tools/check-figures.mjs [path]
    ───────────────────────────────────────────────────────────────────────── */
 import { readFileSync } from 'node:fs';

@@ -131,6 +131,28 @@ runnode() { # runnode <name> <expected-substring> <checker-args> <setup-fn>
 TOK=app/styles/tokens.css
 PROTO=design/previews/terrain-prototype.html
 
+# ── node, named before it is blamed ──────────────────────────────────────────
+# check-figures.mjs is the only thing in tools/ that is not python or shell, so
+# it is the only reason CI needs a second runtime. It needs `node:` prefixed ESM
+# imports and flatMap -- node 14.13 and up; GitHub's ubuntu-latest ships 22.
+#
+# WITHOUT THIS BLOCK A MISSING NODE REPORTS "check-figures.mjs REJECTS a clean
+# tree" AND PRINTS NO DETAIL, because the detail line greps the output for FAIL
+# and `node: command not found` has none. That points the reader at the
+# arithmetic when the cause is the runtime -- the same fault the gates
+# themselves refuse: a failure is a response, and saying the wrong thing about
+# it is worse than saying nothing.
+#
+# A CAPABILITY PROBE, NOT A VERSION COMPARISON. It runs the features the gate
+# actually uses rather than parsing a version string and asserting about what
+# that implies -- which is the kind of claim that is wrong quietly.
+NODE_WHY=""
+if ! command -v node >/dev/null 2>&1; then
+  NODE_WHY="node is not on PATH"
+elif ! node --input-type=module -e 'import "node:vm"; if(![].flatMap) process.exit(1);' >/dev/null 2>&1; then
+  NODE_WHY="node $(node --version 2>/dev/null) cannot run it -- needs node: imports and flatMap, so node 14.13 or newer"
+fi
+
 # ── sync · the region must match tokens.css BYTE for byte ──
 s_value()    { sed -i.bak 's|--border:#2E2E2E|--border:#2E2E2F|' "$1/design/previews/terrain-prototype.html"; rm -f "$1"/design/previews/*.bak; }
 s_comment()  { sed -i.bak 's|even in L\*|even in L star|' "$1/design/previews/terrain-prototype.html"; rm -f "$1"/design/previews/*.bak; }
@@ -194,6 +216,11 @@ runsrc "a second demo/ import"         "imported exactly once" "tools/check-app.
 
 echo
 echo "planting arithmetic violations · platform.md §13:"
+if [ -n "$NODE_WHY" ]; then
+  printf '  FAIL  %-34s (%s)\n' "the eight §13 gates did not run" "$NODE_WHY"
+  printf '        %s\n' "They are NOT passing and they are NOT failing -- nothing ran."
+  fail=$((fail+1))
+fi
 runnode "I1 · shown no longer the sum"  "I1"  "tools/check-figures.mjs" g_shown
 runnode "I2 · a rival's count drifts"   "I2"  "tools/check-figures.mjs" g_rival
 runnode "I3 · origin stops summing"     "I3"  "tools/check-figures.mjs" g_origin
@@ -211,10 +238,18 @@ for c in "tools/check-app.py" "tools/sync-tokens.py --check"; do
     printf '  FAIL  %-34s\n' "${c#tools/} REJECTS a clean tree"; sed 's/^/          /' <<<"$out" | head -6; fail=$((fail+1))
   fi
 done
-if out=$(node tools/check-figures.mjs 2>&1); then
+if [ -n "$NODE_WHY" ]; then
+  printf '  FAIL  %-34s (%s)\n' "check-figures.mjs could not run" "$NODE_WHY"
+  fail=$((fail+1))
+elif out=$(node tools/check-figures.mjs 2>&1); then
   printf '  PASS  %-34s (%s)\n' "check-figures.mjs accepts it" "$(tail -1 <<<"$out" | xargs | cut -c1-60)"; pass=$((pass+1))
 else
-  printf '  FAIL  %-34s\n' "check-figures.mjs REJECTS a clean tree"; sed 's/^/          /' <<<"$out" | grep FAIL | head -6; fail=$((fail+1))
+  printf '  FAIL  %-34s\n' "check-figures.mjs REJECTS a clean tree"
+  # the whole output, not only the lines saying FAIL: a run that died before it
+  # printed a verdict has no FAIL line to grep for, and an empty detail block
+  # under a failure is how a reader concludes the tool is broken rather than the
+  # tree -- or the other way round, which is worse
+  sed 's/^/          /' <<<"$out" | head -8; fail=$((fail+1))
 fi
 
 echo
