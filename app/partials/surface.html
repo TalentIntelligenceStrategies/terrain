@@ -1,0 +1,614 @@
+<!-- EXTRACTED from design/previews/terrain-prototype.html lines 4039-4649.
+     The prototype is the reference; where this and it disagree, it is
+     right and this is stale. The working surface, INCLUDING the record pane -- .rec is positioned within .panecol. -->
+  <section class="view view-work" data-view="work" aria-label="Your search">
+
+    <header class="work-head">
+      <div class="work-head-lines">
+        <!-- the surface's own h1. The project name is a bar (§8), so the
+             heading carries a visually-hidden name and the bar sits inside
+             it — a heading of bars has no accessible name and nothing to
+             announce. It was a bare <span> when the map was one of five
+             surfaces and the set carried the h1; with one surface the h1
+             has to name the surface rather than one of its columns. -->
+        <h1 class="work-h1" tabindex="-1" id="dashTitle">
+          <span class="sr-only">Your search</span>
+          <span class="sk" style="height:22px;width:212px" aria-hidden="true"></span>
+        </h1>
+        <div class="head-meta">
+          <span class="chip">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+            Version <span class="sk sk-h-micro w-xs" id="verBar" style="display:inline-block;vertical-align:-1px"></span>
+          </span>
+          <span class="chip">Updated <span class="sk sk-h-micro w-sm" style="display:inline-block;vertical-align:-1px"></span></span>
+          <span class="chip">Deduplicated by family</span>
+          <!-- platform.md §6.2's standing note: what the views were built on, on every
+               visit including a return. Not a toast, not dismissible, and it
+               names BOTH numbers because "built on 124" without the total
+               says nothing. -->
+          <span class="chip" id="scopeChip" hidden></span>
+          <span class="chip chip-reopened">Opened from your projects — nothing was rebuilt</span>
+          <span class="chip chip-updated">Updated from your change — only what changed was rebuilt</span>
+
+          <!-- ══ the Market / Technology toggle · platform.md §6.5 ═══════
+               IN THE SURFACE'S OWN HEAD, above the hairline, at the trailing
+               end of the chip row. It sat inside the right pane until
+               2026-09-11 and cost that pane a 44px band of its own; up here
+               it costs nothing, because the row it joins was already drawn.
+
+               IT IS THE ONLY CONTROL IN A ROW OF STATEMENTS, and that is
+               why it keeps the segmented form rather than becoming two more
+               chips: a chip on this row is a fact about the search, and the
+               fill-and-lift of a .seg is what says this one is a thing you
+               press. At 28px it also stands a little taller than the 24px
+               chips beside it, which is the same distinction in geometry.
+
+               role="tablist" with aria-selected, not aria-pressed. This is
+               which-of-these-am-I-looking-at, not a setting; telling a
+               screen-reader user "pressed" for a surface swap describes the
+               wrong event (design-language.md §7).
+
+               NOTHING ANIMATES. Both pages are built from the same payload,
+               so the toggle chooses what is on screen and makes no request —
+               and §7 is explicit that a swap is navigation while only a
+               fresh build earns the stagger.
+
+               THE SPLIT IS IPTECH'S OWN, and it is lopsided because theirs
+               is: `Tech-Effx` is the one group reachable under `T-Map` and
+               not under `M-Map`, and the cut of it we take is the map. Every
+               other view is sourced from a group under both, so all nine sit
+               on `Market`, and `Market` lands.
+
+               THE T-MAP WALK CONFIRMED THERE IS NOTHING ELSE TO PUT HERE.
+               Eight `Tech-Effx` entries, seven of them this same object with
+               an axis swapped or collapsed; `1D Matrix` is the column totals
+               the header already prints. The page is one view because the
+               source has one view. -->
+          <div class="seg seg-page" role="tablist" aria-label="Which views to show">
+            <button class="seg-btn" type="button" role="tab" data-page="market"
+                    aria-selected="true">Market</button>
+            <button class="seg-btn" type="button" role="tab" data-page="technology"
+                    aria-selected="false">Technology</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ONE <main> PER SURFACE. The map, the set and the widget page each
+         had their own before 2026-09-10; collapsing three views into one
+         left the working surface with no main landmark at all, which is a
+         regression a screen-reader user meets before anything else. -->
+    <main class="work-split" id="workSplit">
+
+      <!-- ── the left column · platform.md §6.3 on its new host ────────── -->
+      <div class="listcol" id="listcol">
+        <div class="listcol-scroll" id="listScroll">
+        <div class="set-wrap" id="setWrap">
+          <!-- the list's own head. It was a `.page-head` on a surface of its
+               own; it is a chip row above a column now. TWO of the four facts
+               it carried went on 2026-09-10 with the recommendation itself:
+               nothing is recommended any more, because every patent the search
+               returns feeds the views, so "top N recommended" and "N added to
+               our recommendation" had nothing left to count. What remains is
+               "N matched", a CORPUS value and so a bar under §8, and two facts
+               about what the founder did to the ORDER — both real integers,
+               because they count acts rather than data. -->
+          <!-- ONE INFO AFFORDANCE, on the heading, and it has absorbed three
+               things now. A four-line lede above the list and a second
+               popover in the bar went first; the standing note under the
+               list followed on 2026-09-10, along with the only explanation
+               the relevance score had — a title= attribute nobody opens.
+               The rule this keeps arriving at: a narrow column has room for
+               the list or for prose about the list, and every sentence that
+               is not the list belongs behind one control. -->
+          <div class="listhead">
+            <div class="listhead-top">
+              <!-- "What the search found" until 2026-09-11. Every card across
+                   the split is a noun phrase — The map, Rivals, Lineage — and
+                   this was the one clause among them. It also names the same
+                   surface the points page's back control names, and the two
+                   now say the same words. -->
+              <h2 class="t-title" tabindex="-1" id="setTitle">Your results</h2>
+              <!-- THE CORPUS COUNT JOINS THE HEADING ROW, 2026-09-11. It sat
+                   in a chip row of its own beneath, which at rest held one
+                   chip and two hidden ones — a whole line for one fact. Up
+                   here it sits with the affordance that explains it, and the
+                   row below collapses to nothing until the founder does
+                   something worth reporting. -->
+              <!-- THE STAR COUNT SITS LEFT OF THE CORPUS COUNT, 2026-09-11.
+                   It was in .head-meta below, which meant a founder's first
+                   star opened a whole second row to report one word — and it
+                   reported it about 40px from the count it is a subset of.
+                   Two counts about the same list belong on the same line,
+                   and the narrower one reads first: `3 starred` then
+                   `N matched`, which is what the founder did followed by what
+                   they are looking at.
+
+                   IT IS STILL A .chip AND STILL NOT A CONTROL. The rank chip
+                   stays below, and that is not an inconsistency: `N starred`
+                   is a count of the same kind as `N matched` and belongs
+                   beside it, where `Re-ranked around N starred` is a sentence
+                   about the ORDER and would be the longest thing in a 345px
+                   heading row. -->
+              <span class="chip" id="setStarChip" hidden></span>
+              <span class="chip head-count"><span class="sk sk-h-micro w-sm"
+                style="display:inline-block;vertical-align:-1px"></span> matched</span>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false" aria-label="About this list">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                </button>
+                <span class="info-pop" role="note"><b>Every patent the search found feeds the
+                  views beside them.</b> Sorting and filtering change what you are looking at, not
+                  what they count. If one patent is especially close to your idea, star it —
+                  <b>Re-rank</b> appears in the bar above, and orders the rest by how close
+                  they are to the one you starred. No patent enters or leaves; only the
+                  sequence changes.<br><br><b>The figure on the right of each row is
+                  the engine's relevance score.</b> It is how close the search put that patent to
+                  what you described.<br><br><b>That ordering is a ranking, not a verdict.</b> A
+                  patent near the top is close to what you described. It does not mean it affects
+                  you, and it does not mean the ones below it do not.</span>
+              </span>
+            </div>
+            <!-- THE RANK CHIP, AND IT HAS NO WRAPPER ANY MORE. It shared a
+                 .head-meta row with the star chip; that chip has gone up into
+                 the heading row and a flex wrapper around one conditionally
+                 hidden chip is a row that costs its gap to draw nothing.
+
+                 IT IS THE SETTLED STATE'S LIVE REGION SINCE 2026-09-11, which
+                 is a role it inherited rather than gained. The panel's sentence
+                 was this surface's one live region and it is deleted; the chip
+                 is what carries the settled state now, so it is what should
+                 announce it. "Nothing announces twice" still holds — the panel
+                 announces the beat STARTING and is emptied at land, emptying a
+                 live region is silent, and the chip announces only the landing.
+                 Two regions, two moments, never the same fact.
+
+                 IT SHIPS EMPTY AND HIDDEN for the reason .set-run does: a
+                 region registered at load and silent until there is something
+                 true to say is the only kind that reliably announces a later
+                 polite update. -->
+            <span class="chip" id="setRankChip" role="status" aria-live="polite" hidden></span>
+          </div>
+        <!-- what the founder asked to leave out at the gate travels here, because
+             an exclusion that never shows on the result it shaped is indistinguishable
+             from one that was dropped. platform.md §3.2, retired Q4. -->
+        <p class="set-excl" id="setExcl" hidden></p>
+
+        <section class="card">
+          <div class="set-bar">
+            <div class="lm" id="sortWrap">
+              <button class="lm-btn" id="sortBtn" type="button" aria-haspopup="menu"
+                      aria-expanded="false" aria-controls="sortMenu">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
+                <span id="sortLabel">Relevance</span>
+                <svg class="lm-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="lm-menu" id="sortMenu" role="menu" aria-label="Sort the list"></div>
+            </div>
+            <div class="lm" id="filtWrap">
+              <button class="lm-btn" id="filtBtn" type="button" aria-haspopup="menu"
+                      aria-expanded="false" aria-controls="filtMenu">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+                <span>Filter</span>
+                <span class="lm-count fig fig-s" id="filtCount" hidden>0</span>
+                <svg class="lm-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="lm-menu" id="filtMenu" role="menu" aria-label="Filter the list"></div>
+            </div>
+            <!-- THE STAR'S CONSEQUENCE, in the bar since 2026-09-11. It was a
+                 button inside a collapsing strip below this one, beside the
+                 sentence "Find patents like the one you starred." The strip is
+                 gone and the sentence is in the heading's popover, which already
+                 carried the same fact in its own words.
+
+                 IT IS THE ONLY FILLED CONTROL ON THIS SURFACE, and that is now
+                 the WHOLE of how it draws the eye — a one-turn ring traced the
+                 button on arrival for one pass and is deleted: §2 leaves no
+                 accent to spend, and
+                 near-black fill is what CLAUDE.md reserves for a primary action.
+                 Against two outlined menu triggers a filled button is the loudest
+                 thing in a 345px bar without a hue existing.
+
+                 HIDDEN, NOT DISABLED. The strip used to collapse away when there
+                 was nothing to rank, so nothing was on screen; a disabled button
+                 loitering in the bar would be new clutter, and [hidden] takes it
+                 out of the tab order the way #setRestore below already does. -->
+            <button class="btn btn-primary set-rank" id="setRebase" type="button" hidden>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h11"/><path d="M10 12h11"/><path d="M10 18h11"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+              <span>Re-rank</span>
+            </button>
+            <!-- THE WAY BACK, and it lives here rather than in the panel because this
+                 is where the surface's other undo-shaped control already is. Hidden by
+                 [hidden] rather than visibility, so it leaves the tab order and the
+                 a11y tree with it; the geometry it changes is absorbed by setReorder's
+                 before() callback, which mutates AFTER the FLIP has measured. -->
+            <button class="btn btn-ghost" id="setRestore" type="button" hidden>Restore the
+              original order</button>
+            <span class="spacer"></span>
+          </div>
+
+          <!-- THE EVENT, in one slot with two states. It SHIPS EMPTY, and that is
+               not tidiness: grid-template-rows:0fr plus overflow:hidden does not
+               remove text from the accessibility tree, so the old markup let a
+               screen reader browsing a resting set read a sentence about an
+               operation that was not happening. Empty also makes the live region
+               safe — registered at load, silent until there is something true to
+               say. The old #setRunLabel id was read by nothing. -->
+          <div class="set-run" id="setRun"><div><div class="set-run-in">
+            <span class="sweep" aria-hidden="true"></span>
+            <p class="set-run-say" id="setRunSay" role="status" aria-live="polite"></p>
+          </div></div></div>
+          <div class="set-listcol">
+            <div class="set-list" id="setList" aria-busy="false"></div>
+
+            <!-- THE LIST'S FOOT, and it is a foot rather than a call to
+                 action. It was a centred .btn-secondary reading "View more
+                 patents" — a bordered pill in the middle of a column of
+                 rows, which made paging look like the surface's next step
+                 rather than like more of the list.
+
+                 TWO ENDS, TWO JOBS. Where you are, at the leading edge, in
+                 the quiet tone. What to do about it, at the trailing edge,
+                 as plain text with a chevron and a hover ground. The count
+                 is the half that is always true, so it stays when there is
+                 nothing left to show and the action goes. -->
+            <div class="set-more" id="setMoreWrap">
+              <p class="set-more-n" id="setMoreN"></p>
+              <span class="spacer"></span>
+              <button class="set-more-btn" id="setMore" type="button">
+                <span id="setMoreLabel">Show more</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+          </div>
+
+        </section>
+          <div id="setBuildSlot"></div>
+        </div>
+        </div>
+
+      </div>
+
+      <!-- ── the right pane · §6's twelve views, map first ───────────────── -->
+      <div class="panecol" id="panecol">
+        <div class="panescroll" id="paneScroll">
+
+          <div class="grid" id="grid">
+            <section class="card map-card" data-page="technology" hidden>
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+                </span>
+                <h2 class="t-title">The map</h2>
+                <span class="t-micro" id="mapKind">Technology × holder</span>
+                <span class="info">
+                  <button class="info-btn" type="button" aria-expanded="false"
+                          aria-controls="info-map" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                  <span class="info-pop" id="info-map" role="note"><b>An empty cell means that one holder has not filed against that approach.</b> It is not open ground, and it does not tell you why they are absent — they may never have tried it, or they may have tried it and stopped. <b>Tone is how many filings. The hatch marks the cells where the count is climbing.</b> Holder names render as grey bars here and only here; in the product they are companies.</span>
+                </span>
+              </div>
+              <div class="card-body">
+                <div class="matrix-scroll">
+              <div class="matrix" id="matrix" role="grid" aria-label="Technology by holder"></div>
+            </div>
+                <div class="mx-legend" id="mxLegend"></div>
+                <!-- platform.md §6.2's owed sentence, and it is a STANDING condition now
+                     rather than one an edit could produce: the map lays out the
+                     eight largest holders, so its cells sum to less than the
+                     scope figure on arrival with nothing removed. The invariant
+                     is "cells sum to shown, shown < total, and a sentence says
+                     why" — not "cells sum to total". -->
+                <p class="note" id="mxScope" hidden></p>
+              </div>
+              <p class="caption" id="mapCaption">
+                <span class="sk sk-h-body" style="width:78%;margin-bottom:5px"></span>
+                <span class="sk sk-h-body" style="width:41%"></span>
+              </p>
+            </section>
+
+            <!-- ── platform.md §6.4 · what this space is made of ──────────────────────
+                 T-Map > Tech-Effx > 1D Matrix. The map is read ACROSS - who
+                 holds what - and this is read DOWN. tmap-audit.md rated 1D
+                 Matrix "merged into the map's column totals, not a second
+                 widget"; that is reversed here and the reversal is argued in
+                 platform.md 8.1 rather than applied quietly.
+
+                 THE DENOMINATORS DIFFER ON PURPOSE AND THE CARD SAYS SO. This
+                 card is the corpus, 124. The map's column headers are the eight
+                 largest holders, 51. Neither is wrong and they are not the same
+                 question, which is exactly why a reader meeting 32 here and 14
+                 there needs telling. -->
+            <section class="card" data-page="technology" hidden>
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 16h8"/><path d="M7 11h12"/><path d="M7 6h3"/></svg>
+                </span>
+                <h2 class="t-title">What this space is made of</h2>
+                <span class="info">
+                  <button class="info-btn" type="button" aria-expanded="false"
+                          aria-controls="info-mix" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                  <span class="info-pop" id="info-mix" role="note"><b>Every patent your search returned, grouped by the approach it takes.</b> The map above lays out only the eight largest holders, so the figures in its column headings are smaller than these &mdash; that is two different questions, not a disagreement. <b>How big is this part of the space</b> is this card; <b>how much of it those eight hold</b> is the map.</span>
+                </span>
+              </div>
+              <div class="card-body">
+                <div id="techMix"></div>
+              </div>
+              <p class="caption" id="techMixCaption"></p>
+            </section>
+
+            <!-- ── platform.md §6.4 · which part is moving ────────────────────────────
+                 T-Map > Tech-Effx > Company Trend, which tmap-audit.md rated
+                 Ask because it ships as a 1x1 collapsed cell. The objection was
+                 to the RENDERING, not to the question - the same shape as
+                 mmap-audit.md's Life Cycle reversal - so it is built and the
+                 promotion is argued in platform.md 8.1.
+
+                 REUSES momentum() with labels. Rival momentum is the same
+                 component over holders, and the two sitting on different pages
+                 is deliberate: one says WHO is still moving, this says WHAT is.
+                 The data is illustrative and the engine may not expose a series
+                 per column at all - platform.md 10.57 to 10.59, and the card
+                 does not pretend otherwise. -->
+            <section class="card" data-page="technology" hidden>
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </span>
+                <h2 class="t-title">Which part is moving</h2>
+                <span class="info">
+                  <button class="info-btn" type="button" aria-expanded="false"
+                          aria-controls="info-tmom" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                  <span class="info-pop" id="info-tmom" role="note">One strip per approach, twelve years, <b>all on the same scale</b> so the rows are comparable to each other rather than each to itself. <b>The biggest part of a space and the fastest-moving part are rarely the same one</b> &mdash; a crowded approach that stopped growing and a small one still climbing are different bets, and the size ranking above cannot tell them apart.</span>
+                </span>
+              </div>
+              <div class="card-body">
+                <div id="techMom"></div>
+                <div class="mo-axis mo-axis-named"><span class="t-micro">12 years ago</span><span class="t-micro">now</span></div>
+              </div>
+              <p class="caption" id="techMomCaption"></p>
+            </section>
+
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg>
+                </span>
+                <h2 class="t-title">Filings over time</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-filings" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-filings" role="note"><b>The last ~18 months is always incomplete.</b> Patents publish about 18 months after filing, so that window is shaded and excluded — it is not a decline.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <!-- design-language.md §7: the dashboard card binned to nine
+                     because nine is what reads at 360px. At hero width the room
+                     is the page's, so the chart is the page's — one point per
+                     year, from the same series. Same data, two resolutions. -->
+                <div id="dashChart"></div>
+                <div class="mx-legend" style="padding-top:var(--s-12)">
+                  <span class="lg"><span class="lg-sw" style="background:var(--chart-series);opacity:.35;border-color:var(--chart-series)"></span>Filings</span>
+                  <span class="lg"><span class="lg-sw" style="background:repeating-linear-gradient(90deg,var(--chart-trend) 0 5px,transparent 5px 9px);border-color:transparent"></span>Trend</span>
+                  <span class="lg"><span class="lg-sw" style="background:var(--chart-unknown);border-color:var(--border-strong);border-style:dashed"></span>Not yet published</span>
+                </div>
+              </div>
+              <p class="caption" id="dashCaption">
+                <span class="sk sk-h-body" style="width:88%;margin-bottom:5px"></span>
+                <span class="sk sk-h-body" style="width:44%"></span>
+              </p>
+            </section>
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                </span>
+                <h2 class="t-title">Early or late</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-life" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-life" role="note">Each point is one year &mdash; how many companies filed, against how many patents they filed. When both rise together the space is still <b>forming</b>. When patents rise and companies do not, it is <b>consolidating</b> around a few holders.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div id="lifeChart"></div>
+              </div>
+              <p class="caption" id="lifeCaption"></p>
+            </section>
+
+
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </span>
+                <h2 class="t-title">Rivals</h2>
+                <div class="seg" role="tablist" aria-label="Sort rivals">
+                  <button class="seg-btn" role="tab" aria-selected="true" data-sort="count">Most patents</button>
+                  <button class="seg-btn" role="tab" aria-selected="false" data-sort="recent">Most recent</button>
+                </div>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-rivals" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-rivals" role="note">Deduplicated by holder name and patent family. <b>A competitor who stopped filing years ago is a different fact from one filing now</b> — which is why recency sorts separately from count.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <table class="tbl">
+                  <thead><tr>
+                    <th class="t-micro">Holder</th>
+                    <th class="t-micro num">In scope</th>
+                    <th class="t-micro num">Last filed</th>
+                  </tr></thead>
+                  <tbody id="rivalBody"></tbody>
+                </table>
+              </div>
+            </section>
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><rect x="7" y="12" width="3" height="6" rx="1"/><rect x="12" y="8" width="3" height="10" rx="1"/><rect x="17" y="14" width="3" height="4" rx="1"/></svg>
+                </span>
+                <h2 class="t-title">Rival momentum</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-mom" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-mom" role="note">One strip per rival, twelve years, <b>all on the same scale</b>. A rival who stopped filing years ago is a different problem from one still filing now &mdash; the first is a portfolio that will start expiring, the second is a company still moving.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div id="momStrip"></div>
+                <div class="mo-axis"><span class="t-micro">12 years ago</span><span class="t-micro">now</span></div>
+              </div>
+              <p class="caption" id="momCaption"></p>
+            </section>
+
+
+            <!-- Where it is filed · platform.md §6.6. The largest single omission
+                 the 2026-09-07 audit found: a Diverge row with no design at all.
+                 Jurisdictions are NAMED rather than barred — the skeleton rule
+                 protects a real party from being invented, and a country is
+                 neither invented nor a party. Five grey wedges would read as
+                 nothing. -->
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18"/></svg>
+                </span>
+                <h2 class="t-title">Where the holders are from</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-orig" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-orig" role="note">Where the companies are <b>based</b> &mdash; which is a different question from where the patents were <b>granted</b>. A rival abroad who has not filed in your market cannot stop you there; one based anywhere who <em>has</em> filed there can.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div id="origBars"></div>
+              </div>
+              <p class="caption" id="origCaption"></p>
+            </section>
+
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                </span>
+                <h2 class="t-title">Where it is filed</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-jur" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-jur" role="note">A patent only protects the country it is granted in. <b>This is where the patents in your scope were filed</b> &mdash; not where the technology is sold, and not the whole database, which covers 100+ countries.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div class="jur-wrap">
+                  <div id="jurPie"></div>
+                  <div class="jur-bars" id="jurBars"></div>
+                </div>
+              </div>
+              <p class="caption" id="jurCaption"></p>
+            </section>
+
+            <!-- Live and expired · platform.md §6.4. Renamed 2026-09-10 from
+                 "Is it still live" — it was the only card of six phrased as a
+                 question, and the two words name both halves the donut draws. The state hues, never --mark-*:
+                 live and expired are ordinal, which is §2's second permitted case.
+                 Not green-over-red and no verdict in the colour — an expired patent
+                 is prior art rather than an obstacle, which is the EASIER of the two
+                 for a founder. -->
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+                </span>
+                <h2 class="t-title">Live and expired</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-legal" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-legal" role="note">A patent lasts about 20 years, then it expires. <b>An expired patent is published knowledge, not an obstacle</b> &mdash; anyone may use it. The bars split each holder&rsquo;s filings the same way.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div class="dn-wrap">
+                  <div id="legalRing"></div>
+                  <div style="flex:1;min-width:180px" id="legalBars"></div>
+                </div>
+                <div class="mx-legend" style="padding-top:var(--s-12)">
+                  <span class="lg"><span class="lg-sw" style="background:var(--mark-1);border-color:var(--mark-1)"></span>Live</span>
+                  <span class="lg"><span class="lg-sw" style="background:var(--mark-3-hatch);border-color:var(--border-strong)"></span>Expired</span>
+                </div>
+              </div>
+              <p class="caption" id="legalCaption"></p>
+            </section>
+
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8.2 7.2 10.5 15.8M15.8 7.2 13.5 15.8M8.5 6h7"/></svg>
+                </span>
+                <h2 class="t-title">Who builds on whom</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-xref" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-xref" role="note">A patent cites the earlier work it builds on. <b>Rows cite; columns are cited.</b> A column that fills up is a holder whose work the others had to build on &mdash; the party you would most likely be licensing from, or designing around.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <div id="xrefGrid"></div>
+                <div class="xr-cap"><span>Rows cite &rarr; columns are cited</span><span>&mdash; a holder cannot cite itself</span></div>
+              </div>
+              <p class="caption" id="xrefCaption"></p>
+            </section>
+
+            <section class="card" data-page="market">
+              <div class="card-head">
+                <span class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+                </span>
+                <h2 class="t-title">Lineage</h2>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false"
+                        aria-controls="info-lineage" aria-label="About this widget"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></button>
+                <span class="info-pop" id="info-lineage" role="note">Who holds the ground this approach grew out of — the party you would license from or design around.</span>
+              </span>
+              </div>
+              <div class="card-body">
+                <table class="tbl">
+                  <thead><tr>
+                    <th class="t-micro">Most cited in scope</th>
+                    <th class="t-micro num">Year</th>
+                  </tr></thead>
+                  <tbody>
+                    <tr><td><span class="sk sk-h-body w-full" style="margin-bottom:6px"></span>
+                            <span class="sk sk-h-micro w-md"></span></td>
+                        <td class="num" style="vertical-align:top"><span class="sk sk-h-body w-xs" style="margin-left:auto"></span></td></tr>
+                    <tr><td><span class="sk sk-h-body w-full" style="margin-bottom:6px"></span>
+                            <span class="sk sk-h-micro w-sm"></span></td>
+                        <td class="num" style="vertical-align:top"><span class="sk sk-h-body w-xs" style="margin-left:auto"></span></td></tr>
+                    <tr><td><span class="sk sk-h-body w-full" style="margin-bottom:6px"></span>
+                            <span class="sk sk-h-micro w-lg"></span></td>
+                        <td class="num" style="vertical-align:top"><span class="sk sk-h-body w-xs" style="margin-left:auto"></span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+          <p class="foot"><em>Powered by</em><img class="foot-mark foot-mark-light" src="../brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg" alt="Innovue" width="95" height="13"><img class="foot-mark foot-mark-dark" src="../brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg" alt="Innovue" width="95" height="13"></p>
+        </div>
+
+        <!-- the record, over the pane, leaving a ~200px peek. platform.md
+             §6.6. The peek is the spec and not a margin: it is what keeps
+             the record legible as "this came from there" rather than as
+             "this replaced that". -->
+        <aside class="rec" id="recPane" role="dialog" aria-modal="false"
+               aria-labelledby="recTitle" hidden>
+          <div class="rec-head">
+            <h2 class="t-title" id="recTitle" tabindex="-1">The patent record</h2>
+            <button class="icon-btn" id="recClose" type="button"
+                    aria-label="Close this record and go back to the views"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          </div>
+          <div class="rec-body" id="recBody"></div>
+        </aside>
+      </div>
+
+    </main>
+  </section>

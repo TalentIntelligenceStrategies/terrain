@@ -1,0 +1,331 @@
+/* demo/data.mjs — the illustrative figures, in the contract's shapes.
+ *
+ * DELETABLE. This directory is a sibling of app/, not a part of it, and
+ * app/js/** holds no data by construction. check-app.py fails the build if
+ * anything but js/main.mjs imports from here, so deleting the directory leaves
+ * ONE broken line rather than a search.
+ *
+ * ═══ EVERY FIGURE HERE IS ILLUSTRATIVE ═════════════════════════════════════
+ * No number is a real filing count and no party is real. The figures are the
+ * prototype's own, carried across rather than re-invented, because they satisfy
+ * platform.md §13's invariants and re-deriving them would mean re-deriving the
+ * arithmetic that makes the surface internally consistent:
+ *
+ *   cells sum to shown (51), shown < total (124), a sentence says why
+ *   every per-holder series sums to that holder's count — 12 9 8 6 5
+ *   origin sums to total; jurisdiction sums to total, derived not typed
+ *   live + expired = total; each holder's split sits inside it
+ *   colYears rows sum to their colPatents entry; colPatents sums to total
+ *
+ * tools/check-figures.mjs asserts all of that against the PROTOTYPE. If you
+ * change a figure here, change it there, or the two demonstrations of one
+ * product print two different corpora.
+ *
+ * ═══ null MEANS RENDER THE SKELETON BAR ════════════════════════════════════
+ * And it is the only thing that means that — ports.mjs is the rule. Holder
+ * names, patent numbers, application numbers, IPC symbols and inventors are
+ * null here because design-language.md §8 makes them bars, NOT because nobody
+ * has written them. A real engine returning real names changes nothing but the
+ * presence of a value; no renderer branches on whether the data is real.
+ *
+ * THE ONE POPULATED RECORD is §8's fourth admissible exception: a record pane
+ * of nothing but bars cannot demonstrate a record pane. Exactly one.
+ */
+
+/* ── the corpus ─────────────────────────────────────────────────────────── */
+export const TOTAL = 124;
+export const BINNED = 38;
+export const SHOWN = 51;
+
+export const APPROACHES = [
+  'Moulded composite shell', 'Tubular space frame', 'Foam-core sandwich panel',
+  'Snap-fit tool-free housing', 'Folding arm and hinge', 'Integrated motor mount',
+  'Sealed electronics bay', 'Twin-layer impact skin',
+];
+
+/* CORPUS-LEVEL patents per approach, and deliberately NOT what the map's own
+   column headers print. The headers sum to 51 — the eight largest holders —
+   while these sum to 124. Both are true and they answer different questions,
+   which is why the cards below the map carry a scope line. */
+export const COL_PATENTS = [32, 17, 17, 20, 9, 12, 13, 4];
+
+export const COL_YEARS = [
+  [4, 5, 4, 4, 3, 3, 2, 2, 2, 1, 1, 1],
+  [3, 2, 2, 2, 1, 1, 2, 1, 1, 1, 1, 0],
+  [0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2],
+  [0, 0, 1, 1, 1, 2, 2, 3, 3, 3, 2, 2],
+  [2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 1],
+  [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
+];
+
+/* THE EIGHT LARGEST HOLDERS, and they carry no label at all — not a null one.
+   design/components.md §1: a holder name is a field nothing may print, so it is
+   absent from the shape rather than nulled at every call site. */
+export const HOLDER_COUNTS = [
+  [5, 2, 1, 2, 0, 1, 1, 0],
+  [3, 1, 2, 1, 1, 0, 1, 0],
+  [2, 1, 1, 1, 1, 1, 0, 1],
+  [1, 1, 1, 1, 0, 1, 1, 0],
+  [1, 0, 1, 1, 1, 1, 0, 0],
+  [1, 1, 0, 1, 0, 0, 1, 0],
+  [1, 1, 1, 0, 0, 1, 0, 0],
+  [0, 0, 0, 1, 1, 0, 0, 1],
+];
+/* which cells are rising, by row — the hatch overlay, not a colour */
+export const HOLDER_RISING = [[], [], [], [], [3], [], [], []];
+
+export const RIVALS = [12, 9, 8, 6, 5];
+
+/* one row per rival, each summing to that rival's count. The distribution is
+   the finding: one stopped six years ago, one arrived late and is
+   accelerating, the largest is steady. A flat set of five would show none. */
+export const PER_HOLDER = [
+  [0, 0, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1],
+  [2, 2, 2, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0],
+  [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+];
+
+export const FILINGS = [18, 22, 19, 28, 25, 34, 31, 44, 40, 52, 58, 55];
+export const LIFECYCLE = [9, 11, 10, 14, 13, 17, 16, 21, 20, 24, 26, 25];
+
+/* [fromRivalIdx, toRivalIdx, count], DIRECTED. The story: holder 2 is cited by
+   all four others and cites almost nobody, and holder 2 is ALSO the row that
+   stopped filing. That pairing is the point of having both cards. */
+export const CITED_BY = [
+  [0, 1, 4], [2, 1, 3], [3, 1, 2], [4, 1, 3],
+  [0, 2, 1], [2, 0, 1], [3, 0, 2], [4, 0, 1], [1, 0, 1],
+];
+
+export const LEGAL = { live: 88, expired: 36, holders: [9, 9, 5, 6, 2] };
+
+/* A JURISDICTION IS NOT A PARTY, so countries are named — §8 says so, and five
+   grey wedges would read as nothing. Three rows: §3.7 allows three encoded
+   values and barStyle() has exactly three marks, so a fourth would draw
+   identically to the second and the legend would become a lie. */
+export const JURISDICTION = [
+  ['United States', 47], ['China', 66], ['Other, five countries', 11],
+];
+export const ORIGIN = [
+  ['China', 51], ['United States', 38], ['Other, seven countries', 35],
+];
+
+/* ── the one populated record · design-language.md §8's fourth exception ──── */
+export const DEMO_TITLE =
+  'Foldable quadrotor airframe with load-bearing arm hinges and an integrated ' +
+  'motor mount';
+
+export const DEMO_ABSTRACT =
+  'An airframe for a rotary-wing unmanned aircraft has four arms joined to a ' +
+  'central body by hinges that carry flight loads rather than passing them to a ' +
+  'separate spar. Each arm folds against the body about an axis inclined to the ' +
+  'rotor plane, stowing within the plan footprint of the body without removing ' +
+  'the rotors. The motor mount is formed as part of the arm end, locating the ' +
+  'stator directly on the load path.';
+
+/* A REAL DEPENDENCY TREE — 1 independent, 2-9 dependent, two of them dependent
+   on a dependent. A flat list of nine independent claims is not what a patent
+   looks like, and what a patent looks like is the one thing a founder is on
+   this surface to learn. */
+export const DEMO_CLAIMS = [
+  'An airframe for a rotary-wing unmanned aircraft, comprising: a central body; ' +
+  'four arms, each having a proximal end and a distal end; a hinge joining the ' +
+  'proximal end of each arm to the central body and defining a fold axis ' +
+  'inclined to the rotor plane; and a motor mount formed integrally with the ' +
+  'distal end of each arm, wherein the hinge is arranged to carry flight loads ' +
+  'between the arm and the central body.',
+  'The airframe of claim 1, wherein each hinge is arranged to pass over centre ' +
+  'as its arm reaches the deployed position, such that flight loads seat the joint.',
+  'The airframe of claim 2, further comprising a detent retaining each arm in ' +
+  'the deployed position until a release load is applied.',
+  'The airframe of claim 1, wherein each arm folds against the central body ' +
+  'within the plan footprint of the central body with its rotor attached.',
+  'The airframe of claim 1, wherein the motor mount locates a stator of a drive ' +
+  'motor on the load path between the rotor and the hinge.',
+  'The airframe of claim 5, wherein the motor mount and the arm are formed as a ' +
+  'single moulded composite part.',
+  'The airframe of claim 6, wherein the composite part comprises a foam core ' +
+  'enclosed by a fibre-reinforced skin.',
+  'The airframe of claim 1, wherein the central body encloses a sealed ' +
+  'electronics bay, and the hinge is outboard of the seal.',
+  'The airframe of claim 1, wherein each arm carries a conductor between the ' +
+  'central body and the motor mount, the conductor passing through the hinge on ' +
+  'the fold axis.',
+];
+
+/* ACME IS THE ONE INVENTED NAME THAT CANNOT READ AS A LIVE EXAMPLE, and that is
+   the whole argument. CLAUDE.md forbids naming a holder because "an invented
+   one reads as a live example, and transliterating a real one is fabrication" —
+   the harm named there is a reader mistaking the name for real data. ACME is
+   the archetypal fictional company; being unmistakably fake is its entire
+   cultural function, so it satisfies the rule's REASON while departing from its
+   letter. A plausible-sounding invention would not, and must not be used. */
+export const DEMO_HOLDER = 'ACME Group';
+
+export const DEMO_RECORD = {
+  number: 'US 12,984,117 B2',
+  appno: 'US 18/992,410',
+  /* the United States has no utility model, so once `Where` prints real English
+     a seeded `Utility model` would contradict the field beside it */
+  kind: 'Invention',
+  ipcMain: 'B64U 10/13',
+  ipc: ['B64U 10/13', 'B64U 30/293', 'B64U 50/19'],
+  holder: DEMO_HOLDER,
+  inventors: ['J. Doe', 'R. Roe', 'M. Poe'],
+  where: 'United States',
+};
+
+export const DEMO_PROJECT = 'Drone airframe and body structure';
+export const DEMO_IDEA = 'drone';
+
+/* ── the list ────────────────────────────────────────────────────────────────
+   SET_CEILING is the demo's own answer to the fifth narrowing question: 500
+   asked, 162 matched, 124 recommended. */
+export const MATCHED = 162;
+export const SET_CEILING = 124;
+
+/* a seeded pseudo-record, so the list is stable across reloads and a re-rank
+   can be compared against the order before it. Deterministic by construction:
+   an unstable list makes every visual judgement unfalsifiable. */
+function seeded(i) {
+  const n = Math.abs((i * 37 + 5) | 0) % 997;
+  return {
+    n,
+    status: (n % 7 === 3 || n % 11 === 6) ? 'expired' : 'live',
+    /* Innovue's own relevance score, printed rather than re-derived. Four
+       decimals, because that is what the engine returns; rounding it would be
+       Terrain restating it. No word about quality may sit beside it. */
+    score: Number((0.62 + (n % 361) / 1000).toFixed(4)),
+    year: 2014 + (n % 12),
+  };
+}
+
+export function patentRows(count = SET_CEILING) {
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    const s = seeded(i);
+    out.push({
+      id: 'p' + i,
+      /* EXACTLY ONE ROW CARRIES REAL ENGLISH — §8's fourth exception, and the
+         record it opens is the same one. Everything else is a bar. */
+      skim: i === 0 ? DEMO_TITLE : null,
+      holder: i === 0 ? DEMO_HOLDER : null,
+      year: s.year,
+      status: s.status,
+      score: s.score,
+    });
+  }
+  return out;
+}
+
+export function recordFor(id) {
+  const i = Number(String(id).replace(/^p/, '')) || 0;
+  const s = seeded(i);
+  if (i !== 0) {
+    /* every other record is bars. null is not "missing" — it is "this value
+       exists and we decline to print it", and it is the only thing that means
+       render the skeleton. */
+    return {
+      title: null,
+      number: null, appno: null, kind: 'Invention', ipcMain: null, ipc: null,
+      holder: null, inventors: null,
+      filed: String(s.year), published: String(s.year + 1), where: null,
+      status: s.status, abstract: null, claims: null,
+    };
+  }
+  return {
+    ...DEMO_RECORD,
+    title: DEMO_TITLE,
+    filed: '2021', published: '2023',
+    status: 'live', abstract: DEMO_ABSTRACT, claims: DEMO_CLAIMS,
+  };
+}
+
+/* ── projects, versions, points, account, billing ───────────────────────── */
+/* NOTHING IS INVENTED. Every other project is a bar — naming a roster would be
+   inventing six projects a founder never made, which is a different act from
+   printing the one the surface already shows. */
+export const PROJECTS = [
+  { id: 'proj-1', label: DEMO_PROJECT, current: true },
+  { id: 'proj-2', label: null }, { id: 'proj-3', label: null },
+  { id: 'proj-4', label: null }, { id: 'proj-5', label: null },
+];
+
+export const VERSIONS = [
+  { id: 'v3', label: null, current: true },
+  { id: 'v2', label: null }, { id: 'v1', label: null },
+];
+
+export const POINTS = { balance: 180, allowance: 400 };
+
+export const RUN_TYPES = [
+  { id: 'search', label: 'New search', cost: 40 },
+  { id: 'rebuild', label: 'Rebuild after a scope change', cost: 25 },
+  { id: 'rerank', label: 'Re-rank', cost: 4 },
+  { id: 'export', label: 'Export', cost: 8 },
+  { id: 'watch', label: 'Watch', cost: 12 },
+];
+
+export const RUNS = [
+  { id: 'r1', kind: 'New search', project: null, when: '2026-09-14', cost: 40 },
+  { id: 'r2', kind: 'Re-rank', project: null, when: '2026-09-14', cost: 4 },
+  { id: 'r3', kind: 'Rebuild', project: null, when: '2026-09-12', cost: 25 },
+  { id: 'r4', kind: 'New search', project: null, when: '2026-09-09', cost: 40 },
+];
+
+/* THE FOUNDER'S OWN NAME AND ADDRESS ARE BARS TOO. §8 does not bend for them:
+   a settings page whose whole content is a name and an email is where that
+   temptation is strongest. A password renders as a run of dots, which is what a
+   password looks like everywhere and is chrome rather than an identity being
+   withheld. */
+export const ACCOUNT = { name: null, email: null, org: null, twoFactor: false };
+
+/* 'XXX' IS NOT null, AND THE TWO RENDER THROUGH DIFFERENT PATHS ON PURPOSE.
+   null is "this value exists and we decline to print it"; 'XXX' is "nobody has
+   chosen one yet". Pricing is open — platform.md §14 — so the plan screen
+   prints XXX and a bar rather than guessing a number into existence. */
+export const BILLING = { plan: null, price: 'XXX', renews: null, seats: 1 };
+
+export const INVOICES = [
+  { id: 'i1', when: '2026-09-01', amount: 'XXX', status: 'paid' },
+  { id: 'i2', when: '2026-08-01', amount: 'XXX', status: 'paid' },
+  { id: 'i3', when: '2026-07-01', amount: 'XXX', status: 'paid' },
+  { id: 'i4', when: '2026-06-01', amount: 'XXX', status: 'paid' },
+];
+
+/* ── the narrowing round · platform.md §3.2 ──────────────────────────────────
+   Five questions, and the five direction options at the narrowing step are
+   OBSERVED OUTPUT from Innovue's own semantic surface, rendered as real words
+   rather than bars. CLAUDE.md's scoped exception: observed is not invented, and
+   they are nobody's client data. */
+export const ROUND = [
+  { q: 'Which part of a drone are you working on?',
+    opts: ['Airframe and body structure', 'Flight control and avionics',
+           'Propulsion and power', 'Payload and sensors', 'None of these'],
+    pick: 0 },
+  { q: 'What are you trying to improve about it?',
+    opts: ['Weight', 'Cost to manufacture', 'Crash survivability',
+           'Assembly time', 'Something else'],
+    pick: 0 },
+  { q: 'Is it flying already?',
+    opts: ['A working prototype', 'A design on paper', 'Shipping to customers'],
+    pick: 0 },
+  { q: 'Have you filed anything?',
+    opts: ['Nothing yet', 'A provisional', 'One or more granted'],
+    pick: 0 },
+  { q: 'Where does it need to be protected?',
+    opts: ['United States', 'Taiwan', 'Both'],
+    pick: 0 },
+];
+
+export const BUILD_STAGES = [
+  'Reading your criteria',
+  'Searching the Innovue database',
+  'Merging duplicate filings across countries',
+  'Grouping by technical approach',
+  'Ranking against what you described',
+  'Drawing your map',
+];

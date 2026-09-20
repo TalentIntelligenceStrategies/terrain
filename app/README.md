@@ -1,10 +1,20 @@
 # `app/` — the Terrain frontend
 
 **Run it with a server. `python3 -m http.server` from the repository root, then open
-`http://localhost:8000/app/`.** Opening `index.html` from the filesystem does not work and never
+`http://127.0.0.1:8000/app/`.** Opening `index.html` from the filesystem does not work and never
 will: `<script type="module">` is CORS-fetched, a `file://` origin is opaque, and Chrome, Safari and
 Firefox all refuse it. The prototype at `design/previews/terrain-prototype.html` keeps the
 open-the-file property; this does not.
+
+*`127.0.0.1` rather than `localhost`, and it is not fussiness.* `localhost` resolves to IPv6
+first; a second server already bound to `*:8000` on IPv6 will shadow one bound to
+`127.0.0.1:8000` on IPv4, and what you get is somebody else's site with no error anywhere.
+
+**What you should see:** the conversation on arrival. `#set` opens the working surface — the
+list on the left, the Market views on the right, and the map under the **Technology** tab.
+Clicking a row opens the record over the views. `?fail=map,record` arms named ports to refuse
+and `?fail=all` arms every one, which is how §9.1's *a failure is the size of the region that
+was waiting* gets checked rather than asserted. `?slow=3` multiplies every latency.
 
 ---
 
@@ -39,10 +49,16 @@ and that `99-reduced-motion.css` is **last**.
 | --- | --- | --- |
 | `tokens` `01`–`05` | foundation — tokens, reset, type, skeleton, loader, wait/fail | **extracted** |
 | `10`–`15` | primitives — button, chip, field, inline-confirm, menu, empty | **extracted** |
-| `20`–`21` | layout — shell, surface | to come |
-| `30`–`37` | components — conversation, card, map, chart, list, record, destination, attribution | to come |
+| `20`–`21` | layout — shell, surface | **extracted** |
+| `30`–`37` | components — conversation, card, map, chart, list, record, destination, attribution | **extracted** |
 | `98` | the bench, `lab.html` only — numbered into the same manifest so it cannot drift into testing something else | **extracted** |
 | `99` | reduced motion, **which must load last** | **extracted** |
+
+**Extracted means extracted.** Each of `20`–`37` is a run of the prototype's own
+sections, copied by line range and **brace-balanced before it was written** — not a
+rewrite from a memory of what the rules were. The prototype carries its own note about
+why that check exists: *"A STRAY `}` STOOD HERE, AND IT ATE THE RULE BELOW."* A split
+that lands mid-rule is the known failure of this exact move, and it is silent.
 
 **Two rules the split had to get right, both recorded where they bite.**
 `05-wait-fail.css` has its own number because `.card-body.is-wait` and `.rec-body.is-wait` span two
@@ -183,6 +199,37 @@ through different paths on purpose.
 surface has to say *this did not run* rather than throw. It is also the check that no component
 secretly needs data to draw its own chrome — a surface that cannot render against it cannot render
 its own failure state either.
+
+---
+
+## `partials/`, `js/surfaces/`, `js/charts/` — the rest of the tree
+
+**Eight partials, and the host list in `index.html` is the manifest.** `main.mjs` fetches
+every one, **replaces** its host with the partial's own nodes, and **awaits all of them
+before calling any `init()`**. That single ordering rule is what replaces 55 scattered
+parse-time element captures: every surface module exports `init(ctx)` and reads the DOM
+*there*, never at module scope. A module that captures an element at import time
+dereferences null the first time a partial is slower than an import, and that failure is
+intermittent by construction.
+
+**The record is not a host of its own**, and that is a correction to `index.html` rather
+than an omission. `.rec` is positioned against `.panecol` and leaves a ~200px peek of the
+views behind it — §6.6 calls the peek the spec rather than a margin. Hoisted to a sibling
+host it would position against the viewport. It ships inside `surface.html`.
+
+**Seven surfaces**, one per region rather than one per file that happened to get large:
+`masthead`, `conversation`, `work`, `views`, `list`, `record`, `destinations`.
+
+**Four chart modules.** `primitives` (the skeleton bar, the density band, the three marks),
+`share`, `series`, and `map`. Three of the four were extracted by **brace matching from the
+function name**, so a moved line cannot silently truncate one. `map.mjs` is the exception
+and says so at the top: the prototype's `matrixHTML` reads five module-level globals, so
+extracting it verbatim would have dragged the data layer across with it.
+
+**Three globals became parameters on the way across**, and each one is the same lesson:
+`PG_FILINGS` and `PG_LAG` in `filingsChart`, and everything `matrixHTML` read. A chart that
+reads a module-level array cannot be drawn twice with two corpora, and it cannot be drawn
+at all against `NullEngine`.
 
 ### The three zones
 

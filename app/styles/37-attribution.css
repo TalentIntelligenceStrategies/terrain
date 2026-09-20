@@ -1,0 +1,70 @@
+/* 37 · attribution — brief.md §3
+ *
+ * EXTRACTED from the prototype. Powered by Innovue, at the foot of every
+ * surface, rendered as their own mark.
+ *
+ * THE TWO .foot-mark-* SELECTORS ARE THE ONLY NAMED COMPONENT EXCEPTIONS TO
+ * THE DARK TOKEN SWAP — design-language.md §10.1. Innovue's blue may appear
+ * only inside the Innovue mark itself; in a border, a chip, a chart or a
+ * button it has been misread. */
+
+/* ── attribution · brief.md §3 ──────────────────────────────
+   "Powered by" is ours and takes our italic; the mark is Innovue's and is
+   theirs, in their own blue. That split is the whole rule: the colour is
+   attribution to a third party, not an accent entering Terrain's palette, and
+   Terrain still has no accent. The mark is the tight-cropped inline variant —
+   viewBox 0 32 300 41 — which is the one drawn to sit on a line of text.
+
+   CENTRED, changed 2026-09-08. It was left-aligned to the grid's gutter on the
+   three map-shaped surfaces, on the reasoning that a page footer aligns with
+   the page and that it kept clear of the dock. Neither held up: the dock is a
+   44px icon in the opposite corner and never came close, and the conversation
+   surface centred its line from the start — so "aligned with the page" was
+   actually producing two different answers on four surfaces. One rule now,
+   centred everywhere, and the credit reads as belonging to the product rather
+   than to the column it happens to sit under. */
+/* CENTRED, on every surface — design-language.md §7. It was briefly left to
+   the grid gutter and that rule is retired: the dock never came close to it,
+   and the conversation surface had centred its line from the first build, so
+   "aligned with the page" was producing two answers across four surfaces. */
+/* BASELINE, not center, 2026-09-10. align-items:center optically centred a
+   line of text against a 13px image and the two never agreed. The mark is
+   inline-block below, so its baseline is its bottom margin edge: the logo's
+   bottom now sits on the text's baseline, which is what "bottom aligned"
+   means for type. The text is 14.4px -- 12 + 20%, asked for in the same pass. */
+.foot{display:flex;align-items:baseline;justify-content:center;gap:var(--s-6);margin:0;
+      padding:0 var(--s-16) var(--s-32);font-size:14.4px;color:var(--text-3)}
+.foot em,.conv-foot em{font-style:italic}
+/* Their primary in light, their own white mark in dark — both are Innovue's
+   own files, identical viewBox 0 32 300 41, so the swap is pixel-stable and
+   neither is a Terrain-authored variant of someone else's brand. That was the
+   open question when this shipped blue-on-both: the blue measured 3.35 on the
+   dark ground, legal for a logotype and legible, but quiet. Their white mark
+   is simply the right asset and it was sitting in the folder.
+
+   Two <img> rather than <picture>: a <picture> source query follows the OS,
+   and the appearance control has to beat the OS. Same three selectors the
+   tokens use, for the same reason. display:none also takes the inactive one
+   out of the accessibility tree, so "Innovue" is announced once, not twice. */
+.foot-mark{display:inline-block;height:13px;width:auto}
+.foot-mark-dark{display:none}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .foot-mark-light{display:none}
+  :root:not([data-theme="light"]) .foot-mark-dark{display:inline-block}
+}
+:root[data-theme="dark"] .foot-mark-light{display:none}
+:root[data-theme="dark"] .foot-mark-dark{display:inline-block}
+@media (max-width:1180px){
+  .row-3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+}
+.card-head .t-title{flex:1;min-width:0}
+.card-icon{color:var(--text-3);display:flex}
+.card-body{padding:0 var(--s-20) var(--s-16);flex:1;display:flex;flex-direction:column;min-width:0}
+.caption{border-top:1px solid var(--border);margin:0 var(--s-20);padding:var(--s-12) 0 var(--s-14);
+         font-size:13px;line-height:1.6;color:var(--text-2)}
+.caption b{color:var(--text-1);font-weight:600}
+/* a real finding earns the size. better-ui: what matters most is read first,
+   and until now the map's own conclusion was the smallest text on the card. */
+.caption.is-real{font-size:14.5px;line-height:1.55;color:var(--text-2);
+                 max-width:76ch;padding-top:var(--s-14)}
+.dash-title{font-size:20px;line-height:1.25;font-weight:600;color:var(--text-1)}

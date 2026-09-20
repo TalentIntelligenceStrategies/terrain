@@ -97,3 +97,31 @@ export function failHTML(say, act) {
       : '') +
     '</div>';
 }
+
+/**
+ * failWith(el, say, retry) — the whole third ending, in one call.
+ *
+ * WHY THIS EXISTS AND WHY IT IS HERE. failHTML builds MARKUP and wires
+ * NOTHING; the caller has to find the button and bind it. Five surfaces did
+ * that by hand, and every one of them passed a FUNCTION where failHTML wants
+ * `{label}` — so `esc(act.label)` printed the string "undefined" on the
+ * button, and the button did nothing when pressed. Both faults at once, in
+ * every failure block in the product, and neither is visible until a port
+ * actually refuses.
+ *
+ * `retry` IS THE WHOLE SWITCH, and it comes straight from the port's
+ * `retryable`. Pass a function and the block offers `Try again` and calls it;
+ * pass nothing and the block says there is no way forward BY HAVING NO BUTTON,
+ * which is platform.md §9's rule rather than this function's convenience.
+ *
+ * `{ once: true }` because a retry that is pressed twice while the first is in
+ * flight is two requests for one intention — and the block is replaced by the
+ * next ending either way.
+ */
+export function failWith(el, say, retry) {
+  if (!el) return;
+  failIn(el, failHTML(say, retry ? { label: 'Try again' } : null));
+  if (!retry) return;
+  const btn = el.querySelector('.fail-act button');
+  if (btn) btn.addEventListener('click', retry, { once: true });
+}

@@ -29,6 +29,16 @@
 <link rel="stylesheet" href="styles/13-inline-confirm.css">
 <link rel="stylesheet" href="styles/14-menu.css">
 <link rel="stylesheet" href="styles/15-empty.css">
+<link rel="stylesheet" href="styles/20-shell.css">
+<link rel="stylesheet" href="styles/21-surface.css">
+<link rel="stylesheet" href="styles/30-conversation.css">
+<link rel="stylesheet" href="styles/31-card.css">
+<link rel="stylesheet" href="styles/32-map.css">
+<link rel="stylesheet" href="styles/33-chart.css">
+<link rel="stylesheet" href="styles/34-list.css">
+<link rel="stylesheet" href="styles/35-record.css">
+<link rel="stylesheet" href="styles/36-destination.css">
+<link rel="stylesheet" href="styles/37-attribution.css">
 <link rel="stylesheet" href="styles/99-reduced-motion.css">
 
 <script>
@@ -107,15 +117,36 @@
        exports init() and reads the DOM there, so nothing dereferences null
        because markup had not arrived yet. -->
   <div data-partial="masthead"></div>
-  <div data-partial="conversation"></div>
-  <div data-partial="surface"></div>
-  <div data-partial="record"></div>
-  <div data-partial="points"></div>
-  <div data-partial="account"></div>
-  <div data-partial="billing"></div>
-  <div data-partial="help"></div>
+
+  <!-- THE STAGE IS HERE AND NOT IN A PARTIAL. One view at a time is the
+       router's primitive, and every view below is a child of it — a stage
+       injected by one partial and populated by four others would make the
+       order they resolve in load-bearing. -->
+  <div class="stage" id="stage">
+    <div data-partial="conversation"></div>
+    <div data-partial="surface"></div>
+    <div data-partial="points"></div>
+    <div data-partial="account"></div>
+    <div data-partial="billing"></div>
+    <div data-partial="help"></div>
+  </div>
+
+  <!-- THE RECORD IS NOT A HOST OF ITS OWN, and that is a correction to this
+       file rather than an omission. `.rec` is positioned against `.panecol`
+       and leaves a ~200px peek of the views behind it — platform.md §6.6 calls
+       the peek the spec rather than a margin. Hoisted to a sibling host it
+       would position against the viewport and the peek would be whatever the
+       window happened to be. It ships inside surface.html. -->
+
+  <!-- PARKED COMPONENTS. The gate card and the build block are moved into
+       whichever thread needs them rather than duplicated, so the card on the
+       map is literally the same node as the one in the conversation — "same
+       component, same gate" in the DOM rather than by resemblance. -->
+  <div data-partial="parked"></div>
 
 </div>
+
+<script type="module" src="js/main.mjs"></script>
 
 </body>
 </html>

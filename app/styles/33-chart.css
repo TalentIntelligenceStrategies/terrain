@@ -1,0 +1,254 @@
+/* 33 · the charts — platform.md §6.4
+ *
+ * EXTRACTED from the prototype. Restyled from IPtech to the §3.7 palette: data
+ * marks only, one ink, one grey, one texture, and no fourth.
+ *
+ * The M-Map additions below are four views that had no form before 2026-09-12:
+ * momentum, the named variant, who-builds-on-whom, and the life cycle. */
+
+/* ── restyled from IPtech · §3.7 palette, data marks only ─────────────────── */
+.pie-wrap{display:flex;gap:var(--s-24);align-items:center;flex-wrap:wrap}
+.pie-wrap svg{flex:0 0 auto}
+.pie-key{display:flex;flex-direction:column;gap:var(--s-10);min-width:180px}
+.pie-key .k{display:flex;align-items:baseline;gap:var(--s-8);font-size:13px;color:var(--text-2)}
+.pie-key .k .fig-m{margin-left:auto;color:var(--text-1)}
+/* the dot carries identity so the label never has to be coloured. Scoped to
+   the chart keys: a bare `.dot` rule here overrode the 6px status-pill dot
+   defined at the top of the sheet, because both land at the same specificity
+   and this one is later in the file.
+
+   The hairline ring survived the hue that made it necessary, because it now
+   does a different job. --mark-1 and --mark-2 are ink and mid-grey and carry
+   their own edges; the ring is invisible over both. It is the HATCH dot that
+   needs it — a 9px patch of 1.2px stripes on --surface has no outline of its
+   own, and without a ring it reads as an empty slot rather than the third
+   value. One rule for all three dots so the key can never be inconsistent. */
+.pie-key .dot,.tbl-share .dot{width:9px;height:9px;flex:0 0 auto;
+     transform:translateY(1px);background-color:var(--surface);
+     box-shadow:inset 0 0 0 1px var(--key-ring)}
+/* fixed layout plus a colgroup — the shared .tbl rules win over nth-child
+   widths, and the count column has to hold its own so the bar never starts
+   against a digit */
+.tbl-share{table-layout:fixed}
+.tbl-share th:nth-child(2),.tbl-share td:nth-child(2){padding-right:var(--s-16)}
+.share-cell{display:flex;align-items:center;gap:var(--s-12)}
+.bar-t{flex:1;height:8px;border-radius:var(--r-chip);
+       background:var(--surface-sunken);overflow:hidden}
+.bar-f{display:block;height:100%;border-radius:var(--r-chip)}
+/* stacked · platform.md §6.4. The track already clips, so the two fills square off against
+   each other and the track's own radius does the rounding at both ends. */
+.bar-t.bar-stack{display:flex;height:10px}
+.bar-stack .bar-f{border-radius:0}
+.bar-hatch{background:var(--mark-3-hatch);box-shadow:inset 0 0 0 1px var(--border-strong)}
+.lb-row{display:flex;align-items:center;gap:var(--s-12);padding:var(--s-6) 0}
+.lb-row > .sk{flex:0 0 84px}
+.lb-of{color:var(--text-3)}
+.dn-sub{font-size:10px;letter-spacing:.04em;text-transform:uppercase}
+.dn-wrap{display:flex;align-items:center;gap:var(--s-16);flex-wrap:wrap}
+.jur-wrap{display:flex;align-items:center;gap:var(--s-16);flex-wrap:wrap}
+.jur-wrap > svg{flex:0 0 auto}
+.jur-wrap > .jur-bars{flex:1;min-width:180px}
+/* the pie renders at a fixed 180 so the Rivals page keeps its size; the
+   dashboard card is a third of the width and takes it smaller. */
+#jurPie svg{width:132px;height:132px}
+/* the hero has the page's room, not the page's height — a 300px chart at full
+   width reads as the whole dashboard rather than the first of four answers. */
+#dashChart .chart-lg{height:215px}
+/* the version list lives in a 260px rail. The skeleton widths were written for
+   a 268px popover and overflow it, putting Revert on top of the label. */
+.side-hist .sk{max-width:100%}
+.bar-n{flex:0 0 46px;text-align:right;font-size:12.5px;
+       color:var(--text-2);font-variant-numeric:tabular-nums}
+.hb{display:flex;flex-direction:column;gap:var(--s-4)}
+.hb-cap{margin-bottom:var(--s-6)}
+/* a row is the control that moves the tracked holder, so it is a real button.
+   Full-bleed padding rather than margin, so the hit area covers the whole row
+   without the bars shifting — better-ui wants the target bigger than the mark. */
+.hb-row{display:flex;align-items:center;gap:var(--s-10);width:100%;
+        appearance:none;background:none;border:0;font:inherit;color:inherit;
+        text-align:left;cursor:pointer;padding:var(--s-6) var(--s-8);
+        margin:0 calc(var(--s-8) * -1);border-radius:var(--r-control);
+        transition:background var(--dur-1) var(--ease)}
+.hb-row:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+/* wider than the widest skeleton class it can hold (w-lg, 132px). At 96px a
+   wide label pushed its own track right, so the bars no longer shared a
+   baseline and two equal values drew as different lengths. */
+.hb-lbl{flex:0 0 140px;display:flex;overflow:hidden}
+.hb-track{flex:1;height:10px;border-radius:var(--r-chip);background:var(--surface-sunken);
+          overflow:hidden}
+.hb-fill{display:block;height:100%;border-radius:var(--r-chip);
+         transition:width var(--dur-2) var(--ease),background var(--dur-1) var(--ease)}
+.hb-n{flex:0 0 30px;text-align:right;color:var(--text-1)}
+/* the tracked row carries a second cue: the count goes semibold. It was here
+   to rescue a 1.26:1 hue on a 10px bar; it stays because CLAUDE.md's rule is
+   that a mark never rests on one channel, and value is a channel like any
+   other. The selection now survives greyscale on the bar alone, and the
+   weight is what carries it into a column of numbers read without the bars. */
+.hb-row[aria-pressed="true"] .hb-n{font-weight:600}
+.hb-row[aria-pressed="true"] .hb-track{background:var(--track-pressed)}
+@media (hover:hover){ .hb-row:hover{background:var(--surface-sunken)} }
+
+/* ══ M-MAP ADDITIONS · 2026-09-12 ═══════════════════════════════════════════
+   Four views from mmap-audit.md with no form here before. NOTHING below reads
+   a --n-* primitive or a raw hex; the two greps that prove it are the same two
+   the dark pass ran, and a component that reads a primitive silently stays
+   light.
+
+   dataviz mark specs are honoured as written except ONE, and the exception is
+   deliberate: it wants hairline SOLID gridlines and every grid below is DASHED.
+   design-language.md §3.5 settled dashed for --chart-grid before this pass, the
+   shipped Filings chart draws dashed, and shadcn's CartesianGrid — the grammar
+   this pass was asked to follow — is dashed by default. One inconsistent grid
+   across five cards is worse than one departure from a general rule.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* ── momentum · one micro-column strip per rival, on ONE shared scale ────────
+   Shared scale is the whole point: five strips each normalised to their own max
+   would draw a holder with two filings the same height as one with twelve, and
+   the card's question is WHICH rival is still filing. */
+.mo{display:flex;flex-direction:column;gap:var(--s-2)}
+.mo-row{display:flex;align-items:center;gap:var(--s-10);padding:var(--s-4) 0}
+.mo-lbl{flex:0 0 116px;display:flex;overflow:hidden}
+.mo-plot{flex:1;display:flex;align-items:flex-end;gap:2px;height:26px;
+         min-width:120px}
+/* every year gets a column; a zero year gets a 1px seat rather than nothing, so
+   the strip reads as a timeline with gaps and not as a shorter timeline. */
+.mo-col{flex:1;min-width:0;border-radius:2px 2px 0 0;background:var(--mark-2);
+        transition:height var(--dur-2) var(--ease),background var(--dur-1) var(--ease)}
+.mo-col[data-z="1"]{background:var(--border);border-radius:1px}
+.mo-row[data-tracked] .mo-col{background:var(--mark-1)}
+.mo-row[data-tracked] .mo-col[data-z="1"]{background:var(--border-strong)}
+.mo-n{flex:0 0 58px;text-align:right;font-size:12.5px;color:var(--text-2);
+      font-variant-numeric:tabular-nums}
+.mo-row[data-tracked] .mo-n{font-weight:600;color:var(--text-1)}
+/* the word IS the encoding, not a caption on it — every coloured element in
+   this system carries a word or a shape, never colour alone. */
+.mo-word{display:block;font-size:11px;color:var(--text-3);font-weight:500}
+.mo-axis{display:flex;justify-content:space-between;padding-inline-start:126px;
+         padding-inline-end:58px;margin-top:var(--s-4)}
+
+/* ── the NAMED variant · one strip per technology column ─────────────────────
+   Rival momentum's rows are bars because holder names are bars by decision;
+   these rows are generated words and render as words, so the label column
+   carries text and needs the room. Two lines then it clips - a third would
+   push the 26px plot off the row's centre line. The axis foot takes the same
+   basis plus the same gap, and the two are written next to each other so they
+   cannot drift apart. */
+.mo-named .mo-lbl{flex-basis:164px}
+.mo-t{font-size:12px;line-height:1.25;color:var(--text-2);display:-webkit-box;
+      -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mo-row[data-tracked] .mo-t{color:var(--text-1);font-weight:600}
+.mo-axis-named{padding-inline-start:174px}
+
+/* ── who builds on whom · a DIRECTED N×N, reusing the map's density ramp ─────
+   Same 1px-gap-over-border trick as .matrix, so the two grids on one page are
+   built the same way and cannot drift apart. */
+.xr{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);
+    border-radius:var(--r-inner);overflow:hidden;
+    grid-template-columns:92px repeat(var(--xr-n,5),minmax(0,1fr))}
+.xr-h,.xr-c,.xr-rh{background:var(--surface);min-height:30px;display:flex;
+                   align-items:center;justify-content:center}
+.xr-rh{justify-content:flex-start;padding-inline:var(--s-8)}
+.xr-h{padding:var(--s-6) 2px}
+.xr-c{font-size:12px;color:var(--text-1);font-variant-numeric:tabular-nums}
+.xr-c[data-d="0"]{background:var(--density-0);color:var(--text-3)}
+.xr-c[data-d="1"]{background:var(--density-1)}
+.xr-c[data-d="2"]{background:var(--density-2)}
+.xr-c[data-d="3"]{background:var(--density-3)}
+.xr-c[data-d="4"]{background:var(--density-4);color:var(--text-inverse)}
+/* the diagonal is not a zero — it is a cell that cannot hold a value, and
+   painting it like a zero would make "nobody cites this" and "a holder cannot
+   cite itself" the same mark. */
+.xr-c[data-self]{background:var(--surface-sunken);color:var(--text-disabled)}
+.xr-cap{display:flex;gap:var(--s-16);flex-wrap:wrap;margin-top:var(--s-10);
+        font-size:11px;color:var(--text-3)}
+
+/* ── life cycle · connected scatter ─────────────────────────────────────────
+   preserveAspectRatio is LEFT AT ITS DEFAULT, unlike the Filings chart. That
+   chart stretches because an area has no circles in it; this one has 8px
+   markers, and non-uniform scaling would draw them as ellipses. */
+/* TWO CLASSES, and it has to be: .chart{height:150px} is declared further down
+   the sheet, so a single .lc selector loses on source order and the scatter
+   letterboxes inside a 150px band with its markers stranded in the middle. */
+.chart.lc{height:auto}
+/* widgets stagger in only when the map was just built — never on a return.
+   Same rule as the build sequence, one level down. */
+/* .no-anim exists for one frame at a time, and restagger() explains why: the
+   start state has to be COMMITTED, not transitioned towards. Without it the
+   cards animate from 1 down to wherever they get before the entrance retargets
+   them, which is a different number every run and never 0. */
+.grid.no-anim .card,.grid.no-anim .card-body{transition:none!important}
+.grid[data-stagger] .card{opacity:0;transform:translateY(8px);
+     transition:opacity var(--dur-3) var(--ease),transform var(--dur-3) var(--ease)}
+.grid[data-stagger].is-in .card{opacity:1;transform:none}
+/* TEN CARDS IN ONE COLUMN, 35ms apart. Written out rather than looped, because
+   the whole point is that the sequence is legible in the source.
+
+   THE STEP IS DERIVED FROM THE CARD COUNT, NOT CHOSEN. The budget is a ~320ms
+   entrance: past that a stagger stops reading as one movement and becomes the
+   founder watching a queue. Six cards at 60ms was 300ms; ten at 35ms was 315ms;
+   TWELVE AT 29ms IS 319ms. The entrance has been the same length through three
+   card counts and only its density has changed — so when the next card arrives,
+   divide ~320 by the new last index rather than picking a number.
+
+   THE REAL BUG THIS GUARDS IS NOT THE DURATION. The ladder once stopped at
+   nth-child(6). Four cards were added and every one of them fell through to a
+   0ms delay, so they arrived FIRST — ahead of the three above them — and the
+   stagger read as a shuffle.
+
+   AND nth-child COUNTS ACROSS BOTH PAGES, which is the part that catches
+   people: #grid holds every card of both the Market and the Technology view and
+   hides one set with [hidden], so a Technology card added after the map takes
+   rungs 2 and 3 and pushes every Market card down two. That is intended — DOM
+   order groups by page so the two Technology cards sit with the map in the
+   reading order — and it means Market now opens at 3 x the step rather than at
+   0ms. 87ms is imperceptible; splitting a page's cards across the grid to avoid
+   it would not be. A written-out ladder is legible, which is why it
+   is written out; it is also silently wrong the moment someone adds a card and
+   does not scroll down here. Adding a card means adding its line.
+
+   §7's rule is unchanged: only a FRESH BUILD earns this. A re-count after a
+   tick animates nothing, because a stagger says the data was recomputed. */
+.grid[data-stagger].is-in .card:nth-child(1){transition-delay:0ms}
+.grid[data-stagger].is-in .card:nth-child(2){transition-delay:29ms}
+.grid[data-stagger].is-in .card:nth-child(3){transition-delay:58ms}
+.grid[data-stagger].is-in .card:nth-child(4){transition-delay:87ms}
+.grid[data-stagger].is-in .card:nth-child(5){transition-delay:116ms}
+.grid[data-stagger].is-in .card:nth-child(6){transition-delay:145ms}
+.grid[data-stagger].is-in .card:nth-child(7){transition-delay:174ms}
+.grid[data-stagger].is-in .card:nth-child(8){transition-delay:203ms}
+.grid[data-stagger].is-in .card:nth-child(9){transition-delay:232ms}
+.grid[data-stagger].is-in .card:nth-child(10){transition-delay:261ms}
+.grid[data-stagger].is-in .card:nth-child(11){transition-delay:290ms}
+.grid[data-stagger].is-in .card:nth-child(12){transition-delay:319ms}
+
+/* ── the inline resolve · platform.md §5 ────────────────────────────
+   THE STAGE SCREEN IS GONE and this is what replaced it: each of the views
+   resolves in place, a loader in it until its own data lands.
+
+   IT CLAIMS ONLY COMPLETED WORK — §6's rule for a progress indication. A bar
+   asserts a fraction nobody measured; a card that resolves is a card whose
+   data actually arrived.
+
+   ***THE BLANKET DIM WENT ON 2026-09-14, AND WHY IT LASTED SO LONG IS THE
+   USEFUL PART.*** This rule used to read `.card-body, .caption {opacity:.45}`
+   over the whole grid — ONE state for TEN cards — and the comment above it
+   claimed each view "becomes itself as its own data lands". THE COMMENT WAS
+   DESCRIBING A LIFECYCLE THE CODE DID NOT HAVE: drawDash() filled every card
+   in a single call, so there was nothing per-card to express and a dim over
+   all ten was the only thing that could be written. The promise sat here,
+   accurate as a specification and false as a description, for four days.
+
+   *A spec and its implementation disagreeing is ordinary. A spec and the
+   COMMENT ON ITS OWN IMPLEMENTATION disagreeing is the thing to watch for:
+   nothing reads a comment, so nothing can contradict it.*
+
+   drawDash(name) and resolveDash() are the lifecycle. What survives here is
+   pointer-events, because a card that is still resolving must not be
+   clickable, and that was always the half of this rule doing real work. */
+.grid.is-building{pointer-events:none}
+/* the caption holds its box and stops speaking. visibility rather than a
+   dim, because a caption at .45 is a caption being READ — it describes data
+   that is no longer on screen — and visibility also takes it out of the
+   accessibility tree, which opacity does not. */
+.card.is-resolving .caption{visibility:hidden}

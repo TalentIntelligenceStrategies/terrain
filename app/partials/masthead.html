@@ -1,0 +1,144 @@
+<!-- EXTRACTED from design/previews/terrain-prototype.html lines 3816-3957.
+     The prototype is the reference; where this and it disagree, it is
+     right and this is stale. The 48px bar: the brand, the project switcher, the rail, the profile menu. -->
+  <header class="mast" id="mast">
+    <!-- THE LOCKUP IS THE WAY HOME, 2026-09-11, and it used to be a second
+         "New search" — the same data-go as the button twelve pixels to its
+         right, which is one action offered twice and a brand mark doing the
+         job of a labelled control. It now returns the founder to the working
+         screen, which is what a masthead lockup is for.
+
+         IT IS INERT ON THE CONVERSATION, both times that surface is reachable:
+         the first search screen, where there is nothing to go back to, and the
+         re-entry from a version revert, where there is — but the gate is the
+         product's only correction point (platform.md §4) and a mark in the
+         chrome should not be the way out of one.
+
+         NO VISUAL CHANGE BETWEEN THE STATES. It stays an <a>, keeps its cursor
+         and its styling everywhere, and says so to assistive tech with
+         aria-disabled rather than by going grey or dropping out of the tab
+         order. A lockup that changes appearance by screen stops being a fixed
+         point in the chrome, which is the whole of what makes it usable as
+         home. -->
+    <a class="mast-brand" id="mastBrand" href="#" aria-label="TIS Terrain">
+      <svg class="mark" fill="currentColor" aria-hidden="true"><use href="#tis-mark"/></svg>
+      <span class="wordmark">TIS <span>Terrain</span></span>
+    </a>
+
+    <!-- LUCIDE `zoom-in`, NOT `plus` · 2026-09-12. The plus said "new" and said
+         nothing about what a new one IS, on the one control that starts the
+         only act the product has. The magnifier says search; the plus inside
+         it survives from the icon it replaces and says which search.
+
+         AND NOT PLAIN `search`. The reason was a collision — the project
+         menu's Find a project field carried that glyph twelve rows below
+         this button, and one glyph on two different acts in one masthead is
+         the thing CLAUDE.md's "assembled from parts" test is about. ***THAT
+         FIELD IS DELETED AND THE GLYPH IS FREE AGAIN; the icon stays.*** It
+         is not the plain magnifier by accident now: the act is starting a
+         NEW search, the plus says so, and reverting it would spend a change
+         to get back to a mark that says less. -->
+    <button class="mast-btn mast-new" type="button" data-go="conversation:new">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+      <span>New search</span>
+    </button>
+
+    <!-- the project switcher. The projects list, its two recency groups and the
+         version block all live inside it — one menu, because they are one
+         subject: which project am I in, and which version of it. -->
+    <div class="mast-menu-wrap" id="projWrap">
+      <!-- THE NAME IS NOT THE LABEL, and it cannot be: the label is a
+           skeleton bar (§8's contract — project names are identities), so a
+           control named by its contents would have no accessible name at
+           all. The aria-label names the CONTROL; the bar shows there is a
+           project open. -->
+      <button class="mast-btn mast-proj" id="projBtn" type="button"
+              aria-label="Projects and versions"
+              aria-haspopup="true" aria-expanded="false" aria-controls="projMenu">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+        <span class="mast-proj-name sk sk-h-label w-md" id="projName"></span>
+        <svg class="mast-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="mast-menu mast-menu-proj" id="projMenu" role="menu" aria-label="Projects and versions">
+        <div class="side-section t-micro">This week</div>
+        <div id="projGroupA"></div>
+        <div class="side-section t-micro">Earlier</div>
+        <div id="projGroupB"></div>
+
+        <!-- placeHist() relocates this to sit directly under the open project.
+             It lives here in source order only so the markup stays legible. -->
+        <div class="side-hist" id="histWrap">
+          <div class="side-section side-section-sub t-micro" id="histHead">Versions</div>
+          <div id="histList"></div>
+        </div>
+      </div>
+    </div>
+
+    <span class="mast-sp"></span>
+
+    <!-- the control rail: the balance and the appearance control, on the bar.
+         Both are account-level and true everywhere, which is why they are
+         chrome. design-language.md §7. -->
+    <button class="meter" id="meter" type="button" data-go="usage"
+            aria-label="Points left on your plan. Open your points page.">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+      <span class="meter-n fig fig-s" id="meterN">2700</span>
+      <span class="meter-unit t-micro">points</span>
+    </button>
+
+    <div class="seg theme-seg" role="group" aria-label="Appearance">
+      <button class="seg-btn" type="button" data-theme-set="light" aria-pressed="false" title="Light" aria-label="Light appearance"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
+      <button class="seg-btn" type="button" data-theme-set="dark" aria-pressed="false" title="Dark" aria-label="Dark appearance"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button>
+      <button class="seg-btn" type="button" data-theme-set="system" aria-pressed="true" title="Match your system" aria-label="Match your system appearance"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></button>
+    </div>
+
+    <div class="mast-menu-wrap" id="profileWrap">
+      <button class="profile" id="profileBtn" aria-haspopup="true" aria-expanded="false"
+              aria-controls="acctMenu" aria-label="Account">
+        <span class="avatar sk sk-circle"></span>
+        <svg class="mast-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="mast-menu menu" id="acctMenu" role="menu" aria-label="Account">
+        <div class="menu-who">
+          <span class="sk sk-h-label w-md"></span><span class="sk sk-h-micro w-sm"></span>
+        </div>
+        <div class="menu-sep"></div>
+        <!-- THE THREE ROWS STOPPED BEING INERT ON 2026-09-11. data-go is
+             the whole wiring: the delegated handler routes it and go()
+             already calls closeMenus(), so a row closes the menu it was
+             clicked in without a handler of its own. aria-current is set by
+             openDest(), the way #meter has always taken it. -->
+        <button class="menu-item" role="menuitem" data-go="account">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+          Account settings
+        </button>
+        <button class="menu-item" role="menuitem" data-go="billing">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          Plan &amp; billing
+        </button>
+        <button class="menu-item" role="menuitem" data-go="help">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+          Help
+        </button>
+        <div class="menu-sep"></div>
+        <!-- AND SIGN OUT IS STILL INERT, which is a stated omission rather
+             than an oversight. Authentication is deferred at platform.md §12
+             item 2 and the session that asked for these destinations named
+             three screens, not a session model. A route out of §12 is not a
+             licence to widen the item it was used on.
+             IT NOW SAYS SO — platform.md §10. It read as live and did nothing,
+             which is the press a founder blames themselves for. -->
+        <button class="menu-item" role="menuitem"
+                aria-disabled="true" aria-describedby="acctMenuInert">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+          Sign out
+        </button>
+        <!-- role="none", because a <p> is not a valid child of role="menu" and
+             a menu whose children are not all menuitems is a menu whose arrow
+             keys a screen reader may count wrong. The sentence still reaches
+             the founder: aria-describedby on the row above resolves its text
+             whatever role the element carries. -->
+        <p class="menu-note" id="acctMenuInert" role="none">Signing out is not ready yet.</p>
+      </div>
+    </div>
+  </header>

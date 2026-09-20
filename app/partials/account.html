@@ -1,0 +1,272 @@
+<!-- EXTRACTED from design/previews/terrain-prototype.html lines 4696-4964.
+     The prototype is the reference; where this and it disagree, it is
+     right and this is stale. platform.md 8.2. -->
+  <section class="view view-map view-acct" data-view="account" aria-label="Your account">
+    <main class="main">
+      <header class="page-head">
+        <div class="page-head-lines pg-head-lines">
+          <button class="pg-back" id="acctBack" type="button">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            <span id="acctBackLabel">Back</span>
+          </button>
+          <h1 class="t-display-2" id="acctTitle" tabindex="-1">Account settings</h1>
+        </div>
+      </header>
+
+      <div class="grid">
+
+        <!-- EVERY IDENTITY IS A BAR. §8's contract does not bend for the
+             founder's own name: inventing one reads as a live example, and
+             a settings page whose whole content is a name and an email is
+             where that temptation is strongest. The password is the one
+             exception and it is not one — a run of dots is what a password
+             looks like everywhere, so it is chrome rather than an identity
+             we are withholding. -->
+        <section class="card pref-card">
+          <div class="card-head">
+            <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            <h2 class="t-title">Your details</h2>
+          </div>
+          <div class="card-body pref-body">
+
+            <div class="pref">
+              <span class="t-label pref-label" id="acctNameL">Name</span>
+              <div class="pref-val" id="acctNameRest">
+                <span class="sk sk-h-body w-md" id="acctNameBar"></span>
+                <!-- THE SAVE HAD NO WORD ON IT. Its only feedback was the bar
+                     going one step darker to --skeleton-strong, which is a
+                     RENDER CHANGE and reads as one: a founder who looks away
+                     for the length of the beat comes back to a screen that
+                     says nothing happened. §6's rule is that a state may never
+                     be carried by a visual change alone, and #setRankChip is
+                     the precedent for the fix -- unhidden first, then written,
+                     because [hidden] keeps a region out of the accessibility
+                     tree and content set while it is hidden is a mutation of
+                     something that is not there. The bar keeps saying CHANGED;
+                     this says SAVED, which is the half the bar cannot. -->
+                <span class="chip" id="acctNameSaid" role="status" aria-live="polite" hidden></span>
+                <button class="btn btn-ghost" type="button" data-edit="acctName">Edit</button>
+              </div>
+              <!-- .pref-val-col, matching the email row: a field that can be
+                   refused needs somewhere under it for the sentence saying so,
+                   and a save can now be refused on both rows. -->
+              <div class="pref-val pref-val-col" id="acctNameEdit" hidden>
+                <div class="pref-editrow">
+                  <input class="fld" id="acctNameFld" type="text" autocomplete="name" aria-labelledby="acctNameL" aria-describedby="acctNameFail">
+                  <span class="pref-edit">
+                    <button class="btn btn-secondary" type="button" data-save="acctName">Save</button>
+                    <button class="btn btn-ghost" type="button" data-cancel="acctName">Cancel</button>
+                  </span>
+                </div>
+                <p class="fld-msg" id="acctNameFail" hidden></p>
+              </div>
+            </div>
+
+            <div class="pref">
+              <span class="t-label pref-label" id="acctMailL">Email</span>
+              <!-- It read "Sign-in address, and where anything you switch on below is
+                   sent" until 2026-09-12, and there is nothing below it to switch
+                   on any more — the Notifications card is deleted. It points at
+                   the billing address instead, which is the mirror of what that
+                   row already says about this one. -->
+              <p class="pref-help">Where you sign in. Receipts go to a separate billing address, on Plan &amp; billing.</p>
+              <div class="pref-val" id="acctMailRest">
+                <span class="sk sk-h-body w-lg" id="acctMailBar"></span>
+                <span class="chip" id="acctMailSaid" role="status" aria-live="polite" hidden></span>
+                <button class="btn btn-ghost" type="button" data-edit="acctMail">Edit</button>
+              </div>
+              <div class="pref-val pref-val-col" id="acctMailEdit" hidden>
+                <div class="pref-editrow">
+                  <input class="fld" id="acctMailFld" type="email" autocomplete="email" placeholder="you@company.com" aria-labelledby="acctMailL" aria-describedby="acctMailMsg acctMailFail">
+                  <span class="pref-edit">
+                    <button class="btn btn-secondary" type="button" data-save="acctMail">Save</button>
+                    <button class="btn btn-ghost" type="button" data-cancel="acctMail">Cancel</button>
+                  </span>
+                </div>
+                <!-- THE MESSAGE CARRIES THE FACT AND THE EDGE ONLY SAYS WHERE.
+                     It states the fix rather than the fault, and it is here
+                     beside the field rather than at the top of the card. -->
+                <p class="fld-msg" id="acctMailMsg" role="status" hidden>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                  <span>Use an address with an @ in it, so receipts can reach you.</span>
+                </p>
+                <!-- A SECOND MESSAGE RATHER THAN THIS ONE REWORDED, and the
+                     two say different kinds of thing: the one above is about
+                     what was typed and is answered by typing something else;
+                     this one is about a request that did not arrive and is
+                     answered by pressing Save again. Rewriting the element
+                     above would also have destroyed the validation copy the
+                     first time a save failed. -->
+                <p class="fld-msg" id="acctMailFail" hidden></p>
+              </div>
+            </div>
+
+            <div class="pref">
+              <span class="t-label pref-label">Password</span>
+              <div class="pref-val">
+                <span class="pref-dots" aria-label="Password set">••••••••••</span>
+                <button class="btn btn-ghost" type="button" id="acctPwd"
+                        aria-disabled="true" aria-describedby="acctInert">Change</button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- THE MASTHEAD CONTROL IS UNTOUCHED AND THIS IS ADDITIVE.
+             platform.md §6.1 and design-language.md §10.4 both forbid
+             DEMOTING the appearance control into the account menu, and say
+             a pass proposing it reverses a recorded decision. This does not
+             propose it: the three-state control is still on the bar, at
+             every width, on every surface. A second control over one value
+             is not a demotion of the first.
+
+             AND IT NEEDS NO JS. applyTheme() already syncs aria-pressed
+             across $$('[data-theme-set]') and binds a click to each, so a
+             second set of buttons carrying the same attribute joins the
+             existing control rather than shadowing it. One value, one
+             writer, two places to press. -->
+        <section class="card pref-card">
+          <div class="card-head">
+            <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8a2.83 2.83 0 0 0 4 4 4 4 0 1 1-4-4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.9 4.9 1.4 1.4"/><path d="m17.7 17.7 1.4 1.4"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.3 17.7-1.4 1.4"/><path d="m19.1 4.9-1.4 1.4"/></svg></span>
+            <h2 class="t-title">Appearance</h2>
+          </div>
+          <div class="card-body pref-body">
+            <div class="pref">
+              <span class="t-label pref-label" id="acctThemeL">Theme</span>
+              <p class="pref-help">System follows the light or dark setting on this device. The control in the bar above does the same thing.</p>
+              <div class="pref-ctl">
+                <div class="seg theme-seg" role="group" aria-labelledby="acctThemeL">
+                  <button class="seg-btn" type="button" data-theme-set="light" aria-pressed="false">Light</button>
+                  <button class="seg-btn" type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+                  <button class="seg-btn" type="button" data-theme-set="system" aria-pressed="true">System</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ~~THE NOTIFICATIONS CARD~~ · DELETED 2026-09-12, one day old.
+             It held two switches and the first was "Email when a build
+             finishes", which was reported in review as simply FALSE:
+             Terrain does not send that mail, so the row was a control for
+             a capability that does not exist.
+
+             THE RULE THAT COMES OUT OF IT, because the mistake is a kind
+             and not an instance: A SWITCH IS A CLAIM THAT THE PRODUCT DOES
+             THE THING WHEN IT IS ON. Every other invented value on these
+             pages is a grey bar or a figure the reader is told is
+             illustrative — a control has no such marking, and nothing
+             about a toggle says "and this is a sketch". It was written as
+             a preference and it read as a feature.
+
+             The second switch (a renewal receipt) moved to Plan & billing,
+             directly under the billing address it would be sent to, which
+             is where it belonged in the first place: a receipt is billing,
+             not a notification. That left this card holding nothing.
+
+             THE RULING IT WAS BUILT TO ILLUSTRATE OUTLIVED THE CARD, AND
+             IT NOW OUTLIVES ITS SECTION TOO — the alert-versus-notification
+             test is not in the rewritten PRD, which carries filing alerts
+             only as platform.md §12 item 1. What it forbids still holds and
+             is worth restating rather than citing: 專利預警 is a product
+             someone subscribes to, and it may not arrive through a settings
+             page as a switch nobody chose.                                  -->
+
+        <!-- DELETE ONLY, AND THERE IS NO EXPORT ROW. Export is out BY
+             DECISION rather than by deferral — platform.md §12 item 7 records
+             the file half being put to the user on 2026-09-04 and declined —
+             so "download my data" is not a gap here, it is the decision
+             being kept. platform.md §12's IPC-in-export entry says it again: there is no
+             export in v1.
+
+             AND THE BUTTON IS NOT RED. §2 permits colour for a discrete
+             state; DANGEROUS is a judgement, not a state, and the only red
+             this system has means EXPIRED PATENT. What carries the weight
+             is the sentence in the confirm, which is stronger than a hue
+             the founder has to interpret. -->
+        <section class="card pref-card">
+          <div class="card-head">
+            <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg></span>
+            <h2 class="t-title">Your data</h2>
+          </div>
+          <div class="card-body pref-body">
+            <div class="pref">
+              <span class="t-label pref-label">Delete this account</span>
+              <p class="pref-help">Everything you have searched, built and saved goes with it.</p>
+              <div class="pref-ctl">
+                <button class="btn btn-secondary" type="button" id="acctDelBtn" aria-expanded="false" aria-controls="acctDel">Delete account</button>
+              </div>
+            </div>
+            <div class="dc" id="acctDel">
+              <div>
+                <div class="dc-in" id="acctDelIn" tabindex="-1" role="group" aria-labelledby="acctDelT" aria-describedby="acctDelS">
+                  <h3 class="t-label dc-title" id="acctDelT">Deleting this account</h3>
+                  <p class="dc-say" id="acctDelS">Every project, every version and every map you have built are removed <b>immediately</b>, and nobody can restore them afterwards. Points left in this quarter are cancelled rather than refunded.</p>
+                  <div class="dc-act">
+                    <!-- THE SAFE PATH CARRIES THE WEIGHT AND THE ACT IS THE
+                         QUIET ONE. With no red to spend, the only lever left
+                         is which button is affirmed — and giving the border
+                         to Delete made it the louder of the two, which is a
+                         nudge toward the irreversible thing. It is inverted:
+                         Keep is .btn-secondary, Delete is .btn-ghost, and
+                         what makes Delete unmistakable is its label and the
+                         sentence above it rather than its chrome.
+                         Neither is .btn-primary — a near-black fill is the
+                         one primary action of a surface, and the primary
+                         action of a settings card is never deletion. -->
+                    <button class="btn btn-secondary" type="button" id="acctDelNo">Keep account</button>
+                    <button class="btn btn-ghost" type="button" id="acctDelYes"
+                            aria-disabled="true" aria-describedby="acctInert">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                      Delete account permanently
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+      <!-- §10: one sentence for the surface, not one per control. The two
+           controls it names carry aria-describedby pointing here, so a
+           keyboard user meets the reason ON the control rather than having
+           to find this line. -->
+      <p class="inert-note" id="acctInert">Changing your password and deleting your account are not ready yet. Everything else on this page works.</p>
+      <p class="foot"><em>Powered by</em><img class="foot-mark foot-mark-light" src="../brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg" alt="Innovue" width="95" height="13"><img class="foot-mark foot-mark-dark" src="../brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg" alt="Innovue" width="95" height="13"></p>
+    </main>
+  </section>
+
+  <!-- ══ PLAN & BILLING ════════════════════════════════════════════════════
+       AND THE DIVISION OF LABOUR WAS WRITTEN BEFORE THIS SCREEN EXISTED.
+       platform.md §8.1: "A Plan & billing row exists in the profile menu
+       and is still undesigned (platform.md §14 keeps pricing open); this page is NOT
+       that screen. It answers WHAT DID I SPEND and never WHAT DO I PAY."
+
+       So this one answers what you pay and never what you spent. There is
+       no ring, no usage bars, no run breakdown and no second chart — the
+       one reference to spend is a sentence with a link at the end of it,
+       pointing at the page whose subject that is.
+
+       PRICING IS STILL OPEN AT platform.md §14 AND THE SCREEN SAYS SO RATHER THAN
+       GUESSING. The allowance is the points page's own figure, illustrative
+       like every figure here. THE PRICE IS `XXX` — not a number, and not a
+       skeleton bar either. A bar means "a real value, not ours to print";
+       this means "nobody has chosen one yet", and a screen that conflated
+       the two would be claiming a price exists somewhere. marketing.md §3's
+       three tier cards carry no numbers for the same reason.
+
+       THE PLAN NAME IS A BAR, and that is the load-bearing choice on this
+       screen. An allowance and a price are FIGURES, and every figure here
+       is illustrative. A tier NAME is a taxonomy — and the hardest-won rule
+       in CLAUDE.md is that a taxonomy survives having its numbers replaced.
+       Inventing Pro / Team / Enterprise would put a tier structure nobody
+       has decided into a public artifact, where it would read as settled.
+       The account menu's own plan line is already a bar; this matches it.
+
+       THE PLAN SHAPE IS IN ONE PLACE. platform.md §8.1 and §8.3 split what each screen may say about the allowance and the ring
+       "are in one place on purpose", and a second surface asserting an
+       allowance breaks that property unless it reads the same constant. It
+       does: PLAN, PLAN_PRICE and PLAN_PERIOD sit together in one block and
+       syncPlan() fills every span on this page from them.               -->

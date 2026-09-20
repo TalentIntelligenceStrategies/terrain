@@ -110,14 +110,26 @@ export const CODE = {
  *             status:'live'|'expired'|'pending'|null, score:number|null}} PatentRow */
 /** @typedef {{patents:PatentRow[], order:string[], matched:number}} PatentSet */
 
-/** The record · eleven identifiers, the abstract, and the claim set AS PUBLISHED.
- *  `claims` is an ARRAY, one entry per claim, never one blob: a patent numbers its
- *  claims and counsel is pointed at claim 4 by number. Nothing here may arrive
- *  INTERPRETED — no highlight offsets, no decode. */
-/** @typedef {{number:string|null, appno:string|null, kind:string|null, ipcMain:string|null,
- *             ipc:string[]|null, holder:string|null, inventors:string[]|null,
- *             filed:string|null, published:string|null, where:string|null,
- *             status:string|null, abstract:string|null, claims:string[]|null}} Record */
+/** The record · the title, eleven identifiers, the abstract, and the claim set AS
+ *  PUBLISHED. `claims` is an ARRAY, one entry per claim, never one blob: a patent
+ *  numbers its claims and counsel is pointed at claim 4 by number. Nothing here may
+ *  arrive INTERPRETED — no highlight offsets, no decode.
+ *
+ *  `title` WAS MISSING FROM THIS TYPEDEF AND THE RECORD PANE DRAWS IT. The list row
+ *  carries `skim` and the pane carries `title`, and they are the same string for the
+ *  same patent — but the pane receives a record and never an index, so it cannot
+ *  reach the row's copy. Found by building app/: the pane rendered a skeleton where
+ *  the prototype prints a title, and the only reason nothing looked broken is that a
+ *  bar is what every OTHER record draws there.
+ *
+ *  It is `string|null` like every other identity-shaped field, and null means the
+ *  bar — a patent whose title we decline to print is the ordinary case, not an
+ *  error. */
+/** @typedef {{title:string|null, number:string|null, appno:string|null, kind:string|null,
+ *             ipcMain:string|null, ipc:string[]|null, holder:string|null,
+ *             inventors:string[]|null, filed:string|null, published:string|null,
+ *             where:string|null, status:string|null, abstract:string|null,
+ *             claims:string[]|null}} Record */
 
 /* ─────────────────────────────────────────────────────────────────────────
  * THE PORTS. One per data-bearing row of components.md §1, named after it.

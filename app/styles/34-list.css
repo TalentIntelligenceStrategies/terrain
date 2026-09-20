@@ -1,0 +1,316 @@
+/* 34 · the list — platform.md §6.3
+ *
+ * EXTRACTED from the prototype. Four fields per row and no more; the year
+ * holds a column because a date sort over a column of grey bars is an order
+ * the founder cannot check. */
+
+/* ── drill-down slide-over · platform.md §6.6 ─────────────
+   ~~.scrim~~ DELETED 2026-09-15, WITH ITS ELEMENT AND ITS TOKEN. It outlived
+   the slide-over that dimmed the page, and the comment beside its markup then
+   kept it alive on a claim that was not true: "the account and project menus
+   still use it to catch an outside click". They do not and never did — both
+   close on a document-level listener, which is also what makes Escape and a
+   click on a third menu work. Nothing in the file referenced #scrim.
+
+   A DEAD ELEMENT IS NOT FREE. It was a fixed, full-viewport node at z-index 50
+   sitting over every surface, one visibility flip away from covering the
+   product, and the sentence defending it would have been the thing a later
+   session reasoned from. --scrim went with it: three definitions across the
+   light and dark blocks, read by exactly one rule. */
+.drill-close{color:var(--text-3);padding:var(--s-4);border-radius:var(--r-chip);display:flex;
+             transition:color var(--dur-1) var(--ease),background var(--dur-1) var(--ease),
+                        transform var(--dur-1) var(--ease)}
+.drill-close:active{transform:scale(.94)}
+.drill-row{padding:var(--s-16) 0;border-bottom:1px solid var(--border)}
+.drill-row:last-child{border-bottom:0}
+.drill-meta{display:flex;align-items:center;gap:var(--s-12);padding-top:var(--s-12);flex-wrap:wrap}
+
+/* ── THE YEAR HOLDS A COLUMN · 2026-09-11 ────────────────────────────────
+   It sat directly after the holder, whose bar width varies per patent (rec.w),
+   so twenty years landed at twenty different x positions. A COLUMN OF FIGURES
+   THAT DOES NOT ALIGN CANNOT BE SCANNED — and scanning is the entire reason
+   the year is on the row: it is what lets a founder see that the list
+   reordered.
+
+   THE AUTO MARGIN MOVES TO THE YEAR AND OFF THE CHEVRON, and that pair is the
+   whole rule. Adding one to the year alone left TWO auto margins on the line,
+   and flexbox splits free space evenly between them — so the year landed
+   halfway into the gap and still moved with the bar, at exactly half the
+   amplitude. Measured 57px on each side of a 114px gap, which is the tell.
+   One auto, on the leading edge of the trailing GROUP, and the year and the
+   chevron travel together.
+
+   THE FIGURES ARE ALREADY TABULAR — .fig is Inconsolata — so four digits
+   occupy one width and the column is true to the pixel rather than nearly. */
+.drill-meta>.fig{margin-inline-start:auto}
+.drill-meta>.fig~.drill-chev{margin-inline-start:0}
+
+/* ── the list's sort and filter · platform.md §6.3 ──────────────────────
+   MENUS RATHER THAN SEGMENTED CONTROLS, and that is a width decision before
+   it is a semantic one. A .seg lays every option out at once and costs their
+   full width; three sort options and five facets do not fit a 420px column,
+   and spending the column on the controls would push the list below the fold
+   on the surface the list IS.
+
+   THE TWO ROLES DIFFER because the two acts do — the same distinction §7
+   draws between a tablist and a group of aria-pressed buttons, one level
+   down. Sort is `menuitemradio`: one of N, exactly one selected. Filter is
+   `menuitemcheckbox`: each facet independently on or off.
+
+   CONCENTRIC. The menu is --r-inner (12) with --s-4 (4) of padding, so its
+   items take --r-control (8): 8 + 4 = 12. */
+.lm{position:relative;flex:0 0 auto}
+.lm-btn{display:inline-flex;align-items:center;gap:var(--s-6);height:30px;
+  padding:0 var(--s-10);border-radius:var(--r-control);
+  background:var(--surface);border:1px solid var(--border);
+  font-size:12.5px;font-weight:500;color:var(--text-1);white-space:nowrap;
+  transition:background var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
+.lm-btn:active{transform:scale(.97)}
+@media (hover:hover){ .lm-btn:hover{background:var(--surface-sunken)} }
+.lm-btn>svg{flex:0 0 auto;color:var(--text-3)}
+.lm-chev{transition:transform var(--dur-2) var(--ease)}
+.lm.is-open .lm-chev{transform:rotate(180deg)}
+/* HOW MANY FACETS ARE ON, as a figure and not a dot. A filtered list that
+   looks like an unfiltered one is the oldest bug in this pattern, and colour
+   alone may not carry it (§2) — so the count is a word-shaped fact sitting
+   inside the control that caused it. */
+.lm-count{display:inline-flex;align-items:center;justify-content:center;
+  min-width:17px;height:17px;padding:0 4px;border-radius:var(--r-pill);
+  background:var(--text-1);color:var(--text-inverse)}
+/* display:inline-flex outranks [hidden] on its own — the same reason .btn,
+   .said and .card each declare this. */
+.lm-count[hidden]{display:none}
+.lm-menu{position:absolute;top:calc(100% + var(--s-6));left:0;min-width:196px;z-index:35;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-inner);
+  box-shadow:var(--shadow-float);padding:var(--s-4);text-align:left;
+  transform-origin:top left;opacity:0;visibility:hidden;transform:translateY(-4px) scale(.97);
+  transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
+             visibility 0s linear var(--dur-2)}
+.lm.is-open .lm-menu{opacity:1;visibility:visible;transform:none;
+  transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
+             visibility 0s linear 0s}
+.lm-item{display:flex;align-items:center;gap:var(--s-10);width:100%;text-align:left;
+  padding:var(--s-8);border-radius:var(--r-control);font-size:13px;font-weight:500;
+  color:var(--text-2);transition:background var(--dur-1) var(--ease),
+             color var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
+.lm-item:active{transform:scale(.985)}
+@media (hover:hover){ .lm-item:hover{background:var(--surface-sunken);color:var(--text-1)} }
+.lm-item[aria-checked="true"]{color:var(--text-1)}
+/* the tick is ALWAYS IN THE BOX, at opacity 0 when unchecked, so nothing
+   reflows when a facet is turned on and the labels stay on one left edge. */
+.lm-tick{flex:0 0 16px;height:16px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-1);opacity:0;transition:opacity var(--dur-1) var(--ease)}
+.lm-item[aria-checked="true"] .lm-tick{opacity:1}
+.lm-group{font-size:10.5px;line-height:1.2;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--text-3);padding:var(--s-10) var(--s-8) var(--s-6)}
+.lm-group:first-child{padding-top:var(--s-6)}
+.lm-sep{height:1px;background:var(--border);margin:var(--s-4)}
+/* the list said nothing when a facet emptied it — the rows simply were not
+   there, which reads as a broken render rather than as your own filter. */
+.set-empty-f{padding:var(--s-24) var(--s-16);text-align:center}
+.set-list{padding:0}
+/* the row becomes a grid: controls, then the expandable body. The inline
+   padding is PERMANENT and holds the anchor rail — reserved in every state, so
+   nothing shifts when the rail comes and goes. */
+/* LOGICAL PROPERTIES, and the inline-end value is the whole fix. The row read
+   `padding:14px 0 14px 10px` — a trailing gutter of ZERO — so the relevance
+   score at the row's trailing edge sat flush against the card's border. It is
+   written as padding-inline start/end now, which is also what makes the rule
+   survive an RTL surface rather than putting the gutter on the star. */
+.set-row{position:relative;display:grid;grid-template-columns:auto 1fr;
+  align-items:start;gap:var(--s-16);
+  padding-block:var(--s-20);padding-inline:var(--s-10) var(--s-16);
+  border-bottom:1px solid var(--border)}
+.set-row:last-child{border-bottom:0}
+/* THE ANCHOR RAIL — what the founder starred, while the list is flat.
+   It hands off to the band: present only when .is-ranked is absent, because
+   inside a band headed "what you starred" a rail on every row restates the
+   heading. IT IS NOW THE ONLY RAIL ON THIS SURFACE, and that is the point:
+   until 2026-09-11 the row open in the record carried an identical one ~48px
+   in, and two identical marks meaning different things is not a distinction,
+   it is a thing the reader has to be told. The two states are now different
+   KINDS of mark — a rail for what you starred, a surface for what is open —
+   so they read independently on a row that is both. */
+.set-wrap:not(.is-ranked) .set-row[data-starred]::before{content:'';
+  position:absolute;inset-block:var(--s-20);inset-inline-start:0;width:2px;
+  border-radius:1px;background:var(--text-1)}
+/* THE OPEN ROW — what is showing in the record. A surface rather than a mark,
+   which is not an invention here: .proj[aria-current] and .meter[aria-current]
+   in the masthead menus already say "this is the current item in a list" with
+   exactly this token, and .rival-row[data-filtered] says it on the pane. No
+   hue, no new token, and it survives the re-rank because being open is
+   independent of the band (hence no :not(.is-ranked) qualifier). */
+.set-row[data-open]{background:var(--surface-sunken)}
+/* THE BAND — the settled state's structure, rendered only under .is-ranked.
+   A statement of what the founder did, never a verdict on the rows below it
+   (platform.md §6.4), which is why the second heading names the ORDER and not
+   the patents: "ranked around it", not "closest matches". */
+/* THE HEADINGS ARRIVE AFTER THE ROWS LAND, and the reason is only visible in
+   slow motion: they are new nodes with no previous position, so they snapped to
+   their final places while the rows were still flying — "Ranked around it"
+   overlapping the very row it labels. Two beats instead of one: the rows move,
+   then the structure that describes them appears on a list that has settled.
+   Driven inline from setReorder, the same way the FLIP is, so no state class
+   leaks out to the paging paths where the headings already exist — and by
+   CLEARING an inline opacity rather than setting one, so the heading is opaque
+   by declaration and a transition that never ticks costs nothing (§6). */
+.set-band{margin:0;padding:var(--s-20) 0 var(--s-10) var(--s-10);
+  border-bottom:1px solid var(--border);
+  transition:opacity var(--dur-2) var(--ease)}
+.set-band:first-child{padding-top:var(--s-4)}
+.set-row .drill-row{padding:0;border-bottom:0;min-width:0}
+.set-ctl{display:flex;align-items:center;justify-content:center;
+  width:32px;height:32px;margin-top:2px;border-radius:var(--r-chip);color:var(--text-3);
+  /* transform was missing from this list while :active below needed it, so the
+     one control on this surface that carries the founder's only input was also
+     the only one whose press snapped. .btn, .suggest, .drill-close, .lm-btn,
+     .set-more-btn and .pg-back all name it. */
+  transition:color var(--dur-1) var(--ease),background var(--dur-1) var(--ease),
+             transform var(--dur-1) var(--ease)}
+.set-ctl:active{transform:scale(.94)}
+/* the star — outline to filled, no hue. The fill IS the encoding, so the fill
+   is the thing that has to ease. It did not: the base was `fill:none` and
+   none → currentColor is not an animatable pair, so the declaration below was
+   a no-op and only the parent's colour moved. `transparent` renders exactly as
+   `none` here and interpolates. */
+.set-star svg{fill:transparent;transition:fill var(--dur-1) var(--ease)}
+.set-ctl.set-star[aria-pressed="true"]{color:var(--text-1)}
+.set-ctl.set-star[aria-pressed="true"] svg{fill:currentColor}
+.set-row[data-starred] .drill-toggle .sk:first-child{background:var(--skeleton-strong)}
+.set-more{display:flex;align-items:center;gap:var(--s-12);
+  padding:var(--s-14) var(--s-20);border-top:1px solid var(--border)}
+.set-more .spacer{flex:1 1 auto}
+/* display:flex outranks [hidden] here for the same reason .btn does */
+.set-more[hidden]{display:none}
+.set-more-n{margin:0;font-size:12.5px;line-height:1.4;color:var(--text-3)}
+/* NO BORDER AND NO FILL. Its placement zone is what marks it as a control —
+   the trailing edge of the list's own foot, which is the one place on this
+   surface an action about the list can sit. The hover ground is the whole
+   affordance, and the negative trailing margin lets the padding exist
+   without pushing the label off the column's own rule. */
+.set-more-btn{display:inline-flex;align-items:center;gap:var(--s-6);flex:0 0 auto;
+  padding:var(--s-6) var(--s-8);margin-inline-end:calc(-1 * var(--s-8));
+  border-radius:var(--r-control);font-size:13px;font-weight:500;color:var(--text-2);
+  transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease),
+             transform var(--dur-1) var(--ease)}
+.set-more-btn:active{transform:scale(.97)}
+.set-more-btn svg{color:var(--text-3);flex:0 0 auto}
+.set-more-btn[hidden]{display:none}
+@media (hover:hover){
+  .set-more-btn:hover{background:var(--surface-sunken);color:var(--text-1)}
+  .set-more-btn:hover svg{color:var(--text-2)}
+  /* the hover fill is what drew the pill round the loader, so it is refused
+     for the length of the wait rather than merely overridden elsewhere */
+  #setMore[data-waiting]:hover{background:none}
+}
+/* .set-foot is gone — 2026-09-10. Its note moved into the heading's popover
+   and its button into .set-cta above the list; .set-cta went the same way on
+   2026-09-11 and the button is in .set-bar now, so that note has outlived two
+   homes and the popover has ended up holding both halves. .set-note survives
+   because the two empty states still use it. */
+.set-note{font-size:12.5px;line-height:1.5;color:var(--text-3);margin:0;flex:1 1 200px}
+
+/* ── the star's prompt ───────────────────────────────────────────────────
+   THE STRIP IS GONE, 2026-09-11. It was a grid-template-rows collapse holding
+   a sentence and the re-rank button, opening the moment a star made the button
+   live. The button is in .set-bar now and the sentence is in the heading's
+   popover. What the strip did that mattered — a consequence on screen the
+   moment you star — the button does by ARRIVING, and it arrives somewhere the
+   founder is already looking rather than in a region of its own.
+   *The cost, named: the strip's collapse handed off to .set-run in the same
+   frame, which read as the prompt becoming the work. The beat still opens; it
+   just no longer has anything closing as it does.* */
+
+/* ── the re-baseline panel · TWO states ────────────────────
+   rest -> running -> rest. IT WAS THREE, and the third is deleted 2026-09-11.
+   The settled state held a statement — "N patents moved. What you starred is
+   now at the top — and what the views count has not changed, only the order."
+   — in a permanent sunken band above the list.
+
+   WHY IT WENT, and the reasons compound rather than repeat:
+   1. THE FIGURE WENT CONSTANT. It counted positions that changed, which was a
+      real measurement while the re-rank only hoisted the starred rows past
+      their neighbours; now that it re-sequences the whole list it reads 122 of
+      124 every time. A number that never varies is a label wearing a
+      measurement's clothes.
+   2. THE DISCLOSURE HAS A HOME ALREADY. "What the views count has not changed,
+      only the order" was documented as un-relocatable — true only just after a
+      re-rank, so it could not follow the standing note into the heading's
+      popover in 2026-09-10. But the popover's own re-rank paragraph ends "No
+      patent enters or leaves; only the sequence changes", which is that clause,
+      stated durably, about this exact control. It was carrying a fact it had
+      stopped being the only carrier of.
+   3. THREE STANDING CUES SURVIVE IT, and none of them is a transient band: the
+      rank chip in the heading, the two band headings over the rows, and
+      `Restore the original order` arriving in the bar. §6's rule is that motion
+      may never be the only thing carrying a state — it isn't.
+
+   SO THE BEAT STILL OPENS AND NOW IT CLOSES. The running line no longer
+   resolves into a result in place; it collapses, and what is left on screen is
+   the reordered list with the chip above it.
+
+   THE ENTER AND THE EXIT ARE DIFFERENT DURATIONS, which is why the base rule
+   carries the exit and the state class overrides it — §6 says exit is faster
+   than enter everywhere, not only on the view swap. */
+.set-run{display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows var(--dur-2) var(--ease)}
+.set-wrap.is-running .set-run{grid-template-rows:1fr;transition-duration:var(--dur-3)}
+.set-run>div{overflow:hidden;min-height:0}
+/* symmetric padding. It was symmetric because the settled band was PERMANENT
+   and asymmetry would have moved every row the instant the state changed,
+   mid-FLIP. There is no settled band now and the reason is simpler: this is a
+   beat passing through, and a band that is only ever in transit has no edge to
+   favour. */
+.set-run-in{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap;
+  padding:var(--s-14) var(--s-20);font-size:13px;color:var(--text-2)}
+.set-run-in .spacer{flex:1 1 auto}
+/* swapped behind a fade, never retyped in place: a word changing letter by
+   letter in a line reads as a glitch rather than as a state change.
+   THE BLUR IS THE SAME ONE .cmp-status CARRIES and for the same reason: the two
+   sentences are different lengths, so a bare opacity swap reflows the line and
+   reads as two strings trading places rather than one statement changing. */
+.set-run-say{margin:0;flex:1 1 220px;
+  transition:opacity var(--dur-1) var(--ease),filter var(--dur-1) var(--ease)}
+.set-run.is-swapping .set-run-say{opacity:0;filter:blur(2px)}
+/* the indicator belongs to the running state, and its ABSENCE is what says the
+   beat has landed — §2 leaves no hue to say it with. opacity rather than
+   display, so the sentence does not jump 26px left when it goes. */
+.set-run-in .sweep{opacity:0;flex:0 0 auto;
+  transition:opacity var(--dur-1) var(--ease)}
+.set-wrap.is-running .set-run-in .sweep{opacity:1}
+/* THE SETTLED TREATMENT IS DELETED with the state it dressed — it was
+   `--surface-sunken` under the band and `--text-1` on the statement, "fill,
+   weight and a word, the three channels §2 leaves open". Nothing reads
+   .is-ranked in this panel now. The class itself is untouched and still
+   load-bearing: it hands the band headings in and the anchor rails out. */
+/* the running beat OWNS THE CARD. pointer-events was on .set-split alone, so
+   Re-rank and Build the map sat at 45% opacity and stayed clickable — and
+   every control on the bar calls renderSet() on the list being reordered. */
+.set-wrap.is-running .set-bar,.set-wrap.is-running .set-split{opacity:.45;pointer-events:none;
+  transition:opacity var(--dur-2) var(--ease)}
+
+/* ── THE BAND'S OTHER ENDING · platform.md §9.1, 2026-09-15 ────────────────
+   §9.1 gives a re-rank, a sort and a filter ONE row and one treatment: "the
+   list as it was, and a sentence saying the order did not change". So the
+   failure is not a .fail block -- there is no region to put one in, because
+   nothing was emptied and nothing is missing. It is the band, holding open on
+   the sentence it was already the host for.
+
+   ***AND THE BAR IS NOT DIMMED, WHICH IS THE WHOLE DIFFERENCE FROM .is-running
+   ABOVE.*** The rule above exists because every control on the bar calls
+   renderSet() on a list that is mid-reorder. Nothing is mid-anything here --
+   the operation is over and it did not happen -- and the bar is where the
+   founder retries: Sort, Filter and Re-rank are the three ways back. Dimming
+   the recovery is the one thing this state may not do.
+
+   NO SWEEP EITHER, and it comes free: the indicator is declared on
+   .is-running alone, so a band that is failed rather than running has no
+   moving mark in it. §6 -- an indicator's ABSENCE is what says the beat
+   stopped. */
+.set-wrap.is-failed .set-run{grid-template-rows:1fr;transition-duration:var(--dur-3)}
+/* .fld-msg's shape a third time, as a span because .set-run-say is a <p> and a
+   <div> inside one is not markup. Full ink on the sentence: §7 gives failure
+   the assertive register, and the band's resting --text-2 is the colour of a
+   line that narrates. */
+.run-fail{display:flex;align-items:flex-start;gap:var(--s-6);color:var(--text-1)}
+.run-fail svg{flex:0 0 16px;margin-block-start:var(--s-2);color:var(--text-2)}

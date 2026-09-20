@@ -1,0 +1,386 @@
+/* 35 · the record — platform.md §6.6
+ *
+ * EXTRACTED from the prototype. Eleven identifiers, the abstract and the claim
+ * set as published. The claim grid, the tabular numeral and the end-aligned
+ * number belong to the claim, not to its content. */
+
+/* ── the record, over the right pane · platform.md §6.6 ────────────────────────────
+   THE ~200px PEEK IS THE SPEC, not a margin. It is what keeps the record
+   legible as "this came from there" rather than as "this replaced that",
+   and it is platform.md §11's own mitigation for the cost of a record over a map
+   implies the map responded. The LEFT list is never covered. */
+/* IT FLOATS OVER THE VIEWS, it does not replace them — so it is a CARD in the
+   pane's own grammar rather than a panel bolted to the pane's edge. Three
+   things carry the depth, all from tokens that already exist:
+
+     · --r-shell (20) rather than --r-widget (16). The scale already has the
+       step above the widget and --r-shell is by name the outermost container;
+       a larger radius on a larger, nearer object is optically correct. Nothing
+       off-scale — §4 forbids inventing a step to reach a rounder number.
+     · --shadow-float, whose own definition in §5 is "anything that floats free
+       of the page, over content it does not push aside… the record over the
+       right pane". That sentence was written for this.
+     · A HAIRLINE ON ALL FOUR SIDES, and it was tried the other way first.
+       The card shipped borderless for one pass, on the rule that shadows are
+       for elevation and borders for structure. MEASURED IN DARK, the leading
+       edge was #1A1A1A card against #1A1A1A widget with a #181818 gutter
+       between them — a two-level step down almost the whole height, which is
+       invisible. --shadow-float is downward-biased with a -6px spread, so it
+       contributes almost nothing at a vertical edge, and an elevation shadow
+       needs a background that RECEDES: this card floats over other cards of
+       its own value, not over the ground. The border is doing structure here,
+       not faking depth, which is the case the rule keeps borders for — and it
+       is what §5 means by "elevation is a hairline, not a shadow". Both modes,
+       never forked by theme.
+
+   Inset by --s-16 on three sides, which is not an arbitrary margin: it is the
+   pane's own rhythm, the same step .panescroll pads by and .grid gaps by, so
+   the record's top and trailing edges line up with the widgets underneath. The
+   LEADING edge stays at 200px because that is the peek, and the peek is the
+   spec (platform.md §6.6) rather than a margin. */
+.rec{position:absolute;z-index:4;
+     top:var(--s-16);right:var(--s-16);bottom:var(--s-16);left:200px;
+     background:var(--surface);border:1px solid var(--border);
+     border-radius:var(--r-shell);overflow:hidden;
+     box-shadow:var(--shadow-float);display:flex;flex-direction:column;
+     /* +--s-16 because the card no longer touches the trailing edge:
+        translateX(100%) alone would park a 16px strip of it in view. */
+     transform:translateX(calc(100% + var(--s-16)));visibility:hidden;
+     /* EXIT IS FASTER THAN ENTER — §6. This is an overlay arriving from an
+        edge: two states swapping, the founder has already decided, and
+        --dur-2 out is the rule. (The exception it used to be stated against
+        was the dock, whose close matched its open because a MORPH reverses
+        along its own path. The dock is gone; the rule is unconditional.) */
+     transition:transform var(--dur-2) var(--ease-drawer),
+                visibility 0s linear var(--dur-2)}
+.rec-open .rec{transform:none;visibility:visible;
+     transition:transform var(--dur-4) var(--ease-drawer),visibility 0s linear 0s}
+/* ~~SWAPPED BEHIND A FADE~~ — the fade is gone, 2026-09-14, and the rule with
+   it. `.rec.is-swapping .rec-body{opacity:0;filter:blur(2px)}` styled a 120ms
+   crossfade for the founder picking a second patent without closing the first.
+   That duration was right for text trading places and wrong for a record
+   arriving, so the body now waits on a loader instead (platform.md §5) and NOTHING ADDS
+   THE CLASS ANY MORE.
+
+   Deleted rather than left, because a rule nothing can match is a rule the
+   next reader has to disprove. The reasoning it carried is not lost — the
+   container still does not move, and that rule is in §6 where it belongs. */
+.rec-head{display:flex;align-items:center;gap:var(--s-12);flex:0 0 auto;
+          padding:var(--s-16) var(--s-20);border-bottom:1px solid var(--border)}
+.rec-head h2{flex:1;min-width:0;margin:0}
+.rec-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+          padding:var(--s-20);
+          transition:opacity var(--dur-1) var(--ease),filter var(--dur-1) var(--ease)}
+/* [hidden] has to be spelled out, the same as .card, .set-more and every other
+   element in this file that carries it — the author display:flex above outranks
+   the UA rule, so without this the attribute does nothing for layout AND the
+   forced reflow in openRecordOverlay would have nothing to commit. */
+.rec[hidden]{display:none}
+/* below the container breakpoint the peek is a sliver rather than a
+   reassurance, so the record is full width and there is nothing to peek at —
+   and with nothing to peek at there is nothing for it to float OVER, so the
+   inset and the radius go too. A 16px inset on a 400px pane is the same sliver
+   this breakpoint exists to refuse. */
+@media (max-width:900px){
+  /* and the hairline goes with them. Filling the pane flush, the record's own
+     border would double the chrome already there — the list column's
+     border-bottom sits one pixel above the record's border-top. The border
+     exists to separate the card from surfaces of its own value; flush to the
+     pane there are none. */
+  .rec{top:0;right:0;bottom:0;left:0;border:0;border-radius:0;
+       transform:translateX(100%)}
+}
+
+/* the lit cell · platform.md §6.5. A ring on the cell's own edge rather than a fill:
+   the fill is the density tone and it means the count, so a selection cannot
+   enter it — the same rule the column mark already follows (design-language
+   §3.7). No hue; there is no accent. */
+.mx-cell[data-filtered]{box-shadow:inset 0 0 0 2px var(--text-1);position:relative;z-index:1}
+.rival-row[data-filtered]{background:var(--surface-sunken)}
+.rival-row[data-filtered] td:first-child{box-shadow:inset 2px 0 0 var(--text-1)}
+
+/* the engine's relevance score · brief.md §4, platform.md §11 conflict 1.
+   LAST IN THE ROW AND IN --text-3, which is the whole of the design decision:
+   Innovue's surface puts it top-right where it is the most prominent thing
+   after the title, and here it is the quietest thing on the row. An ordering
+   the founder did not ask for should not outrank the four fields §7 caps the
+   row at. tabular, so a column of them does not jitter. */
+/* TOP RIGHT OF THE TITLE since 2026-09-10, and it used to be last in the row.
+   The old placement was argued from Terrain not endorsing an ordering the
+   founder did not ask for. What changed is that brief.md §4 removed the
+   prohibition on printing it at all, so it is Innovue's number rendered as
+   Innovue renders it — and burying a figure we have decided to print is a
+   half-measure that reads as neither. It stays --text-3 and it still carries
+   NO WORD beside it (platform.md §6.6): the number is a fact about the ranking, an
+   adjective would be ours. */
+.drill-head{display:flex;align-items:flex-start;gap:var(--s-16)}
+.drill-title{flex:1;min-width:0}
+/* the one populated row's title. Body scale rather than the 15px .t-title,
+   because a list row is scanned and not read — and --text-1 at 500 is what
+   the two 12px bars it replaces were standing in for. */
+.drill-name{display:block;font-size:13.5px;line-height:1.45;font-weight:500;
+  color:var(--text-1)}
+/* LABELLED, AND STACKED — 2026-09-10. It was a bare four-decimal figure with
+   its only explanation in a title= attribute, which is a tooltip nobody
+   opens. The label is the micro-above-the-value idiom this file already uses
+   for the gate's read-back and for every table header, and it is stacked
+   rather than inline because inline would put two type sizes on the skim's
+   own first line and compete with it.
+
+   "Score" NAMES WHAT THE NUMBER IS. It is not a word about quality, so
+   platform.md §6.6's rule is untouched — that rule forbids "strong match", "best fit"
+   and "most relevant", which are readings Terrain would be authoring. The
+   heading's info popover carries what the score MEANS. */
+.drill-score{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;
+  gap:1px;color:var(--text-3);padding-top:1px}
+.drill-score-k{color:var(--text-3)}
+/* the holder on the demonstration row. It reads at the SAME WEIGHT AS THE
+   YEAR beside it — --text-1 at 12.5px — because it is a field of the row and
+   not a note about one, and a muted slot made the one populated row look
+   like it had a gap in it.
+
+   URBANIST, NOT INCONSOLATA. It matches the year's size and colour, not its
+   typeface: .fig is for numerals and a company name is text. */
+.drill-holder{font-size:12.5px;line-height:1.4;color:var(--text-1)}
+/* the score sits at the TRAILING EDGE of the meta row — margin-inline-start,
+   not margin-left, because the row mirrors under RTL like everything else. */
+.pn-score{color:var(--text-3);display:inline-flex;align-items:baseline;
+  gap:var(--s-4);margin-inline-start:auto}
+
+/* ── the field list · platform.md §6.6 ─────────────────────
+   THIS WAS THE HANDOFF, and it was a row-level disclosure: the row expanded
+   downward onto five identifiers and stopped, because a detail page was
+   deferred. The pane below supersedes it -- the same five fields are five of
+   its eleven, rendered by the same function -- so the row is a single control
+   again and the <dl> moved into the pane. Nothing it showed became
+   unreachable; platform.md §6.3's "the row expands in place" is amended with this pass.
+
+   IT IS STILL A <dl>, because that is what it is.                        */
+.drill-toggle{display:block;width:100%;text-align:left;padding:0}
+.drill-chev{color:var(--text-3);display:flex;flex:0 0 auto;
+      margin-inline-start:auto;transition:transform var(--dur-1) var(--ease)}
+.hf{margin:0;padding:var(--s-12) var(--s-14);background:var(--surface-sunken);
+      border-radius:var(--r-inner);display:grid;grid-template-columns:auto 1fr;
+      gap:var(--s-10) var(--s-14);align-items:center}
+.hf dt{white-space:nowrap}
+.hf dd{margin:0;min-width:0;display:flex;flex-wrap:wrap;align-items:center;
+      gap:var(--s-6) var(--s-8)}
+
+/* ── the patent record · platform.md §6.6 ─────────────────
+   THE PANE, built 2026-09-09. platform.md §12's patent-detail-page entry was un-deferred on
+   the session's explicit ask, and §6.6 closed with it -- in favour of the
+   counter-case platform.md §6.6 ITSELF recorded rather than against it: "a founder who
+   cannot see anything about a patent that worries them may go looking in Google
+   Patents, which is a worse experience Terrain does not control." That section
+   was marked Open. This is the decision it was waiting for.
+
+   THE RULE IT REPLACES IS THE POINT, because the old one could not be applied.
+   "Terrain must not answer does this patent block me, and a claim-reading
+   interface implies it can" conflates showing the evidence with delivering the
+   verdict. A claim is the PUBLIC TEXT of a granted patent; reproducing it is
+   what every patent office does. The judgement is the inference. So:
+
+       TERRAIN RENDERS THE RECORD.
+       TERRAIN DOES NOT RENDER AN OPINION ABOUT THE RECORD.
+
+   The record -- claims, abstract, identifiers -- is here. An opinion is not:
+   match highlighting says "this bit is about you", and a plain-English decode
+   is a paraphrase and therefore an interpretation. Those stay out.
+
+   THE RELEVANCE SCORE CROSSED THAT LINE ON 2026-09-10 and is printed. It sat
+   with "strong match" in the forbidden column as though the two were one
+   thing, and they came apart under the rule's own question: is this IN the
+   record, or a READING of the record? A number the engine computed is
+   neither -- it is the engine's own ordering, and the rule had no cell for
+   it. "Strong match" is Terrain authoring a judgement and stays out; 0.8955
+   is Terrain not deleting one. brief.md §4 carries the decision, because the
+   sentence it changes is positioning.
+
+   NOTHING LEGIBLE ABOUT A REAL PATENT SHIPS. Every identifier, the abstract and
+   every claim render as bars; only labels, the closed enumerations and the
+   disclaimer are real English. §8's contract needs no third exception for this,
+   which is the test that it is the right shape.
+
+   ONE RENDERER, TWO HOSTS. The five-field handoff is now a SUBSET VIEW of this
+   same record through the same field function, so §7's "if the two ever diverge
+   that is a bug, not a variant" holds by construction instead of by care.   */
+/* NO ENTRANCE OF ITS OWN, and its removal is the fix for the second half of
+   the jump. .pn used to carry `animation:pn-in var(--dur-2) var(--ease) both`
+   — 200ms, 4px of Y, on --ease — INSIDE a container travelling 320ms on
+   --ease-drawer. Two curves, two durations, one object: at a tenth speed the
+   text visibly settles inside a box that is still moving. A drawer's contents
+   do not fade in after the drawer opens; content already inside a sliding
+   container is the honest model. It was also a KEYFRAME, so clicking a second
+   row mid-slide restarted it from zero while the container transition
+   retargeted smoothly — the two disagreeing about where they were.
+   The record has one host, so this ran nowhere else and is deleted rather
+   than scoped off. Two keyframes are left in the file, sweep and sweepx. */
+.pn{display:flex;flex-direction:column;min-width:0}
+.pn-head{display:flex;align-items:flex-start;gap:var(--s-12);
+  padding-bottom:var(--s-14);border-bottom:1px solid var(--border)}
+.pn-head-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-10)}
+.pn-title{margin:0;outline-offset:3px}
+.pn-name{display:flex;flex-direction:column;gap:var(--s-6)}
+/* THE DEMONSTRATION PATENT'S REAL TITLE, 2026-09-11. It sits where the two
+   title-height bars sit and matches their weight, but ONE STEP DOWN from the
+   17px `.pn-title` above it: "Patent record" names what the pane is and the
+   patent's own title is its subject, so equal size would make the head read as
+   two competing headings. 15px is the bars' own height, so the populated pane
+   and an unpopulated one are the same shape. */
+.pn-name-real{font-size:15px;line-height:1.4;font-weight:500;color:var(--text-1);
+  text-wrap:pretty}
+.pn-meta{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap}
+/* the patent number is a FIGURE and takes Inconsolata like every other one
+   — it is the one field on this row a founder retypes or pastes, and a
+   proportional face is where a 1 and an l stop being distinguishable. */
+.pn-no{color:var(--text-2)}
+.pn-body{display:flex;flex-direction:column;gap:var(--s-24);padding-top:var(--s-16)}
+.pn-sec{display:flex;flex-direction:column;gap:var(--s-12)}
+.pn-sec-h{display:flex;align-items:baseline;gap:var(--s-8);margin:0}
+.pn-lines{display:flex;flex-direction:column;gap:var(--s-8)}
+/* REAL TEXT WHERE THE BARS WERE. 1.6 is the bars' own rhythm, so a
+   populated record and a skeleton one run at the same lines-per-inch and
+   read as one component in two states rather than as two components. */
+.pn-prose{margin:0;font-size:12.5px;line-height:1.6;color:var(--text-1);
+  text-wrap:pretty}
+/* the claims. An <ol> because that is what a claim set is -- numbered, and the
+   numbers are cited by number. They carry their own figures rather than a
+   list-style marker so the numerals are Inconsolata and tabular like every
+   other figure in the product. */
+.pn-claims{margin:0;padding:0;list-style:none;
+  display:flex;flex-direction:column;gap:var(--s-16)}
+.pn-claim{display:grid;grid-template-columns:auto 1fr;gap:var(--s-12);align-items:start}
+.pn-cn{color:var(--text-3);padding-top:2px}
+/* the empty frame. It says what to do, and it does NOT say how many there are
+   to choose from or hint that any one of them matters more -- platform.md §6.4 and platform.md §6.3. */
+.pn-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:var(--s-8);min-height:220px;padding:var(--s-32) var(--s-24);text-align:center}
+.pn-empty svg{color:var(--text-disabled)}
+.pn-empty p{margin:0;font-size:13px;line-height:1.55;color:var(--text-3);max-width:34ch}
+
+/* ── the record composes, in reading order · 2026-09-11 ────────────────────
+   THIS REVERSES "a drawer's contents do not fade in after the drawer opens",
+   and the reversal is narrow rather than a repeal. §6's prohibition is now
+   "contents do not move WHILE their container is moving", and the fault it was
+   written for is untouched: `pn-in` was a 200ms KEYFRAME on --ease running
+   INSIDE a 320ms --ease-drawer container — two curves over two durations on
+   one object, overlapping, and restarting from zero when a second row was
+   clicked mid-slide. What replaces it is four TRANSITIONS on four objects that
+   start only after the container has stopped. Nothing overlaps and nothing is
+   a keyframe, so a reversal retargets smoothly.
+
+   FOUR GROUPS, and the order is the record's own: what this is, then how it is
+   identified, then what it says, then what it claims. NOT a reading of the
+   record — see platform.md §6.6, which had to rule on exactly that before
+   this could ship.
+
+   .rec-head IS NOT A GROUP and must never become one. Focus moves to #recTitle
+   on open, and §6 already records that a heading which cannot be seen fails
+   silently. A heading held at opacity:0 is that bug wearing opacity. The head
+   is present on frame one, which is also what keeps the card from reading as
+   an empty box while the body arrives.
+
+   TWO PROPERTIES, BOTH COMPOSITABLE. No blur: this is not a crossfade between
+   two strings, and filter:blur() over a subtree of shimmering skeleton bars
+   repaints the whole subtree every frame for the length of the reveal. */
+.pn-stage{opacity:0;transform:translateY(6px)}
+.rec-body .pn-stage{
+  transition:opacity var(--dur-3) var(--ease) var(--stage-delay,0ms),
+             transform var(--dur-3) var(--ease) var(--stage-delay,0ms)}
+/* the wait is the container's own duration, so nothing inside moves until the
+   card has stopped. 50ms is the thread's stagger and the only one in the
+   vocabulary; --i is set per group, the way .tmsg sets it. */
+.rec-body .pn-stage{--stage-delay:calc(var(--dur-4) + var(--i,0) * 50ms)}
+.rec-open .rec-body .pn-stage{opacity:1;transform:none}
+/* reopened inside REC_INSTANT_MS: revealed by the rule above, with nothing to
+   animate. The class is set before .rec-open so it is already in force on the
+   frame the transition would have started. */
+.rec-instant .rec-body .pn-stage{transition:none}
+
+/* ── the record's type hierarchy · 2026-09-11 ───────────────────────────────
+   The card had three levels of content and one level of type: the title bars,
+   the field values, the abstract lines and the claim lines were all
+   sk-h-body at 12px, so the patent's own title had no more presence than its
+   Number field. Seven changes, no field added or removed. */
+
+/* the section headings were t-micro, IDENTICAL to the eleven <dt> labels — a
+   heading and a leaf label rendering the same. Headings take t-label; the
+   <dt>s keep t-micro, so the levels separate without a new type role. */
+.pn-sec-h{font-size:13px;line-height:1.4;font-weight:500;
+          letter-spacing:0;text-transform:none;color:var(--text-2)}
+
+/* eleven fields in one undifferentiated block. Five clusters now — identity ·
+   classification · people · dates · where+status — grouped BY SPACE inside the
+   same <dl>, no rules added. 22px between against 10px within clears the 2x
+   that makes grouping read as grouping. The <dl> has ONE consumer and it is
+   always PN_ALL, so nth-of-type is unambiguous; if a second field set is ever
+   rendered through .hf, this becomes a class on the <dl> instead. */
+.hf dt:nth-of-type(4),.hf dd:nth-of-type(4),
+.hf dt:nth-of-type(6),.hf dd:nth-of-type(6),
+.hf dt:nth-of-type(8),.hf dd:nth-of-type(8),
+.hf dt:nth-of-type(10),.hf dd:nth-of-type(10){margin-block-start:var(--s-12)}
+
+/* the abstract's measure was uncapped: w-full bars in a ~820px card put real
+   abstract text near 130 characters a line against §4's 68ch. */
+.pn-sec:first-of-type .pn-lines{max-width:68ch}
+
+/* ── THE SCORE IS INLINE AGAIN, AND THE RULE IS NARROWER · 2026-09-12 ────
+   This stacked it — `flex-direction:column` — on the grounds that §7 says a
+   figure block puts its LABEL ABOVE, NEVER BESIDE. The rule is kept and it
+   is now scoped to what it was always describing: THE FIGURE BLOCK, a micro
+   label over an Inconsolata figure with an optional delta pill, which is a
+   thing you read on its own.
+
+   THE SCORE IN .pn-meta IS NOT ONE. It sits in a row of peers — a status
+   chip, an identifier, an ordering — and stacking one of three made the
+   shortest item the tallest, which is the opposite of what the rule is for.
+   A meta row is read across; a figure block is read at.
+
+   The figure block keeps the rule everywhere it actually applies: the points
+   page, the widgets, the deltas. design-language.md §7 carries the narrowing
+   and the 2026-09-11 record table records that this row of it was reversed. */
+
+/* claim numbers are tabular already but were left-aligned in an auto column,
+   so 1 and 15 started at the same x and ended at different ones. */
+.pn-cn{text-align:end;justify-self:end}
+
+/* and the chrome outranked the subject: <h2>The patent record</h2> at t-title
+   17/600 was the largest type on the card, sitting above a title rendered as
+   bars. Demoted to an eyebrow. It STAYS an <h2> and stays the focus target —
+   it is the pane's accessible name, because the title itself is a bar. */
+.rec-head h2{font-size:10.5px;line-height:1.2;font-weight:500;
+             letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.rec-head{padding-block:var(--s-12)}
+.set-listcol{min-width:0}
+/* THE TWO SPLIT LAYOUTS ARE GONE, and this is where their queries were.
+   Three @container blocks sat here styling .set-split-in, .set-pane,
+   .drill-split, .drill-pane, .drill-back and .drill-listcol: a results view
+   with a sticky detail pane, and a drilldown that collapsed to one pane at a
+   time with a way back.
+
+   NOT ONE OF THOSE SIX CLASSES EXISTS IN THE MARKUP. They were not queries
+   that never matched -- they were rules with no subject, left behind when
+   both surfaces were rebuilt. The drilldown became expanding rows
+   (.drill-toggle, .drill-open); the results view became the single
+   .set-listcol above. .set-split went the same way and is recorded further
+   down as "unmourned".
+
+   The standing note on .pref-card said these never ran because none of their
+   subjects declared a container, and that fixing them would change the
+   working surface's layout. BOTH HALVES WERE WRONG, and the second is why
+   they survived three passes: adding a container-type would have changed
+   nothing on screen, and neither does deleting them. A rule whose subject
+   does not exist cannot be tested by looking at the page.
+
+   design-language.md §7 carries what replaces them -- the breakpoints are
+   the viewport's, and .pref-card's is the one container query in the file. */
+/* THE SECOND RAIL IS GONE, and this is where it was. The row open in the
+   record used to carry a 2px --text-1 rail ~48px in, which was the SAME MARK
+   as the starred row's anchor rail at the row's outer edge — same width, same
+   radius, same ink, same height — told apart by position alone. That is a
+   distinction a reader has to be told, and in dark mode both resolve to
+   #F0F0F0, so the two read as one white bar. The open row now takes
+   --surface-sunken across its whole width (see .set-row[data-open] below),
+   which makes the two states different KINDS of mark rather than one mark at
+   two x-positions. aria-current is still the state; data-open is its visual
+   hook, the same way data-starred sits beside the star's aria-pressed. */

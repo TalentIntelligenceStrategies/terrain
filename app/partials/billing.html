@@ -1,0 +1,144 @@
+<!-- EXTRACTED from design/previews/terrain-prototype.html lines 4965-5105.
+     The prototype is the reference; where this and it disagree, it is
+     right and this is stale. platform.md 8.3. -->
+  <section class="view view-map view-acct" data-view="billing" aria-label="Your plan and billing">
+    <main class="main">
+      <header class="page-head">
+        <div class="page-head-lines pg-head-lines">
+          <button class="pg-back" id="billBack" type="button">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            <span id="billBackLabel">Back</span>
+          </button>
+          <h1 class="t-display-2" id="billTitle" tabindex="-1">Plan &amp; billing</h1>
+        </div>
+      </header>
+
+      <div class="grid">
+
+        <section class="card">
+          <div class="card-head">
+            <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+            <h2 class="t-title">Your plan</h2>
+            <button class="btn btn-secondary" type="button" id="billChange"
+                    aria-disabled="true" aria-describedby="billInert">Change plan</button>
+          </div>
+          <div class="card-body">
+            <span class="sk sk-h-title w-lg" style="margin-bottom:var(--s-12)"></span>
+            <!-- THESE TWO ARE WRITTEN BY renderBilling() ON EVERY OPEN, and the
+                 markup carries what it will write rather than something else.
+                 It shipped `6,000` and `$600` until 2026-09-12 — a comma the
+                 renderer does not use, and a price that had been rejected —
+                 and neither was ever seen on screen, because the renderer
+                 overwrote both before the view became visible.
+
+                 THAT IS THE FAULT, NOT A TIDY-UP: the published branch is
+                 HTML, and view-source on a public URL shows the markup and
+                 not the render. A number nobody agreed to does not stop being
+                 published by being invisible. The prototype has hit the
+                 two-places-one-renders trap once before, on the confirm
+                 card's lede and gate, and that one at least showed the wrong
+                 words to a reader. -->
+            <div class="plan-fig">
+              <span class="fig fig-l" id="billAllow">6000</span>
+              <span class="t-body" style="color:var(--text-2)">points a quarter</span>
+            </div>
+            <div class="plan-fig" style="margin-top:var(--s-8)">
+              <span class="fig fig-l" id="billPrice">$XXX</span>
+              <span class="fig fig-l fig-sub">/ quarter</span>
+            </div>
+            <p class="t-body" style="margin:var(--s-12) 0 0;color:var(--text-2)">Renews <span class="sk sk-h-body w-md" style="display:inline-block;vertical-align:-2px"></span></p>
+            <!-- A SENTENCE WITH A CONTROL AT THE END, not a card and not a
+                 meter. What was spent is the other page's whole subject; a
+                 second reading of it here would be the two screens platform.md §8.1
+                 separated growing back together. -->
+            <p class="plan-spent">
+              <span><span class="fig" id="billLeft">0</span> points left this quarter.</span>
+              <button class="btn btn-ghost" type="button" data-go="usage">See what you spent</button>
+            </p>
+          </div>
+        </section>
+
+        <section class="card pref-card">
+          <div class="card-head">
+            <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/></svg></span>
+            <h2 class="t-title">Payment method</h2>
+          </div>
+          <div class="card-body pref-body">
+            <div class="pref">
+              <span class="t-label pref-label">Card</span>
+              <div class="pref-val">
+                <span class="sk sk-h-body w-md"></span>
+                <button class="btn btn-ghost" type="button" id="billCard"
+                        aria-disabled="true" aria-describedby="billInert">Update</button>
+              </div>
+            </div>
+            <div class="pref">
+              <span class="t-label pref-label">Billing email</span>
+              <p class="pref-help">Where receipts go. Separate from your sign-in address.</p>
+              <div class="pref-val">
+                <span class="sk sk-h-body w-lg"></span>
+                <button class="btn btn-ghost" type="button" id="billMail"
+                        aria-disabled="true" aria-describedby="billInert">Update</button>
+              </div>
+            </div>
+            <!-- MOVED HERE FROM A NOTIFICATIONS CARD ON 2026-09-12, and the
+                 move is the argument: a receipt is BILLING, and the row it
+                 now sits under is the address it would be sent to. In a
+                 Notifications card it was a preference floating free of the
+                 thing it configures. Its neighbour there — "email when a
+                 build finishes" — was deleted outright as a claim the
+                 product cannot honour, which left that card empty. -->
+            <div class="pref">
+              <span class="t-label pref-label" id="billRcptL">Email a receipt when the plan renews</span>
+              <p class="pref-help" id="billRcptH">Sent to the billing address above, once a quarter. Nothing else goes there.</p>
+              <div class="pref-ctl">
+                <button class="sw" type="button" role="switch" aria-checked="true" aria-labelledby="billRcptL" aria-describedby="billRcptH"><span class="sw-knob"></span></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- A LIST, NOT A TABLE — §7's grammar, and .ur's rows unchanged.
+             Four dates, four amounts, four states. NO DOWNLOAD CONTROL: the
+             row opens an invoice rather than producing a file, which keeps
+             the 2026-09-04 decision intact rather than reasoning around it.
+             Every amount is the plan price, because a plan that renews at
+             one figure cannot bill four different ones — the invariant is
+             cheap to keep and its absence is the first thing a reader
+             notices. -->
+        <section class="card">
+          <div class="card-head">
+            <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/></svg></span>
+            <h2 class="t-title">Invoices</h2>
+          </div>
+          <div class="card-body">
+            <div id="billInv"></div>
+          </div>
+        </section>
+
+      </div>
+      <p class="inert-note" id="billInert">Changing your plan, updating your payment details and opening an invoice are not ready yet. The receipt switch works.</p>
+      <p class="foot"><em>Powered by</em><img class="foot-mark foot-mark-light" src="../brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg" alt="Innovue" width="95" height="13"><img class="foot-mark foot-mark-dark" src="../brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg" alt="Innovue" width="95" height="13"></p>
+    </main>
+  </section>
+
+  <!-- ══ HELP ══════════════════════════════════════════════════════════════
+       CONTACT-FIRST, and that is honest about a product with no
+       documentation site rather than a smaller version of one that has.
+       Nothing in any document specced a Help surface before this pass.
+
+       THE COMPOSER IS NOT REUSED, and the reason is the reason §5 has no
+       chat panel. .cmp is specced as "one component, one size" and its
+       identity is THE THING YOU TYPE YOUR IDEA INTO; a support field
+       wearing it would be a second conversational surface. This is a .ta —
+       a plain multiline field with a labelled Send button, sharing the
+       field's focus treatment and the composer's inert-until-typed rule,
+       and resembling it in neither shape nor chrome.
+
+       THE ANSWERS MAY NOT RESTATE LABELLING. design-language.md §7 says the
+       info popover carries explanation only, and the test is whether a
+       screenshot with no popover open still says what the founder is
+       looking at. A Help page that hoovered up captions would break the
+       same rule from the other side. So these three are things no surface
+       states — and the third is brief.md's locked positioning, which is the
+       single most valuable sentence anyone could read here.             -->

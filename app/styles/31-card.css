@@ -1,0 +1,220 @@
+/* 31 · cards — the widget card, the gate, the build block
+ *
+ * EXTRACTED from the prototype. The confirm card and the build block live in
+ * the THREAD rather than on a screen of their own, which is why they are here
+ * beside the widget card rather than in the conversation file. */
+
+/* ── the widget card ────────────────────────────────────────
+   design-language.md §7: surface, radius 16, one hairline, no shadow. Depth
+   is the ground↔surface step, never elevation.                            */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-widget);
+      display:flex;flex-direction:column;min-width:0}
+/* WRAPS. The head carries a title, a kind line, an info affordance and
+   sometimes a segmented control, and at a narrow pane they were overlapping
+   rather than reflowing — the kind line sat on top of the title. Nothing has
+   a fixed width and the row is allowed to become two. */
+.card-head{display:flex;align-items:center;gap:var(--s-8) var(--s-12);
+           flex-wrap:wrap;padding:var(--s-14) var(--s-20) var(--s-10)}
+.card-head h2{margin:0;flex:0 1 auto;min-width:0}
+.card-head .info{margin-left:auto}
+.strike{position:relative}
+.strike::after{content:"";position:absolute;left:0;top:50%;height:1px;
+               width:100%;background:var(--text-3)}
+
+/* ── the confirm card · platform.md §4, now in the thread ───
+   Bordered once. The two sections inside it carry no border of their own:
+   a card inside a card inside a column is the nesting impeccable bans.    */
+/* DISSOLVED 2026-09-09 · platform.md §4. This was a ~600px panel — its own
+   heading, its own bordered gate block, its own actions row — sitting in the
+   thread above a composer that had nothing to do. It was IN the conversation
+   and did not read as PART of it: a form the chat happened to contain, which is
+   what made the composer look redundant at the one moment the founder most
+   needs to know they can still just say something.
+
+   It is now two turns and no card chrome. design-language.md §7 carries what
+   happened to the four motion rules written against the old panel — two survive,
+   two retire. */
+.cf{background:none;border:0;border-radius:0}
+/* 20 -> 32, 2026-09-11. This is the card's ONE group boundary and it was
+   running at 1.25x the 16px gap between the boxes inside the group — under the
+   2x that makes grouping read at all, so the gate looked like a fourth box.
+   With the boxes tightened to 12 it is 2.7x. Every value is a step on the
+   scale: there is no --s-28 and this did not invent one. */
+.cf-turn + .cf-turn{margin-top:var(--s-32)}
+/* 15 -> 17px, 2026-09-11: .t-title, already on the scale. 15px existed here and
+   nowhere else, and it left the most important h2 in the product rendering
+   smaller than body copy on the same screen. */
+.cf-title{margin:0 0 var(--s-4);font-size:17px;line-height:1.3;font-weight:600;
+          letter-spacing:-.005em;color:var(--text-1);text-wrap:balance}
+/* CAPPED, 2026-09-11. .conv-col is 680px and nothing in this card limited the
+   line, so the lede ran ~88 characters and the gate ~95. design-language.md §4
+   has capped body prose at 68ch since it was written — this was not a new rule,
+   it was one nothing in this card enforced. ch caps are already the idiom here
+   (.conv-sub 52, .conv-note 64). */
+.cf-lede{margin:0;color:var(--text-2);max-width:68ch;text-wrap:pretty}
+.cf-foot{padding:0}
+/* the scope sentence sits under the legend, not in it — it qualifies the whole
+   grid rather than one tone, and reading it as a fourth legend entry was the
+   first thing that went wrong when it shared the row */
+#mxScope{margin-top:var(--s-10)}
+/* The disclosure that held the two lists was deleted 2026-09-09 along with the
+   lists themselves — see setConfirmMode for why they left the gate. Its
+   "collapsed is not hidden" rule went with it; nothing at the gate is collapsed
+   now, because nothing at the gate is optional to read.
+
+   .cf-actions AND .cf-note WENT THE SAME WAY 2026-09-11. The row held "You can
+   change any of this later." beside the primary action; the note is deleted and
+   the action moved to .dock-act under the composer. A 12px size left the file
+   with it, which is the kind of saving a deletion is actually worth. */
+/* once approved it stays in the thread as the record of what was approved,
+   with every control gone — it is the history, not a live form */
+.cf[data-approved] .said .btn{display:none}
+.cf[data-approved] .gate{opacity:.6}
+/* and mid-edit it goes quiet for the same reason it goes quiet once approved:
+   the gate is not the live thing on screen. The primary action is disabled in
+   the dock at the same moment, so the two states agree. */
+.cf[data-editing] .gate{opacity:.6}
+
+.said{background:var(--surface-sunken);border-radius:var(--r-inner);
+      padding:var(--s-12) var(--s-14);display:flex;gap:var(--s-16);align-items:flex-start;
+      margin:var(--s-16) 0 0}
+/* 16 to the lede above, 12 between themselves — the boxes are one group, and a
+   separate rule rather than a changed margin so nothing collapses. */
+.said + .said{margin-top:var(--s-12)}
+.said-body{flex:1;min-width:0}
+/* THE BOX TITLE IS A TITLE, NOT A SIXTH FIELD LABEL. Was four inline
+   style="margin-bottom:8px" in the markup — the only uncontrolled spacing in
+   the card — and at 8px it put "AND YOU TOLD US" directly above "DIRECTION" at
+   the same size and the same tone, where the two read as two labels rather than
+   as a heading and the thing it heads. One step up the neutral ramp and a
+   wider gap, which is the only way §2 has to say this: hierarchy, weight and
+   spacing, never a hue. 12 binds it to the grid more tightly than the grid's
+   own 16px rows bind to each other, which is the relationship it wants. */
+.said .t-micro{color:var(--text-2);margin-bottom:var(--s-12)}
+.said-text{margin:0;color:var(--text-1);line-height:1.6}
+
+/* ── editing what you said · platform.md §4 ──────────────────────────────
+   THE FIELD REPLACES THE SENTENCE IN PLACE, at the same size and on the same
+   line, so the founder is correcting the thing they were reading rather than
+   answering a copy of it in a dialogue. §4 calls this the one correction
+   point in the product; a modal would make it a second one.
+
+   NOTHING ANIMATES. The two states are the same words at the same place —
+   there is no motion that would describe the change, and a height transition
+   on a growing textarea fights the typing. */
+.said-edit{display:block;width:100%;resize:none;overflow:hidden;
+      font:inherit;color:var(--text-1);line-height:1.6;
+      background:var(--surface);border:1px solid var(--border-strong);
+      border-radius:var(--r-control);padding:var(--s-8) var(--s-10);outline:0;
+      transition:border-color var(--dur-1) var(--ease)}
+.said-edit:focus{border-color:var(--text-2)}
+.said-edit[hidden]{display:none}
+/* the controls stack as a row and keep their own column, so the block does
+   not reflow when one button becomes two. */
+.said-ctl{display:flex;align-items:center;gap:var(--s-6);flex:0 0 auto}
+.card-note{padding:0 var(--s-20) var(--s-12);color:var(--text-3);font-size:13px;margin:0}
+
+/* the 4px bottom margin cleared .cf-actions, which is gone — the gate is the
+   last thing in the card now and the commitment is one dock below it */
+.gate{display:flex;align-items:flex-start;gap:var(--s-12);padding:var(--s-14) var(--s-16);
+      background:var(--state-pending-tint);border-radius:var(--r-inner);
+      margin:0}
+.gate svg{color:var(--state-pending);flex:0 0 18px;margin-top:1px}
+/* 13 -> 14px: it carries the most consequential sentence on the screen and was
+   rendering smaller than the lede it follows. */
+.gate p{margin:0;font-size:14px;line-height:1.6;color:var(--text-1);
+        max-width:68ch;text-wrap:pretty}
+.gate b{font-weight:600}
+
+/* ── the build block · in the thread, not a screen ──────────
+   The bar advances on completed stages. Faking determinate progress for a
+   wait whose latency platform.md §5 lists as an open question is the same class of
+   error as a green "open" cell.                                           */
+.bd{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-widget);
+    padding:var(--s-20)}
+.bd-head{display:flex;align-items:baseline;gap:var(--s-12)}
+.bd-head h2{margin:0;flex:1;min-width:0}
+.bd-elapsed{color:var(--text-3);flex:0 0 auto;font-variant-numeric:tabular-nums}
+.bd-lede{margin:var(--s-8) 0 var(--s-16);color:var(--text-2)}
+.prog{height:3px;border-radius:var(--r-pill);background:var(--surface-sunken);overflow:hidden;
+      margin-bottom:var(--s-16)}
+.prog-bar{height:100%;width:100%;background:var(--text-1);border-radius:var(--r-pill);
+      transform:scaleX(0);transform-origin:left;
+      transition:transform var(--dur-3) var(--ease-in-out)}
+
+.stages{list-style:none;margin:0;padding:0}
+.stg{display:flex;align-items:flex-start;gap:var(--s-12);padding:var(--s-10) 0;
+     border-bottom:1px solid var(--border)}
+.stg:last-child{border-bottom:0}
+.st-icon{position:relative;width:18px;height:18px;flex:0 0 18px;margin-top:2px}
+.st-icon>*{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.st-wait{border:1.5px solid var(--indicator-rest);border-radius:var(--r-pill)}
+.st-run{color:var(--state-pending)}
+.st-done{color:var(--state-live)}
+.stg[data-state="wait"] .st-run,.stg[data-state="wait"] .st-done,
+.stg[data-state="run"] .st-wait,.stg[data-state="run"] .st-done,
+.stg[data-state="done"] .st-wait,.stg[data-state="done"] .st-run{opacity:0}
+.st-body{flex:1;min-width:0}
+.st-label{font-size:14px;font-weight:500;color:var(--text-1)}
+.stg[data-state="wait"] .st-label{color:var(--text-3)}
+.st-sub{margin-top:7px;display:block}
+.stg[data-state="wait"] .st-sub,.stg[data-state="run"] .st-sub{opacity:0}
+/* note left, CTA right. This was "the same footer shape .cf-actions uses one
+   card up"; .cf-actions is gone as of 2026-09-11 and the gate's action lives in
+   the dock, so this is now the only place the idiom survives — which is right,
+   because the build block is not the gate and has nothing to say no to.
+   margin-left:auto on the button keeps it right when the row wraps, which a
+   spacer would not. */
+
+/* ── a build that stopped · platform.md §9 ────────────────────────────────
+   THE SWEEP IS THE ONLY THING THAT GOES. A stage that was running when the run
+   stopped is genuinely incomplete, and --state-pending already means exactly
+   that, so the icon is right and stays. What stopped being true is the MOTION:
+   a travelling sweep claims work is in flight. It is stilled the same way
+   prefers-reduced-motion stills it, which is this file's one existing
+   treatment meaning "present, not progressing".
+
+   THE BAR IS UNTOUCHED because it is already honest -- it may only claim what
+   has finished, so where it stopped is where the run got to. */
+.bd[data-failed] .stg[data-state="run"] .sweep::after{animation:none;width:100%;opacity:.5}
+/* there is nothing to open, so the block offering it goes rather than sitting
+   on screen inert. The failure and what to do next are one message below. */
+.bd[data-failed] .done{display:none}
+.done{margin-top:var(--s-20);display:flex;align-items:center;gap:var(--s-16);flex-wrap:wrap;
+      opacity:0;transform:translateY(6px);
+      transition:opacity var(--dur-3) var(--ease),transform var(--dur-3) var(--ease)}
+.done.is-in{opacity:1;transform:none}
+.done-note{margin:0;flex:1 1 220px;font-size:12.5px;color:var(--text-3)}
+.done .btn{margin-left:auto;flex:0 0 auto}
+
+/* clip-rect rather than display:none or width:0 — the two that remove the
+   text from the accessibility tree along with the screen. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+     clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+.work-h1{margin:0;display:flex;align-items:center}
+
+/* ── tables ─────────────────────────────────────────────── */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{padding:var(--s-8) 0;border-bottom:1px solid var(--border);text-align:left}
+.tbl td{padding:var(--s-12) 0;border-bottom:1px solid var(--border);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl .num{text-align:right}
+.cellpair{display:flex;align-items:center;gap:var(--s-10)}
+.sq{width:24px;height:24px;flex:0 0 24px;border-radius:var(--r-chip);background:var(--skeleton)}
+/* the tracked holder is marked on the dashboard as well as on the Rivals page
+   — one selection, carried across both surfaces, which is the whole reason
+   --mark-1 means "this one" rather than naming a category. The ring the lime
+   square needed is gone with it: at 15.32:1 an ink square is the strongest
+   thing in the table and a 14%-ink hairline over it encoded nothing. Against
+   the --skeleton grey the untracked squares carry, it is unmistakable. */
+.sq[data-tracked]{background:var(--mark-1)}
+.rival-row{cursor:pointer;transition:background var(--dur-1) var(--ease)}
+.rival-row td:first-child{border-top-left-radius:var(--r-chip);border-bottom-left-radius:var(--r-chip)}
+.rival-row td:last-child{border-top-right-radius:var(--r-chip);border-bottom-right-radius:var(--r-chip)}
+
+/* ── chart ──────────────────────────────────────────────── */
+.chart{width:100%;height:150px;display:block}
+/* the page's chart is its own size AND its own resolution — see the series
+   below and design-language.md §7 */
+.chart-lg{height:300px}
+.axis-row{display:flex;justify-content:space-between;gap:var(--s-8);padding-top:var(--s-8)}

@@ -1,0 +1,234 @@
+/* 30 · the conversation — platform.md §3
+ *
+ * EXTRACTED from the prototype. Moments 1-3: the composer, the thread, the
+ * reveal, the answer, and the five narrowing questions. */
+
+/* ── the conversation surface · moments 1-3 ────────────────
+   One column. Empty state centres the question and the composer; once there
+   is a thread the composer pins to the bottom and the thread scrolls past it.
+   platform.md §2: chat is not a place, it is the means.                    */
+.conv{min-height:100%;display:flex;flex-direction:column;padding:var(--s-24) var(--s-24) 0;
+      background:var(--ground)}
+.conv-body{flex:1;display:flex;flex-direction:column;justify-content:center}
+.conv-col{width:100%;max-width:680px;margin-left:auto;margin-right:auto}
+.conv-intro{margin-bottom:var(--s-32)}
+.conv-intro h1{margin:0 0 var(--s-12);text-wrap:balance}
+.conv-sub{margin:0;color:var(--text-2);max-width:52ch;text-wrap:pretty}
+/* the dock carries the gate's primary action, so it is the one piece of
+   sticky chrome that must clear the home indicator */
+.conv-dock{padding-bottom:max(var(--s-16),env(safe-area-inset-bottom))}
+.conv-note{margin:var(--s-16) 0 0;font-size:13px;color:var(--text-3);max-width:64ch;
+      text-wrap:pretty}
+/* the commitment, under the thing that offers the alternative. See the markup
+   for why it is full width rather than right-aligned like .cf-actions was. */
+.dock-act{padding-top:var(--s-12)}
+.dock-act[hidden]{display:none}
+.dock-act .btn{width:100%}
+.conv-foot{padding:var(--s-12) 0 var(--s-24);display:flex;align-items:baseline;
+      justify-content:center;gap:var(--s-6);font-size:14.4px;color:var(--text-3)}
+
+/* threaded — the intro leaves, the thread runs from the top, and the composer
+   pins to the bottom. The drop itself is a FLIP on transform in the script. */
+.conv.has-thread .conv-body{justify-content:flex-start}
+.conv.has-thread .conv-intro,.conv.has-thread .conv-note,
+.conv.has-thread .conv-foot{display:none}
+.conv.has-thread .conv-dock{margin-top:auto;position:sticky;bottom:0;
+      background:var(--ground);padding-top:var(--s-8)}
+
+/* ── the thread ─────────────────────────────────────────────
+   Nothing's visibility depends on a transition having run: .is-in is added on
+   the same frame, and reduced motion declares the end state outright.      */
+.thread{display:flex;flex-direction:column;gap:var(--s-20);padding-top:var(--s-8)}
+.conv .thread{padding-bottom:var(--s-8)}
+.tmsg{opacity:0;transform:translateY(8px);
+      transition:opacity var(--dur-2) var(--ease) calc(var(--i,0) * 50ms),
+                 transform var(--dur-2) var(--ease) calc(var(--i,0) * 50ms)}
+.tmsg.is-in{opacity:1;transform:none}
+.tmsg-you{display:flex;justify-content:flex-end}
+.tmsg-you>span{background:var(--surface-sunken);border-radius:var(--r-inner);
+               padding:var(--s-10) var(--s-14);max-width:80%;white-space:pre-wrap}
+.tmsg-sys{color:var(--text-2);line-height:1.6}
+
+/* ── the reveal · the system composing in the open ──────────
+   A reply that lands whole says the wait was a timer; one that arrives in word
+   chunks says something was being written. The whole string is placed at once
+   and then *lit* — appending progressively would re-wrap the line under the
+   founder's eye on every chunk. This way layout settles on the first frame and
+   only opacity and filter move, which is what §6 asks for.
+
+   Chunks, not characters. At this length per-glyph typing is a gimmick, and it
+   pays a layout pass per letter on a line that is being scrolled. */
+.rv{display:inline;opacity:0;filter:blur(2px);
+    transition:opacity var(--dur-2) var(--ease),filter var(--dur-2) var(--ease)}
+.rv.is-in{opacity:1;filter:none}
+
+/* the sentence takes the sweep's place — the sweep is absolutely positioned, so
+   the first line of text lands exactly where the indicator was */
+.tmsg-say{display:block;color:var(--text-2);line-height:1.6}
+.tmsg-say:not(:empty)+.tmsg-grow{margin-top:var(--s-14)}
+
+/* ── the answer · composing, then unfolding ─────────────────
+   The confirm card is ~600px. Landing it at --dur-2 with no height change is a
+   jump-cut: the thread under it teleports and the founder loses their place. So
+   the message grows. grid-template-rows is the height-ish property
+   design-language.md §6 puts on the allow-list beside transform, clip-path and
+   FLIP, and .row-slot below is the existing precedent in this file.
+
+   The sweep is absolutely positioned, so it costs no height of its own and the
+   wrapper's height IS the answer growing from zero. It carries no words: the
+   composer says them one line further down, where §7 puts the conversation's
+   working state, and saying it twice reads as two systems.
+
+   Nothing here staggers. §7: "The confirm card enters as one message and its
+   rows do not stagger" — staggering would imply the approaches were generated
+   one at a time, which is a claim about data the skeleton contract forbids. */
+.tmsg-answer{position:relative;min-height:22px}
+.tmsg-pend{position:absolute;top:0;left:0;display:flex;align-items:center;height:22px;
+      color:var(--text-3);
+      transition:opacity var(--dur-1) var(--ease),filter var(--dur-1) var(--ease)}
+.tmsg-answer.is-said .tmsg-pend,
+.tmsg-answer.is-settled .tmsg-pend{opacity:0;filter:blur(2px);pointer-events:none}
+.tmsg-grow{display:grid;grid-template-rows:0fr;
+      transition:grid-template-rows var(--dur-3) var(--ease)}
+.tmsg-answer.is-settled .tmsg-grow{grid-template-rows:1fr}
+/* blur masks the crossfade. Without it the sweep leaving and the card arriving
+   read as two objects overlapping rather than one thing becoming another. */
+.tmsg-grow>div{overflow:hidden;min-height:0;
+      opacity:0;transform:translateY(6px);filter:blur(2px);
+      transition:opacity var(--dur-3) var(--ease),transform var(--dur-3) var(--ease),
+                 filter var(--dur-3) var(--ease)}
+.tmsg-answer.is-settled .tmsg-grow>div{opacity:1;transform:none;filter:none}
+/* once it has landed the clip and the fr track come off, so the founder adding
+   a row to the card afterwards is not animating against a finished entrance */
+.tmsg-answer.is-done .tmsg-grow{grid-template-rows:auto;transition:none}
+.tmsg-answer.is-done .tmsg-grow>div{overflow:visible}
+
+/* ── the composer ───────────────────────────────────────────
+   One component, two sizes: the whole column here, docked on the map. It
+   carries its own working state, so the founder never navigates to a loading
+   screen (design-language.md §7).                                          */
+.cmp{width:100%}
+.cmp-inner{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-widget);
+      padding:var(--s-14) var(--s-16) var(--s-10);
+      transition:border-color var(--dur-2) var(--ease)}
+.cmp-inner:focus-within{border-color:var(--border-strong)}
+.cmp-field{position:relative}
+/* no transition on the height. Typing is the most repeated action in the
+   product, and a transitioning box lags the caret. Also a layout property. */
+.cmp-field textarea{width:100%;border:0;outline:0;resize:none;background:none;font:inherit;
+      color:var(--text-1);line-height:1.55;padding:0;display:block;
+      min-height:60px;max-height:200px;overflow-y:auto;position:relative;z-index:1}
+.cmp-field textarea::placeholder{color:transparent}
+/* the rotating placeholder sits BEHIND the textarea, never above it. Restored
+   from HEAD: the rewrite dropped this rule and the line became a block that
+   pushed the field down the moment the page loaded. */
+.ghost{position:absolute;inset:0;pointer-events:none;color:var(--text-3);line-height:1.55;
+       transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease)}
+.ghost.is-out{opacity:0;transform:translateY(-4px)}
+.ghost.is-in{opacity:0;transform:translateY(4px)}
+.cmp-field textarea:disabled{color:var(--text-3);cursor:default}
+.cmp-row{display:flex;align-items:center;gap:var(--s-12);padding-top:var(--s-8);
+      border-top:1px solid var(--border);margin-top:var(--s-8)}
+.cmp-hint{flex:1;min-width:0;font-size:12px;color:var(--text-3)}
+/* inert until there is text — the cheapest signal that the interface is
+   reading what you type */
+.cmp-send{width:32px;height:32px;flex:0 0 32px;border-radius:var(--r-pill);position:relative;
+      display:flex;align-items:center;justify-content:center;
+      background:var(--surface-sunken);color:var(--text-3);
+      transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease),
+                 transform var(--dur-1) var(--ease)}
+/* the same primary action, at the composer. §3.8 site 1, second host. */
+.cmp-send:not(:disabled){background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.cmp-send:not(:disabled):active{transform:scale(.94)}
+.cmp-send>span{position:absolute;display:flex;align-items:center;justify-content:center;
+      transition:opacity var(--dur-2) var(--ease),filter var(--dur-2) var(--ease)}
+/* blur masks the crossfade: two glyphs in one 32px box otherwise read as two
+   objects overlapping rather than one thing changing */
+.cmp-send-load{opacity:0;filter:blur(2px)}
+.cmp.is-working .cmp-send-glyph{opacity:0;filter:blur(2px)}
+.cmp.is-working .cmp-send-load{opacity:1;filter:none}
+/* ***AND THE BUTTON STOPS BEING A BUTTON WHILE IT WORKS.*** The control is
+   :disabled for the length of the wait, so it falls back to the base rule's
+   --surface-sunken fill -- a filled circle sitting behind the loader, reading
+   as something you could press again, which is the one thing it is not. Same
+   reasoning as the list's "show more", and the same fix.
+
+   The 32px box stays: it is what holds the crossfade's two absolutely-
+   positioned spans, and collapsing it would move the composer's bottom row.
+   Only the fill goes, and it goes on --dur-1 with the transition the base
+   rule already declares.
+
+   THE COLOUR IS RAISED TO --text-1 in the same breath. The resting button is
+   --text-3 because it is a dimmed affordance; a loader is not an affordance,
+   and every other loader in the product inherits --text-1. Left at --text-3
+   this one mark would have been quietly lighter than the nine identical ones
+   it is meant to match. */
+.cmp.is-working .cmp-send{background:none;color:var(--text-1)}
+.cmp-status{margin:var(--s-8) 0 0;font-size:12px;color:var(--text-3);min-height:17px;
+      transition:opacity var(--dur-2) var(--ease),filter var(--dur-2) var(--ease)}
+.cmp-status.is-swap{opacity:0;filter:blur(2px)}
+
+/* the sweep · a sweep, not a percentage. currentColor, so it costs no palette,
+   and one shared --cycle so every indicator on the page reads as one system. */
+.sweep{width:16px;height:3px;border-radius:var(--r-pill);position:relative;overflow:hidden;
+       background:currentColor;flex:0 0 16px}
+.sweep::after{content:"";position:absolute;top:0;bottom:0;width:45%;border-radius:inherit;
+       background:currentColor;animation:sweepx var(--cycle) linear infinite}
+@keyframes sweepx{0%{transform:translateX(-120%)}100%{transform:translateX(255%)}}
+
+/* ── the narrowing questions · platform.md §3.2 ────────────
+   A question in the thread, with its options beneath it. The options are the
+   composer's own .suggest chips, because an answer to a question Terrain asked
+   is a kind of thing the founder says, not a filter they set.          */
+.qa-opts{margin-top:var(--s-12)}
+/* ONE question per message since 2026-09-09 — this said "a beat is several
+   questions in ONE message" and the block below held two or three of them. The
+   lede is now the acknowledgement of the answer just given, and the single
+   question sits under it. The gap survives the change because it still
+   separates the spoken line from the thing being asked. */
+.qa-item{margin-top:var(--s-20)}
+.qa-sub{display:block;color:var(--text-1);line-height:1.6}
+/* an answered question keeps its label and drops its chips, and the answer is
+   carried by the founder's own reply below — so the label alone would read as
+   unanswered. It goes quiet instead. */
+.qa-item[data-said] .qa-sub{color:var(--text-3)}
+/* the abstention is a different kind of act from the answers beside it, and it
+   looks it — one step quieter, always last. platform.md §3.2. */
+.qa-skip{color:var(--text-3)}
+/* the round, read back where it is approved — §3.2 */
+.cf-answers .head-meta{gap:var(--s-6)}
+/* A GRID, NOT FLEX-WRAP · 2026-09-11. Five answers of wildly different lengths
+   were sized to their own content, so one sentence-length DIRECTION pushed the
+   four short answers out of any rhythm and no label ever lined up with the one
+   under it. auto-fit gives even tracks whatever the values say, and it is the
+   pattern .rt-grid already uses — driven by the space that exists rather than
+   by a media query that cannot see this container.
+
+   The gap between pairs is well over twice the gap inside one, or the column of
+   two lines reads as four unrelated ones. One value now, not 14/16. */
+#cfAnswerChips{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
+  gap:var(--s-16);align-items:start}
+.cf-pair{display:flex;flex-direction:column;gap:var(--s-4);min-width:0}
+/* the five properties are on .t-micro's declaration. "HOW MANY" is the reason
+   for the nowrap: in a narrow track it breaks into two lines and stops reading
+   as one label. */
+.cf-pair-k{white-space:nowrap}
+/* NOT A CHIP, 2026-09-10. These were .chip with a surface fill and a 1px
+   border on a sunken ground — a 999px pill that read as a small button and
+   was a static <span>. An affordance on something nothing can do to is worse
+   than a plain value, so the value is now plain text under its label: the
+   micro-above-the-value idiom, with nothing borrowed from a control. */
+.cf-pair-v{font-size:14px;line-height:1.45;color:var(--text-1);
+  overflow-wrap:anywhere}
+/* NOT the same shape as the answers above: exclusions are label-less phrases,
+   so there is nothing to line up into columns and the grid does not apply. An
+   explicit gap rather than the --s-6 inherited from .cf-answers .head-meta,
+   which was the only reason the two boxes looked different. */
+#cfExclChips{gap:var(--s-8)}
+/* .said carries a display above, which outranks [hidden] on its own */
+.said[hidden]{display:none}
+
+/* what the gate was told to leave out, shown on the result it shaped (platform.md §3.2) */
+.set-excl{margin:calc(var(--s-12) * -1) 0 var(--s-16);font-size:13px;line-height:1.6;
+  color:var(--text-2)}
+.set-excl[hidden]{display:none}
