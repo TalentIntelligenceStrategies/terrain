@@ -41,10 +41,14 @@
    nothing while the list it serves wrapped every title to three lines.
 
    That split was right when the pane held twelve widget cards. It holds one
-   record now. Both columns flex from the same basis so the list keeps the
-   larger share of any extra width, and it still collapses at the 1024 floor
-   the shell already defines. */
-.listcol{position:relative;flex:1 1 560px;min-width:0;max-width:760px;
+   record now.
+
+   FIFTY-FIFTY, AND IT IS `flex:1 1 0` RATHER THAN `width:50%`. A percentage
+   width would be measured before the border between them and leave the two
+   columns a hairline apart; flexing from a zero basis divides what is actually
+   left after the border, so the halves are equal on the screen rather than on
+   paper. It still collapses at the 1024 floor the shell already defines. */
+.listcol{position:relative;flex:1 1 0;min-width:0;
          border-right:1px solid var(--border);background:var(--surface);
          display:flex;flex-direction:column;overflow:hidden}
 
@@ -117,7 +121,7 @@
 
 /* a column, not a canvas for an overlay: the scroller takes the height
    that is left and the attribution sits beneath it. */
-.panecol{position:relative;flex:1;min-width:0;overflow:hidden;
+.panecol{position:relative;flex:1 1 0;min-width:0;overflow:hidden;
          display:flex;flex-direction:column}
 
 /* ── the pane's inset · matched to the left column, 2026-09-11 ──────────
