@@ -282,18 +282,24 @@ export const PROJECTS = [
 
 export const POINTS = { balance: 180, allowance: 400 };
 
+/* THREE RUN TYPES, BECAUSE THERE ARE THREE. platform.md §6.1 lists what
+   exists; `Rebuild after a scope change` was the gate's re-run and `Watch` is
+   filing alerts, which §10 item 1 says are not built. A price beside a run the
+   product cannot perform is the same defect as a switch for a capability that
+   does not exist — design-language.md §7 — and this one also lands on the page
+   whose whole job is telling the founder what they are paying for.
+
+   THE FIGURES ARE ILLUSTRATIVE and pricing is unsettled; §6.1 says so. */
 export const RUN_TYPES = [
   { id: 'search', label: 'New search', cost: 40 },
-  { id: 'rebuild', label: 'Rebuild after a scope change', cost: 25 },
   { id: 'rerank', label: 'Find similar', cost: 4 },
   { id: 'export', label: 'Export', cost: 8 },
-  { id: 'watch', label: 'Watch', cost: 12 },
 ];
 
 export const RUNS = [
   { id: 'r1', kind: 'New search', project: null, when: '2026-09-14', cost: 40 },
   { id: 'r2', kind: 'Find similar', project: null, when: '2026-09-14', cost: 4 },
-  { id: 'r3', kind: 'Rebuild', project: null, when: '2026-09-12', cost: 25 },
+  { id: 'r3', kind: 'Export', project: null, when: '2026-09-12', cost: 8 },
   { id: 'r4', kind: 'New search', project: null, when: '2026-09-09', cost: 40 },
 ];
 
@@ -315,40 +321,6 @@ export const INVOICES = [
   { id: 'i2', when: '2026-08-01', amount: 'XXX', status: 'paid' },
   { id: 'i3', when: '2026-07-01', amount: 'XXX', status: 'paid' },
   { id: 'i4', when: '2026-06-01', amount: 'XXX', status: 'paid' },
-];
-
-/* ── the narrowing round · platform.md §3.2 ──────────────────────────────────
-   Five questions, and the five direction options at the narrowing step are
-   OBSERVED OUTPUT from Innovue's own semantic surface, rendered as real words
-   rather than bars. CLAUDE.md's scoped exception: observed is not invented, and
-   they are nobody's client data. */
-export const ROUND = [
-  { q: 'Which part of a drone are you working on?',
-    opts: ['Airframe and body structure', 'Flight control and avionics',
-           'Propulsion and power', 'Payload and sensors', 'None of these'],
-    pick: 0 },
-  { q: 'What are you trying to improve about it?',
-    opts: ['Weight', 'Cost to manufacture', 'Crash survivability',
-           'Assembly time', 'Something else'],
-    pick: 0 },
-  { q: 'Is it flying already?',
-    opts: ['A working prototype', 'A design on paper', 'Shipping to customers'],
-    pick: 0 },
-  { q: 'Have you filed anything?',
-    opts: ['Nothing yet', 'A provisional', 'One or more granted'],
-    pick: 0 },
-  { q: 'Where does it need to be protected?',
-    opts: ['United States', 'Taiwan', 'Both'],
-    pick: 0 },
-];
-
-export const BUILD_STAGES = [
-  'Reading your criteria',
-  'Searching the Innovue database',
-  'Merging duplicate filings across countries',
-  'Grouping by technical approach',
-  'Ranking against what you described',
-  'Drawing your map',
 ];
 
 /* ── the home surface ─────────────────────────────────────────────────────

@@ -30,9 +30,6 @@
    Below 1080 the columns stack and none of this applies. */
 .view-work{overflow:hidden}
 .view-work.is-active{display:flex;flex-direction:column}
-.work-head{padding:var(--s-16) var(--s-24) var(--s-12);border-bottom:1px solid var(--border);
-           flex:0 0 auto}
-.work-head-lines{display:flex;flex-direction:column;gap:var(--s-8)}
 .work-split{display:flex;flex:1;min-height:0}
 
 /* THE RESULTS ARE THE PRIMARY CONTENT AND WERE GETTING 29% OF THE WIDTH.
@@ -148,34 +145,7 @@
   .listcol{flex:0 0 auto;width:auto;max-height:46vh;border-right:0;
            border-bottom:1px solid var(--border)}
 }
-
-/* ── the filter · platform.md §6.5 ────────────────────────────────────────────────
-   The chip sits ABOVE the list and never in the views, because a filter is a
-   way of LOOKING at the corpus and not a way of cutting it. The ticks are
-   untouched, the views do not redraw, and the standing note does not move. */
-.filter-chip{display:flex;align-items:center;gap:var(--s-8);flex-wrap:wrap;
-     padding:var(--s-8) var(--s-10);margin-bottom:var(--s-12);
-     border:1px solid var(--border-strong);border-radius:var(--r-control);
-     background:var(--surface-sunken)}
-.filter-lab{flex:0 0 100%;color:var(--text-3)}
-.filter-what{flex:1;min-width:0;display:flex;align-items:center;gap:var(--s-6);
-     flex-wrap:wrap;font-size:13px;font-weight:500;color:var(--text-1)}
-.filter-x-sep{color:var(--text-3)}
-.filter-n{margin-left:auto;color:var(--text-2)}
-.filter-x{flex:0 0 24px;width:24px;height:24px;display:flex;align-items:center;
-     justify-content:center;border-radius:var(--r-chip);color:var(--text-3);
-     transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
-@media (hover:hover){ .filter-x:hover{background:var(--surface);color:var(--text-1)} }
-/* a filtered row is READ-ONLY: no checkbox and no star, because ticking is
-   about the corpus and this is a view of it. platform.md §6.5. */
-.set-row-ro{display:block;padding-left:0}
-.set-empty{padding:var(--s-24) var(--s-4);flex:none}
-/* the resting lede tells the founder to untick and to star. Filtered, it is
-   telling them to do something to a list they are not looking at — the same
-   reason the re-rank swaps it (design-language.md §7). */
-.is-filtered .set-bar,
-.is-filtered .set-excl,.is-filtered .set-run{display:none}
-.is-filtered .set-list{padding-top:0}
+@media (hover:hover){ }
 
 /* ── the Market / Technology toggle, in the surface's head ──────────────
    IT HAD A BAND OF ITS OWN inside the right pane until 2026-09-11 — a

@@ -75,8 +75,7 @@
 .rec-open .pane-idle [data-idle="rec"]{display:block}
 /* Nothing hides it when a drawing opens, and nothing needs to: .figview is
    absolute inset:0 at z-index 40 inside .panecol, so it covers this. */
-/* ~~SWAPPED BEHIND A FADE~~ — the fade is gone, 2026-09-14, and the rule with
-   it. `.rec.is-swapping .rec-body{opacity:0;filter:blur(2px)}` styled a 120ms
+/* ~~SWAPPED BEHIND A FADE~~ — the fade is gone, 2026-09-14{opacity:0;filter:blur(2px)}` styled a 120ms
    crossfade for the founder picking a second patent without closing the first.
    That duration was right for text trading places and wrong for a record
    arriving, so the body now waits on a loader instead (platform.md §5) and NOTHING ADDS
@@ -107,19 +106,6 @@
 @media (max-width:1079px){
   .rec-open .listcol{max-height:none}
 }
-
-/* The block that stood here set top/right/bottom/left and a transform on an
-   element with no `position`. Every declaration in it was inert: the record
-   has been in flow since it stopped being an overlay, and a positioned inset
-   on a static element is not an override, it is nothing. */
-
-/* the lit cell · platform.md §6.5. A ring on the cell's own edge rather than a fill:
-   the fill is the density tone and it means the count, so a selection cannot
-   enter it — the same rule the column mark already follows (design-language
-   §3.7). No hue; there is no accent. */
-.mx-cell[data-filtered]{box-shadow:inset 0 0 0 2px var(--text-1);position:relative;z-index:1}
-.rival-row[data-filtered]{background:var(--surface-sunken)}
-.rival-row[data-filtered] td:first-child{box-shadow:inset 2px 0 0 var(--text-1)}
 
 /* the engine's relevance score · brief.md §4, platform.md §11 conflict 1.
    LAST IN THE ROW AND IN --text-3, which is the whole of the design decision:
@@ -164,10 +150,6 @@
    URBANIST, NOT INCONSOLATA. It matches the year's size and colour, not its
    typeface: .fig is for numerals and a company name is text. */
 .drill-holder{font-size:12.5px;line-height:1.4;color:var(--text-1)}
-/* the score sits at the TRAILING EDGE of the meta row — margin-inline-start,
-   not margin-left, because the row mirrors under RTL like everything else. */
-.pn-score{color:var(--text-3);display:inline-flex;align-items:baseline;
-  gap:var(--s-4);margin-inline-start:auto}
 
 /* ── the field list · platform.md §6.6 ─────────────────────
    THIS WAS THE HANDOFF, and it was a row-level disclosure: the row expanded
@@ -241,7 +223,6 @@
 .pn-head{display:flex;align-items:flex-start;gap:var(--s-12);
   padding-bottom:var(--s-14);border-bottom:1px solid var(--border)}
 .pn-head-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-10)}
-.pn-title{margin:0;outline-offset:3px}
 .pn-name{display:flex;flex-direction:column;gap:var(--s-6)}
 /* THE DEMONSTRATION PATENT'S REAL TITLE, 2026-09-11. It sits where the two
    title-height bars sit and matches their weight, but ONE STEP DOWN from the
@@ -273,51 +254,6 @@
   display:flex;flex-direction:column;gap:var(--s-16)}
 .pn-claim{display:grid;grid-template-columns:auto 1fr;gap:var(--s-12);align-items:start}
 .pn-cn{color:var(--text-3);padding-top:2px}
-/* the empty frame. It says what to do, and it does NOT say how many there are
-   to choose from or hint that any one of them matters more -- platform.md §6.4 and platform.md §6.3. */
-.pn-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:var(--s-8);min-height:220px;padding:var(--s-32) var(--s-24);text-align:center}
-.pn-empty svg{color:var(--text-disabled)}
-.pn-empty p{margin:0;font-size:13px;line-height:1.55;color:var(--text-3);max-width:34ch}
-
-/* ── the record composes, in reading order · 2026-09-11 ────────────────────
-   THIS REVERSES "a drawer's contents do not fade in after the drawer opens",
-   and the reversal is narrow rather than a repeal. §6's prohibition is now
-   "contents do not move WHILE their container is moving", and the fault it was
-   written for is untouched: `pn-in` was a 200ms KEYFRAME on --ease running
-   INSIDE a 320ms --ease-drawer container — two curves over two durations on
-   one object, overlapping, and restarting from zero when a second row was
-   clicked mid-slide. What replaces it is four TRANSITIONS on four objects that
-   start only after the container has stopped. Nothing overlaps and nothing is
-   a keyframe, so a reversal retargets smoothly.
-
-   FOUR GROUPS, and the order is the record's own: what this is, then how it is
-   identified, then what it says, then what it claims. NOT a reading of the
-   record — see platform.md §6.6, which had to rule on exactly that before
-   this could ship.
-
-   .rec-head IS NOT A GROUP and must never become one. Focus moves to #recTitle
-   on open, and §6 already records that a heading which cannot be seen fails
-   silently. A heading held at opacity:0 is that bug wearing opacity. The head
-   is present on frame one, which is also what keeps the card from reading as
-   an empty box while the body arrives.
-
-   TWO PROPERTIES, BOTH COMPOSITABLE. No blur: this is not a crossfade between
-   two strings, and filter:blur() over a subtree of shimmering skeleton bars
-   repaints the whole subtree every frame for the length of the reveal. */
-.pn-stage{opacity:0;transform:translateY(6px)}
-.rec-body .pn-stage{
-  transition:opacity var(--dur-3) var(--ease) var(--stage-delay,0ms),
-             transform var(--dur-3) var(--ease) var(--stage-delay,0ms)}
-/* the wait is the container's own duration, so nothing inside moves until the
-   card has stopped. 50ms is the thread's stagger and the only one in the
-   vocabulary; --i is set per group, the way .tmsg sets it. */
-.rec-body .pn-stage{--stage-delay:calc(var(--dur-4) + var(--i,0) * 50ms)}
-.rec-open .rec-body .pn-stage{opacity:1;transform:none}
-/* reopened inside REC_INSTANT_MS: revealed by the rule above, with nothing to
-   animate. The class is set before .rec-open so it is already in force on the
-   frame the transition would have started. */
-.rec-instant .rec-body .pn-stage{transition:none}
 
 /* ── the record's type hierarchy · 2026-09-11 ───────────────────────────────
    The card had three levels of content and one level of type: the title bars,

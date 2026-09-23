@@ -1,26 +1,4 @@
-/* 34 · the list — platform.md §6.3
- *
- * EXTRACTED from the prototype. Four fields per row and no more; the year
- * holds a column because a date sort over a column of grey bars is an order
- * the founder cannot check. */
 
-/* ── drill-down slide-over · platform.md §6.6 ─────────────
-   ~~.scrim~~ DELETED 2026-09-15, WITH ITS ELEMENT AND ITS TOKEN. It outlived
-   the slide-over that dimmed the page, and the comment beside its markup then
-   kept it alive on a claim that was not true: "the account and project menus
-   still use it to catch an outside click". They do not and never did — both
-   close on a document-level listener, which is also what makes Escape and a
-   click on a third menu work. Nothing in the file referenced #scrim.
-
-   A DEAD ELEMENT IS NOT FREE. It was a fixed, full-viewport node at z-index 50
-   sitting over every surface, one visibility flip away from covering the
-   product, and the sentence defending it would have been the thing a later
-   session reasoned from. --scrim went with it: three definitions across the
-   light and dark blocks, read by exactly one rule. */
-.drill-close{color:var(--text-3);padding:var(--s-4);border-radius:var(--r-chip);display:flex;
-             transition:color var(--dur-1) var(--ease),background var(--dur-1) var(--ease),
-                        transform var(--dur-1) var(--ease)}
-.drill-close:active{transform:scale(.94)}
 .drill-row{padding:var(--s-16) 0;border-bottom:1px solid var(--border)}
 .drill-row:last-child{border-bottom:0}
 .drill-meta{display:flex;align-items:center;gap:var(--s-12);padding-top:var(--s-12);flex-wrap:wrap}
@@ -104,10 +82,6 @@
 .lm-group{font-size:10.5px;line-height:1.2;font-weight:500;letter-spacing:.08em;
   text-transform:uppercase;color:var(--text-3);padding:var(--s-10) var(--s-8) var(--s-6)}
 .lm-group:first-child{padding-top:var(--s-6)}
-.lm-sep{height:1px;background:var(--border);margin:var(--s-4)}
-/* the list said nothing when a facet emptied it — the rows simply were not
-   there, which reads as a broken render rather than as your own filter. */
-.set-empty-f{padding:var(--s-24) var(--s-16);text-align:center}
 .set-list{padding:0}
 /* the row becomes a grid: controls, then the expandable body. The inline
    padding is PERMANENT and holds the anchor rail — reserved in every state, so
@@ -141,23 +115,6 @@
    hue, no new token, and it survives the re-rank because being open is
    independent of the band (hence no :not(.is-ranked) qualifier). */
 .set-row[data-open]{background:var(--surface-sunken)}
-/* THE BAND — the settled state's structure, rendered only under .is-ranked.
-   A statement of what the founder did, never a verdict on the rows below it
-   (platform.md §6.4), which is why the second heading names the ORDER and not
-   the patents: "ranked around it", not "closest matches". */
-/* THE HEADINGS ARRIVE AFTER THE ROWS LAND, and the reason is only visible in
-   slow motion: they are new nodes with no previous position, so they snapped to
-   their final places while the rows were still flying — "Ranked around it"
-   overlapping the very row it labels. Two beats instead of one: the rows move,
-   then the structure that describes them appears on a list that has settled.
-   Driven inline from setReorder, the same way the FLIP is, so no state class
-   leaks out to the paging paths where the headings already exist — and by
-   CLEARING an inline opacity rather than setting one, so the heading is opaque
-   by declaration and a transition that never ticks costs nothing (§6). */
-.set-band{margin:0;padding:var(--s-20) 0 var(--s-10) var(--s-10);
-  border-bottom:1px solid var(--border);
-  transition:opacity var(--dur-2) var(--ease)}
-.set-band:first-child{padding-top:var(--s-4)}
 .set-row .drill-row{padding:0;border-bottom:0;min-width:0}
 .set-ctl{display:flex;align-items:center;justify-content:center;
   width:32px;height:32px;margin-top:2px;border-radius:var(--r-chip);color:var(--text-3);
@@ -203,12 +160,6 @@
      for the length of the wait rather than merely overridden elsewhere */
   #setMore[data-waiting]:hover{background:none}
 }
-/* .set-foot is gone — 2026-09-10. Its note moved into the heading's popover
-   and its button into .set-cta above the list; .set-cta went the same way on
-   2026-09-11 and the button is in .set-bar now, so that note has outlived two
-   homes and the popover has ended up holding both halves. .set-note survives
-   because the two empty states still use it. */
-.set-note{font-size:12.5px;line-height:1.5;color:var(--text-3);margin:0;flex:1 1 200px}
 
 /* ── the star's prompt ───────────────────────────────────────────────────
    THE STRIP IS GONE, 2026-09-11. It was a grid-template-rows collapse holding
@@ -254,7 +205,6 @@
    than enter everywhere, not only on the view swap. */
 .set-run{display:grid;grid-template-rows:0fr;
   transition:grid-template-rows var(--dur-2) var(--ease)}
-.set-wrap.is-running .set-run{grid-template-rows:1fr;transition-duration:var(--dur-3)}
 .set-run>div{overflow:hidden;min-height:0}
 /* symmetric padding. It was symmetric because the settled band was PERMANENT
    and asymmetry would have moved every row the instant the state changed,
@@ -271,46 +221,8 @@
    reads as two strings trading places rather than one statement changing. */
 .set-run-say{margin:0;flex:1 1 220px;
   transition:opacity var(--dur-1) var(--ease),filter var(--dur-1) var(--ease)}
-.set-run.is-swapping .set-run-say{opacity:0;filter:blur(2px)}
 /* the indicator belongs to the running state, and its ABSENCE is what says the
    beat has landed — §2 leaves no hue to say it with. opacity rather than
    display, so the sentence does not jump 26px left when it goes. */
 .set-run-in .sweep{opacity:0;flex:0 0 auto;
   transition:opacity var(--dur-1) var(--ease)}
-.set-wrap.is-running .set-run-in .sweep{opacity:1}
-/* THE SETTLED TREATMENT IS DELETED with the state it dressed — it was
-   `--surface-sunken` under the band and `--text-1` on the statement, "fill,
-   weight and a word, the three channels §2 leaves open". Nothing reads
-   .is-ranked in this panel now. The class itself is untouched and still
-   load-bearing: it hands the band headings in and the anchor rails out. */
-/* the running beat OWNS THE CARD. pointer-events was on .set-split alone, so
-   Re-rank and Build the map sat at 45% opacity and stayed clickable — and
-   every control on the bar calls renderSet() on the list being reordered. */
-.set-wrap.is-running .set-bar,.set-wrap.is-running .set-split{opacity:.45;pointer-events:none;
-  transition:opacity var(--dur-2) var(--ease)}
-
-/* ── THE BAND'S OTHER ENDING · platform.md §9.1, 2026-09-15 ────────────────
-   §9.1 gives a re-rank, a sort and a filter ONE row and one treatment: "the
-   list as it was, and a sentence saying the order did not change". So the
-   failure is not a .fail block -- there is no region to put one in, because
-   nothing was emptied and nothing is missing. It is the band, holding open on
-   the sentence it was already the host for.
-
-   ***AND THE BAR IS NOT DIMMED, WHICH IS THE WHOLE DIFFERENCE FROM .is-running
-   ABOVE.*** The rule above exists because every control on the bar calls
-   renderSet() on a list that is mid-reorder. Nothing is mid-anything here --
-   the operation is over and it did not happen -- and the bar is where the
-   founder retries: Sort, Filter and Re-rank are the three ways back. Dimming
-   the recovery is the one thing this state may not do.
-
-   NO SWEEP EITHER, and it comes free: the indicator is declared on
-   .is-running alone, so a band that is failed rather than running has no
-   moving mark in it. §6 -- an indicator's ABSENCE is what says the beat
-   stopped. */
-.set-wrap.is-failed .set-run{grid-template-rows:1fr;transition-duration:var(--dur-3)}
-/* .fld-msg's shape a third time, as a span because .set-run-say is a <p> and a
-   <div> inside one is not markup. Full ink on the sentence: §7 gives failure
-   the assertive register, and the band's resting --text-2 is the colour of a
-   line that narrates. */
-.run-fail{display:flex;align-items:flex-start;gap:var(--s-6);color:var(--text-1)}
-.run-fail svg{flex:0 0 16px;margin-block-start:var(--s-2);color:var(--text-2)}

@@ -55,7 +55,6 @@
 :root[data-theme="dark"] .foot-mark-light{display:none}
 :root[data-theme="dark"] .foot-mark-dark{display:inline-block}
 @media (max-width:1180px){
-  .row-3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
 }
 .card-head .t-title{flex:1;min-width:0}
 .card-icon{color:var(--text-3);display:flex}
@@ -63,8 +62,3 @@
 .caption{border-top:1px solid var(--border);margin:0 var(--s-20);padding:var(--s-12) 0 var(--s-14);
          font-size:13px;line-height:1.6;color:var(--text-2)}
 .caption b{color:var(--text-1);font-weight:600}
-/* a real finding earns the size. better-ui: what matters most is read first,
-   and until now the map's own conclusion was the smallest text on the card. */
-.caption.is-real{font-size:14.5px;line-height:1.55;color:var(--text-2);
-                 max-width:76ch;padding-top:var(--s-14)}
-.dash-title{font-size:20px;line-height:1.25;font-weight:600;color:var(--text-1)}

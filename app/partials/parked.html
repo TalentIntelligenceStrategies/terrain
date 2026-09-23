@@ -8,107 +8,16 @@
        resemblance. Only one is ever active at a time.                      -->
   <div id="parked" hidden>
 
-    <div class="cf" id="cfCard" role="group" aria-labelledby="cfTitle">
-      <!-- THE COPY HERE IS A FALLBACK. setConfirmMode overwrites #cfLede and
-           #cfGate from the CF table before the card is ever shown, so a change
-           made only here renders as the old words. Change both. -->
-      <div class="cf-turn cf-read">
-      <h2 class="cf-title" id="cfTitle" tabindex="-1">Here is how we read your idea</h2>
-      <p class="cf-lede t-body" id="cfLede">Correct anything that is wrong — say what is off and
-         I will adjust it.</p>
+    <!-- ONE TENANT NOW. The approval gate's card and the build block lived
+         here too, hidden, after the analysis layer left — markup nobody
+         rendered, kept in case the decision came back. It did not, and a
+         retired component sitting in the DOM is a component the next reader
+         has to work out the status of. Git has them.
 
-      <div class="said" id="cfSaid">
-        <div class="said-body">
-          <div class="t-micro">You said</div>
-          <p class="said-text" id="cfSaidText"></p>
-          <textarea class="said-edit" id="cfSaidEdit" rows="2" hidden
-                    aria-label="What you are building"></textarea>
-        </div>
-        <!-- SAVE IS NOT PRIMARY. The gate has exactly one primary action and
-             it is Approve; a near-black Save inside the card would put two
-             filled buttons on the most important screen in the product and
-             make the smaller one look like the way forward. -->
-        <div class="said-ctl">
-          <button class="btn btn-secondary" id="cfEdit" type="button">Edit</button>
-          <button class="btn btn-secondary" id="cfSave" type="button" hidden>Save</button>
-          <button class="btn btn-ghost" id="cfCancel" type="button" hidden>Cancel</button>
-        </div>
-      </div>
-
-      <div class="said cf-answers" id="cfAnswers" hidden>
-        <div class="said-body">
-          <div class="t-micro">And you told us</div>
-          <div class="head-meta" id="cfAnswerChips"></div>
-        </div>
-      </div>
-
-      <!-- retired Q4, back as an option rather than as a forced question.
-           platform.md §3.2 calls "is anything coming up that isn't what you're
-           building" the real loss of the 2026-09-09 rewrite; typing at the gate
-           is where it returns, and this is where it shows. -->
-      <div class="said cf-answers" id="cfExcl" hidden>
-        <div class="said-body">
-          <div class="t-micro">And leaving out</div>
-          <div class="head-meta" id="cfExclChips"></div>
-        </div>
-      </div>
-
-      <!-- change mode has no sentence and no round to read back, and with the
-           two lists gone it would otherwise be a warning and a button. The gate
-           has to state what it is gating. -->
-      <div class="said" id="cfChange" hidden>
-        <div class="said-body">
-          <div class="t-micro">You asked for</div>
-          <p class="said-text" id="cfChangeText"></p>
-        </div>
-      </div>
-      </div>
-
-      <div class="cf-turn cf-act">
-      <div class="gate">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <p id="cfGate"><b>Nothing is searched until you approve this.</b> Every result that
-           follows is built from these criteria — if the reading is wrong, the results will be
-           wrong in a way you cannot see.</p>
-      </div>
-
-      </div>
-    </div>
-
-    <div class="bd" id="bdBlock" role="group" aria-labelledby="bdTitle">
-      <div class="bd-head">
-        <h2 class="t-title" id="bdTitle" data-bd="title" tabindex="-1">Building your map</h2>
-        <span class="fig fig-s bd-elapsed" data-bd="elapsed" aria-label="Time elapsed">0.0s</span>
-      </div>
-      <p class="bd-lede t-body" data-bd="lede">This runs once. Coming back to this project later
-         opens it straight away — you will not watch this again.</p>
-      <div class="prog"><div class="prog-bar" id="progBar"></div></div>
-      <ol class="stages" id="stages"></ol>
-      <div class="done" id="bdDone">
-        <p class="done-note" data-bd="note">Saved to your projects. Changing the scope later
-           rebuilds only what changed.</p>
-        <button class="btn btn-primary" id="bdOpen" type="button">
-          <span data-bd="cta">Open your results</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- ══ search settings ══════════════════════════════════════════════════
-         ONE PANEL, TWO ANCHORS, and it is parked here for the same reason the
-         confirm card is: the composer on the conversation and the bar on the
-         results surface both open it, and the settings it holds are ONE set.
-         Two copies of this markup would be two sets of controls over one
-         value, and the first thing that goes wrong with those is that they
-         disagree while both look right.
-
-         A POPOVER, NOT A MODAL. 13-inline-confirm.css states the rule — no
-         modal, no <dialog>, no slide-over — so nothing dims, nothing traps
-         focus, and Escape closes it through the same stack the record uses.
-
-         NOT role="dialog" AND NOT role="menu". It is neither: a dialog is a
-         thing you are inside and must leave, and these are not menu items.
-         It is a labelled group of controls anchored to the button that opens
-         it, which is what aria-expanded plus aria-controls already says. -->
+         WHAT IS LEFT IS NOT RETIRED, it is PARKED: settings.mjs moves #setPop
+         out of here and under whichever composer anchors it. It ships inside a
+         [hidden] container so it cannot flash on first paint before that move
+         happens. -->
     <div class="pop pop-set" id="setPop" role="group" aria-labelledby="setPopTitle">
       <h2 class="pop-title t-micro" id="setPopTitle">Search settings</h2>
       <!-- ONLY THE SECTIONS SCROLL. The panel is capped to the room its

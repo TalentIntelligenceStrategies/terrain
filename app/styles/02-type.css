@@ -29,7 +29,7 @@
    written out verbatim three times — here, .hf dt and .cf-pair-k — so the next
    label change would have landed in one of three places and looked like a
    deliberate difference in the other two. */
-.t-micro,.hf dt,.cf-pair-k{font-size:10.5px;line-height:1.2;font-weight:500;
+.t-micro,.hf dt{font-size:10.5px;line-height:1.2;font-weight:500;
          letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
 /* THE SIZE CLASSES CARRY THE FAMILY, and that is the whole point of this
    selector list. .fig held family + tabular-nums + weight while .fig-m held

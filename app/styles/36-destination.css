@@ -30,9 +30,6 @@
 .view-page .grid{padding-inline:var(--s-16)}
 .page-head-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-8)}
 .head-meta{display:flex;align-items:center;gap:var(--s-8);flex-wrap:wrap}
-.chip-reopened,.chip-updated{display:none}
-.is-reopened .chip-reopened{display:inline-flex}
-.is-updated .chip-updated{display:inline-flex}
 
 /* the bottom pad was --s-72, and the 72px was clearance for a dock icon that
    no longer exists. The attribution occupies that band instead of empty
@@ -62,142 +59,17 @@
 .bar-t{flex:1;height:8px;border-radius:var(--r-chip);
        background:var(--surface-sunken);overflow:hidden}
 .bar-f{display:block;height:100%;border-radius:var(--r-chip)}
-
-.bal{display:flex;align-items:center;gap:var(--s-32);
-     padding:var(--s-24) var(--s-24) var(--s-24) var(--s-20);flex-wrap:wrap}
-.bal-fig{flex:1;min-width:min(220px,100%);display:flex;flex-direction:column;gap:var(--s-6)}
-.bal-n{display:flex;align-items:baseline;gap:var(--s-8);color:var(--text-1)}
-.bal-sub{color:var(--text-3);font-size:13px;line-height:1.6;margin:0;text-wrap:pretty}
-.bal-sub b{color:var(--text-2);font-weight:600}
-/* the ring, and the figure inside it, are one target-sized block so the
-   percentage never lands on the arc it describes */
-.bal-ring{flex:0 0 auto;position:relative;width:104px;height:104px}
-.bal-ring svg{display:block;transform:rotate(-90deg)}
-.bal-ring-in{position:absolute;inset:0;display:flex;flex-direction:column;
-     align-items:center;justify-content:center;gap:1px}
-.bal-ring-in .t-micro{color:var(--text-3)}
-
-/* ── the run-type cards · IPtech's eight module squares, hand-picked to five ──
-   Also the page's filter. One selection state drives the cards, the ranked
-   bars and the daily chart, so the three can never disagree about which run
-   type the founder is looking at — which is the failure §2.20 records on the
-   source screen, arriving from the other direction. */
-/* auto-fit, not two viewport breakpoints. A media query measures the VIEWPORT
-   and this grid lives in whatever the 260px sidebar leaves over — so at a 500px
-   viewport the container is 240px, the query still read "760px and up: two
-   columns", and five cards overflowed a container they could not see. auto-fit
-   is driven by the space that actually exists, and it is the same pattern the
-   dashboard's widget row uses. Five items, so five tracks at full width. */
-.rt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-         gap:var(--s-12);padding:0 var(--s-20) var(--s-20)}
-/* STATIC. These were buttons driving a cross-card isolate selection until
-   2026-09-08; the selection came out and so did the button, the pressed state
-   and the hover. A card that does nothing must not look like a control —
-   better-accessibility's first rule is to use the platform, and the cheapest
-   fix for a control that is not one is to delete the control. */
-.rt{display:flex;flex-direction:column;gap:var(--s-6);
-    padding:var(--s-12) var(--s-14);border-radius:var(--r-inner);
-    border:1px solid var(--border);background:var(--surface)}
-/* short, known strings, and a two-line "MAP BUILDS" reads as broken */
-.rt-lbl{color:var(--text-3);white-space:nowrap}
-/* the figure and its unit are one baseline-aligned pair. §1's secondary-figure
-   treatment: the unit is the quieter half, Urbanist rather than Inconsolata
-   because it is a word, and lowercase because the uppercase label above it is
-   already doing the labelling. */
-.rt-fig{display:flex;align-items:baseline;gap:var(--s-6);min-width:0}
-.rt-n{color:var(--text-1)}
-.rt-unit{font-size:12px;font-weight:500;color:var(--text-3)}
-.rt-each{color:var(--text-3);font-size:11.5px;line-height:1.4;text-wrap:pretty}
-/* what the balance still buys. Divided off with a rule rather than a colour,
-   because §2 has no colour to spend on "remaining" and remaining is not a
-   state. It reads as a sentence: `≈10 MORE` under a rule left the reader to
-   work out more of what, and out of what. */
-.rt-left{margin-top:var(--s-4);padding-top:var(--s-8);border-top:1px solid var(--border);
-         font-size:11.5px;line-height:1.5;color:var(--text-3);text-wrap:pretty}
-.rt-left .fig{color:var(--text-1)}
-
-/* ── the two controls, both inside the card head they govern ──
-   A page-level range row sat above the first card until 2026-09-08 and was
-   the wrong shape twice: it floated outside every surface it acted on, and it
-   changed the denominator, which is the one thing this page must not do.
-   Both are `.seg` in a `.card-head` now — the idiom the Filings page already
-   uses — and the head wraps rather than crushing its title. */
-.card-head .us-seg{flex:0 0 auto}
-.us-seg .seg-btn[aria-pressed="true"]{background:var(--surface);color:var(--text-1)}
-/* Only the heads that CARRY a control wrap, hence the marker class. Scoping
-   this to `.card-head` put the icon, the title and the info affordance on
-   three separate rows on the two heads that have no control — the rule was
-   written for the crowded case and applied to every case. */
-.card-head-ctl{flex-wrap:wrap;row-gap:var(--s-10)}
 @media (max-width:820px){
-  .card-head-ctl .t-title{flex:1 1 100%}
 }
-
-/* ── the ranked bars · a modifier on .hb, not a second component ──
-   .hb is the rivals grammar: a --mark-off field with the tracked entity in
-   --mark-1 ink. It transfers unchanged because the job is identical — rank is
-   carried by LENGTH, and value is free to mean "this is the one you selected".
-   What changes is that these labels are real English (a run type is Terrain's
-   own vocabulary, so §8's contract makes it real) and there are two figures
-   per row instead of one. */
-.hb.ub .hb-lbl{flex:0 0 104px;font-size:13px;color:var(--text-2);align-items:center}
-.hb.ub .hb-n{flex:0 0 46px}
 /* .hb-row's hover is a rivals affordance: there, a row selects a holder. Here
    nothing selects, so the row is a plain element and the hover would be a
    control cue over static content. */
-@media (hover:hover){ .hb.ub .hb-row:hover{background:none} }
+@media (hover:hover){ }
 /* the label was eating the track. Below this the run type wraps to two lines
    rather than leaving a 90px bar, and a 1% bar that reads as a dot is a bar
    that has stopped being one. */
-@media (max-width:720px){ .hb.ub .hb-lbl{flex:0 0 76px;font-size:12.5px} }
-.hb.ub .hb-pct{flex:0 0 34px;text-align:right;color:var(--text-3)}
-.hb.ub .hb-row[aria-pressed="true"] .hb-pct{color:var(--text-2)}
-
-/* ── the daily columns ──
-   One value when nothing is selected — --chart-series, because it is the data
-   and §3.5 owns that layer. Two when something is: the selected run type in
-   --mark-1 at the base, the rest of the day in --mark-off above it. That is
-   dataviz's emphasis form, it stays inside §3.7's three-value cap, and the
-   remainder barely moves tone (--n-8 to --n-7) so only the selection reads as
-   a change. */
-.uc{position:relative;padding:0 var(--s-20) var(--s-4)}
-/* the axis needs its own gutter rather than sitting inside the plot. With the
-   labels at the plot's left edge, the first column drew straight over them —
-   invisible at 31 narrow columns and total at 14 wide ones. dataviz wants the
-   grid recessive, which means BEHIND the marks, so the labels have to be
-   somewhere the marks are not. */
-.uc-wrap{position:relative;padding-left:38px}
-/* centred, not space-between. Under space-between three monthly columns sat
-   at the far edges of a 1000px card with a void between them and read as a
-   broken chart rather than as three months. The cap scales with the count
-   instead, set inline per render. */
-.uc-plot{display:flex;align-items:stretch;justify-content:center;
-         height:180px;border-bottom:1px solid var(--border);position:relative;z-index:1}
-.uc-grid{position:absolute;left:38px;right:0;top:0;height:180px;z-index:0}
-.uc-grid span{position:absolute;left:0;right:0;border-top:1px dashed var(--border)}
-.uc-grid b{position:absolute;left:-38px;top:-7px;width:32px;text-align:right;
-           font-family:'Inconsolata',ui-monospace,monospace;
-           font-variant-numeric:tabular-nums;font-size:10.5px;font-weight:400;
-           color:var(--text-3)}
-/* height:100% is load-bearing, not tidiness. The segments are sized in
-   percent, and a percentage height against a flex item whose own height is
-   content-derived resolves to auto — so every column collapsed to the 2px
-   floor below and the chart drew a flat line. The column has to own a
-   resolved height for the segments to have anything to be a percentage of. */
-.uc-col{flex:1 1 0;min-width:0;max-width:var(--uc-cap,44px);height:100%;display:flex;
-        flex-direction:column;justify-content:flex-end;position:relative;
-        transition:opacity var(--dur-1) var(--ease)}
-/* a day with no run and a day with one 2-point search must not read alike, so a
-   non-zero column floors at 2px. The axis and the caption carry the magnitude;
-   the floor only carries "something happened". */
-.uc-seg{display:block;min-height:2px;border-radius:2px 2px 0 0;
-        background:var(--chart-series)}
-@media (hover:hover){.uc-col:hover{opacity:.72}}
-.uc-axis{display:flex;justify-content:space-between;align-items:center;
-         gap:var(--s-12);padding:var(--s-8) var(--s-20) 0 calc(var(--s-20) + 38px)}
-/* the span in words between the two end dates, which are identities and so are
-   bars. Two bars alone read as debris; a bar, the span, a bar reads as an axis. */
-.uc-span{color:var(--text-3);font-size:11.5px;white-space:nowrap}
+@media (max-width:720px){ }
+@media (hover:hover){}
 
 /* ── the runs list · the drill-down grammar, §7's "a list, not a page" ──
    Dense rows on 1px dividers. Every identity is a bar: the date, the project,
@@ -207,13 +79,8 @@
 .ur{display:flex;align-items:center;gap:var(--s-12);padding:var(--s-10) 0;
     border-bottom:1px solid var(--border)}
 .ur:last-child{border-bottom:0}
-.ur-when{flex:0 0 56px}
-.ur-kind{flex:0 0 118px;font-size:13px;font-weight:500;color:var(--text-1)}
-.ur-what{flex:1;min-width:0;display:flex;align-items:center;gap:var(--s-8)}
-.ur-n{flex:0 0 40px;text-align:right;color:var(--text-1)}
 @media (max-width:640px){
   .ur{flex-wrap:wrap;gap:var(--s-6) var(--s-10)}
-  .ur-what{flex:1 0 100%;order:3}
 }
 .info{position:relative;flex:0 0 auto;display:flex}
 .info-btn{color:var(--text-3);display:flex;padding:var(--s-4);border-radius:var(--r-chip);
@@ -230,19 +97,7 @@
 .info.is-open .info-pop{opacity:1;visibility:visible;transform:none;
           transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
                      visibility 0s linear 0s}
-/* once one is open the next opens instantly. The delay prevents accidental
-   activation; four of these sit in one viewport and a founder reading across
-   them should not pay it four times. */
-.info.is-instant .info-pop{transition-duration:0s}
 .info-pop b{color:var(--text-1);font-weight:600}
-
-.suggests{display:flex;flex-wrap:wrap;gap:var(--s-8)}
-.suggest{text-align:left;font-size:12.5px;font-weight:500;color:var(--text-2);
-         border:1px dashed var(--border-strong);border-radius:var(--r-pill);
-         padding:var(--s-6) var(--s-12);
-         transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease),
-                    border-color var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
-.suggest:active{transform:scale(.97)}
 
 /* ── .pref · the settings row ────────────────────────────────────────────
    §7's "a list, not a page" applied to preferences: a label, optionally one
@@ -490,15 +345,10 @@
 .pg-back:active{transform:scale(.97)}
 .pg-back svg{flex:0 0 auto;color:var(--text-3)}
 
-
 @media (hover:hover) and (pointer:fine){
-  .side-collapse:hover{color:var(--text-1);background:var(--surface-sunken)}
-  .proj:hover{background:var(--surface-sunken)}
   .profile:hover{background:var(--surface-sunken)}
   .menu-item:hover{background:var(--surface-sunken);color:var(--text-1)}
   .add:hover{color:var(--text-1);background:var(--surface-sunken)}
-  .mx-cell:hover{box-shadow:inset 0 0 0 2px var(--text-1);cursor:pointer;z-index:1}
-  .rival-row:hover{background:var(--surface-sunken)}
   .info-btn:hover{color:var(--text-1);background:var(--surface-sunken)}
   /* THE ONE PLACE A FIELD'S EDGE MOVES, and it is hover rather than focus so
      it cannot be mistaken for the focus indicator. Not while disabled, and
@@ -511,16 +361,43 @@
      token and inventing one for a 1px rule is not worth a token. */
   .sw:not(:disabled):hover{box-shadow:inset 0 0 0 1px var(--text-3)}
   .sw[aria-checked="true"]:not(:disabled):hover{background:var(--ink-hover);box-shadow:none}
-  .expand-btn:hover{color:var(--text-1);background:var(--surface-sunken)}
   .pg-back:hover svg{color:var(--text-2)}
   .pg-back:hover{color:var(--text-1);background:var(--surface-sunken)}
-  .drill-row.is-expandable:hover{background:var(--surface-sunken)}
   .set-ctl:hover{color:var(--text-1);background:var(--surface-sunken)}
   /* an open row IS --surface-sunken, so the hover above would be invisible on
      it. One step further along the neutral ramp, using the token whose whole
      definition is the darker neutral carried by a selected row. */
   .set-row[data-open] .set-ctl:hover{background:var(--track-pressed)}
-  .cmp-send:not(:disabled):hover{background:var(--accent-hover)}
-  .suggest:hover{background:var(--surface-sunken);color:var(--text-1);border-color:var(--border-strong)}
-  .drill-close:hover{color:var(--text-1);background:var(--surface-sunken)}
 }
+
+/* ── the points page's own three components ───────────────────────────────
+   These had NO CSS AT ALL. The page's markup was rewritten when the analysis
+   layer left and the stylesheet was not: `.bal-*`, `.rt-*`, `.uc-*` and
+   `.ur-*` styled a richer points page that is no longer rendered, and
+   `.us-meter`, `.runs` and `.run-row` are rendered and were styled by nothing.
+   The meter came out as a 70px black block because `.bar-t` is a <span>,
+   inline boxes ignore `height`, and `.bar-f`'s `height:100%` then resolved
+   against auto.
+
+   NOTHING CAUGHT IT. check-app.py gates the CSS a component reads; it has no
+   way to know a component reads none. The only check that finds this is
+   opening the page, which is why platform.md's verification says to. */
+
+.us-meter{display:flex;flex-direction:column;gap:var(--s-12)}
+/* block, so the 8px height in the shared rule applies at all */
+.us-meter .bar-t{display:block;width:100%;flex:none}
+.us-meter p{margin:0;color:var(--text-2)}
+
+.runs{display:flex;flex-direction:column}
+/* THE COST COLUMN IS FIXED AND END-ALIGNED, which is the whole reason this is
+   a grid and not a flex row: a column of run costs the founder is scanning for
+   the expensive one has to line up, and tabular figures in a flex row do not.
+   The project column takes the slack because it is the only one that can be a
+   skeleton bar of unknown width. */
+.run-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto var(--s-40);
+         align-items:center;gap:var(--s-12);
+         padding:var(--s-10) 0;border-top:1px solid var(--border)}
+.run-row:first-child{border-top:0}
+.run-kind{color:var(--text-1)}
+.run-row > .fig{color:var(--text-3)}
+.run-cost{text-align:end;color:var(--text-1)}

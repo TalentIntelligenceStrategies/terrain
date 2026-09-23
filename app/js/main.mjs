@@ -108,11 +108,24 @@ async function loadPartials() {
    does not. */
 const VIEWS = ['conversation', 'work', 'starred', 'usage', 'account', 'billing', 'help'];
 
+/* WHERE `Back` GOES, and it is a memory rather than a constant. The four
+   destinations are stepped off to and come back from (platform.md §6), so
+   `Back` has to return to whichever surface the founder was on — the results
+   if they have searched, the home surface if they have not. A hard-coded
+   target sends a founder who never searched to an empty result list and calls
+   it going back. */
+const DESTINATIONS = ['usage', 'account', 'billing'];
+let lastSurface = 'conversation';
+export function backTarget() { return lastSurface; }
+
 /* which hash lands on which view. A hash that names a STATE rather than a
    surface still has to resolve to one, or the router silently shows nothing. */
 function viewForHash(h) {
   if (!h) return 'conversation';
-  if (h.startsWith('set') || h === 'technology' || h === 'track' ||
+  /* `back` is not a surface, it is a request to leave one — it resolves to
+     wherever the founder was before they stepped off. */
+  if (h === 'back') return lastSurface;
+  if (h === 'work' || h.startsWith('set') || h === 'technology' || h === 'track' ||
       h.startsWith('drilldown')) return 'work';
   if (h.startsWith('starred')) return 'starred';
   if (h.startsWith('usage')) return 'usage';
@@ -131,6 +144,10 @@ export function onRoute(fn) { listeners.push(fn); }
 
 export function go(view) {
   if (view === current) return;
+  /* remembered BEFORE the swap, and `help` is deliberately not in
+     DESTINATIONS' opposite: help is stepped off to as well, so returning to it
+     would be returning to somewhere the founder was leaving. */
+  if (!DESTINATIONS.includes(view) && view !== 'help' && view !== 'starred') lastSurface = view;
   const next = $(`.view[data-view="${view}"]`);
   if (!next) return;
   const prev = current && $(`.view[data-view="${current}"]`);

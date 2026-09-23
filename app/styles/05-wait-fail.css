@@ -104,14 +104,6 @@
   20%    {opacity:var(--dmx-opacity-base)}
 }
 
-/* THE WHOLE RIGHT PANE, WAITING. One region and one loader, for the one case
-   where nothing on screen belongs to the project being opened. It REPLACES the
-   grid rather than covering it: a scrim over ten stale cards would be showing
-   the previous project's numbers behind a veil, which is worse than showing
-   nothing, because it is showing something wrong. */
-.pane-wait{min-height:360px;display:grid;place-items:center}
-.pane-wait[hidden]{display:none}
-
 /* A WAITING REGION. min-height is set inline from the height the region had
    before it emptied, so a card does not collapse to the loader's 20px and the
    grid does not reflow twice per resolve -- the same reason .cmp-status
@@ -140,7 +132,6 @@
    made. So it stacks rather than centring everything into one cell: chip at
    the top where it always sits, loader centred in what is left. */
 .set-list.is-wait{grid-template-rows:auto 1fr;justify-items:center}
-.set-list.is-wait>.filter-chip{justify-self:stretch;width:auto}
 /* ROW 2 ALWAYS, chip or no chip. Left to flow the loader lands in row 1 --
    the chip's row -- and sits hard against the top of the column when there is
    no chip to displace it, which reads as a thing stuck under the toolbar
@@ -240,7 +231,6 @@
    the cut the founder made did not stop being the cut they made. Same two
    rows the wait uses, for the same reason. */
 .set-list.is-fail{grid-template-rows:auto 1fr;justify-items:center}
-.set-list.is-fail>.filter-chip{justify-self:stretch;width:auto}
 .set-list.is-fail>.fail{grid-row:2;align-self:center}
 
 /* ── .fail · the block itself ──────────────────────────────────────────────
@@ -280,26 +270,6 @@
    block is never it -- and on --surface-sunken the --surface fill is what
    makes it read as raised. */
 .fail-act{display:flex;align-items:center;gap:var(--s-8);flex-wrap:wrap}
-
-/* ── the one assertive region · design-language.md §7 ──────────────────────
-   REGISTERED AT LOAD, EMPTY, AND NEVER HIDDEN. A region inserted at the
-   moment it has something to say is a region screen readers announce
-   inconsistently, and `[hidden]` keeps a node out of the accessibility tree
-   so writing into it first announces nothing. It ships present and silent.
-
-   IT IS THE ONLY role="alert" IN THE SYSTEM and it carries failure alone.
-   Every other update here is polite and waits its turn; a routine
-   confirmation borrowing this is how an alert region stops being read as
-   urgent. It lives outside .stage so it survives every view swap -- a
-   failure on the working surface and a failure at the gate announce through
-   the same node.
-
-   :empty ZEROES THE BOX RATHER THAN REMOVING IT. display:none would take it
-   back out of the tree, which is the bug above wearing a different property.
-   It is .sr-only regardless: the VISIBLE failure is the .fail block sitting
-   in the region that failed, and printing the same sentence twice on screen
-   would be the interface saying it once and shouting it once. */
-.alert-region:empty{margin:0;padding:0}
 
 /* clip-rect rather than display:none or width:0 — the two that remove the
    text from the accessibility tree along with the screen. */

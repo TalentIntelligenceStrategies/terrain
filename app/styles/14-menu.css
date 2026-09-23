@@ -31,39 +31,6 @@
                  visibility 0s linear 0s}
 .menu-who{display:flex;flex-direction:column;gap:5px;padding:var(--s-8)}
 
-/* ~~.side-search~~ DELETED 2026-09-15 · Find a project had no listener, and
-   the reason it never grew one is the more useful half: IT CANNOT WORK HERE
-   AND NOT BECAUSE IT WAS UNFINISHED. §8 renders every project name but the
-   open one as a bar, so six of the seven rows have no text to match — a
-   founder could not type a name they are not shown, and any keystroke would
-   hide six rows for being unnamed rather than for not matching. A control
-   that promises a filter it cannot perform on 6/7 of its list is worse than
-   no control, and wiring it would have been the worse of the audit's two
-   options rather than the more thorough one.
-
-   IT COMES BACK WHEN THE NAMES DO. Nothing about the design was wrong; the
-   demonstration data cannot support it. */
-
-.side-section{margin:var(--s-16) 0 var(--s-6);padding:0 var(--s-8)}
-.side-section:first-of-type{margin-top:var(--s-6)}
-.proj{display:flex;align-items:center;gap:var(--s-10);width:100%;text-align:left;
-      padding:var(--s-8);border-radius:var(--r-control);margin-bottom:var(--s-2);
-      transition:background var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
-.proj:active{transform:scale(.985)}
-.proj[aria-current="true"]{background:var(--surface-sunken)}
-.proj[aria-current="true"] .proj-dot{background:var(--text-1)}
-.proj-dot{width:5px;height:5px;flex:0 0 5px;border-radius:var(--r-pill);
-          background:var(--indicator-rest);margin-right:var(--s-2);transition:background var(--dur-1) var(--ease)}
-.proj-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
-/* the open project's real name, 2026-09-11. It takes .t-label's size and weight
-   without the class, because these rows are 13px throughout and a second
-   typographic voice in a menu row would read as a different kind of item. One
-   line, clipped rather than wrapped: a project name is an identifier the
-   founder recognises from its start, and a two-line row would break the
-   switcher's even rhythm for the one row that is already marked. */
-.proj-name{font-size:13px;line-height:1.4;font-weight:500;color:var(--text-1);
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
 /* ── MOVED HERE FROM THE RESET SECTION, and it is safe to move because it
    wins on SPECIFICITY wherever it lands rather than on order.
 
