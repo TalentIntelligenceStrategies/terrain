@@ -269,6 +269,63 @@
         </div>
         </div>
 
+          <!-- ══ THE RECORD TAKES THE LEFT COLUMN, IN THE LIST'S PLACE ═══════
+               platform.md §4.5. The two columns divide by how hard you are
+               looking: LEFT is for glancing — the identifiers, the abstract,
+               the claims, and the thumbnail strip under them — and RIGHT is
+               for when it matters, holding one drawing as large as the column
+               allows.
+
+               So the record is here rather than opposite the list, and the
+               drawing gets the column the record used to have. A viewer that
+               covered the record made the founder choose between the figure
+               and the text describing it; side by side they are one act.
+
+               IT IS IN FLOW, not an overlay. The column is the record's while
+               it is open and the list steps aside, which is why closing it is
+               an X rather than a back chevron — nothing is behind it. -->
+          <section class="rec" id="recPane" aria-labelledby="recTitle" hidden>
+            <!-- CLOSE IS AN X AT THE TRAILING EDGE, not a back chevron at the
+                 leading one. A chevron says "the thing you were looking at is
+                 behind this and you are stepping back to it" — which was true
+                 when the record slid over the pane and left a peek of it. The
+                 record IS the column now. So the control
+                 dismisses this pane rather than retreating from it, and an X
+                 is the glyph for that.
+
+                 DOM ORDER IS WHAT PINS IT RIGHT. `.rec-head h2` is `flex:1`,
+                 so the heading takes every spare pixel and whatever follows it
+                 is pushed to the trailing edge. No auto margin, and nothing to
+                 flip for RTL — the row is already logical. -->
+            <div class="rec-head">
+              <h2 class="t-title" id="recTitle" tabindex="-1">The patent record</h2>
+              <!-- ══ WHAT THE LEFT COLUMN COSTS, PAID BACK HERE ═════════════
+                   platform.md §4.5. The record takes the list's place, so the
+                   founder cannot see the results while reading one. Without
+                   these, moving through a set is close, find your place, open
+                   — once per patent, and a founder comparing five does it
+                   eight times.
+
+                   THE POSITION IS SPOKEN, not shown as "3 / 41". A visible
+                   counter is a fifth fact in a head that has three, and the
+                   number is only ever wanted by someone who has lost their
+                   place — which is exactly who aria-label serves. -->
+              <button class="icon-btn" id="recPrev" type="button"
+                      aria-label="Previous patent in your results">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <button class="icon-btn" id="recNext" type="button"
+                      aria-label="Next patent in your results">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+              <button class="icon-btn" id="recClose" type="button"
+                      aria-label="Close this patent">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+            <div class="rec-body" id="recBody"></div>
+          </section>
+
       </div>
 
       <!-- ── the right pane · §6's twelve views, map first ───────────────── -->
@@ -279,43 +336,19 @@
                record replaces it rather than covering it. -->
           <div class="fishwrap" id="fishWrap" hidden></div>
 
-          <!-- ══ THE RECORD OCCUPIES THIS COLUMN ════════════════════════════
-               It was an overlay that slid in from the right and stopped ~200px
-               short, so the thing behind stayed half-visible. That peek was the
-               spec while the pane held twelve widgets and the record needed to
-               read as "this came from there".
 
-               The pane holds one thing now, so there is nothing to peek at and
-               a panel sliding over an empty column is motion that reports
-               nothing. It is in flow: the column is the record's, and the
-               grouping steps aside while it is open. -->
-          <section class="rec" id="recPane" aria-labelledby="recTitle" hidden>
-            <!-- CLOSE IS AN X AT THE TRAILING EDGE, not a back chevron at the
-                 leading one. A chevron says "the thing you were looking at is
-                 behind this and you are stepping back to it" — which was true
-                 when the record slid over the pane and left a peek of it. The
-                 record IS the column now: the list it came from never went
-                 anywhere and is still live on the left. So the control
-                 dismisses this pane rather than retreating from it, and an X
-                 is the glyph for that.
+          <!-- ══ NOTHING CHOSEN YET, AND THE COLUMN SAYS WHICH NOTHING ═══
+               This column has two idle states because it serves two steps, and
+               an empty column that says nothing is the defect design-language
+               §8 names one level up: an empty region that looks like a region
+               which failed to load.
 
-                 DOM ORDER IS WHAT PINS IT RIGHT. `.rec-head h2` is `flex:1`,
-                 so the heading takes every spare pixel and whatever follows it
-                 is pushed to the trailing edge. No auto margin, and nothing to
-                 flip for RTL — the row is already logical. -->
-            <div class="rec-head">
-              <h2 class="t-title" id="recTitle" tabindex="-1">The patent record</h2>
-              <button class="icon-btn" id="recClose" type="button"
-                      aria-label="Close this patent">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-              </button>
-            </div>
-            <div class="rec-body" id="recBody"></div>
-          </section>
-
-          <!-- nothing chosen yet -->
+               No record open  → pick a patent.
+               Record open     → pick a drawing, or a sentence saying this one
+                                 has none. record.mjs writes the second. -->
           <div class="pane-idle" id="paneIdle">
-            <p class="t-body">Pick a patent on the left to read its record.</p>
+            <p class="t-body" data-idle="set">Pick a patent on the left to read its record.</p>
+            <p class="t-body" data-idle="rec" id="paneIdleRec">Pick a drawing to see it here.</p>
           </div>
 
           <!-- ══ the figure viewer · platform.md §6.6 ══════════════════════

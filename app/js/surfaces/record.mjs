@@ -38,6 +38,10 @@ let restore = null;
    and re-reading them out of the DOM would mean parsing <img> tags back into
    the shape the port already gave us. */
 let FIGURES = [];
+/* WHICH PATENT IS OPEN, so the step controls know where they are. The list is
+   hidden while the record is up (platform.md §4.5), so this is the only thing
+   that knows the founder's place in it. */
+let OPEN_ID = null;
 const FLOOR = 240;
 
 const MONO = { number: 1, appno: 1, ipcMain: 1, ipc: 1 };
@@ -96,7 +100,14 @@ function figuresHTML(figures) {
         /* THE WHOLE THUMBNAIL IS THE CONTROL. A separate "open" affordance
            beside a picture is two targets for one intention, and the picture
            is the bigger and more obvious of the two. */
+        /* A WITHHELD FIGURE IS NOT A CONTROL THAT OPENS AN EMPTY VIEWER.
+           `src === null` means the drawing exists and we decline to show it,
+           so there is nothing larger to open — the button says why instead,
+           the same way `Drawings only` refuses on a record with none.
+           aria-disabled rather than disabled, so it keeps its tab stop and
+           can carry the reason to a keyboard. */
         + '<button class="pn-fig-btn" type="button" data-fig="' + i + '"'
+        + (f.src == null ? ' aria-disabled="true"' : '')
         + ' aria-label="Figure ' + f.n
         + (f.src == null ? ', not shown' : ', open it larger') + '">'
         /* `src === null` MEANS RENDER THE FRAME, and it is the only thing that
@@ -165,6 +176,7 @@ function paneHTML(rec) {
    class comes off removes the element mid-slide and the record vanishes rather
    than leaving. */
 function close() {
+  OPEN_ID = null;
   const pane = $('#recPane');
   const app = $('#app');
   if (!pane || pane.hidden) return;
@@ -192,13 +204,60 @@ function close() {
   }, reduced() ? 0 : 220);
 }
 
-async function open(id, trigger) {
+/* THE ORDER IS READ OFF THE DOM, not held as a second array. The list already
+   holds the true sequence — Find similar MOVES rows rather than rebuilding
+   them, so a cached copy would be the one that went stale. Reading it costs a
+   querySelectorAll on a press a human made. */
+function rowIds() {
+  return [...document.querySelectorAll('#setList .drill-toggle')]
+    .map(b => b.getAttribute('data-pn'));
+}
+
+/* Both controls are aria-disabled at the ends rather than hidden: a control
+   that vanishes at the end of a list takes its own explanation with it, and
+   the founder cannot tell whether they ran out or it broke. */
+function syncSteps() {
+  const ids = rowIds();
+  const i = ids.indexOf(OPEN_ID);
+  const set = (sel, off, word) => {
+    const b = $(sel);
+    if (!b) return;
+    const to = i < 0 ? -1 : i + off;
+    const none = to < 0 || to >= ids.length;
+    b.setAttribute('aria-disabled', String(none));
+    b.setAttribute('aria-label', none
+      ? word + ' patent — you are at the ' + (off < 0 ? 'first' : 'last') + ' result'
+      : word + ' patent in your results, ' + (to + 1) + ' of ' + ids.length);
+  };
+  set('#recPrev', -1, 'Previous');
+  set('#recNext', +1, 'Next');
+}
+
+/* Stepping keeps focus where it is. The founder pressed Next and is still
+   pressing Next; moving focus to the heading on every step would make the
+   second press land on something else. */
+function step(delta) {
+  const ids = rowIds();
+  const i = ids.indexOf(OPEN_ID);
+  if (i < 0) return;
+  const to = i + delta;
+  if (to < 0 || to >= ids.length) return;
+  open(ids[to], null, true);
+}
+
+async function open(id, trigger, stepping) {
   const pane = $('#recPane');
   const body = $('#recBody');
   if (!pane || !body) return;
 
   const app = $('#app');
-  restore = captureFocus(trigger);
+  OPEN_ID = id;
+  /* A STEP DOES NOT RE-CAPTURE THE RETURN POINT. Escape after five Next
+     presses must land back on the row the founder actually opened, not on the
+     one they stepped to — otherwise closing returns them somewhere they never
+     chose to be. */
+  if (!stepping) restore = captureFocus(trigger);
+  syncSteps();
   pane.hidden = false;
   /* the class is set BEFORE .rec-open so it is already in force on the frame
      the transition would otherwise start on — reduced motion has to win the
@@ -231,24 +290,52 @@ async function open(id, trigger) {
      record that has none: a toggle that switches to an empty pane is a control
      reporting a fault in itself. aria-disabled rather than disabled, so it
      keeps its tab stop and can say why. */
+  /* THREE STATES, NOT TWO, and collapsing them is the same error the figures
+     contract warns about one level down. A record may have NO drawings; it may
+     have drawings Terrain declines to show; or it may have drawings you can
+     open. "Pick a drawing" over six withheld frames invites a press that
+     cannot work, which is the one thing a control must never do. */
+  const none = FIGURES.length === 0;
+  const openable = FIGURES.some(f => f && f.src != null);
+
   const imgBtn = $('#modeImages');
   if (imgBtn) {
-    const none = FIGURES.length === 0;
     imgBtn.setAttribute('aria-disabled', String(none));
     imgBtn.setAttribute('aria-label',
       none ? 'Drawings only — this record has none' : 'Drawings only');
   }
+  /* AND THE RIGHT COLUMN SAYS WHICH NOTHING IT IS SHOWING. A blank half-screen
+     reads as a region that failed to load. */
+  const idle = $('#paneIdleRec');
+  if (idle) idle.textContent =
+      none     ? 'This patent has no drawings.'
+    : !openable ? 'This patent has ' + FIGURES.length
+                  + (FIGURES.length === 1 ? ' drawing, which is' : ' drawings, which are')
+                  + ' not shown here.'
+    :             'Pick a drawing to see it here.';
+  syncSteps();
   /* focus moves to the heading, quietly — preventScroll is the fix for the
-     record jumping the pane it opened over */
-  focusQuietly($('#recTitle'));
+     record jumping the pane it opened over. NOT ON A STEP: the founder's hand
+     is on the Next button and moving focus off it breaks the second press. */
+  if (!stepping) focusQuietly($('#recTitle'));
+  else say('list', 'Patent ' + (rowIds().indexOf(id) + 1) + ' of ' + rowIds().length + '.');
 }
 
 export function init(ctx) {
   ENGINE = ctx.engine;
   Viewer.init();
 
-  onActivate(document, '.pn-fig-btn', el =>
-    Viewer.open(FIGURES, Number(el.getAttribute('data-fig')) || 0, el));
+  onActivate(document, '.pn-fig-btn', el => {
+    if (el.getAttribute('aria-disabled') === 'true') {
+      say('list', 'This drawing is not shown.');
+      return;
+    }
+    Viewer.open(FIGURES, Number(el.getAttribute('data-fig')) || 0, el);
+  });
   onActivate(document, '.drill-toggle', el => open(el.getAttribute('data-pn'), el));
   onActivate(document, '#recClose', close);
+  onActivate(document, '#recPrev', b =>
+    b.getAttribute('aria-disabled') === 'true' || step(-1));
+  onActivate(document, '#recNext', b =>
+    b.getAttribute('aria-disabled') === 'true' || step(+1));
 }

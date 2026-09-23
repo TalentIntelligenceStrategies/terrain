@@ -58,7 +58,23 @@
      border-radius:var(--r-shell);overflow:hidden}
 .rec[hidden]{display:none}
 /* the grouping yields the column rather than sitting under a cover */
-.rec-open .fishwrap,.rec-open .pane-idle{display:none}
+/* THE RECORD HIDES THE LIST, NOT THE GROUPING. It is a sibling of
+   .listcol-scroll now and takes the column while it is open; the right column
+   goes on showing the grouping until a drawing is enlarged over it.
+
+   THE LIST IS WHAT THIS COSTS, and the record pays it back in its own head:
+   platform.md §4.5 puts previous/next patent there, because without them
+   moving through a set is close, find your place, open — once per patent. */
+.rec-open .listcol-scroll{display:none}
+/* THE RIGHT COLUMN KEEPS ITS IDLE STATE while a record is open — it just says
+   something else. It used to be hidden, which was right when the record WAS
+   this column; now the record is opposite and hiding it leaves a blank half
+   screen that reads as a region which failed to load. */
+.pane-idle [data-idle="rec"]{display:none}
+.rec-open .pane-idle [data-idle="set"]{display:none}
+.rec-open .pane-idle [data-idle="rec"]{display:block}
+/* Nothing hides it when a drawing opens, and nothing needs to: .figview is
+   absolute inset:0 at z-index 40 inside .panecol, so it covers this. */
 /* ~~SWAPPED BEHIND A FADE~~ — the fade is gone, 2026-09-14, and the rule with
    it. `.rec.is-swapping .rec-body{opacity:0;filter:blur(2px)}` styled a 120ms
    crossfade for the founder picking a second patent without closing the first.
@@ -80,20 +96,22 @@
    the UA rule, so without this the attribute does nothing for layout AND the
    forced reflow in openRecordOverlay would have nothing to commit. */
 .rec[hidden]{display:none}
-/* below the container breakpoint the peek is a sliver rather than a
-   reassurance, so the record is full width and there is nothing to peek at —
-   and with nothing to peek at there is nothing for it to float OVER, so the
-   inset and the radius go too. A 16px inset on a 400px pane is the same sliver
-   this breakpoint exists to refuse. */
-@media (max-width:900px){
-  /* and the hairline goes with them. Filling the pane flush, the record's own
-     border would double the chrome already there — the list column's
-     border-bottom sits one pixel above the record's border-top. The border
-     exists to separate the card from surfaces of its own value; flush to the
-     pane there are none. */
-  .rec{top:0;right:0;bottom:0;left:0;border:0;border-radius:0;
-       transform:translateX(100%)}
+/* ── below the floor · platform.md §4.5 ──────────────────────────────────
+   The columns stack at 1079 and the record is IN the upper one, so it needs
+   no rule of its own to fill the width — it already does. What it does need
+   is its height back: .listcol is capped at 46vh for a LIST, which the reader
+   scrolls a few rows of, and a record at 46vh shows about four fields.
+
+   So the cap lifts while the record is open. The drawing column below keeps
+   its own height, which is the arrangement stacking is supposed to produce. */
+@media (max-width:1079px){
+  .rec-open .listcol{max-height:none}
 }
+
+/* The block that stood here set top/right/bottom/left and a transform on an
+   element with no `position`. Every declaration in it was inert: the record
+   has been in flow since it stopped being an overlay, and a positioned inset
+   on a static element is not an override, it is nothing. */
 
 /* the lit cell · platform.md §6.5. A ring on the cell's own edge rather than a fill:
    the fill is the density tone and it means the count, so a selection cannot

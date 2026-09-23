@@ -30,7 +30,7 @@
  */
 import { $, esc } from './dom.mjs';
 import { push, drop } from './esc-stack.mjs';
-import { focusQuietly, captureFocus, setInert } from './focus.mjs';
+import { focusQuietly, captureFocus } from './focus.mjs';
 import { say } from './live-region.mjs';
 import { reduced } from './motion.mjs';
 
@@ -149,13 +149,16 @@ export function open(figures, index, trigger) {
     el.root.classList.add('is-open');
   });
 
-  /* THE RECORD BEHIND IT GOES INERT, and this is `focus.mjs`'s setInert
-     earning its keep for the first time. It is not a focus trap: the list on
-     the left is still live and still reachable, because the viewer does not
-     cover it. What goes inert is the pane underneath — a column of controls a
-     keyboard can tab into and a pointer cannot reach. */
-  const body = $('#recBody');
-  if (body) setInert(body, true);
+  /* NOTHING GOES INERT, and that is the arrangement rather than an oversight.
+     The viewer fills the RIGHT column and the record sits in the LEFT one, so
+     there is no node underneath it — every control the keyboard can reach is
+     also one the pointer can reach.
+
+     This is the whole return on putting the drawing beside the record instead
+     of over it: the founder picks the next figure from the strip without
+     closing the one they are looking at, and compares a claim against the
+     figure it names. An overlay had to make the record inert to stay honest
+     about what was reachable; a column does not. */
 
   /* ABOVE THE RECORD ON THE STACK. Escape closes the viewer first and the
      record second, which is the order they were opened in and the order the
@@ -171,8 +174,6 @@ export function close() {
   if (!el.root || el.root.hidden) return;
   el.root.classList.remove('is-open');
   drop('figure');
-  const body = $('#recBody');
-  if (body) setInert(body, false);
   if (restoreFocus) restoreFocus();
   restoreFocus = null;
   /* the hide waits for the exit, or the node is removed mid-transition and the
