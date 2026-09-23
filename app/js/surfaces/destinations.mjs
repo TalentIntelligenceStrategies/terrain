@@ -25,6 +25,7 @@ import { onActivate } from '../core/delegate.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { wait as pause } from '../core/timers.mjs';
 import { bar, sk, pgCard, numCell } from '../core/primitives.mjs';
+import { popover } from '../core/popover.mjs';
 
 let ENGINE = null;
 const done = new Set();
@@ -229,12 +230,76 @@ export function init(ctx) {
     if (fld.hasAttribute('aria-invalid')) clearInvalid(fld.id.replace(/Fld$/, ''));
   });
 
+  /* ── help · the topic menu ─────────────────────────────────────────────
+     A MENU AND NOT A SELECT: there is no <select> in this system. It uses
+     core/popover.mjs rather than a private open/close pair, which is the whole
+     reason that module exists — masthead.mjs and list.mjs each had one, and a
+     third copy is the one that drifts.
+
+     THE TOPICS ARE OURS AND SHIP IN THE PAGE. components.md records why the
+     FAQ may never become a payload and the same argument holds here: a topic
+     list fetched at runtime can disagree with the build that renders it. */
+  const TOPICS = [
+    'Something is not working',
+    'My results look wrong',
+    'A patent record is wrong',
+    'Taking my starred patents out',
+    'Points and what things cost',
+    'My account or plan',
+    'Something else',
+  ];
+  const tmenu = $('#helpTopicMenu'), tbtn = $('#helpTopicBtn'), tlabel = $('#helpTopicLabel');
+  if (tmenu && tbtn) {
+    /* menuitemradio, because it is one of seven rather than seven switches */
+    tmenu.innerHTML = TOPICS.map((t, i) =>
+      '<button class="lm-item" type="button" role="menuitemradio" data-topic="' + esc(t) + '"'
+      + ' aria-checked="' + (i === 0 ? 'true' : 'false') + '">' + esc(t) + '</button>').join('');
+    const pop = popover({ btn: tbtn, panel: tmenu, key: 'helpTopic' });
+    onActivate(document, '#helpTopicMenu [data-topic]', el => {
+      const t = el.getAttribute('data-topic');
+      if (tlabel) tlabel.textContent = t;
+      tmenu.querySelectorAll('[data-topic]').forEach(b =>
+        b.setAttribute('aria-checked', String(b === el)));
+      if (pop) pop.close();
+      say('destination', t + ' selected.');
+    });
+  }
+
+  /* SEND IS INERT UNTIL THERE IS SOMETHING TO SEND, natively disabled, and
+     that is correct here rather than a departure: design-language.md §7 says
+     `disabled` when the reason is already on screen, and the reason is the
+     empty box directly above the button. It shipped disabled with nothing
+     enabling it, so the whole send path below — including its retry — could
+     never fire. */
+  const hmsg = $('#helpMsg'), hsend = $('#helpSend');
+  if (hmsg && hsend) {
+    const syncSend = () => { hsend.disabled = !hmsg.value.trim(); };
+    hmsg.addEventListener('input', syncSend);
+    syncSend();
+  }
+
+  /* THE SENT STATE REPLACES THE FORM, so coming back has to restore it —
+     otherwise "Send another message" is a button that removes the only way to
+     send another message. */
+  onActivate(document, '#helpAgain', () => {
+    const form = $('#helpForm'), sent = $('#helpSent'), fail = $('#helpFail');
+    if (sent) sent.hidden = true;
+    if (form) form.hidden = false;
+    if (fail) fail.hidden = true;
+    if (hmsg) { hmsg.value = ''; hmsg.focus(); }
+    if (hsend) hsend.disabled = true;
+  });
+
   /* ── help · the send is a REQUEST · platform.md §9.1 ───────────────────── */
   onActivate(document, '#helpSend', async btn => {
     const msg = $('#helpMsg');
     if (!msg || !msg.value.trim()) return;
     btnWait(btn);
-    const res = await ENGINE.sendSupport({ text: msg.value });
+    const topic = $('#helpTopicLabel');
+    const res = await ENGINE.sendSupport({
+      text: msg.value,
+      topic: topic ? topic.textContent.trim() : null,
+    });
     btnRest(btn);
     const fail = $('#helpFail'), sent = $('#helpSent'), form = $('#helpForm');
     if (res.ok) {
