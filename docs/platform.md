@@ -240,6 +240,13 @@ It renders **the record, not an opinion about the record**: eleven identifiers, 
 claim set as published, and the drawings. A five-field handoff row — number, holder, where, status,
 IPC — is a projection of the same fields, for the founder taking this to counsel.
 
+**As published does not mean twice.** Claim text arrives carrying its own number — *1. A method of…*
+— and the claim list prints a number in its gutter, so both appeared. The leading number is removed
+**only where it agrees with the position the gutter is about to print**; where they disagree, both
+stay, because a claim set that does not start at 1 is telling the reader something. The same rule
+governs *Classes*, which lists the classifications **other than** the main one: the main symbol
+already has its own row above, and a reader who sees it twice looks for the difference.
+
 **The enlarged drawing dims nothing and covers nothing.** [`design-language.md`](design-language.md) §3.2 has no scrim, and there is nothing to
 dim: it opens in a column that was showing the grouping panel, beside a record that stays live. The
 founder picks the next figure from the strip without closing the one they are looking at, which is

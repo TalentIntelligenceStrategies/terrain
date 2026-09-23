@@ -157,7 +157,13 @@ function rowHTML(rec, i) {
     + '<span class="drill-meta">'
     + (rec.status ? statusHTML(rec.status) : '')
     + (rec.holder != null
-      ? '<span class="drill-holder">' + esc(rec.holder) + '</span>'
+      /* THE FULL NAME IS ON THE ELEMENT even though the row shows one line
+         of it. `title` is not the accessible name here — the row's own
+         aria-label already carries the holder in full (rowName) — it is for
+         the pointer user who can see the name is cut and wants the rest
+         without opening the record. */
+      ? '<span class="drill-holder" title="' + esc(rec.holder) + '">'
+        + esc(rec.holder) + '</span>'
       : '<span class="sk sk-h-micro w-md"></span>')
     + '<span class="fig fig-s">' + (rec.year == null ? '' : rec.year) + '</span>'
     + '<span class="drill-chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"'

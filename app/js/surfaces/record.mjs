@@ -62,8 +62,30 @@ function valueHTML(rec, key) {
     if (key === 'inventors') return bars(3, ['w-sm', 'w-sm', 'w-xs']);
     return bar(key === 'holder' ? 'w-lg' : 'w-md');
   }
+  /* CLASSES DOES NOT REPEAT MAIN CLASS. Real classification lists lead with
+     the main symbol, so the two rows printed the same code one above the
+     other — a reader sees a repetition and looks for the difference. The
+     payload is unchanged and still carries the full list (`components.md`
+     §1); this is the renderer declining to say the same thing twice. */
+  if (key === 'ipc' && Array.isArray(v) && rec.ipcMain) {
+    const rest = v.filter(c => c !== rec.ipcMain);
+    if (!rest.length) return '<span class="pn-only">Only the main class</span>';
+    v.length = 0; v.push(...rest);
+  }
   if (Array.isArray(v)) return v.map(x => '<span>' + esc(x) + '</span>').join('');
   return esc(v);
+}
+
+/* CLAIM TEXT ARRIVES CARRYING ITS OWN NUMBER — "1. A method of…" — and the
+   gutter adds one, so every claim printed its number twice. Stripping it
+   blindly would be worse: a claim set that does not start at 1, or one whose
+   numbering has been preserved through a reissue, is telling you something.
+   So the leading number comes off ONLY when it agrees with the position the
+   gutter is about to print. Where they disagree, both stay and the disagreement
+   is visible, which is the useful outcome. */
+function claimText(text, n) {
+  const m = /^\s*(\d+)\s*[.)]\s+/.exec(text || '');
+  return m && Number(m[1]) === n ? text.slice(m[0].length) : text;
 }
 
 /* ── the drawings · platform.md §6.6 ───────────────────────────────────────
@@ -126,7 +148,7 @@ function figuresHTML(figures) {
 function paneHTML(rec) {
   const claims = (rec.claims || []).map((c, k) =>
     '<li class="pn-claim"><span class="fig fig-s pn-cn">' + (k + 1) + '</span>'
-    + '<span class="pn-prose">' + esc(c) + '</span></li>').join('');
+    + '<span class="pn-prose">' + esc(claimText(c, k + 1)) + '</span></li>').join('');
 
   const claimCount = rec.claims ? rec.claims.length : 0;
 

@@ -342,3 +342,10 @@
    which makes the two states different KINDS of mark rather than one mark at
    two x-positions. aria-current is still the state; data-open is its visual
    hook, the same way data-starred sits beside the star's aria-pressed. */
+
+/* A CLASSIFICATION LIST WITH NOTHING LEFT IN IT AFTER THE MAIN CLASS says so
+   in words rather than rendering an empty <dd>. An empty value cell reads as a
+   value that failed to arrive, which is the distinction design-language.md §8
+   draws between a bar and an absence — and this is neither: it is a real fact
+   about a patent classified under exactly one symbol. */
+.pn-only{color:var(--text-3)}

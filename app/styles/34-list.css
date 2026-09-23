@@ -1,7 +1,20 @@
 
 .drill-row{padding:var(--s-16) 0;border-bottom:1px solid var(--border)}
 .drill-row:last-child{border-bottom:0}
-.drill-meta{display:flex;align-items:center;gap:var(--s-12);padding-top:var(--s-12);flex-wrap:wrap}
+/* NOWRAP, AND THE HOLDER TRUNCATES. This wrapped, and against real data that
+   is not an edge case: the longest assignee in the stress corpus is 81
+   characters — "Shanghai Motor System Energy Saving Engineering Technology
+   Research Center Co Ltd" — which pushed the year and the chevron onto a
+   third line and broke the year's column, which is the one thing that column
+   exists for.
+
+   The row is a scanning surface and the record is where the full name lives.
+   `min-width:0` on the holder is what actually lets it shrink: a flex item's
+   default `min-width:auto` refuses to go below its content, so `ellipsis`
+   alone would have done nothing. */
+.drill-meta{display:flex;align-items:center;gap:var(--s-12);padding-top:var(--s-12);
+            flex-wrap:nowrap}
+.drill-holder{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ── THE YEAR HOLDS A COLUMN · 2026-09-11 ────────────────────────────────
    It sat directly after the holder, whose bar width varies per patent (rec.w),
