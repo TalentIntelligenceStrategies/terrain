@@ -159,12 +159,21 @@ Each is an ink/tint pair; each renders as **dot + word**.
 |---|---|---|---|---|---|
 | `--state-live` | `#1B6B45` | `#E4F1EA` | 6.49 | 5.58 | live patent, active |
 | `--state-expired` | `#A32B21` | `#FAE9E7` | 7.18 | 6.11 | expired patent |
-| `--state-pending` | `#7A5200` | `#FBF0D9` | 6.92 | 6.12 | in progress, incomplete |
+| `--state-pending` | `#7A5200` | `#FBF0D9` | 6.92 | 6.12 | an application still in examination |
 | `--state-up` | `--state-live` | | | | delta pill, rising |
 | `--state-down` | `--state-expired` | | | | delta pill, falling |
 
 Live-versus-expired is the single most decision-relevant fact a US founder reads off a row — an
 expired patent is not a threat, it is free to use. It earns colour on that ground alone.
+
+**Four status words share three hues, and the fourth word is why.** A patent's status renders as
+**Live**, **Expired**, **Abandoned** or **Pending**; *Abandoned* takes `--state-expired`. The hue
+means **not enforceable**, which is true of both, and the word is what separates them: an expired
+patent was granted and lapsed, an abandoned application was never granted. A fifth token for a fact
+the first already carries would be colour doing a word's job, which §2 puts the other way round.
+
+**A status Terrain does not know renders nothing at all.** Not a bar, and certainly not a guess —
+`null` here is not a withheld value, it is an absent one, and a chip is the wrong shape for either.
 
 `--state-up` / `--state-down` are aliases, not new hues. **They apply only to delta pills**, never to
 a series, a score or a status.

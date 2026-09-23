@@ -105,9 +105,15 @@ export const CODE = {
  *  by patent, and the FLIP, the rail, the focus return and the reversal all resolve
  *  through that key. `matched` and `patents.length` differ by what was binned, and
  *  printing the wrong one beneath the standing chip is a recorded regression. */
+/** `status` HAS FOUR VALUES AND `null`, and the fourth is not decoration.
+ *  Real data carries at least Active, Granted, Expired, Abandoned and Pending;
+ *  folding the last two into `expired` makes the interface say *Expired* about
+ *  an application that was never granted, which is a different fact stated
+ *  with full confidence. `null` means we do not know, and renders nothing. */
 /** @typedef {{id:string, number:string|null, skim:string|null, holder:string|null,
  *             where:string|null, year:number|null,
- *             status:'live'|'expired'|'pending'|null, score:number|null}} PatentRow */
+ *             status:'live'|'expired'|'abandoned'|'pending'|null,
+ *             score:number|null}} PatentRow */
 /** @typedef {{patents:PatentRow[], order:string[], matched:number}} PatentSet */
 
 /** The record · the title, eleven identifiers, the abstract, and the claim set AS

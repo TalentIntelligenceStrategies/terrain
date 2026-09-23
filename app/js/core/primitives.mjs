@@ -14,10 +14,34 @@
  * lab.html, read by every surface.
  */
 
+/* FOUR STATES, AND THE FOURTH IS WHY THIS IS A MAP RATHER THAN A TERNARY.
+   This was `live ? Live : Expired` — everything that was not live printed the
+   word *Expired*, which against real data is a different fact stated with full
+   confidence. Ten pending applications and five abandoned ones all read as
+   expired patents. For a US founder that is the most decision-relevant word on
+   the row: an expired patent was granted and lapsed, an abandoned application
+   was never granted, and a pending one might yet be.
+
+   ABANDONED SHARES EXPIRED'S HUE AND NOT ITS WORD. §2 permits colour for a
+   discrete state and requires every coloured element to carry a word as well —
+   the hue here means *not enforceable*, which is true of both, and the word is
+   what separates them. A fifth token for a fact the first one already carries
+   would be colour doing a word's job.
+
+   AN UNKNOWN STATUS IS NOT A STATUS. `null` renders nothing rather than
+   guessing, which is what null means everywhere else in this product. */
+const STATUS = {
+  live:      ['live',    'Live'],
+  expired:   ['expired', 'Expired'],
+  abandoned: ['expired', 'Abandoned'],
+  pending:   ['pending', 'Pending'],
+};
+
 export function statusHTML(kind){
-  return kind === 'live'
-    ? '<span class="status status-live"><span class="dot"></span>Live</span>'
-    : '<span class="status status-expired"><span class="dot"></span>Expired</span>';
+  var s = STATUS[kind];
+  if (!s) return '';
+  return '<span class="status status-' + s[0] + '"><span class="dot"></span>'
+       + s[1] + '</span>';
 }
 
 export function bar(w, h){ return '<span class="sk sk-h-' + (h || 'body') + ' ' + w + '"></span>'; }

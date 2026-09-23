@@ -123,7 +123,15 @@ function seeded(i) {
   const n = Math.abs((i * 37 + 5) | 0) % 997;
   return {
     n,
-    status: (n % 7 === 3 || n % 11 === 6) ? 'expired' : 'live',
+    /* ALL FOUR STATUS WORDS APPEAR IN THE DEMO, because a vocabulary the
+       demo never renders is a vocabulary nobody looks at. Real data carries
+       roughly half live, a quarter expired, a tenth pending and a handful
+       abandoned; these proportions are that shape and are illustrative like
+       every other figure here. */
+    status: n % 13 === 4 ? 'pending'
+          : n % 17 === 9 ? 'abandoned'
+          : (n % 7 === 3 || n % 11 === 6) ? 'expired'
+          : 'live',
     /* Innovue's own relevance score, printed rather than re-derived. Four
        decimals, because that is what the engine returns; rounding it would be
        Terrain restating it. No word about quality may sit beside it. */

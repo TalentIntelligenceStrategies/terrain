@@ -33,8 +33,10 @@
         height:22px;padding:0 var(--s-8);border-radius:var(--r-pill);white-space:nowrap}
 .status-live{background:var(--state-live-tint);color:var(--state-live)}
 .status-expired{background:var(--state-expired-tint);color:var(--state-expired)}
+.status-pending{background:var(--state-pending-tint);color:var(--state-pending)}
 .status-live .dot{background:var(--state-live)}
 .status-expired .dot{background:var(--state-expired)}
+.status-pending .dot{background:var(--state-pending)}
 .delta{display:inline-flex;align-items:center;gap:3px;font-size:11.5px;font-weight:500;
        height:22px;padding:0 var(--s-8);border-radius:var(--r-pill)}
 .delta-up{background:var(--state-live-tint);color:var(--state-up)}

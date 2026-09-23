@@ -139,10 +139,20 @@ function rowHTML(rec, i) {
     /* THE SAME WORD AS THE RECORD. It read "Relevance" in one place and printed
        a bare figure in the other, which is one number with two names and no
        name. Four decimals, because that is what the engine returns. */
-    + '<span class="drill-score" title="How close the engine put this to what you described">'
-    + '<span class="t-micro drill-score-k">Score</span>'
-    + '<span class="fig fig-s">' + (rec.score == null ? '' : rec.score.toFixed(4)) + '</span>'
-    + '</span>'
+    /* THE LABEL GOES WITH THE VALUE, and printing one without the other was a
+       real defect against real data: every corpus record has `score: null`,
+       so every row printed the word SCORE over an empty space. A label with
+       nothing under it is not a withheld value, it is a broken component —
+       and `null` means withheld, which is the skeleton bar.
+
+       The whole block is omitted rather than barred, because a bar here would
+       claim the engine produced a score and we declined to print it. It did
+       not produce one. */
+    + (rec.score == null ? '' :
+       '<span class="drill-score" title="How close the engine put this to what you described">'
+       + '<span class="t-micro drill-score-k">Score</span>'
+       + '<span class="fig fig-s">' + rec.score.toFixed(4) + '</span>'
+       + '</span>')
     + '</span>'
     + '<span class="drill-meta">'
     + (rec.status ? statusHTML(rec.status) : '')
