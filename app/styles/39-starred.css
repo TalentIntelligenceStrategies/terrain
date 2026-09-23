@@ -1,0 +1,94 @@
+/* ══ 39 · THE STARRED SET ═══════════════════════════════════════════════════
+   platform.md §7.2. The founder's shortlist read as a whole, and the surface
+   it leaves from.
+
+   MOST OF THIS SURFACE HAS NO CSS HERE, and that is the point. It renders in
+   `.view-page` / `.main` / `.page-head` / `.pg-back` / `.foot` alongside
+   points, account, billing and help, so everything about the frame is already
+   decided. What is left is the list, the bar above it, and the two sentences.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* THE COLUMN, and it borrows the account page's measurement rather than
+   inventing a second one. `.view-page` gives `.page-head` and `.grid` their
+   16px inline padding by name, and this surface has neither of those between
+   the head and the list — so it declares the same padding and the same 820px
+   cap that `.view-acct` uses, for the same reason: a list of rows set to
+   1440px is a line the eye loses its place on between the title and the year. */
+.view-starred .page-head,
+.view-starred .star-lede,
+.view-starred .star-bar,
+.view-starred .star-list,
+.view-starred .star-note,
+.view-starred #starEmpty{max-width:820px;margin-inline:auto;width:100%}
+.view-starred .star-lede,
+.view-starred .star-bar,
+.view-starred .star-list,
+.view-starred .star-note,
+.view-starred #starEmpty{padding-inline:var(--s-16)}
+/* the foot sits under the column rather than centred on the viewport, so it
+   ends the page where the page ends. */
+.view-starred .foot{max-width:820px;margin-inline:auto;width:100%;
+                    padding-inline:var(--s-16)}
+
+.star-lede{margin:0 0 var(--s-20);color:var(--text-2);max-width:68ch;
+           text-wrap:pretty}
+
+/* THE BAR IS THE FOOT OF THE HEAD, not a toolbar over the list. Both controls
+   in it act on the whole set rather than on a row, so they sit above the
+   hairline the list starts with and not inside it. */
+.star-bar{display:flex;align-items:center;gap:var(--s-8);
+          margin-bottom:var(--s-12)}
+.star-bar .spacer{flex:1 1 auto}
+
+/* ── the rows ───────────────────────────────────────────────────────────
+   A LIST, NOT CARDS. Twelve bordered cards down a 940px column is twelve
+   boxes to read the edges of; the set is one thing and the rows are its
+   members, so one hairline between each is what says so. §5: elevation is a
+   hairline, and a widget card that reaches for a shadow has not earned one. */
+.star-list{list-style:none;margin:0;padding:0;
+           border-top:1px solid var(--border)}
+.starrow{display:grid;grid-template-columns:1fr auto auto;
+         align-items:center;gap:var(--s-8) var(--s-16);
+         padding:var(--s-12) var(--s-4);
+         border-bottom:1px solid var(--border)}
+
+.starrow-main{min-width:0;display:flex;align-items:baseline;gap:var(--s-10);
+              flex-wrap:wrap}
+/* THE NUMBER LEADS. It is the field the founder will search their own
+   document for after they export, and it is a figure, so Inconsolata. */
+.starrow-id{color:var(--text-3);flex:0 0 auto}
+.starrow-name{color:var(--text-1);min-width:0;overflow-wrap:break-word}
+
+.starrow-meta{display:flex;align-items:center;gap:var(--s-10);
+              flex:0 0 auto;color:var(--text-3);font-size:12.5px}
+.starrow-holder{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+                max-width:22ch}
+
+.star-note{margin:var(--s-20) 0 0;color:var(--text-3);max-width:68ch;
+           font-size:12.5px;line-height:1.55;text-wrap:pretty}
+
+/* ── the count chip, as a control ───────────────────────────────────────
+   On the results surface `N starred` is the only thing that knows how big the
+   set is, so it is also where the founder reaches to see it. It stays a chip:
+   it is a count of the same kind as `N matched` beside it, and promoting it to
+   a button shape would make one of two adjacent counts look like the act. What
+   marks it as pressable is the cursor, the underline on hover and the focus
+   ring — not a second silhouette. */
+.chip-link{cursor:pointer;color:var(--text-2);
+           transition:color var(--dur-1) var(--ease),
+                      border-color var(--dur-1) var(--ease)}
+.chip-link:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+/* ── hover, gated ── every rule here NAMES :hover; nothing else may. ──── */
+@media (hover:hover) and (pointer:fine){
+  .chip-link:hover{color:var(--text-1);border-color:var(--border-strong);
+                   text-decoration:underline;text-underline-offset:2px}
+  .starrow:hover{background:var(--surface-sunken)}
+}
+
+@media (max-width:640px){
+  /* the meta row drops under the title rather than squeezing it: a holder
+     name ellipsised to four characters says less than nothing. */
+  .starrow{grid-template-columns:1fr auto}
+  .starrow-meta{grid-column:1;grid-row:2}
+}

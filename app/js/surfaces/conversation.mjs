@@ -18,6 +18,7 @@ import { $, esc } from '../core/dom.mjs';
 import { waitOn, failWith } from '../core/wait.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
+import { read as readSettings } from './settings.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { bar } from '../core/primitives.mjs';
 
@@ -143,7 +144,7 @@ export function init(ctx) {
     if (!text) return;
 
     btnWait(btn);
-    const res = await ENGINE.search({ query: text, field: FIELD });
+    const res = await ENGINE.search({ query: text, field: FIELD, settings: readSettings() });
     btnRest(btn);
 
     if (!res.ok) {

@@ -5,9 +5,9 @@
    token: nothing referenced it, and a dead full-viewport node at z-index 50
    is one visibility flip away from covering the product.
 
-   A MENU FLATTENS BY DEFAULT and the project switcher is the protected
-   exception (design-language.md §7): a version is OF a project, so the
-   version block nests under the open project rather than sitting beside it.
+   A MENU FLATTENS, and both of these do. The project switcher held a nested
+   version block until versions were removed; nothing in the product nests a
+   menu now, and a new one would have to argue for itself.
 
    THE SELECTED STATE IS §3.8's ACCENT SITE 3, on the LABEL. The row's fill
    stays neutral -- a filled accent row inside a menu would be a second
@@ -15,9 +15,8 @@
    ═══════════════════════════════════════════════════════════════════════ */
 
 /* ── the two masthead menus ─────────────────────────────────────────────
-   ONLY ONE MAY BE OPEN, and the project switcher carries the version block
-   nested under the open project. design-language.md §7 protects that nesting
-   by name: a menu flattens by default, and a version is OF a project. */
+   ONLY ONE MAY BE OPEN. Two dropdowns anchored to the same 48px bar overlap
+   whatever is in them, so opening one closes the other. */
 .mast-menu-wrap{position:relative;flex:0 0 auto}
 .mast-menu{position:absolute;top:calc(100% + var(--s-6));min-width:260px;
       background:var(--surface);border:1px solid var(--border);border-radius:var(--r-inner);

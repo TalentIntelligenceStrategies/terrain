@@ -10,7 +10,7 @@
 
          IT IS INERT ON THE CONVERSATION, both times that surface is reachable:
          the first search screen, where there is nothing to go back to, and the
-         re-entry from a version revert, where there is — but the gate is the
+         re-entry through the gate, where there is — but the gate is the
          product's only correction point (platform.md §4) and a mark in the
          chrome should not be the way out of one.
 
@@ -21,7 +21,7 @@
          point in the chrome, which is the whole of what makes it usable as
          home. -->
     <a class="mast-brand" id="mastBrand" href="#" aria-label="TIS Terrain">
-      <svg class="mark" fill="currentColor" aria-hidden="true"><use href="#tis-mark"/></svg>
+      <svg class="mark" fill="currentColor" aria-hidden="true"><use href="#terrain-tis-mark"/></svg>
       <span class="wordmark">TIS <span>Terrain</span></span>
     </a>
 
@@ -43,9 +43,8 @@
       <span>New search</span>
     </button>
 
-    <!-- the project switcher. The projects list, its two recency groups and the
-         version block all live inside it — one menu, because they are one
-         subject: which project am I in, and which version of it. -->
+    <!-- the project switcher, and it holds one list because it answers one
+         question: which project am I in. -->
     <div class="mast-menu-wrap" id="projWrap">
       <!-- THE NAME IS NOT THE LABEL, and it cannot be: the label is a
            skeleton bar (§8's contract — project names are identities), so a
@@ -53,24 +52,20 @@
            all. The aria-label names the CONTROL; the bar shows there is a
            project open. -->
       <button class="mast-btn mast-proj" id="projBtn" type="button"
-              aria-label="Projects and versions"
+              aria-label="Projects"
               aria-haspopup="true" aria-expanded="false" aria-controls="projMenu">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
         <span class="mast-proj-name sk sk-h-label w-md" id="projName"></span>
         <svg class="mast-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
       </button>
-      <div class="mast-menu mast-menu-proj" id="projMenu" role="menu" aria-label="Projects and versions">
-        <div class="side-section t-micro">This week</div>
+      <!-- ONE LIST, MOST RECENT FIRST, AND NO GROUP HEADINGS. A heading needs
+           a renderer that can leave it empty; without one it is a promise the
+           menu cannot keep, and a heading over nothing reads as a list that
+           failed to load rather than as a section with nothing in it. Recency
+           groups earn their headings again when there are enough projects for
+           the split to tell the founder something. -->
+      <div class="mast-menu mast-menu-proj" id="projMenu" role="menu" aria-label="Projects">
         <div id="projGroupA"></div>
-        <div class="side-section t-micro">Earlier</div>
-        <div id="projGroupB"></div>
-
-        <!-- placeHist() relocates this to sit directly under the open project.
-             It lives here in source order only so the markup stays legible. -->
-        <div class="side-hist" id="histWrap">
-          <div class="side-section side-section-sub t-micro" id="histHead">Versions</div>
-          <div id="histList"></div>
-        </div>
       </div>
     </div>
 

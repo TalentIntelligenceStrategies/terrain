@@ -25,44 +25,69 @@ import { bar, statusHTML } from '../core/primitives.mjs';
 import { bump, stale } from '../core/generation.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
 import { focusQuietly } from '../core/focus.mjs';
+import { btnWait, btnRest } from '../core/button-wait.mjs';
+import * as Starred from '../core/starred.mjs';
 
 let ENGINE = null;
 let MATCHED = 0;
+
+/* WHAT THE PORT SAID ABOUT EACH ROW, kept so a star can hand the whole row to
+   the set rather than an id. The starred view and the export both need fields
+   the DOM renders as bars, and scraping them back out of the markup would mean
+   parsing a skeleton. Rebuilt on every render, which is also every point the
+   rows could have changed. */
+const ROW_BY_ID = new Map();
 let loaded = false;
 const FLOOR = 240;
 
 /* ── the star ─────────────────────────────────────────────────────────────
    platform.md §6.3. A star is an ANCHOR, not a bookmark: it says "this one is
-   close to what I meant", and Re-rank orders the rest by how near they are to
-   it. NO PATENT ENTERS OR LEAVES — only the sequence changes, which is why the
-   count beside it is a count of the founder's own acts rather than of results.
+   close to what I meant", and it does TWO things — platform.md §7.1. It adds
+   the patent to the founder's starred set, which is theirs and has a surface of
+   its own; and it makes `Find similar` available, which re-orders the whole
+   result set by nearness to what was starred. NO PATENT ENTERS OR LEAVES the
+   set — what changes is which of them the founder is shown first.
 
-   It is client state and stays that way. The engine is told the anchors only
-   when the founder presses Re-rank, because starring is a thought and
-   re-ranking is a request. */
-const STARRED = new Set();
+   The engine is told the anchors only when the founder presses Find similar,
+   because starring is a thought and re-ordering is a request.
+
+   THE SET ITSELF LIVES IN core/starred.mjs. It outlives this surface: the
+   starred view renders it and the export writes it, and a Set private to the
+   renderer would have made both of those reach into a renderer for state. */
+const STARRED = Starred;
 
 function syncStarUI() {
   const chip = $('#setStarChip');
   if (chip) {
-    chip.hidden = STARRED.size === 0;
-    chip.textContent = STARRED.size + (STARRED.size === 1 ? ' starred' : ' starred');
+    chip.hidden = STARRED.size() === 0;
+    /* ONE FORM, NOT A TERNARY RETURNING THE SAME STRING TWICE. "starred" does
+       not inflect, so the branch that stood here computed nothing while reading
+       as though it handled a case it did not. */
+    chip.textContent = STARRED.size() + ' starred';
   }
   /* HIDDEN, NOT DISABLED, exactly as the markup's own note says: a disabled
      button loitering in a 345px bar is clutter, and [hidden] takes it out of
      the tab order too. */
   const rebase = $('#setRebase');
-  if (rebase) rebase.hidden = STARRED.size === 0;
+  if (rebase) rebase.hidden = STARRED.size() === 0;
 }
 
 function toggleStar(id, btn) {
-  const on = !STARRED.has(id);
-  on ? STARRED.add(id) : STARRED.delete(id);
+  const row = ROW_BY_ID.get(id) || { id };
+  const on = STARRED.toggle(id, row);
   btn.setAttribute('aria-pressed', String(on));
-  const row = btn.closest('.set-row');
-  if (row) on ? row.setAttribute('data-starred', '') : row.removeAttribute('data-starred');
+  const el = btn.closest('.set-row');
+  if (el) on ? el.setAttribute('data-starred', '') : el.removeAttribute('data-starred');
   syncStarUI();
-  say('list', on ? 'Starred. Re-rank is available.' : 'Unstarred.');
+  /* THE CONFIRMATION NAMES THE SET, not just the act. "Starred." says a
+     button was pressed; the founder needs to know a collection exists, how big
+     it is, and that it is the thing they can take out. */
+  say('list', on
+    ? 'Starred. ' + STARRED.size() + (STARRED.size() === 1 ? ' patent' : ' patents')
+      + ' in your starred set. Find similar is available.'
+    : 'Unstarred. ' + (STARRED.size()
+        ? STARRED.size() + (STARRED.size() === 1 ? ' patent' : ' patents') + ' left.'
+        : 'Nothing starred.'));
 }
 
 /* the sentence a screen reader reads for one row */
@@ -133,11 +158,35 @@ function rowHTML(rec, i) {
     + '</div></div>';
 }
 
-function render(data) {
+/* `append` IS PAGING, and it is the whole difference between Show more and
+   every other request on this surface.
+
+   The port returns the CUMULATIVE page — twenty rows, then forty, then sixty —
+   so re-rendering all of them was correct data and wrong behaviour: twenty rows
+   the founder was reading were destroyed and rebuilt to add twenty below them.
+   Focus inside the list went to <body>, the scroll position was whatever the
+   new height made it, and anything mid-hover lost its state.
+
+   So paging renders only the tail and leaves what is above it alone. `landIn`
+   with a null body is doing the half of its job that still applies: clear
+   `is-wait`/`is-fail` and the inline min-height, touch no content. */
+function render(data, append) {
   const list = $('#setList');
   if (!list) return;
   MATCHED = data.matched;
-  landIn(list, data.patents.map(rowHTML).join(''));
+  data.patents.forEach(r => ROW_BY_ID.set(r.id, r));
+  if (append) {
+    const have = list.querySelectorAll('.set-row').length;
+    landIn(list, null);
+    /* the offset keeps data-i and the "Patent N" fallback name global rather
+       than per page — a second page starting over at 1 would name two rows
+       the same thing to a screen reader. */
+    const fresh = data.patents.slice(have)
+      .map((rec, k) => rowHTML(rec, have + k)).join('');
+    if (fresh) list.insertAdjacentHTML('beforeend', fresh);
+  } else {
+    landIn(list, data.patents.map(rowHTML).join(''));
+  }
   list.setAttribute('aria-busy', 'false');
 
   const n = $('#setMoreN');
@@ -162,18 +211,44 @@ function render(data) {
   }
 }
 
-async function request(port, arg, sayWhat) {
+/* `into` NAMES WHERE THE WAIT IS SHOWN, and there are only two answers.
+
+   A request that REPLACES the list waits in the list: the rows are about to
+   stop being true, so they go and the region says it is working. A request
+   that EXTENDS it waits in the button that asked — the twenty rows on screen
+   are still true and blanking them to fetch twenty more tells the founder
+   their list broke.
+
+   This is the same rule the search button already follows, and the CSS for it
+   was written for #setMore before anything set the attribute: 05-wait-fail.css
+   styles `#setMore[data-waiting]` by name, strips the button's ground and
+   hides its label and chevron together. It has been unreachable since. */
+async function request(port, arg, sayWhat, into) {
   const list = $('#setList');
   if (!list) return;
+  const btn = into && $(into);
+  /* btnWait returns false when the button is already waiting, which is the
+     re-press guard: two presses of Show more is one intention. */
+  if (btn && !btnWait(btn)) return null;
   const token = bump('list');
   list.setAttribute('aria-busy', 'true');
-  waitOn(list, 320);
+  if (!btn) waitOn(list, 320);
   const [res] = await Promise.all([ENGINE[port](arg), pause(FLOOR)]);
+  if (btn) btnRest(btn);
   /* THE THIRD LINE PEOPLE FORGET. A response that arrives after the founder
      has already asked for something else must not paint — two requests in
      flight is the ordinary case, not the exceptional one. */
   if (stale('list', token)) return;
-  if (res.ok) { render(res.data); return res.data; }
+  if (res.ok) { render(res.data, Boolean(btn)); return res.data; }
+  /* A PAGE THAT DID NOT LOAD DOES NOT REPLACE THE PAGE THAT DID. The failure
+     for an extending request is announced and offered in the foot; writing the
+     fail block into #setList would throw away the rows that are still good to
+     report that the next twenty are not. */
+  if (btn) {
+    say('list', sayWhat);
+    list.setAttribute('aria-busy', 'false');
+    return null;
+  }
   failWith(list, sayWhat, res.retryable
     ? () => request(port, arg, sayWhat) : null);
   say('list', sayWhat);
@@ -228,28 +303,51 @@ function check(panel, el) {
     b.setAttribute('aria-checked', String(b === el)));
 }
 
-/* ── the re-rank ──────────────────────────────────────────────────────────
+/* ── find similar ─────────────────────────────────────────────────────────
    IT RETURNS AN ORDER, NOT A SET, so this cannot go through render(): that
-   reads data.patents and a re-rank has none. The rows on screen are the rows
+   reads data.patents and this call has none. The rows on screen are the rows
    that stay — the contract's whole claim about this call is that no patent
    enters or leaves — so the DOM nodes are MOVED rather than rebuilt.
 
    Moving them rather than re-rendering also keeps the star states, the open
-   row and any focus inside the list intact, which a rebuild would drop. */
+   row and any focus inside the list intact, which a rebuild would drop.
+
+   ═══ THE SETTLED STATE IS DECLARED HERE, NOT BY THE PRESS ══════════════════
+   The chip, the band class and the Restore button used to be set by the click
+   handler BEFORE this call answered, and the failure branch rolled back only
+   the class. So a refused request left a chip reading "Nearest to 2 starred
+   patents" and a Restore button offering to undo an order that never changed —
+   the interface asserting an outcome the engine had just declined. Everything
+   that says "this happened" now happens where it is known to have happened. */
+function settled(on, n) {
+  const wrap = $('#setWrap');
+  if (wrap) wrap.classList.toggle('is-ranked', on);
+  const chip = $('#setRankChip');
+  if (chip) {
+    chip.hidden = !on;
+    chip.textContent = on
+      ? 'Nearest to ' + n + (n === 1 ? ' starred patent' : ' starred patents')
+      : '';
+  }
+  const restore = $('#setRestore');
+  if (restore) restore.hidden = !on;
+}
+
 async function reorderTo(anchors) {
   const list = $('#setList');
   if (!list) return;
+  const btn = $('#setRebase');
+  if (btn && !btnWait(btn)) return;
   const token = bump('list');
   list.setAttribute('aria-busy', 'true');
 
   const res = await ENGINE.rerank({ anchors });
+  if (btn) btnRest(btn);
   if (stale('list', token)) return;
   list.setAttribute('aria-busy', 'false');
 
   if (!res.ok) {
-    say('list', 'The list could not be re-ranked. The order is unchanged.');
-    const wrap = $('#setWrap');
-    if (wrap) wrap.classList.remove('is-ranked');
+    say('list', 'Similar patents could not be found. The order is unchanged.');
     return;
   }
 
@@ -261,7 +359,8 @@ async function reorderTo(anchors) {
     const el = rows.get(id);
     if (el) list.append(el);
   });
-  say('list', 'Re-ranked around ' + anchors.length
+  settled(true, anchors.length);
+  say('list', 'Ordered by nearness to ' + anchors.length
     + (anchors.length === 1 ? ' starred patent.' : ' starred patents.'));
 }
 
@@ -275,45 +374,34 @@ export function init(ctx) {
   });
 
   onActivate(document, '#setMore', () =>
-    request('patentsPage', undefined, 'The next page did not load.'));
+    request('patentsPage', undefined,
+      'The next page did not load. The patents already shown are unchanged.',
+      '#setMore'));
 
-  /* a new run replaces the set, so the star anchors go with it: they pointed
-     at patents that may not be in this one. */
+  /* THE STARRED SET SURVIVES A NEW SEARCH, and this used to clear it.
+     platform.md §7.1: the set is the founder's own shortlist and the thing
+     they take out of Terrain, so emptying it because they ran another query
+     deletes their work to save them a click. What DOES go is the ordering —
+     `Find similar` ordered the previous result set and this is a different
+     one — so the settled state is stood down and the list reloads. */
   window.addEventListener('terrain:searched', () => {
-    STARRED.clear();
+    settled(false, 0);
     syncStarUI();
-    const wrap = $('#setWrap');
-    if (wrap) wrap.classList.remove('is-ranked');
     request('patents', undefined, 'The list did not load.');
   });
 
   onActivate(document, '.set-star', el =>
     toggleStar(el.getAttribute('data-star'), el));
 
-  /* THE RE-RANK IS THE ONLY FILLED CONTROL ON THIS SURFACE and it sends the
+  /* FIND SIMILAR IS THE ONLY FILLED CONTROL ON THIS SURFACE and it sends the
      anchors the founder chose. The response is an ORDER over the same set. */
   onActivate(document, '#setRebase', () => {
-    if (!STARRED.size) return;
-    const wrap = $('#setWrap');
-    if (wrap) wrap.classList.add('is-ranked');
-    const chip = $('#setRankChip');
-    if (chip) {
-      chip.hidden = false;
-      chip.textContent = 'Ranked around ' + STARRED.size
-        + (STARRED.size === 1 ? ' starred patent' : ' starred patents');
-    }
-    const restore = $('#setRestore');
-    if (restore) restore.hidden = false;
-    reorderTo([...STARRED]);
+    if (!STARRED.size()) return;
+    reorderTo(STARRED.ids());
   });
 
   onActivate(document, '#setRestore', () => {
-    const wrap = $('#setWrap');
-    if (wrap) wrap.classList.remove('is-ranked');
-    const chip = $('#setRankChip');
-    if (chip) { chip.hidden = true; chip.textContent = ''; }
-    const restore = $('#setRestore');
-    if (restore) restore.hidden = true;
+    settled(false, 0);
     request('sort', { sort: 'relevance' },
       'The original order could not be restored.');
   });

@@ -56,18 +56,24 @@ async function resolveEngine() {
 }
 /* ════════════════════════════════════════════════════════════════════════ */
 
-const PARTIALS = ['masthead', 'conversation', 'surface', 'points', 'account',
-                  'billing', 'help', 'parked'];
+const PARTIALS = ['masthead', 'conversation', 'surface', 'starred', 'points',
+                  'account', 'billing', 'help', 'parked'];
 
 /* THE SURFACES. Each is imported for its side-effect-free init(); the order
    here is the order init() runs, and it is DOM order rather than dependency
    order because none of them may depend on another having run. */
 const SURFACES = [
   ['masthead',     () => import('./surfaces/masthead.mjs')],
+  /* SETTINGS BEFORE CONVERSATION, and it is the one place the order matters:
+     it moves #setPop out of the [hidden] parked container and under the
+     composer's anchor, and conversation.mjs reads its values on the way into
+     ENGINE.search(). Everything else here is DOM order. */
+  ['settings',     () => import('./surfaces/settings.mjs')],
   ['conversation', () => import('./surfaces/conversation.mjs')],
   ['work',         () => import('./surfaces/work.mjs')],
   ['list',         () => import('./surfaces/list.mjs')],
   ['record',       () => import('./surfaces/record.mjs')],
+  ['starred',      () => import('./surfaces/starred.mjs')],
   ['destinations', () => import('./surfaces/destinations.mjs')],
 ];
 
@@ -95,7 +101,7 @@ async function loadPartials() {
    the arriving one — a leaving view is painted ABOVE the arriving one whenever
    it comes later in the DOM, which the work surface does and the conversation
    does not. */
-const VIEWS = ['conversation', 'work', 'usage', 'account', 'billing', 'help'];
+const VIEWS = ['conversation', 'work', 'starred', 'usage', 'account', 'billing', 'help'];
 
 /* which hash lands on which view. A hash that names a STATE rather than a
    surface still has to resolve to one, or the router silently shows nothing. */
@@ -103,6 +109,7 @@ function viewForHash(h) {
   if (!h) return 'conversation';
   if (h.startsWith('set') || h === 'technology' || h === 'track' ||
       h.startsWith('drilldown')) return 'work';
+  if (h.startsWith('starred')) return 'starred';
   if (h.startsWith('usage')) return 'usage';
   if (h.startsWith('account')) return 'account';
   if (h.startsWith('billing')) return 'billing';

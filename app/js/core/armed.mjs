@@ -32,7 +32,7 @@ const flags = new Map();
 
 /**
  * Declare a flag. `initial` is what disarmAll() restores it to -- which is not
- * always falsy: a list of versions resets to its full starting set, not to
+ * always falsy: a filtered list resets to its full starting set, not to
  * empty, so "disarmed" means "back to the resting value" rather than "off".
  */
 export function register(name, initial = 0) {

@@ -53,9 +53,9 @@ and that `99-reduced-motion.css` is **last**.
 | | | |
 | --- | --- | --- |
 | `tokens` `01`–`05` | foundation — tokens, reset, type, skeleton, loader, wait/fail | **extracted** |
-| `10`–`15` | primitives — button, chip, field, inline-confirm, menu, empty | **extracted** |
+| `10`–`16` | primitives — button, chip, field, inline-confirm, menu, empty, popover | `16` is **new** |
 | `20`–`21` | layout — shell, surface | **extracted** |
-| `30`–`37` | components — conversation, card, map, chart, list, record, destination, attribution | **extracted** |
+| `30`–`40` | components — conversation, card, list, record, destination, attribution, home, starred, drawings | `38`–`40` are **new** |
 | `98` | the bench, `lab.html` only — numbered into the same manifest so it cannot drift into testing something else | **extracted** |
 | `99` | reduced motion, **which must load last** | **extracted** |
 
@@ -96,8 +96,8 @@ custom property on `:root`**. `design-language.md` §3.9 is the rule; this is th
 | --- | --- | --- | --- |
 | primitive | 11 | `:root` once | `--n-0`…`--n-10`. No component may read one |
 | scale | 29 | `:root` once | Invariant by construction |
-| semantic | 42 | **all three blocks** | The dark contract |
-| derived | 5 | `:root` once | Resolves *through* a themed token. **Never in a dark block** |
+| semantic | 31 | **all three blocks** | The dark contract |
+| derived | 3 | `:root` once | Resolves *through* a themed token. **Never in a dark block** |
 | component-scoped | 5 | the component's own class | Never on `:root` |
 
 **Every other copy of the token block is generated.** `tools/sync-tokens.py --write` writes it into
@@ -122,11 +122,12 @@ passes.
 | `--dmx-path` | the loader, per dot | `var(--dmx-path,0)` | position along the ripple path |
 | `--dmx-opacity-base` | the loader | on `.dmx-root` | trough of the pulse |
 | `--dmx-opacity-mid` | the loader | on `.dmx-root` | midpoint of the pulse |
-| `--mx-n` | the map renderer | `var(--mx-n,5)` | column count |
-| `--mx-min` | the map renderer | `var(--mx-min,520px)` | minimum grid width |
-| `--mx-head` | the map renderer | `var(--mx-head,132px)` | header row height |
 | `--uc-cap` | the usage chart | `var(--uc-cap,44px)` | column cap height |
-| `--xr-n` | the cross-ref renderer | `var(--xr-n,5)` | row count |
+| `--fig-scale` | the figure viewer | `var(--fig-scale,1)` | zoom, as a step off a fixed ladder rather than a free multiplier |
+| `--fig-rot` | the figure viewer | `var(--fig-rot,0deg)` | rotation, a quarter turn at a time |
+| `--fig-x` `--fig-y` | the figure viewer, while panning | `var(--fig-x,0px)` | pan offset. **All four compose into ONE transform, and the CSS decides the order** — a JS-built transform string is three call sites that can disagree about whether rotation happens before scale |
+
+*`--mx-n`, `--mx-min`, `--mx-head` and `--xr-n` left with the analysis layer.*
 
 **Every read site carries a fallback, and that is load-bearing rather than tidy.** A `var()` whose
 property is set by nothing and whose read has no fallback is *invalid at computed-value time*, and
@@ -138,7 +139,7 @@ while every grep for the token found it present and correct.
 
 ## `js/core/` — the behaviour layer, and the part a rewrite gets subtly wrong
 
-Fourteen modules, dependency-free, each exercised by `lab.html`. **This is the deliverable.** Every
+Seventeen modules, dependency-free. **This is the deliverable.** Every
 one of them encodes a rule that reads as an implementation detail and is not:
 
 | Module | The rule it carries |
@@ -157,6 +158,9 @@ one of them encodes a rule that reads as an implementation detail and is not:
 | `live-region` | Clears and re-sets after 60ms so an **identical** second failure announces. Unhides **before** writing |
 | `roving` | One tab stop per group; the stop moves with focus so leaving and returning lands where the founder was |
 | `delegate` | `closest`, not `matches` — the founder clicks the label inside the button |
+| `popover` | One floating panel, one trigger, four things every one of them must get right. It exists because there were two private copies and a third would have been the one that drifted |
+| `starred` | The set holds **rows, not ids**: an id is enough to re-order a list and not enough to render a collection or write a CSV, and the client holds one page at a time |
+| `figure-viewer` | Zoom is `scale()`, rotation is `rotate()`, pan is `translate()`, composed into **one** transform by the CSS. §6 forbids animating a layout property and says there are no exceptions |
 
 ### The numbered checks
 
@@ -207,9 +211,9 @@ its own failure state either.
 
 ---
 
-## `partials/`, `js/surfaces/`, `js/charts/` — the rest of the tree
+## `partials/` and `js/surfaces/` — the rest of the tree
 
-**Eight partials, and the host list in `index.html` is the manifest.** `main.mjs` fetches
+**Nine partials, and the host list in `index.html` is the manifest.** `main.mjs` fetches
 every one, **replaces** its host with the partial's own nodes, and **awaits all of them
 before calling any `init()`**. That single ordering rule is what replaces 55 scattered
 parse-time element captures: every surface module exports `init(ctx)` and reads the DOM
@@ -217,24 +221,21 @@ parse-time element captures: every surface module exports `init(ctx)` and reads 
 dereferences null the first time a partial is slower than an import, and that failure is
 intermittent by construction.
 
-**The record is not a host of its own**, and that is a correction to `index.html` rather
-than an omission. `.rec` is positioned against `.panecol` and leaves a ~200px peek of the
-views behind it — §6.6 calls the peek the spec rather than a margin. Hoisted to a sibling
-host it would position against the viewport. It ships inside `surface.html`.
+**Neither the record nor the figure viewer is a host of its own.** Both are positioned
+against `.panecol` and both ship inside `surface.html`. The record IS the right column
+now — the ~200px peek went with the twelve widget cards there was something to peek at —
+and the viewer sits over it, `position:absolute` inside the same positioned parent.
+Hoisted to a sibling host either would position against the viewport instead, and the
+viewer would become the full-screen lightbox three separate rules say this product does
+not have.
 
-**Seven surfaces**, one per region rather than one per file that happened to get large:
-`masthead`, `conversation`, `work`, `views`, `list`, `record`, `destinations`.
+**Eight surfaces**, one per region rather than one per file that happened to get large:
+`masthead`, `settings`, `conversation`, `work`, `list`, `record`, `starred`, `destinations`.
+`views` left with the analysis layer.
 
-**Four chart modules.** `primitives` (the skeleton bar, the density band, the three marks),
-`share`, `series`, and `map`. Three of the four were extracted by **brace matching from the
-function name**, so a moved line cannot silently truncate one. `map.mjs` is the exception
-and says so at the top: the prototype's `matrixHTML` reads five module-level globals, so
-extracting it verbatim would have dragged the data layer across with it.
-
-**Three globals became parameters on the way across**, and each one is the same lesson:
-`PG_FILINGS` and `PG_LAG` in `filingsChart`, and everything `matrixHTML` read. A chart that
-reads a module-level array cannot be drawn twice with two corpora, and it cannot be drawn
-at all against `NullEngine`.
+**`js/charts/` is gone.** The four modules — `primitives`, `share`, `series`, `map` — left
+with the analysis layer; the skeleton bar and the status chip they shared moved to
+`core/primitives.mjs`, which is where the surviving renderers read them from.
 
 ### The three zones
 

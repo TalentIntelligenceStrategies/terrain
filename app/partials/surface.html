@@ -25,10 +25,12 @@
           </div>
           <div class="cmp-row">
             <div class="res-tools" role="group" aria-label="How the results are shown">
+              <div class="pop-wrap" id="resSetWrap">
               <button class="icon-btn" id="resSettings" type="button"
                       aria-label="Search settings" aria-expanded="false">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
               </button>
+              </div>
               <span class="res-tools-sep" aria-hidden="true"></span>
               <!-- the fishbone is its own control and NOT a view mode: either
                    list rendering can sit beside it. Their message table agrees
@@ -112,10 +114,15 @@
                    IT IS STILL A .chip AND STILL NOT A CONTROL. The rank chip
                    stays below, and that is not an inconsistency: `N starred`
                    is a count of the same kind as `N matched` and belongs
-                   beside it, where `Re-ranked around N starred` is a sentence
+                   beside it, where `Ordered around N starred` is a sentence
                    about the ORDER and would be the longest thing in a 345px
-                   heading row. -->
-              <span class="chip" id="setStarChip" hidden></span>
+                   heading row.
+
+                   THE COUNT IS ALSO THE WAY TO THE SET. It is the only place on
+                   this surface that knows how many the founder has starred, so
+                   it is where they expect to press to see them. -->
+              <button class="chip chip-link" id="setStarChip" type="button" hidden
+                      data-go="starred"></button>
               <span class="chip head-count"><span class="sk sk-h-micro w-sm"
                 style="display:inline-block;vertical-align:-1px"></span> matched</span>
               <span class="info">
@@ -125,9 +132,10 @@
                 <span class="info-pop" role="note"><b>Every patent the search found feeds the
                   views beside them.</b> Sorting and filtering change what you are looking at, not
                   what they count. If one patent is especially close to your idea, star it —
-                  <b>Re-rank</b> appears in the bar above, and orders the rest by how close
-                  they are to the one you starred. No patent enters or leaves; only the
-                  sequence changes.<br><br><b>The figure on the right of each row is
+                  <b>Find similar</b> appears in the bar above, and re-orders the whole set by
+                  how near each patent is to the one you starred. No patent enters or leaves
+                  the set; what changes is which of them you are shown first, so patents
+                  further down surface to the top.<br><br><b>The figure on the right of each row is
                   the engine's relevance score.</b> It is how close the search put that patent to
                   what you described.<br><br><b>That ordering is a ranking, not a verdict.</b> A
                   patent near the top is close to what you described. It does not mean it affects
@@ -209,7 +217,7 @@
                  out of the tab order the way #setRestore below already does. -->
             <button class="btn btn-primary set-rank" id="setRebase" type="button" hidden>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h11"/><path d="M10 12h11"/><path d="M10 18h11"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
-              <span>Re-rank</span>
+              <span>Find similar</span>
             </button>
             <!-- THE WAY BACK, and it lives here rather than in the panel because this
                  is where the surface's other undo-shaped control already is. Hidden by
@@ -282,12 +290,25 @@
                nothing. It is in flow: the column is the record's, and the
                grouping steps aside while it is open. -->
           <section class="rec" id="recPane" aria-labelledby="recTitle" hidden>
+            <!-- CLOSE IS AN X AT THE TRAILING EDGE, not a back chevron at the
+                 leading one. A chevron says "the thing you were looking at is
+                 behind this and you are stepping back to it" — which was true
+                 when the record slid over the pane and left a peek of it. The
+                 record IS the column now: the list it came from never went
+                 anywhere and is still live on the left. So the control
+                 dismisses this pane rather than retreating from it, and an X
+                 is the glyph for that.
+
+                 DOM ORDER IS WHAT PINS IT RIGHT. `.rec-head h2` is `flex:1`,
+                 so the heading takes every spare pixel and whatever follows it
+                 is pushed to the trailing edge. No auto margin, and nothing to
+                 flip for RTL — the row is already logical. -->
             <div class="rec-head">
-              <button class="icon-btn" id="recClose" type="button"
-                      aria-label="Close this patent and go back to the results">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-              </button>
               <h2 class="t-title" id="recTitle" tabindex="-1">The patent record</h2>
+              <button class="icon-btn" id="recClose" type="button"
+                      aria-label="Close this patent">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
             </div>
             <div class="rec-body" id="recBody"></div>
           </section>
@@ -296,6 +317,81 @@
           <div class="pane-idle" id="paneIdle">
             <p class="t-body">Pick a patent on the left to read its record.</p>
           </div>
+
+          <!-- ══ the figure viewer · platform.md §6.6 ══════════════════════
+               ONE DRAWING, LARGE, WITH THE CONTROLS TO READ IT. It sits inside
+               .panecol — which is already positioned — rather than over the
+               window, and that is three rules rather than a layout preference:
+               §3.2 has no scrim and nothing in the product dims the page,
+               there is no position:fixed anywhere in app/, and there is no
+               modal and no focus trap. The list on the left stays live and
+               readable the whole time, which is the same arrangement the
+               record itself uses and for the same reason — the founder is
+               comparing, not leaving.
+
+               NOT role="dialog". Announcing it as a dialog would describe the
+               wrong event: this is one of the things a column shows, reached
+               by pressing a thumbnail and left by a control. The record pane
+               beside it gave up the same role for the same reason. -->
+          <section class="figview" id="figView" hidden aria-label="Patent drawing">
+            <div class="figview-head">
+              <span class="figview-cap t-micro" id="figCap" role="status" aria-live="polite"></span>
+              <!-- THE X IS AT THE TRAILING EDGE, like the record's. One glyph,
+                   one act, in one place across the surface. -->
+              <button class="icon-btn figview-x" id="figClose" type="button"
+                      aria-label="Close this drawing">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+
+            <div class="figview-stage" id="figStage">
+              <img class="figview-img" id="figImg" alt="" decoding="async">
+
+              <!-- PAGING SITS ON THE STAGE, at the two edges it points at. It
+                   is the one pair of controls whose position IS its meaning. -->
+              <button class="figview-step figview-prev" id="figPrev" type="button"
+                      aria-label="Previous drawing">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <button class="figview-step figview-next" id="figNext" type="button"
+                      aria-label="Next drawing">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+
+              <!-- ══ the action bar ══ It floats over the drawing rather than
+                   taking a band of the frame, because the drawing is the
+                   subject and every pixel the chrome takes is a pixel of it.
+                   §5's shadow case exactly: something that floats free of the
+                   page over content it does not push aside. It carries a
+                   hairline too — a shadow cannot separate two surfaces of the
+                   same colour, and this one sits on white line-work. -->
+              <div class="figbar" role="group" aria-label="How the drawing is shown">
+                <button class="figbar-btn" id="figRot" type="button" aria-label="Rotate a quarter turn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+                </button>
+                <button class="figbar-btn" id="figReset" type="button" aria-label="Reset the view">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+                </button>
+                <span class="figbar-sep" aria-hidden="true"></span>
+                <button class="figbar-btn" id="figOut" type="button" aria-label="Zoom out">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/></svg>
+                </button>
+                <button class="figbar-btn" id="figIn" type="button" aria-label="Zoom in">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                </button>
+                <span class="figbar-sep" aria-hidden="true"></span>
+                <button class="figbar-btn" id="figFull" type="button"
+                        aria-pressed="false" aria-label="Fill the screen">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- THE STRIP SCROLLS AND THE STAGE DOES NOT. Seventeen drawings
+                 do not fit a column at a readable size, and shrinking them
+                 until they do makes every one of them useless. -->
+            <div class="figstrip" id="figStrip" role="group" aria-label="The other drawings"></div>
+          </section>
         </div>
 
         <!-- UNDER the column it attributes, not above it. It sat at the top

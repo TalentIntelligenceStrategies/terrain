@@ -40,7 +40,7 @@ const SLOW = Number(qs.get('slow') || 1) || 1;
    offer `Try again`, false means say there is no way forward BY HAVING NO
    BUTTON. Guessing wrong in either direction either wastes the founder's time
    or hides their way out. */
-const PERMANENT = new Set(['record', 'revert', 'saveAccount']);
+const PERMANENT = new Set(['record', 'saveAccount']);
 
 const wait = ms => new Promise(r => setTimeout(r, ms * SLOW));
 
@@ -52,8 +52,9 @@ const DELAY = {
   fields: 180, coverage: 340, search: 900,
   read: 900, narrow: 650, approve: 500,
   patents: 700, patentsPage: 520, sort: 420, facets: 420, rerank: 1100,
+  export: 500,
   record: 600,
-  projects: 240, versions: 240, revert: 700,
+  projects: 240,
   points: 300, runs: 380, account: 300, saveAccount: 800,
   billing: 340, invoices: 380, sendSupport: 900,
 };
@@ -86,6 +87,12 @@ function page(order, n) {
 
 let shown = PAGE;
 
+/* WHAT THE FOUNDER ASKED FOR, held across the reload. `patents` re-runs right
+   after a search — the list reloads itself on terrain:searched — so a limit
+   that lived only in `search` would be honoured for one frame and then reset
+   to twenty by the very next call. */
+let LIMIT = PAGE;
+
 const byId = new Map(ALL.map(r => [r.id, r]));
 const cmp = {
   relevance: (a, b) => byId.get(b).score - byId.get(a).score,
@@ -97,12 +104,24 @@ export const DemoEngine = {
   /* ── the conversation and the gate ───────────────────────────────────── */
   /* ONE CALL. The old flow charged at the gate; there is no gate, so this is
      where the ledger moves. A failed search returns the balance untouched. */
-  search: async ({ query = '' } = {}) => respond('search', {
-    ...page(ALL.map(r => r.id), PAGE),
-    said: String(query || D.DEMO_IDEA),
-    elapsedMs: 240,
-    balance: D.POINTS.balance - 2,
-  }),
+  /* THE SETTINGS ARE HONOURED, NOT ACKNOWLEDGED. `count` is the one the
+     founder can check against what is on screen — they picked 10 and ten rows
+     came back — so the fake engine answers it rather than echoing it. The
+     other four narrow a corpus this demo does not have: every row here is the
+     same synthetic shape, so filtering by jurisdiction would return the same
+     set with a smaller number on it, which is a lie with a number attached.
+     They reach the engine and `corpus/` is where they mean something. */
+  search: async ({ query = '', settings = {} } = {}) => {
+    LIMIT = Number(settings.count) || PAGE;
+    shown = Math.min(LIMIT, ALL.length);
+    ORDER = ALL.map(r => r.id).sort(cmp.relevance);
+    return respond('search', {
+      ...page(ORDER, shown),
+      said: String(query || D.DEMO_IDEA),
+      elapsedMs: 240,
+      balance: D.POINTS.balance - 2,
+    });
+  },
 
   /* ── the home surface ──────────────────────────────────────────────── */
   fields:   async () => respond('fields',   { fields: D.FIELDS }),
@@ -110,9 +129,16 @@ export const DemoEngine = {
                                               sources: D.COVERAGE }),
 
   /* ── the list ────────────────────────────────────────────────────────── */
+  /* SORTED, because the bar says Relevance from the first frame. This handed
+     back generator order, and the generator ramps `score` upward by index — so
+     the opening list ran 0.6250, 0.6620, 0.6990 downward, worst first, under a
+     control that claimed it was ranked by relevance. The comparator below was
+     right the whole time and simply never ran until somebody opened the menu.
+
+     Whatever `cmp.relevance` does IS the default, rather than a copy of it. */
   patents: async () => {
-    shown = PAGE;
-    ORDER = ALL.map(r => r.id);
+    shown = Math.min(LIMIT, ALL.length);
+    ORDER = ALL.map(r => r.id).sort(cmp.relevance);
     return respond('patents', page(ORDER, shown));
   },
 
@@ -140,7 +166,7 @@ export const DemoEngine = {
     return respond('facets', res);
   },
 
-  /* A RE-RANK RE-SEQUENCES A CORPUS ALREADY PAID FOR and adds no patent to it.
+  /* FIND SIMILAR RE-SEQUENCES A CORPUS ALREADY PAID FOR and adds no patent to it.
      It returns an ORDER over the SAME set — never a new set — which is what
      lets the client FLIP the rows it already has rather than redraw. */
   rerank: async ({ anchors = [] } = {}) => {
@@ -156,10 +182,15 @@ export const DemoEngine = {
 
   record: async ({ id } = {}) => respond('record', D.recordFor(id)),
 
-  /* ── projects and versions ───────────────────────────────────────────── */
+  /* THE LEDGER, and nothing else. It is handed the ids so a real engine can
+     record WHAT left, and it answers with the balance. It never returns the
+     rows: the client already has them, and a second copy of the columns here
+     would be a second place the export's shape is decided. */
+  export: async ({ ids = [] } = {}) =>
+    respond('export', { balance: D.POINTS.balance - 8, exported: ids.length }),
+
+  /* ── projects ────────────────────────────────────────────────────────── */
   projects: async () => respond('projects', { projects: D.PROJECTS }),
-  versions: async () => respond('versions', { versions: D.VERSIONS }),
-  revert: async ({ id } = {}) => respond('revert', { current: id }),
 
   /* ── the destinations ────────────────────────────────────────────────── */
   points: async () => respond('points', {

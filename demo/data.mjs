@@ -116,7 +116,7 @@ export const DEMO_IDEA = 'drone';
 export const MATCHED = 162;
 export const SET_CEILING = 124;
 
-/* a seeded pseudo-record, so the list is stable across reloads and a re-rank
+/* a seeded pseudo-record, so the list is stable across reloads and a reorder
    can be compared against the order before it. Deterministic by construction:
    an unstable list makes every visual judgement unfalsifiable. */
 function seeded(i) {
@@ -144,7 +144,16 @@ export function patentRows(count = SET_CEILING) {
       holder: i === 0 ? DEMO_HOLDER : null,
       year: s.year,
       status: s.status,
-      score: s.score,
+      /* AND IT SCORES HIGHEST, so relevance order puts it first. The seed gave
+         it whatever the formula produced, which left the one row that can
+         demonstrate a title, a holder and a record sitting at position 61 —
+         reachable only by paging, on a surface whose whole job is to show what
+         a result looks like.
+
+         It is not a thumb on the scale. The demonstration row IS the patent
+         closest to what the founder described; a set where the nearest match
+         is the one we can say nothing about would be the odd arrangement. */
+      score: i === 0 ? 0.9880 : s.score,
     });
   }
   return out;
@@ -163,6 +172,11 @@ export function recordFor(id) {
       holder: null, inventors: null,
       filed: String(s.year), published: String(s.year + 1), where: null,
       status: s.status, abstract: null, claims: null,
+      /* EMPTY, NOT null, AND NOT A BAR. The skeleton contract covers values
+         that exist and are being withheld; the demo corpus has no drawings at
+         all, and a row of grey rectangles would claim it does. `?data=real`
+         runs on corpus/, where they are real. */
+      figures: [],
     };
   }
   return {
@@ -170,10 +184,26 @@ export function recordFor(id) {
     title: DEMO_TITLE,
     filed: '2021', published: '2023',
     status: 'live', abstract: DEMO_ABSTRACT, claims: DEMO_CLAIMS,
+    /* SIX DRAWINGS, EVERY ONE OF THEM WITHHELD — `src: null`, which is what
+       null means in every other field here. This is §8's contract, not a fifth
+       exception to it: the record HAS drawings and Terrain declines to print
+       them, exactly as it declines to print the holder name two fields up.
+
+       IT IS NOT A FABRICATION AND COULD NOT BE ONE. .gitignore refuses *.png
+       wholesale and check-publish.py refuses a base64 data: URI, so a demo
+       drawing would have to be inline SVG somebody drew — an invented
+       technical drawing presented as a patent's own, which is the one thing
+       §8's exceptions may never be used for. A frame invents nothing.
+
+       AND IT IS WHY THE SURFACE IS REACHABLE AT ALL. With an empty array the
+       viewer, the strip, the action bar and the Drawings-only mode were
+       unreachable on the URL everybody opens — a feature demonstrable only
+       behind a flag and a local directory absent from a fresh clone. */
+    figures: [1, 2, 3, 4, 5, 6].map(n => ({ n, src: null, alt: null })),
   };
 }
 
-/* ── projects, versions, points, account, billing ───────────────────────── */
+/* ── projects, points, account, billing ─────────────────────────────────── */
 /* NOTHING IS INVENTED. Every other project is a bar — naming a roster would be
    inventing six projects a founder never made, which is a different act from
    printing the one the surface already shows. */
@@ -183,24 +213,19 @@ export const PROJECTS = [
   { id: 'proj-4', label: null }, { id: 'proj-5', label: null },
 ];
 
-export const VERSIONS = [
-  { id: 'v3', label: null, current: true },
-  { id: 'v2', label: null }, { id: 'v1', label: null },
-];
-
 export const POINTS = { balance: 180, allowance: 400 };
 
 export const RUN_TYPES = [
   { id: 'search', label: 'New search', cost: 40 },
   { id: 'rebuild', label: 'Rebuild after a scope change', cost: 25 },
-  { id: 'rerank', label: 'Re-rank', cost: 4 },
+  { id: 'rerank', label: 'Find similar', cost: 4 },
   { id: 'export', label: 'Export', cost: 8 },
   { id: 'watch', label: 'Watch', cost: 12 },
 ];
 
 export const RUNS = [
   { id: 'r1', kind: 'New search', project: null, when: '2026-09-14', cost: 40 },
-  { id: 'r2', kind: 'Re-rank', project: null, when: '2026-09-14', cost: 4 },
+  { id: 'r2', kind: 'Find similar', project: null, when: '2026-09-14', cost: 4 },
   { id: 'r3', kind: 'Rebuild', project: null, when: '2026-09-12', cost: 25 },
   { id: 'r4', kind: 'New search', project: null, when: '2026-09-09', cost: 40 },
 ];

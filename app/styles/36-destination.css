@@ -236,45 +236,6 @@
 .info.is-instant .info-pop{transition-duration:0s}
 .info-pop b{color:var(--text-1);font-weight:600}
 
-/* ── version history · a nested list in the sidebar ──────────
-   Moved out of the map's page head 2026-09-10 (design-language.md §7). The
-   toggle needed the slot, but the popover was the wrong container anyway:
-   versions are project-scoped, and the sidebar is the only element that
-   survives a view swap. The indent is what says "of the project above". */
-/* The space does the grouping; the rule only reinforces it. Measured before
-   this: 6px to the project above, 8px to the project below — equidistant, so
-   the list read as a third peer band and the indent and rule were carrying the
-   nesting alone. Attached above, detached below, and the gap out is now 12x
-   the gap in. */
-.side-hist{padding-inline-start:var(--s-16);margin:var(--s-2) 0 var(--s-24);
-           border-inline-start:1px solid var(--border);margin-inline-start:var(--s-16)}
-.side-section-sub{margin:var(--s-4) 0 var(--s-2);color:var(--text-3)}
-.hist-row{display:flex;align-items:center;gap:var(--s-8);padding:var(--s-6) var(--s-8);
-          border-radius:var(--r-control)}
-/* the deep link has to land somewhere visible — a route that silently stops
-   routing is worse than a removed one.
-
-   A TRANSITION, not a keyframe, and that is the whole point. This was
-   @keyframes histFlash, and the reduced-motion block kills `animation`
-   outright — so the one cue telling a founder where #history landed existed
-   only for people who had not asked for less motion. As a class toggle the
-   background still appears and still goes away; motion users get it fading,
-   everyone else gets it snapping. The cue is colour, and the fade is
-   decoration on top of it. */
-.side-hist{transition:background var(--dur-4) var(--ease)}
-.side-hist.is-target{background:var(--surface-sunken)}
-.hist-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
-/* `Version 3` — the numeral is a .fig like every other figure, so it is
-   Inconsolata and tabular and 3 sits under 12 without the column moving. */
-.hist-v{color:var(--text-2)}
-.hist-v .fig{color:var(--text-1)}
-.hist-revert{font-size:12px;font-weight:500;color:var(--text-2);padding:var(--s-4) var(--s-8);
-             border-radius:var(--r-chip);flex:0 0 auto;
-             transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease),
-                        transform var(--dur-1) var(--ease)}
-.hist-revert:active{transform:scale(.96)}
-.hist-tag{flex:0 0 auto}
-
 .suggests{display:flex;flex-wrap:wrap;gap:var(--s-8)}
 .suggest{text-align:left;font-size:12.5px;font-weight:500;color:var(--text-2);
          border:1px dashed var(--border-strong);border-radius:var(--r-pill);
@@ -562,5 +523,4 @@
   .cmp-send:not(:disabled):hover{background:var(--accent-hover)}
   .suggest:hover{background:var(--surface-sunken);color:var(--text-1);border-color:var(--border-strong)}
   .drill-close:hover{color:var(--text-1);background:var(--surface-sunken)}
-  .hist-revert:hover{background:var(--surface-sunken);color:var(--text-1)}
 }

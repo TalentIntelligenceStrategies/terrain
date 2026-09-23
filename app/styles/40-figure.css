@@ -1,0 +1,269 @@
+/* ══ 40 · THE DRAWINGS ═════════════════════════════════════════════════════
+   platform.md §6.6. The strip inside the record, and the viewer over it.
+
+   ═══ WHAT DECIDED THE SHAPE, BEFORE ANY DESIGN QUESTION ═══════════════════
+   · §3.2 — there is no scrim token and no scrim. Nothing dims.
+   · There is no `position:fixed` in app/ and no full-viewport node.
+   · There is no modal and no focus trap (13-inline-confirm.css, focus.mjs).
+
+   So the viewer is absolute inside `.panecol`, which is already positioned. It
+   fills the record column and leaves the list on the left live and readable —
+   the same arrangement the record itself uses, for the same reason.
+
+   ═══ §6's PROHIBITIONS, EVERY ONE OF WHICH BITES HERE ═════════════════════
+   No `transition:all`. No entrance from `scale(0)`. No `ease-in`. **No
+   transition on a layout property — "There are no exceptions"** — so zoom is
+   `scale()`, rotation is `rotate()`, pan is `translate()`. Exit is faster than
+   enter. Hover-driven motion is gated. No fourth keyframe: everything here is
+   a transition, which is also what lets a rapidly-pressed zoom button retarget
+   from where it is instead of restarting.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── the strip inside the record ────────────────────────────────────────── */
+
+.pn-nofig{margin:0;color:var(--text-3)}
+
+.pn-figs{list-style:none;margin:0;padding:0;
+         display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));
+         gap:var(--s-8)}
+.pn-fig{min-width:0}
+
+/* A THUMBNAIL IS A WIDGET IN THE LAYOUT, SO IT GETS A HAIRLINE AND NOT A
+   SHADOW. §5: "a widget card that reaches for a shadow has not earned one" —
+   it sits IN the pane rather than floating over it, and the ground↔surface
+   step plus 1px --border is what says so. The depth the founder asked for is
+   in the viewer, which does float.
+
+   WHITE GROUND, ALWAYS. Patent drawings are black line-work on transparent or
+   white; on a dark surface they disappear into it. This is the one element in
+   the product whose background does not swap with the theme, and it is a fact
+   about the content rather than an exemption — a --surface here would render
+   the drawings invisible in dark mode. */
+.pn-fig-btn{display:block;width:100%;position:relative;
+            background:var(--figure-ground);border:1px solid var(--border);
+            border-radius:var(--r-control);overflow:hidden;cursor:pointer;
+            padding:0;
+            transition:border-color var(--dur-1) var(--ease),
+                       transform var(--dur-1) var(--ease)}
+.pn-fig-btn:active{transform:scale(.98)}
+.pn-fig-img{display:block;width:100%;aspect-ratio:4/5;object-fit:contain;
+            padding:var(--s-6)}
+
+/* THE NUMBER IS ALWAYS THERE AND HOVER RAISES IT. A caption that exists only
+   under a pointer does not exist on a touch screen or to a keyboard, so it
+   sits quietly at rest and comes up when the pointer arrives — which is what
+   "numbering on hover" has to mean if it is to be true for everybody. */
+.pn-fig-n{position:absolute;bottom:var(--s-4);inset-inline-start:var(--s-6);
+          color:var(--text-3);
+          transition:color var(--dur-1) var(--ease)}
+
+/* ── the viewer ─────────────────────────────────────────────────────────── */
+
+.figview{position:absolute;inset:0;z-index:40;
+         display:flex;flex-direction:column;
+         background:var(--surface);border:1px solid var(--border);
+         border-radius:var(--r-shell);overflow:hidden;
+         box-shadow:var(--shadow-float)}
+.figview[hidden]{display:none}
+
+/* ORIGIN-AWARE ENOUGH TO SAY WHERE IT CAME FROM, without pretending to a
+   precision it does not have: the thumbnails are a grid and the viewer fills
+   the column, so scaling from the grid's side is the honest version of growing
+   from the trigger. .98, because nothing in the world appears from nothing.
+
+   EXIT IS --dur-1 AND ENTER IS --dur-2. §6, and the skill agrees: the founder
+   is waiting on the open and not on the close. */
+.figview{opacity:0;transform:scale(.98);
+         transition:opacity var(--dur-1) var(--ease),
+                    transform var(--dur-1) var(--ease)}
+.figview.is-open{opacity:1;transform:none;
+                 transition:opacity var(--dur-2) var(--ease),
+                            transform var(--dur-2) var(--ease)}
+
+.figview-head{display:flex;align-items:center;gap:var(--s-12);flex:0 0 auto;
+              padding:var(--s-12) var(--s-16);
+              border-bottom:1px solid var(--border)}
+.figview-cap{flex:1;min-width:0;color:var(--text-3)}
+
+/* ── the stage ──────────────────────────────────────────────────────────
+   WHITE, AND FOR THE SAME REASON THE THUMBNAILS ARE. Black line-work on a
+   #1A1A1A surface is a blank rectangle. */
+.figview-stage{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;
+               background:var(--figure-ground);display:grid;place-items:center}
+.figview-stage.can-pan{cursor:grab}
+.figview-stage.can-pan.is-panning{cursor:grabbing}
+
+/* ONE TRANSFORM, COMPOSED HERE. The module sets three custom properties and
+   this decides the order they apply in, so there is one answer to whether
+   rotation happens before scale rather than one per call site. Every read
+   carries a fallback: a var() that is declared nowhere and has no fallback is
+   invalid at computed-value time, and the property takes its INITIAL value —
+   which for `transform` would drop the whole composition silently. */
+/* IT FITS THE STAGE RATHER THAN SITTING AT ITS NATURAL SIZE. `max-width:100%`
+   only ever shrinks, and a patent drawing captured at 600px then rendered in a
+   900px column arrives as a postage stamp in the middle of a white field — the
+   founder's first act would be pressing zoom twice to get back to where the
+   viewer should have opened. `object-fit:contain` scales both ways and keeps
+   the aspect ratio, which for line-work is not negotiable.
+
+   THE BOTTOM PADDING IS THE ACTION BAR'S ROOM. The bar floats over the stage,
+   so without it the bar sits on top of the drawing rather than beside it —
+   which is fine for a photograph and not fine for a technical drawing whose
+   bottom edge carries figure labels. */
+.figview-img{width:100%;height:100%;object-fit:contain;
+             padding:var(--s-24) var(--s-24) var(--s-56);
+             transform:translate(var(--fig-x,0px),var(--fig-y,0px))
+                       rotate(var(--fig-rot,0deg))
+                       scale(var(--fig-scale,1));
+             transform-origin:center;
+             transition:transform var(--dur-2) var(--ease);
+             will-change:transform}
+/* WHILE DRAGGING, NO TRANSITION. A 200ms ease on a pointer-driven translate
+   makes the drawing lag the cursor by a fifth of a second, which reads as the
+   interface being slow rather than as smoothing. */
+.figview-stage.is-panning .figview-img{transition:none}
+
+/* ── paging, on the stage edges ─────────────────────────────────────────── */
+.figview-step{position:absolute;top:50%;transform:translateY(-50%);
+              width:36px;height:36px;display:grid;place-items:center;
+              border-radius:var(--r-pill);
+              background:var(--veil);border:1px solid var(--border);
+              box-shadow:var(--shadow-float);color:var(--text-2);
+              backdrop-filter:blur(6px);
+              transition:color var(--dur-1) var(--ease),
+                         background var(--dur-1) var(--ease)}
+.figview-prev{inset-inline-start:var(--s-12)}
+.figview-next{inset-inline-end:var(--s-12)}
+.figview-step:active{transform:translateY(-50%) scale(.94)}
+
+/* ── the action bar ─────────────────────────────────────────────────────
+   §5's shadow case, named: something that floats free of the page over content
+   it does not push aside. AND its second clause — a shadow cannot separate two
+   surfaces of the same colour, and this sits on white line-work on a white
+   stage — so the hairline is what draws the edge and the shadow only lifts it.
+
+   --veil IS A TOKEN AND HAD TO BE. check-app.py gate A refuses an inline
+   rgba() anywhere but tokens.css, and §3.2 allows alpha only as a token,
+   because a translucent surface composites over something whose colour varies
+   and cannot be a flat neutral. */
+.figbar{position:absolute;bottom:var(--s-16);left:50%;
+        transform:translateX(-50%);
+        display:flex;align-items:center;gap:var(--s-2);
+        padding:var(--s-4);border-radius:var(--r-pill);
+        background:var(--veil);border:1px solid var(--border);
+        box-shadow:var(--shadow-float);
+        backdrop-filter:blur(8px)}
+.figbar-btn{width:32px;height:32px;display:grid;place-items:center;
+            border-radius:var(--r-pill);color:var(--text-2);
+            transition:color var(--dur-1) var(--ease),
+                       background var(--dur-1) var(--ease),
+                       transform var(--dur-1) var(--ease)}
+.figbar-btn:active{transform:scale(.94)}
+/* A ZOOM BUTTON AT THE END OF ITS LADDER IS DISABLED, NOT HIDDEN. It is one of
+   a pair and the pair's shape is the control; removing one would move the
+   other under the founder's finger mid-gesture. */
+.figbar-btn:disabled{color:var(--text-disabled);cursor:default}
+.figbar-sep{width:1px;height:18px;background:var(--border);flex:0 0 auto;
+            margin-inline:var(--s-2)}
+
+/* NO ACCENT ON A PRESSED CONTROL HERE. §3.8 gives the accent three sites — the
+   primary action, the focus ring, and the selected state of a segmented
+   control or menu item — and a fullscreen toggle inside a floating bar is none
+   of them. Ink and weight say pressed. */
+.figbar-btn[aria-pressed="true"]{color:var(--text-1);background:var(--surface-sunken)}
+
+/* ── the thumbnail strip ────────────────────────────────────────────────
+   IT SCROLLS AND THE STAGE DOES NOT. Seventeen drawings do not fit a column at
+   a size anybody can read, and shrinking them until they do makes every one of
+   them useless. */
+.figstrip{flex:0 0 auto;display:flex;gap:var(--s-8);overflow-x:auto;
+          padding:var(--s-12) var(--s-16);
+          border-top:1px solid var(--border);
+          overscroll-behavior-x:contain;scrollbar-width:thin}
+.figstrip-btn{position:relative;flex:0 0 auto;width:64px;
+              background:var(--figure-ground);border:1px solid var(--border);
+              border-radius:var(--r-control);overflow:hidden;cursor:pointer;
+              padding:0;
+              transition:border-color var(--dur-1) var(--ease),
+                         transform var(--dur-1) var(--ease)}
+.figstrip-btn img{display:block;width:100%;aspect-ratio:4/5;object-fit:contain;
+                  padding:3px}
+.figstrip-btn:active{transform:scale(.96)}
+/* THE CURRENT ONE IS MARKED BY WEIGHT, NOT BY HUE. Which drawing you are
+   looking at is closer to data than to a control, so §3.8's accent does not
+   reach it; --border-strong and ink do the work, and the number goes solid. */
+.figstrip-btn[aria-current="true"]{border-color:var(--text-1)}
+.figstrip-btn[aria-current="true"] .figstrip-n{color:var(--text-1)}
+.figstrip-n{position:absolute;bottom:2px;inset-inline-start:4px;
+            color:var(--text-3);
+            transition:color var(--dur-1) var(--ease)}
+
+/* ── hover, gated ── every rule here NAMES :hover; nothing else may. ──── */
+@media (hover:hover) and (pointer:fine){
+  /* THE LIFT IS A TRANSFORM, NOT A SHADOW AND NOT A MARGIN. §5 will not give a
+     card in a layout an elevation shadow, and §6 will not animate a layout
+     property. A 1px translate reads as the thing coming toward you and costs
+     no reflow. */
+  .pn-fig-btn:hover{border-color:var(--border-strong);transform:translateY(-1px)}
+  .pn-fig-btn:hover .pn-fig-n{color:var(--text-1)}
+  .figstrip-btn:hover{border-color:var(--border-strong)}
+  .figstrip-btn:hover .figstrip-n{color:var(--text-1)}
+  .figbar-btn:not(:disabled):hover{color:var(--text-1);background:var(--surface-sunken)}
+  .figview-step:hover{color:var(--text-1)}
+}
+
+.pn-fig-btn:focus-visible,.figstrip-btn:focus-visible,
+.figbar-btn:focus-visible,.figview-step:focus-visible{
+  outline:2px solid var(--focus);outline-offset:2px}
+
+@media (max-width:900px){
+  /* the strip goes first: at a narrow column the stage is the whole value and
+     a row of 64px thumbnails under it is the part that can be paged to. */
+  .figstrip{display:none}
+}
+
+/* ── `Drawings only` ────────────────────────────────────────────────────
+   THE ATTRIBUTE THAT DROVE NOTHING. work.mjs has written `data-mode` on
+   #workSplit since the toolbar was built and no rule anywhere read it, so both
+   halves of the segmented control flipped an aria-pressed and changed the
+   screen in no other way. This is the rule it was waiting for.
+
+   IT HIDES, IT DOES NOT UNMOUNT. The record's text is still in the DOM and
+   still in the accessible tree order when the founder switches back, and
+   `display:none` on a <section> is cheaper than re-rendering the pane — which
+   would also lose the scroll position and re-run the entrance. */
+[data-mode="images"] .pn-body > .pn-sec:not(.pn-figs-sec),
+[data-mode="images"] .pn-body > .hf{display:none}
+/* the strip gets the room the text was using, so the drawings come up to a
+   size worth looking at rather than staying thumbnails on an emptier page. */
+[data-mode="images"] .pn-figs{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+
+/* THE SEGMENTED CONTROL'S DISABLED HALF. `.field` and `.btn` both have one and
+   the segmented control did not, because until the drawings arrived neither of
+   its halves could ever be unavailable.
+
+   aria-disabled AND NOT disabled, which is 10-button.css's rule and the same
+   reason as everywhere else: a `disabled` button drops out of the tab order, so
+   the founder who most needs the label saying WHY cannot reach it. It stays
+   focusable, it keeps its name, and the JS refuses the act. */
+.seg-btn[aria-disabled="true"]{color:var(--text-disabled);cursor:default}
+.seg-btn[aria-disabled="true"]:active{transform:none}
+
+/* ── a withheld drawing ─────────────────────────────────────────────────
+   `src === null` means the record HAS this drawing and Terrain declines to
+   print it — §8's contract in the shape a figure has, exactly as a withheld
+   holder name is a bar. It is NOT the same as `figures: []`, which means the
+   record has none and gets a sentence instead.
+
+   THE FRAME KEEPS THE FIGURE'S PROPORTIONS so the strip does not reflow when
+   real drawings arrive, and it carries `.sk` so it shimmers with every other
+   withheld value on the surface rather than inventing a second idle state. */
+.pn-fig-sk{display:block;width:100%;aspect-ratio:4/5;border-radius:0}
+.figstrip-sk{display:block;width:100%;aspect-ratio:4/5;border-radius:0}
+/* the stage's frame is the same thing at reading size. It stays inside the
+   bar's room, so the action bar has something to float over rather than
+   sitting on the edge of a box. */
+.figview-stage.is-withheld::before{content:"";width:min(46%,320px);aspect-ratio:4/5;
+  border-radius:var(--r-control);background:var(--skeleton);
+  margin-block-end:var(--s-32)}
+.figview-img[hidden]{display:none}

@@ -1,8 +1,8 @@
 /* surfaces/work — the working surface's own chrome. platform.md §6.2.
  *
- * The head: the project's name, the version bar, the scope chip. Everything
- * INSIDE the columns belongs to list.mjs, fishbone.mjs and record.mjs; this is
- * only what sits above them.
+ * The head: the project's name and the scope chip. Everything INSIDE the
+ * columns belongs to list.mjs and record.mjs; this is only what sits above
+ * them.
  *
  * THE PROJECT'S NAME IS NOT NEW AND THAT IS THE WHOLE ARGUMENT. The working
  * screen's own title has printed it since the dashboard was built — the project
@@ -23,6 +23,7 @@ import { $ } from '../core/dom.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
+import { read as readSettings } from './settings.mjs';
 
 let ENGINE = null;
 
@@ -43,13 +44,34 @@ function toggleFishbone(btn) {
   say('work', on ? 'Grouping shown.' : 'Grouping hidden.');
 }
 
+/* `data-mode` DRIVES THE RECORD, and until the drawings arrived it drove
+   nothing at all: this attribute was written by this function and read by no
+   CSS rule and no other module, so both buttons flipped an aria-pressed and
+   changed the screen in no other way. A toggle that cannot change anything is
+   worse than a missing one — the founder presses it, nothing moves, and the
+   next control they try is one they no longer trust.
+
+   IT REFUSES WHAT IT CANNOT DO. record.mjs marks `Drawings only` aria-disabled
+   on a record with no figures, so this checks before switching: a mode that
+   hid the text to show an empty pane would be the toggle reporting a fault in
+   itself. Announced, because the button stays focused and a founder who cannot
+   see the pane gets no other signal. */
 function setMode(which) {
+  const imgBtn = $('#modeImages');
+  if (which === 'images' && imgBtn
+      && imgBtn.getAttribute('aria-disabled') === 'true') {
+    say('work', 'This record has no drawings.');
+    return;
+  }
   [['modeText', 'text'], ['modeImages', 'images']].forEach(([id, key]) => {
     const b = $('#' + id);
     if (b) b.setAttribute('aria-pressed', String(key === which));
   });
   const split = $('#workSplit');
   if (split) split.setAttribute('data-mode', which);
+  say('work', which === 'images'
+    ? 'Showing the drawings only.'
+    : 'Showing the details and the drawings.');
 }
 
 export function init(ctx) {
@@ -85,7 +107,7 @@ export function init(ctx) {
     const text = field && field.value.trim();
     if (!text) return;
     btnWait(b);
-    const res = await ENGINE.search({ query: text });
+    const res = await ENGINE.search({ query: text, settings: readSettings() });
     btnRest(b);
     if (!res.ok) {
       say('work', 'The search did not run. Nothing was charged.');

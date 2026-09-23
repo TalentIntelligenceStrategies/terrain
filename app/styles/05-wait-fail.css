@@ -147,6 +147,31 @@
    rather than as the column working. With no chip row 1 collapses to 0 and
    the 1fr below it is the whole region. */
 .set-list.is-wait>.dmx-root{grid-row:2;align-self:center;justify-self:center}
+
+/* ── THE CARD DOES NOT FRAME A WAIT ──────────────────────────────────────
+   A widget card's hairline says "these things belong together". While the
+   list is out there is one thing inside it — a 20px mark — and the border
+   stops describing a group and starts drawing a box around a dot: 450px of
+   empty white panel, which reads as a region that failed rather than one
+   that is working.
+
+   So the card's paint comes off for the length of the wait and the loader
+   sits on --ground. The BAR STAYS, because it is chrome and §8 says chrome
+   is real — and because every wait on this surface was started by a control
+   in it, so hiding the sort you just pressed would be the interface losing
+   the thing you did.
+
+   TRANSPARENT, NOT `border:none`. The 1px stays in the box model, so nothing
+   moves by a pixel when the list lands and the colour comes back. Same for
+   the two inner hairlines, which would otherwise hang in the air with no
+   card edge to meet.
+
+   Scoped to the list card by its waiting child rather than to `.card`: a
+   card with a HEAD is still framing its title while its body waits, and that
+   border is doing its job. This one has no head. */
+.card:has(>.set-listcol>#setList.is-wait){background:none;border-color:transparent}
+.card:has(>.set-listcol>#setList.is-wait)>.set-bar{border-bottom-color:transparent}
+.card:has(>.set-listcol>#setList.is-wait) .set-more{border-top-color:transparent}
 /* the foot's button, mid-request. Sized to the label it replaces so the bar
    does not change width while it waits — the same reserve .cmp-status makes
    for a line it does not have yet. */

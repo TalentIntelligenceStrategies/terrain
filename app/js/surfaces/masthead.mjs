@@ -21,8 +21,8 @@ let ENGINE = null;
    display:none and leaves both dropdowns invisible, which is exactly what they
    were. The prototype always did it this way; the extraction did not.
 
-   ONLY ONE MAY BE OPEN. 14-menu.css says so and the project switcher nests a
-   version block, so two open menus would overlap. Opening one closes the other.
+   ONLY ONE MAY BE OPEN. 14-menu.css says so, and two dropdowns anchored to the
+   same 48px bar overlap whatever is in them. Opening one closes the other.
 
    The stack is what makes that safe: Escape closes the MOST RECENT, not
    whichever remembered to bind a handler. */
@@ -110,18 +110,6 @@ export function init(ctx) {
     }
   });
 
-  ENGINE.versions().then(res => {
-    const h = $('#histList');
-    if (!h) return;
-    if (!res.ok) { h.innerHTML = ''; return; }
-    const vs = res.data.versions || [];
-    h.innerHTML = vs.map(v =>
-      '<button class="side-item side-item-sub' + (v.current ? ' is-current' : '') +
-      '" type="button" role="menuitem" data-ver="' + esc(v.id) + '">' +
-      (v.label ? '<span>' + esc(v.label) + '</span>' : bar('w-sm')) +
-      '</button>').join('');
-  });
-
   /* ── the meter · what is left ───────────────────────────────────────────
      A FIGURE AND A WORD, never a colour alone. The meter narrows as the
      balance falls and the number beside it says what it is; a bar that only
@@ -136,9 +124,19 @@ export function init(ctx) {
     if (m) m.style.setProperty('--meter-fill', (balance / allowance * 100).toFixed(1) + '%');
   });
 
-  /* ── navigation out of the bar ──────────────────────────────────────── */
-  onActivate(document, '[data-goto]', el => {
-    const h = el.getAttribute('data-goto');
+  /* ── navigation out of the bar ────────────────────────────────────────
+     `data-go`, WHICH IS WHAT THE MARKUP SAYS. This listened for `data-goto`
+     and nothing in the tree has ever carried that attribute, so all six
+     navigation controls were inert: Account settings, Plan & billing, Help,
+     the points meter, New search, and billing's link to the points page.
+
+     Nothing failed. The delegated listener matched no element, so the click
+     fell through to the document and the page sat exactly where it was — which
+     looks identical to a route that resolved to the view you are already on.
+     Two of the three account rows even carry a comment saying they stopped
+     being inert, written against the attribute the markup uses. */
+  onActivate(document, '[data-go]', el => {
+    const h = el.getAttribute('data-go');
     if (h) location.hash = h;
   });
 

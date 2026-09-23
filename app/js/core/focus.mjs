@@ -32,9 +32,16 @@ export function focusQuietly(node) {
 export function captureFocus(fallback) {
   const from = document.activeElement;
   return function restore() {
-    if (from && from.isConnected && from !== document.body) { from.focus(); return from; }
+    /* focusQuietly, NOT .focus(). Restoring focus is exactly the case the
+       preventScroll note above this file is about: the node being returned to
+       is a list row inside an overflow:hidden column, and a plain .focus()
+       scrolls it into view — which yanks the column sideways on the same frame
+       the record is sliding out. It is the same bug at the other end of the
+       interaction, and it arrived here because this function was written to
+       return a node's focus rather than to return focus quietly. */
+    if (from && from.isConnected && from !== document.body) { focusQuietly(from); return from; }
     const alt = typeof fallback === 'function' ? fallback() : fallback;
-    if (alt && alt.isConnected) { alt.focus(); return alt; }
+    if (alt && alt.isConnected) { focusQuietly(alt); return alt; }
     return null;
   };
 }

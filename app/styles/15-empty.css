@@ -8,8 +8,8 @@
    NEITHER SENTENCE IS AN ACTION, and that is deliberate rather than an
    omission: none of the three empty states is filled by a control the founder
    can press from where they are standing. A project comes from a search, a
-   version from a change, an invoice from a renewal. Inventing a button for
-   each would be an empty state pointing at nothing.
+   starred set from reading the list, an invoice from a renewal. Inventing a
+   button for each would be an empty state pointing at nothing.
    ═══════════════════════════════════════════════════════════════════════ */
 
 /* ── AN EMPTY LIST IS NOT A LIST OF BARS · design-language.md §8 ──────────
@@ -21,8 +21,9 @@
    TWO SENTENCES AND THE SECOND IS QUIETER: what this place is, then what
    fills it. Neither is an action here, because none of the three is filled by
    a control the founder can press from where they are standing -- a project
-   comes from a search, a version from a change, an invoice from a renewal.
-   Inventing a button for each would be an empty state pointing at nothing. */
+   comes from a search, a starred set from reading the list, an invoice from a
+   renewal. Inventing a button for each would be an empty state pointing at
+   nothing. */
 .empty-note{margin:0;padding:var(--s-12);font-size:13px;line-height:1.55;
       color:var(--text-2);max-width:60ch;text-wrap:pretty}
 .empty-note .empty-then{display:block;margin-block-start:var(--s-2);color:var(--text-3)}

@@ -45,9 +45,9 @@
  * device once, for the map's holders; here it is a system rule. Four things
  * follow, and the fourth is the one that matters most:
  *
- *   · Width strings and label arrays leave the data entirely. Version history
- *     stops being three CSS width-class strings and becomes the contract's
- *     shape.
+ *   · Width strings and label arrays leave the data entirely. A list of
+ *     identities stops being CSS width-class strings and becomes the
+ *     contract's shape.
  *   · The skeleton contract becomes greppable: one rule, one meaning.
  *   · A real engine returning real names changes NOTHING but the presence of a
  *     value. No renderer branches on "is this demo data".
@@ -113,11 +113,29 @@ export const CODE = {
  *  It is `string|null` like every other identity-shaped field, and null means the
  *  bar — a patent whose title we decline to print is the ordinary case, not an
  *  error. */
+/* `figures` CARRIES THE SKELETON CONTRACT LIKE EVERY OTHER FIELD, and the two
+ *  cases it has to keep apart are the whole of its design.
+ *
+ *    figures: []              this record HAS NO DRAWINGS. A fact about it.
+ *    figures: [{n, src:null}] it has drawings and we decline to show them.
+ *
+ *  The first renders a sentence; the second renders numbered skeleton frames,
+ *  exactly as a withheld holder name renders a bar. Collapsing them would be
+ *  the same error in either direction: an empty array where drawings exist says
+ *  a patent has none, and a frame where none exist claims one is being
+ *  withheld. `src === null` is the ONLY thing that means render the frame,
+ *  which is `null`'s meaning everywhere else in this file.
+ *
+ *  `n` IS THE PUBLISHED FIGURE NUMBER AND IS NOT THE INDEX. The claims refer to
+ *  figures by number; a renumbered figure is a different document. It is carried
+ *  rather than derived from position for exactly that reason. */
+/** @typedef {{n:number, src:string|null, alt:string|null}} Figure */
+
 /** @typedef {{title:string|null, number:string|null, appno:string|null, kind:string|null,
  *             ipcMain:string|null, ipc:string[]|null, holder:string|null,
  *             inventors:string[]|null, filed:string|null, published:string|null,
  *             where:string|null, status:string|null, abstract:string|null,
- *             claims:string[]|null}} Record */
+ *             claims:string[]|null, figures:Figure[]}} Record */
 
 /* ─────────────────────────────────────────────────────────────────────────
  * THE PORTS. One per data-bearing row of components.md §1, named after it.
@@ -132,7 +150,16 @@ export const PORTS = [
      reading, the five questions, the gate and the build stream were four
      ports and are now none. CHARGED HERE: the approval used to be the
      commitment, and with no approval the commitment is pressing Search. */
-  'search',          // {query, field, where[], kinds[], size, dates} → PatentSet
+  /* `settings` is the search-settings panel's whole state and it travels as
+     one object, not as six loose arguments: the panel is the only thing that
+     builds it and the engine is the only thing that reads it, so a shape
+     change is a change in two places rather than in every call site.
+       sources[] · jurisdictions, at least one
+       kinds[]   · 'granted' | 'applications', at least one
+       count     · 10 | 20 | 50 | 100 | 500
+       basis     · 'filed' | 'published' — which date the range applies to
+       from, to  · four-digit years as strings, '' meaning no bound */
+  'search',          // {query, field, settings} → PatentSet
 
   /* the list. ALL THREE ARE REQUESTS — twenty rows arrive at a time, so the
      client never holds the whole set and sorting what it has would sort a page
@@ -143,13 +170,20 @@ export const PORTS = [
   'facets',          // {facets:{status,kind}} → PatentSet
   'rerank',          // {anchors:[id]} → {order:[id]} over the SAME set
 
+  /* THE EXPORT PORT IS THE LEDGER, NOT THE FILE. Every field that goes into a
+     CSV or a Markdown list is already in the client — core/starred.mjs holds
+     the rows the list port returned — so the bytes are built there and this
+     call exists because a run costs points and the balance has to move. It
+     follows that a refusal here must NOT cost the founder their download:
+     surfaces/starred.mjs hands the file over first and updates the balance
+     only if this answered. */
+  'export',          // {ids:[id], format:'csv'|'md'} → {balance}
+
   /* the record */
   'record',          // → Record
 
-  /* projects and versions */
+  /* projects */
   'projects',
-  'versions',
-  'revert',
 
   /* the destinations */
   'points',

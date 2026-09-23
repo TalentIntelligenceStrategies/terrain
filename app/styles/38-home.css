@@ -52,8 +52,19 @@
    16px mark inside one reads as a mistake. 24px, same Lucide set, same 1.5
    stroke. It is an extension to §9 rather than an exception to it, and it
    belongs in design-language.md. */
+/* CONTENT IS TOP-ANCHORED, NOT CENTRED, and the badge is why. Four of the five
+   tiles carry a third row and one does not, so centring put the covered field's
+   icon 13px below the other four — a row of five marks that did not line up,
+   with nothing on screen to say why.
+
+   Anchoring from the top makes the icon and the name land at the same y on
+   every tile whatever hangs below them, and it survives the name wrapping to
+   two lines at a narrow column. The alternative — pinning the badge to the
+   tile's bottom edge — aligns the same marks and then collides with the second
+   line of a wrapped name, which is the failure the corner placement existed to
+   avoid and is not worth reintroducing lower down. */
 .field{display:flex;flex-direction:column;align-items:center;
-       justify-content:center;gap:var(--s-10);min-height:132px;
+       justify-content:flex-start;gap:var(--s-10);min-height:120px;
        padding:var(--s-20) var(--s-14);text-align:center;
        background:var(--surface);border:1px solid var(--border);
        border-radius:var(--r-widget);cursor:pointer;color:var(--text-2);
@@ -76,14 +87,21 @@
 .field[aria-disabled="true"]{background:var(--surface-sunken);color:var(--text-3);
                              cursor:default}
 .field[aria-disabled="true"] .field-icon{color:var(--text-disabled)}
-/* A BADGE IN THE CORNER, NOT A LINE UNDER THE NAME. It was the name's
-   third line with a bolt beside it, which made "Coming soon" read as part of
-   what the field is called. Pinned top-right it is metadata about the tile:
-   the same relation a status chip has to a row.
+/* THE BADGE SITS UNDER THE NAME, in flow, and it is a chip rather than a line
+   of text — which is the distinction that stops it reading as part of what the
+   field is called. A bordered chip on its own row is metadata about the tile,
+   the same relation a status chip has to a row; an unbordered third line of
+   the name is not.
 
-   The bolt went with it. design-language.md §9 is one glyph, one act — and
-   this one named no act, it decorated a state that a word already states. */
-.field-soon{position:absolute;top:var(--s-8);inset-inline-end:var(--s-8);
+   NEGATIVE MARGIN AGAINST THE FLEX GAP, and it is grouping rather than nudging.
+   The tile's gap is s-10 and §5 wants a group's inner gap at no more than half
+   its outer one, so the name and its badge close to s-4 while the icon stays a
+   full s-10 away. Both values are on the scale; the subtraction is not a third
+   value, it is the one the gap already committed to being cancelled.
+
+   No bolt. §9 is one glyph, one act — that one named no act, it decorated a
+   state a word already states. */
+.field-soon{margin-top:calc(var(--s-4) - var(--s-10));
             padding:2px var(--s-6);border-radius:var(--r-chip);
             background:var(--surface);border:1px solid var(--border);
             font-size:10.5px;line-height:1.5;letter-spacing:.02em;
@@ -105,7 +123,15 @@
 /* ══ the coverage block ══════════════════════════════════════════════════ */
 
 .cover{margin-top:var(--s-24)}
-.cover-scope{margin:0 0 var(--s-14);color:var(--text-2);max-width:68ch;
+
+/* 86ch, NOT §5's 68ch, and the difference is what this sentence is. The measure
+   cap is for body prose — several lines the eye has to track back across. This
+   is one line that states the scope of the table under it, and breaking it in
+   two puts "Europe, Korea and Japan" on a row of its own where it reads as a
+   second, smaller claim. It is a caption above a table, so it is capped to the
+   longest it can be while staying one line at this column's width, and it wraps
+   below ~760px like anything else. */
+.cover-scope{margin:0 0 var(--s-14);color:var(--text-2);max-width:86ch;
              text-wrap:pretty}
 /* the dates are figures, so they are Inconsolata and they align on the right;
    the source names are text and stay left. §4. */
