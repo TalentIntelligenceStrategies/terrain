@@ -31,13 +31,58 @@ let MATCHED = 0;
 let loaded = false;
 const FLOOR = 240;
 
+/* ── the star ─────────────────────────────────────────────────────────────
+   platform.md §6.3. A star is an ANCHOR, not a bookmark: it says "this one is
+   close to what I meant", and Re-rank orders the rest by how near they are to
+   it. NO PATENT ENTERS OR LEAVES — only the sequence changes, which is why the
+   count beside it is a count of the founder's own acts rather than of results.
+
+   It is client state and stays that way. The engine is told the anchors only
+   when the founder presses Re-rank, because starring is a thought and
+   re-ranking is a request. */
+const STARRED = new Set();
+
+function syncStarUI() {
+  const chip = $('#setStarChip');
+  if (chip) {
+    chip.hidden = STARRED.size === 0;
+    chip.textContent = STARRED.size + (STARRED.size === 1 ? ' starred' : ' starred');
+  }
+  /* HIDDEN, NOT DISABLED, exactly as the markup's own note says: a disabled
+     button loitering in a 345px bar is clutter, and [hidden] takes it out of
+     the tab order too. */
+  const rebase = $('#setRebase');
+  if (rebase) rebase.hidden = STARRED.size === 0;
+}
+
+function toggleStar(id, btn) {
+  const on = !STARRED.has(id);
+  on ? STARRED.add(id) : STARRED.delete(id);
+  btn.setAttribute('aria-pressed', String(on));
+  const row = btn.closest('.set-row');
+  if (row) on ? row.setAttribute('data-starred', '') : row.removeAttribute('data-starred');
+  syncStarUI();
+  say('list', on ? 'Starred. Re-rank is available.' : 'Unstarred.');
+}
+
 /* ── one row ──────────────────────────────────────────────────────────────
    `skim` and `holder` are `string|null`, and null means render the bar. No
    branch here asks whether the data is real — a real engine returning real
    names changes nothing but the presence of a value. */
 function rowHTML(rec, i) {
   const real = rec.skim != null;
-  return '<div class="set-row" data-i="' + i + '" data-id="' + esc(rec.id) + '">'
+  return '<div class="set-row" data-i="' + i + '" data-id="' + esc(rec.id) + '"'
+    + (STARRED.has(rec.id) ? ' data-starred' : '') + '>'
+    /* THE STAR IS THE FIRST GRID COLUMN. .set-row has been
+       `grid-template-columns:auto 1fr` since the row was designed; nothing ever
+       filled the first track. */
+    + '<button class="set-ctl set-star" type="button" aria-pressed="'
+    + (STARRED.has(rec.id) ? 'true' : 'false') + '" data-star="' + esc(rec.id) + '"'
+    + ' aria-label="Star this patent as the one closest to your idea">'
+    + '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+    + ' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'
+    + '<path d="M12 2.5l2.9 5.88 6.5.95-4.7 4.58 1.11 6.47L12 17.33l-5.81 3.05'
+    + ' 1.11-6.47-4.7-4.58 6.5-.95z"/></svg></button>'
     + '<div class="drill-row">'
     + '<button class="drill-toggle" type="button" data-pn="' + esc(rec.id) + '"'
     + ' aria-current="false">'
@@ -156,6 +201,43 @@ function check(panel, el) {
     b.setAttribute('aria-checked', String(b === el)));
 }
 
+/* ── the re-rank ──────────────────────────────────────────────────────────
+   IT RETURNS AN ORDER, NOT A SET, so this cannot go through render(): that
+   reads data.patents and a re-rank has none. The rows on screen are the rows
+   that stay — the contract's whole claim about this call is that no patent
+   enters or leaves — so the DOM nodes are MOVED rather than rebuilt.
+
+   Moving them rather than re-rendering also keeps the star states, the open
+   row and any focus inside the list intact, which a rebuild would drop. */
+async function reorderTo(anchors) {
+  const list = $('#setList');
+  if (!list) return;
+  const token = bump('list');
+  list.setAttribute('aria-busy', 'true');
+
+  const res = await ENGINE.rerank({ anchors });
+  if (stale('list', token)) return;
+  list.setAttribute('aria-busy', 'false');
+
+  if (!res.ok) {
+    say('list', 'The list could not be re-ranked. The order is unchanged.');
+    const wrap = $('#setWrap');
+    if (wrap) wrap.classList.remove('is-ranked');
+    return;
+  }
+
+  const rows = new Map([...list.querySelectorAll('.set-row')]
+    .map(el => [el.getAttribute('data-id'), el]));
+  /* only the ids we actually hold: the engine orders the whole set and the
+     client is holding one page of it. */
+  (res.data.order || []).forEach(id => {
+    const el = rows.get(id);
+    if (el) list.append(el);
+  });
+  say('list', 'Re-ranked around ' + anchors.length
+    + (anchors.length === 1 ? ' starred patent.' : ' starred patents.'));
+}
+
 export function init(ctx) {
   ENGINE = ctx.engine;
 
@@ -167,6 +249,47 @@ export function init(ctx) {
 
   onActivate(document, '#setMore', () =>
     request('patentsPage', undefined, 'The next page did not load.'));
+
+  /* a new run replaces the set, so the star anchors go with it: they pointed
+     at patents that may not be in this one. */
+  window.addEventListener('terrain:searched', () => {
+    STARRED.clear();
+    syncStarUI();
+    const wrap = $('#setWrap');
+    if (wrap) wrap.classList.remove('is-ranked');
+    request('patents', undefined, 'The list did not load.');
+  });
+
+  onActivate(document, '.set-star', el =>
+    toggleStar(el.getAttribute('data-star'), el));
+
+  /* THE RE-RANK IS THE ONLY FILLED CONTROL ON THIS SURFACE and it sends the
+     anchors the founder chose. The response is an ORDER over the same set. */
+  onActivate(document, '#setRebase', () => {
+    if (!STARRED.size) return;
+    const wrap = $('#setWrap');
+    if (wrap) wrap.classList.add('is-ranked');
+    const chip = $('#setRankChip');
+    if (chip) {
+      chip.hidden = false;
+      chip.textContent = 'Ranked around ' + STARRED.size
+        + (STARRED.size === 1 ? ' starred patent' : ' starred patents');
+    }
+    const restore = $('#setRestore');
+    if (restore) restore.hidden = false;
+    reorderTo([...STARRED]);
+  });
+
+  onActivate(document, '#setRestore', () => {
+    const wrap = $('#setWrap');
+    if (wrap) wrap.classList.remove('is-ranked');
+    const chip = $('#setRankChip');
+    if (chip) { chip.hidden = true; chip.textContent = ''; }
+    const restore = $('#setRestore');
+    if (restore) restore.hidden = true;
+    request('sort', { sort: 'relevance' },
+      'The original order could not be restored.');
+  });
 
   lmMenu('sortWrap', 'sortBtn', 'sortMenu');
   lmMenu('filtWrap', 'filtBtn', 'filtMenu');

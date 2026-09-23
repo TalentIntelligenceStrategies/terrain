@@ -33,7 +33,6 @@ const ICON = {
   battery: '<path d="M15 7h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><path d="M6 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1"/><path d="m11 7-3 5h4l-3 5"/><path d="M22 11v2"/>',
   stetho:  '<path d="M11 2v2M5 2v2M5 4v7a6 6 0 0 0 12 0V4"/><circle cx="20" cy="10" r="2"/><path d="M20 12v3a6 6 0 0 1-12 0v-1"/>',
 };
-const ZAP = '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>';
 
 const svg = (p, n) => '<svg width="' + n + '" height="' + n + '" viewBox="0 0 24 24" '
                     + G + '>' + p + '</svg>';
@@ -47,7 +46,7 @@ function fieldHTML(f) {
     + (ready ? ' aria-pressed="false"' : ' aria-disabled="true"') + '>'
     + '<span class="field-icon">' + svg(ICON[f.icon] || ICON.cpu, 24) + '</span>'
     + '<span class="field-name">' + (f.label == null ? bar('w-md', 'body') : esc(f.label)) + '</span>'
-    + (ready ? '' : '<span class="field-soon">' + svg(ZAP, 11) + 'Coming soon</span>')
+    + (ready ? '' : '<span class="field-soon">Coming soon</span>')
     + '</button>';
 }
 
@@ -159,6 +158,18 @@ export function init(ctx) {
     }
     const meter = $('#meterN');
     if (meter && res.data.balance != null) meter.textContent = String(res.data.balance);
+
+    /* THE RESULTS BAR KEEPS THE SENTENCE. Both partials are in the DOM from
+       boot, so this is a write rather than a handoff — and the founder arriving
+       at the results finds the words they searched with still in the field,
+       which is what makes it the way to run the next one. */
+    const resQ = $('#resQuery');
+    if (resQ) resQ.value = text;
+    const resMeta = $('#resMeta');
+    if (resMeta && res.data.matched != null) {
+      resMeta.textContent = res.data.matched + ' results'
+        + (res.data.elapsedMs != null ? ' \u00b7 ' + (res.data.elapsedMs / 1000).toFixed(2) + ' s' : '');
+    }
     location.hash = '#set';
   });
 }

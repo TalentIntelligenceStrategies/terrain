@@ -38,23 +38,27 @@
    the record's top and trailing edges line up with the widgets underneath. The
    LEADING edge stays at 200px because that is the peek, and the peek is the
    spec (platform.md §6.6) rather than a margin. */
-.rec{position:absolute;z-index:4;
-     top:var(--s-16);right:var(--s-16);bottom:var(--s-16);left:200px;
+/* ══ THE RECORD IS THE COLUMN, NOT A PANEL OVER IT ═══════════════════════
+   It was position:absolute, inset 16px, left:200px, sliding in from the
+   trailing edge and stopping short so a ~200px strip of what was behind stayed
+   visible. That peek was the spec while this pane held twelve widget cards: it
+   said "this came from there" rather than "this replaced that".
+
+   The pane holds one thing now. There is nothing to peek at, and a panel
+   sliding over an empty column is motion that reports nothing — §6 refuses
+   motion that carries no information. So it sits in flow and fills the column,
+   and the grouping steps aside while it is open.
+
+   IT IS NO LONGER role="dialog" EITHER. A dialog is a thing you are inside and
+   must leave; this is one of two things a column shows, reached by clicking a
+   row and left by a Back control. Announcing it as a dialog would describe the
+   wrong event (design-language.md §7). */
+.rec{display:flex;flex-direction:column;min-height:0;flex:1;
      background:var(--surface);border:1px solid var(--border);
-     border-radius:var(--r-shell);overflow:hidden;
-     box-shadow:var(--shadow-float);display:flex;flex-direction:column;
-     /* +--s-16 because the card no longer touches the trailing edge:
-        translateX(100%) alone would park a 16px strip of it in view. */
-     transform:translateX(calc(100% + var(--s-16)));visibility:hidden;
-     /* EXIT IS FASTER THAN ENTER — §6. This is an overlay arriving from an
-        edge: two states swapping, the founder has already decided, and
-        --dur-2 out is the rule. (The exception it used to be stated against
-        was the dock, whose close matched its open because a MORPH reverses
-        along its own path. The dock is gone; the rule is unconditional.) */
-     transition:transform var(--dur-2) var(--ease-drawer),
-                visibility 0s linear var(--dur-2)}
-.rec-open .rec{transform:none;visibility:visible;
-     transition:transform var(--dur-4) var(--ease-drawer),visibility 0s linear 0s}
+     border-radius:var(--r-shell);overflow:hidden}
+.rec[hidden]{display:none}
+/* the grouping yields the column rather than sitting under a cover */
+.rec-open .fishwrap,.rec-open .pane-idle{display:none}
 /* ~~SWAPPED BEHIND A FADE~~ — the fade is gone, 2026-09-14, and the rule with
    it. `.rec.is-swapping .rec-body{opacity:0;filter:blur(2px)}` styled a 120ms
    crossfade for the founder picking a second patent without closing the first.

@@ -44,7 +44,7 @@
    min-width:0 stays because the other trap is real too: `1fr` is
    minmax(auto,1fr), whose auto floor is min-content, so a long word can push a
    column wider. It is not what happened here. */
-.field{width:100%;min-width:0}
+.field{position:relative;width:100%;min-width:0}
 .field-name{overflow-wrap:break-word}
 
 /* THE TILE IS THE ONE PLACE A GLYPH IS NOT 16 OR 18px. §9 sizes icons for
@@ -76,8 +76,18 @@
 .field[aria-disabled="true"]{background:var(--surface-sunken);color:var(--text-3);
                              cursor:default}
 .field[aria-disabled="true"] .field-icon{color:var(--text-disabled)}
-.field-soon{display:flex;align-items:center;gap:var(--s-4);
-            font-size:11.5px;letter-spacing:.02em;color:var(--text-3)}
+/* A BADGE IN THE CORNER, NOT A LINE UNDER THE NAME. It was the name's
+   third line with a bolt beside it, which made "Coming soon" read as part of
+   what the field is called. Pinned top-right it is metadata about the tile:
+   the same relation a status chip has to a row.
+
+   The bolt went with it. design-language.md §9 is one glyph, one act — and
+   this one named no act, it decorated a state that a word already states. */
+.field-soon{position:absolute;top:var(--s-8);inset-inline-end:var(--s-8);
+            padding:2px var(--s-6);border-radius:var(--r-chip);
+            background:var(--surface);border:1px solid var(--border);
+            font-size:10.5px;line-height:1.5;letter-spacing:.02em;
+            font-weight:500;color:var(--text-3);white-space:nowrap}
 
 @media (hover:hover){
   .field:hover:not([aria-disabled="true"]){border-color:var(--border-strong);
@@ -107,3 +117,30 @@
   .fields{grid-template-columns:repeat(auto-fit,minmax(132px,1fr))}
   .field{padding:var(--s-14) var(--s-8)}
 }
+
+/* ══ the results surface's search bar ════════════════════════════════════
+   The same .cmp component as the home surface, kept on screen after the run.
+   It does not scroll away, which is why there is no pin control: theirs exists
+   because their box scrolls, and a toggle that cannot change anything is worse
+   than a missing one. */
+.res-search{padding:var(--s-16) var(--s-16) var(--s-12);flex:0 0 auto}
+.res-cmp .cmp-field textarea{min-height:44px}
+
+.res-tools{display:flex;align-items:center;gap:var(--s-6);flex:0 0 auto}
+.res-tools-sep{width:1px;height:18px;background:var(--border);flex:0 0 auto;
+               margin-inline:var(--s-2)}
+/* the fishbone is a toggle, so it carries pressed state the way every other
+   toggle in this system does — value, not hue. §2. */
+.res-tools .icon-btn[aria-pressed="true"]{background:var(--surface-sunken);
+                                          color:var(--text-1)}
+.res-modes .seg-btn[aria-pressed="true"]{background:var(--surface);color:var(--text-1)}
+.res-meta{text-align:right;font-variant-numeric:tabular-nums}
+
+/* ══ the right column ════════════════════════════════════════════════════ */
+.panescroll{padding:var(--s-16)}
+/* nothing chosen yet. Not a skeleton: a skeleton says a value is coming, and
+   nothing is coming until the founder picks a row. §8. */
+.pane-idle{flex:1;display:flex;align-items:center;justify-content:center;
+           padding:var(--s-40) var(--s-24);text-align:center}
+.pane-idle p{margin:0;color:var(--text-3);max-width:34ch}
+.panecol .foot{flex:0 0 auto;padding:var(--s-12) var(--s-16) var(--s-16)}

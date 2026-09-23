@@ -106,7 +106,10 @@
   .panescroll::-webkit-scrollbar-thumb:hover{background:var(--text-3);background-clip:content-box}
 }
 
-.panecol{position:relative;flex:1;min-width:0;overflow:hidden}
+/* a column, not a canvas for an overlay: the scroller takes the height
+   that is left and the attribution sits beneath it. */
+.panecol{position:relative;flex:1;min-width:0;overflow:hidden;
+         display:flex;flex-direction:column}
 
 /* ── the pane's inset · matched to the left column, 2026-09-11 ──────────
    The cards sat 56px in from the pane edge — 24 of scroller plus 32 of grid
@@ -124,7 +127,7 @@
    paid back, and the arithmetic written up then — which reasoned to a
    one-pixel fit at 340px — was close but not measured. The chain is worth
    trusting; the last digit of it is worth checking in a browser.* */
-.panescroll{position:absolute;inset:0;overflow-y:auto;display:flex;flex-direction:column;
+.panescroll{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;
             padding:var(--s-16) var(--s-16) 0;scrollbar-gutter:stable}
 
 @media (max-width:1079px){
