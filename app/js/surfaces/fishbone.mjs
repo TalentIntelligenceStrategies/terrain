@@ -44,14 +44,22 @@ function treeHTML(tree) {
         + '<ul class="fb-leaves">'
         + sp.leaves.map(lf =>
             '<li>'
+            /* THE WHOLE LABEL IS ON THE CONTROL even though two lines of it
+               show. aria-label carries the count with the name, because a
+               screen reader announcing "Neural networks" without "ten" has
+               dropped the only quantity on the control; `title` gives the
+               pointer user the untruncated text without a round trip. */
             + '<button class="fb-leaf" type="button" role="checkbox"'
             + ' data-leaf="' + esc(lf.id) + '"'
+            + ' title="' + esc(lf.label) + '"'
+            + ' aria-label="' + esc(lf.label) + ', ' + lf.n
+            + (lf.n === 1 ? ' patent' : ' patents') + '"'
             + ' aria-checked="' + (PICKED.has(lf.id) ? 'true' : 'false') + '">'
             /* THE COUNT IS PART OF THE NAME, not a decoration beside it: a
                screen reader announcing "Rotor and propeller" without "nine"
                has dropped the only quantity on the control. */
-            + '<span class="fb-leaf-n fig fig-s">' + lf.n + '</span>'
-            + '<span class="fb-leaf-l">' + esc(lf.label) + '</span>'
+            + '<span class="fb-leaf-n fig fig-s" aria-hidden="true">' + lf.n + '</span>'
+            + '<span class="fb-leaf-l" aria-hidden="true">' + esc(lf.label) + '</span>'
             + '</button></li>').join('')
         + '</ul></li>').join('')
     + '</ul>';

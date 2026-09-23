@@ -170,9 +170,14 @@ of questions loses that link.
    assumption.
 
 2. **Can a taxonomy be generated over a result set we supply?** The grouping panel is two levels of
-   branches with a count and a patent-id list per leaf, generated *after* retrieval over the set that
-   came back. Your own fishbone partitions its result set exhaustively, which is what suggests this is
-   possible — but over **your** search, not over a set handed to you.
+   branches with a count per leaf, generated *after* retrieval over the set that came back. Your own
+   fishbone partitions its result set exhaustively, which is what suggests this is possible — but over
+   **your** search, not over a set handed to you.
+
+   **And the branch labels must be WORDS.** Grouping the stress corpus by CPC gives branches called
+   `H10D` and `G06N`, which navigate nobody who is not already an examiner — the panel exists so a
+   founder can walk two hundred results in pieces. CPC ships a description per node and that was
+   enough here; a generated taxonomy has to come back with the same thing.
 
 3. **Who supplies the per-patent "open this in the source" URL?** The source varies by jurisdiction —
    Google Patents, WebPat, TIPO — so the interface cannot construct it. We need the engine to return

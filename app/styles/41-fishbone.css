@@ -44,7 +44,15 @@
 .fb-leaf-n{flex:0 0 var(--s-32);text-align:end;color:var(--text-3);
            font-variant-numeric:tabular-nums;
            transition:color var(--dur-1) var(--ease)}
-.fb-leaf-l{min-width:0}
+/* TWO LINES AT MOST. A real classification description runs to 149 characters
+   and a branch that takes six lines stops being a list you can scan, which is
+   the only thing this panel is for. The full text is on the control's title
+   for a pointer, and the aria-label carries it whole. */
+.fb-leaf-l{min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+           overflow:hidden}
+/* align the count to the first line of a wrapped label */
+.fb-leaf{align-items:flex-start}
+.fb-leaf-n{padding-top:1px}
 
 @media (hover:hover) and (pointer:fine){
   .fb-leaf:hover{background:var(--surface-sunken);color:var(--text-1)}
