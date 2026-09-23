@@ -22,7 +22,7 @@
 import { $ } from '../core/dom.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { say } from '../core/live-region.mjs';
-import { statusHTML } from '../core/primitives.mjs';
+import { statusHTML, statusWord } from '../core/primitives.mjs';
 import { esc } from '../core/dom.mjs';
 import * as Starred from '../core/starred.mjs';
 
@@ -35,8 +35,11 @@ const COLUMNS = [
   { key: 'skim',   head: 'Title',   get: r => r.skim },
   { key: 'holder', head: 'Holder',  get: r => r.holder },
   { key: 'where',  head: 'Where',   get: r => r.where },
-  { key: 'status', head: 'Status',  get: r => r.status === 'live' ? 'Live'
-                                            : r.status === 'expired' ? 'Expired' : r.status },
+  /* THE WORD COMES FROM core/primitives.mjs, not from a ternary here. This
+     read `live ? Live : expired ? Expired : r.status`, which wrote the raw
+     string `abandoned` into a spreadsheet and could never learn a fifth
+     value. */
+  { key: 'status', head: 'Status',  get: r => statusWord(r.status) || null },
   { key: 'year',   head: 'Year',    get: r => r.year },
   { key: 'score',  head: 'Score',   get: r => r.score == null ? null : r.score.toFixed(4) },
 ];
@@ -79,7 +82,7 @@ function toMarkdown(rows, query) {
     if (r.holder != null) bits.push(r.holder);
     if (r.where != null) bits.push(r.where);
     if (r.year != null) bits.push(String(r.year));
-    if (r.status) bits.push(r.status === 'live' ? 'Live' : 'Expired');
+    if (statusWord(r.status)) bits.push(statusWord(r.status));
     if (r.score != null) bits.push('score ' + r.score.toFixed(4));
     /* THE BULLET LEADS WITH WHATEVER IDENTIFIES THE PATENT. A withheld number
        must not leave `- **** —` in the founder's document, so the title takes

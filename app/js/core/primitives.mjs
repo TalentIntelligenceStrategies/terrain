@@ -44,6 +44,17 @@ export function statusHTML(kind){
        + s[1] + '</span>';
 }
 
+/* THE SAME WORD, FOR SOMEWHERE THAT IS NOT A CHIP. The export writes a status
+   into the founder's spreadsheet, and it was deciding on its own what to call
+   one — so it wrote the raw `abandoned` into a CSV and the word *Expired* into
+   a Markdown list for a patent that was abandoned. That is the identical false
+   statement the chip was just fixed for, in the one place nothing downstream
+   can tell it is wrong. One map, two readers. */
+export function statusWord(kind){
+  var s = STATUS[kind];
+  return s ? s[1] : '';
+}
+
 export function bar(w, h){ return '<span class="sk sk-h-' + (h || 'body') + ' ' + w + '"></span>'; }
 
 export function bars(cnt, ws){
