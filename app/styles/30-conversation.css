@@ -10,7 +10,11 @@
 .conv{min-height:100%;display:flex;flex-direction:column;padding:var(--s-24) var(--s-24) 0;
       background:var(--ground)}
 .conv-body{flex:1;display:flex;flex-direction:column;justify-content:center}
-.conv-col{width:100%;max-width:680px;margin-left:auto;margin-right:auto}
+/* 680px was a reading measure for a thread of messages. The home surface
+   carries a row of tiles and a two-column table instead, and neither is
+   prose — 940 is what fits five tiles at a legible size without the
+   composer becoming a field nobody can track a line across. */
+.conv-col{width:100%;max-width:940px;margin-left:auto;margin-right:auto}
 .conv-intro{margin-bottom:var(--s-32)}
 .conv-intro h1{margin:0 0 var(--s-12);text-wrap:balance}
 .conv-sub{margin:0;color:var(--text-2);max-width:52ch;text-wrap:pretty}
@@ -118,7 +122,9 @@
 .cmp-field textarea{width:100%;border:0;outline:0;resize:none;background:none;font:inherit;
       color:var(--text-1);line-height:1.55;padding:0;display:block;
       min-height:60px;max-height:200px;overflow-y:auto;position:relative;z-index:1}
-.cmp-field textarea::placeholder{color:transparent}
+/* the placeholder is VISIBLE again. It was transparent because .ghost drew a
+   rotating one over it, and the rotation left with the conversation. */
+.cmp-field textarea::placeholder{color:var(--text-3)}
 /* the rotating placeholder sits BEHIND the textarea, never above it. Restored
    from HEAD: the rewrite dropped this rule and the line became a block that
    pushed the field down the moment the page loaded. */

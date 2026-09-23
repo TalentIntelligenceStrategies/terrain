@@ -1,212 +1,149 @@
-/* surfaces/conversation — moments 1-3. platform.md §3, §4, §5.
+/* surfaces/conversation — the home surface. platform.md §3.
  *
- * One field, five narrowing questions, and a gate. The gate and the build block
- * are PARKED components moved into the thread rather than duplicated, so the
- * card on the map is literally the same node as the one here.
+ * WHAT THIS WAS UNTIL 2026-09-23. One field, five narrowing questions, a
+ * priced gate and a build that streamed stages while a map was drawn. All four
+ * are gone. The founder types a sentence and presses Search; the set comes
+ * back. There is no step between the sentence and the result.
  *
- * ═══ THE GATE IS WHERE THE CHARGE HAPPENS ══════════════════════════════════
- * platform.md §9.2, and it is the reason `approve` is its own port. A run that
- * did not finish is not a run that was charged — so the ledger has to
- * distinguish an attempted run from a completed one, and the surface has to
- * spend at the moment the founder commits rather than at the moment the result
- * arrives.
+ * THE FILE IS STILL CALLED conversation. It is the home surface now and the
+ * name is stale — the rename touches VIEWS, viewForHash, the partial, the
+ * host in index.html and every data-view selector, so it is one deliberate
+ * pass rather than a rider on this one.
  *
- * ═══ A STAGE STREAM, NOT A PERCENTAGE ══════════════════════════════════════
- * platform.md §5. A percentage invents a denominator nobody measured, and a
- * founder reads 80% as "nearly done" and then waits as long again. Named stages
- * say what is happening and cannot imply a finishing time.
+ * THE GLYPH MAP IS CHROME, NOT DATA. The engine returns an icon KEY per field;
+ * which 24px path that key draws is ours, and Lucide's. An engine that sent
+ * markup would be choosing our icon set for us.
  */
 import { $, esc } from '../core/dom.mjs';
-import { onActivate } from '../core/delegate.mjs';
-import { say } from '../core/live-region.mjs';
+import { waitOn, failWith } from '../core/wait.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
-import { failHTML, failWith } from '../core/wait.mjs';
-import { wait as pause } from '../core/timers.mjs';
-import { reduced } from '../core/motion.mjs';
+import { say } from '../core/live-region.mjs';
+import { onActivate } from '../core/delegate.mjs';
+import { bar } from '../core/primitives.mjs';
 
 let ENGINE = null;
-let ROUND = [];
-let asked = 0;
-const answers = [];
+let FIELD = null;          // the chosen technology field
 
-function pushYou(text) {
-  const thread = $('#thread');
-  if (!thread) return;
-  thread.insertAdjacentHTML('beforeend',
-    '<div class="turn turn-you"><p class="t-body">' + esc(text) + '</p></div>');
+const G = 'fill="none" stroke="currentColor" stroke-width="1.5" '
+        + 'stroke-linecap="round" stroke-linejoin="round"';
+const ICON = {
+  cpu:     '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/>',
+  network: '<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3M12 12V8"/>',
+  monitor: '<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  battery: '<path d="M15 7h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><path d="M6 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1"/><path d="m11 7-3 5h4l-3 5"/><path d="M22 11v2"/>',
+  stetho:  '<path d="M11 2v2M5 2v2M5 4v7a6 6 0 0 0 12 0V4"/><circle cx="20" cy="10" r="2"/><path d="M20 12v3a6 6 0 0 1-12 0v-1"/>',
+};
+const ZAP = '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>';
+
+const svg = (p, n) => '<svg width="' + n + '" height="' + n + '" viewBox="0 0 24 24" '
+                    + G + '>' + p + '</svg>';
+
+/* ── the technology fields ───────────────────────────────────────────────
+   A tile that is not ready is aria-disabled rather than disabled, so it keeps
+   its tab stop and can say why it is not available. design-language.md §7. */
+function fieldHTML(f) {
+  const ready = f.ready === true;
+  return '<button class="field" type="button" data-field="' + esc(f.id) + '"'
+    + (ready ? ' aria-pressed="false"' : ' aria-disabled="true"') + '>'
+    + '<span class="field-icon">' + svg(ICON[f.icon] || ICON.cpu, 20) + '</span>'
+    + '<span class="field-name">' + (f.label == null ? bar('w-md', 'body') : esc(f.label)) + '</span>'
+    + (ready ? '' : '<span class="field-soon">' + svg(ZAP, 11) + 'Coming soon</span>')
+    + '</button>';
 }
 
-/* A RETRY BUTTON THAT DOES NOTHING IS WORSE THAN NO BUTTON — platform.md §9
-   makes that a rule rather than a preference, so a pushed failure block binds
-   the button it just created or is passed no `retry` at all. */
-function pushFail(say, retry) {
-  const node = pushSystem(failHTML(say, retry ? { label: 'Try again' } : null));
-  if (node && retry) {
-    const b = node.querySelector('.fail-act button');
-    if (b) b.addEventListener('click', retry, { once: true });
-  }
-  return node;
-}
-
-function pushSystem(html) {
-  const thread = $('#thread');
-  if (!thread) return null;
-  const node = document.createElement('div');
-  node.className = 'turn turn-sys';
-  node.innerHTML = html;
-  thread.append(node);
-  return node;
-}
-
-/* ── the five questions ───────────────────────────────────────────────────
-   One at a time, each with its options as chips. The founder may type instead
-   of answering — platform.md §3.3 — and that is not a fallback, it is the
-   correction point the whole flow is built around. */
-function askNext() {
-  if (asked >= ROUND.length) return gate();
-  const q = ROUND[asked];
-  pushSystem(
-    '<div class="qa-item"><p class="qa-q t-body">' + esc(q.q) + '</p>'
-    + '<div class="qa-opts">'
-    + q.opts.map((o, i) =>
-        '<button class="suggest chip" type="button" data-opt="' + i + '">'
-        + esc(o) + '</button>').join('')
-    + '</div></div>');
-}
-
-function answer(i) {
-  const q = ROUND[asked];
-  if (!q) return;
-  answers.push(q.opts[i]);
-  const item = $('.qa-item:not([data-said])');
-  if (item) {
-    item.setAttribute('data-said', '1');
-    const opts = item.querySelector('.qa-opts');
-    if (opts) opts.innerHTML =
-      '<span class="chip chip-said">' + esc(q.opts[i]) + '</span>';
-  }
-  asked++;
-  askNext();
-}
-
-/* ── the gate · platform.md §4 ────────────────────────────────────────────
-   NOTHING IS SEARCHED UNTIL IT IS APPROVED. It states what it is gating, reads
-   back what it understood, and offers exactly one primary action. */
-function gate() {
-  const card = $('#cfCard');
-  const thread = $('#thread');
-  if (!card || !thread) return;
-  const text = $('#cfChangeText');
-  if (text) text.textContent = answers.join(' · ');
-  const said = $('#cfSaidText');
-  if (said && answers.length) said.textContent = answers.join(' · ');
-  thread.append(card);
-  card.hidden = false;
-}
-
-/* ── the build · platform.md §5 ──────────────────────────────────────────── */
-async function build() {
-  const block = $('#bdBlock');
-  const thread = $('#thread');
-  if (!block || !thread) return;
-  thread.append(block);
-  block.hidden = false;
-
-  const list = $('#stages');
-  const bar = $('#progBar');
-  if (list) list.innerHTML = '';
-
-  const res = await ENGINE.buildProgress({}, (i, label) => {
-    if (!list) return;
-    list.insertAdjacentHTML('beforeend',
-      '<li class="stage is-run" data-state="run" style="--stage-delay:0ms">'
-      + '<span class="stage-t">' + esc(label) + '</span></li>');
-    const prev = list.children[i - 1];
-    if (prev) { prev.classList.remove('is-run'); prev.setAttribute('data-state', 'done'); }
-    if (bar) bar.style.transform = 'scaleX(' + ((i + 1) / 6) + ')';
-    say('conversation', label);
-  });
-
-  const lastStage = list && list.lastElementChild;
-  if (lastStage) { lastStage.classList.remove('is-run'); lastStage.setAttribute('data-state', 'done'); }
-
+async function paintFields() {
+  const host = $('#fields');
+  if (!host) return;
+  const done = waitOn(host);
+  const res = await ENGINE.fields();
   if (!res.ok) {
-    const box = document.createElement('div');
-    block.append(box);
-    failWith(box, 'The build stopped before it finished. Nothing was charged.',
-      res.retryable ? build : null);
-    say('conversation', 'The build stopped before it finished.');
+    failWith(host, 'The technology fields did not load.',
+      res.retryable ? paintFields : null);
     return;
   }
-  const done = $('#bdDone');
-  if (done) done.hidden = false;
+  const list = res.data.fields || [];
+  host.innerHTML = list.map(fieldHTML).join('');
+  if (typeof done === 'function') done();
+
+  /* the first ready field is chosen on arrival, because a search cannot run
+     without one and making the founder pick the only option is a step that
+     asks nothing. */
+  const first = list.find(f => f.ready === true);
+  if (first) selectField(first.id);
+}
+
+function selectField(id) {
+  FIELD = id;
+  document.querySelectorAll('#fields .field[aria-pressed]').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.getAttribute('data-field') === id)));
+}
+
+/* ── what is in the corpus ───────────────────────────────────────────────── */
+async function paintCoverage() {
+  const rows = $('#coverRows'), scope = $('#coverScope');
+  if (!rows) return;
+  const res = await ENGINE.coverage();
+  if (!res.ok) {
+    const card = $('#coverCard');
+    if (card) failWith(card.querySelector('.card-body'),
+      'The coverage table did not load.', res.retryable ? paintCoverage : null);
+    return;
+  }
+  if (scope) scope.textContent = res.data.scope || '';
+  rows.innerHTML = (res.data.sources || []).map(s =>
+    '<tr><td>' + (s.source == null ? bar('w-md', 'body') : esc(s.source)) + '</td>'
+    + '<td class="num"><span class="fig-m">' + esc(s.updated || '—') + '</span></td></tr>'
+  ).join('');
+}
+
+/* ── the search ──────────────────────────────────────────────────────────── */
+function armSearch() {
+  const field = $('#cmpMain textarea'), btn = $('#cmpSearch');
+  if (!field || !btn) return;
+  const sync = () => { btn.disabled = !field.value.trim(); };
+  field.addEventListener('input', sync);
+  sync();
 }
 
 export function init(ctx) {
   ENGINE = ctx.engine;
 
-  /* moment 1 · one field. The composer is the whole of the first screen. */
-  onActivate(document, '#cmpMain [data-send], #cmpMain button[type="submit"]', async btn => {
-    const field = $('#cmpMain textarea, #cmpMain input');
+  ctx.onRoute(view => {
+    if (view !== 'conversation') return;
+    paintFields();
+    paintCoverage();
+  });
+
+  armSearch();
+
+  onActivate(document, '#fields .field[aria-pressed]', el =>
+    selectField(el.getAttribute('data-field')));
+
+  /* THE SEARCH IS THE CHARGE. platform.md §9.2's rule is unchanged and its
+     location is: the approval used to be the commitment and there is no
+     approval now, so the commitment is this button. A run that did not finish
+     is still not a run that was charged. */
+  onActivate(document, '#cmpSearch', async btn => {
+    const field = $('#cmpMain textarea');
     const text = field && field.value.trim();
     if (!text) return;
-    pushYou(text);
-    if (field) field.value = '';
 
     btnWait(btn);
-    const res = await ENGINE.read(text);
+    const res = await ENGINE.search({ query: text, field: FIELD });
     btnRest(btn);
 
     if (!res.ok) {
-      pushFail('We could not read that. Nothing has been searched and nothing charged.',
-        res.retryable ? () => btn.click() : null);
-      say('conversation', 'We could not read what you described.');
-      return;
-    }
-
-    const nr = await ENGINE.narrow();
-    if (!nr.ok) {
-      pushFail('The questions did not load.', () => btn.click());
-      return;
-    }
-    ROUND = nr.data.round || [];
-    asked = 0;
-    answers.length = 0;
-    askNext();
-  });
-
-  onActivate(document, '.qa-opts .suggest', el =>
-    answer(Number(el.getAttribute('data-opt')) || 0));
-
-  /* THE APPROVAL IS THE CHARGE. §9.2 — and the button carries its own wait,
-     because the founder has just committed and the next thing they see must
-     not be a surface that looks idle. */
-  onActivate(document, '#cfApprove', async btn => {
-    btnWait(btn);
-    const res = await ENGINE.approve({ answers });
-    btnRest(btn);
-    if (!res.ok) {
-      const card = $('#cfCard');
-      if (card) {
-        const box = document.createElement('div');
-        card.append(box);
-        /* INSUFFICIENT is NOT retryable and the engine says so: pressing again
-           cannot make the balance larger. The way forward is a different route
-           — top up — not this button, so the block offers none. */
-        failWith(box, res.code === 'INSUFFICIENT'
-          ? 'There are not enough points for this run. Nothing was charged.'
-          : 'The run did not start. Nothing was charged.',
-          res.retryable ? () => btn.click() : null);
+      const status = $('#cmpStatus');
+      if (status) {
+        status.textContent = res.code === 'INSUFFICIENT'
+          ? 'There are not enough points for this search. Nothing was charged.'
+          : 'The search did not run. Nothing was charged.';
       }
-      say('conversation', 'The run did not start. Nothing was charged.');
+      say('conversation', 'The search did not run. Nothing was charged.');
       return;
     }
-    const card = $('#cfCard');
-    if (card) card.hidden = true;
     const meter = $('#meterN');
-    if (meter) meter.textContent = String(res.data.balance);
-    build();
+    if (meter && res.data.balance != null) meter.textContent = String(res.data.balance);
+    location.hash = '#set';
   });
-
-  onActivate(document, '#bdOpen', () => { location.hash = '#set'; });
 }

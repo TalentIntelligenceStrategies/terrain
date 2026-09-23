@@ -258,3 +258,30 @@ export const BUILD_STAGES = [
   'Ranking against what you described',
   'Drawing your map',
 ];
+
+/* ── the home surface ─────────────────────────────────────────────────────
+   ILLUSTRATIVE, like every figure in this file. The dates are plausible and
+   are nobody's published claim; what is real is the SHAPE — six jurisdictions
+   by two document kinds is how the index is actually cut. */
+export const FIELDS = [
+  { id: 'semi',    label: 'Semiconductor devices',     icon: 'cpu',      ready: true  },
+  { id: 'comms',   label: 'Digital communication',     icon: 'network',  ready: false },
+  { id: 'compute', label: 'Computing & data',          icon: 'monitor',  ready: false },
+  { id: 'energy',  label: 'Batteries & energy',        icon: 'battery',  ready: false },
+  { id: 'medical', label: 'Medical diagnostics',       icon: 'stetho',   ready: false },
+];
+
+export const COVERAGE_SCOPE =
+  'Right now Terrain covers semiconductor devices, filed in the United States, '
+  + 'China, Taiwan and Europe.';
+
+export const COVERAGE = [
+  { source: 'United States · granted',     updated: '2026-09-17' },
+  { source: 'United States · applications', updated: '2026-09-17' },
+  { source: 'China · granted',             updated: '2026-09-15' },
+  { source: 'China · applications',        updated: '2026-09-15' },
+  { source: 'Taiwan · granted',            updated: '2026-09-16' },
+  { source: 'Taiwan · applications',       updated: '2026-09-16' },
+  { source: 'Europe · granted',            updated: '2026-09-11' },
+  { source: 'Europe · applications',       updated: '2026-09-11' },
+];

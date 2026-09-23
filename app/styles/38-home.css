@@ -1,0 +1,88 @@
+/* ── 38 · the home surface ────────────────────────────────────────────────
+   The field tiles, the composer's toolbar and the coverage block. Its layout
+   follows Innovue's PI-VuePat home page; every value in it is Terrain's.
+
+   ONE COLUMN WIDTH FOR ALL THREE BLOCKS. Their page centres the tiles, the
+   composer and the coverage card at three different widths, which reads as
+   three decisions nobody made. Here the left edge is the same line down the
+   whole page, and the eye gets one ruler instead of three. */
+
+/* ══ the technology fields ═══════════════════════════════════════════════ */
+
+.fields-lbl{margin:0 0 var(--s-10);color:var(--text-3)}
+/* the tiles choose what the search runs against, so they sit with the
+   composer rather than floating above it as a banner. */
+.conv-body > .conv-col:has(.fields){margin-bottom:var(--s-14)}
+
+/* THE DOCK'S BOTTOM PADDING AND THE STATUS LINE'S RESERVED HEIGHT BOTH EXIST
+   FOR A SURFACE THIS NO LONGER IS. The dock used to be the sticky foot of a
+   scrolling thread, and .cmp-status held 17px open so a message arriving under
+   the composer could not shift the page. Nothing scrolls under the composer
+   now and the status is empty until a search fails, so the reserved band is
+   just a gap before the coverage card.
+
+   The height is still RESERVED rather than collapsed — a failure sentence that
+   pushes the card down is the jump the reservation was for. It is reserved
+   inside the dock instead of under it. */
+.conv-dock{padding-bottom:0}
+.conv-dock .cmp-status:empty{min-height:0;margin-top:0}
+
+/* auto-fit rather than repeat(5,1fr): the tile count is the engine's, not the
+   stylesheet's, and a hard 5 breaks the day a sixth field opens. */
+.fields{display:grid;gap:var(--s-10);
+        grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+
+.field{display:flex;flex-direction:column;align-items:center;gap:var(--s-8);
+       padding:var(--s-20) var(--s-12);text-align:center;
+       background:var(--surface);border:1px solid var(--border);
+       border-radius:var(--r-widget);cursor:pointer;color:var(--text-2);
+       font:inherit;font-size:13.5px;line-height:1.4;
+       transition:border-color var(--dur-1) var(--ease),
+                  background var(--dur-1) var(--ease),
+                  color var(--dur-1) var(--ease)}
+.field-icon{display:flex;color:var(--text-3);
+            transition:color var(--dur-1) var(--ease)}
+.field-name{font-weight:500}
+
+/* §3.8 SITE 3 OF 3 — the selected state of a control. The LABEL and the glyph
+   take the accent; the tile stays --surface, because a filled accent tile here
+   would be a second primary action on a surface that already has Search. */
+.field[aria-pressed="true"]{border-color:var(--border-strong);color:var(--text-1)}
+.field[aria-pressed="true"] .field-name{color:var(--accent);font-weight:600}
+.field[aria-pressed="true"] .field-icon{color:var(--accent)}
+
+/* not yet covered. aria-disabled, so it keeps its tab stop and can say why. */
+.field[aria-disabled="true"]{background:var(--surface-sunken);color:var(--text-3);
+                             cursor:default}
+.field[aria-disabled="true"] .field-icon{color:var(--text-disabled)}
+.field-soon{display:flex;align-items:center;gap:var(--s-4);
+            font-size:11.5px;letter-spacing:.02em;color:var(--text-3)}
+
+@media (hover:hover){
+  .field:hover:not([aria-disabled="true"]){border-color:var(--border-strong);
+                                           color:var(--text-1)}
+}
+.field:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+/* ══ the composer's toolbar ══════════════════════════════════════════════ */
+
+/* the one primary action on this surface. It carries a word because a search
+   spends a point and returns a set, and an arrow cannot say that. */
+.cmp-search{flex:0 0 auto;gap:var(--s-8)}
+.cmp-search[disabled]{opacity:.5;cursor:default}
+
+/* ══ the coverage block ══════════════════════════════════════════════════ */
+
+.cover{margin-top:var(--s-24)}
+.cover-scope{margin:0 0 var(--s-14);color:var(--text-2);max-width:68ch;
+             text-wrap:pretty}
+/* the dates are figures, so they are Inconsolata and they align on the right;
+   the source names are text and stay left. §4. */
+.cover-tbl{width:100%}
+.cover-tbl td:last-child,.cover-tbl th:last-child{text-align:right;
+           font-variant-numeric:tabular-nums}
+
+@media (max-width:640px){
+  .fields{grid-template-columns:repeat(auto-fit,minmax(132px,1fr))}
+  .field{padding:var(--s-14) var(--s-8)}
+}

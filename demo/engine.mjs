@@ -49,6 +49,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms * SLOW));
    own data lands. A grid where every card resolves on the same frame cannot
    demonstrate partial success, which components.md §0.1 calls the normal case. */
 const DELAY = {
+  fields: 180, coverage: 340, search: 900,
   read: 900, narrow: 650, approve: 500,
   patents: 700, patentsPage: 520, sort: 420, facets: 420, rerank: 1100,
   record: 600,
@@ -94,37 +95,19 @@ const cmp = {
 
 export const DemoEngine = {
   /* ── the conversation and the gate ───────────────────────────────────── */
-  read: async (text) => respond('read', {
-    said: String(text || D.DEMO_IDEA),
-    reading: {
-      subject: 'Airframe and body structure',
-      improving: 'Weight',
-      stage: 'A working prototype',
-      filed: 'Nothing yet',
-      where: 'United States',
-    },
+  /* ONE CALL. The old flow charged at the gate; there is no gate, so this is
+     where the ledger moves. A failed search returns the balance untouched. */
+  search: async ({ query = '' } = {}) => respond('search', {
+    ...page(ALL.map(r => r.id), PAGE),
+    said: String(query || D.DEMO_IDEA),
+    elapsedMs: 240,
+    balance: D.POINTS.balance - 2,
   }),
 
-  narrow: async () => respond('narrow', { round: D.ROUND }),
-
-  /* CHARGED HERE, not at the end — platform.md §9.2. A run that did not finish
-     is not a run that was charged, so the ledger has to distinguish an
-     attempted run from a completed one; this returns the balance AFTER. */
-  approve: async () => respond('approve', {
-    charged: 40,
-    balance: D.POINTS.balance - 40,
-    project: { id: 'proj-1', label: D.DEMO_PROJECT },
-  }),
-
-  /* A STAGE STREAM, NOT A PERCENTAGE. platform.md §5: a percentage invents a
-     denominator nobody measured, and a founder reads 80% as "nearly done". */
-  buildProgress: async (_arg, onStage) => {
-    for (let i = 0; i < D.BUILD_STAGES.length; i++) {
-      await wait(420);
-      if (typeof onStage === 'function') onStage(i, D.BUILD_STAGES[i]);
-    }
-    return respond('buildProgress', { stages: D.BUILD_STAGES, done: true });
-  },
+  /* ── the home surface ──────────────────────────────────────────────── */
+  fields:   async () => respond('fields',   { fields: D.FIELDS }),
+  coverage: async () => respond('coverage', { scope: D.COVERAGE_SCOPE,
+                                              sources: D.COVERAGE }),
 
   /* ── the list ────────────────────────────────────────────────────────── */
   patents: async () => {

@@ -124,13 +124,15 @@ export const CODE = {
  * Every one returns Promise<Result>.
  * ───────────────────────────────────────────────────────────────────────── */
 export const PORTS = [
-  /* the conversation and the gate */
-  'read',            // a sentence, a number, a company or a code → a reading
-  'narrow',          // the five questions' options for this reading
-  'approve',         // the gate. CHARGED HERE, not at the end — §9.2
+  /* the home surface */
+  'fields',          // the technology fields, and which are covered yet
+  'coverage',        // what is in the corpus, and when each source was taken in
 
-  /* the build */
-  'buildProgress',   // a STAGE STREAM, not a percentage
+  /* the search. ONE CALL, NO STEP BETWEEN THE SENTENCE AND THE SET — the
+     reading, the five questions, the gate and the build stream were four
+     ports and are now none. CHARGED HERE: the approval used to be the
+     commitment, and with no approval the commitment is pressing Search. */
+  'search',          // {query, field, where[], kinds[], size, dates} → PatentSet
 
   /* the list. ALL THREE ARE REQUESTS — twenty rows arrive at a time, so the
      client never holds the whole set and sorting what it has would sort a page
