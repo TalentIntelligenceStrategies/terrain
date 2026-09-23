@@ -1,7 +1,7 @@
 /* surfaces/settings — the search settings panel, and the state it holds.
  *
  * ═══ ONE PANEL, TWO ANCHORS, ONE SET OF VALUES ═════════════════════════════
- * #cmpSettings on the conversation and #resSettings on the results bar open
+ * #cmpSettings on the home surface and #resSettings on the results bar open
  * the same node, moved between the two wraps rather than duplicated — the
  * pattern the confirm card already uses. Two copies of these controls would be
  * two readings of one value, and the first thing that goes wrong with those is
@@ -93,7 +93,7 @@ function toggleIn(list, value, what) {
   const i = list.indexOf(value);
   if (i < 0) { list.push(value); return true; }
   if (list.length === 1) {
-    say('conversation', 'At least one ' + what + ' has to stay on.');
+    say('home', 'At least one ' + what + ' has to stay on.');
     return false;
   }
   list.splice(i, 1);
@@ -209,7 +209,7 @@ export function init() {
   onActivate(document, '#popReset', () => {
     STATE = clone(DEFAULTS);
     paint();
-    say('conversation', 'Search settings are back to the defaults.');
+    say('home', 'Search settings are back to the defaults.');
   });
 
   onActivate(document, '#popDone', () => {

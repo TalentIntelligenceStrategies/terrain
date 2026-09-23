@@ -1,7 +1,15 @@
-/* 30 · the conversation — platform.md §3
- *
- * EXTRACTED from the prototype. Moments 1-3: the composer, the thread, the
- * reveal, the answer, and the five narrowing questions. */
+/* ══ 30 · THE COMPOSER, AND THE COLUMN IT SITS IN ═══════════════════════════
+   platform.md §3. NAMED FOR THE COMPOSER RATHER THAN FOR A SURFACE, because
+   the composer appears on two: centred on the home surface, and above the two
+   columns on the results surface still holding what the founder typed. A file
+   called `30-home.css` would be wrong about half of what is in it, and
+   `38-home.css` — the field tiles, the coverage block, the right column's idle
+   state — is the one that is genuinely the home surface's.
+
+   The `.conv-*` classes are the home surface's column layout and keep their
+   names: renaming a class is a markup change, and these are accurate about
+   what they lay out even though the surface stopped being a conversation. */
+
 
 /* ── the conversation surface · moments 1-3 ────────────────
    One column. Empty state centres the question and the composer; once there

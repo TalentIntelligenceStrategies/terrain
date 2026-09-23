@@ -12,11 +12,18 @@
  */
 import { $ } from './dom.mjs';
 
+/* ONE KEY PER SURFACE THAT EXISTS, and the keys ARE the surfaces. `views`
+   named the analysis pane and `conversation` named the home surface; `work`
+   named neither, so every say('work', ...) in the tree resolved to
+   `$('work')`, found nothing, and announced NOTHING — including "The search
+   did not run. Nothing was charged." A key that does not resolve is silent
+   rather than loud, which is why four call sites could be wrong for as long
+   as they were. */
 const POLITE = {
-  conversation: '#sayConversation',
-  list:         '#sayList',
-  views:        '#sayViews',
-  destination:  '#sayDestination',
+  home:        '#sayHome',
+  list:        '#sayList',
+  work:        '#sayWork',
+  destination: '#sayDestination',
 };
 
 /* A LIVE REGION RE-SET TO THE STRING IT ALREADY HOLDS is a mutation several

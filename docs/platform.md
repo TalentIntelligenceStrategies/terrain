@@ -133,7 +133,7 @@ change anything is worse than a missing one.
 48px, full width, seven regions:
 
 1. **The lockup** — the way home. It returns the founder to the working screen. It is **inert on the
-   conversation**, both times that surface is reachable, and says so with `aria-disabled` rather than
+   home surface**, both times it is reachable, and says so with `aria-disabled` rather than
    by going grey: a lockup that changes appearance by screen stops being a fixed point in the chrome.
 2. **New search** — Lucide `zoom-in`, not `plus`. The plus said *new* and said nothing about what a
    new one is.

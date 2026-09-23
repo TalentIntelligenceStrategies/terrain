@@ -520,7 +520,7 @@ like responsive behaviour, and no screenshot at any width can show you that it i
 **The lockup routes home unless there is no home to route to.** On the working screen it scrolls both
 columns to the top — both, because the surface has two and returning one is a half-answer. On a
 destination it returns to the working screen in the mode that destination's own Back would have used.
-On the conversation it is inert.
+On the home surface it is inert.
 
 **The visual does not change between those states**, and that is the constraint everything else
 follows from. It stays an `<a>`, keeps its styling and its cursor, and tells assistive tech with

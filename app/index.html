@@ -32,7 +32,7 @@
 <link rel="stylesheet" href="styles/16-popover.css">
 <link rel="stylesheet" href="styles/20-shell.css">
 <link rel="stylesheet" href="styles/21-surface.css">
-<link rel="stylesheet" href="styles/30-conversation.css">
+<link rel="stylesheet" href="styles/30-composer.css">
 <link rel="stylesheet" href="styles/31-card.css">
 <link rel="stylesheet" href="styles/34-list.css">
 <link rel="stylesheet" href="styles/35-record.css">
@@ -101,9 +101,9 @@
        partial that gets replaced stops announcing: the browser watches a NODE,
        and a new node with the same id is a different node with no history.
        That is the bug the shell exists to make impossible. -->
-  <p class="sr-only" id="sayConversation"  role="status" aria-live="polite"></p>
+  <p class="sr-only" id="sayHome"         role="status" aria-live="polite"></p>
   <p class="sr-only" id="sayList"          role="status" aria-live="polite"></p>
-  <p class="sr-only" id="sayViews"         role="status" aria-live="polite"></p>
+  <p class="sr-only" id="sayWork"          role="status" aria-live="polite"></p>
   <p class="sr-only" id="sayDestination"   role="status" aria-live="polite"></p>
 
   <!-- ══ THE REGIONS ══ One empty host per partial. main.mjs awaits all of
@@ -118,7 +118,7 @@
        injected by one partial and populated by four others would make the
        order they resolve in load-bearing. -->
   <div class="stage" id="stage">
-    <div data-partial="conversation"></div>
+    <div data-partial="home"></div>
     <div data-partial="surface"></div>
     <div data-partial="starred"></div>
     <div data-partial="points"></div>
@@ -136,7 +136,7 @@
 
   <!-- PARKED COMPONENTS. The gate card and the build block are moved into
        whichever thread needs them rather than duplicated, so the card on the
-       map is literally the same node as the one in the conversation — "same
+       panel is literally the same node as the one on the home surface — "same
        component, same gate" in the DOM rather than by resemblance. -->
   <div data-partial="parked"></div>
 

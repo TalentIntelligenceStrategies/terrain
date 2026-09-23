@@ -1,14 +1,9 @@
-/* surfaces/conversation — the home surface. platform.md §3.
+/* surfaces/home — the home surface. platform.md §3.
  *
- * WHAT THIS WAS UNTIL 2026-09-23. One field, five narrowing questions, a
- * priced gate and a build that streamed stages while a map was drawn. All four
- * are gone. The founder types a sentence and presses Search; the set comes
- * back. There is no step between the sentence and the result.
- *
- * THE FILE IS STILL CALLED conversation. It is the home surface now and the
- * name is stale — the rename touches VIEWS, viewForHash, the partial, the
- * host in index.html and every data-view selector, so it is one deliberate
- * pass rather than a rider on this one.
+ * THE FOUNDER TYPES A SENTENCE AND PRESSES SEARCH, and the set comes back.
+ * There is no step between the sentence and the result: no narrowing round,
+ * no criteria to approve, no staged build. The commitment is the button, and
+ * the points are charged there.
  *
  * THE GLYPH MAP IS CHROME, NOT DATA. The engine returns an icon KEY per field;
  * which 24px path that key draws is ours, and Lucide's. An engine that sent
@@ -124,7 +119,7 @@ export function init(ctx) {
   ENGINE = ctx.engine;
 
   ctx.onRoute(view => {
-    if (view !== 'conversation') return;
+    if (view !== 'home') return;
     paintFields();
     paintCoverage();
   });
@@ -154,7 +149,7 @@ export function init(ctx) {
           ? 'There are not enough points for this search. Nothing was charged.'
           : 'The search did not run. Nothing was charged.';
       }
-      say('conversation', 'The search did not run. Nothing was charged.');
+      say('home', 'The search did not run. Nothing was charged.');
       return;
     }
     const meter = $('#meterN');

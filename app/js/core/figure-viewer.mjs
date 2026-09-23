@@ -111,7 +111,7 @@ function setFig(i, announce) {
     if (cur) cur.scrollIntoView({ block: 'nearest', inline: 'nearest',
                                   behavior: reduced() ? 'auto' : 'smooth' });
   }
-  if (announce) say('views', 'Figure ' + f.n + ' of ' + FIGS.length + '.');
+  if (announce) say('work', 'Figure ' + f.n + ' of ' + FIGS.length + '.');
 }
 
 function stripHTML() {
@@ -167,7 +167,7 @@ export function open(figures, index, trigger) {
   push('figure', close);
   const closeBtn = $('#figClose');
   if (closeBtn) focusQuietly(closeBtn);
-  say('views', 'Figure ' + FIGS[at].n + ' of ' + FIGS.length + ' open.');
+  say('work', 'Figure ' + FIGS[at].n + ' of ' + FIGS.length + ' open.');
 }
 
 export function close() {

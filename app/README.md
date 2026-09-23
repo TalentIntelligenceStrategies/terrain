@@ -75,7 +75,7 @@ and that `99-reduced-motion.css` is **last**.
 | `tokens` `01`–`05` | foundation — tokens, reset, type, skeleton, loader, wait/fail | **extracted** |
 | `10`–`16` | primitives — button, chip, field, inline-confirm, menu, empty, popover | `16` is **new** |
 | `20`–`21` | layout — shell, surface | **extracted** |
-| `30`–`40` | components — conversation, card, list, record, destination, attribution, home, starred, drawings | `38`–`40` are **new** |
+| `30`–`41` | components — composer, card, list, record, destination, attribution, home, starred, drawings, grouping | `38`–`41` are **new** |
 | `98` | the bench, `lab.html` only — numbered into the same manifest so it cannot drift into testing something else | **extracted** |
 | `99` | reduced motion, **which must load last** | **extracted** |
 
@@ -198,7 +198,7 @@ offers no button to tab to.
 
 ## The engine seam
 
-`js/ports.mjs` is `design/components.md` §1 made executable: **18 named ports**, one per
+`js/ports.mjs` is `design/components.md` §1 made executable: **19 named ports**, one per
 data-bearing row, plus a typedef for each shape and a `NullEngine` that implements every port by
 refusing.
 
@@ -249,8 +249,8 @@ Hoisted to a sibling host either would position against the viewport instead, an
 viewer would become the full-screen lightbox three separate rules say this product does
 not have.
 
-**Eight surfaces**, one per region rather than one per file that happened to get large:
-`masthead`, `settings`, `conversation`, `work`, `list`, `record`, `starred`, `destinations`.
+**Nine surfaces**, one per region rather than one per file that happened to get large:
+`masthead`, `settings`, `home`, `work`, `list`, `fishbone`, `record`, `starred`, `destinations`.
 `views` left with the analysis layer.
 
 **`js/charts/` is gone.** The four modules — `primitives`, `share`, `series`, `map` — left
