@@ -24,7 +24,7 @@ import { say } from '../core/live-region.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { wait as pause } from '../core/timers.mjs';
-import { bar, sk, pgCard, numCell } from '../charts/primitives.mjs';
+import { bar, sk, pgCard, numCell } from '../core/primitives.mjs';
 
 let ENGINE = null;
 const done = new Set();
@@ -49,7 +49,7 @@ function pointsHTML(d) {
   const pct = (d.balance / d.allowance * 100).toFixed(1);
   return pgCard('What is left', '',
     '<div class="us-meter"><span class="bar-t"><span class="bar-f" style="width:'
-    + pct + '%;background:var(--mark-1)"></span></span>'
+    + pct + '%;background:var(--text-1)"></span></span>'
     + '<p class="t-body"><b><span class="fig-l">' + d.balance + '</span></b> of '
     + '<span class="fig-m">' + d.allowance + '</span> points left this month.</p></div>')
   + pgCard('What a run costs', '',

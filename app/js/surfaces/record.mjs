@@ -26,7 +26,7 @@ import { onActivate } from '../core/delegate.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
 import { focusQuietly, captureFocus } from '../core/focus.mjs';
 import { wait as pause } from '../core/timers.mjs';
-import { bar, bars, statusHTML } from '../charts/primitives.mjs';
+import { bar, bars, statusHTML } from '../core/primitives.mjs';
 import { bump, stale } from '../core/generation.mjs';
 import { reduced } from '../core/motion.mjs';
 

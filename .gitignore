@@ -43,6 +43,24 @@ brand/logos/innovue/*
 !brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg
 !brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg
 
+# ── The stress-test corpus. Local only, and the whole directory. ─────────────
+# Ten semiconductor patents captured from Google Patents -- the raw pages, the
+# parsed records, and roughly 110 drawing PNGs -- used to run app/ against real
+# text instead of demo/'s well-behaved synthetic rows.
+#
+# The DIRECTORY is excluded rather than its contents, and that is the decision
+# rather than a shorthand for one. One line refuses three things that would
+# otherwise each need their own argument: a third party's drawings, which the
+# raster rule below already refuses and which would need ~110 literal
+# exceptions to track; real assignee and inventor names, which CLAUDE.md keeps
+# out of tracked files; and 4 MB of archived HTML, kept so that a field nobody
+# thought to extract is a reparse rather than a refetch.
+#
+# What IS tracked is the mechanism, not the data: the fail-soft ?data=real seam
+# in app/js/main.mjs degrades to the demo when this directory is absent. The
+# instrument is local; the fact that it exists is not.
+corpus/
+
 # ── Build output and cruft ───────────────────────────────────────────────────
 .DS_Store
 node_modules/

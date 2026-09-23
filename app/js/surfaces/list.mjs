@@ -21,7 +21,7 @@ import { waitOn, landIn, failWith } from '../core/wait.mjs';
 import { say } from '../core/live-region.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { wait as pause } from '../core/timers.mjs';
-import { bar, statusHTML } from '../charts/primitives.mjs';
+import { bar, statusHTML } from '../core/primitives.mjs';
 import { bump, stale } from '../core/generation.mjs';
 
 let ENGINE = null;

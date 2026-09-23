@@ -30,6 +30,30 @@ import { sayNothing } from './core/live-region.mjs';
    ══════════════════════════════════════════════════════════════════════════ */
 import DemoEngine from '../../demo/engine.mjs';
 const ENGINE_FROM_DEMO = DemoEngine;
+
+/* AND ONE STRESS-TEST SEAM BESIDE IT. `?data=real` swaps in corpus/ — ten
+   semiconductor patents captured from Google Patents — to find out what real
+   text does to components written against the demo's well-behaved shapes: a
+   264-character column label, a 5,250-character claim, CJK inventor names, a
+   46-character holder name where the row expects a bar.
+
+   IT MUST DEGRADE RATHER THAN THROW. corpus/ is untracked by decision, so a
+   clean clone does not have it and a static import would fail the whole module
+   — a blank screen, for a flag nobody in that clone can use. The catch is the
+   feature, not defensiveness. */
+async function resolveEngine() {
+  if (new URLSearchParams(location.search).get('data') !== 'real') {
+    return ENGINE_FROM_DEMO;
+  }
+  try {
+    const mod = await import('../../corpus/engine.mjs');
+    console.info('engine: corpus/ — ten real patents');
+    return mod.default;
+  } catch (e) {
+    console.warn('engine: corpus/ is absent, running the demo instead', e);
+    return ENGINE_FROM_DEMO;
+  }
+}
 /* ════════════════════════════════════════════════════════════════════════ */
 
 const PARTIALS = ['masthead', 'conversation', 'surface', 'points', 'account',
@@ -42,7 +66,6 @@ const SURFACES = [
   ['masthead',     () => import('./surfaces/masthead.mjs')],
   ['conversation', () => import('./surfaces/conversation.mjs')],
   ['work',         () => import('./surfaces/work.mjs')],
-  ['views',        () => import('./surfaces/views.mjs')],
   ['list',         () => import('./surfaces/list.mjs')],
   ['record',       () => import('./surfaces/record.mjs')],
   ['destinations', () => import('./surfaces/destinations.mjs')],
@@ -149,7 +172,7 @@ async function boot() {
      moment a founder presses something, several surfaces into the product, and
      it reads as that surface being broken rather than as the engine being
      incomplete. */
-  const engine = assertEngine(ENGINE_FROM_DEMO || NullEngine);
+  const engine = assertEngine(await resolveEngine() || NullEngine);
 
   const ctx = { engine, go, onRoute, applyTheme };
 

@@ -185,7 +185,6 @@ html{color-scheme:light dark;background:var(--ground)}
 :root[data-theme="light"]{color-scheme:light}
 :root[data-theme="dark"]{color-scheme:dark}
 
-
 /* ── 1 · PRIMITIVE ─────────────────────────────────────────────────────────
    NO COMPONENT MAY READ ONE. A component that reads --n-* is a component that
    stays light and throws nothing, logs nothing, and reads as correct CSS.
@@ -196,7 +195,6 @@ html{color-scheme:light dark;background:var(--ground)}
   --n-4:#E4E4E4; --n-5:#D1D1D1; --n-6:#B0B0B0; --n-7:#6F6F6F;
   --n-8:#595959; --n-9:#383838; --n-10:#252525;
 }
-
 
 /* ── 2 · SCALE ─────────────────────────────────────────────────────────────
    Invariant by construction: a step, a radius and a duration are the same in
@@ -217,7 +215,6 @@ html{color-scheme:light dark;background:var(--ground)}
   --dur-1:120ms; --dur-2:200ms; --dur-3:320ms; --dur-4:520ms;
   --cycle:1.6s;                     /* one indicator cycle for the whole page */
 }
-
 
 /* ── 3 · SEMANTIC · light ──────────────────────────────────────────────────
    COMPONENTS READ ONLY THESE. The next three blocks carry the same 41 names in
@@ -260,74 +257,21 @@ html{color-scheme:light dark;background:var(--ground)}
   --state-expired:#A32B21; --state-expired-tint:#FAE9E7;
   --state-pending:#7A5200; --state-pending-tint:#FBF0D9;
 
-  /* density — count only, no verdict */
-  --density-0:#F6F6F6; --density-1:#DDDDDD; --density-2:#BBBBBB;
-  --density-3:#909090; --density-4:#5E5E5E;
+  /* THE CHART LAYER, SINGULAR — narrowed 2026-09-23. There were three, for a
+     dashboard of twelve widgets that no longer exists. --chart-trend and
+     --chart-unknown went with the filings chart; this one stayed because the
+     points page still draws a column per day, and a column is still a chart.
 
-  /* chart layers — trend is near-black, so the palette is now only the
-     three state hues. Amber carried no information (design-language.md §3.5).
-     The excluded window was --chart-excluded #A32B21 until 2026-09-04. Red is
-     the expired hue: it said this data is BAD where the fact is that it is NOT
-     YET KNOWN, and it was the loudest thing on the dashboard while marking the
-     least important information. Same error the amber trend made in §3.5. */
-  --chart-series:#595959; --chart-trend:var(--n-10); --chart-unknown:var(--n-3);
+     §3.5 narrows with it rather than being deleted: one series, no trend line,
+     no unpublished-window band. A second layer here means a second question is
+     being asked on one chart, and the destinations do not ask one. */
+  --chart-series:#595959;
 
-  /* categorical · design-language.md §3.7 — THE HUE IS GONE, 2026-09-05.
-     One ink, one mid-grey, one texture. No hue anywhere in this system.
-
-     What stood here was one sampled hue, shipped 2026-09-04 as --mark-1, the
-     mark meaning "the entity being tracked". Withdrawn the next day, and the
-     reason is the one CLAUDE.md gives for holding the accent open: a hue that
-     loud becomes the thing every reviewer reviews instead of the structure.
-     It also put the prototype in conflict with the colour rule, which admits
-     four places and no more — and a chart mark is not one of them
-     (CLAUDE.md, design-language.md §3.8).
-
-     Its own contrast note said the rest. At 1.26:1 on white it needed a ring
-     at 9px, a semibold count beside it, an ink circle round the pie and a
-     printed number on every bar: five reliefs to make one mark legible is the
-     design telling you the mark is wrong.
-
-     So the encoding moves from hue to VALUE, which is what every other layer
-     in this sheet already does. --mark-1 is the darkest thing on the card,
-     and being darkest is what "this is the one" now means. That reads in
-     greyscale, in print and under forced colours with no second channel
-     needed, and it retires both collisions the hue spent a section clearing:
-     nothing here can land 15 deg off a status hue, because nothing here has
-     a hue.
-
-     Measured. On --surface #FFFFFF: --mark-1 15.32:1, --mark-2 5.03:1, both
-     over the 3:1 a data mark needs, where the hue was a fifth of it. On the
-     bar track #F0F0F0: 13.44:1 and 4.41:1. L* separation is 32 points
-     (14.7 to 46.8), and --mark-3 arrives as texture on top of that.
-
-     Cap is still THREE encoded values. A fourth folds into Other, or the
-     chart becomes small multiples. There is no --mark-4, deliberately.
-
-     --mark-3 is the third encoded value and is ALWAYS a 45deg hatch — never a
-     third solid, and that is a limit of the ramp rather than a preference. The
-     next step down from --mark-2 is --n-6 #B0B0B0 at 2.17:1 on white and
-     1.90:1 on the bar track, so a third solid either fails the 3:1 a mark
-     needs or sits between the ramp's steps. Texture is what separates a third
-     value without a hue. The hatch itself is DERIVED — tier 4 below.
-
-     --mark-off is NOT a fourth value — it is the absence of one. Everything a
-     chart shows but does not encode: the four holders you are not tracking.
-     Recessive on purpose, because dataviz wants context to sit behind the mark
-     that carries the point. It shares --n-7 with --mark-2: a chart uses one or
-     the other, never both, so the collision cannot happen. */
-  --mark-1:var(--n-10); --mark-2:var(--n-7); --mark-3:var(--n-10);
-  --mark-off:var(--n-7);
-
-  /* skeleton. --skeleton-strong is a bar the founder has acted on — starred,
-     or edited in the confirm card. One step darker, so "changed" reads without
-     leaving the skeleton grammar. */
   --skeleton:var(--n-4); --skeleton-shimmer:var(--n-3); --skeleton-strong:var(--n-5);
 
   /* composited over a coloured surface, so these cannot be flat neutrals.
      --key-ring is the 1px ring on a 9px legend key: alpha for the same reason,
      it sits on --surface in the key and on a slice in the chart. */
-  --cell-mark:rgba(37,37,37,.14); --cell-mark-inverse:rgba(250,250,250,.30);
   --key-ring:rgba(37,37,37,.24);
 
   /* elevation. THEMED, which is why it is here rather than with the scale:
@@ -337,7 +281,6 @@ html{color-scheme:light dark;background:var(--ground)}
   --shadow-float:0 1px 2px rgba(37,37,37,.04), 0 8px 24px -6px rgba(37,37,37,.10);
   --shadow-drop:drop-shadow(0 1px 1px rgba(37,37,37,.05)) drop-shadow(0 6px 16px rgba(37,37,37,.10));
 }
-
 
 /* ── 3 · SEMANTIC · dark · design-language.md §10 ──────────────────────────
    §10 is a contract with two halves and this is both of them.
@@ -384,33 +327,10 @@ html{color-scheme:light dark;background:var(--ground)}
   --state-expired:#D98B80; --state-expired-tint:#2A1A17;
   --state-pending:#C9A45C; --state-pending-tint:#251E10;
 
-  /* density — re-stepped, and the L* gaps keep the light ramp's shape:
-     10.7 / 12.2 / 15.5 / 20.3 against 8.8 / 12.2 / 16.1 / 19.9. --density-0 is
-     --ground, exactly as it is in light, so an open cell reads as nothing at
-     1.06 against the card and the 1px gridlines carry the grid. Text flips to
-     inverse at --density-4 and only there, as in light.
-     #6A6A6A rather than the even #6E6E6E: the even step lands text-1 at 4.47
-     and reopens the dead zone at step 3 the light ramp was tuned to remove. */
-  --density-0:#141414; --density-1:#2A2A2A; --density-2:#454545;
-  --density-3:#6A6A6A; --density-4:#9E9E9E;
-
-  --chart-series:#A8A8A8; --chart-trend:#F0F0F0; --chart-unknown:#242424;
-
-  /* the marks invert as VALUE, which is the whole point of retiring the hue:
-     --mark-1 is again the most prominent thing on the card, it is simply the
-     lightest here rather than the darkest. 15.96 and 5.04 on surface, 39.1 L*
-     points apart against 32.1 in light. --mark-off keeps sharing its value with
-     --mark-2 exactly as it shares --n-7 in light — a chart uses one or the
-     other, never both, so the collision cannot happen.
-     --mark-3-hatch is NOT redefined anywhere: it is tier 4, and it reads
-     --mark-3 and --surface, so the stripes and the ground between them both
-     invert on their own. */
-  --mark-1:#F5F5F5; --mark-2:#8A8A8A; --mark-3:#F5F5F5; --mark-off:#8A8A8A;
+  --chart-series:#A8A8A8;
 
   /* the sweep is still the lighter band, so it still reads as a sweep */
   --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
-
-  --cell-mark:rgba(245,245,245,.16); --cell-mark-inverse:rgba(20,20,20,.34);
   --key-ring:rgba(245,245,245,.30);
 
   /* an ink shadow is invisible on ink. These go black and heavier, and the
@@ -445,33 +365,10 @@ html{color-scheme:light dark;background:var(--ground)}
   --state-expired:#D98B80; --state-expired-tint:#2A1A17;
   --state-pending:#C9A45C; --state-pending-tint:#251E10;
 
-  /* density — re-stepped, and the L* gaps keep the light ramp's shape:
-     10.7 / 12.2 / 15.5 / 20.3 against 8.8 / 12.2 / 16.1 / 19.9. --density-0 is
-     --ground, exactly as it is in light, so an open cell reads as nothing at
-     1.06 against the card and the 1px gridlines carry the grid. Text flips to
-     inverse at --density-4 and only there, as in light.
-     #6A6A6A rather than the even #6E6E6E: the even step lands text-1 at 4.47
-     and reopens the dead zone at step 3 the light ramp was tuned to remove. */
-  --density-0:#141414; --density-1:#2A2A2A; --density-2:#454545;
-  --density-3:#6A6A6A; --density-4:#9E9E9E;
-
-  --chart-series:#A8A8A8; --chart-trend:#F0F0F0; --chart-unknown:#242424;
-
-  /* the marks invert as VALUE, which is the whole point of retiring the hue:
-     --mark-1 is again the most prominent thing on the card, it is simply the
-     lightest here rather than the darkest. 15.96 and 5.04 on surface, 39.1 L*
-     points apart against 32.1 in light. --mark-off keeps sharing its value with
-     --mark-2 exactly as it shares --n-7 in light — a chart uses one or the
-     other, never both, so the collision cannot happen.
-     --mark-3-hatch is NOT redefined anywhere: it is tier 4, and it reads
-     --mark-3 and --surface, so the stripes and the ground between them both
-     invert on their own. */
-  --mark-1:#F5F5F5; --mark-2:#8A8A8A; --mark-3:#F5F5F5; --mark-off:#8A8A8A;
+  --chart-series:#A8A8A8;
 
   /* the sweep is still the lighter band, so it still reads as a sweep */
   --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
-
-  --cell-mark:rgba(245,245,245,.16); --cell-mark-inverse:rgba(20,20,20,.34);
   --key-ring:rgba(245,245,245,.30);
 
   /* an ink shadow is invisible on ink. These go black and heavier, and the
@@ -479,7 +376,6 @@ html{color-scheme:light dark;background:var(--ground)}
   --shadow-float:0 1px 2px rgba(0,0,0,.40), 0 8px 24px -6px rgba(0,0,0,.55);
   --shadow-drop:drop-shadow(0 1px 1px rgba(0,0,0,.40)) drop-shadow(0 6px 16px rgba(0,0,0,.50));
 }
-
 
 /* ── 4 · DERIVED ───────────────────────────────────────────────────────────
    EACH RESOLVES THROUGH A THEMED TOKEN, SO IT INVERTS FOR FREE. None of them
@@ -495,16 +391,6 @@ html{color-scheme:light dark;background:var(--ground)}
   /* direction of change, which is the one place the state hues are reused for
      something that is not a legal status. design-language.md §3.3. */
   --state-up:var(--state-live); --state-down:var(--state-expired);
-  /* dashed gridlines, values inside the plot. §3.5. */
-  --chart-grid:var(--border);
-  /* the line-scale rendering of --mark-3 — same 40% duty cycle as the SVG
-     pattern, half the pitch, for a 9px key dot or an 8px bar where the 6px
-     pattern draws one diagonal line and reads as a rendering fault. It reads
-     --mark-3 AND --surface, which is why it is late-bound rather than
-     redefined in dark: the stripes and the ground between them invert
-     together. One rendering rule either way — area marks take the SVG
-     pattern, line-scale marks take this, and both are the same category. */
-  --mark-3-hatch:repeating-linear-gradient(45deg,var(--mark-3) 0 1.2px,var(--surface) 1.2px 3px);
   /* THE FOCUS RING IS THE ACCENT. §3.8 names three places the accent may
      appear and this is one of them, so it derives rather than being declared
      twice — one edit to --accent moves the primary fill, the selected control

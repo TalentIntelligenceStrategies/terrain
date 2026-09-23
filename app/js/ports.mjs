@@ -89,18 +89,6 @@ export const CODE = {
 
 /** @typedef {{id:string, label:string|null}} Labelled — label null renders a bar */
 
-/** The map's axes · `{approaches, holders}`. holders carry NO label, by decision:
- *  a holder name is a field nothing may print, so it is absent rather than nulled
- *  at every call site. */
-/** @typedef {{approaches:Labelled[], holders:{id:string}[]}} Axes */
-
-/** The map · one count per intersection, family-merged. `shown` is what the cells
- *  sum to and is always less than `total`, because the map lays out the eight
- *  largest holders. Density tone is derived CLIENT-SIDE relative to the view's own
- *  maximum, so no tone or threshold is ever sent. */
-/** @typedef {{cols:string[], rows:{label:null, counts:number[], rising?:number[]}[],
- *             total:number, shown:number}} MapData */
-
 /** The list · FOUR FIELDS PER ROW AND NO MORE, plus the score and the id the client
  *  keys on. `order` is a first-class field and not an array index — rows are keyed
  *  by patent, and the FLIP, the rail, the focus return and the reversal all resolve
@@ -143,18 +131,6 @@ export const PORTS = [
 
   /* the build */
   'buildProgress',   // a STAGE STREAM, not a percentage
-  'axes',            // → Axes
-  'map',             // → MapData
-  'mapRising',       // the same grid over two time windows
-  'rivals',
-  'filings',
-  'lineage',
-  'sharePie',
-  'holderBars',
-  'shareBars',
-  'citeMatrix',
-  'lifeCycle',
-  'momentum',
 
   /* the list. ALL THREE ARE REQUESTS — twenty rows arrive at a time, so the
      client never holds the whole set and sorting what it has would sort a page

@@ -199,18 +199,13 @@
 .tbl td{padding:var(--s-12) 0;border-bottom:1px solid var(--border);vertical-align:middle}
 .tbl tr:last-child td{border-bottom:0}
 .tbl .num{text-align:right}
-.cellpair{display:flex;align-items:center;gap:var(--s-10)}
-.sq{width:24px;height:24px;flex:0 0 24px;border-radius:var(--r-chip);background:var(--skeleton)}
-/* the tracked holder is marked on the dashboard as well as on the Rivals page
-   — one selection, carried across both surfaces, which is the whole reason
-   --mark-1 means "this one" rather than naming a category. The ring the lime
-   square needed is gone with it: at 15.32:1 an ink square is the strongest
-   thing in the table and a 14%-ink hairline over it encoded nothing. Against
-   the --skeleton grey the untracked squares carry, it is unmistakable. */
-.sq[data-tracked]{background:var(--mark-1)}
-.rival-row{cursor:pointer;transition:background var(--dur-1) var(--ease)}
-.rival-row td:first-child{border-top-left-radius:var(--r-chip);border-bottom-left-radius:var(--r-chip)}
-.rival-row td:last-child{border-top-right-radius:var(--r-chip);border-bottom-right-radius:var(--r-chip)}
+/* THE RIVALS TABLE'S FURNITURE LEFT ON 2026-09-23 — .cellpair, .sq, its
+   [data-tracked] mark and .rival-row's three rules. Nothing emits them: the
+   Rivals card went with the analysis surfaces, and .sq[data-tracked] read
+   --mark-1, which is no longer a token. check-app.py is what found it, which
+   is the gate working: a var() declared nowhere and carrying no fallback is
+   invalid at computed-value time, and the property takes its initial value
+   rather than erroring. */
 
 /* ── chart ──────────────────────────────────────────────── */
 .chart{width:100%;height:150px;display:block}

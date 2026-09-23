@@ -50,9 +50,6 @@ const wait = ms => new Promise(r => setTimeout(r, ms * SLOW));
    demonstrate partial success, which components.md §0.1 calls the normal case. */
 const DELAY = {
   read: 900, narrow: 650, approve: 500,
-  axes: 300, map: 700, mapRising: 760, rivals: 520, filings: 460,
-  lineage: 880, sharePie: 400, holderBars: 560, shareBars: 430,
-  citeMatrix: 940, lifeCycle: 820, momentum: 640,
   patents: 700, patentsPage: 520, sort: 420, facets: 420, rerank: 1100,
   record: 600,
   projects: 240, versions: 240, revert: 700,
@@ -128,72 +125,6 @@ export const DemoEngine = {
     }
     return respond('buildProgress', { stages: D.BUILD_STAGES, done: true });
   },
-
-  /* ── the views ───────────────────────────────────────────────────────── */
-  axes: async () => respond('axes', {
-    approaches: D.APPROACHES.map((label, i) => ({ id: 'a' + i, label })),
-    /* holders carry NO label field at all. Not a null one — absent. */
-    holders: D.HOLDER_COUNTS.map((_, i) => ({ id: 'h' + i })),
-  }),
-
-  /* DENSITY TONE IS DERIVED CLIENT-SIDE relative to the view's own maximum, so
-     no tone and no threshold is ever sent. An engine that sent a tone would be
-     deciding what "dark" means for a grid it cannot see the size of. */
-  map: async () => respond('map', {
-    cols: D.APPROACHES,
-    rows: D.HOLDER_COUNTS.map((counts, i) => ({
-      label: null, counts, rising: D.HOLDER_RISING[i],
-    })),
-    total: D.TOTAL, shown: D.SHOWN,
-  }),
-
-  mapRising: async () => respond('mapRising', {
-    cols: D.APPROACHES,
-    rows: D.HOLDER_COUNTS.map((counts, i) => ({
-      label: null, counts, rising: D.HOLDER_RISING[i],
-    })),
-    total: D.TOTAL, shown: D.SHOWN,
-  }),
-
-  rivals: async () => respond('rivals', {
-    rows: D.RIVALS.map((p, i) => ({ id: 'h' + i, label: null, patents: p })),
-    total: D.TOTAL,
-  }),
-
-  filings: async () => respond('filings', {
-    series: D.FILINGS, lagYears: 1.5,
-  }),
-
-  lineage: async () => respond('lineage', { versions: D.VERSIONS }),
-
-  sharePie: async () => respond('sharePie', {
-    rows: D.JURISDICTION, total: D.TOTAL,
-  }),
-
-  holderBars: async () => respond('holderBars', {
-    rows: D.RIVALS.map((p, i) => ({ id: 'h' + i, label: null, patents: p })),
-    total: D.TOTAL,
-  }),
-
-  shareBars: async () => respond('shareBars', {
-    rows: D.ORIGIN, total: D.TOTAL,
-  }),
-
-  citeMatrix: async () => respond('citeMatrix', {
-    pairs: D.CITED_BY, n: D.RIVALS.length,
-  }),
-
-  lifeCycle: async () => respond('lifeCycle', {
-    holders: D.LIFECYCLE, patents: D.FILINGS,
-  }),
-
-  momentum: async () => respond('momentum', {
-    rows: D.PER_HOLDER.map((series, i) => ({ id: 'h' + i, label: null, series })),
-  }),
-
-  /* legal is carried on the map response's sibling in components.md; kept here
-     so the donut has a port of its own to fail independently of the grid */
-  legal: async () => respond('legal', D.LEGAL),
 
   /* ── the list ────────────────────────────────────────────────────────── */
   patents: async () => {

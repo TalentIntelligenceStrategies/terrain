@@ -8,7 +8,7 @@
 import { $, $$, esc } from '../core/dom.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
-import { bar } from '../charts/primitives.mjs';
+import { bar } from '../core/primitives.mjs';
 import { focusQuietly } from '../core/focus.mjs';
 
 let ENGINE = null;

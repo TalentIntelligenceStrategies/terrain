@@ -42,8 +42,21 @@ CLOSE  = '/* ══ end tokens ══ */'
 # graph -- so it LINKS app/styles/tokens.css, which sits in the directory next
 # to it. A third copy of the block, generated into the page that owns the
 # authored one, would be drift risk bought for nothing.
+# terrain-prototype.html IS NOT ON THIS LIST EITHER, AND IT WAS. It is FROZEN
+# AT v1 -- the landscape product, with the map. app/ no longer renders a map, so
+# the chart, density and categorical-mark tokens left the authored file; the
+# prototype still reads 28 of them and regenerating its block would blank the
+# one artifact the public link serves.
+#
+# Freezing is the narrow move rather than deleting the page: it stays readable,
+# it stays published, and it stops claiming to track a file it no longer agrees
+# with. The cost is that its block can no longer be verified, and that is why
+# the page carries its own note saying which it is.
+#
+# THIS IS TEMPORARY BY INTENT. The exit is publishing app/ itself at the same
+# URL, which needs strip-comments.py to run across a tree rather than over one
+# file. Until that lands, this list has one entry.
 TARGETS = [
-    'design/previews/terrain-prototype.html',
     'design/previews/terrain-loading-lab.html',
 ]
 

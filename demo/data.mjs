@@ -32,75 +32,7 @@
  * of nothing but bars cannot demonstrate a record pane. Exactly one.
  */
 
-/* ── the corpus ─────────────────────────────────────────────────────────── */
-export const TOTAL = 124;
-export const BINNED = 38;
-export const SHOWN = 51;
-
-export const APPROACHES = [
-  'Moulded composite shell', 'Tubular space frame', 'Foam-core sandwich panel',
-  'Snap-fit tool-free housing', 'Folding arm and hinge', 'Integrated motor mount',
-  'Sealed electronics bay', 'Twin-layer impact skin',
-];
-
-/* CORPUS-LEVEL patents per approach, and deliberately NOT what the map's own
-   column headers print. The headers sum to 51 — the eight largest holders —
-   while these sum to 124. Both are true and they answer different questions,
-   which is why the cards below the map carry a scope line. */
-export const COL_PATENTS = [32, 17, 17, 20, 9, 12, 13, 4];
-
-export const COL_YEARS = [
-  [4, 5, 4, 4, 3, 3, 2, 2, 2, 1, 1, 1],
-  [3, 2, 2, 2, 1, 1, 2, 1, 1, 1, 1, 0],
-  [0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2],
-  [0, 0, 1, 1, 1, 2, 2, 3, 3, 3, 2, 2],
-  [2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 1],
-  [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
-];
-
-/* THE EIGHT LARGEST HOLDERS, and they carry no label at all — not a null one.
-   design/components.md §1: a holder name is a field nothing may print, so it is
-   absent from the shape rather than nulled at every call site. */
-export const HOLDER_COUNTS = [
-  [5, 2, 1, 2, 0, 1, 1, 0],
-  [3, 1, 2, 1, 1, 0, 1, 0],
-  [2, 1, 1, 1, 1, 1, 0, 1],
-  [1, 1, 1, 1, 0, 1, 1, 0],
-  [1, 0, 1, 1, 1, 1, 0, 0],
-  [1, 1, 0, 1, 0, 0, 1, 0],
-  [1, 1, 1, 0, 0, 1, 0, 0],
-  [0, 0, 0, 1, 1, 0, 0, 1],
-];
-/* which cells are rising, by row — the hatch overlay, not a colour */
-export const HOLDER_RISING = [[], [], [], [], [3], [], [], []];
-
-export const RIVALS = [12, 9, 8, 6, 5];
-
-/* one row per rival, each summing to that rival's count. The distribution is
-   the finding: one stopped six years ago, one arrived late and is
-   accelerating, the largest is steady. A flat set of five would show none. */
-export const PER_HOLDER = [
-  [0, 0, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1],
-  [2, 2, 2, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0],
-  [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-];
-
 export const FILINGS = [18, 22, 19, 28, 25, 34, 31, 44, 40, 52, 58, 55];
-export const LIFECYCLE = [9, 11, 10, 14, 13, 17, 16, 21, 20, 24, 26, 25];
-
-/* [fromRivalIdx, toRivalIdx, count], DIRECTED. The story: holder 2 is cited by
-   all four others and cites almost nobody, and holder 2 is ALSO the row that
-   stopped filing. That pairing is the point of having both cards. */
-export const CITED_BY = [
-  [0, 1, 4], [2, 1, 3], [3, 1, 2], [4, 1, 3],
-  [0, 2, 1], [2, 0, 1], [3, 0, 2], [4, 0, 1], [1, 0, 1],
-];
-
-export const LEGAL = { live: 88, expired: 36, holders: [9, 9, 5, 6, 2] };
 
 /* A JURISDICTION IS NOT A PARTY, so countries are named — §8 says so, and five
    grey wedges would read as nothing. Three rows: §3.7 allows three encoded
@@ -108,9 +40,6 @@ export const LEGAL = { live: 88, expired: 36, holders: [9, 9, 5, 6, 2] };
    identically to the second and the legend would become a lie. */
 export const JURISDICTION = [
   ['United States', 47], ['China', 66], ['Other, five countries', 11],
-];
-export const ORIGIN = [
-  ['China', 51], ['United States', 38], ['Other, seven countries', 35],
 ];
 
 /* ── the one populated record · design-language.md §8's fourth exception ──── */

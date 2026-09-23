@@ -206,6 +206,23 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
   Pages at a tree, and the transform that makes the prototype publishable — every comment stripped —
   runs on one file. Both halves of that are in `CLAUDE.md` under Publishing, and changing either
   changes this line first.
+- **`corpus/` is the stress-test set, it is local only, and it prints real holder names.** Ten
+  semiconductor patents captured from Google Patents, sitting beside `demo/` with the same two-file
+  shape and reached by `?data=real`. The whole directory is excluded from git, which is what makes
+  the rest of this line affordable: a third party's drawings are never tracked, and no real assignee
+  or inventor name enters a tracked file.
+
+  **Real names are printed, and that does not reopen §1.** The rule §1 carries governs what copy may
+  claim about the *territory* — the map cannot say a space is empty, because its rows are holders.
+  Naming a holder is the opposite claim and has always been admissible; what CLAUDE.md refuses is
+  *inventing* one or *transliterating* one into illustrative data, and an observed assignee is
+  neither. The demo keeps its bars, because its rows are fictional and a fictional name reads as a
+  live example.
+
+  **What the corpus is for is finding what the demo cannot ask.** `demo/` is well-behaved by
+  construction — one 46-character holder, three classification codes, nine short claims — so every
+  renderer was written against shapes that never strain. The corpus supplies the strain, and the
+  findings belong in this repository rather than in it.
 
 ---
 

@@ -33,8 +33,6 @@
 <link rel="stylesheet" href="styles/21-surface.css">
 <link rel="stylesheet" href="styles/30-conversation.css">
 <link rel="stylesheet" href="styles/31-card.css">
-<link rel="stylesheet" href="styles/32-map.css">
-<link rel="stylesheet" href="styles/33-chart.css">
 <link rel="stylesheet" href="styles/34-list.css">
 <link rel="stylesheet" href="styles/35-record.css">
 <link rel="stylesheet" href="styles/36-destination.css">
@@ -81,14 +79,6 @@
     <polygon points="74.44,292.6 74.44,444.7 212.46,530.2 212.46,674.02 74.88,588.77 74.44,588.52 74.44,726.72 488.06,997.17 488.5,997.47 488.5,843.46 352.78,759.38 352.78,617.98 488.06,701.78 488.5,702.06 488.5,563.35 74.88,292.9"/>
     <polygon points="925.42,443.57 925.56,443.48 925.56,292.6 511.64,563.26 511.5,563.35 511.5,795.06 718.53,667.3 718.53,715.98 511.64,845.21 511.5,845.3 511.5,997.47 925.42,726.81 925.56,726.72 925.56,493.26 720.83,619.62 720.83,571.38"/>
   </symbol>
-  <!-- the third encoded value, always a 45deg hatch. --mark-3-hatch is the CSS
-       twin for line scale; keep the two in step — same 45deg, same 40% duty
-       cycle, pitch halved there. design-language.md §3.7. -->
-  <pattern id="terrain-hatch" width="6" height="6"
-           patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-    <rect width="6" height="6" fill="var(--surface)"/>
-    <rect width="2.4" height="6" fill="var(--mark-3)"/>
-  </pattern>
 </svg>
 
 <div class="app" id="app">

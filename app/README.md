@@ -16,6 +16,11 @@ Clicking a row opens the record over the views. `?fail=map,record` arms named po
 and `?fail=all` arms every one, which is how §9.1's *a failure is the size of the region that
 was waiting* gets checked rather than asserted. `?slow=3` multiplies every latency.
 
+**`?data=real` runs the whole thing on ten real patents** from `corpus/`, which is local only and
+absent from a fresh clone — the flag falls back to the demo and says so in the console rather than
+failing to mount. `corpus/fetch.py` captures the set, `corpus/build.py` shapes it. The flags
+combine: `?data=real&fail=all` is the one that checks a failure state still fits around real text.
+
 ---
 
 ## What this is
