@@ -1,42 +1,59 @@
 # TIS Terrain
 
-**Patent search with strategic direction, for founders working out where their idea sits.**
+**Patent search that returns an accurate set and hands it over cleanly, for founders working out
+where their idea sits.**
 
-You arrive with a concept — filed, mid-filing, or nowhere near it — and Terrain shows you who else is
-in the space, which technology is adjacent to yours, and which part of it each of them holds.
-Self-serve software on a subscription, searching the full Innovue patent database.
+You describe what you are building, Terrain returns the patents that are actually near it, you star
+the ones that matter, and you take them out as a file. Self-serve software on a subscription,
+searching the full Innovue patent database.
 
-Terrain is a TIS product in the Patent Intelligence pillar. This repository holds the definition,
-one working prototype, and [`app/`](app/) — the frontend being extracted from that prototype so the
-interface can be built on rather than read.
+**Terrain does not analyse.** No map, no charts, no widgets, no generated summary. Founders do not
+run somebody else's pre-built analysis — they take the data and work it in tools they already trust.
+The gap worth solving sits upstream of analysis: patent search returns inaccurate, incomplete sets,
+and an accurate one is the product.
+
+Terrain is a TIS product in the Patent Intelligence pillar. This repository holds the product and
+four documents describing it.
 
 ---
 
-## The prototype
+## The product
 
-| | |
-| --- | --- |
-| [**The prototype**](design/previews/terrain-prototype.html) | The whole product as an interactive HTML page — the conversation, the gate, the build, the working surface with its twelve views, the patent record, and four account destinations. Nothing to install: open the file. |
-| [**The loading lab**](design/previews/terrain-loading-lab.html) | A bench for the loader and the waiting states, kept beside the prototype rather than inside it. |
+**[`app/`](app/) is the product, and it is the reference.** Where a document and `app/` disagree, the
+code is what was decided.
 
-**The prototype is published** at
-[`talentintelligencestrategies.github.io/terrain/`](https://talentintelligencestrategies.github.io/terrain/)
-from the generated `gh-pages` branch — the prototype alone, with its eleven assets and both font
-licences. Nothing else in this repository is served.
+**Run it:**
 
-**It is the reference.** The documents below describe what the prototype is. Where a document and the
-prototype disagree, the prototype is what was decided.
+```bash
+python3 -m http.server 8765      # from the repo root
+# then open http://127.0.0.1:8765/app/
+```
+
+`file://` will never work — `<script type="module">` is CORS-fetched and a `file://` origin is
+opaque. [`app/README.md`](app/README.md) is the handoff document and says so on its first line.
+
+**Nothing is published.** This repository served a single-file prototype at a public URL; that
+prototype showed a landscape-analysis product that has been replaced, so the link was retired rather
+than left pointing at the wrong thing.
+[`design/previews/terrain-prototype.html`](design/previews/terrain-prototype.html) is that frozen v1.
+It is kept because every partial in `app/` names it as the file it was extracted from — provenance,
+not reference. Do not read it to find out what Terrain is.
 
 ## Every figure here is illustrative
 
-**No number in this repository is a real filing count.** The distribution is representative and the
-arithmetic is internally consistent — the matrix sums to the scope figure, the finding quotes the
-true maximum, the rivals total matches its own sentence — but nothing is observed data.
-[`docs/platform.md`](docs/platform.md) §13 lists the invariants a change has to keep.
+**No number in `demo/` or `docs/` is a real filing count.**
+[`docs/platform.md`](docs/platform.md) §11 carries the one invariant a change has to keep, and
+nothing checks it.
 
-**No real patent holder is ever named.** Identities render as grey skeleton bars by decision:
-inventing one reads as a live example, and transliterating a real one is fabrication.
+**No real patent holder is named in tracked files.** Identities render as grey skeleton bars by
+decision: inventing one reads as a live example, and transliterating a real one is fabrication.
 [`docs/design-language.md`](docs/design-language.md) §8 is the contract.
+
+**`corpus/` is the deliberate exception and it is not tracked.** It holds real patents captured from
+Google Patents, prints real assignee names, and exists to strain renderers written against
+well-behaved demo shapes. It is excluded from git in its entirety, and `?data=real` is what reaches
+it. The cost is stated rather than hidden: **the export is only demonstrable with it**, because a
+spreadsheet of skeleton bars shows nothing.
 
 ## Layout
 
@@ -44,25 +61,25 @@ inventing one reads as a live example, and transliterating a real one is fabrica
 CLAUDE.md            how to work in this folder
 README.md            this file
 
+app/                 THE PRODUCT, and the reference. Needs a server
+  README.md          the handoff document — how to run it is its first line
+  index.html         the shell; styles/ the numbered stylesheets
+demo/                fake data and the fake engine — deletable, imported once
+
 docs/
   brief.md           what Terrain is — positioning, the name, Innovue, what is locked
-  platform.md        what gets built — the PRD, reverse-written from the prototype
+  platform.md        what gets built — the PRD, written against app/
   design-language.md how it looks — tokens, type, space, motion, the skeleton contract
 
 design/
   components.md      what the engine must return, per component
   previews/
-    terrain-prototype.html    the product
+    terrain-prototype.html    FROZEN v1 — kept for provenance, not maintained
     terrain-loading-lab.html  the loader bench
 
-app/                 the frontend, extracted from the prototype. NEVER PUBLISHED
-  README.md          the handoff document — how to run it is its first line
-  index.html         the shell; styles/ the numbered stylesheets
-demo/                fake data and the fake engine — deletable, imported once
-
 brand/               fonts, logos, the favicon, and one permitted image family
-tools/               everything CI or a publish runs, and every one can refuse
-.github/workflows/   publish-prototype.yml — rebuilds gh-pages on every push to main
+tools/               everything CI runs, and every one can refuse
+.github/workflows/   gates.yml — runs the gates on every push to main
 ```
 
 **Four documents, and that is the whole set.** A fifth needs a distinct *kind* of content and a
@@ -70,30 +87,32 @@ distinct *reader*, not just a distinct topic. `CLAUDE.md` carries the rule.
 
 ## Editing
 
-**No build step.** The prototype carries its own tokens and links the shared font stylesheet. Edit
-the file, open it in a browser, look at it.
+**No build step.** No framework, no preprocessor, no bundler.
 
 **The tokens have one author.** [`app/styles/tokens.css`](app/styles/tokens.css) is it; every other
 copy is a region between sentinels written by `tools/sync-tokens.py --write` and verified byte for
-byte by `--check`, which CI runs before the publish. Edit the region in a page and the check reverts
-it — edit `tokens.css` and run `--write`.
+byte by `--check`, which CI runs on every push. Edit the region in a page and the check reverts it —
+edit `tokens.css` and run `--write`.
 
-**`app/` needs a server**, because `<script type="module">` is CORS-fetched and a `file://` origin is
-opaque. `python3 -m http.server`, then `localhost:8000/app/`. The prototype keeps the open-the-file
-property; `app/` cannot.
+**The gates run locally in one command each:**
 
-**Publishing is automatic.** Push to `main`; the workflow rebuilds `gh-pages` and Pages redeploys
-about a minute later. `tools/publish-prototype.sh` is the same thing runnable by hand, and
-`--build-only <dir>` assembles the tree without publishing.
+```bash
+python3 tools/check-app.py            # tokens, theme, hover gates, the manifest, the demo seam
+python3 tools/sync-tokens.py --check  # the generated token regions, byte for byte
+bash   tools/test-gates.sh            # every gate above, watched refusing a planted violation
+```
 
-**Never edit `gh-pages` by hand.** It is generated.
+**Add a gate, add its test.** Three of these were shell once, three of them silently did not run,
+and all three reported clean.
 
 ## Before pushing
 
 Four things must hold. Each command prints offending files and nothing otherwise — note the
 `grep -v README.md`, without which this file matches its own patterns and the check never passes.
-`tools/check-publish.py` and `tools/test-gates.sh` carry the same exemption, because they are these
-checks reimplemented as gates and contain the patterns as their own search strings.
+
+**These four are not gates and cannot be.** `tools/` holds what CI runs and what can refuse; these
+run against the *tracked set* and against a capture set that only a human has seen. Check 3 in
+particular cannot recognise a name it has not been told.
 
 ```bash
 # 1 · no raster images, except the one permitted family.
@@ -135,13 +154,13 @@ git ls-files | grep -Ei 'visual-reference|iptech-screenshots|comparison-assets|v
 #     every balance it was read off does not.
 #
 #     THE COMMA IS REQUIRED. Dropping it to catch `4438` as well made the check
-#     fire on a 4.5s animation delay in the prototype, and a check that fires on
+#     fire on a 4.5s animation delay in the loader, and a check that fires on
 #     a legitimate line is a check people learn to skip.
-git ls-files | grep -vE 'README\.md|^tools/(check-publish\.py|test-gates\.sh)$' | tr '\n' '\0' \
+git ls-files | grep -vE 'README\.md|^tools/test-gates\.sh$' | tr '\n' '\0' \
   | xargs -0 grep -lEi 'Tektronix|Nike|Qualcomm|ENANTA|MONOLITHIC|緯穎|富蘭登|光焱|聯享光電|Macroblock|4,50[0-9]|4,49[0-9]|4,438|4,368|10,004|5,566|2,184|78\.5'
 
 # 4 · nothing tracked embeds an image as base64
-git ls-files | grep -vE 'README\.md|^tools/(check-publish\.py|test-gates\.sh)$' | tr '\n' '\0' | xargs -0 grep -l 'data:image'
+git ls-files | grep -vE 'README\.md|^tools/test-gates\.sh$' | tr '\n' '\0' | xargs -0 grep -l 'data:image'
 ```
 
 **Report what you checked, never that the tree is clean.** A sweep is only as wide as the capture set
@@ -163,8 +182,8 @@ as seven subset `woff2` plus `fonts.css`, linked by every page:
 ```
 
 **Both OFL licences must stay with them.** These are subsets, which OFL permits, and OFL 1.1 requires
-the notice travel with the Font Software wherever it is redistributed. This repository is public and
-the published branch serves the fonts, so that is not theoretical.
+the notice travel with the Font Software wherever it is redistributed. This repository is public, so
+that is not theoretical — the licences travel with the files whether or not anything is served.
 
 **Terrain is English-only.** No CJK face, by decision.
 

@@ -1,33 +1,53 @@
 # `app/` — the Terrain frontend
 
-**Run it with a server. `python3 -m http.server` from the repository root, then open
-`http://127.0.0.1:8000/app/`.** Opening `index.html` from the filesystem does not work and never
+**Run it with a server. `python3 -m http.server 8765` from the repository root, then open
+`http://127.0.0.1:8765/app/`.** Opening `index.html` from the filesystem does not work and never
 will: `<script type="module">` is CORS-fetched, a `file://` origin is opaque, and Chrome, Safari and
-Firefox all refuse it. The prototype at `design/previews/terrain-prototype.html` keeps the
-open-the-file property; this does not.
+Firefox all refuse it.
 
 *`127.0.0.1` rather than `localhost`, and it is not fussiness.* `localhost` resolves to IPv6
-first; a second server already bound to `*:8000` on IPv6 will shadow one bound to
-`127.0.0.1:8000` on IPv4, and what you get is somebody else's site with no error anywhere.
+first; a second server already bound to `*:8765` on IPv6 will shadow one bound to
+`127.0.0.1:8765` on IPv4, and what you get is somebody else's site with no error anywhere.
 
-**What you should see:** the conversation on arrival. `#set` opens the working surface — the
-list on the left, the Market views on the right, and the map under the **Technology** tab.
-Clicking a row opens the record over the views. `?fail=map,record` arms named ports to refuse
-and `?fail=all` arms every one, which is how §9.1's *a failure is the size of the region that
-was waiting* gets checked rather than asserted. `?slow=3` multiplies every latency.
+**What you should see:** the home surface on arrival — the technology-field tiles, the composer, and
+what is in the corpus. Type a sentence and press Search. `#set` opens the results surface: the list
+on the left, the grouping panel on the right. Clicking a row opens the record **in the left column**,
+in the list's place, with a thumbnail strip under the text; clicking a thumbnail enlarges that
+drawing **in the right column**. Star two rows and *Find similar* appears; the count beside the
+results leads to the starred set, which is where the export lives.
 
-**`?data=real` runs the whole thing on ten real patents** from `corpus/`, which is local only and
-absent from a fresh clone — the flag falls back to the demo and says so in the console rather than
-failing to mount. `corpus/fetch.py` captures the set, `corpus/build.py` shapes it. The flags
-combine: `?data=real&fail=all` is the one that checks a failure state still fits around real text.
+`?fail=search,record` arms named ports to refuse and `?fail=all` arms every one, which is how
+`platform.md` §7.1's *a failure is the size of the region that was waiting* gets checked rather than
+asserted. `?slow=3` multiplies every latency. `?theme=light|dark` pins appearance.
+
+**`?data=real` runs the whole thing on real patents** from `corpus/`, which is local only and absent
+from a fresh clone — the flag falls back to the demo and says so in the console rather than failing
+to mount. `corpus/fetch.py` captures the set, `corpus/build.py` shapes it. The flags combine:
+`?data=real&fail=all` is the one that checks a failure state still fits around real text.
+
+> ### Two features are only visible under `?data=real`, and that is a decision
+>
+> **The drawings and the export.** `demo/` never names a real holder and never ships a real patent
+> figure — `CLAUDE.md`'s client-data boundary — so the demo record renders numbered *skeleton*
+> frames rather than drawings, and a CSV exported from it has an almost-empty Number column. Both are
+> correct behaviour: a bar means *this value exists and we decline to print it*.
+>
+> **But it means a reader receiving this handoff without `corpus/` cannot watch the product's own
+> ending work.** That is the price of never tracking a third party's data, it was paid deliberately,
+> and `brief.md` §4 carries it. If you need to see the export produce a real file, you need the
+> corpus: `python3 corpus/fetch.py`, then reload with `?data=real`.
 
 ---
 
 ## What this is
 
-The frontend extracted from `design/previews/terrain-prototype.html`, which is 13,000 lines in one
-file — one `<style>`, one block of markup, one IIFE — and is **the reference for what Terrain is**.
-Where a document and the prototype disagree, the prototype is what was decided.
+**This is the product and the reference.** Where a document and `app/` disagree, the code is what was
+decided.
+
+It was extracted from `design/previews/terrain-prototype.html`, 13,000 lines in one file — one
+`<style>`, one block of markup, one IIFE. That file is **frozen at v1** and describes a
+landscape-analysis product that no longer exists; it is kept because every partial here names it as
+its source, which is provenance rather than authority. Do not read it to settle a question.
 
 **This is a separation, not a rewrite.** The prototype is read; `app/` is built beside it, so every
 step is checked against a known-good reference rather than against a memory of how it used to behave.
@@ -139,7 +159,7 @@ while every grep for the token found it present and correct.
 
 ## `js/core/` — the behaviour layer, and the part a rewrite gets subtly wrong
 
-Seventeen modules, dependency-free. **This is the deliverable.** Every
+Eighteen modules, dependency-free. **This is the deliverable.** Every
 one of them encodes a rule that reads as an implementation detail and is not:
 
 | Module | The rule it carries |
@@ -178,7 +198,7 @@ offers no button to tab to.
 
 ## The engine seam
 
-`js/ports.mjs` is `design/components.md` §1 made executable: **32 named ports**, one per
+`js/ports.mjs` is `design/components.md` §1 made executable: **18 named ports**, one per
 data-bearing row, plus a typedef for each shape and a `NullEngine` that implements every port by
 refusing.
 

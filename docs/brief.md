@@ -8,57 +8,90 @@
 
 ## 1 · The product
 
-**Terrain is patent search with strategic direction, for founders working out where their idea
-sits.**
+**Terrain is patent search that returns an accurate set and hands it over cleanly, for founders
+working out where their idea sits.**
 
 The user arrives with a concept. Whether they have filed, are mid-filing, or have no intention of
 filing does not change the job — early-stage IP positions are all over the place, and Terrain does
-not assume one. Terrain answers two questions:
+not assume one. They describe what they are building, Terrain returns the patents that are actually
+near it, and they take the ones that matter with them.
 
-1. **Who else is here?** The companies already holding ground in this space.
-2. **What is adjacent?** Similar and neighbouring technology they didn't know to look for.
+**One question, and the whole product answers it:** *what is already here that is close to this?*
 
 Self-serve software, subscription-priced, English-native, searching the full Innovue patent database.
 
+### The flow, and there is only one
+
+**Search → find similar → star → the starred set → export.** Every surface serves a step of it, and a
+surface that serves none does not belong in the product.
+
+1. **Search.** One sentence, one call. Nothing is asked before it runs.
+2. **Find similar.** Star a patent and the set re-orders by nearness to it. No patent enters or
+   leaves — only the sequence changes, and it can be put back.
+3. **Star.** The founder's own shortlist, and the only thing in the product they curate by hand.
+4. **The starred set.** Its own surface, where the shortlist is read as a whole.
+5. **Export.** It leaves as a CSV or a Markdown list, and the product is over.
+
+### Terrain does not analyse, and that is the position
+
+**Founders do not run somebody else's pre-built analysis.** They take the data and work it in tools
+they already trust, because they know how the answer came out — and a chart they did not build,
+sitting inside software they are still deciding whether to pay for, is a claim they have no way to
+check. Terrain stopped competing on the analysis and moved upstream of it.
+
+**The gap worth solving is retrieval.** Patent search returns inaccurate, incomplete sets: the right
+patent is missing, or it is on page nine behind forty that are not close at all. A founder cannot
+tell which, because they cannot see what was left out. An accurate set, and a clean way to take it
+out, is the product.
+
+**That is a claim about retrieval, not about presentation** — so anything that reads the set and
+tells the founder what it *means* is out, however small. No map, no charts, no widgets, no generated
+summary, no finding sentence, no verdict. Terrain prints what the engine returned and what the patent
+says.
+
+**The engine's own relevance score is printed, and that is the line rather than an exception to it.**
+The question is not *is it an opinion* but *is it ours*. Terrain refuses to **generate** a verdict; it
+does not **hide** one the engine already produced. No ranking language may read as a verdict —
+*ranked by relevance* is an ordering; *strong match*, *best fit* and *most relevant* are readings,
+whatever number sits beside them.
+
 ### What makes it a product rather than a search box
 
-**Legibility and self-serve.** The same analysis an IP professional runs, operable by the person who
-actually has the question.
+**Legibility and self-serve.** The same set an IP professional would assemble, operable by the person
+who actually has the question — and handed over in a form they can work in.
 
 A founder cannot run IPtech: it wants a taxonomy authored before the first search is typed, it is
 built in the vocabulary of the profession, and it assumes an analyst on the other side of it. Terrain
-is one sentence, five questions and a map — no analyst, no 魚骨, no definitions table, and no term of
-art anywhere on the surface.
+is one sentence and a set — no analyst, no definitions table, and no term of art anywhere on the
+surface.
 
 **This is a durable claim in a way a feature claim is not.** *We draw X* is beaten the day somebody
 else draws X. *A founder can operate this and cannot operate that* is a claim about who can use the
 thing, and it does not fall to a feature.
 
-### What an empty cell means
+**And there is a second one underneath it, which is the harder claim to beat:** the incumbent's only
+way out is one patent at a time, into another of its own products. A set the founder can leave with
+is not a feature the incumbent has declined to build — it is one that cuts against why they built the
+rest.
 
-The map's rows are **holders**. An empty cell means **that company has not filed against that
-approach** — and it does not say why. They may never have tried it; they may have tried it and
-stopped.
+### What Terrain may not say about a set
 
-**So copy may describe what is there, and may describe a holder's absence from it, and may not
-describe the space as empty.** These are sayable:
+**A search that returns nothing has found nothing, which is not the same as there being nothing.**
+The engine searched an index, over a vocabulary, at a moment. Copy may describe **what came back**
+and may not describe **what exists**:
 
-- *No holder has more than five patents against any single approach — this space is divided, not
-  owned.*
-- *Twin-layer impact skin draws two filings from the whole group, against fourteen for moulded
-  composite shell.*
-- *This rival stopped filing six years ago.*
-
-These are not, because they claim a fact about the territory that a holder-axis grid cannot carry:
-
-- *Here is the gap.* *Open ground.* *Whitespace.* *Nobody is here.*
-- The zone names `地雷區` / `新興區` / `處女地帶` — minefield, emerging, virgin territory — which are
-  Innovue's own labels for exactly this claim and are quoted here as an audit finding, in the past
-  tense, and nowhere else.
+- Sayable: *Nothing in the Innovue database came back close to this.* *Forty-one patents matched, and
+  these eight are nearest to the one you starred.* *This holder's most recent filing here is 2019.*
+- Not sayable: *Here is the gap.* *Open ground.* *Whitespace.* *Nobody is here.* *This is unclaimed.*
 
 **The test:** a sentence is admissible if it would still be true when the whole rest of the world's
-patent estate is added to the grid. A statement about *these holders* survives that. A statement about
-*this technology being unclaimed* does not.
+patent estate is added to the index. A statement about *this result set* survives that. A statement
+about *this technology being unclaimed* does not.
+
+*The rule is easy to think unnecessary, because nobody would write "nobody is here" on purpose. The
+failure is quieter than that: an empty result list, rendered plainly and captioned honestly, still
+reads as open ground to a founder who does not know what an index is. Saying what was searched is
+what keeps the absence a fact about the search.*
 
 ### Software, not a report
 
@@ -100,18 +133,19 @@ it holds, because the alternative is writing nothing, but it is a decision that 
 It is positioned as a **TIS-endorsed sub-brand** — not a standalone brand and not a descriptive
 label.
 
-**Why Terrain.** Three reasons, none of which depends on the product rendering absence:
+**Why Terrain.** Three reasons, none of which depends on the product drawing a map:
 
-1. **It maps onto the job.** Competitors, adjacent technology, who is standing where. Both of §1's
-   questions are spatial: *who else is in the space*, *what is adjacent to mine*. Occupants and
-   neighbours are what a terrain has.
+1. **It names the founder's question, not our output.** *Where does my idea sit, and what is around
+   it* — §1's one question is spatial, and it stays spatial whether the answer arrives as a grid or
+   as a ranked list. The name survived the product changing shape underneath it, which is the test a
+   name is supposed to pass.
 2. **The engine's own vocabulary is already territorial.** Its lineage family is **技術脈絡** — a
    *pathway*; its competitive family is **競合分析**, contending over the same ground; and the system
    it sits in is **專利布局分析系統**, a patent *layout* analysis system, layout in the sense of how
    ground is laid out and held. Terrain is the capability's native vocabulary rendered into English a
    founder reads without instruction.
-3. **The map register extends.** Bearing, Waypoint, Atlas, Contour are available for later products
-   or modules without a rebrand.
+3. **The register extends.** Bearing, Waypoint, Atlas, Contour are available for later products or
+   modules without a rebrand.
 
 **Why endorsed rather than standalone.** Equity compounds into TIS, the SABCD rating engine's
 credibility transfers for free, and it is far cheaper to launch. Revisit only if Terrain is ever meant
@@ -178,7 +212,11 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
 - **The endorsed sub-brand architecture** — the TIS mark appears in the lockup.
 - **Two typefaces**: Urbanist (text and display), Inconsolata (numerals and figures).
 - **English only** — no Chinese surface, no bilingual markup.
-- **The product definition and ICP** in §1, including what an empty cell may be said to mean.
+- **The product definition and ICP** in §1, including what may and may not be said about a set.
+- **Terrain does not analyse.** No map, no charts, no widgets, no generated summary, no finding
+  sentence. Anything that reads the result set and tells the founder what it *means* is out. This is
+  the decision the whole product turned on and it is the one most likely to be reopened by accident,
+  because every individual chart looks small.
 - **Software, not a report.**
 - **Terrain renders the record, not an opinion about the record.** A patent's identifiers, abstract
   and claims are the public text of a granted patent and Terrain shows them; every *reading* of that
@@ -189,29 +227,26 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
   Terrain **generating** a verdict; what is admitted is Terrain **not hiding** one the engine already
   produced. **No ranking language may read as a verdict** — *ranked by relevance* is an ordering;
   *strong match*, *best fit* and *most relevant* are readings, whatever number sits beside them.
-- **One working screen.** The ranked patents on the left, the views on the right, the patent record
-  over the views. A top masthead, not a sidebar.
-- **The map is Technology × holder.** No axis switch, no generated outcome axis, no founder veto over
-  either list.
-- **Every patent the search returns feeds every view.** No per-row selection; sort and filter replace
-  it. A permanently visible list of patents with checkboxes that redraw a chart is a curation
-  workbench, which is the analyst's tool this product is not.
-- **There is no chat surface.** Terrain opens on a conversation and that is the only one. The gate is
-  the only correction point in the product **and** the only entrance to one. The cost is named: a
-  founder on a built map cannot narrow the corpus without going through the gate again.
-- **The `Market` / `Technology` toggle**, and the split is IPtech's rather than ours. `Technology`
-  being a three-view page is faithful to the source; inventing a more balanced split would be
-  inventing a structure that is not theirs.
+- **One working screen, two columns.** The result list and the patent record share the left column;
+  the right column carries the grouping panel, and the drawing when one is open. A top masthead, not
+  a sidebar.
+- **The search runs on submit.** No narrowing questions, no criteria to approve, no build stream. The
+  commitment is pressing Search, and the points are charged there.
+- **Starring is the one thing the founder curates by hand**, and it is per-row. *This is a narrowed
+  successor, not a reversal*: the old rule banned per-row selection because checkboxes redrew a
+  chart and the set feeding the charts had to stay whole. There are no charts, and the starred set
+  feeds nothing but itself and the export.
 - **Application code goes in `app/`, and it is framework-agnostic** — plain CSS files, semantic HTML
   partials, vanilla ES modules. No framework, no preprocessor, no bundler. The team receiving this
   writes CSS, and a custom property is the one interchange format every stack consumes; a
   preprocessor variable also resolves at build time, which the theme swap cannot survive. `app/` is
   the reference implementation and [`app/README.md`](../app/README.md) is what an engineer reads
   first.
-- **`app/` does not publish.** The prototype stays the published artifact. Publishing means pointing
-  Pages at a tree, and the transform that makes the prototype publishable — every comment stripped —
-  runs on one file. Both halves of that are in `CLAUDE.md` under Publishing, and changing either
-  changes this line first.
+- **Nothing publishes.** The prototype that used to be the published artifact showed the landscape
+  product, so `gh-pages` was emptied and the pipeline retired with it. Publishing `app/` was
+  considered and is not next: it is 40-odd files with a demo seam, and making it public means
+  deciding what a stranger sees when the fake engine answers. `CLAUDE.md` under *Nothing is
+  published* carries it, and changing that changes this line first.
 - **`corpus/` is the stress-test set, it is local only, and it prints real holder names.** Ten
   semiconductor patents captured from Google Patents, sitting beside `demo/` with the same two-file
   shape and reached by `?data=real`. The whole directory is excluded from git, which is what makes
@@ -219,11 +254,16 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
   or inventor name enters a tracked file.
 
   **Real names are printed, and that does not reopen §1.** The rule §1 carries governs what copy may
-  claim about the *territory* — the map cannot say a space is empty, because its rows are holders.
-  Naming a holder is the opposite claim and has always been admissible; what CLAUDE.md refuses is
+  claim about a *set* — that nothing came back is not that nothing exists. Naming a holder who did
+  file is the opposite kind of claim and has always been admissible; what `CLAUDE.md` refuses is
   *inventing* one or *transliterating* one into illustrative data, and an observed assignee is
   neither. The demo keeps its bars, because its rows are fictional and a fictional name reads as a
   live example.
+
+  **The cost is stated rather than hidden: export is only demonstrable under `?data=real`.** A
+  spreadsheet of skeleton bars shows nothing, so anyone receiving this handoff without `corpus/`
+  cannot see the product's own ending work. That is the price of never tracking a real name, it was
+  paid deliberately, and [`app/README.md`](../app/README.md) says so where an engineer will read it.
 
   **What the corpus is for is finding what the demo cannot ask.** `demo/` is well-behaved by
   construction — one 46-character holder, three classification codes, nine short claims — so every
@@ -246,9 +286,9 @@ uses it.
 
 **Where it may not:**
 
-- **In data.** Not a chart series, not a map cell, not a density step, not a bar. The three permitted
-  colour cases in [`design-language.md`](design-language.md) §2 — discrete states, direction of
-  change, chart layers — are unchanged and the accent is not one of them.
+- **In data.** Not a status chip, not a score, not a relevance rank, not a bar. The permitted colour
+  cases in [`design-language.md`](design-language.md) §2 — discrete states and direction of change —
+  are unchanged and the accent is not one of them.
 - **As decoration.** No gradient, no wash, no accent border on a card, no tinted background.
 - **Anywhere it could be read as a verdict.** Nothing in this product means *good* because it is
   green.
@@ -261,7 +301,7 @@ uses it.
 2. **It needs a dark value, measured.** A hue chosen against white and carried unchanged into the
    dark palette is how a component silently stops meeting contrast.
 
-**The prototype has not been repainted.** It ships with near-black primary fills, which is what the
+**`app/` has not been repainted.** It ships with near-black primary fills, which is what the
 no-accent rule left behind. Applying this decision is a separate, visible pass.
 
 **A green marketing page was never licence to put green in the product**, and that separation still
@@ -277,8 +317,9 @@ accents are a different system, recorded upstream.
   bar rather than guessing, and [`platform.md`](platform.md) §12 records why this cannot be settled
   before filing alerts are.
 - **The specific green**, its dark value, and its two tokens.
-- **What the founder walks away with.** A link plus copyable text is the current answer and it has
-  never been tested on a founder.
+- **What a search costs, and what an export costs.** [`platform.md`](platform.md) §8.1 lists the run
+  types that exist and prints illustrative figures against them. Pricing is unsettled, and the one
+  question the pivot forces is whether taking your own data out should move the meter at all.
 - **Whether Terrain sits on Innovue's semantic search surface or beside it.**
 
 ---

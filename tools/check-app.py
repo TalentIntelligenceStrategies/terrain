@@ -173,6 +173,50 @@ if os.path.exists(os.path.join(ROOT, TOKENS)):
                 fail(f"{TOKENS}: {d} is derived and is ALSO declared in a dark block. "
                      f"A literal there pins it to one palette while reading as correct")
 
+# ── GATE G · every printed copy of the tier counts matches tokens.css ──────
+# THE SUCCESSOR TO A RULE THAT COULD ONLY BE OBEYED BY REMEMBERING.
+# design-language.md §10.1 used to claim it was "the one place that count
+# appears". It was not -- the number lived in three files, and it drifted in
+# all three: they read 42 while tokens.css held 29. A number repeated in three
+# documents is a number nobody can keep right by discipline, so it is parsed
+# from the file and every printed copy has to agree.
+#
+# It counts the tiers it can see rather than a list of names, so adding a
+# semantic token fails here until the three documents are updated -- which is
+# the point. Add a token, move the number.
+if os.path.exists(os.path.join(ROOT, TOKENS)) and len(light) >= 4:
+    counts = {'primitive': len(light[0]), 'scale': len(light[1]),
+              'semantic': len(light[2]), 'derived': len(light[3])}
+    # (file, regex with the tier's count as group 1, tier)
+    PRINTED = [
+        ('docs/design-language.md',
+         r'\*\*(\d+) semantic tokens\*\*', 'semantic'),
+        ('docs/design-language.md',
+         r'\|\s*\*\*semantic\*\*\s*\|\s*(\d+)\s*\|', 'semantic'),
+        ('docs/design-language.md',
+         r'\|\s*\*\*derived\*\*\s*\|\s*(\d+)\s*\|', 'derived'),
+        ('CLAUDE.md',
+         r'swap of \*\*(\d+) semantic tokens\*\*', 'semantic'),
+        ('app/README.md',
+         r'\|\s*semantic\s*\|\s*(\d+)\s*\|', 'semantic'),
+        ('app/README.md',
+         r'\|\s*derived\s*\|\s*(\d+)\s*\|', 'derived'),
+    ]
+    for rel, pat, tier in PRINTED:
+        ap = os.path.join(ROOT, rel)
+        if not os.path.exists(ap):
+            fail(f"{rel}: missing -- it prints the {tier} token count and this gate reads it")
+            continue
+        body = io.open(ap, encoding='utf-8').read()
+        hits = re.findall(pat, body)
+        if not hits:
+            fail(f"{rel}: the printed {tier} count could not be found. "
+                 f"GATE G reads it by pattern; if the sentence moved, move the pattern")
+        for h in hits:
+            if int(h) != counts[tier]:
+                fail(f"{rel}: prints {h} {tier} tokens; {TOKENS} holds {counts[tier]}. "
+                     f"A count repeated in three documents drifts in all of them")
+
 
 # ── GATE E · a theme selector may only ever be combined with :root / html ──
 # The two exceptions are literal, no glob, the same shape as the raster rule:

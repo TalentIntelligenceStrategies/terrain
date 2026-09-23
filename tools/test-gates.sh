@@ -89,6 +89,11 @@ e_theme() { printf ':root[data-theme="dark"] .probe{color:var(--text-1)}\n' > "$
 f_base()  { printf '@media (hover:hover) and (pointer:fine){\n  .probe{display:inline-flex;height:30px}\n  .probe:hover{color:var(--text-1)}\n}\n' > "$1/app/styles/90-probe.css"; }
 # ── a mirror class for a state ARIA already has a word for ──
 m_mirror(){ printf '.probe.is-selected{color:var(--text-1)}\n' > "$1/app/styles/90-probe.css"; }
+# ── G · a printed token count that disagrees with tokens.css ──
+# The one gate here whose subject is a DOCUMENT rather than code. It exists
+# because the sentence it replaced asked three files to stay equal by memory
+# and they did not.
+g_count() { sed -i.bak 's|\*\*31 semantic tokens\*\*|**30 semantic tokens**|' "$1/docs/design-language.md"; rm -f "$1"/docs/*.bak; }
 # ── a second demo/ import outside main.mjs ──
 x_demo()  { mkdir -p "$1/app/js" "$1/demo"; printf 'export const x=1\n' > "$1/demo/engine.mjs";
             printf "import {x} from '../../demo/engine.mjs'\nexport const y=x\n" > "$1/app/js/probe.mjs"; }
@@ -108,6 +113,7 @@ runsrc "E · theme selector on a class" "token swap"      "tools/check-app.py"  
 runsrc "F · base rule in a hover gate" "base rule inside" "tools/check-app.py"          f_base
 runsrc "mirror class for an ARIA state" "mirrors an ARIA" "tools/check-app.py"          m_mirror
 runsrc "a second demo/ import"         "imported exactly once" "tools/check-app.py"     x_demo
+runsrc "G · printed token count drifts" "holds 31"       "tools/check-app.py"           g_count
 
 echo "and the clean source tree itself:"
 for c in "tools/check-app.py" "tools/sync-tokens.py --check"; do

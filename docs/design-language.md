@@ -4,7 +4,7 @@
 > What gets built is [`platform.md`](platform.md); what Terrain is is [`brief.md`](brief.md); what
 > the engine must return, per component, is [`../design/components.md`](../design/components.md).
 >
-> The prototype inlines its own token block. There is no shared token stylesheet and no build step —
+> Every standalone page inlines its own token block. There is no shared token stylesheet and no build step —
 > and there must not be one until three previews independently want the same value. A linked font
 > stylesheet locks nothing; a linked token sheet would.
 
@@ -18,10 +18,12 @@ Three things follow from that and everything else is downstream of them:
 - **Hierarchy comes from weight, size and space, not from colour.** A founder scanning a screen of
   patent data should be able to find the heading, the figure and the caption without a hue telling
   them which is which.
-- **Every widget states its own finding.** A chart nobody can read is a chart that needed a sentence.
-  Captions are the longest prose in the product and they are not decoration.
-- **Nothing pretends to more certainty than it has.** An unpublished window is shaded and named. A
-  value we do not hold is a grey bar. A wait is a loader, not a fake skeleton.
+- **Nothing on screen is a reading of what is on screen.** Terrain prints the engine's answer and the
+  patent's own text. There is no caption stating a finding, because a finding is an analysis and
+  `brief.md` §1 puts those outside the product — this is the rule that used to say the opposite, and
+  it inverted with the product rather than being relaxed.
+- **Nothing pretends to more certainty than it has.** A value we do not hold is a grey bar. A wait is
+  a loader, not a fake skeleton. An empty result says what was searched.
 
 ---
 
@@ -29,24 +31,25 @@ Three things follow from that and everything else is downstream of them:
 
 **Colour carries information, or it is not there.**
 
-Four narrow, earned places have colour. Everything else is the neutral ramp, carrying meaning with
+Three narrow, earned places have colour. Everything else is the neutral ramp, carrying meaning with
 hierarchy, weight and spacing.
 
 | Where | What it encodes |
 | --- | --- |
 | **Discrete states** | live / expired / pending — §3.3 |
 | **Direction of change** | a delta pill rising or falling — §3.3 |
-| **Chart layers** | series, trend, unknown, grid — §3.5, plus the categorical marks in §3.7 |
 | **The accent** | the primary action, the focus ring, a selected control — §3.8 |
 
-**Colour encodes direction, never desirability.** This is the load-bearing half. A space heating up
-is not good or bad for a founder — it is information. If rising filings render green, the founder
-reads *green means build here*, and the trend chart delivers exactly the verdict the map is forbidden
-from delivering. Green and red are confined to state chips and delta pills, where direction is
-unambiguous. Series and trend overlays are both neutral.
+*A fourth was **chart layers**, and it left with the charts. §3.5 narrows to the one token that
+survives, `--chart-series`, because the points page still draws daily columns.*
+
+**Colour encodes direction, never desirability.** This is the load-bearing half. A patent being live
+is not good or bad for a founder — it is information, and whether it is a problem depends entirely on
+what they are building. Green and red are confined to state chips and delta pills, where direction is
+unambiguous.
 
 **Nothing means *good* because it is green.** The accent is a hue for a control, not a verdict about
-data, and it may not enter a chart, a cell or a status.
+data, and it may not enter a status, a score or a rank.
 
 **Never colour alone.** Every coloured element also carries a word or a shape — a dot plus a label,
 an arrow plus a number, a hatch plus a legend entry.
@@ -54,6 +57,12 @@ an arrow plus a number, a hatch plus a legend entry.
 ---
 
 ## 3 · Colour
+
+**The subsection numbers are stable across retirements.** §3.4 was the density ramp and §3.7 was the
+categorical marks; both went with the analysis layer, and their numbers are not reused. A number that
+gets reassigned turns every reference to it in the code, in the other documents and in this file's
+own prose into a silently wrong pointer rather than a visibly missing one.
+
 
 ### 3.1 · Neutral ramp
 
@@ -86,7 +95,7 @@ what lets an accent sit on the system without fighting a temperature.
 | Token | → | Contrast |
 |---|---|---|
 | `--ground` | `--n-2` | page background |
-| `--surface` | `--n-0` | widget cards, menus |
+| `--surface` | `--n-0` | cards, menus, popovers |
 | `--surface-sunken` | `--n-3` | input tracks, table headers, segmented tracks |
 | `--border` | `--n-4` | every hairline, 1px |
 | `--border-strong` | `--n-5` | active edges |
@@ -139,7 +148,7 @@ rgba() / hsl() →  0      an alpha written inline instead of tokenised
 raw hex        →  0      anything at all
 ```
 
-Comments are excluded because §3.4, §3.7 and §10.3 quote measured hex values as prose, and those are
+Comments are excluded because §3.1, §3.2 and §10.3 quote measured hex values as prose, and those are
 the evidence rather than a violation.
 
 ### 3.3 · State colours
@@ -158,50 +167,26 @@ Live-versus-expired is the single most decision-relevant fact a US founder reads
 expired patent is not a threat, it is free to use. It earns colour on that ground alone.
 
 `--state-up` / `--state-down` are aliases, not new hues. **They apply only to delta pills**, never to
-a series or a matrix cell.
+a series, a score or a status.
 
-### 3.4 · Density ramp — the matrix
-
-| Token | Hex | Text on it | Contrast |
-|---|---|---|---|
-| `--density-0` | `#F6F6F6` | `--text-1` | 14.14 |
-| `--density-1` | `#DDDDDD` | `--text-1` | 11.25 |
-| `--density-2` | `#BBBBBB` | `--text-1` | 7.98 |
-| `--density-3` | `#909090` | `--text-1` | 4.81 |
-| `--density-4` | `#5E5E5E` | `--text-inverse` | 6.20 |
-
-**Thresholds are fractions of the view's own maximum** — 2/14, 6/14 and 12/14 — so `band(n, max)`
-takes the count and the maximum, never a percentile and never an absolute cut.
-
-**Two channels, because rising is not a point on the ramp.** Tone is *how many*; a 45° hatch over the
-cell is *the count is climbing*. They are independent: a pale cell can be rising and the darkest cell
-can be flat. Encoding growth as a sixth tone would make the two unreadable as separate facts.
-
-#### The ramp stays tonal, and no label may describe absence
-
-**`--density-0` means *this one holder has not filed against this approach*.** That is a fact about a
-company. It is not a gap in the field and it is not enterable ground.
-
-A red↔green ramp would say *this cell is bad and that one is good*, and the interface would be
-answering a question the data cannot. **A label saying `Open` does exactly the same thing through the
-word instead of the hue** — which is why the legend has no such step and copy may not reintroduce
-one. [`brief.md`](brief.md) §1 carries the test for what may and may not be said about an empty cell.
-
-### 3.5 · Chart layers
+### 3.5 · Chart layers, and what is left of them
 
 | Token | Value | Role |
 |---|---|---|
 | `--chart-series` | `#595959` | the data — neutral line, area fill at 8% |
-| `--chart-trend` | `--n-10` | 1.5px dashed trend overlay, 15.3 on surface |
-| `--chart-unknown` | `--n-3` | the unpublished window — full tone, dashed boundary at `--border-strong` |
-| `--chart-grid` | `--border` | dashed gridlines, values inside the plot |
 
-**Series is grey on purpose.** Direction lives in the caption, in words, where it can be qualified.
+**One column chart is left in the product**: the points page's per-day usage. Everything else that
+read a chart token left with the analysis layer, and `--chart-trend`, `--chart-unknown`,
+`--chart-grid`, the five `--density-*` steps and the four `--mark-*` marks went with it.
 
-**The band over the unpublished window is mandatory, not decorative.** Patents publish roughly 18
-months after filing, so the last ~18 months of any series is structurally incomplete. It is shaded,
-excluded from the trend, and named in the legend as *Not yet published*. It is **not** red: red in
-this system means *expired*, and an incomplete window is not an error.
+**Series is grey on purpose, and that reason outlived the charts it was written for.** A coloured
+series says *this direction is the good one*; a neutral one says *this is how many*. The points page
+is the one place left where a founder watches a number move over time, and it is the last place the
+interface should imply that moving up is success.
+
+**A new chart is an amendment to `brief.md` §1, not a design task.** The tokens are gone rather than
+parked, so drawing one means declaring the tokens again, in all three theme blocks, with measured
+contrast — which is the friction this section is now for.
 
 ### 3.6 · Skeleton
 
@@ -213,43 +198,6 @@ this system means *expired*, and an incomplete window is not an error.
 
 **`--skeleton-strong` is a bar the founder has acted on** — a starred row, an edited field. It is a
 state, not a second grey.
-
-### 3.7 · The categorical marks — one ink, one grey, one texture
-
-| Token | Value | Role |
-| --- | --- | --- |
-| `--mark-1` | `--n-10` `#252525` | first encoded value, **or the entity being tracked** |
-| `--mark-2` | `--n-7` `#6F6F6F` | second encoded value |
-| `--mark-3` | `--n-10` `#252525` | third encoded value — **only ever as a 45° hatch**, never a solid |
-| `--mark-3-hatch` | `repeating-linear-gradient(45deg, --mark-3 0 1.2px, --surface 1.2px 3px)` | the line-scale rendering of the third value |
-| `--mark-off` | `--n-7` `#6F6F6F` | **not a fourth value — the absence of one** |
-
-**Measured.**
-
-| | vs `--surface` `#FFFFFF` | vs the bar track `#F0F0F0` | L* |
-| --- | --- | --- | --- |
-| `--mark-1` | **15.32:1** | 13.44:1 | 14.7 |
-| `--mark-2` | **5.03:1** | 4.41:1 | 46.8 |
-| `--mark-3` as drawn | 1.60:1 *(mean tone)* | — | 82.2 |
-
-**The third value cannot be a solid, and that is the ramp rather than a preference.** A third solid
-step would have to sit between 15.32 and 5.03, and every value there collides with `--text-3`,
-`--border-strong` or the density ramp. A hatch is a different *channel*, so it does not compete.
-
-**A hatch is not a tint, and its mean tone is the wrong number to judge it by.** What the eye
-resolves is the stripe — the ink itself at 15.32:1 — so the mark has the crispest edges on the card
-while reading as the lightest.
-
-**Two renderings, one meaning.** Which one a mark gets is a question of area, not of value:
-
-| Rendering | Where | Pitch | Duty cycle |
-| --- | --- | --- | --- |
-| SVG `<pattern>` | area marks — pie slices, stacked segments | 6px | 2.4 / 6 = 40% |
-| `--mark-3-hatch` | line-scale marks — 8px bars, 9px key dots | 3px | 1.2 / 3 = 40% |
-
-**There is no `--mark-4`, deliberately.** A fourth category folds into *Other*, or the chart becomes
-the wrong chart. L* separation between marks that co-occur is 32 points solid-to-solid and 35 to the
-hatch's mean.
 
 ### 3.8 · The accent
 
@@ -282,8 +230,8 @@ rather than by discipline. §3.9 carries the tier.
 
 **Where it may not appear:**
 
-- **In data.** Not a chart series, not a map cell, not a density step, not a mark, not a status chip.
-  §2's four permitted cases are exhaustive and the accent is the control case, not the data case.
+- **In data.** Not a chart series, not a status chip, not a score, not a relevance rank.
+  §2's three permitted cases are exhaustive and the accent is the control case, not the data case.
 - **As decoration.** No gradient, no wash, no tinted card background, no accent border.
 - **Anywhere it could be read as a verdict.**
 
@@ -329,11 +277,14 @@ same names in the same order* is a one-line assertion and **added to light, forg
 impossible to commit. The cost is that `--shadow-float` and `--shadow-drop` sit under §5 here and in
 the themed half there; that mismatch is exactly why the file is not organised by §.
 
-**The derived five** are `--state-up`, `--state-down`, `--chart-grid`, `--mark-3-hatch` and
-`--focus`. A literal for any of them inside a dark block would pin the value to one palette **while
-reading as perfectly correct CSS** — the same failure mode as a component reading a primitive.
-`--mark-3-hatch` is the clearest case: it re-reads `--mark-3` and `--surface` at use time, so the
-stripes and the ground between them invert together.
+**The derived three** are `--state-up`, `--state-down` and `--focus`. A literal for any of them
+inside a dark block would pin the value to one palette **while reading as perfectly correct CSS** —
+the same failure mode as a component reading a primitive. `--focus` is the clearest case: it
+re-reads `--accent` at use time, so choosing the green once gives the focus ring both its values.
+
+*This read `the derived five` and named two tokens the file had already deleted. It is the same
+drift §10.1 describes, in the prose rather than the table, which is why the gate added there counts
+the tiers rather than trusting either.*
 
 **The component-scoped five** are `--dmx-cycle`, `--dmx-opacity-base`, `--dmx-opacity-mid`,
 `--dmx-opacity-peak` and `--stage-delay`. They are declared on the component's own class because
@@ -410,7 +361,7 @@ off-scale.
 is what makes this cheap to get right: **there is no 28**, so one step up from 24 is 32, and the
 temptation to split the difference is the temptation to add a step.
 
-**Radius** — `4` chip · `6` segmented pill · `8` control · `12` card inner · `16` widget · `20` shell
+**Radius** — `4` chip · `6` segmented pill · `8` control · `12` card inner · `16` card · `20` shell
 · `999` pill.
 
 `6` exists only for the active pill inside a segmented control: an 8-radius pill in an 8-radius track
@@ -429,7 +380,7 @@ inner radius is the outer minus the inset.
 composer: `clip-path` eats a `box-shadow`, but a filter on the unclipped parent sees the clip.
 
 **The shadow belongs to anything that floats free of the page, over content it does not push aside** —
-menus, popovers, the record over the right pane. **A widget card that reaches for a shadow has not
+menus, popovers, the figure viewer's action bar. **A card that reaches for a shadow has not
 earned one**: it sits *in* the layout, and the ground↔surface step plus a hairline says so.
 
 **A shadow cannot separate two surfaces of the same colour.** `--shadow-float` is downward-biased
@@ -541,22 +492,23 @@ Fixing either alone leaves the other.
 
 ## 7 · Components
 
-The prototype is the component reference: every rule below is implemented there, with the reasoning in
-its own comments. This section carries what a reader cannot get from the CSS.
+`app/` is the component reference: every rule below is implemented in `app/styles/`, with the
+reasoning in its own comments. This section carries what a reader cannot get from the CSS.
 
 **The shell.** TIS submark at the leading edge of a **48px top masthead**, inlined with
 `fill="currentColor"` so it inverts for free. Content on `--ground`, cards on `--surface`, one working
 surface beneath the bar.
 
-**The working surface has a floor, and below it Terrain says so rather than reflowing.** The list
-column is a fixed 420px and the pane takes what is left, so the arithmetic decides this rather than a
-preference: at 840px the pane is narrower than the list, which puts the answer in less room than the
-evidence. **The supported floor is 1024px.** Below it the product states that it needs a wider window
-and stops, which is honest about a two-column analytical surface carrying a five-column matrix.
+**The results surface has a floor, and below it Terrain says so rather than reflowing.** The two
+columns split evenly, so the arithmetic decides this rather than a preference: the result list stops
+being readable under 340px, and the record's eleven-field list wraps its values onto second lines
+under about 600px — which is the tighter constraint and the one that sets the floor. **The supported
+floor is 1024px.** Below it the product states that it needs a wider window and stops.
 
-**The breakpoints above the floor adjust components, never the structure.** The card grid folds to one
-column, the record goes full-bleed over the pane, a label narrows. The two columns never stack — a
-list and the views built from it are read against each other, and stacking them ends that.
+**The breakpoints above the floor adjust components, never the structure.** A label narrows, the
+thumbnail strip fits fewer per row, the field tiles reflow. **The two columns never stack**, and the
+reason changed with the product rather than going away: a record and the drawing being read against
+it are one act, and stacking puts the drawing below the fold of the text that describes it.
 
 **The breakpoints are the viewport's, with one exception.** A settings card is handed whatever width
 its column has, which a viewport query cannot see, so `.pref-card` declares `container-type` and
@@ -575,23 +527,20 @@ follows from. It stays an `<a>`, keeps its styling and its cursor, and tells ass
 `aria-disabled` rather than by greying out. *A lockup that changes appearance by screen stops being a
 fixed point in the chrome, which is the whole of what makes it usable as home.*
 
-**Two things in the masthead are protected by name.** The appearance control stays on the bar at every
-width — burying it in a menu is the same loss as dropping it. And version history stays **nested under
-the open project**, indented on a left hairline: a version is *of* a project, and two flat lists say
-nothing about which belongs to which. A menu flattens by default, so the nesting is rebuilt inside it.
+**One thing in the masthead is protected by name.** The appearance control stays on the bar at every
+width — burying it in a menu is the same loss as dropping it.
 
 **One `<main>` per surface.** Collapsing surfaces is how a screen-reader user loses the landmark they
 meet before anything else.
 
-**The composer is one component at one size.** It is the whole column until there is a thread, then it
-pins to the bottom of it. It is inert until something is typed. **A support field may not wear it** —
-the composer's identity is *the thing you type your idea into*, and a second one would be a second
-conversational surface.
+**The composer is one component at one size**, and it appears twice: centred on the home surface, and
+above the columns on the results surface still holding what the founder typed. It is inert until
+something is typed. **A support field may not wear it** — the composer's identity is *the thing you
+type your idea into*, and a second one would claim the help form searches.
 
-**The confirm card is two turns**, the reading and the act, with the primary action **under the
-composer** rather than at the foot of the card. Approve and *say what is off* are one decision, so
-they are one zone. The action is full width: the send arrow already owns the bottom-right corner, and
-a right-aligned pill beneath it reads as a second send.
+**Its primary action sits under it, full width.** Search and *change what you typed* are one decision,
+so they are one zone. The send arrow already owns the bottom-right corner, and a right-aligned pill
+beneath it reads as a second send.
 
 **One primary action per surface.** A near-black fill (an accent fill, once §3.8 is applied) is what
 says *this is the way forward*. Two filled buttons on one screen make the smaller one look like the
@@ -600,14 +549,15 @@ irreversible, the safe path is the affirmed button and the act is the ghost one,
 carried by the sentence above them rather than by a hue.
 
 **A switch is a claim that the product does the thing when it is on.** Every other invented value in
-the prototype is a grey bar or a figure the reader is told is illustrative; a control carries no such
+`demo/` is a grey bar or a figure the reader is told is illustrative; a control carries no such
 marking, and nothing about a toggle says *this is a sketch*. Do not add one for a capability that does
 not exist.
 
-**Widget cards** carry a head (icon, title, optional control, one info affordance), a body, and a
-caption that states the finding. **The info popover carries explanation only** — the test is whether a
-screenshot with **no popover open** still says what the founder is looking at. A caption that needs a
-popover to make sense is a caption that is not doing its job.
+**There are no widget cards, and no captions.** A caption states a finding, a finding is a reading of
+the data, and `brief.md` §1 puts those outside the product. **The info popover survives and carries
+explanation only** — what a score is, what *deduplicated by family* means. The test is whether a
+screenshot with **no popover open** still says what the founder is looking at; an interface that needs
+a popover to be legible is not legible.
 
 **A narrow column has room for the list or for prose about the list.** Every sentence that is not the
 list lives behind one control.
@@ -643,8 +593,8 @@ hiding *why* it will not send. Here the why is the empty field directly above th
 **A failure is the same argument at the size of a region.** A view, a pane or a list that does not
 arrive takes an icon, a sentence that states the fix, and an action where there is one, on the
 `--surface-sunken` fill any box inside a card takes. No hue, for the reason above, and none of the
-three state colours is available anyway: red is *expired*, amber is *in progress*, green is *live*
-and now the accent.
+three state colours is available anyway: red is *expired*, amber is *pending*, green is *live* and
+now the accent.
 
 **It takes one hairline at full ink, not the field's doubled edge**, and the difference is scale
 rather than principle. A field doubles because it already has a resting border and may not change
@@ -653,10 +603,10 @@ out-shouts the primary action on the same screen. One `--text-1` hairline says t
 right volume: `--border` is 1.27:1 and reads as furniture, `--text-1` is 15.3:1 and reads as a
 statement.
 
-**A failed region silences its own caption.** A widget caption states the finding — *filings have gone
-from about 20 a year to about 45* — and that sentence is drawn from the data that did not arrive.
-Left standing it is the interface making a claim about numbers it does not have, directly above a
-block saying it does not have them.
+**A failed region silences every count it was about to state.** The list head reads *162 patents
+matched · 50 shown*, and both numbers come from the response that did not arrive. Left standing they
+are the interface making a claim about data it does not have, directly above a block saying it does
+not have it. The same holds for a grouping's branch counts and a record's figure count.
 
 **A region that fails keeps the height its wait reserved.** Dropping to the height of a short sentence
 moves everything below it a second time, and the second jump is the one that loses the reader's place.
@@ -686,14 +636,18 @@ confirmation invites a second send of the same message.
 
 ## 8 · The skeleton contract
 
-Terrain has no engine behind the prototype, so every preview shows a populated screen without live
-data.
+`demo/` stands in for an engine, so `app/` shows a populated screen without live data.
 
 **Chrome is real. Identities stay bars. Figures are illustrative.**
 
 | Real English | Grey bar | Illustrative |
 |---|---|---|
-| Titles, buttons, column headers, captions, legends, empty-state copy, menu rows, axis *titles* | Company names, other project names, the user's own name and address, plan tier, patent and application numbers, IPC symbols, inventors | Counts, cell values, jurisdiction splits, axis *values*, filing and publication years, version numbers |
+| Titles, buttons, column headers, empty-state copy, menu rows, field labels | Company names, other project names, the user's own name and address, plan tier, patent and application numbers, IPC symbols, inventors | Counts, relevance scores, filing and publication years |
+
+**`corpus/` is the deliberate exception and it is not in this table**, because it is not illustrative
+data — it is real patents, captured, and its whole job is to strain renderers written against
+well-behaved shapes. It prints real assignee names, it is excluded from git in its entirety, and it
+is reached by `?data=real`. `brief.md` §4 carries it.
 
 **No party is invented.** A named company is never invented, because an invented one reads as a live
 example — and transliterating a real one is fabrication. Both are worse than a bar.
@@ -714,18 +668,21 @@ the act that does — the same distinction the loader draws against the bar, one
 
 ### The exceptions, and what makes one admissible
 
-Each is the same exception: **where a widget's whole purpose is to express a *shape*, rendering it
-flat would show nothing**, so the shape is drawn and the values stay bars.
+Each is the same exception: **where withholding the value would leave a control with nothing to act
+on**, the value is shown and everything around it stays a bar.
 
-- **Matrix tone.** Cells carry the density ramp and the rising hatch. Cell *counts* are bars.
-- **The filings series.** The chart draws a curve so the three-layer grammar is visible at all. Both
-  axes are bars.
 - **The year on a list row.** A date sort over a column of grey bars is an order the founder cannot
   check. The control is the argument, not the row.
+- **The relevance score.** *Nearest first* over a column of bars is the same defect, and the score is
+  the engine's own number rather than one Terrain generated.
 - **The one demonstration record.** A record pane of nothing but bars cannot demonstrate a record
   pane. Exactly one is populated, and its field *names* were always real anyway.
 
-**None of them claims a fact.** A tone is not a count and an unlabelled curve is not a year.
+*Two others — matrix tone and the filings series — went with the analysis layer. This list has
+shrunk rather than grown, which is the only direction it is supposed to move.*
+
+**None of them claims a fact about a party.** A year is a date and a score is the engine's, and
+neither names a company.
 
 **The line, stated once:** an exception is admissible when the alternative shows *nothing*, not when
 it merely shows *less*. If a fifth is proposed, treat it as evidence the contract is being eroded
@@ -739,7 +696,13 @@ rather than extended.
 result. Mixing sets is immediately visible in the stroke weight and the corner radius, and it reads as
 an interface assembled from parts.
 
-1.5px stroke, round caps and joins, 16px in controls and 18px in card heads.
+**Three sizes and each has one home.** 1.5px stroke, round caps and joins throughout.
+
+| Size | Where |
+|---|---|
+| 16px | controls — buttons, menu rows, the masthead, the figure viewer's action bar |
+| 18px | the head of a destination page |
+| 24px | a technology-field tile on the home surface, where the glyph is the tile's subject rather than a marker on a control |
 
 **One glyph, one act.** Two controls in one region carrying the same mark for different acts is the
 assembled-from-parts failure arriving through repetition rather than through mixture — so *New search*
@@ -766,15 +729,24 @@ The list is **duplicated on purpose.** CSS cannot share a declaration block betw
 a third indirection layer of `--dark-*` primitives buys nothing and hides which value is live.
 Whatever writes one writes both.
 
-**31 semantic tokens**, and **this is the one place that count appears** — a number repeated in two
-files is a number that drifts in one of them, and this one did, twice. It read 42 while the file held
-29: eleven left with the analysis layer and nobody moved the number, which is exactly the failure the
-sentence you are reading was written to prevent. **Counting them is one command** —
-`grep -c '^\s*--' ` over the light block will not do it, because the comments are longer than the
-declarations; parse for `--name:` inside the block bounds. §3.9 carries the tier it belongs to:
-the primitives, the scale and the derived five are *not* in it, and a dark block that redefined one
-of them would be the bug rather than the contract. `tools/check-app.py` asserts that all three blocks
-carry the same names in the same order, so this number is checked rather than remembered.
+**31 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
+here, `CLAUDE.md`, and `app/README.md`'s tier table — and **a gate keeps them equal to the file**
+rather than a sentence asking everyone to keep them equal to each other.
+
+*That gate is the successor to a rule that did not work.* This paragraph used to claim it was the one
+place the number appeared, which was false when it was written: the number lived in three files, and
+it drifted in all of them. It read 42 while `tokens.css` held 29. **A rule that can only be obeyed by
+remembering is not a rule**, so `tools/check-app.py` now parses the semantic block, counts it, and
+refuses any printed copy that disagrees — and `tools/test-gates.sh` plants a wrong number and watches
+it refuse.
+
+**Counting them by hand is not one command.** `grep -c '^\s*--'` over the light block will not do it,
+because the comments are longer than the declarations; the gate parses for `--name:` inside the block
+bounds, which is why it is a gate rather than a shell one-liner in a comment.
+
+§3.9 carries the tier it belongs to: the primitives, the scale and the derived three are *not* in it,
+and a dark block that redefined one of them would be the bug rather than the contract.
+`check-app.py` also asserts that all three blocks carry the same names in the same order.
 
 `html` also moves from `color-scheme:light` to `color-scheme:light dark`, with each `[data-theme]`
 pinning its own — that is what makes scrollbars, form controls and the canvas behind the page follow
@@ -829,28 +801,27 @@ this section.
 | `--state-expired` | `#D98B80` | `#2A1A17` | 6.59 | 6.32 |
 | `--state-pending` | `#C9A45C` | `#251E10` | 7.42 | 7.04 |
 
-**Density.** The ramp runs the other way and keeps the light ramp's *shape*.
-
-| Token | Hex | Text on it | Contrast | L* |
-| --- | --- | --- | --- | --- |
-| `--density-0` | `#141414` | `--text-1` | 16.17 | 6.3 |
-| `--density-1` | `#2A2A2A` | `--text-1` | 12.60 | 17.1 |
-| `--density-2` | `#454545` | `--text-1` | 8.41 | 29.3 |
-| `--density-3` | `#6A6A6A` | `--text-1` | 4.75 | 44.8 |
-| `--density-4` | `#9E9E9E` | `--text-inverse` | 6.88 | 65.1 |
-
-**Chart, marks and skeleton.**
+**Chart and skeleton.**
 
 | Token | Hex | Note |
 | --- | --- | --- |
 | `--chart-series` | `#A8A8A8` | 7.32 on surface |
-| `--chart-trend` | `#F0F0F0` | 15.27 — still the strongest layer |
-| `--chart-unknown` | `#242424` | the unpublished window, 1.12 |
-| `--mark-1` | `#F5F5F5` | 15.96 |
-| `--mark-2` | `#8A8A8A` | 5.04 |
 | `--skeleton` | `#2A2A2A` | |
 | `--skeleton-shimmer` | `#343434` | |
 | `--skeleton-strong` | `#424242` | |
+
+**The drawings.** Two tokens that behave unlike everything above them.
+
+| Token | Value | Note |
+| --- | --- | --- |
+| `--veil` | `rgba(26,26,26,.82)` | the ground under the figure viewer's action bar |
+| `--figure-ground` | `#FFFFFF` | **does not swap** — see §3.2 |
+
+**`--figure-ground` is the one semantic token identical in both palettes**, and that is a fact about
+the content rather than an exemption. A patent drawing is black line-work on a transparent
+background; composited onto `#1A1A1A` it is a blank rectangle. Every other semantic token means *the
+surface under our own chrome*; this one means *the paper this was published on*, which has no dark
+value.
 
 **`--accent` and `--accent-ink` gain rows here when the specific green is chosen.** A hue measured
 only against white is a hue that has not been measured.
@@ -872,5 +843,9 @@ that — an external favicon cannot inherit `currentColor` the way the inlined s
 
 - **The specific green**, its `--accent-ink`, and both dark values. §3.8 is the rule; the hue is not
   chosen.
-- **The map has a cell click; the filings chart and Lineage have none.** Two widgets that look
-  interactive and are not.
+- **The results surface has two columns and three things to put in them.** The list, the record and
+  the grouping panel share the left and right by state, which works at 1440px and has not been tested
+  against a founder who wants the list and a drawing at once.
+- **The figure viewer has no measured floor.** A drawing is legible at whatever size the right column
+  gives it, and nothing states the width below which a patent figure stops being readable. Every
+  other dimension in this file is measured; this one is not.
