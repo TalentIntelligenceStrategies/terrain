@@ -271,17 +271,25 @@ export const FIELDS = [
   { id: 'medical', label: 'Medical diagnostics',       icon: 'stetho',   ready: false },
 ];
 
+/* THE SENTENCE AND THE TABLE MUST AGREE, and on their surface they do not:
+   the prose names four jurisdictions and the table lists six. Whichever is
+   right, an interface that says both is telling the founder its own coverage
+   is not known. Ours names what the table carries. */
 export const COVERAGE_SCOPE =
-  'Right now Terrain covers semiconductor devices, filed in the United States, '
-  + 'China, Taiwan and Europe.';
+  'Terrain currently covers semiconductor devices filed in the United States, '
+  + 'China, Taiwan, Europe, Korea and Japan.';
 
 export const COVERAGE = [
-  { source: 'United States · granted',     updated: '2026-09-17' },
+  { source: 'United States · granted',      updated: '2026-09-17' },
   { source: 'United States · applications', updated: '2026-09-17' },
-  { source: 'China · granted',             updated: '2026-09-15' },
-  { source: 'China · applications',        updated: '2026-09-15' },
-  { source: 'Taiwan · granted',            updated: '2026-09-16' },
-  { source: 'Taiwan · applications',       updated: '2026-09-16' },
-  { source: 'Europe · granted',            updated: '2026-09-11' },
-  { source: 'Europe · applications',       updated: '2026-09-11' },
+  { source: 'China · granted',              updated: '2026-09-15' },
+  { source: 'China · applications',         updated: '2026-09-15' },
+  { source: 'Taiwan · granted',             updated: '2026-09-16' },
+  { source: 'Taiwan · applications',        updated: '2026-09-16' },
+  { source: 'Europe · granted',             updated: '2026-09-11' },
+  { source: 'Europe · applications',        updated: '2026-09-11' },
+  { source: 'Korea · granted',              updated: '2026-09-09' },
+  { source: 'Korea · applications',         updated: '2026-09-09' },
+  { source: 'Japan · granted',              updated: '2026-09-18' },
+  { source: 'Japan · applications',         updated: '2026-09-18' },
 ];

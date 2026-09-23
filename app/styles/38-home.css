@@ -32,8 +32,14 @@
 .fields{display:grid;gap:var(--s-10);
         grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
 
-.field{display:flex;flex-direction:column;align-items:center;gap:var(--s-8);
-       padding:var(--s-20) var(--s-12);text-align:center;
+/* THE TILE IS THE ONE PLACE A GLYPH IS NOT 16 OR 18px. §9 sizes icons for
+   controls in a row and card heads; a 150px selection tile is neither, and a
+   16px mark inside one reads as a mistake. 24px, same Lucide set, same 1.5
+   stroke. It is an extension to §9 rather than an exception to it, and it
+   belongs in design-language.md. */
+.field{display:flex;flex-direction:column;align-items:center;
+       justify-content:center;gap:var(--s-10);min-height:132px;
+       padding:var(--s-20) var(--s-14);text-align:center;
        background:var(--surface);border:1px solid var(--border);
        border-radius:var(--r-widget);cursor:pointer;color:var(--text-2);
        font:inherit;font-size:13.5px;line-height:1.4;

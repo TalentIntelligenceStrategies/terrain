@@ -45,7 +45,7 @@ function fieldHTML(f) {
   const ready = f.ready === true;
   return '<button class="field" type="button" data-field="' + esc(f.id) + '"'
     + (ready ? ' aria-pressed="false"' : ' aria-disabled="true"') + '>'
-    + '<span class="field-icon">' + svg(ICON[f.icon] || ICON.cpu, 20) + '</span>'
+    + '<span class="field-icon">' + svg(ICON[f.icon] || ICON.cpu, 24) + '</span>'
     + '<span class="field-name">' + (f.label == null ? bar('w-md', 'body') : esc(f.label)) + '</span>'
     + (ready ? '' : '<span class="field-soon">' + svg(ZAP, 11) + 'Coming soon</span>')
     + '</button>';
