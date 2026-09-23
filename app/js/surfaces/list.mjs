@@ -23,6 +23,8 @@ import { onActivate } from '../core/delegate.mjs';
 import { wait as pause } from '../core/timers.mjs';
 import { bar, statusHTML } from '../core/primitives.mjs';
 import { bump, stale } from '../core/generation.mjs';
+import { push, drop } from '../core/esc-stack.mjs';
+import { focusQuietly } from '../core/focus.mjs';
 
 let ENGINE = null;
 let MATCHED = 0;
@@ -106,6 +108,54 @@ async function request(port, arg, sayWhat) {
   return null;
 }
 
+/* ── the two bar menus ────────────────────────────────────────────────────
+   NOT THE MASTHEAD'S menu() HELPER, and the difference is the mechanism rather
+   than a preference. That one toggles [hidden]; .lm-menu animates opacity and
+   transform under .lm.is-open, so hiding it outright would skip the transition
+   the stylesheet already specifies.
+
+   Escape closes the most recent, through the same stack — which is what makes
+   a second overlay safe. An outside click closes too, and the trigger toggles.
+   FOCUS MOVES INTO THE MENU on open, because a menu a keyboard cannot reach is
+   a menu that is not there. */
+function lmMenu(wrapId, btnId, panelId) {
+  const wrap = $('#' + wrapId), btn = $('#' + btnId), panel = $('#' + panelId);
+  if (!wrap || !btn || !panel) return;
+
+  const close = () => {
+    if (!wrap.classList.contains('is-open')) return;
+    wrap.classList.remove('is-open');
+    btn.setAttribute('aria-expanded', 'false');
+    drop(panelId);
+  };
+  const open = () => {
+    wrap.classList.add('is-open');
+    btn.setAttribute('aria-expanded', 'true');
+    push(panelId, close);
+    const first = panel.querySelector('[role="menuitemradio"]');
+    if (first) focusQuietly(first);
+  };
+
+  btn.setAttribute('aria-expanded', 'false');
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    wrap.classList.contains('is-open') ? close() : open();
+  });
+  document.addEventListener('click', e => {
+    if (!wrap.classList.contains('is-open')) return;
+    if (!panel.contains(e.target) && !btn.contains(e.target)) close();
+  });
+  /* a chosen option closes the menu it was chosen from */
+  panel.addEventListener('click', () => close());
+  return close;
+}
+
+/* one checked item per group, and the tick is the only thing that moves */
+function check(panel, el) {
+  panel.querySelectorAll('[role="menuitemradio"]').forEach(b =>
+    b.setAttribute('aria-checked', String(b === el)));
+}
+
 export function init(ctx) {
   ENGINE = ctx.engine;
 
@@ -118,13 +168,31 @@ export function init(ctx) {
   onActivate(document, '#setMore', () =>
     request('patentsPage', undefined, 'The next page did not load.'));
 
-  onActivate(document, '#sortMenu [data-sort]', el =>
-    request('sort', { sort: el.getAttribute('data-sort') },
-      'The list could not be re-sorted. It is unchanged.'));
+  lmMenu('sortWrap', 'sortBtn', 'sortMenu');
+  lmMenu('filtWrap', 'filtBtn', 'filtMenu');
 
-  onActivate(document, '#filtMenu [data-facet]', el =>
-    request('facets', { facets: { [el.getAttribute('data-facet')]: el.getAttribute('data-val') } },
-      'The list could not be filtered. It is unchanged.'));
+  /* THE TRIGGER CARRIES THE CURRENT SORT, so the bar states the order without
+     the menu being open. A control that says only "Sort" makes the founder
+     open it to find out what they are looking at. */
+  onActivate(document, '#sortMenu [data-sort]', el => {
+    const val = el.getAttribute('data-sort');
+    check($('#sortMenu'), el);
+    const label = $('#sortLabel');
+    if (label) label.textContent = el.querySelector('span:last-child').textContent;
+    request('sort', { sort: val }, 'The list could not be re-sorted. It is unchanged.');
+  });
+
+  /* `all` CLEARS THE FACET rather than sending one. A filter whose only way off
+     is reloading the page is a trap, and the count badge is what says one is on
+     — hidden at zero, because a badge reading 0 is a filter that looks applied. */
+  onActivate(document, '#filtMenu [data-facet]', el => {
+    const val = el.getAttribute('data-facet');
+    check($('#filtMenu'), el);
+    const count = $('#filtCount');
+    if (count) { count.hidden = val === 'all'; count.textContent = '1'; }
+    request('facets', { facets: val === 'all' ? {} : { status: val } },
+      'The list could not be filtered. It is unchanged.');
+  });
 }
 
 export const matched = () => MATCHED;

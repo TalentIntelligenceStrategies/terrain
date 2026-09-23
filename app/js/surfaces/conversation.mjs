@@ -103,6 +103,21 @@ function armSearch() {
   const sync = () => { btn.disabled = !field.value.trim(); };
   field.addEventListener('input', sync);
   sync();
+
+  /* ENTER RUNS THE SEARCH; SHIFT+ENTER BREAKS THE LINE. The field is a
+     multi-line textarea because a description can be a paragraph, and a
+     textarea's own Enter is a newline — so a founder who types a sentence and
+     presses Enter gets a blank second line and no search, which reads as the
+     product ignoring them.
+
+     NOT DURING COMPOSITION. An IME uses Enter to accept a candidate, and
+     submitting there would swallow the keystroke that was choosing a word.
+     isComposing is the flag for exactly this. */
+  field.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' || e.shiftKey || e.isComposing) return;
+    e.preventDefault();
+    if (!btn.disabled) btn.click();
+  });
 }
 
 export function init(ctx) {

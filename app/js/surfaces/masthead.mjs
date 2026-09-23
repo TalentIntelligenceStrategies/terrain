@@ -14,31 +14,52 @@ import { focusQuietly } from '../core/focus.mjs';
 let ENGINE = null;
 
 /* ── a menu that closes on Escape, on outside click, and on a second press ──
-   The stack is what makes a second overlay safe: Escape closes the MOST RECENT
-   one, not whichever remembered to bind a handler. */
+   IT TOGGLES A CLASS ON #app, NOT [hidden] ON THE PANEL, and that was a real
+   defect rather than a style choice. .mast-menu ships opacity:0 and
+   visibility:hidden, and 14-menu.css reveals it through `.proj-open #projMenu`
+   and `.menu-open #acctMenu` — an ancestor class. Clearing [hidden] removes
+   display:none and leaves both dropdowns invisible, which is exactly what they
+   were. The prototype always did it this way; the extraction did not.
+
+   ONLY ONE MAY BE OPEN. 14-menu.css says so and the project switcher nests a
+   version block, so two open menus would overlap. Opening one closes the other.
+
+   The stack is what makes that safe: Escape closes the MOST RECENT, not
+   whichever remembered to bind a handler. */
+const MENU_CLASS = { projMenu: 'proj-open', acctMenu: 'menu-open' };
+
 function menu(btn, panel, key) {
   if (!btn || !panel) return;
+  const app = document.getElementById('app') || document.body;
+  const cls = MENU_CLASS[key];
+
   const close = () => {
-    panel.hidden = true;
+    if (!app.classList.contains(cls)) return;
+    app.classList.remove(cls);
     btn.setAttribute('aria-expanded', 'false');
     drop(key);
   };
   const open = () => {
-    panel.hidden = false;
+    /* close the sibling first — one open menu, and its own stack entry goes */
+    Object.entries(MENU_CLASS).forEach(([k, c]) => {
+      if (k !== key && app.classList.contains(c)) { app.classList.remove(c); drop(k); }
+    });
+    app.classList.add(cls);
     btn.setAttribute('aria-expanded', 'true');
     push(key, close);
     const first = panel.querySelector('[role="menuitem"], button, a');
     if (first) focusQuietly(first);
   };
+
   btn.setAttribute('aria-expanded', 'false');
-  panel.hidden = true;
+  panel.hidden = false;                 /* visibility is the class's job now */
   btn.addEventListener('click', e => {
     e.stopPropagation();
-    panel.hidden ? open() : close();
+    app.classList.contains(cls) ? close() : open();
   });
   document.addEventListener('click', e => {
-    if (panel.hidden) return;
-    if (!panel.contains(e.target) && e.target !== btn) close();
+    if (!app.classList.contains(cls)) return;
+    if (!panel.contains(e.target) && !btn.contains(e.target)) close();
   });
   return { open, close };
 }

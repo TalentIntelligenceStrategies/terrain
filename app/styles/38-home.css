@@ -32,6 +32,21 @@
 .fields{display:grid;gap:var(--s-10);
         grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
 
+/* width:100% IS WHAT MAKES THE TILES THE SAME WIDTH, and the grid was never
+   the problem. The columns computed as 180px 180px 180px 180px 180px and the
+   tiles inside them measured 170/163/141/140/148 — because a <button> is a
+   form control, and a form control is not stretched to fill its grid track the
+   way a <div> is. It sizes to its own content and sits in the middle.
+
+   So the ruler disagreed with every rule in this file, and the rules were all
+   correct. Any grid or flex cell that IS a button needs this line.
+
+   min-width:0 stays because the other trap is real too: `1fr` is
+   minmax(auto,1fr), whose auto floor is min-content, so a long word can push a
+   column wider. It is not what happened here. */
+.field{width:100%;min-width:0}
+.field-name{overflow-wrap:break-word}
+
 /* THE TILE IS THE ONE PLACE A GLYPH IS NOT 16 OR 18px. §9 sizes icons for
    controls in a row and card heads; a 150px selection tile is neither, and a
    16px mark inside one reads as a mistake. 24px, same Lucide set, same 1.5
