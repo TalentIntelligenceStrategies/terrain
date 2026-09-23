@@ -390,6 +390,18 @@ export function init(ctx) {
     request('patents', undefined, 'The list did not load.');
   });
 
+  /* THE GROUPING HANDS BACK A SET, NOT A DOM INSTRUCTION. fishbone.mjs asked
+     `facets` for the branches the founder picked and this is the answer; the
+     list renders it exactly as it renders a sort or a status facet, because it
+     IS one. The panel never touches these rows.
+
+     The ordering stands down for the same reason a new search stands it down:
+     `Find similar` ordered a set this is no longer. */
+  window.addEventListener('terrain:refiltered', e => {
+    settled(false, 0);
+    render(e.detail);
+  });
+
   onActivate(document, '.set-star', el =>
     toggleStar(el.getAttribute('data-star'), el));
 

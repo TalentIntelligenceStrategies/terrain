@@ -168,6 +168,14 @@
    nothing is coming until the founder picks a row. §8. */
 .pane-idle{flex:1;display:flex;align-items:center;justify-content:center;
            padding:var(--s-40) var(--s-24);text-align:center}
+/* AND IT HAS TO BEAT ITS OWN display:flex. `[hidden]` is a UA rule at the same
+   specificity as this class, so an author `display:flex` wins and the element
+   stays on screen while its `hidden` property reads true. work.mjs has set
+   that property since the grouping toggle was written and it did nothing —
+   the idle sentence sat over the panel. Every element in this product that
+   both declares a display and is hidden by property needs this line; the
+   record has one, and this is the other. */
+.pane-idle[hidden]{display:none}
 .pane-idle p{margin:0;color:var(--text-3);max-width:34ch}
 .panecol .foot{flex:0 0 auto;padding:var(--s-12) var(--s-16) var(--s-16)}
 

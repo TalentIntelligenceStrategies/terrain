@@ -143,6 +143,14 @@ export const CODE = {
  *  rather than derived from position for exactly that reason. */
 /** @typedef {{n:number, src:string|null, alt:string|null}} Figure */
 
+/** The grouping · TWO LEVELS AND NO MORE. A third is a taxonomy, which is the
+ *  authored artifact a founder cannot produce and the thing this product
+ *  refuses to require. `n` is the leaf's size over the WHOLE set, not over the
+ *  page the client is holding. */
+/** @typedef {{id:string, label:string, n:number}} Leaf */
+/** @typedef {{label:string, leaves:Leaf[]}} Spine */
+/** @typedef {{head:string, spines:Spine[]}} Cluster */
+
 /** @typedef {{title:string|null, number:string|null, appno:string|null, kind:string|null,
  *             ipcMain:string|null, ipc:string[]|null, holder:string|null,
  *             inventors:string[]|null, filed:string|null, published:string|null,
@@ -179,8 +187,24 @@ export const PORTS = [
   'patents',         // → PatentSet
   'patentsPage',     // Show more
   'sort',            // {sort:'relevance'|'newest'|'oldest'} → PatentSet
-  'facets',          // {facets:{status,kind}} → PatentSet
+  'facets',          // {facets:{status,kind}, groups:[leafId]} → PatentSet
   'rerank',          // {anchors:[id]} → {order:[id]} over the SAME set
+
+  /* THE GROUPING. It partitions the set the search returned; it does not
+     re-query, and it covers the WHOLE set rather than the page.
+
+     A LEAF CARRIES A COUNT, NOT A LIST OF IDS, and that follows from the line
+     above `patents`: the client holds twenty rows at a time and never the
+     whole set, so a leaf naming its patents would name ones the list does not
+     have. Selecting a branch is therefore a REQUEST, exactly as sort and
+     facets are — `facets({groups:[leafId]})` returns a fresh first page — and
+     `n` is what the badge prints. One number, from the engine, so the badge
+     and the filtered count cannot disagree.
+
+     TOO FEW TO GROUP IS A SUCCESSFUL RESPONSE, not a failure: `spines: []`
+     with `ok:true`. A set of three has no structure to show, and refusing
+     would make the panel offer a retry that cannot help. */
+  'cluster',         // → {head, spines:[{label, leaves:[{id,label,n}]}]}
 
   /* THE EXPORT PORT IS THE LEDGER, NOT THE FILE. Every field that goes into a
      CSV or a Markdown list is already in the client — core/starred.mjs holds

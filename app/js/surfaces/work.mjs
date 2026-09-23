@@ -41,6 +41,10 @@ function toggleFishbone(btn) {
   const wrap = $('#fishWrap'), idle = $('#paneIdle');
   if (wrap) wrap.hidden = !on;
   if (idle) idle.hidden = on;
+  /* THE PANEL ASKS FOR ITS OWN DATA THE FIRST TIME IT IS SHOWN, and this
+     event is how: a grouping nobody opened is an engine run nobody asked for,
+     and work.mjs has no business knowing what fishbone.mjs needs. */
+  if (on) window.dispatchEvent(new CustomEvent('terrain:grouping-shown'));
   say('work', on ? 'Grouping shown.' : 'Grouping hidden.');
 }
 

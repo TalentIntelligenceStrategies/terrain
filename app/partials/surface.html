@@ -129,17 +129,19 @@
                 <button class="info-btn" type="button" aria-expanded="false" aria-label="About this list">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
                 </button>
-                <span class="info-pop" role="note"><b>Every patent the search found feeds the
-                  views beside them.</b> Sorting and filtering change what you are looking at, not
-                  what they count. If one patent is especially close to your idea, star it —
-                  <b>Find similar</b> appears in the bar above, and re-orders the whole set by
-                  how near each patent is to the one you starred. No patent enters or leaves
-                  the set; what changes is which of them you are shown first, so patents
-                  further down surface to the top.<br><br><b>The figure on the right of each row is
-                  the engine's relevance score.</b> It is how close the search put that patent to
-                  what you described.<br><br><b>That ordering is a ranking, not a verdict.</b> A
-                  patent near the top is close to what you described. It does not mean it affects
-                  you, and it does not mean the ones below it do not.</span>
+                <span class="info-pop" role="note"><b>Sorting, filtering and grouping change
+                  what you are looking at, never what was searched.</b> The set is fixed by your
+                  sentence and your search settings; everything in the bar above rearranges it. To
+                  search for something else, edit the sentence at the top and search again.
+                  <br><br><b>Star a patent that is close to your idea.</b> Your starred patents
+                  stay with you while you search, and they are what you can take out of Terrain.
+                  Starring also makes <b>Find similar</b> available, which re-orders the set by how
+                  near each patent is to what you starred — no patent enters or leaves, only the
+                  order changes, and you can put it back.<br><br><b>The figure on the right of each
+                  row is the engine's relevance score.</b> It is how close the search put that
+                  patent to what you described.<br><br><b>That ordering is a ranking, not a
+                  verdict.</b> A patent near the top is close to what you described. It does not
+                  mean it affects you, and it does not mean the ones below it do not.</span>
               </span>
             </div>
             <!-- THE RANK CHIP, AND IT HAS NO WRAPPER ANY MORE. It shared a
@@ -241,6 +243,11 @@
             <p class="set-run-say" id="setRunSay" role="status" aria-live="polite"></p>
           </div></div></div>
           <div class="set-listcol">
+            <!-- THE GROUPING'S CHIPS LIVE HERE, not in the panel that made
+                 them. The panel can be hidden; the filter it applied cannot
+                 be, or the founder reads a shortened list with nothing on
+                 screen saying why it is short. -->
+            <div class="fb-chips" id="fbChips" hidden></div>
             <div class="set-list" id="setList" aria-busy="false"></div>
 
             <!-- THE LIST'S FOOT, and it is a foot rather than a call to

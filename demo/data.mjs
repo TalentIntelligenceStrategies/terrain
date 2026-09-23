@@ -166,6 +166,66 @@ export function patentRows(count = SET_CEILING) {
   return out;
 }
 
+/* ── the grouping · platform.md §4.4 ──────────────────────────────────────
+   TWO LEVELS, AND THE LEAVES PARTITION THE SET EXHAUSTIVELY. That is the
+   contract the panel is built on: selecting a leaf filters the list to
+   `ids`, so a patent in no leaf would be unreachable through the panel while
+   still sitting in the list, and a patent in two would be counted twice by
+   the chip above the results.
+
+   The vocabulary is drone airframe engineering, which is this demo's own
+   invented domain and nobody's client data. Real branches would come from the
+   engine over the real set; these are the SHAPE, illustrative like every other
+   figure here.
+
+   THE LEAF OWNS THE MEMBERSHIP AND EMITS ONLY A COUNT. The client holds one
+   page and never the whole set, so a leaf that listed its patents would list
+   ones the list does not have. `leafIds` below is what the engine filters
+   with; `n` is what the panel prints. */
+const SPINES = [
+  ['Airframe structure', [
+    'Folding arm and hinge', 'Monocoque and shell', 'Boom and truss', 'Landing gear']],
+  ['Propulsion and lift', [
+    'Rotor and propeller', 'Motor mounting', 'Ducted and shrouded', 'Tilt and transition']],
+  ['Power and thermal', [
+    'Battery housing', 'Thermal path', 'Power distribution']],
+  ['Control and sensing', [
+    'Flight control', 'Obstacle sensing', 'Payload gimbal']],
+];
+
+export function clusterFor(ids) {
+  /* Below a floor there is no structure to show, and the panel says so rather
+     than drawing two branches and implying one. Three patents in fourteen
+     leaves is noise wearing the shape of a taxonomy. */
+  if (ids.length < 12) return { tree: { head: DEMO_IDEA, spines: [] }, members: new Map() };
+
+  const leaves = [];
+  SPINES.forEach(([spine, names], si) =>
+    names.forEach((label, li) => leaves.push({ spine, si, label, id: 's' + si + 'l' + li, ids: [] })));
+
+  /* DEALT ROUND ROBIN OFF A STABLE HASH so the same patent lands in the same
+     leaf on every render, and every leaf that exists has at least one patent —
+     an empty branch is a claim that a category was considered and came back
+     with nothing, which is exactly the finding this panel does not state. */
+  ids.forEach((id, i) => {
+    const n = Number(String(id).replace(/\D/g, '')) || i;
+    leaves[(n * 7 + (n % 5)) % leaves.length].ids.push(id);
+  });
+
+  return {
+    tree: {
+      head: DEMO_IDEA,
+      spines: SPINES.map(([label], si) => ({
+        label,
+        leaves: leaves.filter(l => l.si === si && l.ids.length)
+                      .map(({ id, label, ids }) => ({ id, label, n: ids.length })),
+      })).filter(sp => sp.leaves.length),
+    },
+    /* the engine's own half: leaf id -> the patents in it */
+    members: new Map(leaves.map(l => [l.id, l.ids])),
+  };
+}
+
 export function recordFor(id) {
   const i = Number(String(id).replace(/^p/, '')) || 0;
   const s = seeded(i);

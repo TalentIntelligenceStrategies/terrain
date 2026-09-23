@@ -1,0 +1,80 @@
+/* ══ 41 · THE GROUPING PANEL ════════════════════════════════════════════════
+   platform.md §4.4. The right column while no record is open.
+
+   IT IS NAVIGATION AND IT LOOKS LIKE IT. No card, no chart, no caption — a
+   heading, a list of branches, and a count per branch. Every visual decision
+   below follows from that: this is a way of moving through results, so it is
+   built out of the same parts as a menu rather than out of the parts of a
+   widget, and design-language.md §7's "there are no widget cards" is why.
+
+   NO ACCENT ANYWHERE IN HERE. §3.8 gives the accent three sites — a primary
+   action, a focus ring, a selected control — and a selected BRANCH is closer
+   to a filter than to a control: fourteen of them can be lit at once, which is
+   the "eight simultaneously filled chips read as data" failure the settings
+   popover already refuses. Selection is weight and a hairline.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.fishwrap{flex:1;min-height:0;display:flex;flex-direction:column;
+          padding-bottom:var(--s-16)}
+.fishwrap[hidden]{display:none}
+
+.fb-head{color:var(--text-3);margin-bottom:var(--s-12)}
+
+/* TOO FEW TO GROUP IS A SENTENCE, not an empty list. An empty region reads as
+   one that failed to load — design-language.md §8 draws that line for lists
+   and it holds here for the same reason. */
+.fb-thin{margin:0;color:var(--text-3);max-width:44ch}
+
+.fb-spines{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;
+           gap:var(--s-20)}
+.fb-spine-h{color:var(--text-2);margin:0 0 var(--s-8)}
+
+.fb-leaves{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+
+/* THE COUNT LEADS, and it is the one place in this panel where alignment does
+   real work: a column of right-aligned tabular figures is scannable in a way
+   that "Rotor and propeller (9)" is not, and the founder is here to find the
+   big branches. --s-32 is one step on the scale and fits three digits. */
+.fb-leaf{display:flex;align-items:baseline;gap:var(--s-10);width:100%;
+         padding:var(--s-6) var(--s-8);border:0;background:none;cursor:pointer;
+         border-radius:var(--r-control);text-align:start;
+         color:var(--text-2);
+         transition:color var(--dur-1) var(--ease),
+                    background-color var(--dur-1) var(--ease)}
+.fb-leaf-n{flex:0 0 var(--s-32);text-align:end;color:var(--text-3);
+           font-variant-numeric:tabular-nums;
+           transition:color var(--dur-1) var(--ease)}
+.fb-leaf-l{min-width:0}
+
+@media (hover:hover) and (pointer:fine){
+  .fb-leaf:hover{background:var(--surface-sunken);color:var(--text-1)}
+  .fb-leaf:hover .fb-leaf-n{color:var(--text-2)}
+}
+
+/* SELECTED IS INK AND WEIGHT, plus a hairline on the leading edge. No fill:
+   the fill is what hover uses, and a selected row that looked hovered would
+   make the founder unable to tell which state they were reading. */
+.fb-leaf[aria-checked="true"]{color:var(--text-1);font-weight:500;
+                              box-shadow:inset 2px 0 0 var(--text-1)}
+.fb-leaf[aria-checked="true"] .fb-leaf-n{color:var(--text-1)}
+
+/* ── the chips above the list ────────────────────────────────────────────── */
+
+/* THEY LIVE WITH THE RESULTS, NOT WITH THE PANEL. The panel can be hidden and
+   the filter it applied cannot be, or the founder reads a shortened list with
+   nothing on screen saying why it is short. */
+.fb-chips{display:flex;flex-wrap:wrap;gap:var(--s-6);margin-bottom:var(--s-12)}
+.fb-chips[hidden]{display:none}
+
+.fb-chip{display:inline-flex;align-items:center;gap:var(--s-6);
+         padding:var(--s-4) var(--s-8);
+         border:1px solid var(--border-strong);border-radius:var(--r-chip);
+         background:var(--surface);color:var(--text-1);
+         font-size:12px;line-height:1.3;cursor:pointer;
+         transition:border-color var(--dur-1) var(--ease)}
+.fb-chip svg{flex:0 0 12px;color:var(--text-3)}
+
+@media (hover:hover) and (pointer:fine){
+  .fb-chip:hover{border-color:var(--text-1)}
+  .fb-chip:hover svg{color:var(--text-1)}
+}

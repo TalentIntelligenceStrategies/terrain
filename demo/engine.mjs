@@ -51,7 +51,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms * SLOW));
 const DELAY = {
   fields: 180, coverage: 340, search: 900,
   read: 900, narrow: 650, approve: 500,
-  patents: 700, patentsPage: 520, sort: 420, facets: 420, rerank: 1100,
+  patents: 700, patentsPage: 520, sort: 420, facets: 420, rerank: 1100, cluster: 1400,
   export: 500,
   record: 600,
   projects: 240,
@@ -86,6 +86,9 @@ function page(order, n) {
 }
 
 let shown = PAGE;
+/* leaf id -> patent ids, held by the ENGINE because the client never has the
+   whole set. Null until the grouping has been asked for. */
+let GROUPS = null;
 
 /* WHAT THE FOUNDER ASKED FOR, held across the reload. `patents` re-runs right
    after a search — the list reloads itself on terrain:searched — so a limit
@@ -152,13 +155,22 @@ export const DemoEngine = {
     return respond('sort', page(ORDER, shown));
   },
 
-  facets: async ({ facets = {} } = {}) => {
+  facets: async ({ facets = {}, groups = [] } = {}) => {
     /* THE FACETS ARE REAL VALUES ONLY. status and kind are English words
        already printed on the row; jurisdiction was considered and refused,
        because §8 keeps it a bar and filtering on it would mean inventing a
        facet the founder cannot check against what they can see. */
     let ids = ALL.filter(r => !facets.status || r.status === facets.status)
                  .map(r => r.id);
+    /* A BRANCH SELECTION IS A FACET, and it lands here rather than in a port
+       of its own because it does the same thing: it changes which patents the
+       founder is looking at, over the set the search already returned.
+       Several branches union rather than intersect — picking two branches asks
+       for both, which is what the removable chips above the list read as. */
+    if (groups.length && GROUPS) {
+      const want = new Set(groups.flatMap(g => GROUPS.get(g) || []));
+      ids = ids.filter(id => want.has(id));
+    }
     ORDER = ids;
     shown = Math.min(PAGE, ids.length);
     const res = page(ORDER, shown);
@@ -178,6 +190,18 @@ export const DemoEngine = {
     });
     ORDER = order;
     return respond('rerank', { order });
+  },
+
+  /* THE GROUPING PARTITIONS THE SET IT WAS GIVEN, so it is built from ORDER
+     and not from the whole corpus: a facet that removed half the results must
+     remove them from the branches too, or the counts contradict the list
+     directly above them. And it covers the whole ORDER rather than the loaded
+     page — a branch count that grew as the founder pressed Show more would be
+     reporting our paging rather than their results. */
+  cluster: async () => {
+    const { tree, members } = D.clusterFor(ORDER);
+    GROUPS = members;
+    return respond('cluster', tree);
   },
 
   record: async ({ id } = {}) => respond('record', D.recordFor(id)),

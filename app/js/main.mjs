@@ -72,6 +72,11 @@ const SURFACES = [
   ['conversation', () => import('./surfaces/conversation.mjs')],
   ['work',         () => import('./surfaces/work.mjs')],
   ['list',         () => import('./surfaces/list.mjs')],
+  /* FISHBONE AFTER LIST, so the list's `terrain:refiltered` listener is bound
+     before the panel can dispatch one. Both are idempotent, but an init order
+     that only works because the first request takes a network round trip is an
+     order that breaks the day the engine gets fast. */
+  ['fishbone',     () => import('./surfaces/fishbone.mjs')],
   ['record',       () => import('./surfaces/record.mjs')],
   ['starred',      () => import('./surfaces/starred.mjs')],
   ['destinations', () => import('./surfaces/destinations.mjs')],
