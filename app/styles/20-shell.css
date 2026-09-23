@@ -140,7 +140,7 @@
 .menu-sep{height:1px;background:var(--border);margin:var(--s-6) var(--s-8)}
 
 /* ── main ───────────────────────────────────────────────── */
-.view-map{overflow:hidden}
+.view-page{overflow:hidden}
 .main{position:absolute;inset:0;display:flex;flex-direction:column;min-width:0;overflow-y:auto}
 .page-head{display:flex;align-items:flex-end;gap:var(--s-16);
            padding:var(--s-24) var(--s-32) var(--s-16);flex-wrap:wrap}

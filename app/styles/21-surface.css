@@ -35,7 +35,16 @@
 .work-head-lines{display:flex;flex-direction:column;gap:var(--s-8)}
 .work-split{display:flex;flex:1;min-height:0}
 
-.listcol{position:relative;flex:0 0 420px;width:420px;min-width:0;
+/* THE RESULTS ARE THE PRIMARY CONTENT AND WERE GETTING 29% OF THE WIDTH.
+   420px fixed against a flex:1 pane measured 420/1020 at 1440 — and the pane
+   is empty until a patent is picked, so two thirds of the screen showed
+   nothing while the list it serves wrapped every title to three lines.
+
+   That split was right when the pane held twelve widget cards. It holds one
+   record now. Both columns flex from the same basis so the list keeps the
+   larger share of any extra width, and it still collapses at the 1024 floor
+   the shell already defines. */
+.listcol{position:relative;flex:1 1 560px;min-width:0;max-width:760px;
          border-right:1px solid var(--border);background:var(--surface);
          display:flex;flex-direction:column;overflow:hidden}
 

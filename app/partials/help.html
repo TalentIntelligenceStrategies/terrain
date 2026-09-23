@@ -1,7 +1,7 @@
 <!-- EXTRACTED from design/previews/terrain-prototype.html lines 5106-5275.
      The prototype is the reference; where this and it disagree, it is
      right and this is stale. platform.md 8.4. -->
-  <section class="view view-map view-acct" data-view="help" aria-label="Help">
+  <section class="view view-page view-acct" data-view="help" aria-label="Help">
     <main class="main">
       <header class="page-head">
         <div class="page-head-lines pg-head-lines">
@@ -34,7 +34,7 @@
               <div class="lm-menu" id="helpTopicMenu" role="menu" aria-label="What this is about"></div>
             </div>
             <label class="sr-only" for="helpMsg">Your message</label>
-            <textarea class="ta" id="helpMsg" placeholder="The map came back empty after my second search."></textarea>
+            <textarea class="ta" id="helpMsg" placeholder="My second search came back empty."></textarea>
             <div class="dc-act" style="margin-top:var(--s-16)">
               <button class="btn btn-primary" type="button" id="helpSend" disabled><span>Send message</span></button>
               <span class="t-body" style="color:var(--text-2)">We reply within one working day.</span>
@@ -99,31 +99,31 @@
           <div class="card-body">
 
             <div class="hlp-grp">
-              <h3 class="t-micro hlp-grp-h">Your search and your map</h3>
+              <h3 class="t-micro hlp-grp-h">Your search</h3>
               <dl class="hlp-qa">
                 <div>
-                  <dt>How long does a build take?</dt>
-                  <dd>A few minutes. You can close Terrain and come back — the map is waiting when you return, because a build belongs to the project rather than to the tab you started it in.</dd>
+                  <dt>How long does a search take?</dt>
+                  <dd>A few seconds. The bar at the top of your results says how long the last one took, and holds the words you searched with so you can change them and run it again.</dd>
                 </div>
                 <div>
                   <dt>Can Terrain tell me whether I am free to file?</dt>
                   <dd>No. Terrain shows you what has already been filed and which company holds it. Whether any of it stands in your way is a legal question, and that one is for a patent attorney.</dd>
                 </div>
                 <div>
-                  <dt>Why are the rows on the map companies?</dt>
-                  <dd>Because that is the question a founder can act on. Each row is a holder and each column an approach, so a row tells you what one company has built and a column tells you who is working the same way you are. An empty cell means that company has not filed there — it is a fact about them, not about the technology.</dd>
+                  <dt>What does starring a patent do?</dt>
+                  <dd>It marks one as close to what you meant. Re-rank then orders the rest by how near they are to it — no patent enters or leaves the set, only the order changes. Restore puts the original order back.</dd>
                 </div>
                 <div>
                   <dt>Where does the patent data come from?</dt>
                   <dd>The Innovue database — around 180 million records, covering the major offices. Terrain searches it and lays out what it returns; it does not hold a database of its own.</dd>
                 </div>
                 <div>
-                  <dt>Can I change what a map covers after it is built?</dt>
-                  <dd>Not from the map. You can go back to an earlier version of the project, or start a new search. Changing what gets searched costs a fresh run across the whole database, so it goes through the same approval step the first search did.</dd>
+                  <dt>Why does a search cover only some countries?</dt>
+                  <dd>Data coverage on the home screen lists every source and when each was last taken in. Search settings let you narrow to the ones you care about before a run.</dd>
                 </div>
                 <div>
-                  <dt>Does sorting or filtering the list change the map?</dt>
-                  <dd>No. Every patent the search returned feeds the views, and it keeps doing so. Sorting and filtering change what you are looking at, not what the views count.</dd>
+                  <dt>Does sorting or filtering run a new search?</dt>
+                  <dd>No, and neither spends a point. They change the order and what is shown of the set you already have. Pressing Search is what starts a new run.</dd>
                 </div>
               </dl>
             </div>
@@ -133,11 +133,11 @@
               <dl class="hlp-qa">
                 <div>
                   <dt>When do points come back?</dt>
-                  <dd>At the start of each quarter. Points you have not spent do not carry over, and a build is charged when you approve it rather than when the map finishes drawing.</dd>
+                  <dd>At the start of each quarter. Points you have not spent do not carry over, and a search is charged when you press Search rather than when the results finish arriving.</dd>
                 </div>
                 <div>
                   <dt>What spends points?</dt>
-                  <dd>Building a map. Reading it does not — opening a record, sorting the list, re-ranking it, switching views and reverting to an earlier version are all free, however many times you do them.</dd>
+                  <dd>Running a search. Working with what it returns does not — opening a record, sorting, filtering, starring and re-ranking are all free, however many times you do them.</dd>
                 </div>
                 <div>
                   <dt>What happens if I run out?</dt>
@@ -154,12 +154,12 @@
                   <dd>Only you. There are no shared workspaces and no seats in Terrain — an account is one person's.</dd>
                 </div>
                 <div>
-                  <dt>Can I send a map to someone else?</dt>
-                  <dd>Not from inside Terrain today. Nothing stops you showing it on your own screen, and telling us you need to send one is useful — it is what decides whether this gets built.</dd>
+                  <dt>Can I take my results out of Terrain?</dt>
+                  <dd>Export the patents you starred as a Markdown file, a spreadsheet, a PDF or a package with the drawings and the full documents in it. The point is that you can work on the data wherever you already work.</dd>
                 </div>
                 <div>
                   <dt>What happens to my projects if I close my account?</dt>
-                  <dd>They go, along with the searches and the maps built from them. Nothing is recoverable afterwards, so take what you need out first.</dd>
+                  <dd>They go, along with every search you have run and everything you starred. Nothing is recoverable afterwards, so export what you need first.</dd>
                 </div>
               </dl>
             </div>

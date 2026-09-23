@@ -65,6 +65,16 @@ function toggleStar(id, btn) {
   say('list', on ? 'Starred. Re-rank is available.' : 'Unstarred.');
 }
 
+/* the sentence a screen reader reads for one row */
+function rowName(rec, i) {
+  const bits = [rec.skim != null ? rec.skim : 'Patent ' + (i + 1)];
+  if (rec.holder != null) bits.push(rec.holder);
+  if (rec.year != null) bits.push(String(rec.year));
+  if (rec.status) bits.push(rec.status === 'live' ? 'Live' : 'Expired');
+  if (rec.score != null) bits.push('score ' + rec.score.toFixed(4));
+  return bits.join(', ') + '. Open the record.';
+}
+
 /* ── one row ──────────────────────────────────────────────────────────────
    `skim` and `holder` are `string|null`, and null means render the bar. No
    branch here asks whether the data is real — a real engine returning real
@@ -84,7 +94,15 @@ function rowHTML(rec, i) {
     + '<path d="M12 2.5l2.9 5.88 6.5.95-4.7 4.58 1.11 6.47L12 17.33l-5.81 3.05'
     + ' 1.11-6.47-4.7-4.58 6.5-.95z"/></svg></button>'
     + '<div class="drill-row">'
+    /* THE ROW'S OWN NAME, because the one it composed from its children was
+       "Score0.6620Live2020" — every span concatenated with no separators, and
+       nothing at all where the title is a bar. A screen-reader user picking a
+       row from a list heard a number run into a status run into a year.
+
+       aria-label wins over the contents, so the visible layout is free to stay
+       a grid of fragments while the name stays a sentence. */
     + '<button class="drill-toggle" type="button" data-pn="' + esc(rec.id) + '"'
+    + ' aria-label="' + esc(rowName(rec, i)) + '"'
     + ' aria-current="false">'
     + '<span class="drill-head">'
     + '<span class="drill-title">'
@@ -130,9 +148,18 @@ function render(data) {
 
   const title = $('#setTitle');
   /* `matched` and `patents.length` differ by what was binned, and printing the
-     wrong one beneath the standing chip is a recorded regression. */
-  if (title) title.textContent =
-    `${data.matched} patents matched, ${data.patents.length} shown`;
+     wrong one beneath the standing chip is a recorded regression.
+
+     ONE TEMPLATED STRING PER PLURAL FORM, not a sentence assembled around two
+     numbers. Word order moves between languages and "1 patents matched" is
+     what fragment concatenation ships. It is also shorter now, because the
+     old form wrapped to three lines in this column. */
+  if (title) {
+    const m = data.matched, n = data.patents.length;
+    title.textContent = m === 1
+      ? '1 patent matched'
+      : (m === n ? `${m} patents matched` : `${m} patents matched · ${n} shown`);
+  }
 }
 
 async function request(port, arg, sayWhat) {

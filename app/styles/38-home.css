@@ -144,3 +144,19 @@
            padding:var(--s-40) var(--s-24);text-align:center}
 .pane-idle p{margin:0;color:var(--text-3);max-width:34ch}
 .panecol .foot{flex:0 0 auto;padding:var(--s-12) var(--s-16) var(--s-16)}
+
+/* ── review fixes · 2026-09-23 ─────────────────────────────────────────────
+   THE TOOLBAR WAS CRAMPED AT 6px BETWEEN 28px TARGETS. better-layout starts
+   borderless icon controls at 24px apart; better-accessibility's AA baseline
+   is a 24x24 target, which 28 clears, but the two together were reading as one
+   undifferentiated strip. The gap does the work rather than a bigger button,
+   so the bar keeps its height. */
+.res-tools{gap:var(--s-8)}
+.res-tools .icon-btn{width:32px;height:32px}
+.res-tools-sep{margin-inline:var(--s-4)}
+
+/* a heading that names a count should not re-wrap every time the count
+   changes width. §4's tabular figures, and balance so two lines split evenly
+   rather than leaving one word alone. */
+#setTitle{text-wrap:balance;font-variant-numeric:tabular-nums}
+.field-name{text-wrap:balance}

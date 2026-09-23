@@ -14,7 +14,7 @@
 
    Both are --s-16 now, the step the right pane already uses, so the title and
    the cards share one edge and this page reads at the same rhythm as the
-   surface it is reached from. Scoped to .view-map rather than added to .grid,
+   surface it is reached from. Scoped to .view-page rather than added to .grid,
    because .grid inside .panescroll would then be padded twice.
 
    NOT CAPPED, and that was checked rather than assumed. A max-width would
@@ -26,8 +26,8 @@
    card that DOES look stretched is the balance hero, whose donut sits ~1300px
    from the figure it describes; that is a layout question inside one card and
    capping the page is the wrong instrument for it. */
-.view-map .page-head{padding:var(--s-16)}
-.view-map .grid{padding-inline:var(--s-16)}
+.view-page .page-head{padding:var(--s-16)}
+.view-page .grid{padding-inline:var(--s-16)}
 .page-head-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-8)}
 .head-meta{display:flex;align-items:center;gap:var(--s-8);flex-wrap:wrap}
 .chip-reopened,.chip-updated{display:none}
