@@ -34,8 +34,8 @@ against that approach* — a fact about a company, not about the technology.
 
 **A top masthead, not a sidebar.** Arithmetic, not taste: the map needs 944px and the result list
 stops being readable under 340px, which does not fit a 1440px laptop beside a 260px rail. Everything
-a rail would have carried is in the 48px bar — the project switcher, version history, the points
-balance, the appearance control, the account menu.
+a rail would have carried is in the 48px bar — the project switcher, the points balance, the
+appearance control, the account menu.
 
 ---
 
@@ -137,7 +137,7 @@ there is no axis veto to fall back on, so this step is load-bearing in a way not
 | --- | --- | --- |
 | Title | Here is how we read your idea | Review this change |
 | Lede | Correct anything that is wrong — say what is off and I will adjust it. | One change to your scope. Nothing is re-searched until you approve it. |
-| Gate | **Nothing is searched until you approve this.** Every result that follows is built from these criteria — if the reading is wrong, the results will be wrong in a way you cannot see. | **Approving re-searches only what changed.** Everything else stays exactly as it is, and this change is saved as a version you can revert to. |
+| Gate | **Nothing is searched until you approve this.** Every result that follows is built from these criteria — if the reading is wrong, the results will be wrong in a way you cannot see. | **Approving re-searches only what changed.** Everything else stays exactly as it is. |
 | Action | Approve and search | Approve and rebuild |
 | Reads back | the sentence, the answers, the exclusions | what was asked for |
 
@@ -187,7 +187,7 @@ Two shapes, sharing one component.
 | Lede | This runs once. Coming back to this project later opens it straight away — you will not watch this again. | Only what changed is being rebuilt. Everything you did not touch stays as it was. |
 | Stages | Reading your idea · Searching the patent database · Grouping what came back · Merging duplicate filings across countries · Drawing the map | Applying your change · Searching the patent database · Redrawing the map |
 | Action | Open your results | Back to your results |
-| Note | Saved to your projects. Changing the scope later rebuilds only what changed. | Saved as a new version. You can revert to the previous one from the version list beside your project. |
+| Note | Saved to your projects. Changing the scope later rebuilds only what changed. | Saved to your project. Only what changed was rebuilt. |
 
 **The bar advances on completed stages, never on elapsed time.** Search latency is an open question,
 so there is no duration to honestly fill against — and a bar that fills on a timer asserts something
@@ -209,23 +209,21 @@ One screen. Moments 3 through 6 all happen on it without it ever being left.
    by going grey: a lockup that changes appearance by screen stops being a fixed point in the chrome.
 2. **New search** — Lucide `zoom-in`, not `plus`. The plus said *new* and said nothing about what a
    new one is.
-3. **The project switcher** — the projects list in two recency groups, with **version history nested
-   under the open project**, indented on a left hairline. A version is *of* a project; two flat lists
-   say nothing about which belongs to which.
+3. **The project switcher** — the projects list, most recent first.
 4. **The points balance** — a button, and the link to the points page.
 5. **The appearance control** — three states: light, dark, system. **It may not be demoted into the
    account menu at any width.** A second control over the same value elsewhere is not a demotion; a
    move is.
 6. **The account menu** — Account settings, Plan & billing, Help, and Sign out.
 
-Two regions are protected by name: the appearance control and the nesting of version history.
+One region is protected by name: the appearance control.
 
 ### 6.2 · The head
 
 The surface's own `h1` — *Your search* — with the project name beside it as a bar. Then a row of
 chips, which are statements rather than controls:
 
-`Version …` · `Updated …` · `Deduplicated by family` · the scope note · and, on a return,
+`Updated …` · `Deduplicated by family` · the scope note · and, on a return,
 `Opened from your projects — nothing was rebuilt` or `Updated from your change — only what changed
 was rebuilt`.
 
@@ -251,8 +249,8 @@ for the list or for prose about the list; every sentence that is not the list li
 control.
 
 **Bar** — Sort (Relevance · Newest filed · Oldest filed), Filter (status and kind facets, with a
-count), **Re-rank** and **Restore the original order**. Re-rank is the only filled control on the
-surface and is hidden rather than disabled when there is nothing to rank.
+count), **Find similar** and **Restore the original order**. Find similar is the only filled control
+on the surface and is hidden rather than disabled when nothing is starred.
 
 **Rows** — each carries the patent's identity as bars, a status chip, and the engine's relevance score
 on the right. Twenty rows, then a foot that says how many are left and offers `Show more`.
@@ -266,9 +264,11 @@ fail, and §9.1 says what the founder sees when they do. Neither spends points �
 selection. Sorting and filtering change what the founder is *looking at*, not what the views count.
 The corpus is set by the gate and by the fifth narrowing question alone.
 
-**The star re-baselines the order.** Star a patent and *Re-rank* appears; it orders the rest by how
-close they are to the one starred. No patent enters or leaves; only the sequence changes. A chip
-announces the settled state and *Restore the original order* undoes it.
+**The star does two things and §7.1 is where they are settled.** It adds the patent to the founder's
+starred set, and it makes *Find similar* available — which orders the rest by how close they are to
+what was starred. No patent enters or leaves; only the sequence changes. A chip announces the settled
+state, a second chip counts the starred set and links to it, and *Restore the original order* undoes
+the ordering without unstarring anything.
 
 **The ordering is a ranking, not a verdict.** A patent near the top is close to what the founder
 described. It does not mean it affects them, and it does not mean the ones below it do not. No ranking
@@ -325,34 +325,65 @@ views are not.** Nothing is redrawn and nothing is re-run.
 
 ### 6.6 · The record
 
-A patent's record opens **over the right pane**, leaving a ~200px peek. It covers the thing that is
-not its subject — you read a record against the map you found it on. The left column is never covered.
+A patent's record **is the right column**, not a panel over it. The left list stays live throughout,
+so the founder picks the next patent without closing this one, and the record is left by a control
+rather than escaped from — it is one of two things a column shows, not a place you are inside.
 
-It renders **the record, not an opinion about the record**: eleven identifiers, the abstract, and the
-claim set as published. A five-field handoff row — number, holder, where, status, IPC — is a
-projection of the same fields, for the founder taking this to counsel.
+It renders **the record, not an opinion about the record**: eleven identifiers, the abstract, the
+claim set as published, and **the drawings**. A five-field handoff row — number, holder, where,
+status, IPC — is a projection of the same fields, for the founder taking this to counsel.
+
+**The drawings are the record too**, which is why they are the one visual thing here that is not a
+reading. They render as a strip of numbered thumbnails; one opens a viewer over the column that can
+zoom, rotate and fill the pane. **The viewer dims nothing** — §3.2 has no scrim, and a drawing on
+white does not need one. **Every figure keeps its published number**, because that number is what
+the claims refer to and a renumbered figure is a different document.
+
+**Two absences, and the interface must not confuse them.** A record with no drawings says so in a
+sentence. A record whose drawings Terrain declines to print renders numbered frames — §8's skeleton
+contract in the shape a figure has, exactly as a withheld holder name is a bar. An empty strip where
+drawings exist says a patent has none; a frame where none exist claims one is being withheld.
 
 **What stays out**: plain-English decode, match highlighting, an IPC gloss, unread markers. Each is a
-*reading* of the record rather than the record. Drawings are the odd one out — a figure *is* the
-record, so nothing forbids them and they are simply not built.
+*reading* of the record rather than the record.
 
 ---
 
-## 7 · Projects and versions
+## 7 · Projects and the starred set
 
-A project is the saved object: the sentence, the five answers, the approved criteria, and everything
-built from them. It takes its name from the founder's sentence plus the direction picked at beat one.
-
-**Versions are the founder's own scope changes**, nested under the open project in the switcher. A
-confirmed change through the gate saves a new version and rebuilds only what changed. Reverting is
-free and costs no points.
+A project is the saved object: the sentence, the approved criteria, and everything built from them.
+It takes its name from the founder's sentence.
 
 **Returning to a project opens it straight away.** No search step, no rebuild, no progress bar.
 
-**A founder who has never searched has no projects, and a project whose map has not been built yet has
-no versions.** Both say what fills them rather than rendering as a heading over nothing. An empty list
-that looks like a list which failed to load is the same defect as a bar standing in for a value nobody
-withheld.
+**A founder who has never searched has no projects.** The switcher says what fills it rather than
+rendering as a heading over nothing. An empty list that looks like a list which failed to load is the
+same defect as a bar standing in for a value nobody withheld.
+
+### 7.1 · Starring, and what it is for
+
+**A star means *this one is close to what I meant*.** It does two things and they are separate acts,
+which is why one of them is a button rather than a consequence:
+
+- **It collects.** The starred set is the founder's own shortlist and it is the only thing in the
+  product they curate by hand. It **survives a new search**, because the set is what they are taking
+  out and clearing it on the next query would delete their work to save them a click.
+- **It finds similar.** With at least one patent starred, *Find similar* re-orders the set by
+  nearness to what was starred. **No patent enters or leaves; only the sequence changes**, and
+  *Restore the original order* puts it back.
+
+**That ordering is a ranking, not a verdict.** A patent near the top is close to what the founder
+described. It does not mean it affects them, and the interface never says it does.
+
+### 7.2 · The starred set leaves as data
+
+The starred set has **its own surface**, reached from the count beside the results. It is where the
+shortlist is read as a whole rather than one row at a time, and it is where the set leaves.
+
+**It leaves as a CSV or a Markdown list, and as nothing else.** Both carry the fields already on
+screen — number, title, holder, where, status, date, score — and neither carries a cover page, a
+summary or a conclusion. `brief.md` §1 is the rule and the test is one question: **does the file
+state anything the interface did not?** If it does, Terrain has written a report.
 
 ---
 
@@ -372,15 +403,15 @@ type, share bars, a per-day column chart with day / week / month grain, and a li
 | Map build | 265 |
 | Rebuild | 51 |
 | Search | 2 |
-| Re-rank | 4 |
+| Find similar | 4 |
 | Skim | 1 per patent |
 
 **Changing the grain changes the resolution and never the denominator.** 91 days is 13 whole weeks and
 three months, so all three grains divide it exactly and every one sums to the same total. There is
 nothing to reconcile.
 
-**Building spends points; reading does not.** Opening a record, sorting, filtering, re-ranking,
-switching pages and reverting to an earlier version are all free, however many times. A build is
+**Building spends points; reading does not.** Opening a record, reading its drawings, sorting,
+filtering, starring, finding similar and switching pages are all free, however many times. A build is
 charged when it is approved, not when it finishes, and returned if it does not finish — §9.2 carries
 the rule and why the charge sits at the gate rather than at the end.
 
@@ -401,7 +432,8 @@ next edit rather than fading.
 the act is the quiet one**: *Keep account* is the affirmed button and *Delete account permanently* is
 the ghost one. Neither is primary — the primary action of a settings card is never deletion.
 
-**There is no export row.** Export is out by decision, not by deferral.
+**There is no export row here.** The starred set is what leaves, and it leaves from its own
+surface (§7.2) where the founder can see what they are taking.
 
 ### 8.3 · Plan & billing
 
@@ -459,7 +491,7 @@ without it.
 | The search, after approval | The gate, with the criteria still on it and the approval offered again | Every answer, the exclusions, and the points |
 | One view, while the others land | That card alone, in place, naming the view that did not arrive | The other views, the list, the map |
 | The record | The pane, with the row still selected | The list and the views under it |
-| A re-rank, a sort, a filter | The list as it was, and a sentence saying the order did not change | The order that was on screen |
+| Find similar, a sort, a filter | The list as it was, and a sentence saying the order did not change | The order that was on screen |
 | A save | The field, still open, still holding the value | What was typed |
 | A message | The form, not the sent state | The message and the topic |
 
@@ -559,7 +591,7 @@ to configure it.
 | Plain-English decode (`AI閱讀Pro`) | A paraphrase of the record rather than the record. |
 | The landscape summary (`AI Insight`) | Same reason, at corpus scale. |
 | Per-row curation | A checkbox that redraws a chart is a curation workbench. Sort and filter replace it. |
-| Export | Declined in favour of a link plus copyable text. |
+| An attorney handoff file | The starred set leaves as data (§7.2); a written-up handoff is the authored narrative `brief.md` §1 refuses. |
 | The ring diagram beside the citation table | It carries no information the table does not. |
 | The zone names (`地雷區` / `新興區` / `處女地帶`) | They label absence, and on a holder axis absence is a company's profile rather than open ground. |
 
@@ -597,11 +629,10 @@ postponed, it says so.
    reliable.
 5. **IPC drift as an adjacency detector** — flag patents whose IPC class sits outside the main cluster.
    Mechanical rather than inferred. **Starts when:** IPC depth in the engine is confirmed.
-6. **Drawings in the record.** Out on cost, not on principle — a figure *is* the record.
-   **Starts when:** anyone asks.
-7. **Export and an attorney handoff file.** **Decided against**, not postponed: a link plus copyable
-   text was chosen over a downloadable file. Reopening this is an amendment to `brief.md` §1's
-   software-not-a-report lock and must be argued as one.
+6. **An attorney handoff file** — the starred set written up as a document somebody could file
+   against. **Decided against**, not postponed. The starred set leaves as data (§7.2); a written-up
+   handoff is the authored narrative `brief.md` §1 draws the line at, and reopening it is an
+   amendment to that lock.
 
 ---
 
@@ -633,11 +664,11 @@ changes one figure has to carry the rest.
 - **Pricing.** The allowance, the price, and the tier structure are all open, which is why the plan
   screen prints `XXX` and a bar rather than guessing.
 - **Whether Terrain sits on Innovue's semantic search surface or beside it.**
-- **What a re-rank costs.** §8.1 carries both answers and they cannot both be right: the cost table
-  prices it at **4 points**, and the paragraph three lines below lists re-ranking among the things
+- **What *Find similar* costs.** §8.1 carries both answers and they cannot both be right: the cost table
+  prices it at **4 points**, and the paragraph three lines below lists it among the things
   that are **free, however many times**. Neither line has been changed, because the two readings are
   different products rather than different wordings. *Free* follows from *building spends points and
-  reading does not* — a re-rank re-sequences a corpus already paid for and adds no patent to it.
+  reading does not* — it re-sequences a corpus already paid for and adds no patent to it.
   *Charged* follows from it being a real engine call over the whole corpus, which a sort is not; but
   it makes the star a metered control, and nothing on the working surface says so. Whichever way it
   settles, §6.3 and [`components.md`](../design/components.md)'s list row both assert *free* today

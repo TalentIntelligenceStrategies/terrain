@@ -99,13 +99,22 @@ what lets an accent sit on the system without fighting a temperature.
 | `--ink-hover` | `--n-9` | hover on an ink fill |
 | `--indicator-rest` | `--n-5` | a dot or ring for a thing not yet current |
 | `--track-pressed` | `--n-4` | a bar track under the selected row |
-| `--cell-mark` | `rgba(37,37,37,.14)` | skeleton bar inside a matrix cell |
-| `--cell-mark-inverse` | `rgba(250,250,250,.30)` | the same, on `--density-4` |
 | `--key-ring` | `rgba(37,37,37,.24)` | the 1px ring on a 9px legend key |
+| `--veil` | `rgba(255,255,255,.82)` | the ground under a control bar floating over content |
+| `--figure-ground` | `#FFFFFF` | the paper a patent drawing was published on |
 
-The last three are alpha rather than flat neutrals because they composite over a surface whose colour
-varies — a matrix cell is one of five tones, the legend key sits on a slice. They are still tokens,
-and still the only alpha values in the system.
+The first two are alpha rather than flat neutrals because they composite over a surface whose colour
+varies — the legend key sits on a slice, and `--veil` sits on a patent's own line-work. They are
+still tokens, and still the only alpha values in the system. **`--veil`'s .82 is measured**: below
+about .78 a 1.5px Lucide stroke stops clearing 4.5:1 against the black line-work showing through, and
+above .90 the bar stops reading as floating and becomes a plate over the figure.
+
+**`--figure-ground` is the one semantic token that does not swap**, and that is a fact about the
+content rather than an exemption from §10. A patent drawing is black line-work on a transparent
+background; composited onto `#1A1A1A` it is a blank rectangle. Every other semantic token means *the
+surface under our own chrome*; this one means *the paper this was published on*, which has no dark
+value. It is a token rather than a literal because §3.2's rule is that every colour is a token — a
+named invariant is checkable where a hex in a component is a judgement call the gate has to allow.
 
 **There is no scrim token, and no scrim.** Nothing in the product dims the page: the record opens in
 its own column, the delete confirmation is inline, and both menus close on an outside click the
@@ -311,8 +320,8 @@ blocks that goes stale. `tools/check-app.py` refuses one declared anywhere else.
 | --- | --- | --- | --- |
 | **primitive** | 11 | `:root`, once | `--n-0`…`--n-10`. **No component may read one.** |
 | **scale** | 29 | `:root`, once | `--s-*` `--r-*` `--dur-*` `--ease*` `--cycle`. Invariant by construction: a step is not a different size at night. |
-| **semantic** | 42 | **all three blocks** | This is the dark contract. §10.1. |
-| **derived** | 5 | `:root`, once | Resolves *through* a themed token, so it inverts for free. **Never add one to a dark block.** |
+| **semantic** | 31 | **all three blocks** | This is the dark contract. §10.1. |
+| **derived** | 3 | `:root`, once | Resolves *through* a themed token, so it inverts for free. **Never add one to a dark block.** |
 | **component-scoped** | 5 | on the component's own class | Never on `:root`, never read outside that component. |
 
 **The file is ordered by theme-variance, not by document section**, so *the three blocks carry the
@@ -378,6 +387,11 @@ decimal drops to weight 400 at 55% opacity: `194` stays full, `/ 381` recedes.
 declares it.** No preview will tell you which containers are missing the cap; the two most-read
 sentences in the product ran at ~88 and ~95 characters for a month inside a card that looked like it
 had a measure discipline.
+
+**A one-line caption over a table is not body prose**, and capping it to 68ch breaks it in two for a
+reader who was never going to track back across it. The cap there is *whatever keeps it on one line
+at that column's width*, stated in the rule with its reason. The test is the number of lines the
+sentence is meant to occupy: more than one and 68ch holds.
 
 **A label that heads a box is not a label inside it.** `micro` is one role, so a box title and a field
 label inside it render identically unless something separates them. The box title takes `--text-2`
@@ -752,8 +766,12 @@ The list is **duplicated on purpose.** CSS cannot share a declaration block betw
 a third indirection layer of `--dark-*` primitives buys nothing and hides which value is live.
 Whatever writes one writes both.
 
-**42 semantic tokens**, and **this is the one place that count appears** — a number repeated in two
-files is a number that drifts in one of them, and this one did. §3.9 carries the tier it belongs to:
+**31 semantic tokens**, and **this is the one place that count appears** — a number repeated in two
+files is a number that drifts in one of them, and this one did, twice. It read 42 while the file held
+29: eleven left with the analysis layer and nobody moved the number, which is exactly the failure the
+sentence you are reading was written to prevent. **Counting them is one command** —
+`grep -c '^\s*--' ` over the light block will not do it, because the comments are longer than the
+declarations; parse for `--name:` inside the block bounds. §3.9 carries the tier it belongs to:
 the primitives, the scale and the derived five are *not* in it, and a dark block that redefined one
 of them would be the bug rather than the contract. `tools/check-app.py` asserts that all three blocks
 carry the same names in the same order, so this number is checked rather than remembered.

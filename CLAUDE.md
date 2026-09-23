@@ -57,7 +57,7 @@ design/
 
 app/                 the frontend, extracted from the prototype. NEVER PUBLISHED
   README.md          THE HANDOFF DOCUMENT — how to run it is its first line
-  index.html · lab.html · partials/ · styles/ · js/core/ · js/surfaces/ · js/charts/
+  index.html · lab.html · partials/ · styles/ · js/core/ · js/surfaces/
 demo/                fake data and the fake engine. A SIBLING of app/, deletable,
                      imported exactly once — see "The demo seam" in app/README.md
 
@@ -193,7 +193,7 @@ visible pass.
 **Innovue's blue may only ever appear inside the Innovue mark itself.** In a border, a chip, a chart
 or a button, it has been misread.
 
-**And the rule describes two palettes.** Dark is a swap of **42 semantic tokens** — `design-language.md`
+**And the rule describes two palettes.** Dark is a swap of **31 semantic tokens** — `design-language.md`
 §10.1 is the one place that number lives — with **two named component exceptions and no others**, the
 two `.foot-mark-*` selectors on the attribution line. **No component may read a primitive (`--n-*`) or
 a raw hex**; eleven violations had to be fixed before the pass could work. A component that reads a

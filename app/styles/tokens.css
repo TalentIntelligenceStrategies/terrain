@@ -126,6 +126,31 @@ html{color-scheme:light dark;background:var(--ground)}
      --key-ring is the 1px ring on a 9px legend key: alpha for the same reason,
      it sits on --surface in the key and on a slice in the chart. */
   --key-ring:rgba(37,37,37,.24);
+  /* --veil is the translucent ground under a control bar FLOATING OVER
+     CONTENT — the figure viewer's zoom/rotate bar, sitting on a patent's own
+     line-work. Alpha for the same reason as --key-ring: what is behind it is
+     the drawing and varies pixel to pixel, so a flat neutral would either
+     hide the drawing or fail to separate the buttons from it.
+
+     .82 IS MEASURED, not chosen for feel. Below about .78 the 1.5px Lucide
+     strokes stop clearing 4.5:1 against the black line-work that shows through;
+     above .90 the bar stops reading as floating and becomes a solid plate over
+     the figure. It is paired with a 1px --border, because §5 is explicit that a
+     shadow cannot separate two surfaces of the same colour and this one sits on
+     white. */
+  --veil:rgba(255,255,255,.82);
+
+  /* --figure-ground IS WHITE IN BOTH THEMES, and that is a fact about the
+     content rather than an exemption from §10. A patent drawing is black
+     line-work on a transparent background; composited onto #1A1A1A it is a
+     blank rectangle. The dark contract swaps the tokens whose meaning is "the
+     surface under our own chrome"; this one means "the paper this drawing was
+     published on", which has no dark value.
+
+     A TOKEN RATHER THAN A LITERAL because §3.2's rule is that every colour is
+     a token. The gate is what stops the next white from being a judgement
+     call, and a named invariant is checkable where a hex is not. */
+  --figure-ground:#FFFFFF;
 
   /* elevation. THEMED, which is why it is here rather than with the scale:
      an ink shadow is invisible on ink. --shadow-drop is the same elevation as
@@ -185,6 +210,13 @@ html{color-scheme:light dark;background:var(--ground)}
   /* the sweep is still the lighter band, so it still reads as a sweep */
   --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
   --key-ring:rgba(245,245,245,.30);
+  /* the stage under it stays WHITE in both themes — black line-work on #1A1A1A
+     is a blank rectangle — so the veil is the light value in the dark block
+     too. It is not an inversion that was forgotten: the surface this
+     composites over does not swap, so neither may this. */
+  --veil:rgba(255,255,255,.82);
+  /* unchanged, deliberately: see the light block. The paper does not swap. */
+  --figure-ground:#FFFFFF;
 
   /* an ink shadow is invisible on ink. These go black and heavier, and the
      hairline is doing most of the work regardless. */
@@ -223,6 +255,13 @@ html{color-scheme:light dark;background:var(--ground)}
   /* the sweep is still the lighter band, so it still reads as a sweep */
   --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
   --key-ring:rgba(245,245,245,.30);
+  /* the stage under it stays WHITE in both themes — black line-work on #1A1A1A
+     is a blank rectangle — so the veil is the light value in the dark block
+     too. It is not an inversion that was forgotten: the surface this
+     composites over does not swap, so neither may this. */
+  --veil:rgba(255,255,255,.82);
+  /* unchanged, deliberately: see the light block. The paper does not swap. */
+  --figure-ground:#FFFFFF;
 
   /* an ink shadow is invisible on ink. These go black and heavier, and the
      hairline is doing most of the work regardless. */

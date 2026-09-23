@@ -154,9 +154,15 @@ elif ! node --input-type=module -e 'import "node:vm"; if(![].flatMap) process.ex
 fi
 
 # ── sync · the region must match tokens.css BYTE for byte ──
-s_value()    { sed -i.bak 's|--border:#2E2E2E|--border:#2E2E2F|' "$1/design/previews/terrain-prototype.html"; rm -f "$1"/design/previews/*.bak; }
-s_comment()  { sed -i.bak 's|even in L\*|even in L star|' "$1/design/previews/terrain-prototype.html"; rm -f "$1"/design/previews/*.bak; }
-s_sentinel() { sed -i.bak 's|/\* ══ end tokens ══ \*/||' "$1/design/previews/terrain-prototype.html"; rm -f "$1"/design/previews/*.bak; }
+# THE VIOLATION GOES WHERE THE GATE LOOKS, which is sync-tokens.py's TARGETS
+# and nothing else. These three planted into the PROTOTYPE, which stopped being
+# a target when the analysis layer left — so for two commits they planted a
+# violation in a file the gate does not read, and reported FAIL on a gate that
+# was working perfectly. A test that fails for the wrong reason costs the same
+# attention as one that passes for the wrong reason and buys less.
+s_value()    { sed -i.bak 's|--border:#2E2E2E|--border:#2E2E2F|' "$1/design/previews/terrain-loading-lab.html"; rm -f "$1"/design/previews/*.bak; }
+s_comment()  { sed -i.bak 's|even in L\*|even in L star|' "$1/design/previews/terrain-loading-lab.html"; rm -f "$1"/design/previews/*.bak; }
+s_sentinel() { sed -i.bak 's|/\* ══ end tokens ══ \*/||' "$1/design/previews/terrain-loading-lab.html"; rm -f "$1"/design/previews/*.bak; }
 
 # ── A · a component reading a primitive, a raw hex, or an inline alpha ──
 a_prim()  { printf '.probe{color:var(--n-7)}\n'          > "$1/app/styles/90-probe.css"; }

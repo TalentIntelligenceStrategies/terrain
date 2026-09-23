@@ -99,7 +99,7 @@ for p in APP_CSS:
         fail(f"{p}: raw hex {m.group(0)} -- every colour is a token ({TOKENS})")
     for m in FN.finditer(body):
         fail(f"{p}: inline {m.group(1)}() -- an alpha is a token too; "
-             f"--cell-mark, --cell-mark-inverse and --key-ring are the three that exist")
+             f"--key-ring and --veil are the two that exist")
 
 
 # ── GATE C · only tokens.css may declare a custom property on :root ───────

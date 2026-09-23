@@ -65,10 +65,16 @@ patent estate is added to the grid. A statement about *these holders* survives t
 The user logs in and searches. Nothing is produced to order by a human, nothing is delivered as a
 document. **Never write copy that describes Terrain in report language.**
 
-The test that keeps this honest: *a title page, a download, or the word* report *is the line.* A page
-with a URL is software; selectable text is not a document; a PDF is. A downloadable file was put to
-the decision and declined, in favour of a link plus copyable text. A later proposal for a PDF, a
-slide or a cover page is an amendment to this lock and must be argued as one.
+The test that keeps this honest: *a title page, an authored narrative, or the word* report *is the
+line.* A page with a URL is software; selectable text is not a document; a PDF with a cover is.
+
+**A download is not the line, because it never separated the two.** The founder may take the patents
+they starred out as a CSV or a Markdown list: that file is the rows already on their screen, in a
+format they can work in, and it is their data leaving rather than our document arriving. The line is
+what the file is permitted to *say*. It carries no cover page, no summary written for them and no
+conclusion — the moment it states something the interface did not, Terrain has produced a report. A
+proposal for a PDF, a slide or a written-up handoff is an amendment to this lock and must be argued
+as one.
 
 ### Who it is for
 
