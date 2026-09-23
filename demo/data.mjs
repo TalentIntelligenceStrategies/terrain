@@ -139,9 +139,16 @@ export function patentRows(count = SET_CEILING) {
     out.push({
       id: 'p' + i,
       /* EXACTLY ONE ROW CARRIES REAL ENGLISH — §8's fourth exception, and the
-         record it opens is the same one. Everything else is a bar. */
+         record it opens is the same one. Everything else is a bar.
+
+         `number` AND `where` FOLLOW THE SAME RULE, and they are here because the
+         export writes them. A withheld number is null and leaves an empty cell,
+         which is what null means everywhere else; it is NOT the id wearing a
+         different column heading. */
       skim: i === 0 ? DEMO_TITLE : null,
       holder: i === 0 ? DEMO_HOLDER : null,
+      number: i === 0 ? DEMO_RECORD.number : null,
+      where: i === 0 ? DEMO_RECORD.where : null,
       year: s.year,
       status: s.status,
       /* AND IT SCORES HIGHEST, so relevance order puts it first. The seed gave

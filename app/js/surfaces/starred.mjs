@@ -31,7 +31,7 @@ import * as Starred from '../core/starred.mjs';
    is what turns a row into a cell, and it is also where "we decline to print
    this" becomes an empty cell rather than the string "null". */
 const COLUMNS = [
-  { key: 'id',     head: 'Number',  get: r => r.id },
+  { key: 'number', head: 'Number',  get: r => r.number },
   { key: 'skim',   head: 'Title',   get: r => r.skim },
   { key: 'holder', head: 'Holder',  get: r => r.holder },
   { key: 'where',  head: 'Where',   get: r => r.where },
@@ -81,7 +81,15 @@ function toMarkdown(rows, query) {
     if (r.year != null) bits.push(String(r.year));
     if (r.status) bits.push(r.status === 'live' ? 'Live' : 'Expired');
     if (r.score != null) bits.push('score ' + r.score.toFixed(4));
-    lines.push('- **' + cell(r.id) + '** — ' + (r.skim == null ? '' : r.skim));
+    /* THE BULLET LEADS WITH WHATEVER IDENTIFIES THE PATENT. A withheld number
+       must not leave `- **** —` in the founder's document, so the title takes
+       the bold when there is no number, and a row with neither says so rather
+       than rendering an empty bullet nobody can act on. */
+    const lead = r.number != null ? '**' + r.number + '**'
+               : r.skim   != null ? '**' + r.skim + '**'
+               : '*(number withheld)*';
+    const tail = r.number != null && r.skim != null ? ' — ' + r.skim : '';
+    lines.push('- ' + lead + tail);
     if (bits.length) lines.push('  ' + bits.join(' · '));
   });
   lines.push('');
@@ -129,7 +137,9 @@ function rowHTML(r) {
     : '<span class="sk sk-h-micro w-md"></span>';
   return '<li class="starrow" data-id="' + esc(r.id) + '">'
     + '<div class="starrow-main">'
-    + '<span class="fig fig-s starrow-id">' + esc(r.id) + '</span>'
+    + (r.number != null
+        ? '<span class="fig fig-s starrow-id">' + esc(r.number) + '</span>'
+        : '<span class="sk sk-h-micro w-sm"></span>')
     + title
     + '</div>'
     + '<div class="starrow-meta">'

@@ -89,12 +89,24 @@ export const CODE = {
 
 /** @typedef {{id:string, label:string|null}} Labelled — label null renders a bar */
 
-/** The list · FOUR FIELDS PER ROW AND NO MORE, plus the score and the id the client
- *  keys on. `order` is a first-class field and not an array index — rows are keyed
+/** The list · FOUR FIELDS PER ROW AND NO MORE — that rule is about what the row
+ *  DRAWS, and the row still draws four. `number` and `where` are carried and not
+ *  drawn, because the starred set leaves as a seven-column file and the export
+ *  cannot reach the record port: fifty starred patents would be fifty calls to
+ *  fill in two columns the list already had.
+ *
+ *  THE ID IS NOT THE NUMBER, and the export is where that stops being pedantry.
+ *  `id` is whatever the engine keys on; `number` is what is printed on the patent
+ *  and what the founder searches their own document for. Writing the id into a
+ *  column headed *Number* puts a string that is not a patent number into their
+ *  data, and nothing downstream can tell.
+ *
+ *  `order` is a first-class field and not an array index — rows are keyed
  *  by patent, and the FLIP, the rail, the focus return and the reversal all resolve
  *  through that key. `matched` and `patents.length` differ by what was binned, and
  *  printing the wrong one beneath the standing chip is a recorded regression. */
-/** @typedef {{id:string, skim:string|null, holder:string|null, year:number|null,
+/** @typedef {{id:string, number:string|null, skim:string|null, holder:string|null,
+ *             where:string|null, year:number|null,
  *             status:'live'|'expired'|'pending'|null, score:number|null}} PatentRow */
 /** @typedef {{patents:PatentRow[], order:string[], matched:number}} PatentSet */
 
