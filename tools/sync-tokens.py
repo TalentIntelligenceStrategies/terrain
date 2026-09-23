@@ -45,17 +45,19 @@ CLOSE  = '/* ══ end tokens ══ */'
 # terrain-prototype.html IS NOT ON THIS LIST EITHER, AND IT WAS. It is FROZEN
 # AT v1 -- the landscape product, with the map. app/ no longer renders a map, so
 # the chart, density and categorical-mark tokens left the authored file; the
-# prototype still reads 28 of them and regenerating its block would blank the
-# one artifact the public link serves.
+# prototype still reads 28 of them, and regenerating its block would blank the
+# page rather than update it.
 #
-# Freezing is the narrow move rather than deleting the page: it stays readable,
-# it stays published, and it stops claiming to track a file it no longer agrees
-# with. The cost is that its block can no longer be verified, and that is why
-# the page carries its own note saying which it is.
+# Freezing is the narrow move rather than deleting the page: every partial in
+# app/ names it as the file it was extracted from, so it is the provenance for
+# a tree nobody would otherwise be able to trace. It is kept, not maintained,
+# and it stops claiming to track a file it no longer agrees with. The cost is
+# that its block can no longer be verified, and that is why the page carries
+# its own note saying which it is.
 #
-# THIS IS TEMPORARY BY INTENT. The exit is publishing app/ itself at the same
-# URL, which needs strip-comments.py to run across a tree rather than over one
-# file. Until that lands, this list has one entry.
+# THIS IS NO LONGER TEMPORARY. The exit used to be publishing app/ at the same
+# URL; Terrain publishes nothing now, the whole publish pipeline was retired
+# with the landscape product, and this list has one entry for good.
 TARGETS = [
     'design/previews/terrain-loading-lab.html',
 ]

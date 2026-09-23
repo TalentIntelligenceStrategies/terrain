@@ -1,0 +1,53 @@
+# Run the gates whenever main moves.
+#
+# WHY THIS EXISTS. Every rule in this repository that can be checked is checked
+# by a script that refuses, and a gate nobody runs is a gate that does not
+# exist. Locally that is one command; the point of running it here is the push
+# that skipped it.
+#
+# THIS WORKFLOW USED TO PUBLISH. Terrain served a single-file prototype from a
+# gh-pages branch, and that prototype was the landscape product. The product is
+# search + export now, `app/` is the reference, and nothing is published -- so
+# publish-prototype.sh, strip-comments.py, check-publish.py and check-figures.mjs
+# were retired with it rather than left pointing at a frozen file. What survives
+# gates the SOURCE tree, which is the tree anybody now changes.
+name: Gates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# No paths filter, deliberately. The run is ~30s, and a filter would introduce
+# the one failure this repository keeps relearning: a rule that silently skips
+# the thing you needed it to do.
+concurrency:
+  group: gates-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read          # nothing is written any more
+    steps:
+      - uses: actions/checkout@v4
+
+      # NO actions/setup-node, deliberately. check-app.py shells out to
+      # `node --check` and REFUSES BY NAME when node is absent rather than
+      # skipping the JavaScript gate -- so a runner image that stopped shipping
+      # node fails loudly here instead of reporting clean on a tree it never read.
+      - name: Gate the source tree
+        run: |
+          node --version
+          python3 --version
+          python3 tools/check-app.py
+          python3 tools/sync-tokens.py --check
+
+      # AND PROVE THEY STILL FIRE. Three of these checks were shell once, three
+      # of them silently did not run, and all three reported clean. This plants
+      # a violation against every gate above and fails if any of them accepts
+      # it. Add a gate, add its test.
+      - name: Prove the gates refuse
+        run: bash tools/test-gates.sh
