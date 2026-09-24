@@ -358,18 +358,41 @@ exception — mixed numeral rendering across a dense table is immediately visibl
 `font-variant-numeric: tabular-nums` on every Inconsolata run, so columns of numbers align and
 figures do not jitter when they change.
 
-**`label-s` is a step the tree had already invented, and adding it is the honest direction.** The gap
+**`label-s` is a step the tree had already invented, and it is for compact controls only.** The gap
 from `label` 13 to `micro` 10.5 is 1.24×, and everything compact in the product fell into it. A sweep
 **by typeface** — 12.5px is `figure-s` in Inconsolata and was nothing in Urbanist — found fifteen
-declarations off this table, and **six had independently landed on 12.5**: the menu button, the
-popover chip, the info popover, the starred row's meta line and note, and *Find similar*. Six
-components agreeing is evidence about the scale, not about the components, so the step was added and
-the seven stragglers at 11.5, 12 and 13.5 moved onto it rather than six being moved off their own
+declarations off this table, and six had independently landed on 12.5. The step was added and the
+stragglers at 11.5 and 12 moved onto it, rather than six components being moved off their own
 agreement.
+
+**But the six were agreeing on a number, not on a role, and that took a second pass to see.** Five
+were compact controls — the chip, the segmented button, the menu button, the popover chip and
+*Find similar* — which carry weight 500, sit at a fixed height, and never render their leading. Three
+were explanatory prose, at weight 400 and at **three different leadings**: 1.5, 1.55 and 1.6. One role
+described the controls and misdescribed the prose. **Prose is `body` wherever it appears**, so the
+notes went there: the popover's explanation, the starred set's note about what the file contains, the
+signed-out note, and the empty state — which had been `label`'s size on `body`'s leading, the same
+invented role from the other direction. Two notes were already `body` and one of those was carrying
+`t-body` in its markup while its component rule overrode it.
 
 **12.5 and not 12, because it is `figure-s`'s size.** A meta line mixes Urbanist words with
 Inconsolata numerals — the starred row does it on one line — and words and figures at different sizes
 is the mixed-numeral defect this section opens with, read from the other end.
+
+**`label-s` has no class, the same as `body-strong`.** The five controls spell their own size, which
+is what `.lm-item` and `.rec-act` already do for `label`. A rule defined and carried by no markup is a
+selector nothing references, which is what this repository refuses for a stylesheet.
+
+**A meta line takes the size at 400, and the weight is the only thing it borrows from elsewhere.**
+Three short factual strings sit at 12.5 — the results meta line, the composer's status, the starred
+row's meta — and they are neither controls nor prose. **The list row already settled this one size
+up**: `.dm-v` is `body` 14/400 holding `figure-s` 12.5/500, so the words are 400 and the figures
+beside them are 500. The smaller meta lines follow it. Forcing them to `label-s`'s 500 would render
+the same holder name at 400 in the list and 500 in the starred set, which is one fact in two weights
+on two surfaces — a worse outcome than a role with a stated exception.
+
+*Every chip is 500, including the grouping panel's, which inherited 400 and rendered lighter than the
+three chips beside it until this was swept.*
 
 *The attribution line was the fifteenth and is now `body`. It ran at 14.4px — 12 + 20%, asked for and
 recorded — which is the only kind of off-scale value worth having. It still went: 14 is 0.4px away

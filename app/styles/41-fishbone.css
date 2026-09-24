@@ -91,7 +91,12 @@
          padding:var(--s-4) var(--s-8);
          border:1px solid var(--border-strong);border-radius:var(--r-chip);
          background:var(--surface);color:var(--text-1);
-         font-size:12.5px;line-height:1.3;cursor:pointer;
+         /* label-s, AND THE WEIGHT WAS THE HALF THAT WAS MISSING. It carried
+            the size and inherited 400, so a fishbone chip rendered lighter
+            than every other chip in the product -- .chip, .pop-chip and
+            .seg-btn are all 500. Two chips at two weights is the split-role
+            defect wearing a component's clothes. */
+         font-size:12.5px;font-weight:500;line-height:1.3;cursor:pointer;
          transition:border-color var(--dur-1) var(--ease)}
 .fb-chip svg{flex:0 0 12px;color:var(--text-3)}
 

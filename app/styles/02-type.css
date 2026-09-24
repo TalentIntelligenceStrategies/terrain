@@ -43,17 +43,14 @@
 .t-title-s{font-size:15px;line-height:1.45;font-weight:600}
 .t-body{font-size:14px;line-height:1.55}
 .t-label{font-size:13px;line-height:1.4;font-weight:500}
-/* label-s · THE STEP THE TREE HAD ALREADY INVENTED. The gap from label 13 to
-   micro 10.5 is 1.24x, and everything compact in this product fell into it:
-   a sweep by TYPEFACE -- 12.5px is figure-s in Inconsolata and nothing in
-   Urbanist -- found fifteen declarations off the scale, and SIX had
-   independently landed on 12.5. This adds the step rather than moving six
-   components off their own agreement.
-   12.5 AND NOT 12, because it is figure-s's size: .starrow-meta puts Urbanist
-   words beside Inconsolata numerals on one line, and a meta line whose words
-   and figures are different sizes is the mixed-numeral defect §4 opens with,
-   read from the other end. */
-.t-label-s{font-size:12.5px;line-height:1.4;font-weight:500}
+/* label-s IS IN §4's TABLE AND HAS NO CLASS HERE, the same as body-strong.
+   The compact controls that use it -- chip, segmented button, menu button,
+   popover chip, Find similar -- spell their own size, which is what .lm-item
+   and .rec-act already do for `label`. A class defined here and carried by no
+   markup is a selector nothing references, and this repo refuses that for a
+   stylesheet; there is no reason it is better for a rule.
+   THE ROLE IS CONTROLS ONLY. Prose at 12.5 was the other half of the cluster
+   and went to `body`: see §4. */
 /* ONE DECLARATION, THREE CONSUMERS · 2026-09-11. These five properties were
    written out verbatim three times — here, .hf dt and .cf-pair-k — so the next
    label change would have landed in one of three places and looked like a

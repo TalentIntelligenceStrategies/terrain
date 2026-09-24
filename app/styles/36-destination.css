@@ -79,7 +79,7 @@
 .info-pop{position:absolute;top:calc(100% + var(--s-6));right:0;width:min(300px,72vw);z-index:35;
           background:var(--surface);border:1px solid var(--border);border-radius:var(--r-inner);
           box-shadow:var(--shadow-float);padding:var(--s-12) var(--s-14);
-          font-size:12.5px;line-height:1.6;color:var(--text-2);text-align:left;
+          color:var(--text-2);text-align:left;
           transform-origin:top right;opacity:0;visibility:hidden;transform:scale(.97);
           transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
                      visibility 0s linear var(--dur-2)}

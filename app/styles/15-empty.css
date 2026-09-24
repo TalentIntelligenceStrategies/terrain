@@ -24,7 +24,10 @@
    comes from a search, a starred set from reading the list, an invoice from a
    renewal. Inventing a button for each would be an empty state pointing at
    nothing. */
-.empty-note{margin:0;padding:var(--s-12);font-size:13px;line-height:1.55;
+/* SIZE AND LEADING ARE .t-body's, ON THE MARKUP. This was 13/1.55 -- label's
+   size on body's leading, a role invented in the gap between two real ones.
+   Explanatory prose is `body` wherever it appears. */
+.empty-note{margin:0;padding:var(--s-12);
       color:var(--text-2);max-width:60ch;text-wrap:pretty}
 .empty-note .empty-then{display:block;margin-block-start:var(--s-2);color:var(--text-3)}
 /* DESCENDANT, not a child: the invoices live in their own div inside the card
@@ -32,4 +35,4 @@
    belonged under. The menu keeps the inset, because its rows have one. */
 .card-body .empty-note{padding:var(--s-4) 0}
 .menu-note{margin:0;padding:var(--s-4) var(--s-12) var(--s-8);
-      font-size:12.5px;line-height:1.5;color:var(--text-3)}
+      color:var(--text-3)}

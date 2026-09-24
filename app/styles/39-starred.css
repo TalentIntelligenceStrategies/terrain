@@ -64,8 +64,11 @@
 .starrow-holder{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
                 max-width:22ch}
 
+/* ITS MARKUP ALREADY CARRIED .t-body AND THIS OVERRODE IT -- 39 loads after
+   02, so the role class was decoration and the component decided. That is the
+   split-role defect from the other direction. */
 .star-note{margin:var(--s-20) 0 0;color:var(--text-3);max-width:68ch;
-           font-size:12.5px;line-height:1.55;text-wrap:pretty}
+           text-wrap:pretty}
 
 /* ── the count chip, as a control ───────────────────────────────────────
    On the results surface `N starred` is the only thing that knows how big the
