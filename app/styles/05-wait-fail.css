@@ -241,16 +241,12 @@
 .is-fail{display:grid;place-items:center}
 .card-body.is-fail,.rec-body.is-fail{display:grid;place-items:center}
 .card-body.is-fail{padding-block:var(--s-16)}
-/* ***THE CAPTION GOES, AND THIS IS THE ONE A RENDER CAUGHT.*** A caption
-   states the widget's finding -- "this space is growing, filings have gone
-   from about 20 a year to about 45" -- and that sentence is drawn from the
-   data that just failed to arrive. Left standing it is the interface making a
-   claim about numbers it does not have, under a block saying it does not have
-   them. `.card.is-resolving .caption` already does this for the wait; the
-   sibling selector does it for the failure without needing a second class on
-   the card. visibility rather than display, for the reason the wait uses it:
-   the space is held, so nothing below the card moves. */
-.card-body.is-fail~.caption{visibility:hidden}
+/* THE CAPTION WENT ENTIRELY, so the rule that hid it on a failure went too.
+   It stated the widget's finding, a finding is a reading of the data, and
+   brief.md §1 puts those outside the product. The argument this rule carried
+   is still worth having if a caption ever returns: a sentence drawn from data
+   that failed to arrive is the interface making a claim about numbers it does
+   not have, under a block saying it does not have them. */
 /* the column keeps the chip that is still true while the rest of it failed --
    the cut the founder made did not stop being the cut they made. Same two
    rows the wait uses, for the same reason. */

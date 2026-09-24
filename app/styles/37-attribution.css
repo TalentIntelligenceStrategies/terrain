@@ -54,11 +54,11 @@
 }
 :root[data-theme="dark"] .foot-mark-light{display:none}
 :root[data-theme="dark"] .foot-mark-dark{display:inline-block}
-@media (max-width:1180px){
-}
-.card-head .t-title{flex:1;min-width:0}
-.card-icon{color:var(--text-3);display:flex}
-.card-body{padding:0 var(--s-20) var(--s-16);flex:1;display:flex;flex-direction:column;min-width:0}
-.caption{border-top:1px solid var(--border);margin:0 var(--s-20);padding:var(--s-12) 0 var(--s-14);
-         font-size:13px;line-height:1.6;color:var(--text-2)}
-.caption b{color:var(--text-1);font-weight:600}
+/* THREE CARD RULES MOVED TO 31, WHERE THE REST OF THE CARD IS. They were
+   here because the attribution line and the card foot were extracted in one
+   pass, which put the card body's padding in the file named for the Innovue
+   mark — the same class of misfiling the .pref block was.
+
+   .caption WENT WITH THE WIDGETS. A caption stated a finding, a finding is a
+   reading of the data, and brief.md §1 puts those outside the product. Its
+   partner rule in 05-wait-fail went with it. Nothing emitted either. */

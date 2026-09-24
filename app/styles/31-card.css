@@ -1,8 +1,8 @@
-/* 31 · cards — the widget card, the gate, the build block
+/* 31 · cards and tables
  *
- * EXTRACTED from the prototype. The confirm card and the build block live in
- * the THREAD rather than on a screen of their own, which is why they are here
- * beside the widget card rather than in the conversation file. */
+ * EXTRACTED from the prototype, where this file also held the gate and the
+ * build block. Both were deleted with the analysis layer; what is left is the
+ * card every destination is built from, and the table two of them draw. */
 
 /* ── the widget card ────────────────────────────────────────
    design-language.md §7: surface, radius 16, one hairline, no shadow. Depth
@@ -17,144 +17,26 @@
            flex-wrap:wrap;padding:var(--s-14) var(--s-20) var(--s-10)}
 .card-head h2{margin:0;flex:0 1 auto;min-width:0}
 .card-head .info{margin-left:auto}
+/* MOVED FROM 37 · the card's head and body. They were extracted into the
+   attribution file by accident, which set the card body's padding from a
+   sheet named for the Innovue mark. */
+.card-head .t-title{flex:1;min-width:0}
+.card-icon{color:var(--text-3);display:flex}
+.card-body{padding:0 var(--s-20) var(--s-16);flex:1;display:flex;flex-direction:column;min-width:0}
 
-/* ── the card · platform.md §3.4, §6 ───
-   Bordered once. The two sections inside it carry no border of their own:
-   a card inside a card inside a column is the nesting impeccable bans.    */
-/* DISSOLVED 2026-09-09, AND THE GATE IT BELONGED TO IS GONE ENTIRELY —
-   platform.md §2: the reading, the five questions, the priced gate and the
-   staged build were four ports and are now none. This was a ~600px panel — its own
-   heading, its own bordered gate block, its own actions row — sitting in the
-   thread above a composer that had nothing to do. It was IN the conversation
-   and did not read as PART of it: a form the chat happened to contain, which is
-   what made the composer look redundant at the one moment the founder most
-   needs to know they can still just say something.
+/* ── WHAT STOOD HERE WENT WITH THE GATE AND THE BUILD ──────────────────
+   132 lines: .cf and its turns, #mxScope, .said and its inline editor, .gate,
+   and the whole build block — .bd, .prog, .stages, .done. Every one of them
+   styled markup that no longer exists; parked.html records that the gate card
+   and the build block were deleted rather than parked, and says Git has them.
 
-   It is now two turns and no card chrome. design-language.md §7 carries what
-   happened to the four motion rules written against the old panel — two survive,
-   two retire. */
-.cf{background:none;border:0;border-radius:0}
-/* 20 -> 32, 2026-09-11. This is the card's ONE group boundary and it was
-   running at 1.25x the 16px gap between the boxes inside the group — under the
-   2x that makes grouping read at all, so the gate looked like a fourth box.
-   With the boxes tightened to 12 it is 2.7x. Every value is a step on the
-   scale: there is no --s-28 and this did not invent one. */
-.cf-turn + .cf-turn{margin-top:var(--s-32)}
-/* 15 -> 17px, 2026-09-11: .t-title, already on the scale. 15px existed here and
-   nowhere else, and it left the most important h2 in the product rendering
-   smaller than body copy on the same screen. */
-.cf-title{margin:0 0 var(--s-4);font-size:17px;line-height:1.3;font-weight:600;
-          letter-spacing:-.005em;color:var(--text-1);text-wrap:balance}
-/* CAPPED, 2026-09-11. .conv-col is 680px and nothing in this card limited the
-   line, so the lede ran ~88 characters and the gate ~95. design-language.md §4
-   has capped body prose at 68ch since it was written — this was not a new rule,
-   it was one nothing in this card enforced. ch caps are already the idiom here
-   (.conv-sub 52, .conv-note 64). */
-.cf-lede{margin:0;color:var(--text-2);max-width:68ch;text-wrap:pretty}
-/* the scope sentence sits under the legend, not in it — it qualifies the whole
-   grid rather than one tone, and reading it as a fourth legend entry was the
-   first thing that went wrong when it shared the row */
-#mxScope{margin-top:var(--s-10)}
-/* The disclosure that held the two lists was deleted 2026-09-09 along with the
-   lists themselves — see setConfirmMode for why they left the gate. Its
-   "collapsed is not hidden" rule went with it; nothing at the gate is collapsed
-   now, because nothing at the gate is optional to read.
+   THE ANALYSIS LAYER'S LAST RULE WENT WITH THEM: a selector literally named
+   `.chart`, 150px tall, in a product whose first rule is that it does not draw
+   one. Nothing emitted it, which is the only reason it survived this long.
 
-   .cf-actions AND .cf-note WENT THE SAME WAY 2026-09-11. The row held "You can
-   change any of this later." beside the primary action; the note is deleted and
-   the action moved to .dock-act under the composer. A 12px size left the file
-   with it, which is the kind of saving a deletion is actually worth. */
-/* once approved it stays in the thread as the record of what was approved,
-   with every control gone — it is the history, not a live form */
-.cf[data-approved] .said .btn{display:none}
-.cf[data-approved] .gate{opacity:.6}
-/* and mid-edit it goes quiet for the same reason it goes quiet once approved:
-   the gate is not the live thing on screen. The primary action is disabled in
-   the dock at the same moment, so the two states agree. */
-.cf[data-editing] .gate{opacity:.6}
-
-.said{background:var(--surface-sunken);border-radius:var(--r-inner);
-      padding:var(--s-12) var(--s-14);display:flex;gap:var(--s-16);align-items:flex-start;
-      margin:var(--s-16) 0 0}
-/* 16 to the lede above, 12 between themselves — the boxes are one group, and a
-   separate rule rather than a changed margin so nothing collapses. */
-.said + .said{margin-top:var(--s-12)}
-.said-body{flex:1;min-width:0}
-/* THE BOX TITLE IS A TITLE, NOT A SIXTH FIELD LABEL. Was four inline
-   style="margin-bottom:8px" in the markup — the only uncontrolled spacing in
-   the card — and at 8px it put "AND YOU TOLD US" directly above "DIRECTION" at
-   the same size and the same tone, where the two read as two labels rather than
-   as a heading and the thing it heads. One step up the neutral ramp and a
-   wider gap, which is the only way §2 has to say this: hierarchy, weight and
-   spacing, never a hue. 12 binds it to the grid more tightly than the grid's
-   own 16px rows bind to each other, which is the relationship it wants. */
-.said .t-micro{color:var(--text-2);margin-bottom:var(--s-12)}
-.said-text{margin:0;color:var(--text-1);line-height:1.6}
-
-/* ── editing what you said · NO MARKUP RENDERS THIS ──────────────────────────────
-   THE FIELD REPLACES THE SENTENCE IN PLACE, at the same size and on the same
-   line, so the founder is correcting the thing they were reading rather than
-   answering a copy of it in a dialogue. THE CORRECTION POINT MOVED: there is
-   no gate, and platform.md §4.2 puts the founder's sentence in the search bar
-   with it still editable. Nothing sets `.said` any more.
-
-   NOTHING ANIMATES. The two states are the same words at the same place —
-   there is no motion that would describe the change, and a height transition
-   on a growing textarea fights the typing. */
-.said-edit{display:block;width:100%;resize:none;overflow:hidden;
-      font:inherit;color:var(--text-1);line-height:1.6;
-      background:var(--surface);border:1px solid var(--border-strong);
-      border-radius:var(--r-control);padding:var(--s-8) var(--s-10);outline:0;
-      transition:border-color var(--dur-1) var(--ease)}
-.said-edit:focus{border-color:var(--text-2)}
-.said-edit[hidden]{display:none}
-/* the controls stack as a row and keep their own column, so the block does
-   not reflow when one button becomes two. */
-.said-ctl{display:flex;align-items:center;gap:var(--s-6);flex:0 0 auto}
-
-/* the 4px bottom margin cleared .cf-actions, which is gone — the gate is the
-   last thing in the card now and the commitment is one dock below it */
-.gate{display:flex;align-items:flex-start;gap:var(--s-12);padding:var(--s-14) var(--s-16);
-      background:var(--state-pending-tint);border-radius:var(--r-inner);
-      margin:0}
-.gate svg{color:var(--state-pending);flex:0 0 18px;margin-top:1px}
-/* 13 -> 14px: it carries the most consequential sentence on the screen and was
-   rendering smaller than the lede it follows. */
-.gate p{margin:0;font-size:14px;line-height:1.6;color:var(--text-1);
-        max-width:68ch;text-wrap:pretty}
-.gate b{font-weight:600}
-
-/* ── the build block · in the thread, not a screen ──────────
-   NO MARKUP RENDERS THIS EITHER — the staged build went with the gate
-   (platform.md §2). It advanced on completed stages, and faking determinate
-   progress for a wait nobody has timed is the same class of error as a green
-   "open" cell.                                           */
-.bd{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-widget);
-    padding:var(--s-20)}
-.bd-head{display:flex;align-items:baseline;gap:var(--s-12)}
-.bd-head h2{margin:0;flex:1;min-width:0}
-.bd-elapsed{color:var(--text-3);flex:0 0 auto;font-variant-numeric:tabular-nums}
-.bd-lede{margin:var(--s-8) 0 var(--s-16);color:var(--text-2)}
-.prog{height:3px;border-radius:var(--r-pill);background:var(--surface-sunken);overflow:hidden;
-      margin-bottom:var(--s-16)}
-.prog-bar{height:100%;width:100%;background:var(--text-1);border-radius:var(--r-pill);
-      transform:scaleX(0);transform-origin:left;
-      transition:transform var(--dur-3) var(--ease-in-out)}
-
-.stages{list-style:none;margin:0;padding:0}
-/* there is nothing to open, so the block offering it goes rather than sitting
-   on screen inert. The failure and what to do next are one message below. */
-.bd[data-failed] .done{display:none}
-.done{margin-top:var(--s-20);display:flex;align-items:center;gap:var(--s-16);flex-wrap:wrap;
-      opacity:0;transform:translateY(6px);
-      transition:opacity var(--dur-3) var(--ease),transform var(--dur-3) var(--ease)}
-.done-note{margin:0;flex:1 1 220px;font-size:12.5px;color:var(--text-3)}
-.done .btn{margin-left:auto;flex:0 0 auto}
-
-/* clip-rect rather than display:none or width:0 — the two that remove the
-   text from the accessibility tree along with the screen. */
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
-     clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+   .sr-only WENT TOO, AND THAT ONE IS A DUPLICATE RATHER THAN A RETIREMENT.
+   It was byte-identical to 05-wait-fail.css's, and 05 is the copy that
+   matters: lab.html links 05 and does not link this file at all. */
 
 /* ── tables ─────────────────────────────────────────────── */
 .tbl{width:100%;border-collapse:collapse}
@@ -170,5 +52,3 @@
    invalid at computed-value time, and the property takes its initial value
    rather than erroring. */
 
-/* ── chart ──────────────────────────────────────────────── */
-.chart{width:100%;height:150px;display:block}
