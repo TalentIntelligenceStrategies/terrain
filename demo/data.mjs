@@ -34,13 +34,9 @@
 
 export const FILINGS = [18, 22, 19, 28, 25, 34, 31, 44, 40, 52, 58, 55];
 
-/* A JURISDICTION IS NOT A PARTY, so countries are named — §8 says so, and five
-   grey wedges would read as nothing. Three rows: §3.7 allows three encoded
-   values and barStyle() has exactly three marks, so a fourth would draw
-   identically to the second and the legend would become a lie. */
-export const JURISDICTION = [
-  ['United States', 47], ['China', 66], ['Other, five countries', 11],
-];
+/* JURISDICTION WENT WITH sharePie. The demo's own split fed a chart that is
+   not in the product; corpus/ keeps its copy because a dead port there still
+   reads it. */
 
 /* ── the one populated record · design-language.md §8's fourth exception ──── */
 export const DEMO_TITLE =

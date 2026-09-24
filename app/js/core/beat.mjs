@@ -24,9 +24,4 @@
  * would be the same error as pretending to be fast.
  */
 export const BEAT = { page: 2340, card: 1610, row: 1350, rec: 1460 };
-export const SAVE_MS = 760;
 
-/* Note what the arithmetic does here, because it is easy to get wrong: a
- * column's wait and the views' resolve RUN CONCURRENTLY, so the total elapsed
- * is not the sum of the beats. */
-export const totalIsNotTheSum = true;

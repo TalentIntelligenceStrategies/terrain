@@ -703,4 +703,3 @@ export function init(ctx) {
   });
 }
 
-export const matched = () => MATCHED;

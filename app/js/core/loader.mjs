@@ -82,5 +82,3 @@ export function loader() {
   return root;
 }
 
-/** True when the loader will be still rather than moving. For tests and the bench. */
-export const loaderIsStill = () => reduced();

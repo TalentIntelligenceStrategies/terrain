@@ -41,7 +41,5 @@ export function onMotionChange(fn) {
  * well as in CSS because JavaScript has to know when a transition has finished
  * in order to hide a node after it -- and a JS constant that has drifted from
  * its token hides the node mid-flight. If one moves, both move. */
-export const DUR1 = 120, DUR2 = 200, DUR3 = 320;
+export const DUR2 = 200;
 
-/** How long to wait before treating a transition as done. 0 under reduced motion. */
-export const afterTransition = ms => (_reduced ? 0 : ms);

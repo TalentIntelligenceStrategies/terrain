@@ -68,11 +68,6 @@ export function sk(w, cls){
        + (w ? ' style="width:' + w + '"' : '') + '></span>';
 }
 
-export function skStack(ws){
-  return ws.map(function(w, i){
-    return '<span class="sk sk-h-body" style="width:' + w + (i < ws.length - 1 ? ';margin-bottom:7px' : '') + '"></span>';
-  }).join('');
-}
 
 export function pgCard(title, icon, body, head){
   return '<section class="card"><div class="card-head"><span class="card-icon">' + icon + '</span>'

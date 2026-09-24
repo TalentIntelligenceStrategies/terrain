@@ -56,11 +56,6 @@ export function toggle(id, row) {
   return on;
 }
 
-export function clear() {
-  if (!ROWS.size) return;
-  ROWS.clear();
-  announce();
-}
 
 /** subscribe. Called immediately with the current set, so a surface that
  *  mounts after a star has already happened paints the right thing without

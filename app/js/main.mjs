@@ -116,8 +116,6 @@ async function loadPartials() {
    the arriving one — a leaving view is painted ABOVE the arriving one whenever
    it comes later in the DOM, which the work surface does and the home surface
    does not. */
-const VIEWS = ['home', 'work', 'starred', 'usage', 'account', 'billing', 'help'];
-
 /* WHERE `Back` GOES, and it is a memory rather than a constant. The four
    destinations are stepped off to and come back from (platform.md §6), so
    `Back` has to return to whichever surface the founder was on — the results
@@ -126,7 +124,6 @@ const VIEWS = ['home', 'work', 'starred', 'usage', 'account', 'billing', 'help']
    it going back. */
 const DESTINATIONS = ['usage', 'account', 'billing'];
 let lastSurface = 'home';
-export function backTarget() { return lastSurface; }
 
 /* which hash lands on which view. A hash that names a STATE rather than a
    surface still has to resolve to one, or the router silently shows nothing. */
@@ -135,8 +132,11 @@ function viewForHash(h) {
   /* `back` is not a surface, it is a request to leave one — it resolves to
      wherever the founder was before they stepped off. */
   if (h === 'back') return lastSurface;
-  if (h === 'work' || h.startsWith('set') || h === 'technology' || h === 'track' ||
-      h.startsWith('drilldown')) return 'work';
+  /* `technology`, `track` and `drilldown` were here and named the Market /
+     Technology toggle, the column tracker and the drill-down. Nothing emits
+     any of them; a typed one falls through to the home surface, which is
+     right now that the map is gone. */
+  if (h === 'work' || h.startsWith('set')) return 'work';
   if (h.startsWith('starred')) return 'starred';
   if (h.startsWith('usage')) return 'usage';
   if (h.startsWith('account')) return 'account';

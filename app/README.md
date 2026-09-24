@@ -197,7 +197,7 @@ one of them encodes a rule that reads as an implementation detail and is not:
 | `loader` | One mark, one size, no variants, no region scaling. Third-party motion: permitted in the product, **not** republishable as a standalone component |
 | `wait` | `waitOn` captures `offsetHeight` **before** emptying. `failIn` deliberately does **not** clear `minHeight`. `failHTML`'s retry button is optional **by rule** |
 | `button-wait` | Re-applies the label as `aria-label`, because `display:none` children are excluded from the accessible name. Not `disabled` — that drops focus to `<body>` |
-| `beat` | `BEAT` is the engine's, `SAVE_MS` is ours, and the second is not a rounding of the first. **Reduced motion does not shorten or skip a beat** |
+| `beat` | The beats are the engine's, and none of them is a measurement. **Reduced motion does not shorten or skip a beat** |
 | `generation` | A counter per channel. The third line — `if (stale(…)) return` in every deferred callback — is the one people forget |
 | `timers` | A scope that can cancel everything it started. 66 timer calls in the prototype, each cleared or not by hand |
 | `armed` | A **registry**, so `disarmAll()` cannot miss a flag. The hand-maintained checklist it replaces said "the list has to stay whole" and lived inside the router being deleted |
