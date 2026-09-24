@@ -165,6 +165,19 @@ export function init(ctx) {
     if (el && el.hasAttribute('data-open')) delClose(); else delOpen();
   });
   onActivate(document, '#acctDelNo', delClose);
+
+  /* ── the switches · platform.md §8 ───────────────────────────────
+     §8 NAMES THE SWITCHES AMONG WHAT IS LIVE, and the one that exists was not.
+     It rendered checked, took focus, took a press and stayed checked — the
+     same defect as the delete disclosure and the same sentence refuses it:
+     a control that looks live and does nothing is worse than one that is
+     absent, because the founder blames themselves for the press.
+
+     NOTHING IS SAID ALOUD. `role="switch"` announces its own state change
+     from aria-checked, so a live region here would say it twice. */
+  onActivate(document, '[role="switch"]', el =>
+    el.setAttribute('aria-checked',
+      el.getAttribute('aria-checked') === 'true' ? 'false' : 'true'));
   const delEl = $('#acctDel');
   if (delEl) delEl.addEventListener('transitionend', e => {
     if (e.propertyName === 'grid-template-rows' && delEl.hasAttribute('data-open'))
