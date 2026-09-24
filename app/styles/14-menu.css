@@ -29,7 +29,10 @@
 .proj-open #projMenu,.menu-open #acctMenu{opacity:1;visibility:visible;transform:none;
       transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
                  visibility 0s linear 0s}
-.menu-who{display:flex;flex-direction:column;gap:5px;padding:var(--s-8)}
+/* --s-6 AND NOT 5. Five is not a step on §5's scale and nothing argued it;
+   the name-over-address stack is the same label-over-value pair every other
+   surface spaces with --s-6. */
+.menu-who{display:flex;flex-direction:column;gap:var(--s-6);padding:var(--s-8)}
 
 /* ── MOVED HERE FROM THE RESET SECTION, and it is safe to move because it
    wins on SPECIFICITY wherever it lands rather than on order.

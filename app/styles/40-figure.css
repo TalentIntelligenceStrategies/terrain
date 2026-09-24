@@ -302,8 +302,10 @@
               transition:border-color var(--dur-1) var(--ease),
                          box-shadow var(--dur-1) var(--ease),
                          transform var(--dur-1) var(--ease)}
+/* --s-4 AND NOT 3. Three is not a step and nothing argued it; --s-4 is what
+   .set-thumb-img and .pn-fig-img both inset a drawing by. */
 .figstrip-btn img{display:block;width:100%;aspect-ratio:4/5;object-fit:contain;
-                  padding:3px}
+                  padding:var(--s-4)}
 .figstrip-btn:active{transform:scale(.96)}
 /* THE CURRENT ONE IS MARKED BY WEIGHT, NOT BY HUE. Which drawing you are
    looking at is closer to data than to a control, so §3.8's accent does not
