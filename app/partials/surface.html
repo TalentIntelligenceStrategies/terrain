@@ -199,10 +199,9 @@
                  polite update. -->
             <span class="chip" id="setRankChip" role="status" aria-live="polite" hidden></span>
           </div>
-        <!-- what the founder asked to leave out at the gate travels here, because
-             an exclusion that never shows on the result it shaped is indistinguishable
-             from one that was dropped. platform.md §3.2, retired Q4. -->
-        <p class="set-excl" id="setExcl" hidden></p>
+        <!-- #setExcl STOOD HERE and showed what the narrowing was told to leave
+             out. There is no narrowing: the search runs on submit. Nothing set
+             it, so it never rendered. -->
 
         <section class="card">
           <div class="set-bar">
@@ -268,17 +267,11 @@
             <span class="spacer"></span>
           </div>
 
-          <!-- THE EVENT, in one slot with two states. It SHIPS EMPTY, and that is
-               not tidiness: grid-template-rows:0fr plus overflow:hidden does not
-               remove text from the accessibility tree, so the old markup let a
-               screen reader browsing a resting set read a sentence about an
-               operation that was not happening. Empty also makes the live region
-               safe — registered at load, silent until there is something true to
-               say. The old #setRunLabel id was read by nothing. -->
-          <div class="set-run" id="setRun"><div><div class="set-run-in">
-            <span class="sweep" aria-hidden="true"></span>
-            <p class="set-run-say" id="setRunSay" role="status" aria-live="polite"></p>
-          </div></div></div>
+          <!-- #setRun STOOD HERE: a collapsed band for a beat passing through,
+               with its own live region. Nothing ever opened it — there was no
+               [data-open] rule and no writer — so it sat at 0fr permanently and
+               the region it registered never spoke. The re-rank says what it
+               did through #setRankChip above. -->
           <div class="set-listcol">
             <!-- THE GROUPING'S CHIPS LIVE HERE, not in the panel that made
                  them. The panel can be hidden; the filter it applied cannot
@@ -309,7 +302,6 @@
           </div>
 
         </section>
-          <div id="setBuildSlot"></div>
         </div>
         </div>
       </div>

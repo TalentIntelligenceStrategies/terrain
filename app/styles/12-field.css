@@ -18,7 +18,7 @@
 /* ── .pref · the settings row ────────────────────────────────────────────
    §7's "a list, not a page" applied to preferences: a label, optionally one
    sentence of consequence, one control at the trailing edge, rows dividing
-   on .ur's hairline. A settings card and a runs list are the same object.
+   on a hairline. A settings card and a runs list are the same object.
 
    A GRID AND NOT A FLEX LINE, and the help text is the whole reason. With
    flex, align-items:center centres a 36px control against a two-line body
@@ -38,7 +38,7 @@
    A container query needs a subject that exists and a width the viewport
    does not know. This has both.*                                        */
 .pref-card{container-type:inline-size}
-/* THE DIVIDER IS ON THE TOP EDGE, and .ur's is on the bottom — a deliberate
+/* THE DIVIDER IS ON THE TOP EDGE, and the runs list's is on the bottom — a deliberate
    difference rather than a slip. A trailing border plus :last-child works only
    while a row IS the last child, and the Your data card puts the inline
    confirm after its one row, so the row stopped being last and kept a line

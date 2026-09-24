@@ -35,8 +35,8 @@
 /* ── the thread ─────────────────────────────────────────────
    Nothing's visibility depends on a transition having run: .is-in is added on
    the same frame, and reduced motion declares the end state outright.      */
-.thread{display:flex;flex-direction:column;gap:var(--s-20);padding-top:var(--s-8)}
-.conv .thread{padding-bottom:var(--s-8)}
+/* .thread WENT WITH THE CONVERSATION. There is no thread; the home surface
+   is one column with a composer in it. */
 
 /* ── the composer ───────────────────────────────────────────
    One component, two sizes: the whole column here, docked on the map. It
@@ -70,8 +70,6 @@
 .sweep::after{content:"";position:absolute;top:0;bottom:0;width:45%;border-radius:inherit;
        background:currentColor;animation:sweepx var(--cycle) linear infinite}
 @keyframes sweepx{0%{transform:translateX(-120%)}100%{transform:translateX(255%)}}
-/* the round, read back where it is approved — §3.2 */
-.cf-answers .head-meta{gap:var(--s-6)}
 /* A GRID, NOT FLEX-WRAP · 2026-09-11. Five answers of wildly different lengths
    were sized to their own content, so one sentence-length DIRECTION pushed the
    four short answers out of any rhythm and no label ever lined up with the one
@@ -81,19 +79,9 @@
 
    The gap between pairs is well over twice the gap inside one, or the column of
    two lines reads as four unrelated ones. One value now, not 14/16. */
-#cfAnswerChips{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
-  gap:var(--s-16);align-items:start}
 /* NOT the same shape as the answers above: exclusions are label-less phrases,
    so there is nothing to line up into columns and the grid does not apply. An
    explicit gap rather than the --s-6 inherited from .cf-answers .head-meta,
    which was the only reason the two boxes looked different. */
-#cfExclChips{gap:var(--s-8)}
-/* .said carries a display above, which outranks [hidden] on its own */
-.said[hidden]{display:none}
 
-/* RETIRED WITH THE GATE, and the rule is kept only while #setExcl is still in
-   the markup. It showed what the narrowing was told to leave out; there is no
-   narrowing, so nothing sets it and it never renders. */
-.set-excl{margin:calc(var(--s-12) * -1) 0 var(--s-16);font-size:13px;line-height:1.6;
-  color:var(--text-2)}
-.set-excl[hidden]{display:none}
+/* .set-excl WENT WITH #setExcl. The narrowing it reported does not exist. */

@@ -63,11 +63,7 @@
   .dc[data-open]{grid-template-rows:1fr}
   .dc[data-open]>div{overflow:visible}
 
-  /* the build lands on its final frame, every narration line present. The
-     runner declares the same states in JS; this is the belt to that braces. */
-  .prog-bar{transform:none}
-  .done{opacity:1;transform:none}
-
-  /* anything that would otherwise fade or rise into place is simply there */
-  .grid[data-stagger] .card{opacity:1;transform:none}
+  /* THE BUILD'S TWO END-STATE RULES WENT WITH THE BUILD, and the stagger
+     override with them: nothing writes data-stagger, and the entrance it
+     declared an end state for is not declared anywhere either. */
 }

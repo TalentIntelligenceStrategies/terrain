@@ -155,7 +155,6 @@
   .listcol{flex:0 0 auto;width:auto;min-width:0;max-height:46vh;border-right:0;
            border-bottom:1px solid var(--border)}
 }
-@media (hover:hover){ }
 
 /* ── the Market / Technology toggle, in the surface's head ──────────────
    IT HAD A BAND OF ITS OWN inside the right pane until 2026-09-11 — a

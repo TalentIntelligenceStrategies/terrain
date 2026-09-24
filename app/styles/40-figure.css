@@ -399,8 +399,8 @@
    reason as everywhere else: a `disabled` button drops out of the tab order, so
    the founder who most needs the label saying WHY cannot reach it. It stays
    focusable, it keeps its name, and the JS refuses the act. */
-.seg-btn[aria-disabled="true"]{color:var(--text-disabled);cursor:default}
-.seg-btn[aria-disabled="true"]:active{transform:none}
+/* NO .seg-btn TAKES aria-disabled. The two controls that do are #recPrev and
+   #recNext, and both are .icon-btn. */
 
 /* ── a withheld drawing ─────────────────────────────────────────────────
    `src === null` means the record HAS this drawing and Terrain declines to

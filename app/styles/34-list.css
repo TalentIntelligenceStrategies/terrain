@@ -382,29 +382,11 @@
    THE ENTER AND THE EXIT ARE DIFFERENT DURATIONS, which is why the base rule
    carries the exit and the state class overrides it — §6 says exit is faster
    than enter everywhere, not only on the view swap. */
-.set-run{display:grid;grid-template-rows:0fr;
-  transition:grid-template-rows var(--dur-2) var(--ease)}
-.set-run>div{overflow:hidden;min-height:0}
-/* symmetric padding. It was symmetric because the settled band was PERMANENT
-   and asymmetry would have moved every row the instant the state changed,
-   mid-FLIP. There is no settled band now and the reason is simpler: this is a
-   beat passing through, and a band that is only ever in transit has no edge to
-   favour. */
-.set-run-in{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap;
-  padding:var(--s-14) var(--s-20);font-size:13px;color:var(--text-2)}
-.set-run-in .spacer{flex:1 1 auto}
-/* swapped behind a fade, never retyped in place: a word changing letter by
-   letter in a line reads as a glitch rather than as a state change.
-   THE BLUR IS THE SAME ONE .cmp-status CARRIES and for the same reason: the two
-   sentences are different lengths, so a bare opacity swap reflows the line and
-   reads as two strings trading places rather than one statement changing. */
-.set-run-say{margin:0;flex:1 1 220px;
-  transition:opacity var(--dur-1) var(--ease),filter var(--dur-1) var(--ease)}
-/* the indicator belongs to the running state, and its ABSENCE is what says the
-   beat has landed — §2 leaves no hue to say it with. opacity rather than
-   display, so the sentence does not jump 26px left when it goes. */
-.set-run-in .sweep{opacity:0;flex:0 0 auto;
-  transition:opacity var(--dur-1) var(--ease)}
+/* .set-run WENT WITH ITS MARKUP. It declared a collapsed track and a
+   transition to open it, and nothing ever wrote the state that opened it. */
+
+
+
 
 /* ── the drawings' own hover · §6's full form, because it carries a transform ─
    EVERY SELECTOR IN HERE NAMES :hover, which is gate F, and the gate matters
