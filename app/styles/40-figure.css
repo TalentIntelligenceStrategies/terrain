@@ -120,8 +120,12 @@
    under a pointer does not exist on a touch screen or to a keyboard, so it
    sits quietly at rest and comes up when the pointer arrives — which is what
    "numbering on hover" has to mean if it is to be true for everybody. */
+/* --figure-ink AND NOT --text-3. This caption sits ON the drawing's paper,
+   which does not swap, and --text-3 does: measured in dark it was #8E8E8E on
+   #FFFFFF at 3.28:1, under the 4.5:1 §3.2 sets for small text. The paper's
+   own ink pair is what a caption on paper takes. */
 .pn-fig-n{position:absolute;bottom:var(--s-4);inset-inline-start:var(--s-6);
-          color:var(--text-3);
+          color:var(--figure-ink);
           transition:color var(--dur-1) var(--ease)}
 
 /* ── the viewer ─────────────────────────────────────────────────────────── */
@@ -305,9 +309,10 @@
    looking at is closer to data than to a control, so §3.8's accent does not
    reach it; --border-strong and ink do the work, and the number goes solid. */
 .figstrip-btn[aria-current="true"]{border-color:var(--text-1)}
-.figstrip-btn[aria-current="true"] .figstrip-n{color:var(--text-1)}
+.figstrip-btn[aria-current="true"] .figstrip-n{color:var(--figure-ink-strong)}
+/* ON THE PAPER, SO IT TAKES THE PAPER'S INK. Same as .pn-fig-n above. */
 .figstrip-n{position:absolute;bottom:2px;inset-inline-start:4px;
-            color:var(--text-3);
+            color:var(--figure-ink);
             transition:color var(--dur-1) var(--ease)}
 
 /* ── hover, gated ── every rule here NAMES :hover; nothing else may. ──── */
@@ -321,10 +326,10 @@
      box-shadow joins the transition BY NAME rather than through `all`. */
   .pn-fig-btn:hover{border-color:var(--border-strong);transform:translateY(-1px);
                     box-shadow:var(--shadow-raise)}
-  .pn-fig-btn:hover .pn-fig-n{color:var(--text-1)}
+  .pn-fig-btn:hover .pn-fig-n{color:var(--figure-ink-strong)}
   .figstrip-btn:hover{border-color:var(--border-strong);transform:translateY(-1px);
                       box-shadow:var(--shadow-raise)}
-  .figstrip-btn:hover .figstrip-n{color:var(--text-1)}
+  .figstrip-btn:hover .figstrip-n{color:var(--figure-ink-strong)}
   .figbar-btn:not(:disabled):hover{color:var(--text-1);background:var(--surface-sunken)}
   .figview-step:hover{color:var(--text-1)}
 }

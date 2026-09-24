@@ -115,6 +115,8 @@ what lets an accent sit on the system without fighting a temperature.
 | `--veil-edge` | `rgba(37,37,37,.12)` | the hairline on that bar, compositing over the same thing |
 | `--scrim` | `rgba(37,37,37,.55)` | the one dimming layer, under the enlarged drawing |
 | `--figure-ground` | `#FFFFFF` | the paper a patent drawing was published on |
+| `--figure-ink` | `#595959` | a caption ON that paper, quiet |
+| `--figure-ink-strong` | `#252525` | the same caption, raised |
 
 Three of these are alpha rather than flat neutrals because they composite over a surface whose colour
 varies — `--veil` sits on a patent's own line-work, `--veil-edge` sits on whatever `--veil` is sitting
@@ -140,7 +142,14 @@ clears the white stage at 3.79:1; at .48 it falls to 3.11 and below that it fail
 is the floor for a boundary that is not text. Above about .65 the page stops reading as a page that
 is still there.
 
-**`--figure-ground` is the one semantic token that does not swap**, and that is a fact about the
+**The paper does not swap, and neither does the ink on it.** `--figure-ink` and
+`--figure-ink-strong` are light's own `--text-2` and `--text-1`, frozen, because a caption sitting on
+a patent drawing sits on `--figure-ground` rather than on the app. Taking `--text-*` there was the
+same defect `--veil-edge` was added for: **measured in dark, the record's figure number was `#8E8E8E`
+on `#FFFFFF` paper at 3.28:1** — under the 4.5:1 this section sets for small text — and a caption
+raised to `--text-1` was `#F0F0F0` at **1.14:1**. Frozen, they measure **7.00:1** and **15.33:1** on paper, in both themes.
+
+**`--figure-ground` is the semantic token this all follows from**, and that is a fact about the
 content rather than an exemption from §10. A patent drawing is black line-work on a transparent
 background; composited onto `#1A1A1A` it is a blank rectangle. Every other semantic token means *the
 surface under our own chrome*; this one means *the paper this was published on*, which has no dark
@@ -291,7 +300,7 @@ blocks that goes stale. `tools/check-app.py` refuses one declared anywhere else.
 | --- | --- | --- | --- |
 | **primitive** | 11 | `:root`, once | `--n-0`…`--n-10`. **No component may read one.** |
 | **scale** | 28 | `:root`, once | `--s-*` `--r-*` `--dur-*` `--ease*` `--cycle`. Invariant by construction: a step is not a different size at night. |
-| **semantic** | 30 | **all three blocks** | This is the dark contract. §10.1. |
+| **semantic** | 32 | **all three blocks** | This is the dark contract. §10.1. |
 | **derived** | 3 | `:root`, once | Resolves *through* a themed token, so it inverts for free. **Never add one to a dark block.** |
 | **component-scoped** | 5 | on the component's own class | Never on `:root`, never read outside that component. |
 
@@ -870,7 +879,7 @@ The list is **duplicated on purpose.** CSS cannot share a declaration block betw
 a third indirection layer of `--dark-*` primitives buys nothing and hides which value is live.
 Whatever writes one writes both.
 
-**30 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
+**32 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
 here, `CLAUDE.md`, and `app/README.md`'s tier table — and **a gate keeps them equal to the file**
 rather than a sentence asking everyone to keep them equal to each other.
 
@@ -957,6 +966,8 @@ this section.
 | `--veil-edge` | `rgba(37,37,37,.12)` | **does not swap** — the surface under it does not, so neither may it |
 | `--scrim` | `rgba(0,0,0,.72)` | **does** swap — it composites over the app, not the drawing |
 | `--figure-ground` | `#FFFFFF` | **does not swap** — see §3.2 |
+| `--figure-ink` | `#595959` | **does not swap** — the paper does not, so the ink on it may not |
+| `--figure-ink-strong` | `#252525` | **does not swap** — the raised form of the same |
 
 **Two semantic tokens are identical in both palettes, and both are facts about the content rather
 than exemptions.** A patent drawing is black line-work on a transparent background; composited onto

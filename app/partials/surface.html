@@ -99,6 +99,30 @@
            that cost, and the list is the thing a founder navigates BY — it
            stays. -->
       <div class="listcol" id="listcol">
+        <!-- ══ THE FIGURE PEEK · one node, and it belongs to the COLUMN ══════
+             A GLANCE, NOT A TARGET. Hovering or keyboard-focusing a drawing in
+             a result row raises it large enough to read; moving away puts it
+             back. Clicking still opens the record at that figure, and the full
+             viewer — zoom, rotate, paging — stays inside the record, because
+             that is where somebody who wants more than a glance has gone.
+
+             IT IS A SIBLING OF THE SCROLLER AND NOT A CHILD OF A ROW. A
+             preview anchored inside .listcol-scroll is clipped on all four
+             sides by it; .listcol is position:relative and is NOT the
+             scroller, so a child of it escapes the clip and holds still while
+             the list moves underneath. .listcol's own overflow:hidden is then
+             the outer clamp, which is the correct clamp — the peek must never
+             reach the record.
+
+             ONE NODE FOR THE WHOLE COLUMN. Twenty rows of thirteen tiles is
+             260 of these otherwise, for a thing that exists once.
+
+             NO SECOND position:fixed NODE. The enlarged drawing is the one,
+             and this does not need to leave the column — it must not. -->
+        <div class="set-peek" id="setPeek" hidden aria-hidden="true">
+          <img class="set-peek-img" id="setPeekImg" alt="" decoding="async">
+          <span class="set-peek-n fig fig-s" id="setPeekN"></span>
+        </div>
         <div class="listcol-scroll" id="listScroll">
         <div class="set-wrap" id="setWrap">
           <!-- the list's own head. It was a `.page-head` on a surface of its

@@ -202,6 +202,80 @@
    THE CHEVRON WENT WITH IT. It pointed at the row's own button, which is the
    thing it was inside: an affordance describing itself. */
 
+/* ══ THE FIGURE PEEK ══════════════════════════════════════════════════════
+   A GLANCE AT ONE DRAWING, AND THE SIZE SITS ON A MEASURED CLIFF. All 2,246
+   renditions in corpus/thumbs were sampled and the object-fit:contain scale
+   into each candidate card computed. 176 puts the median at 1.68x with 6%
+   of drawings over 2x; 208 puts the median at 2.02x with FIFTY-SIX percent
+   over 2x, because that is where the median rendition itself crosses. 176 is
+   the last size before the cliff, and the ladder reads 102 -> 148 -> 176 ->
+   the viewport.
+
+   IT IS ABSOLUTE IN .listcol, which is position:relative and is NOT the
+   scroller. A preview anchored inside .listcol-scroll is clipped by it on all
+   four sides; this escapes the clip and holds still while the list moves
+   under it, and the column's own overflow:hidden is the outer clamp.
+
+   pointer-events:none IS LOAD-BEARING, NOT TIDINESS. The peek is a glance and
+   not a target, so the pointer can never enter it: there is no safe-triangle
+   problem, no travel grace needed on close, and a peek overlapping the rows
+   below steals none of their hover.
+
+   aria-hidden, AND THE TILE IS WHY. .set-thumb's accessible name already
+   reads "Figure N, open the record at this drawing" — a superset of what this
+   prints. Exposing it would announce the figure number twice.
+
+   z-index 5 · ONE BELOW THE MASTHEAD. Above everything in the scroller, which
+   is all z:auto, and below every surface the founder opened ON PURPOSE: the
+   masthead at 6, its menus at 7, .lm-menu and .info-pop at 35, .pop at 36,
+   the enlarged drawing at 60. A preview that merely happened under the
+   pointer may not cover a menu that was asked for.
+
+   NO :hover RULE ANYWHERE IN HERE, so check-app.py's hover gate is not
+   engaged. The gate lives in JS as e.pointerType, which is strictly better
+   than a media query: a hybrid laptop gets a peek from its trackpad and none
+   from its touchscreen, in the same session. */
+.set-peek{position:absolute;top:0;left:0;z-index:5;
+          width:176px;aspect-ratio:4/5;
+          pointer-events:none;overflow:hidden;
+          background:var(--figure-ground);
+          border:1px solid var(--veil-edge);
+          border-radius:var(--r-inner);
+          box-shadow:var(--shadow-float);
+          opacity:0;
+          transform:translate(var(--peek-x,0px),var(--peek-y,0px))
+                    translateY(var(--peek-dy,-4px))
+                    scale(var(--peek-s,.97));
+          transform-origin:50% 100%;
+          transition:opacity var(--dur-1) var(--ease),
+                     transform var(--dur-1) var(--ease)}
+.set-peek[hidden]{display:none}
+/* THE ANCHOR IS STATED ONCE, as two custom properties, so re-anchoring while
+   open is two setProperty calls and touches no rule. It moves by TRANSFORM
+   and never by left/top — §6 forbids animating a layout property outright. */
+.set-peek[data-open]{opacity:1;--peek-dy:0px;--peek-s:1;
+                     transition:opacity var(--dur-2) var(--ease),
+                                transform var(--dur-2) var(--ease)}
+/* THE ORIGIN FLIPS AND THE LIFT DOES NOT, which is .pop's own convention and
+   .lm-menu's: always translateY(-4px), and only the origin says which side of
+   the trigger it came from. */
+.set-peek[data-below]{transform-origin:50% 0%}
+/* NAMING ONLY opacity DROPS transform OUT OF THE TRANSITION, which is the
+   point. A keyboard walks this strip with the arrows, and a 200ms entrance
+   replayed on every keypress is animation on a repeated key action — the
+   focus ring is already carrying the movement. Declared after [data-open]
+   because the two are equal specificity and order decides. */
+.set-peek[data-via="key"]{transition:opacity var(--dur-1) var(--ease)}
+.set-peek-img{display:block;width:100%;height:100%;object-fit:contain;
+              padding:var(--s-8)}
+/* THE NUMBER IS THE FEATURE'S JUSTIFICATION, not decoration. The row's tile
+   prints one NOWHERE — the record's strip does (.pn-fig-n) and the enlarged
+   view's does (.figstrip-n) and the row's does not — so this is the only
+   place on the results surface a sighted founder learns WHICH figure a tile
+   is. That is information gain, which is why it survives reduced motion. */
+.set-peek-n{position:absolute;bottom:var(--s-6);inset-inline-start:var(--s-8);
+            color:var(--figure-ink-strong)}
+
 /* ══ THE ROW'S DRAWINGS · platform.md §4.3 ════════════════════════════════
    IT SCROLLS, AND THAT MOVED THE COST FROM WIDTH TO HEIGHT. The track was four
    fixed 64s because four was what the column could hold at the 1024 floor —

@@ -21,7 +21,7 @@
    FIVE TIERS, and the rule for each is on its own block:
      1 primitive  11   no component may read one
      2 scale      28   invariant by construction
-     3 semantic   30   declared in all three blocks — this is the dark contract
+     3 semantic   32   declared in all three blocks — this is the dark contract
      4 derived     3   resolves THROUGH a themed token. Never in a dark block
      5 component   —   not here at all. On the component's own class,
                        design-language.md §3.9
@@ -177,6 +177,23 @@ html{color-scheme:light dark;background:var(--ground)}
      a token. The gate is what stops the next white from being a judgement
      call, and a named invariant is checkable where a hex is not. */
   --figure-ground:#FFFFFF;
+  /* --figure-ink AND --figure-ink-strong ARE --figure-ground's HALF OF THE
+     SAME ARGUMENT. Paper does not swap, so the ink on it may not either. Every
+     caption that sits ON a drawing had been taking --text-*, which does swap:
+     measured in dark, the record's figure number was #8E8E8E on #FFFFFF paper
+     at 3.28:1, under the 4.5:1 §3.2 sets for small text, and a caption raised
+     to --text-1 was #F0F0F0 at 1.14:1 — invisible.
+
+     THE TWO VALUES ARE LIGHT'S OWN --text-2 AND --text-1, frozen. On white
+     paper they measure 7.00:1 and 14.68:1, so the quiet one clears the floor
+     for 10.5px text and the raised one is the same step up the ramp the rest
+     of the system uses. Freezing them rather than inventing a pair keeps the
+     figure captions reading like every other quiet-then-raised label.
+
+     THEY ARE NOT --text-2 AND --text-1 WITH A NOTE. A component reading a
+     token that swaps, over a surface that does not, is the exact defect
+     --veil-edge was added for three tokens ago. */
+  --figure-ink:#595959; --figure-ink-strong:#252525;
 
   /* ── --scrim · the ONE dimming layer in the product ─────────────────────
      §3.2 read "there is no scrim token, and no scrim" and closed with "a
@@ -280,6 +297,7 @@ html{color-scheme:light dark;background:var(--ground)}
   --veil-edge:rgba(37,37,37,.12);
   /* unchanged, deliberately: see the light block. The paper does not swap. */
   --figure-ground:#FFFFFF;
+  --figure-ink:#595959; --figure-ink-strong:#252525;
 
   /* THE SCRIM IS BLACK HERE AND INK IN THE LIGHT BLOCK, which is a real swap
      rather than the --veil case one line up. --veil composites over a white
@@ -336,6 +354,7 @@ html{color-scheme:light dark;background:var(--ground)}
   --veil-edge:rgba(37,37,37,.12);
   /* unchanged, deliberately: see the light block. The paper does not swap. */
   --figure-ground:#FFFFFF;
+  --figure-ink:#595959; --figure-ink-strong:#252525;
 
   /* THE SCRIM IS BLACK HERE AND INK IN THE LIGHT BLOCK, which is a real swap
      rather than the --veil case one line up. --veil composites over a white

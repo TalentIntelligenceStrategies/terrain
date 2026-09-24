@@ -42,6 +42,7 @@ import { focusQuietly } from '../core/focus.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import * as Starred from '../core/starred.mjs';
 import { rovingIn } from '../core/roving.mjs';
+import * as Peek from '../core/peek.mjs';
 
 let ENGINE = null;
 let MATCHED = 0;
@@ -719,6 +720,12 @@ export function init(ctx) {
      tile, -1 on the rest — so a fresh render resets the stop to the head of
      the strip, which is the correct fresh state. */
   rovingIn(document, '.set-thumbs', '.set-thumb');
+
+  /* THE PEEK IS THE STRIP'S, so it is started where the strip is. It needs
+     nothing from rovingIn and rovingIn needs nothing from it: roving calls
+     focusQuietly, whose focus event bubbles to the peek's delegated focusin
+     handler, and the two never speak. */
+  Peek.init();
 
   ctx.onRoute(view => {
     if (view !== 'work' || loaded) return;

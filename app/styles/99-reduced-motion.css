@@ -66,4 +66,21 @@
   /* THE BUILD'S TWO END-STATE RULES WENT WITH THE BUILD, and the stagger
      override with them: nothing writes data-stagger, and the entrance it
      declared an end state for is not declared anywhere either. */
+
+  /* ── the figure peek · present and flat ─────────────────────────────────
+     IT MAY NOT SIMPLY BE SWITCHED OFF, and the reason is the figure NUMBER.
+     The row's tile prints one nowhere — the record's strip does and the
+     enlarged view's does and the row's does not — so this is the only place
+     on the results surface a sighted founder learns WHICH figure a tile is.
+     Withholding that under reduced motion is reduced INFORMATION, which §6
+     refuses outright.
+
+     WHAT GOES IS THE 4px LIFT AND THE .97 SCALE, declared here rather than
+     left to a transition that never ticks. The glance is unchanged.
+
+     THE 160ms DWELL STAYS, and it is in peek.mjs rather than here. A delay is
+     an intent filter, not motion; removing it would fire the peek on every
+     sweep of the pointer across the strip, which is MORE movement on screen
+     rather than less. */
+  .set-peek[data-open]{opacity:1;--peek-dy:0px;--peek-s:1}
 }
