@@ -362,6 +362,19 @@
 .lm.is-open .lm-menu{opacity:1;visibility:visible;transform:none;
   transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
              visibility 0s linear 0s}
+/* ── .lm-up · a menu at the foot of a scroller opens upward ──────────────
+   The record's closing block is the last thing inside a .rec that is
+   overflow:clip, so a menu below its last control is a menu nobody sees. This
+   is the whole modifier: flip the edge it hangs from and the origin it grows
+   from, and flip the sign of the 4px the entrance travels.
+
+   THE .is-open OVERRIDE IS SPELLED OUT because .lm-up .lm-menu and
+   .lm.is-open .lm-menu are both (0,2,0) and order decides — this pair is
+   later in the file, so it wins, and it has to restate transform:none rather
+   than inherit it. */
+.lm-up .lm-menu{top:auto;bottom:calc(100% + var(--s-6));
+  transform-origin:bottom left;transform:translateY(4px) scale(.97)}
+.lm-up.is-open .lm-menu{transform:none}
 .lm-item{display:flex;align-items:center;gap:var(--s-10);width:100%;text-align:left;
   padding:var(--s-8);border-radius:var(--r-control);font-size:13px;font-weight:500;
   color:var(--text-2);transition:background var(--dur-1) var(--ease),
@@ -426,8 +439,12 @@
    a no-op and only the parent's colour moved. `transparent` renders exactly as
    `none` here and interpolates. */
 .set-star svg{fill:transparent;transition:fill var(--dur-1) var(--ease)}
-.set-ctl.set-star[aria-pressed="true"]{color:var(--text-1)}
-.set-ctl.set-star[aria-pressed="true"] svg{fill:currentColor}
+/* THE .set-ctl QUALIFIER WENT, 2026-09-24. It was there for specificity over
+   .set-ctl{color:var(--text-3)} and nothing else, and at (0,2,0) this still
+   beats it — but the record's star is a .rec-act rather than a .set-ctl, and
+   one treatment has to reach every host of the class. */
+.set-star[aria-pressed="true"]{color:var(--text-1)}
+.set-star[aria-pressed="true"] svg{fill:currentColor}
 /* SCOPED TO THE TITLE, 2026-09-24. It read `.drill-toggle .sk:first-child`,
    which meant "the title's first bar" only while the title was the first
    thing in the button. The eyebrow's number bar is first in DOM order now, so

@@ -25,6 +25,9 @@ import { say } from '../core/live-region.mjs';
 import { statusHTML, statusWord } from '../core/primitives.mjs';
 import { esc } from '../core/dom.mjs';
 import * as Starred from '../core/starred.mjs';
+/* THE ONE CROSS-SURFACE IMPORT IN THIS FILE, and it is the right direction:
+   this surface is what the list's rows leave through. See rowFor()'s note. */
+import { rowFor } from './list.mjs';
 
 /* THE COLUMNS ARE DECLARED ONCE and both formats read them, so a spreadsheet
    and a Markdown list cannot drift into carrying different things. The `get`
@@ -218,4 +221,38 @@ export function init(ctx) {
       download(filename('md'), 'text/markdown;charset=utf-8', toMarkdown(rows, query));
       say('destination', rows.length + ' patents downloaded as a Markdown list.');
     }));
+
+  /* ── one record, through the same two builders ───────────────────────────
+     THE RECORD'S CLOSING BLOCK OFFERS THIS AND THIS FILE ANSWERS IT, because
+     COLUMNS is declared here and one record must not grow a third opinion
+     about what a row contains. It reads the ROW rather than the record, for
+     the reason rowFor() carries.
+
+     THE INVERSION IS THE SET'S. platform.md §7.2: the file is built entirely
+     in the client from a row the founder already has, so it is handed over
+     first and the ledger is called after — a refused ledger call must not cost
+     them their download, because the bytes were never the engine's to
+     withhold. */
+  onActivate(document, '[data-rec-export]', async el => {
+    const end = el.closest('.rec-end');
+    const id = end && end.getAttribute('data-pn');
+    const row = id && rowFor(id);
+    if (!row) return;
+    const ext = el.getAttribute('data-rec-export');
+    const q = $('#resQuery');
+    if (ext === 'csv') {
+      download(filename('csv'), 'text/csv;charset=utf-8', toCSV([row]));
+      say('destination', 'This record downloaded as a spreadsheet.');
+    } else {
+      download(filename('md'), 'text/markdown;charset=utf-8',
+        toMarkdown([row], q && q.value.trim()));
+      say('destination', 'This record downloaded as a Markdown list.');
+    }
+    let res = null;
+    try { res = await ENGINE.export({ ids: [id], format: ext }); } catch (e) { res = null; }
+    if (res && res.ok && res.data && res.data.balance != null) {
+      const meter = $('#meterN');
+      if (meter) meter.textContent = String(res.data.balance);
+    }
+  });
 }

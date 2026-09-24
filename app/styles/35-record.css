@@ -106,48 +106,78 @@
 .rec-head{display:flex;align-items:center;gap:var(--s-12);flex:0 0 auto;
           position:sticky;inset-block-start:0;z-index:1;
           background:var(--surface);
-          padding:var(--s-16) var(--s-20);border-bottom:1px solid var(--border);
-          container-type:inline-size;container-name:rec-head}
+          padding:var(--s-16) var(--s-20);border-bottom:1px solid var(--border)}
 .rec-head h2{flex:1;min-width:0;margin:0}
 
-/* ══ THE WAY OUT · design-language.md §9, §3.8 ════════════════════════════
-   A LABEL AND A GLYPH, and it is the only control in this head that carries
-   words. The three beside it — previous, next, close — are acts the founder
-   already knows the shape of; this one has a DESTINATION, and an arrow alone
-   would say "somewhere else" without saying where.
+/* ══ THE CLOSING BLOCK · platform.md §4.5 ═════════════════════════════════
+   .rec-act IS .rec-out's OWN TREATMENT, RENAMED. That control was the one
+   quiet labelled control in this pane, and its rule already said everything
+   every control down here has to say: no border, no fill, a --surface-sunken
+   ground on hover, the label at 13/500. So the rule is kept and the family
+   gains four members, rather than a second shape being invented beside it.
 
-   NO ACCENT. §3.8 gives the accent to the primary action of a surface, and
-   the primary action here is reading the record. This is a way out of it.
-   So it reads as a quiet control at rest and comes up on hover, the same as
-   every other control in this head.
+   IT MOVED OUT OF THE HEAD RATHER THAN BEING DUPLICATED. Two controls with
+   one destination in one pane is §9's repetition failure with the same mark
+   for the same act. Moving it also deleted a container query — .rec-head's
+   container-type existed solely to feed a 520px rule that hid this label —
+   which takes §7's "three exceptions" down to two.
 
-   IT IS AN <a>, so it gets the underline-free treatment explicitly: the
-   product has no other external link and no inherited anchor styling to
-   lean on. */
-.rec-out{display:inline-flex;align-items:center;gap:var(--s-6);flex:0 0 auto;
+   THE LABEL STAYS "Open in IPtech". platform.md §4.5 argues it outright: a
+   label rather than a bare glyph, BECAUSE IT HAS A DESTINATION, and an arrow
+   alone says only "somewhere else". "See source" says strictly less. When the
+   engine returns a URL and a label per patent, the label becomes data.
+
+   NO ACCENT, AND NO FILL ANYWHERE IN HERE. §3.8 gives the accent to the
+   primary action of a surface, and this surface already spent it on Find
+   similar in the list bar. Two filled buttons make the smaller one look like
+   the way forward.
+
+   IT IS AN <a> IN ONE CASE, so the underline-free treatment is explicit: the
+   product has no other external link and no inherited anchor styling. */
+.rec-end{border-block-start:1px solid var(--border);padding:var(--s-20);
+         display:flex;flex-direction:column;gap:var(--s-12)}
+/* [hidden] has to beat the author display:flex above it, the same as .rec and
+   .card and every other element in this file that carries it. */
+.rec-end[hidden]{display:none}
+/* THE NEGATIVE START MARGIN IS .set-more-btn's ARGUMENT: the first label
+   lines up with the heading above it and the note below it, while the hover
+   ground keeps its own padding. */
+.rec-acts{display:flex;flex-wrap:wrap;align-items:center;
+          gap:var(--s-8) var(--s-24);
+          margin-inline-start:calc(-1 * var(--s-8))}
+.rec-act-grp{display:flex;flex-wrap:wrap;align-items:center;
+             gap:var(--s-8) var(--s-12)}
+.rec-act{display:inline-flex;align-items:center;gap:var(--s-6);flex:0 0 auto;
          padding:var(--s-6) var(--s-8);border-radius:var(--r-control);
          font-size:13px;font-weight:500;color:var(--text-2);
          text-decoration:none;white-space:nowrap;
          transition:background var(--dur-1) var(--ease),
                     color var(--dur-1) var(--ease),
                     transform var(--dur-1) var(--ease)}
-.rec-out svg{color:var(--text-3);flex:0 0 auto;
+.rec-act svg{color:var(--text-3);flex:0 0 auto;
              transition:color var(--dur-1) var(--ease)}
-.rec-out:active{transform:scale(.97)}
+.rec-act:active{transform:scale(.97)}
+.rec-act[hidden]{display:none}
+/* THE CONFIRMATION IS A GLYPH SWAP AND NOTHING MOVES. Both marks are 16px in
+   the same slot, so the label does not shift under the pointer that just
+   pressed it — and neither is a transition, because there is no state to
+   interpolate between two different paths. */
+.rec-act-ok{display:none}
+.rec-act[data-done] .rec-act-i{display:none}
+.rec-act[data-done] .rec-act-ok{display:block}
+.rec-act[data-done] svg{color:var(--text-1)}
+/* THE STAR'S PRESSED TREATMENT IS THE ROW'S, and it reaches here because
+   34-list.css drops the .set-ctl qualifier it only ever carried for
+   specificity. Value, not hue: §2. */
+.rec-act.set-star[aria-pressed="true"]{color:var(--text-1)}
+/* A HEADING, NOT A LABEL. design-language.md §4: "a label that heads a box is
+   not a label inside it" — this heads the box, so --text-2 and the 12px gap
+   below it, which .rec-end's own flex gap supplies. */
+.rec-end-h{margin:0;color:var(--text-2)}
+.rec-end-note{margin:0;max-width:68ch;color:var(--text-2)}
 @media (hover:hover){
-  .rec-out:hover{background:var(--surface-sunken);color:var(--text-1)}
-  .rec-out:hover svg{color:var(--text-2)}
-}
-/* ── below 520px of record · the label goes, the glyph stays ──────────────
-   Four controls and a heading in one row is the head's whole budget. The
-   label is the widest thing in it and the only part with a smaller form that
-   is still honest — an arrow-up-right out of a patent record means one thing.
-   THE NAME DOES NOT GO WITH IT. This is the sr-only technique rather than
-   display:none, so the words stay in the accessibility tree and the link goes
-   on announcing itself as "Open in IPtech" at every width. */
-@container rec-head (max-width:520px){
-  .rec-out>span{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
-                overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .rec-act:hover{background:var(--surface-sunken);color:var(--text-1)}
+  .rec-act:hover svg{color:var(--text-2)}
 }
 /* NO TRANSITION ON THIS. It carried `opacity` and `filter` for a 120ms
    crossfade when the founder picked a second patent without closing the

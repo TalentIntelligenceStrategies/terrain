@@ -87,12 +87,23 @@ function syncStarUI() {
   if (rebase) rebase.hidden = STARRED.size() === 0;
 }
 
+/* EVERY CONTROL THAT CARRIES THIS ID, NOT THE ONE THAT WAS PRESSED. The star
+   has three hosts now — the row, the record's closing block and the starred
+   view — and painting only the presser left the other two asserting the
+   opposite of what the set holds. The row's own [data-starred] rail still
+   goes on the closest .set-row, because the record has no rail. */
+function paintStars(id, on) {
+  document.querySelectorAll('[data-star="' + id + '"]').forEach(b => {
+    b.setAttribute('aria-pressed', String(on));
+    const el = b.closest('.set-row');
+    if (el) on ? el.setAttribute('data-starred', '') : el.removeAttribute('data-starred');
+  });
+}
+
 function toggleStar(id, btn) {
   const row = ROW_BY_ID.get(id) || { id };
   const on = STARRED.toggle(id, row);
-  btn.setAttribute('aria-pressed', String(on));
-  const el = btn.closest('.set-row');
-  if (el) on ? el.setAttribute('data-starred', '') : el.removeAttribute('data-starred');
+  paintStars(id, on);
   syncStarUI();
   /* THE CONFIRMATION NAMES THE SET, not just the act. "Starred." says a
      button was pressed; the founder needs to know a collection exists, how big
@@ -627,21 +638,26 @@ function check(panel, el) {
    patents" and a Restore button offering to undo an order that never changed —
    the interface asserting an outcome the engine had just declined. Everything
    that says "this happened" now happens where it is known to have happened. */
-function settled(on, n) {
+/* IT TAKES THE SENTENCE NOW, NOT A COUNT. The chip composed "Nearest to N
+   starred patents" from a number, which is false the moment the anchor is a
+   record the founder never starred — and the record's closing block is
+   exactly that case. The caller knows what it anchored on; this does not. */
+function settled(on, text) {
   const wrap = $('#setWrap');
   if (wrap) wrap.classList.toggle('is-ranked', on);
   const chip = $('#setRankChip');
   if (chip) {
     chip.hidden = !on;
-    chip.textContent = on
-      ? 'Nearest to ' + n + (n === 1 ? ' starred patent' : ' starred patents')
-      : '';
+    chip.textContent = on ? text : '';
   }
   const restore = $('#setRestore');
   if (restore) restore.hidden = !on;
 }
 
-async function reorderTo(anchors) {
+/* `label` IS WHAT THE SET IS NOW ORDERED BY, as a noun phrase: "2 starred
+   patents", or a patent number. Both the chip and the announcement read it,
+   so the two cannot disagree about what just happened. */
+async function reorderTo(anchors, label) {
   const list = $('#setList');
   if (!list) return;
   const btn = $('#setRebase');
@@ -671,9 +687,19 @@ async function reorderTo(anchors) {
     const el = rows.get(id);
     if (el) list.append(el);
   });
-  settled(true, anchors.length);
-  say('list', 'Ordered by nearness to ' + anchors.length
-    + (anchors.length === 1 ? ' starred patent.' : ' starred patents.'));
+  settled(true, 'Nearest to ' + label);
+  say('list', 'Ordered by nearness to ' + label + '.');
+}
+
+/* THE ROW BEHIND AN ID, for the one reader outside this file that needs it.
+   components.md §1 says the row carries `number` and `where` it does not draw
+   "because the starred set leaves as a seven-column file and the export reads
+   the row rather than the record" — so a single record leaving has to leave
+   through a row too, or one file carries different fields from the set it
+   came out of. The list is what holds rows; it hands one over rather than
+   letting the export reach into its renderer. */
+export function rowFor(id) {
+  return ROW_BY_ID.get(id) || null;
 }
 
 export function init(ctx) {
@@ -712,7 +738,7 @@ export function init(ctx) {
      `Find similar` ordered the previous result set and this is a different
      one — so the settled state is stood down and the list reloads. */
   window.addEventListener('terrain:searched', () => {
-    settled(false, 0);
+    settled(false, '');
     syncStarUI();
     request('patents', undefined, 'The list did not load.');
   });
@@ -725,7 +751,7 @@ export function init(ctx) {
      The ordering stands down for the same reason a new search stands it down:
      `Find similar` ordered a set this is no longer. */
   window.addEventListener('terrain:refiltered', e => {
-    settled(false, 0);
+    settled(false, '');
     render(e.detail);
   });
 
@@ -736,17 +762,39 @@ export function init(ctx) {
      anchors the founder chose. The response is an ORDER over the same set. */
   onActivate(document, '#setRebase', () => {
     if (!STARRED.size()) return;
-    reorderTo(STARRED.ids());
+    const n = STARRED.size();
+    reorderTo(STARRED.ids(), n + (n === 1 ? ' starred patent' : ' starred patents'));
+  });
+
+  /* THE RECORD'S ANCHOR, AND THE ACT BELONGS HERE RATHER THAN IN record.mjs.
+     Reordering the set is the list's business; the record's closing block only
+     supplies the button. components.md §1 types rerank's anchors as an ARRAY,
+     so one of them is inside the contract rather than a special case — and
+     this does NOT star the patent, which is platform.md §5.1's whole point
+     about the two being separate acts.
+     THE WAIT AND THE FAILURE STAY IN THE LIST, where the change happens. A
+     control in the right column reporting that the left column did not change
+     would report it away from the thing that did not change. */
+  onActivate(document, '#recSimilar', el => {
+    const id = el.getAttribute('data-pn');
+    if (!id) return;
+    const row = ROW_BY_ID.get(id);
+    reorderTo([id], (row && row.number) || id);
   });
 
   onActivate(document, '#setRestore', () => {
-    settled(false, 0);
+    settled(false, '');
     request('sort', { sort: 'relevance' },
       'The original order could not be restored.');
   });
 
   lmMenu('sortWrap', 'sortBtn', 'sortMenu');
   lmMenu('filtWrap', 'filtBtn', 'filtMenu');
+  /* THE RECORD'S EXPORT MENU IS A .lm, so the file that owns .lm drives it.
+     The markup is static in surface.html for exactly this reason — lmMenu
+     binds by id at init and is not delegated, so a menu rebuilt on every
+     record open would need a driver of its own. */
+  lmMenu('recExpWrap', 'recExpBtn', 'recExpMenu');
 
   /* THE TRIGGER CARRIES THE CURRENT SORT, so the bar states the order without
      the menu being open. A control that says only "Sort" makes the founder

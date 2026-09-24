@@ -26,9 +26,10 @@ import { onActivate } from '../core/delegate.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
 import { focusQuietly, captureFocus } from '../core/focus.mjs';
 import { wait as pause } from '../core/timers.mjs';
-import { bar, bars, statusHTML } from '../core/primitives.mjs';
+import { bar, bars, statusHTML, statusWord } from '../core/primitives.mjs';
 import { bump, stale } from '../core/generation.mjs';
 import { reduced } from '../core/motion.mjs';
+import * as Starred from '../core/starred.mjs';
 import * as Viewer from '../core/figure-viewer.mjs';
 
 let ENGINE = null;
@@ -38,6 +39,10 @@ let restore = null;
    and re-reading them out of the DOM would mean parsing <img> tags back into
    the shape the port already gave us. */
 let FIGURES = [];
+/* THE OPEN RECORD, kept for the closing block's citation. The <dl> above is
+   rendered HTML by then, and scraping five values back out of markup that
+   renders half of them as skeleton bars is parsing a skeleton. */
+let REC = null;
 /* WHICH PATENT IS OPEN, so the step controls know where they are. The list is
    hidden while the record is up (platform.md §4.5), so this is the only thing
    that knows the founder's place in it. */
@@ -47,6 +52,24 @@ const FLOOR = 240;
 const CAP = 12;
 
 const MONO = { number: 1, appno: 1, ipcMain: 1, ipc: 1 };
+/* platform.md §4.5's five-field handoff, and the only place it exists. It was
+   specified, claimed as built, and never built: 35-record.css said "the
+   five-field handoff is now a SUBSET VIEW of this same record through the
+   same field function", and FIELDS has exactly one caller rendering all
+   eleven. That renderer was deleted and the comment outlived it.
+
+   A PROJECTION, NOT A SECOND FIELD LIST. Printing five of the eleven again at
+   the foot of a record that has just printed all eleven is the repetition the
+   Classes rule already refuses — "a reader who sees it twice looks for the
+   difference". Its stated purpose is "for the founder taking this to
+   counsel", which is something that LEAVES, so it is the clipboard's payload
+   rather than a block on screen.
+
+   THE TITLE IS THE SIXTH AND THE CONTROL IS WHY. A citation without a title
+   is a handoff line, not a citation. .rec-end-note names all six where the
+   founder is standing when they press it. */
+const HANDOFF = ['number', 'title', 'holder', 'where', 'status', 'ipcMain'];
+
 const FIELDS = [
   ['number', 'Number'], ['appno', 'Application'], ['kind', 'Kind'],
   ['status', 'Status'], ['filed', 'Filed'], ['published', 'Published'],
@@ -85,6 +108,15 @@ function valueHTML(rec, key) {
    So the leading number comes off ONLY when it agrees with the position the
    gutter is about to print. Where they disagree, both stay and the disagreement
    is visible, which is the useful outcome. */
+/* A WITHHELD FIELD CONTRIBUTES NOTHING — not the string "null", not an empty
+   separator. Same rule the export's own cell() follows one surface over. */
+function citation(rec) {
+  return HANDOFF
+    .map(k => (k === 'status' ? statusWord(rec.status) : rec[k]))
+    .filter(v => v != null && v !== '')
+    .join(' · ');
+}
+
 function claimText(text, n) {
   const m = /^\s*(\d+)\s*[.)]\s+/.exec(text || '');
   return m && Number(m[1]) === n ? text.slice(m[0].length) : text;
@@ -263,6 +295,9 @@ function close() {
   /* `data-mode` IS NOT RESET HERE and no longer could be. It was a property of
      the record being read while the record owned the toggle; it is a property
      of how the LIST is drawn now, and the list outlives any one record. */
+  const end = $('#recEnd');
+  if (end) { end.hidden = true; end.removeAttribute('data-pn'); }
+  REC = null;
   drop('record');
   /* `restore` IS A FUNCTION, NOT A NODE. captureFocus hands back the act of
      restoring rather than the thing to restore to, because it is the one that
@@ -381,6 +416,14 @@ async function open(id, trigger, stepping, opts = {}) {
   const col = $('#paneScroll');
   if (col) col.scrollTop = 0;
 
+  /* THE CLOSING BLOCK GOES BEFORE THE WAIT DOES. It lives outside #recBody, so
+     waitOn() and failWith() cannot take it down — five controls offering to
+     star, cite and export a record that has not arrived, or has just failed
+     to. record.mjs owns it explicitly because the markup is static. */
+  const end = $('#recEnd');
+  if (end) end.hidden = true;
+  REC = null;
+
   const token = bump('record');
   waitOn(body, 360);
   const [res] = await Promise.all([ENGINE.record({ id }), pause(FLOOR)]);
@@ -395,7 +438,31 @@ async function open(id, trigger, stepping, opts = {}) {
     return;
   }
   FIGURES = Array.isArray(res.data.figures) ? res.data.figures : [];
+  REC = res.data;
   landIn(body, paneHTML(res.data));
+  if (end) {
+    const star = $('#recStar'), sim = $('#recSimilar'),
+          out = $('#recOut'), cite = $('#recCite');
+    /* data-star IS THE WHOLE WIRING. list.mjs's delegated .set-star handler
+       reads it, so the record's star is the row's star with a label on it —
+       one treatment, one handler, one set. */
+    if (star) {
+      star.setAttribute('data-star', id);
+      star.setAttribute('aria-pressed', String(Starred.has(id)));
+    }
+    if (sim) sim.setAttribute('data-pn', id);
+    /* OMITTED, NOT DISABLED, and it is the score's rule applied to a control:
+       there is no act here and no sentence to read, so a disabled button would
+       be a promise the engine has not made. `sourceUrl` is not in the port
+       yet — components.md §4 question 3 — so until it is, undefined means the
+       placeholder stands and only an explicit null hides it. */
+    if (out) out.hidden = res.data.sourceUrl === null;
+    if (cite) cite.hidden = res.data.number == null && res.data.title == null;
+    /* THE BLOCK CARRIES THE ID, so the export menu inside it does not have to
+       ask another control which record it is looking at. */
+    end.setAttribute('data-pn', id);
+    end.hidden = false;
+  }
   /* ══ THE MODE CONTROL IS NOT THE RECORD'S ANY MORE ══════════════════════
      This used to mark `Drawings only` aria-disabled from the open record's
      figure count, which was right while the toggle governed this pane. It
@@ -511,4 +578,31 @@ export function init(ctx) {
     b.getAttribute('aria-disabled') === 'true' || step(-1));
   onActivate(document, '#recNext', b =>
     b.getAttribute('aria-disabled') === 'true' || step(+1));
+
+  /* ── copy citation ───────────────────────────────────────────────────────
+     THE GLYPH CONFIRMS AND THE LABEL DOES NOT. Changing the label would change
+     the accessible name and announce the same fact a second time, which §7's
+     "live regions announce once; two regions, two moments, never the same
+     fact" forbids. So the mark swaps to a tick, the words stay put, and the
+     live region says it once.
+
+     AND IT STATES THE FIX RATHER THAN THE FAULT when the clipboard refuses.
+     navigator.clipboard is absent on an insecure origin and rejects without a
+     user gesture in some browsers; either way the founder's next move is the
+     same, and the record above them is where the fields are. */
+  onActivate(document, '#recCite', async btn => {
+    if (!REC) return;
+    const text = citation(REC);
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      say('list', 'This browser would not let Terrain copy. '
+        + 'The citation is in the record above.');
+      return;
+    }
+    btn.setAttribute('data-done', '');
+    setTimeout(() => btn.removeAttribute('data-done'), 1600);
+    say('list', 'Citation copied.');
+  });
 }

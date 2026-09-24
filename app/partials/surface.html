@@ -371,29 +371,6 @@
                    counter is a fifth fact in a head that has three, and the
                    number is only ever wanted by someone who has lost their
                    place — which is exactly who aria-label serves. -->
-              <!-- ══ THE WAY OUT, AND THE DESTINATION IS A PLACEHOLDER ═════
-                   components.md §4 question 3 is the real answer and it is
-                   still open: the source varies by jurisdiction — Google
-                   Patents, WebPat, TIPO — so the interface CANNOT construct
-                   this URL. The engine has to return both the URL and the
-                   label, per patent. Until it does, every record points at
-                   the same IPtech sign-in, which is honest about being a
-                   stand-in in a way a fabricated per-patent link would not
-                   be.
-
-                   AN ANCHOR AND NOT A BUTTON, because it navigates. The
-                   first external href in the product, so it is also the
-                   first target=_blank and the first anchor focus.mjs treats
-                   as a real tab stop — which it already does, at :64.
-
-                   THE LABEL IS WRITTEN OUT. An arrow-up-right alone says
-                   "somewhere else" and not "where", and the head has room
-                   that the two chevrons beside it do not need. -->
-              <a class="rec-out" id="recOut" href="https://iptech.cc/Member/Account/LogOn?ReturnUrl=%2F"
-                 target="_blank" rel="noopener noreferrer">
-                <span>Open in IPtech</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-              </a>
               <button class="icon-btn" id="recPrev" type="button"
                       aria-label="Previous patent in your results">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -408,6 +385,101 @@
               </button>
             </div>
             <div class="rec-body" id="recBody"></div>
+
+            <!-- ══ THE CLOSING BLOCK · platform.md §4.5 ═══════════════════════
+                 NOT A .pn-sec. Drawings, Abstract and Claims are the published
+                 document; these are five things to DO with it, and a fourth
+                 section in the same grammar would claim they are part of the
+                 patent. It sits OUTSIDE .rec-body, which is the element the
+                 record renderer owns and replaces.
+
+                 THE DIVIDER IS THE RECORD'S OWN, USED ONCE ALREADY. .pn-head
+                 closes with the same 1px --border rule, so the patent is
+                 bracketed between two identical hairlines: everything between
+                 them is the document, everything outside is Terrain.
+
+                 STATIC RATHER THAN RENDERED, for two reasons. lmMenu binds by
+                 id at init and is not delegated, so a menu rebuilt on every
+                 record open would need a delegated driver written for it. And
+                 a block outside #recBody is a block waitOn() and failWith()
+                 cannot leave standing over a record that never arrived —
+                 record.mjs hides it explicitly instead. -->
+            <div class="rec-end" id="recEnd" hidden>
+              <h4 class="t-micro rec-end-h">Take this further</h4>
+
+              <div class="rec-acts">
+                <!-- group one · what this does to your SET -->
+                <div class="rec-act-grp">
+                  <!-- .set-star AND NOT A SECOND STAR. One treatment, one
+                       delegated handler, three hosts: the row, the starred
+                       view and now the record. data-star is written per
+                       record by record.mjs. -->
+                  <button class="rec-act set-star" id="recStar" type="button"
+                          data-star="" aria-pressed="false">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.9 5.88 6.5.95-4.7 4.58 1.11 6.47L12 17.33l-5.81 3.05 1.11-6.47-4.7-4.58 6.5-.95z"/></svg>
+                    <span>Star</span>
+                  </button>
+
+                  <!-- THE SAME ACT AS THE BAR'S Find similar, ANCHORED
+                       DIFFERENTLY, so it takes the same glyph. platform.md
+                       §5.1: starring and finding similar "are separate acts,
+                       which is why one of them is a button rather than a
+                       consequence" — this does not star the patent. -->
+                  <button class="rec-act" id="recSimilar" type="button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h11"/><path d="M10 12h11"/><path d="M10 18h11"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+                    <span>Find similar to this one</span>
+                  </button>
+                </div>
+
+                <!-- group two · what LEAVES. --s-24 between the groups against
+                     --s-12 inside them: §5, "group gaps are at least twice the
+                     gaps inside the group, or the grouping does not read." -->
+                <div class="rec-act-grp">
+        <a class="rec-act" id="recOut" href="https://iptech.cc/Member/Account/LogOn?ReturnUrl=%2F"
+           target="_blank" rel="noopener noreferrer">
+          <span>Open in IPtech</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        </a>
+
+                  <button class="rec-act" id="recCite" type="button">
+                    <!-- BOTH GLYPHS SHIP AND [data-done] SWAPS THEM. The mark
+                         confirms; the LABEL does not change, because changing it
+                         would change the accessible name and announce the same
+                         fact twice — §7's "live regions announce once". -->
+                    <svg class="rec-act-i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    <svg class="rec-act-ok" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    <span>Copy citation</span>
+                  </button>
+
+                  <!-- IT OPENS UPWARD. This is the last control in a .rec that
+                       is overflow:clip, so a menu below it is a menu nobody
+                       sees. .lm-up is the one modifier that says so. -->
+                  <div class="lm lm-up" id="recExpWrap">
+                    <button class="rec-act" id="recExpBtn" type="button" aria-haspopup="menu"
+                            aria-expanded="false" aria-controls="recExpMenu">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                      <span>Export just this record</span>
+                      <svg class="lm-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <div class="lm-menu" id="recExpMenu" role="menu" aria-label="Export this record">
+                      <button class="lm-item" type="button" role="menuitem" data-rec-export="csv"><span>Spreadsheet</span></button>
+                      <button class="lm-item" type="button" role="menuitem" data-rec-export="md"><span>Markdown</span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- WHAT THE FILE CONTAINS, STATED BEFORE IT IS TAKEN. This is
+                   .star-note's own argument one surface over: a founder
+                   pressing copy or download has no way to see inside it first,
+                   so the page says it where they are standing when they
+                   decide. It NAMES the fields; it does not print them again —
+                   the <dl> above has already printed all eleven. -->
+              <p class="rec-end-note t-body">Copy citation takes the number, title,
+                holder, where, status and main class. The export carries the same
+                fields as the starred set, and neither writes anything the record
+                did not.</p>
+            </div>
           </section>
 
           <!-- ══ the figure viewer · platform.md §4.5 ══════════════════════
