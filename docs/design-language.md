@@ -112,15 +112,26 @@ what lets an accent sit on the system without fighting a temperature.
 | `--ink-hover` | `--n-9` | hover on an ink fill |
 | `--track-pressed` | `--n-4` | a bar track under the selected row |
 | `--veil` | `rgba(255,255,255,.82)` | the ground under a control bar floating over content |
+| `--veil-edge` | `rgba(37,37,37,.12)` | the hairline on that bar, compositing over the same thing |
 | `--scrim` | `rgba(37,37,37,.55)` | the one dimming layer, under the enlarged drawing |
 | `--figure-ground` | `#FFFFFF` | the paper a patent drawing was published on |
 
 Three of these are alpha rather than flat neutrals because they composite over a surface whose colour
-varies — the legend key sits on a slice, `--veil` sits on a patent's own line-work, and `--scrim`
-sits on whatever the founder was looking at. They are still tokens, and still the only alpha values
-in the system. **`--veil`'s .82 is measured**: below about .78 a 1.5px Lucide stroke stops clearing
-4.5:1 against the black line-work showing through, and above .90 the bar stops reading as floating
-and becomes a plate over the figure.
+varies — `--veil` sits on a patent's own line-work, `--veil-edge` sits on whatever `--veil` is sitting
+on, and `--scrim` sits on whatever the founder was looking at. They are still tokens, and still the
+only alpha values in the system. **`--veil`'s .82 is measured**: below about .78 a 1.5px Lucide stroke
+stops clearing 4.5:1 against the black line-work showing through, and above .90 the bar stops reading
+as floating and becomes a plate over the figure.
+
+**`--veil-edge` is `--veil`'s own argument applied to the edge**, and it exists because that argument
+had only been applied to the fill. The border on a floating control composites over the same varying
+thing the fill does, and it was `--border`, which swaps: in dark the figure bar wore a `#2E2E2E`
+hairline measuring **13.6:1** against the `#FFFFFF` pill it edges, where light's `#E4E4E4` measures
+**1.27:1**. A factor of ten for one declaration. **The .12 is measured against both backdrops** — over
+white paper the edge lands at `#E5E5E5` (1.26:1), over black line-work at `#BCBCBC` on a `#D1D1D1`
+pill (1.24:1) — because an edge has to be the same weight whatever is under it. **It is alpha and not
+a hex for that reason:** a solid `#E4E4E4` measures 1.20:1 over line-work but *inverted*, lighter than
+what it edges, so the hairline would change polarity as the founder pans and read as an artefact.
 
 **`--scrim`'s .55 is measured too, against the thing it separates.** The enlarged drawing's stage is
 `--figure-ground`, white in both themes, so in light theme — where the page behind is `--n-2` — the
@@ -280,7 +291,7 @@ blocks that goes stale. `tools/check-app.py` refuses one declared anywhere else.
 | --- | --- | --- | --- |
 | **primitive** | 11 | `:root`, once | `--n-0`…`--n-10`. **No component may read one.** |
 | **scale** | 28 | `:root`, once | `--s-*` `--r-*` `--dur-*` `--ease*` `--cycle`. Invariant by construction: a step is not a different size at night. |
-| **semantic** | 28 | **all three blocks** | This is the dark contract. §10.1. |
+| **semantic** | 30 | **all three blocks** | This is the dark contract. §10.1. |
 | **derived** | 3 | `:root`, once | Resolves *through* a themed token, so it inverts for free. **Never add one to a dark block.** |
 | **component-scoped** | 5 | on the component's own class | Never on `:root`, never read outside that component. |
 
@@ -381,24 +392,50 @@ temptation to split the difference is the temptation to add a step.
 with 2px of padding reads as a bulge, because inner and outer curves are concentric only when the
 inner radius is the outer minus the inset.
 
-**Elevation is a hairline, not a shadow.** Depth comes from the ground↔surface step plus 1px
-`--border`. Two shadow tokens exist:
+**Elevation is a hairline first and a shadow second.** Depth starts with the ground↔surface step and
+1px `--border`; the shadow says how far off the page a thing is, and **there are exactly two
+distances**.
 
 ```
+--shadow-raise: 0 1px 2px rgba(37,37,37,.05), 0 3px 8px -3px rgba(37,37,37,.10);
 --shadow-float: 0 1px 2px rgba(37,37,37,.04), 0 8px 24px -6px rgba(37,37,37,.10);
 ```
 
-*`--shadow-drop` stood beside it — the same elevation as a `filter` rather than a `box-shadow`, for a
+*`--shadow-drop` stood beside them — the same elevation as a `filter` rather than a `box-shadow`, for a
 composer that was clipped. The composer carries no `clip-path` now, so nothing read it and it went.*
 
-**The shadow belongs to anything that floats free of the page, over content it does not push aside** —
-menus, popovers, the figure viewer's action bar. **A card that reaches for a shadow has not
-earned one**: it sits *in* the layout, and the ground↔surface step plus a hairline says so.
+**`--shadow-raise` is a thing that has lifted without leaving.** It is still in the flow and still
+pushes nothing aside — a drawing tile coming toward the pointer, a control under the founder's hand.
+**It is always paired with the 1px translate that causes it**, because a shadow with no movement is a
+thing that grew rather than rose. It is `--shadow-float` at a third of the geometry: offset 8→3, blur
+24→8, spread −6→−3, with the contact layer at `.05` rather than `.04` because a 1px lift needs its
+contact to read where a floating panel has the ambient doing the work.
 
-**A shadow cannot separate two surfaces of the same colour.** `--shadow-float` is downward-biased
-with a `-6px` spread, so it contributes almost nothing at a *vertical* edge, and an elevation shadow
-needs a background that recedes. The record floats over cards of its own surface value, so it carries
-`1px --border` on all four sides — the hairline is what draws the edge, not the shadow.
+**`--shadow-float` is a thing drawn over the page** — out of the flow, anchored to a trigger,
+closable. Menus, popovers, the figure viewer's action bar, the row's figure peek.
+
+**There is no third rung, and the reason is measurable.** The one thing that covers the product is the
+enlarged drawing, and it sits on `--scrim`. In light the scrim composites to `#838383`, and
+`--shadow-float`'s ambient layer over that lands at `#757575` — a **1.1:1** step. A shadow under a
+panel on a scrim is a shadow nobody can see. The scrim separates and the hairline draws the edge; the
+token is carried there and does almost nothing, which is the honest amount.
+
+**A shadow cannot separate two surfaces of the same colour.** Both tokens are downward-biased with a
+negative spread, so they contribute almost nothing at a *vertical* edge, and an elevation shadow needs
+a background that recedes. The record floats over cards of its own surface value, and the figure peek
+is `--figure-ground` white on a white column in light — both carry `1px --border` on all four sides,
+and there the hairline is what draws the edge, not the shadow. **This clause is not a taste rule and
+does not lift.**
+
+**A shadow on an ink fill is invisible.** `.btn` takes neither rung: in dark it disappears, and in
+light it reads as a button from 2010.
+
+*This section read "elevation is a hairline, **not** a shadow" and "a card that reaches for a shadow
+has not earned one" until 2026-09-24. It was right about the second clause and over-general about the
+first — it was written when the only floating thing in the product was a menu, and it was then used to
+argue three drawing tiles into compensating for a refused shadow with a bare 1px translate. The
+refusal was never about the shadow; it was about a card in the layout pretending to float. That is
+one rung now rather than a prohibition.*
 
 ---
 
@@ -534,19 +571,42 @@ twelve drawings or three, the row is the same height. **The gap above the strip 
 block padding**, which is the 2:1 that makes a group read as a group rather than as a caption on the
 row below.
 
-**72px on a row, 104px in the record, and the step is still the point.** One size down reads as
-subordinate; the row's job is *which of these*, the record's is *this one*. The row's number moved
-from 64 because the scroller moved the cost from width to height: 64 → 72 is +10px of row for +27%
-of drawing area. **80 is where the step starts to go** — 80/104 is 0.77 and stops reading as a step,
-where 72/104 is 0.69 and still does. Below about 48px a patent drawing stops being a kind of drawing
-and becomes a grey smudge, which is the floor neither is near.
+**102px on a row, 148px in the record, and the step is still the point.** One size down reads as
+subordinate; the row's job is *which of these*, the record's is *this one*. The row's tile ran 64,
+then 72, and is 102 now — five across the strip instead of not quite seven, which is what a patent
+figure has to be before it is a drawing rather than a kind of drawing. Below about 48px it is a grey
+smudge, which is the floor none of them is near.
 
-**The strip's scroll affordance is a cut tile, not a shadow and not a fade.** §5 refuses an elevation
-shadow to anything sitting *in* the layout, and its second clause bites harder here: a shadow cannot
-separate two surfaces of the same colour, and these are white tiles on a white row. A fade has to
-appear only when there is somewhere left to scroll, which costs a scroll listener on twenty rows or a
-fourth keyframe — and what it would buy is a gradient over the last drawing. The track is wider than
-the column whenever it overflows, so the column's own edge cuts a tile at nearly every width.
+**Check the step rendered, not declared, because this section had it wrong twice.** It argued
+72/104 = 0.69 against 80/104 = 0.77, "where the step starts to go". **Both numbers were the wrong
+ones.** 104 was the `minmax()` *floor* of the record grid's `auto-fill`, not a width anything painted:
+measured in a 732px record column it packed six columns at **115px**, so the real step was
+72/115 = 0.624. The floor is 148 now, which packs **four columns at 177px**, and the step is
+102/177 = **0.576** — further from 0.77 than it has ever been. A declared minimum is not a rendered
+size, and a ratio computed from one is a ratio about nothing.
+
+**The strip's scroll affordance is a cut tile, not a shadow and not a fade**, and §5's second clause
+is the half that still carries it: a shadow cannot separate two surfaces of the same colour, and these
+are white tiles on a white row. *§5's first clause used to be the other half. It is not a prohibition
+any more, so the argument has to stand without it — and it does, on something neither document said.*
+
+**A fade is theme-asymmetric in the wrong direction.** The gradient would run from the row's own
+background to transparent. In light the row is `--surface` `#FFFFFF` and the tiles are
+`--figure-ground` `#FFFFFF`, so it is white over white — invisible at the one moment it is needed. In
+dark the row is `#1A1A1A` and the tiles are **still** `#FFFFFF`, so it is a near-black wipe eating a
+white drawing, and the loudest thing on the row. That asymmetry exists because `--figure-ground` does
+not swap, which is a fact about paper rather than a decision anyone is proposing to revisit. A fade is
+also only honest if it appears when there is somewhere left to scroll, which costs a scroll listener
+on twenty rows or a fourth keyframe.
+
+The track is wider than the column whenever it overflows, so the column's own edge cuts a tile at most
+widths. **Measured at the 108px pitch**, swept at 1px from 1080 to 1920: 5.2% of widths are flush and
+11.3% show 8px or less of a 102px tile, in three bands — about one width in nine. *The 72px tile gave
+8.8% and 18.9% in five bands, so the larger tile roughly halved it.*
+
+*Revisit trigger, named: `@container scroll-state(scrollable: inline-end)` makes the honest
+only-when-scrollable fade a three-line change with no listener and no keyframe. It is Chrome 133+ and
+not yet in Safari. When it reaches baseline, re-argue the fade on the dark-theme asymmetry above.*
 
 **The columns are 44 / 56, and the record has the larger half.** They were even until the record
 moved into the right column; equal halves would then have given the denser column the same room as
@@ -810,7 +870,7 @@ The list is **duplicated on purpose.** CSS cannot share a declaration block betw
 a third indirection layer of `--dark-*` primitives buys nothing and hides which value is live.
 Whatever writes one writes both.
 
-**28 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
+**30 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
 here, `CLAUDE.md`, and `app/README.md`'s tier table — and **a gate keeps them equal to the file**
 rather than a sentence asking everyone to keep them equal to each other.
 
@@ -894,6 +954,7 @@ this section.
 | Token | Value | Note |
 | --- | --- | --- |
 | `--veil` | `rgba(255,255,255,.82)` | **does not swap** — it composites over the drawing, not the app |
+| `--veil-edge` | `rgba(37,37,37,.12)` | **does not swap** — the surface under it does not, so neither may it |
 | `--scrim` | `rgba(0,0,0,.72)` | **does** swap — it composites over the app, not the drawing |
 | `--figure-ground` | `#FFFFFF` | **does not swap** — see §3.2 |
 

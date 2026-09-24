@@ -209,10 +209,11 @@ subordinate — 80 is where the step stops reading as one — and is enough to t
 from a mechanical assembly, which is the whole of what a glance wants.
 
 **What is off the end is shown by a cut tile**, not a shadow and not a fade. A shadow cannot separate
-two surfaces of the same colour, which white tiles on a white row are, and
-[`design-language.md`](design-language.md) §5 refuses one to anything in the layout; a fade would
-need a scroll listener on twenty rows. There is no scroll snap, because snapping resolves every rest
-position flush and deletes the affordance.
+two surfaces of the same colour, which white tiles on a white row are; and a fade would be white over
+white in light and a near-black wipe over a white drawing in dark, because `--figure-ground` does not
+swap — invisible where it is needed and loudest where it is not.
+[`design-language.md`](design-language.md) §7 carries the measurement. There is no scroll snap,
+because snapping resolves every rest position flush and deletes the affordance.
 
 **They are controls now, and the row's own target is not one of them.** Each tile opens the record at
 that drawing. **One tab stop per strip**, with the arrows moving inside it — twenty rows of twelve

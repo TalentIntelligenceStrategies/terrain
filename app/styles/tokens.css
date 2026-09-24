@@ -21,7 +21,7 @@
    FIVE TIERS, and the rule for each is on its own block:
      1 primitive  11   no component may read one
      2 scale      28   invariant by construction
-     3 semantic   28   declared in all three blocks — this is the dark contract
+     3 semantic   30   declared in all three blocks — this is the dark contract
      4 derived     3   resolves THROUGH a themed token. Never in a dark block
      5 component   —   not here at all. On the component's own class,
                        design-language.md §3.9
@@ -137,6 +137,34 @@ html{color-scheme:light dark;background:var(--ground)}
      shadow cannot separate two surfaces of the same colour and this one sits on
      white. */
   --veil:rgba(255,255,255,.82);
+  /* --veil-edge IS --veil's OWN ARGUMENT, APPLIED TO THE EDGE. The note above
+     says a translucent surface "composites over something whose colour varies
+     and cannot be a flat neutral". The BORDER on that same surface composites
+     over the same varying thing and was a flat neutral -- --border, which
+     SWAPS. So in dark the figure bar wore a #2E2E2E hairline measuring 13.6:1
+     against the #FFFFFF pill it edges, where light's #E4E4E4 measures 1.27:1.
+     A factor of ten for one declaration. The reasoning had been applied to the
+     fill and not to the edge; this is the other half of it.
+
+     .12 IS MEASURED TWICE, ONCE PER BACKDROP.
+     - Over WHITE paper the pill composites to #FFFFFF and this edge to
+       #E5E5E5: 1.26:1, against the 1.27:1 --border gives in light today. Dark
+       stops changing the edge; it keeps the one light already had.
+     - Over BLACK line-work the pill composites to #D1D1D1 and this edge to
+       #BCBCBC: 1.24:1. The edge is the same WEIGHT against both backdrops,
+       which is what an edge has to be.
+
+     AND THAT IS WHY IT IS ALPHA AND NOT A HEX. A solid #E4E4E4 edge measures
+     1.20:1 on the #D1D1D1 pill -- but INVERTED, lighter than what it edges. A
+     hairline darker than its pill over paper and lighter than it over a drawn
+     line changes polarity as the founder pans, and an edge that changes
+     polarity reads as an artefact rather than as an edge.
+
+     INK AND NOT BLACK, for --scrim's reason: it composites over whatever is
+     there, and the ramp's darkest neutral is what the rest of the system dims
+     toward. IT DOES NOT SWAP, for --veil's reason: the surface under it does
+     not. */
+  --veil-edge:rgba(37,37,37,.12);
 
   /* --figure-ground IS WHITE IN BOTH THEMES, and that is a fact about the
      content rather than an exemption from §10. A patent drawing is black
@@ -180,6 +208,20 @@ html{color-scheme:light dark;background:var(--ground)}
      same elevation expressed as a filter, for a composer that was clipped;
      nothing clips the composer now and nothing read it. */
   --shadow-float:0 1px 2px rgba(37,37,37,.04), 0 8px 24px -6px rgba(37,37,37,.10);
+  /* --shadow-raise IS --shadow-float AT A THIRD OF THE GEOMETRY: offset 8->3,
+     blur 24->8, spread -6->-3. It is the second of exactly two rungs, and the
+     difference between them is how far off the page a thing is.
+
+     A THING THAT HAS LIFTED WITHOUT LEAVING. Still in the flow, pushing
+     nothing aside, under the founder's pointer -- a drawing tile coming
+     toward them. It is ALWAYS paired with the 1px translate that causes it,
+     because a shadow with no movement is a thing that grew rather than rose.
+
+     THE CONTACT LAYER GOES .04 -> .05 IN LIGHT and the ambient stays at .10.
+     A 1px lift needs its contact to read at all, where a floating panel has
+     the ambient doing the work. The negative spread survives at both rungs,
+     which is what keeps both downward-biased. */
+  --shadow-raise:0 1px 2px rgba(37,37,37,.05), 0 3px 8px -3px rgba(37,37,37,.10);
 }
 
 /* ── 3 · SEMANTIC · dark · design-language.md §10 ──────────────────────────
@@ -235,6 +277,7 @@ html{color-scheme:light dark;background:var(--ground)}
      too. It is not an inversion that was forgotten: the surface this
      composites over does not swap, so neither may this. */
   --veil:rgba(255,255,255,.82);
+  --veil-edge:rgba(37,37,37,.12);
   /* unchanged, deliberately: see the light block. The paper does not swap. */
   --figure-ground:#FFFFFF;
 
@@ -253,6 +296,7 @@ html{color-scheme:light dark;background:var(--ground)}
   /* an ink shadow is invisible on ink. These go black and heavier, and the
      hairline is doing most of the work regardless. */
   --shadow-float:0 1px 2px rgba(0,0,0,.40), 0 8px 24px -6px rgba(0,0,0,.55);
+  --shadow-raise:0 1px 2px rgba(0,0,0,.45), 0 3px 8px -3px rgba(0,0,0,.55);
   }
 }
 :root[data-theme="dark"]{
@@ -289,6 +333,7 @@ html{color-scheme:light dark;background:var(--ground)}
      too. It is not an inversion that was forgotten: the surface this
      composites over does not swap, so neither may this. */
   --veil:rgba(255,255,255,.82);
+  --veil-edge:rgba(37,37,37,.12);
   /* unchanged, deliberately: see the light block. The paper does not swap. */
   --figure-ground:#FFFFFF;
 
@@ -307,6 +352,7 @@ html{color-scheme:light dark;background:var(--ground)}
   /* an ink shadow is invisible on ink. These go black and heavier, and the
      hairline is doing most of the work regardless. */
   --shadow-float:0 1px 2px rgba(0,0,0,.40), 0 8px 24px -6px rgba(0,0,0,.55);
+  --shadow-raise:0 1px 2px rgba(0,0,0,.45), 0 3px 8px -3px rgba(0,0,0,.55);
 }
 
 /* ── 4 · DERIVED ───────────────────────────────────────────────────────────

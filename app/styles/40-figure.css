@@ -103,6 +103,7 @@
             border-radius:var(--r-control);overflow:hidden;cursor:pointer;
             padding:0;
             transition:border-color var(--dur-1) var(--ease),
+                       box-shadow var(--dur-1) var(--ease),
                        transform var(--dur-1) var(--ease)}
 .pn-fig-btn:active{transform:scale(.98)}
 /* A WITHHELD DRAWING IN THE RECORD, AND IT HAD NO RULE AT ALL. record.mjs has
@@ -234,7 +235,7 @@
 .figview-step{position:absolute;top:50%;transform:translateY(-50%);
               width:36px;height:36px;display:grid;place-items:center;
               border-radius:var(--r-pill);
-              background:var(--veil);border:1px solid var(--border);
+              background:var(--veil);border:1px solid var(--veil-edge);
               box-shadow:var(--shadow-float);color:var(--text-2);
               backdrop-filter:blur(6px);
               transition:color var(--dur-1) var(--ease),
@@ -257,7 +258,7 @@
         transform:translateX(-50%);
         display:flex;align-items:center;gap:var(--s-2);
         padding:var(--s-4);border-radius:var(--r-pill);
-        background:var(--veil);border:1px solid var(--border);
+        background:var(--veil);border:1px solid var(--veil-edge);
         box-shadow:var(--shadow-float);
         backdrop-filter:blur(8px)}
 .figbar-btn{width:32px;height:32px;display:grid;place-items:center;
@@ -270,7 +271,10 @@
    a pair and the pair's shape is the control; removing one would move the
    other under the founder's finger mid-gesture. */
 .figbar-btn:disabled{color:var(--text-disabled);cursor:default}
-.figbar-sep{width:1px;height:18px;background:var(--border);flex:0 0 auto;
+/* AND THE SEPARATOR TOO, which is the site nobody had named. A 1px x 18px
+   --border tick INSIDE the white pill read as a black mark between the
+   buttons in dark, for the same reason the pill's own edge did. */
+.figbar-sep{width:1px;height:18px;background:var(--veil-edge);flex:0 0 auto;
             margin-inline:var(--s-2)}
 
 /* NO ACCENT ON A PRESSED CONTROL HERE. §3.8 gives the accent three sites — the
@@ -292,6 +296,7 @@
               border-radius:var(--r-control);overflow:hidden;cursor:pointer;
               padding:0;
               transition:border-color var(--dur-1) var(--ease),
+                         box-shadow var(--dur-1) var(--ease),
                          transform var(--dur-1) var(--ease)}
 .figstrip-btn img{display:block;width:100%;aspect-ratio:4/5;object-fit:contain;
                   padding:3px}
@@ -307,13 +312,18 @@
 
 /* ── hover, gated ── every rule here NAMES :hover; nothing else may. ──── */
 @media (hover:hover) and (pointer:fine){
-  /* THE LIFT IS A TRANSFORM, NOT A SHADOW AND NOT A MARGIN. §5 will not give a
-     card in a layout an elevation shadow, and §6 will not animate a layout
-     property. A 1px translate reads as the thing coming toward you and costs
-     no reflow. */
-  .pn-fig-btn:hover{border-color:var(--border-strong);transform:translateY(-1px)}
+  /* THE LIFT IS A TRANSFORM AND A SHADOW NOW. It was a bare translate because
+     §5 would not give a card in a layout an elevation shadow; §5 has two rungs
+     since 2026-09-24 and this is what the second one is for. The two travel
+     together on purpose — a shadow with no movement is a thing that grew
+     rather than rose, and a 1px translate alone was the compensation.
+     §6 still will not animate a layout property, so it stays a transform, and
+     box-shadow joins the transition BY NAME rather than through `all`. */
+  .pn-fig-btn:hover{border-color:var(--border-strong);transform:translateY(-1px);
+                    box-shadow:var(--shadow-raise)}
   .pn-fig-btn:hover .pn-fig-n{color:var(--text-1)}
-  .figstrip-btn:hover{border-color:var(--border-strong)}
+  .figstrip-btn:hover{border-color:var(--border-strong);transform:translateY(-1px);
+                      box-shadow:var(--shadow-raise)}
   .figstrip-btn:hover .figstrip-n{color:var(--text-1)}
   .figbar-btn:not(:disabled):hover{color:var(--text-1);background:var(--surface-sunken)}
   .figview-step:hover{color:var(--text-1)}

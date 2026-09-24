@@ -290,6 +290,7 @@
            background:var(--figure-ground);
            border:1px solid var(--border);border-radius:var(--r-control);
            transition:border-color var(--dur-1) var(--ease),
+                      box-shadow var(--dur-1) var(--ease),
                       transform var(--dur-1) var(--ease)}
 .set-thumb:active{transform:scale(.97)}
 /* A WITHHELD DRAWING IS NOT A CONTROL THAT OPENS AN EMPTY VIEWER. aria-disabled
@@ -542,7 +543,11 @@
    are controls with an act of their own now, so the premise is gone rather
    than the rule being bent. */
 @media (hover:hover) and (pointer:fine){
+  /* THE SHADOW ARRIVED WITH §5's SECOND RUNG. The translate was carrying this
+     on its own because an elevation shadow was refused to anything in the
+     layout; they belong together. */
   .set-thumb:not([aria-disabled="true"]):hover{
-    border-color:var(--border-strong);transform:translateY(-1px)}
+    border-color:var(--border-strong);transform:translateY(-1px);
+    box-shadow:var(--shadow-raise)}
   .set-thumb-more:hover{background:var(--surface);color:var(--text-1)}
 }

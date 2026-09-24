@@ -6,7 +6,9 @@
 
 /* ── the widget card ────────────────────────────────────────
    design-language.md §7: surface, radius 16, one hairline, no shadow. Depth
-   is the ground↔surface step, never elevation.                            */
+   here is the ground↔surface step. §5 has two shadow rungs since 2026-09-24
+   and a card takes neither: --shadow-raise is for something that has lifted
+   under the pointer, and a card does not lift.                            */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-widget);
       display:flex;flex-direction:column;min-width:0}
 /* WRAPS. The head carries a title, a kind line, an info affordance and
