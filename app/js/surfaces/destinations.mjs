@@ -55,7 +55,12 @@ function pointsHTML(d) {
     '<div class="us-meter"><span class="bar-t"><span class="bar-f" style="width:'
     + pct + '%;background:var(--text-1)"></span></span>'
     + '<p class="t-body"><b><span class="fig-l">' + d.balance + '</span></b> of '
-    + '<span class="fig-m">' + d.allowance + '</span> points left this month.</p></div>')
+    /* QUARTER, NOT MONTH. This said month while help.html said "at the start of
+     each quarter" and the delete confirm said "points left in this quarter".
+     The payload carries no period, so the word is a copy decision rather than
+     data — and one surface disagreeing with two is the kind of thing nothing
+     checks. platform.md §6.1 says quarter. */
+    + '<span class="fig-m">' + d.allowance + '</span> points left this quarter.</p></div>')
   + pgCard('What a run costs', '',
     '<table class="tbl"><thead><tr><th class="t-micro">Run</th>'
     + '<th class="t-micro num">Points</th></tr></thead><tbody>'
