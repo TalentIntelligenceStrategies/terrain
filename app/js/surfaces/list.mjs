@@ -433,7 +433,7 @@ function rowHTML(rec, i) {
    ONE TAB STOP PER ROW, NOT TWELVE. Twenty rows times twelve drawings is 240
    tab stops between the top of the list and the bottom, which would make the
    keyboard path through the results unusable to reach a control that is not a
-   drawing. The strip is a toolbar with a roving tabindex: Tab enters it once,
+   drawing. The strip is role="group" with a roving tabindex: Tab enters once,
    arrows move inside it. */
 function thumbsHTML(rec, i) {
   const all = Array.isArray(rec.thumbs) ? rec.thumbs : [];

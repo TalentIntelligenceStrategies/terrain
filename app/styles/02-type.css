@@ -64,7 +64,13 @@
    size, weight and tracking together -- so the CSS now matches the document
    rather than splitting a role in half and hoping both halves get used.
 
-   .fig stays, because three sites spell it and it costs nothing. */
+   .fig STAYS, AND THE REASON IS THAT A FEW SITES SPELL IT ALONE -- a figure
+   whose size comes from somewhere else. It adds nothing a .fig-* does not
+   already carry, so `class="fig fig-s"` is redundant rather than wrong and is
+   left alone; what would be wrong is a size class without the family, which
+   is the split this block closed. (This counted the sites and said "three".
+   It is four, and it was four within one pass -- a tally nothing checks goes
+   stale quietly, so this states the property instead.) */
 .fig,.fig-xl,.fig-l,.fig-m,.fig-s{font-family:'Inconsolata',ui-monospace,monospace;
      font-variant-numeric:tabular-nums;font-weight:500}
 .fig-xl{font-size:40px;line-height:1;letter-spacing:-.01em}

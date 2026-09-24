@@ -64,9 +64,13 @@
    first, in Inconsolata, at --text-2 so it frames the title rather than
    competing with it.
 
-   THE RANK AND THE SCORE TRAIL, and they are the only two things on the row
-   that are about the SEARCH rather than about the patent. They sit together
-   at the trailing edge for that reason, not because there was space.
+   THE RANK AND THE SCORE ARE STILL THE ONLY TWO THINGS ON THE ROW THAT ARE
+   ABOUT THE SEARCH RATHER THAN ABOUT THE PATENT, and they no longer travel
+   together. This read "they sit together at the trailing edge for that
+   reason", which was true while band one was one line. The rank is an
+   ORDINAL -- the Nth of these -- so it leads, beside the identifier it
+   counts; the score is a MAGNITUDE, and the trailing edge is reserved for it.
+   Being about the search is what they share, not where they sit.
 
    EVERY .drill-* RULE IS HERE NOW, 2026-09-24, AND THIS MOVE CHANGES NOTHING.
    Five of them lived in 35-record.css, which loads after this file, so ITS
@@ -462,8 +466,12 @@
 .lm-tick{flex:0 0 16px;height:16px;display:flex;align-items:center;justify-content:center;
   color:var(--text-1);opacity:0;transition:opacity var(--dur-1) var(--ease)}
 .lm-item[aria-checked="true"] .lm-tick{opacity:1}
-.lm-group{font-size:10.5px;line-height:1.2;font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--text-3);padding:var(--s-10) var(--s-8) var(--s-6)}
+/* THE ROLE IS .t-micro's, ON THE MARKUP. This spelled all six of micro's
+   declarations out by hand -- size, leading, weight, tracking, case, colour --
+   which is the split-role failure 02-type.css's header was written to close,
+   in the direction that looks harmless. What is left here is the padding,
+   which is this component's. */
+.lm-group{padding:var(--s-10) var(--s-8) var(--s-6)}
 .lm-group:first-child{padding-top:var(--s-6)}
 .set-list{padding:0}
 /* the row becomes a grid: controls, then the expandable body. The inline
@@ -530,7 +538,12 @@
 .set-more .spacer{flex:1 1 auto}
 /* display:flex outranks [hidden] here for the same reason .btn does */
 .set-more[hidden]{display:none}
-.set-more-n{margin:0;font-size:12.5px;line-height:1.4;color:var(--text-3)}
+/* THE SIZE AND LEADING ARE .fig-s's, ON THE MARKUP, AND SO IS THE FAMILY --
+   which is the half that was missing. #setMoreN holds String(left): a bare
+   COUNT, and §4 says Inconsolata for every count without exception. It had
+   figure-s's metrics in Urbanist, without tabular-nums, which is the same
+   defect .dm-more carried one band up. */
+.set-more-n{margin:0;color:var(--text-3)}
 /* NO BORDER AND NO FILL. Its placement zone is what marks it as a control —
    the trailing edge of the list's own foot, which is the one place on this
    surface an action about the list can sit. The hover ground is the whole

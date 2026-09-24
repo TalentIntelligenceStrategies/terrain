@@ -71,8 +71,12 @@
    18. Inventing two off-rhythm tokens to hit a rounder number is how a
    spacing scale stops being one.
 
-   TYPE SCALE UNTOUCHED. This is a spacing pass; design-language.md §3 is not
-   reopened. The row goes ~90px to ~102px — about one fewer row per screen. */
+   THE ROW HEIGHT QUOTED HERE WAS FROM THAT PASS AND IS LONG GONE. It read
+   "the row goes ~90px to ~102px", which was true of a four-field row before
+   it gained an abstract, a drawing strip, an eyebrow and a title on the type
+   scale. It is ~340px now and design-language.md §7 is where that number is
+   argued — a second copy of it here is a second place for it to drift. This
+   note is about the PADDING it changed, which is unchanged. */
 .listcol-scroll{flex:1;min-height:0;overflow-y:auto;
   padding:var(--s-20) var(--s-16) var(--s-24);scrollbar-gutter:stable}
 .listhead{display:flex;flex-direction:column;gap:var(--s-10);margin-bottom:var(--s-16)}
