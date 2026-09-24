@@ -174,20 +174,39 @@ record too until the record moved opposite it, swapping with it by display — w
 could read a patent or see the set it came from, never both. Reading one patent against the set is
 one act, and one region that means two things by state is what that cost.
 
-**Three bands a row, then the drawings.** Band one is identity — the number, the title, the
-position in the order, and the score if the engine returned one. Band two is a 2×2 grid of who and
-when: the first inventor, the holder, the publication date, and a cell carrying the status chip, the
+**Three bands a row, then the drawings.** Band one is identity, on two lines: an **eyebrow** carrying
+the status chip, the position in the order and the patent number, with the engine's score at its
+trailing edge if there was one — and the **title on its own full width** below it. Band two is a 2×2
+grid of who and when: the first inventor, the holder, the publication date, and a cell carrying the
 jurisdiction and the main classification. Band three is the abstract, clamped to three lines. The
 drawings are not a fourth band: a field is a value read *off* the patent, and a drawing is the
 patent.
+
+**The eyebrow is what lets the title be read.** With the number beside it on one line, a title that
+wrapped began its second line at the title's own leading edge — indented past the number by the
+number's width, declared nowhere and removable by nothing while the two shared a line. Freeing the
+full column also bought a size step: measured over 100 corpus titles, one-line titles went from 33%
+to 45% *at the larger size*, so the title reads bigger and wraps less.
+
+**The status chip leads it.** It is the single most decision-relevant fact on the row — an expired
+patent is not a threat, it is free to use — and it had been the fourth cell of the 2×2 grid. The
+leading edge of the first line is what prominence means here; its size does not have to carry it,
+because it is the only coloured thing on the row and it has a dot as well as a word.
+
+**The score is inline at the eyebrow's trailing edge, not stacked above it.** Stacked, a scored row
+stood 10.35px taller than an unscored one, so row height depended on what the engine returned.
+Inline, the eyebrow is one height either way — the same invariant the scrolling drawing strip is
+built on, and the row went from six possible heights to two.
 
 **The row answers the glance, and four fields could not.** It carried the skim, the status, the
 holder and the year, and a founder could not tell a corporate filing from a university one, or a
 printing patent from a motor-control one, without opening the record — so the record was opened on
 every row and the list read as a table of contents rather than as a result. What changed is not how
 many facts a row may assert; it is which surface answers the glance. **The cost is stated rather
-than hidden**: the row measures about 300px against the old 176, so a 1000px column shows three
-results where it showed five.
+than hidden**: the row measures about 340px against the old 176, so a 1000px column shows three
+results where it showed five. *Of the most recent 46px, more than half is the eyebrow's own line;
+the rest is the type coming up onto the scale — the meta and the abstract were rendering at sizes
+that appear nowhere in [`design-language.md`](design-language.md) §4's table.*
 
 **The abstract is barred when it is withheld and absent when there is none**, which is the skeleton
 contract in the one place on the row where the two are easy to confuse. Three lines rather than the
@@ -339,17 +358,41 @@ reading five in a row is otherwise five round trips to the column beside you whi
 eyes are on the record. **The list marks the open row**, which is what makes the pair legible rather
 than a second navigation with no anchor.
 
-**The way out is a control in the record's head.** *Open in IPtech*, with a label rather than a bare
-glyph, because it has a destination and an arrow alone says only *somewhere else*. **The
+**The column scrolls as one, and the record's head stays on it.** The record used to be a contained
+scroll inside a contained scroll — the card was forced to the column's height, so the column's own
+scroller never had anything to scroll and 1,500px of claims overflowed one level further down, inside
+a rounded card, against a scrollbar 1px from its own border. There is one scroller now, at the
+column's edge. The card grows to its content, the head is `sticky` so *previous*, *next* and *close*
+stay reachable through a long claim set, and **the attribution follows the claims instead of being
+pinned under them** — it was never fixed to the viewport, it was simply outside the scroller, which
+pins just as effectively.
+
+**The way out is at the end of the reading, not the top of it.** *Open in IPtech*, with a label
+rather than a bare glyph, because it has a destination and an arrow alone says only *somewhere else*.
+It sat in the head until the closing block existed to hold it; two controls with one destination in
+one pane is the same mark for the same act, so it **moved** rather than being duplicated. **The
 destination is a placeholder and is named as one**:
 [`components.md`](../design/components.md) §4 question 3 is the real answer and it is still open —
 the source varies by jurisdiction, so the engine has to return the URL *and* the label per patent.
 Until it does, every record points at the same sign-in, which is honest about being a stand-in in a
-way a constructed per-patent link would not be.
+way a constructed per-patent link would not be. *At the foot of the reading a placeholder is cheap;
+pinned in permanent chrome at the top of every record it was a placeholder at maximum prominence.*
+
+**The record closes with what to do about it.** A hairline, then five controls: star it, open the
+source, find similar to this one, copy a citation, export just this record. **It is chrome and not a
+fourth section of the patent** — Drawings, Abstract and Claims are the published document, and a
+fourth heading in the same grammar would claim these belong to it. The divider is the same rule the
+identity block closes with, so the patent is bracketed between two identical hairlines and everything
+between them is the document.
 
 It renders **the record, not an opinion about the record**: eleven identifiers, the abstract, the
-claim set as published, and the drawings. A five-field handoff row — number, holder, where, status,
-IPC — is a projection of the same fields, for the founder taking this to counsel.
+claim set as published, and the drawings. **The five-field handoff — number, holder, where, status,
+IPC — is the citation's payload rather than a block on screen**, with the title as a sixth because a
+citation without one is a handoff line and not a citation. Printing five of the eleven again at the
+foot of a record that has just printed all eleven is the repetition the *Classes* rule refuses one
+paragraph down; its stated purpose is the founder taking this to counsel, which is something that
+**leaves**. The closing block names the fields it copies where the founder is standing when they
+press it.
 
 **As published does not mean twice.** Claim text arrives carrying its own number — *1. A method of…*
 — and the claim list prints a number in its gutter, so both appeared. The leading number is removed
@@ -411,6 +454,17 @@ which is why one of them is a button rather than a consequence:
   nearness to what was starred. **No patent enters or leaves; only the sequence changes**, and
   *Restore the original order* puts it back.
 
+**An open record can be the anchor too, and it does not star it.** The closing block's *Find similar
+to this one* sends that one patent as the anchor —
+[`components.md`](../design/components.md) types `rerank`'s anchors as an array, so one of them is
+inside the contract rather than a special case. This is the separation above read from the other end:
+a founder who wants more like *this* has not necessarily decided it belongs in the set they are
+taking out. **The chip says what the order is by**, which is why it carries a phrase rather than a
+count — *Nearest to 2 starred patents* is true of one path and false of the other, and the control
+that anchored the order is what knows which. **The wait and the failure stay in the list**, where the
+change happens: a control in the right column reporting that the left column did not change would
+report it away from the thing that did not change.
+
 **That ordering is a ranking, not a verdict.** A patent near the top is close to what the founder
 described. It does not mean it affects them, and the interface never says it does.
 
@@ -423,6 +477,13 @@ shortlist is read as a whole rather than one row at a time, and it is where the 
 screen — number, title, holder, where, status, date, score — and neither carries a cover page, a
 summary or a conclusion. `brief.md` §1 is the rule and the test is one question: **does the file
 state anything the interface did not?** If it does, Terrain has written a report.
+
+**One record can leave on its own, through the same two builders.** The record's closing block offers
+the same CSV and Markdown for the patent being read, and it reads the **row** rather than the record
+— which is why the row carries `number` and `where` it does not draw. One record must not grow a
+third opinion about what a row contains, and a file of one must not carry different fields from the
+set it came out of. It keeps §7.2's inversion: the bytes are already in the client, so the file is
+handed over first and the ledger is called after.
 
 ---
 

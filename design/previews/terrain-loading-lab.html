@@ -149,10 +149,19 @@
    TIS Terrain — tokens. THE ONE AUTHORED COPY.
 
    Every other copy of this block is generated. tools/sync-tokens.py --write
-   writes it into the region between the sentinels in the prototype, the
-   loading lab and app/index.html; --check verifies all three BYTE FOR BYTE and
-   CI runs it before the publish. A value diff would pass while the comments
-   drifted, and the comments are where the measured contrast ratios live.
+   writes it into the region between the sentinels, --check verifies it BYTE
+   FOR BYTE, and CI runs --check on every push. A value diff would pass while
+   the comments drifted, and the comments are where the measured contrast
+   ratios live.
+
+   THERE IS ONE TARGET NOW AND THIS SAID THREE. It named the prototype, the
+   loading lab and app/index.html, "and CI runs it before the publish". The
+   prototype is frozen and reads tokens that left with the analysis layer, so
+   regenerating its block would blank it rather than update it; app/index.html
+   links this file directly, because it cannot work from a download under any
+   circumstances and a third generated copy beside the authored one is drift
+   risk bought for nothing; and nothing publishes. sync-tokens.py's TARGETS
+   list is the count, and it holds the loading lab.
 
    THE FILE IS ORDERED BY THEME-VARIANCE, NOT BY DOCUMENT SECTION. That is what
    makes "the three blocks carry the same names in the same order" a one-line

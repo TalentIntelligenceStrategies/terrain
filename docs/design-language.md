@@ -564,15 +564,21 @@ surface beneath the bar.
 **The results surface has a floor, and below it Terrain says so rather than reflowing.** **The
 supported floor is 1024px.** Below it the product states that it needs a wider window and stops.
 
-**A result row is ~290px, and it buys back the trip into the record.** It was ~102px with four
-fields on it, ~176px once it gained drawings, and it is three bands now — what the document is, who
-holds it and when, and what it claims — over a strip of its own drawings. Measured, that takes a
-1000px column from five results to about three. **That is the largest single cost in this document
-and it is spent on one thing:** four fields could not answer the glance, so the record was opened on
-every row and the list was a table of contents rather than a result. A row that settles *not this
-one* without a press is worth more than two more rows that cannot.
+**A result row is ~340px, and it buys back the trip into the record.** It was ~102px with four
+fields on it, ~176px once it gained drawings, ~290px at three bands, and ~340px since band one became
+an eyebrow over a full-width title and the type came up onto the scale. Measured, that takes a 1000px
+column from five results to about three. **That is the largest single cost in this document and it is
+spent on one thing:** four fields could not answer the glance, so the record was opened on every row
+and the list was a table of contents rather than a result. A row that settles *not this one* without
+a press is worth more than two more rows that cannot.
 
-**The strip is a constant ~104px of it, whatever the patent carries**, and that is a stronger claim
+**Two heights, where there were six.** The row's height used to depend on whether the engine returned
+a score — stacked, the score block stood 10.35px taller than the head beside it — multiplied by how
+many lines the title took. The score is inline now and the title is clamped to two, so a row is one
+of two heights whatever the patent and whatever the engine said. **For a surface whose whole job is
+scanning, two heights at 340 is a better target than six at 290.**
+
+**The strip is a constant ~134px of it, whatever the patent carries**, and that is a stronger claim
 than the fixed four-up grid could make. The grid capped at four because four was what the column
 could hold — six would have wrapped, and a strip that wraps makes row height depend on the data,
 which is the one thing a scan target cannot have. A horizontal scroller answers that outright:
@@ -651,20 +657,36 @@ That is not a third structure: it is the same two regions in the other axis, and
 **Above the stack the breakpoints adjust components, never the structure.** A label narrows, the
 thumbnail strip fits fewer per row, the field tiles reflow.
 
-**The breakpoints are the viewport's, with three exceptions, and all three earn it the same way**: a
+**The breakpoints are the viewport's, with two exceptions, and both earn it the same way**: a
 subject that exists in the markup, and a width the viewport does not know.
 
 - `.pref-card` — a settings card is handed whatever width its column has.
 - `.rec-body` — the record's field list, §7. The column is 56% of a split or the whole width,
   depending on a breakpoint above it.
-- `.rec-head` — the same column, one level up. *Open in IPtech* keeps its glyph and drops its label
-  below 520px of head, because four controls and a heading is the row's whole budget.
 
-**A fourth has to argue the same two things.** The count is here rather than in a comment because
+*`.rec-head` was a third and went when the control that needed it did.* It existed solely so
+*Open in IPtech* could drop its label below 520px of head; that control moved to the record's closing
+block, where it has room for a per-patent label the head could never have held. **Removing a control
+removed a query**, which is the direction this count is supposed to move in.
+
+**A third has to argue the same two things.** The count is here rather than in a comment because
 "it is the only one" was the claim this paragraph used to make, and it stopped being true in one
 pass.
 *A container query whose subject was never built does not fail — it sits in the stylesheet looking
 like responsive behaviour, and no screenshot at any width can show you that it is not there.*
+
+**There is one sticky element, and it is the record's head.** A `sticky` bar is a claim that what it
+holds is needed at every scroll position, and almost nothing is: a menu closes, a chip is read once,
+a heading is read once. The record's head holds *previous*, *next* and *close* over a claim set that
+runs to 1,500px, and *close* is how the founder leaves. It pinned for free until the column became
+the scroller — a non-flexing item above a scrolling sibling stays put without saying so — so this is
+a rule arriving to describe something that was already true rather than a new affordance. **A second
+one is evidence this rule has stopped holding**, not evidence that sticky turned out to be useful.
+
+*It also depends on a detail worth writing down once: the card that holds it is `overflow:clip` and
+not `overflow:hidden`. `hidden` makes an element a scroll container, so a sticky child resolves
+against the card — which never scrolls — and travels away with it, throwing nothing and logging
+nothing. `clip` clips to the radius without creating a scrollport.*
 
 **The lockup routes home unless there is no home to route to.** On the working screen it scrolls both
 columns to the top — both, because the surface has two and returning one is a half-answer. On a

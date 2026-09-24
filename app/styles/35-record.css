@@ -281,9 +281,15 @@
    disclaimer are real English. §8's contract needs no third exception for this,
    which is the test that it is the right shape.
 
-   ONE RENDERER, TWO HOSTS. The five-field handoff is now a SUBSET VIEW of this
-   same record through the same field function, so §7's "if the two ever diverge
-   that is a bug, not a variant" holds by construction instead of by care.   */
+   THE FIVE-FIELD HANDOFF IS NOT A SECOND VIEW OF THIS, AND THIS CLAIMED IT
+   WAS. It read "one renderer, two hosts... a SUBSET VIEW of this same record
+   through the same field function" — and FIELDS has exactly one caller, which
+   renders all eleven. The second host was deleted and the comment outlived it.
+   The handoff is the closing block's CITATION PAYLOAD now (record.mjs
+   HANDOFF): printing five of the eleven again at the foot of a record that
+   has just printed all eleven is the repetition the Classes rule refuses, and
+   its stated purpose is the founder taking it to counsel — something that
+   leaves rather than something read twice.                                */
 /* NO ENTRANCE OF ITS OWN, and its removal is the fix for the second half of
    the jump. .pn used to carry `animation:pn-in var(--dur-2) var(--ease) both`
    — 200ms, 4px of Y, on --ease — INSIDE a container travelling 320ms on the

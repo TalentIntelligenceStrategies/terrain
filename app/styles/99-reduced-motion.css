@@ -1,8 +1,13 @@
 /* ══ 99 · REDUCED MOTION ══ THIS FILE MUST LOAD LAST ════════════════════
-   20 of the 28 rules below are SAME-SPECIFICITY OVERRIDES declaring end
+   MOST OF THE RULES BELOW ARE SAME-SPECIFICITY OVERRIDES declaring end
    states. Same specificity means order decides, so a stylesheet loading after
    this one silently wins and the end state never lands. check-app.py asserts
    that the last <link> in the manifest is this file.
+
+   NO COUNT HERE ANY MORE. This read "20 of the 28 rules below" against a file
+   that has held a handful since the analysis layer went, and nothing checks
+   it — a number that cannot be wrong loudly is a number that goes stale
+   quietly. What matters is the property, not the tally.
 
    AND THIS IS WHY THERE IS NO @layer. Inside a layer, !important REVERSES
    layer order -- an important declaration in an earlier layer beats one in a
