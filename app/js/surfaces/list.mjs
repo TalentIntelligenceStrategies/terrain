@@ -164,7 +164,11 @@ function glyph(k) {
 /* one cell of the meta grid. `inner` is already-escaped HTML, because half the
    callers pass a bar and half pass text. */
 function cell(k, inner) {
-  return '<span class="dm">' + glyph(k) + '<span class="dm-v">' + inner + '</span></span>';
+  /* t-body ON THE VALUE. It was 13/1.4 at weight 400 in 34-list.css — `label`'s
+     metrics carrying `body`'s weight, which is a sixth role invented in a gap
+     rather than a role from §4's table. */
+  return '<span class="dm">' + glyph(k)
+    + '<span class="dm-v t-body">' + inner + '</span></span>';
 }
 
 /* THE INVENTOR LINE PRINTS ONE NAME AND COUNTS THE REST. A patent with six
@@ -174,8 +178,14 @@ function cell(k, inner) {
 function inventorHTML(list) {
   if (!Array.isArray(list) || !list.length) return bar('w-md', 'micro');
   const rest = list.length - 1;
+  /* fig-s, AND 34-list.css HAS CLAIMED THIS WAS A FIGURE ALL ALONG: "It is a
+     count, so it is a figure." The markup carried no figure role at all, so
+     every "+5" on the surface rendered in Urbanist without tabular-nums —
+     the exact split-role failure 02-type.css's header was written to close.
+     THE LITERAL LEADING SPACE WENT TOO: .dm-v is a flex row with gap --s-6,
+     so the space and the gap were a double gap you could see. */
   return esc(list[0]) + (rest > 0
-    ? '<span class="dm-more"> +' + rest + '</span>' : '');
+    ? '<span class="dm-more fig fig-s">+' + rest + '</span>' : '');
 }
 
 /* ── one row ──────────────────────────────────────────────────────────────
@@ -217,30 +227,67 @@ function rowHTML(rec, i) {
     + ' aria-label="' + esc(rowName(rec, i)) + '"'
     + ' aria-current="false">'
 
-    /* ── band 1 · what this document IS ── */
+    /* ── band 1 · an eyebrow, then the title on its own full-width line ────
+       THE NUMBER WAS A FLEX SIBLING OF THE TITLE, so a title that ran to two
+       lines began its second line at the TITLE's leading edge — indented past
+       the number by the number's own width plus a gap. Nothing declared that
+       indent and nothing could remove it while the two shared a line.
+
+       THE EYEBROW ALSO PAID FOR THE TITLE'S SIZE STEP. Sharing line one with
+       the number and the rank left the title ~381px of a ~518px column at
+       1440 — about 53 characters, against a corpus whose median title is 66.
+       Measured over 100 corpus titles, 33% fitted on one line. At 17px across
+       the full width, 45% do. The title went UP a scale step and wraps LESS,
+       and the step itself costs 0.35px of row height.
+
+       THE STATUS LEADS, and it was the fourth cell of a 2x2 grid. It is the
+       single most decision-relevant fact on the row — an expired patent is
+       not a threat, it is free to use — and the leading edge of the first
+       line is what prominence means here. Its size does not have to carry it:
+       it is the only coloured thing on the row and it has a dot as well as a
+       word.
+
+       THE RANK LEADS WITH IT AND THE SCORE TRAILS, which splits a pair this
+       file used to argue for keeping together. The rank is an ORDINAL — the
+       Nth of these — and belongs beside the identifier it counts. The score
+       is a MAGNITUDE, and the trailing edge is reserved for it. */
     + '<span class="drill-head">'
-    + '<span class="drill-no fig fig-s">'
-    + (rec.number != null ? esc(rec.number) : bar('w-sm', 'micro')) + '</span>'
-    + '<span class="drill-title">'
-    + (real
-      ? '<span class="drill-name t-title-s">' + esc(rec.skim) + '</span>'
-      : '<span class="sk sk-h-body w-full" style="margin-bottom:6px"></span>'
-        + '<span class="sk sk-h-body" style="width:74%"></span>')
-    + '</span>'
+    + '<span class="drill-eyebrow">'
+    + (rec.status ? statusHTML(rec.status) : '')
     /* THE RANK IS THE POSITION IN THE ORDER THE FOUNDER IS LOOKING AT, which
        is true under relevance, newest and oldest alike — it is not a claim
        about relevance, and it does not become one when the sort changes. */
     + '<span class="drill-rank fig fig-s">#' + (i + 1) + '</span>'
+    /* w-md AND NOT w-sm/micro. The longest number in this corpus is 15
+       characters — US20130146987A1, about 112px at fig-s — and a 52x9 bar is
+       a skeleton the wrong size for the thing it withholds. */
+    + '<span class="drill-no fig fig-s">'
+    + (rec.number != null ? esc(rec.number) : bar('w-md')) + '</span>'
     /* THE LABEL GOES WITH THE VALUE. Printing one without the other was a real
        defect against real data: every corpus record has `score: null`, so every
        row printed the word SCORE over an empty space. The whole block is
        omitted rather than barred, because a bar would claim the engine produced
-       a score and we declined to print it. It did not produce one. */
+       a score and we declined to print it. It did not produce one.
+
+       THE title= WENT WITH THE MOVE. It was a tooltip nobody opens, and the
+       results heading's info popover already carries that sentence verbatim. */
     + (rec.score == null ? '' :
-       '<span class="drill-score" title="How close the engine put this to what you described">'
+       '<span class="drill-score">'
        + '<span class="t-micro drill-score-k">Score</span>'
        + '<span class="fig fig-s">' + rec.score.toFixed(4) + '</span>'
        + '</span>')
+    + '</span>'
+    + '<span class="drill-title">'
+    + (real
+      ? '<span class="drill-name t-title">' + esc(rec.skim) + '</span>'
+      /* sk-h-title IS 17px, WHICH IS WHAT THE TITLE NOW IS. Two 12px bars
+         stood in for 44.2px of real title; two 17px bars are honest about it.
+         The two inline style= attributes went with them — they were the only
+         ones on the row, and .drill-title-sk carries the gap and the second
+         bar's width instead. */
+      : '<span class="drill-title-sk">'
+        + bar('w-full', 'title') + bar('w-full', 'title') + '</span>')
+    + '</span>'
     + '</span>'
 
     /* ── band 2 · who and when · a 2x2 grid ── */
@@ -253,13 +300,22 @@ function rowHTML(rec, i) {
            cut and wants the rest without opening the record. */
         ? '<span title="' + esc(rec.holder) + '">' + esc(rec.holder) + '</span>'
         : bar('w-md', 'micro'))
+    /* "Published" AND NOT "Pub.". The record's own field list has said
+       Published since it was written (record.mjs FIELDS), so the row was the
+       only surface abbreviating it — and `Pub. {date}` is, character for
+       character, PI-VuePat's own pubDateLabel. The column is 2x1fr and the
+       word fits. */
     + cell('when', rec.published != null
-        ? 'Pub. <span class="fig fig-s">' + esc(rec.published) + '</span>'
+        ? 'Published <span class="fig fig-s">' + esc(rec.published) + '</span>'
         : (rec.year != null
-            ? 'Pub. <span class="fig fig-s">' + rec.year + '</span>'
+            ? 'Published <span class="fig fig-s">' + rec.year + '</span>'
             : bar('w-sm', 'micro')))
-    + cell('what', (rec.status ? statusHTML(rec.status) : '')
-        + (rec.where != null ? '<span class="dm-where">' + esc(rec.where) + '</span>' : '')
+    /* THE STATUS CHIP LEFT THIS CELL FOR THE EYEBROW. What is left is the
+       jurisdiction and the main classification, which are both CODES — §4
+       says Inconsolata for every code without exception, and `US` / `EP` /
+       `WO` had been inheriting .dm-v and rendering in Urbanist. */
+    + cell('what', (rec.where != null
+            ? '<span class="dm-where fig fig-s">' + esc(rec.where) + '</span>' : '')
         + (rec.ipcMain != null
             ? '<span class="fig fig-s">' + esc(rec.ipcMain) + '</span>' : ''))
     + '</span>'
@@ -275,8 +331,11 @@ function rowHTML(rec, i) {
        decline to print is exactly what a bar means. A patent with no abstract
        at all is one row in this corpus and renders nothing. */
     + (rec.abstract != null
-        ? '<span class="drill-abs">' + esc(rec.abstract) + '</span>'
-        : '<span class="drill-abs drill-abs-sk">'
+        /* t-body. It was 13/1.55 — `label`'s SIZE on `body`'s LEADING, the
+           same invented role from the other direction. The substance of the
+           row was rendering a pixel smaller than nothing in §4's table. */
+        ? '<span class="drill-abs t-body">' + esc(rec.abstract) + '</span>'
+        : '<span class="drill-abs t-body drill-abs-sk">'
           + bar('w-full') + bar('w-full') + bar('w-md') + '</span>')
     + '</button>'
     + thumbsHTML(rec, i)

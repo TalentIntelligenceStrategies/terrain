@@ -29,8 +29,14 @@
 .wordmark span{color:var(--text-3);font-weight:500}
 
 /* status chip + delta pill — dot or arrow plus a word, never colour alone */
-.status{display:inline-flex;align-items:center;gap:var(--s-6);font-size:11.5px;font-weight:500;
-        height:22px;padding:0 var(--s-8);border-radius:var(--r-pill);white-space:nowrap}
+/* SIZE, WEIGHT, TRACKING AND CASE ARE .t-micro's, ON THE MARKUP. This rule
+   carried font-size:11.5px and font-weight:500 -- an off-table size invented
+   in the gap between `micro` and `label`. statusHTML() emits the role now, so
+   all three of its hosts move together.
+   HEIGHT IS --s-20 AND NOT 22, because 22 is off §5's scale and a micro chip
+   wants the smaller pill anyway. */
+.status{display:inline-flex;align-items:center;gap:var(--s-6);
+        height:var(--s-20);padding:0 var(--s-8);border-radius:var(--r-pill);white-space:nowrap}
 .status-live{background:var(--state-live-tint);color:var(--state-live)}
 .status-expired{background:var(--state-expired-tint);color:var(--state-expired)}
 .status-pending{background:var(--state-pending-tint);color:var(--state-pending)}

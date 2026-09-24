@@ -40,7 +40,15 @@ const STATUS = {
 export function statusHTML(kind){
   var s = STATUS[kind];
   if (!s) return '';
-  return '<span class="status status-' + s[0] + '"><span class="dot"></span>'
+  /* THE ROLE IS ON THE EMITTED CLASS LIST, not spelled in 11-chip.css. The chip
+     shipped font-size:11.5px, which appears nowhere in design-language.md §4's
+     table -- a sixth role invented in the gap between `micro` and `label`, and
+     spelled once for the three surfaces this function feeds. Adding the role
+     here fixes the list row, the record and the starred view together.
+     THE HUE STILL WINS: .t-micro sets --text-3 and .status-* sets the state
+     colour at equal specificity, and 11 loads after 02. The number is the
+     cascade. */
+  return '<span class="status t-micro status-' + s[0] + '"><span class="dot"></span>'
        + s[1] + '</span>';
 }
 
