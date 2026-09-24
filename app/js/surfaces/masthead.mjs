@@ -111,17 +111,21 @@ export function init(ctx) {
   });
 
   /* ── the meter · what is left ───────────────────────────────────────────
-     A FIGURE AND A WORD, never a colour alone. The meter narrows as the
-     balance falls and the number beside it says what it is; a bar that only
-     changed length would be encoding the one thing a founder acts on in a
-     channel they cannot read precisely. */
+     A FIGURE AND A WORD, and here it is only the figure. This wrote a
+     --meter-fill percentage that NO STYLESHEET READ, under a comment claiming
+     the meter narrowed as the balance fell. It never narrowed: #meter is a
+     button holding a glyph and a number, with no track and no fill.
+
+     THE WRITE GOES RATHER THAN A READER ARRIVING. Adding one means adding a
+     bar to the masthead, and the points page already draws that length —
+     36-destination.css reasons at the plan-spent line that it is deliberately
+     not a second meter. The number and its unit carry the balance here, which
+     is a figure and a word and never a colour alone. */
   ENGINE.points().then(res => {
     if (!res.ok) return;
     const { balance, allowance } = res.data;
     const n = $('#meterN');
     if (n) n.textContent = String(balance);
-    const m = $('#meter');
-    if (m) m.style.setProperty('--meter-fill', (balance / allowance * 100).toFixed(1) + '%');
   });
 
   /* ── navigation out of the bar ────────────────────────────────────────

@@ -38,3 +38,19 @@ a{text-decoration:none;color:inherit}
    bug paid for a fourth time. design-language.md §7 has the ruling. */
 :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 [tabindex="-1"]:focus,[tabindex="-1"]:focus-visible{outline:none}
+
+/* ── the theme swap, for one frame · design-language.md §6 ──────────────
+   THE FOURTH !important, AND IT WAS DOCUMENTED IN TWO PLACES AND DECLARED IN
+   NEITHER. main.mjs adds .theme-switching, waits two frames and removes it;
+   nothing listened, so every one of the 39 colour, border and shadow
+   transitions in this tree ran at once on a theme change. A palette does not
+   cross-fade — it switches — and a surface melting into its other self is the
+   one moment the interface looks like it is guessing.
+
+   IT LIVES HERE RATHER THAN IN 99, and the difference matters: 99 is the
+   reduced-motion blanket and must be the last word in the sheet. This is a
+   one-frame suppression during a deliberate act, and it beats every component
+   rule on !important alone rather than on order. */
+:root.theme-switching *,
+:root.theme-switching *::before,
+:root.theme-switching *::after{transition:none!important}
