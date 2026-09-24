@@ -36,8 +36,12 @@ function treeHTML(tree) {
   if (!tree.spines || !tree.spines.length) {
     return '<p class="fb-thin t-body">There are too few results to group.</p>';
   }
-  return '<div class="fb-head t-micro">Grouped by approach</div>'
-    + '<ul class="fb-spines">'
+  /* NO HEADING HERE. There was one — "Grouped by approach" — and it earned
+     its place above a column that would otherwise have started with a bare
+     list. The panel names itself in .pop-title now, and two headings 40px
+     apart in a 380px panel is the same fact twice. The words moved up rather
+     than going: #fishPopTitle carries them. */
+  return '<ul class="fb-spines">'
     + tree.spines.map(sp =>
         '<li class="fb-spine">'
         + '<h4 class="fb-spine-h t-micro">' + esc(sp.label) + '</h4>'
@@ -154,8 +158,11 @@ export function init(ctx) {
     PICKED.clear();
     LABELS.clear();
     paintChips(LABELS);
+    /* THE PANEL IS A POPOVER NOW, so "is it showing" is a question about its
+       host's open class rather than about `hidden` on a column. A closed
+       panel just drops LOADED and rebuilds the next time it is opened. */
     const host = $('#fishWrap');
-    if (host && !host.hidden) load();
+    if (host && host.closest('.pop-wrap.is-open')) load();
   });
 
   onActivate(document, '.fb-leaf', el => {

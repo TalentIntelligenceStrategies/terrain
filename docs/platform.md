@@ -21,7 +21,7 @@
 | | |
 | --- | --- |
 | **The home surface** | Where the founder picks a technology field and describes an idea. One composer, one button. |
-| **The results surface** | The patents the search found down the left, any patent's record in their place, the grouping panel and the drawings on the right. |
+| **The results surface** | The patents the search found down the left, with their drawings; whichever one you open on the right, with all of them. |
 | **The starred set** | Everything the founder starred, read as a whole, and where it leaves as a file. |
 | *Destinations* | Points · Account settings · Plan & billing · Help. Reached from the masthead, returned from in place. |
 
@@ -29,11 +29,12 @@ A **surface** is somewhere the product happens. A **destination** is somewhere t
 to and comes back from. No moment routes through a destination, and nothing opens a new tab or a new
 window anywhere in the product.
 
-**A top masthead, not a sidebar.** Arithmetic, not taste: the two columns split a 1440px laptop
-evenly at 720px each, and neither half survives a 260px rail — the result list stops being readable
-under 340px, and the record's eleven-field list wraps its values onto second lines under about 600px.
-Everything a rail would have carried is in the 48px bar: the project switcher, the points balance,
-the appearance control, the account menu.
+**A top masthead, not a sidebar.** Arithmetic, not taste. The two columns split a 1440px laptop
+44/56 — 634 for the list, 806 for the record — and neither half survives a 260px rail: the result
+list stops being readable under 340px, and the record's eleven-field list wraps its values onto
+second lines under about 600px, which a 260px rail would put it under at any window below ~1465.
+Everything a rail would have carried is in the 48px bar: the project switcher, the points balance, the
+appearance control, the account menu.
 
 ---
 
@@ -42,7 +43,7 @@ the appearance control, the account menu.
 | Moment | Surface | What is on screen |
 | --- | --- | --- |
 | 1 · First run | home | The field tiles, the composer, and the question above it. Nothing else. |
-| 2 · What was found | results | The ranked patents fill the left column. Nothing is approved and nothing is waited for beyond the one call. |
+| 2 · What was found | results | The ranked patents fill the left column, and keep it. Nothing is approved and nothing is waited for beyond the one call. |
 | 3 · Working | results | Sorting, filtering, starring, finding similar, reading a record, opening a drawing. The founder may stay here indefinitely and most of the product's value is spent here. |
 | 4 · Leaving | starred set | The shortlist as a whole, and two buttons that write a file. |
 
@@ -88,8 +89,9 @@ that means *send* understates both.
 
 ### 3.3 · The search settings
 
-An **anchored popover**, not a modal — this product has no modal, no scrim and no focus trap, and a
-panel that is none of those must not pretend otherwise by dimming the page.
+An **anchored popover**, not a modal — this product has no modal and no `<dialog>`, and its one
+scrim and one focus trap belong to the enlarged drawing (§4.5). A panel that is none of those must
+not pretend otherwise by dimming the page.
 
 It carries: **data source** (jurisdiction chips, and document kind — granted or applications),
 **results to return**, and a **date filter** with a basis (filed or published) and an optional range.
@@ -120,8 +122,9 @@ coverage table a founder will assume is complete.
 One screen. Moments 2 and 3 both happen on it without it ever being left, and the founder returns to
 it from the starred set.
 
-**Two columns, split evenly.** The left carries the result list, and the patent record in its place
-when one is open. The right carries the grouping panel, and the drawing when one is enlarged.
+**Two columns, 44 / 56, and each means one thing.** The left carries the result list and never gives
+it up; the right carries the record of whichever patent is open. The grouping is a popover anchored
+to its own control, and an enlarged drawing is a lightbox over the viewport.
 
 **The search bar stays.** It sits above both columns with the founder's sentence still in it, so
 changing the search is editing what is already there rather than navigating back to a blank one.
@@ -130,7 +133,7 @@ change anything is worse than a missing one.
 
 ### 4.1 · The masthead
 
-48px, full width, seven regions:
+48px, full width, six regions:
 
 1. **The lockup** — the way home. It returns the founder to the working screen. It is **inert on the
    home surface**, both times it is reachable, and says so with `aria-disabled` rather than
@@ -152,27 +155,98 @@ The founder's sentence, still editable, with the elapsed time and the match coun
 toggles sit under it:
 
 1. **Search settings** — the same popover §3.3 describes, anchored here instead.
-2. **Grouping** — shows and hides the panel in the right column.
-3. **Details and drawings** — the record as published.
-4. **Drawings only** — the figures at the size the column allows, for a patent being read visually.
+2. **Grouping** — opens the branch panel, §4.4, as a popover under this control.
+3. **Details and drawings** — every row as it is: title, status, holder, year, drawings.
+4. **Drawings only** — every row stripped to its drawings, for a set being scanned visually.
 
-**Toggles 3 and 4 do nothing until a record is open**, and *Drawings only* refuses with a spoken
-reason when the open record has no figures rather than switching to an empty pane.
+**Toggles 3 and 4 govern the list, and that is a correction.** They governed the record, which made
+a bar-wide control do nothing at all until a patent was open — and the control's own group label
+reads *how much of each patent to show*, which is a claim about the set rather than about one of
+them. The record always shows everything; a drawing worth enlarging has the lightbox.
+
+***Drawings only* refuses with a spoken reason when nothing in the set has a drawing**, rather than
+emptying the list.
 
 ### 4.3 · The list
 
-The left column, 340px minimum.
+**The left column, and it never gives it up.** 44% of the split, floored at 340px. It held the
+record too until the record moved opposite it, swapping with it by display — which meant the founder
+could read a patent or see the set it came from, never both. Reading one patent against the set is
+one act, and one region that means two things by state is what that cost.
 
-**Head** — *Your results*, a star count, `N matched`, and one info affordance. A narrow column has room
-for the list or for prose about the list; every sentence that is not the list lives behind that
-control.
+**Three bands a row, then the drawings.** Band one is identity — the number, the title, the
+position in the order, and the score if the engine returned one. Band two is a 2×2 grid of who and
+when: the first inventor, the holder, the publication date, and a cell carrying the status chip, the
+jurisdiction and the main classification. Band three is the abstract, clamped to three lines. The
+drawings are not a fourth band: a field is a value read *off* the patent, and a drawing is the
+patent.
+
+**The row answers the glance, and four fields could not.** It carried the skim, the status, the
+holder and the year, and a founder could not tell a corporate filing from a university one, or a
+printing patent from a motor-control one, without opening the record — so the record was opened on
+every row and the list read as a table of contents rather than as a result. What changed is not how
+many facts a row may assert; it is which surface answers the glance. **The cost is stated rather
+than hidden**: the row measures about 300px against the old 176, so a 1000px column shows three
+results where it showed five.
+
+**The abstract is barred when it is withheld and absent when there is none**, which is the skeleton
+contract in the one place on the row where the two are easy to confuse. Three lines rather than the
+corpus's median nine, because three reaches past the boilerplate a patent abstract opens with and
+into the clause that separates this one from the next.
+
+**Twelve drawings at 72px, and the strip scrolls.** The number is the DOM's now rather than the
+column's: twelve a row over twenty rows is 240 images, against a corpus patent that carries 347
+figures. Twelve is also the record's cap, so the row and the record agree about how many drawings is
+enough to judge a patent by. **The last tile is a `+N` control** — the patent's real total less what
+the strip holds — and it opens the record; a patent whose figure count the engine did not return
+draws no tile at all, because `+0` is a claim and a missing tile is not.
+
+**A horizontal scroller answers the wrap rather than working around it.** The old four was derived
+from the column's width on the premise that a strip which wraps makes row height depend on the data,
+and that is the one thing a list you *scan* cannot have. Scrolling settles it outright: twelve
+drawings or three, the row is the same height. 72px rather than the record's 104 still says
+subordinate — 80 is where the step stops reading as one — and is enough to tell a circuit diagram
+from a mechanical assembly, which is the whole of what a glance wants.
+
+**What is off the end is shown by a cut tile**, not a shadow and not a fade. A shadow cannot separate
+two surfaces of the same colour, which white tiles on a white row are, and
+[`design-language.md`](design-language.md) §5 refuses one to anything in the layout; a fade would
+need a scroll listener on twenty rows. There is no scroll snap, because snapping resolves every rest
+position flush and deletes the affordance.
+
+**They are controls now, and the row's own target is not one of them.** Each tile opens the record at
+that drawing. **One tab stop per strip**, with the arrows moving inside it — twenty rows of twelve
+would otherwise be 240 tab stops, and a keyboard founder would tab through the drawings of a patent
+they had not decided to open.
+
+**The strip sits outside the row's button, and that is correctness rather than layout.** A
+drag-to-scroll that begins inside a `<button>` ends as a click on it, so every horizontal scroll
+would have opened a record.
+
+**A tile joins the record on the published figure number, never on its index.**
+[`../design/components.md`](../design/components.md) §1 is explicit that the row's thumbnails and the
+record's figures are two renditions the engine chooses independently, so nothing says the fourth
+thumbnail is the fourth figure.
+
+**Head** — what the search matched and how much of it is on screen, a star count once anything is
+starred, and one info affordance. The count is printed once: a chip beside the heading repeating
+`matched` as a bar said the same fact twice, once as a number and once as withheld. A narrow column
+has room for the list or for prose about the list, and every sentence that is not the list lives
+behind that control.
 
 **Bar** — Sort (Relevance · Newest filed · Oldest filed), Filter (status and kind facets, with a
 count), **Find similar** and **Restore the original order**. Find similar is the only filled control
 on the surface and is hidden rather than disabled when nothing is starred.
 
-**Rows** — each carries the patent's identity as bars, a status chip, and the engine's relevance score
-on the right. Twenty rows, then a foot that says how many are left and offers `Show more`.
+**Rows** — each carries the patent's identity, a status chip, and the engine's relevance score on
+the right. Twenty rows, then a foot that says how many are left and offers `Show more`.
+
+**A score the engine did not return is omitted, not barred**, and it is the one field on the row
+where `null` does not mean the skeleton. A bar says *this value exists and we decline to print it*;
+the engine produced no score at all, so a bar would claim something untrue about it, and a label over
+an empty space is a broken component rather than a withheld value. **The label goes with the value or
+neither goes** — the word *Score* alone over nothing is what this rule was written against. `corpus/`
+returns no score on any record, so the row prints none; `?data=demo` is where the field can be seen.
 
 **Arranging the list is a request.** Twenty rows arrive at a time and *Show more* asks the engine for
 the next twenty, so the client never holds the whole result set. A sort re-sequences it at the engine
@@ -197,8 +271,18 @@ language may read as a verdict — *ranked by relevance* is an ordering; *strong
 
 ### 4.4 · The grouping panel
 
-The right column, while no record is open. A **fishbone**: the search at the spine, and branches
-generated over the result set, each carrying a count.
+**A popover, anchored to its own control in the search bar.** A **fishbone**: the search at the
+spine, and branches generated over the result set, each carrying a count.
+
+**It owned the right column until the record took it**, and the three candidates were: let the
+record cover it, move it above the list, or anchor it to its trigger. The first makes one region
+mean three kinds of thing by state. The second costs the list vertical room at every width and
+breaks where the columns stack. The third is width-independent, which is the property that decides
+it — it survives the stack and the floor with no third region to place.
+
+**Closing it hides nothing the founder decided.** The selected branches are chips *above the list*,
+in the left column, so the cut stays on screen whether the tree is open or not. That is what makes a
+popover affordable here and would not be true of a panel whose selection lived inside it.
 
 **It is navigation, not analysis, and the distinction is the whole of why it survives.** It does not
 tell the founder what the set means. It groups what came back so a set of two hundred can be walked
@@ -223,18 +307,44 @@ its own retry in the panel.
 
 ### 4.5 · The record, and where the drawings go
 
-**A patent's record takes the left column, in the list's place.** The right column, which held the
-grouping panel, becomes where a drawing is enlarged.
+**A patent's record takes the right column.** The left column is the list and stays the list.
 
-**The two columns divide by how hard you are looking.** The left is for glancing: the identifiers,
-the abstract, the claims, and a strip of numbered thumbnails under them — everything needed to decide
-whether this patent matters, in one scroll. The right is for when it does: one drawing, as large as
-the column allows, with zoom, rotation and pan.
+**The two columns divide by how hard you are looking, and the division is between them rather than
+inside one.** The left is for glancing: three bands a row and up to twelve drawings, with the
+abstract clamped to three lines — enough to decide which patent to open. The right is for reading
+the one you opened: every identifier, then **all** its drawings, then the abstract and the claims as
+published. **The clamp is the division**: the left shows enough of the prose to choose by, and the
+right is the only place it is whole.
 
-**That costs the list, and the record pays it back.** The founder loses sight of the results while a
-record is open, so the record carries **previous and next patent** in its own head. Without them,
-moving through a set means close, find your place, open — once per patent, and a founder comparing
-five patents does it eight times.
+**The drawings sit under the field panel, above the abstract, and that is the third position they
+have had.** They were briefly last, under the whole claim set, on the reading that *under the text*
+meant under all of it. Measured, that put them about 950px down a 1300px scroller: a founder who
+opened a patent to see what it looks like scrolled past five to forty claims of legal prose and
+mostly concluded there were no pictures. Ordering by what a patent is published in lost to ordering
+by what the reader came for.
+
+**A long strip is capped.** Real records run to hundreds of figures; the strip shows two rows and a
+control for the rest. The count in the heading is what states how many there are, so the control is
+disclosure rather than a claim about the data.
+
+**The right column is the wider half**, 56% against the list's 44%, because the record's eleven-field
+list is the width-critical thing on the surface and the list's four are not.
+[`design-language.md`](design-language.md) §7 carries the measurement and the point at which the
+field list goes single-column.
+
+**Previous and next survived the move on a narrower argument.** They were built because the record
+ate the list and there was no other way through a set. The list is back, and they stay because
+reading five in a row is otherwise five round trips to the column beside you while the founder's
+eyes are on the record. **The list marks the open row**, which is what makes the pair legible rather
+than a second navigation with no anchor.
+
+**The way out is a control in the record's head.** *Open in IPtech*, with a label rather than a bare
+glyph, because it has a destination and an arrow alone says only *somewhere else*. **The
+destination is a placeholder and is named as one**:
+[`components.md`](../design/components.md) §4 question 3 is the real answer and it is still open —
+the source varies by jurisdiction, so the engine has to return the URL *and* the label per patent.
+Until it does, every record points at the same sign-in, which is honest about being a stand-in in a
+way a constructed per-patent link would not be.
 
 It renders **the record, not an opinion about the record**: eleven identifiers, the abstract, the
 claim set as published, and the drawings. A five-field handoff row — number, holder, where, status,
@@ -247,10 +357,17 @@ stay, because a claim set that does not start at 1 is telling the reader somethi
 governs *Classes*, which lists the classifications **other than** the main one: the main symbol
 already has its own row above, and a reader who sees it twice looks for the difference.
 
-**The enlarged drawing dims nothing and covers nothing.** [`design-language.md`](design-language.md) §3.2 has no scrim, and there is nothing to
-dim: it opens in a column that was showing the grouping panel, beside a record that stays live. The
-founder picks the next figure from the strip without closing the one they are looking at, which is
-the arrangement's whole return.
+**The enlarged drawing takes the viewport, over a scrim.** It filled the right column until the
+record moved into that column — where filling it would cover the text the drawing is read against,
+which is the arrangement the column version existed to avoid. The left column would give a technical
+drawing 44% of the window, and reference numerals are what a founder enlarges a drawing *for*.
+
+**So it is the product's one scrim, one `position:fixed` node and one focus trap**, and each of
+those rules is narrowed rather than repealed —
+[`design-language.md`](design-language.md) §3.2 anticipated exactly this, closing with *a dimming
+layer would arrive with whatever first needs one*. The page behind goes `inert` for the length of
+it: a cover the pointer cannot reach and the tab key can is an interface lying about what is
+reachable. Escape closes the drawing and leaves the record open.
 
 **Every figure keeps its published number.** That number is what the claims refer to, and a
 renumbered figure is a different document. The number is rendered at rest and raised on hover — a
@@ -608,6 +725,12 @@ knowing before changing one.*
   and it is a product risk rather than a question — the star collects and finds similar, and without
   this it only collects. `components.md` §4 question 1.
 - **Can a grouping be generated over a result set we supply?** §4.4 depends on it entirely.
+- **Who supplies the per-patent "open this in the source" URL?** `components.md` §4 question 3. The
+  source varies by jurisdiction — Google Patents, WebPat, TIPO — so the interface cannot construct
+  it; the engine has to return the URL and the label together. **The affordance is built and its
+  destination is a stand-in**, a single IPtech sign-in on every record. That is the one place in the
+  product where a control points somewhere the data did not choose, and it is written into §4.5 so
+  it cannot be mistaken for a decision.
 - **What *Find similar* costs**, and whether *Export* should cost anything. §6.1 prices both; the
   interface has never agreed with itself about the first. *Free* follows from *retrieving spends
   points and reading does not* — it re-sequences a set already paid for and adds no patent to it.

@@ -26,7 +26,7 @@ import io, os, re, subprocess, sys, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
-from cssgates import (css_depth_errors, ungated_hovers,
+from cssgates import (comment_delimiter_errors, css_depth_errors, ungated_hovers,
                       base_rules_in_hover_gate, styles_in)
 
 fails = []
@@ -65,12 +65,19 @@ def strip_comments_css(css):
     return re.sub(r'/\*.*?\*/', '', css, flags=re.S)
 
 
-# ── the three lifted CSS scanners, now over .css files too ────────────────
+# ── the four lifted CSS scanners, now over .css files too ─────────────────
 # This is the cover that goes dark when the CSS leaves the HTML.
 for p, t in texts.items():
     if not (p.endswith('.css') or p.endswith('.html')):
         continue
     for blk in styles_in(p, t):
+        # ── GATE H · comment delimiters ──
+        # FIRST, because an orphaned '*/' is what makes the other three lie:
+        # they treat comments as whitespace, so a comment that closed early
+        # reads to them exactly like the prose it was meant to be.
+        for m in comment_delimiter_errors(blk):
+            fail(f"{p}: {m}. Text outside a comment is consumed as a selector "
+                 f"prelude, and the whole rule after it is dropped")
         for m in css_depth_errors(blk):
             fail(f"{p}: unbalanced CSS -- {m}. A stray brace silently eats the rule after it")
         for ln, sel in ungated_hovers(blk):

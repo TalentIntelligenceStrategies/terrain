@@ -1,4 +1,4 @@
-/* 36 · the destinations — platform.md §8
+/* 36 · the destinations — platform.md §6
  *
  * EXTRACTED from the prototype. Points, account, plan and billing, help. The
  * settings row, the switch and the page furniture; .fld and .dc are already
@@ -36,7 +36,7 @@
    space — 24 + the line + its own 32 comes back to the same 72. */
 .grid{padding:0 0 var(--s-24);display:flex;flex-direction:column;gap:var(--s-16)}
 
-/* ═══ the points page · platform.md §8.1 ═════════════════════════════════
+/* ═══ the points page · platform.md §6.1 ═════════════════════════════════
    The one surface that is account-level rather than project-level, and the
    only one reached from the chrome instead of from the flow. Restyled from
    IPtech's account → point usage screen (`32`); the reading of that screen,

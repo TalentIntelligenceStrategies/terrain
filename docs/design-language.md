@@ -110,13 +110,22 @@ what lets an accent sit on the system without fighting a temperature.
 | `--track-pressed` | `--n-4` | a bar track under the selected row |
 | `--key-ring` | `rgba(37,37,37,.24)` | the 1px ring on a 9px legend key |
 | `--veil` | `rgba(255,255,255,.82)` | the ground under a control bar floating over content |
+| `--scrim` | `rgba(37,37,37,.55)` | the one dimming layer, under the enlarged drawing |
 | `--figure-ground` | `#FFFFFF` | the paper a patent drawing was published on |
 
-The first two are alpha rather than flat neutrals because they composite over a surface whose colour
-varies — the legend key sits on a slice, and `--veil` sits on a patent's own line-work. They are
-still tokens, and still the only alpha values in the system. **`--veil`'s .82 is measured**: below
-about .78 a 1.5px Lucide stroke stops clearing 4.5:1 against the black line-work showing through, and
-above .90 the bar stops reading as floating and becomes a plate over the figure.
+Three of these are alpha rather than flat neutrals because they composite over a surface whose colour
+varies — the legend key sits on a slice, `--veil` sits on a patent's own line-work, and `--scrim`
+sits on whatever the founder was looking at. They are still tokens, and still the only alpha values
+in the system. **`--veil`'s .82 is measured**: below about .78 a 1.5px Lucide stroke stops clearing
+4.5:1 against the black line-work showing through, and above .90 the bar stops reading as floating
+and becomes a plate over the figure.
+
+**`--scrim`'s .55 is measured too, against the thing it separates.** The enlarged drawing's stage is
+`--figure-ground`, white in both themes, so in light theme — where the page behind is `--n-2` — the
+scrim is the only thing making the lightbox's edge an edge. Composited it lands at `#838383` and
+clears the white stage at 3.79:1; at .48 it falls to 3.11 and below that it fails 3:1 outright, which
+is the floor for a boundary that is not text. Above about .65 the page stops reading as a page that
+is still there.
 
 **`--figure-ground` is the one semantic token that does not swap**, and that is a fact about the
 content rather than an exemption from §10. A patent drawing is black line-work on a transparent
@@ -125,9 +134,15 @@ surface under our own chrome*; this one means *the paper this was published on*,
 value. It is a token rather than a literal because §3.2's rule is that every colour is a token — a
 named invariant is checkable where a hex in a component is a judgement call the gate has to allow.
 
-**There is no scrim token, and no scrim.** Nothing in the product dims the page: the record opens in
-its own column, the delete confirmation is inline, and both menus close on an outside click the
-document hears for itself. A dimming layer would arrive with whatever first needs one.
+**There is exactly one scrim, and it is the enlarged drawing.** This read *there is no scrim token
+and no scrim*, and closed with *a dimming layer would arrive with whatever first needs one*. That is
+what happened: the figure viewer became a lightbox over the viewport, because it had been capped at
+one column of a two-column split and reference numerals are what a founder enlarges a drawing for.
+
+**Everything else still dims nothing**, and the list is the rule rather than an anecdote: the record
+opens in its own column, the grouping panel is a popover, the delete confirmation is inline, and
+every menu closes on an outside click the document hears for itself. `--scrim` has one reader. **A
+second one is a sign this rule has stopped holding**, not a sign the token turned out to be useful.
 
 `--text-3` is darker than it looks like it should be. It carries the 10.5px micro-labels, which are
 small text and need the full 4.5:1 — the obvious mid-grey lands at 3.6 and fails.
@@ -277,7 +292,7 @@ blocks that goes stale. `tools/check-app.py` refuses one declared anywhere else.
 | --- | --- | --- | --- |
 | **primitive** | 11 | `:root`, once | `--n-0`…`--n-10`. **No component may read one.** |
 | **scale** | 29 | `:root`, once | `--s-*` `--r-*` `--dur-*` `--ease*` `--cycle`. Invariant by construction: a step is not a different size at night. |
-| **semantic** | 31 | **all three blocks** | This is the dark contract. §10.1. |
+| **semantic** | 32 | **all three blocks** | This is the dark contract. §10.1. |
 | **derived** | 3 | `:root`, once | Resolves *through* a themed token, so it inverts for free. **Never add one to a dark block.** |
 | **component-scoped** | 5 | on the component's own class | Never on `:root`, never read outside that component. |
 
@@ -321,6 +336,7 @@ exception — mixed numeral rendering across a dense table is immediately visibl
 | `display-1` | Urbanist | 34 / 1.15 | 700 | -0.02em |
 | `display-2` | Urbanist | 26 / 1.2 | 700 | -0.015em |
 | `title` | Urbanist | 17 / 1.3 | 600 | -0.005em |
+| `title-s` | Urbanist | 15 / 1.45 | 600 | 0 |
 | `body` | Urbanist | 14 / 1.55 | 400 | 0 |
 | `body-strong` | Urbanist | 14 / 1.5 | 500 | 0 |
 | `label` | Urbanist | 13 / 1.4 | 500 | 0 |
@@ -508,21 +524,85 @@ reasoning in its own comments. This section carries what a reader cannot get fro
 `fill="currentColor"` so it inverts for free. Content on `--ground`, cards on `--surface`, one working
 surface beneath the bar.
 
-**The results surface has a floor, and below it Terrain says so rather than reflowing.** The two
-columns split evenly, so the arithmetic decides this rather than a preference: the result list stops
-being readable under 340px, and the record's eleven-field list wraps its values onto second lines
-under about 600px — which is the tighter constraint and the one that sets the floor. **The supported
-floor is 1024px.** Below it the product states that it needs a wider window and stops.
+**The results surface has a floor, and below it Terrain says so rather than reflowing.** **The
+supported floor is 1024px.** Below it the product states that it needs a wider window and stops.
 
-**The breakpoints above the floor adjust components, never the structure.** A label narrows, the
-thumbnail strip fits fewer per row, the field tiles reflow. **The two columns never stack**, and the
-reason changed with the product rather than going away: a record and the drawing being read against
-it are one act, and stacking puts the drawing below the fold of the text that describes it.
+**A result row is ~290px, and it buys back the trip into the record.** It was ~102px with four
+fields on it, ~176px once it gained drawings, and it is three bands now — what the document is, who
+holds it and when, and what it claims — over a strip of its own drawings. Measured, that takes a
+1000px column from five results to about three. **That is the largest single cost in this document
+and it is spent on one thing:** four fields could not answer the glance, so the record was opened on
+every row and the list was a table of contents rather than a result. A row that settles *not this
+one* without a press is worth more than two more rows that cannot.
 
-**The breakpoints are the viewport's, with one exception.** A settings card is handed whatever width
-its column has, which a viewport query cannot see, so `.pref-card` declares `container-type` and
-queries its own descendants. **It is the only container query in the file**, and a second one has to
-earn the same two things: a subject that exists in the markup, and a width the viewport does not know.
+**The strip is a constant ~104px of it, whatever the patent carries**, and that is a stronger claim
+than the fixed four-up grid could make. The grid capped at four because four was what the column
+could hold — six would have wrapped, and a strip that wraps makes row height depend on the data,
+which is the one thing a scan target cannot have. A horizontal scroller answers that outright:
+twelve drawings or three, the row is the same height. **The gap above the strip is half the row's own
+block padding**, which is the 2:1 that makes a group read as a group rather than as a caption on the
+row below.
+
+**72px on a row, 104px in the record, and the step is still the point.** One size down reads as
+subordinate; the row's job is *which of these*, the record's is *this one*. The row's number moved
+from 64 because the scroller moved the cost from width to height: 64 → 72 is +10px of row for +27%
+of drawing area. **80 is where the step starts to go** — 80/104 is 0.77 and stops reading as a step,
+where 72/104 is 0.69 and still does. Below about 48px a patent drawing stops being a kind of drawing
+and becomes a grey smudge, which is the floor neither is near.
+
+**The strip's scroll affordance is a cut tile, not a shadow and not a fade.** §5 refuses an elevation
+shadow to anything sitting *in* the layout, and its second clause bites harder here: a shadow cannot
+separate two surfaces of the same colour, and these are white tiles on a white row. A fade has to
+appear only when there is somewhere left to scroll, which costs a scroll listener on twenty rows or a
+fourth keyframe — and what it would buy is a gradient over the last drawing. The track is wider than
+the column whenever it overflows, so the column's own edge cuts a tile at nearly every width.
+
+**The columns are 44 / 56, and the record has the larger half.** They were even until the record
+moved into the right column; equal halves would then have given the denser column the same room as
+the sparser one. The list carries three bands a row and floors at 340px; the record carries eleven
+identifiers, an abstract, the claims and the drawings.
+
+**The record's field list is the width-critical thing on the surface.** It is a two-column grid —
+label, value — and what makes eleven rows scannable is that the values share a leading edge. Under
+about 600px the longest values wrap onto second lines under their own labels, the shared edge stops
+existing, and the grid costs a column of whitespace for nothing. Below that it goes single-column,
+label above value.
+
+The chain, at a 1440px window:
+
+```
+1440 × 0.56 (the record's column)   = 806
+     −  32  (the pane's inset)       = 774
+     −   2  (the record's border)    = 772
+     −  40  (the record body's pad)  = 732   what the field list gets
+```
+
+**So the crossing point is a window of about 1203px**, from `0.56W − 74 = 600`. Between 1203 and the
+stack the field list is single-column, which is the arrangement working rather than a defect.
+
+**It is a container query and not a viewport one**, and the reason is that the same element is 56% of
+a split above the stack and the full width below it — a viewport query would fire at the wrong moment
+in both directions.
+
+**The columns stack below 1080**, in the 56px band between there and the floor, list above record.
+That is not a third structure: it is the same two regions in the other axis, and the list keeps a
+46vh cap so the record it opened sits beneath it rather than off the bottom of the page.
+
+**Above the stack the breakpoints adjust components, never the structure.** A label narrows, the
+thumbnail strip fits fewer per row, the field tiles reflow.
+
+**The breakpoints are the viewport's, with three exceptions, and all three earn it the same way**: a
+subject that exists in the markup, and a width the viewport does not know.
+
+- `.pref-card` — a settings card is handed whatever width its column has.
+- `.rec-body` — the record's field list, §7. The column is 56% of a split or the whole width,
+  depending on a breakpoint above it.
+- `.rec-head` — the same column, one level up. *Open in IPtech* keeps its glyph and drops its label
+  below 520px of head, because four controls and a heading is the row's whole budget.
+
+**A fourth has to argue the same two things.** The count is here rather than in a comment because
+"it is the only one" was the claim this paragraph used to make, and it stopped being true in one
+pass.
 *A container query whose subject was never built does not fail — it sits in the stylesheet looking
 like responsive behaviour, and no screenshot at any width can show you that it is not there.*
 
@@ -656,7 +736,8 @@ confirmation invites a second send of the same message.
 **`corpus/` is the deliberate exception and it is not in this table**, because it is not illustrative
 data — it is real patents, captured, and its whole job is to strain renderers written against
 well-behaved shapes. It prints real assignee names, it is excluded from git in its entirety, and it
-is reached by `?data=real`. `brief.md` §4 carries it.
+is **what loads by default when it is present** — `?data=demo` forces the fake engine. `brief.md` §4
+carries it.
 
 **No party is invented.** A named company is never invented, because an invented one reads as a live
 example — and transliterating a real one is fabrication. Both are worse than a bar.
@@ -738,7 +819,7 @@ The list is **duplicated on purpose.** CSS cannot share a declaration block betw
 a third indirection layer of `--dark-*` primitives buys nothing and hides which value is live.
 Whatever writes one writes both.
 
-**31 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
+**32 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
 here, `CLAUDE.md`, and `app/README.md`'s tier table — and **a gate keeps them equal to the file**
 rather than a sentence asking everyone to keep them equal to each other.
 
@@ -823,14 +904,21 @@ this section.
 
 | Token | Value | Note |
 | --- | --- | --- |
-| `--veil` | `rgba(26,26,26,.82)` | the ground under the figure viewer's action bar |
+| `--veil` | `rgba(255,255,255,.82)` | **does not swap** — it composites over the drawing, not the app |
+| `--scrim` | `rgba(0,0,0,.72)` | **does** swap — it composites over the app, not the drawing |
 | `--figure-ground` | `#FFFFFF` | **does not swap** — see §3.2 |
 
-**`--figure-ground` is the one semantic token identical in both palettes**, and that is a fact about
-the content rather than an exemption. A patent drawing is black line-work on a transparent
-background; composited onto `#1A1A1A` it is a blank rectangle. Every other semantic token means *the
-surface under our own chrome*; this one means *the paper this was published on*, which has no dark
-value.
+**Two semantic tokens are identical in both palettes, and both are facts about the content rather
+than exemptions.** A patent drawing is black line-work on a transparent background; composited onto
+`#1A1A1A` it is a blank rectangle — so `--figure-ground` means *the paper this was published on*,
+which has no dark value, and `--veil` sits on that paper and may not swap either. Every other
+semantic token means *the surface under our own chrome*.
+
+**`--scrim` is the one that looks like it belongs with them and does not.** It composites over the
+app, which does swap, so it swaps. Ink at .55 over `#141414` would dim nothing, which is the one
+thing a scrim exists to do. In dark the binding constraint is not contrast — every usable value
+clears 20:1 against the white stage — but the other side: enough that the masthead and the list stop
+competing for the eye, little enough that the page reads as behind rather than gone.
 
 **`--accent` and `--accent-ink` gain rows here when the specific green is chosen.** A hue measured
 only against white is a hue that has not been measured.
@@ -852,9 +940,10 @@ that — an external favicon cannot inherit `currentColor` the way the inlined s
 
 - **The specific green**, its `--accent-ink`, and both dark values. §3.8 is the rule; the hue is not
   chosen.
-- **The results surface has two columns and three things to put in them.** The list, the record and
-  the grouping panel share the left and right by state, which works at 1440px and has not been tested
-  against a founder who wants the list and a drawing at once.
-- **The figure viewer has no measured floor.** A drawing is legible at whatever size the right column
-  gives it, and nothing states the width below which a patent figure stops being readable. Every
-  other dimension in this file is measured; this one is not.
+- **The figure viewer has no measured floor.** It takes the viewport less a 24px gutter now, so the
+  question moved rather than going away: nothing states the width below which a patent figure stops
+  being readable, and the strip's 640px breakpoint is re-derived from the old column figure rather
+  than measured against a drawing. Every other dimension in this file is measured; this one is not.
+- **Nobody has watched a founder use the lightbox.** The drawing gained roughly four times the area
+  and lost the record beside it, and which of those matters more is the kind of thing one session
+  with a real user settles and no amount of arithmetic does.

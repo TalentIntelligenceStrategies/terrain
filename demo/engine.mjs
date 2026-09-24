@@ -15,13 +15,14 @@
  * ═══ LATENCY IS PART OF THE DEMONSTRATION ══════════════════════════════════
  * Every port waits. A fake engine that resolves synchronously makes every
  * loader, every skeleton and every wait/fail path unreachable — and those are
- * more than a third of what app/js/core exists to do. platform.md §5's whole
- * argument is that a wait has a shape; an engine with no latency deletes it.
+ * more than a third of what app/js/core exists to do. platform.md §7's whole
+ * argument is that every wait can end two ways; an engine with no latency
+ * deletes the first ending and the second along with it.
  *
  * ═══ FAILURE IS REACHABLE ON PURPOSE ═══════════════════════════════════════
  * `?fail=map,record` arms named ports to refuse, and `?fail=all` arms every
  * one. This is how the failure vocabulary gets exercised without editing code:
- * platform.md §9.1 says a failure is the size of the region that was waiting,
+ * platform.md §7.1 says a failure is the size of the region that was waiting,
  * and that claim is only checkable if the regions can be made to fail one at a
  * time. `?slow=N` multiplies every delay.
  */

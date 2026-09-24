@@ -129,7 +129,7 @@ export function init(ctx) {
   onActivate(document, '#fields .field[aria-pressed]', el =>
     selectField(el.getAttribute('data-field')));
 
-  /* THE SEARCH IS THE CHARGE. platform.md §9.2's rule is unchanged and its
+  /* THE SEARCH IS THE CHARGE. platform.md §7.2's rule is unchanged and its
      location is: the approval used to be the commitment and there is no
      approval now, so the commitment is this button. A run that did not finish
      is still not a run that was charged. */
@@ -138,7 +138,7 @@ export function init(ctx) {
     const text = field && field.value.trim();
     if (!text) return;
 
-    btnWait(btn);
+    btnWait(btn, true);
     const res = await ENGINE.search({ query: text, field: FIELD, settings: readSettings() });
     btnRest(btn);
 

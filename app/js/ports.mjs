@@ -95,6 +95,23 @@ export const CODE = {
  *  cannot reach the record port: fifty starred patents would be fifty calls to
  *  fill in two columns the list already had.
  *
+ *  `thumbs` IS CARRIED FOR THE SAME REASON AND IS NOT A FIFTH FIELD. A field is
+ *  a value read OFF the patent — its holder, its year, its status. A drawing is
+ *  the patent. The row draws its fields and up to twelve pictures, and the rule
+ *  it narrows is the one about how many facts a row asserts.
+ *
+ *  UP TO TWELVE, AND THE ENGINE DECIDES WHICH. They are the row's glance value —
+ *  is this the kind of mechanism I meant — so the first few are what matter and
+ *  the rest are there because the strip scrolls. They are carried with the row rather than
+ *  fetched per-row for the reason `number` is: twenty rows would be twenty
+ *  record calls to fill a strip the search already had.
+ *
+ *  THE SKELETON CONTRACT IS UNCHANGED and is the same one `figures` carries:
+ *  `[]` means this patent HAS no drawings, `[{n, src:null}]` means it has them
+ *  and we decline to show them. The engine may point `src` at a SMALLER
+ *  rendition than the record's — a 64px thumbnail has no business decoding the
+ *  full drawing — and nothing in the contract says the two must be one file.
+ *
  *  THE ID IS NOT THE NUMBER, and the export is where that stops being pedantry.
  *  `id` is whatever the engine keys on; `number` is what is printed on the patent
  *  and what the founder searches their own document for. Writing the id into a
@@ -110,10 +127,37 @@ export const CODE = {
  *  folding the last two into `expired` makes the interface say *Expired* about
  *  an application that was never granted, which is a different fact stated
  *  with full confidence. `null` means we do not know, and renders nothing. */
-/** @typedef {{id:string, number:string|null, skim:string|null, holder:string|null,
- *             where:string|null, year:number|null,
+/** THE ROW DRAWS TWELVE FIELDS NOW AND IT USED TO DRAW FOUR, and the rule that
+ *  changed is not "how many facts may a row assert" but WHICH SURFACE ANSWERS
+ *  THE GLANCE. Four fields — title, holder, year, status — could not separate a
+ *  TSMC filing from a university one without opening the record, so the record
+ *  was opened on every row and the list was a table of contents rather than a
+ *  result. The fields added are the ones that end that trip: who invented it,
+ *  what class it sits in, when it published, and what it actually claims.
+ *
+ *  `abstract` IS THE ONE THAT PAYS FOR ITSELF and the one to watch. It is the
+ *  only field here that is prose rather than an identifier, the row clamps it
+ *  to three lines, and a clamp is a rendering decision rather than a contract:
+ *  the engine sends the abstract as published and the row decides how much of
+ *  it fits. An engine that pre-truncates has made that decision for every
+ *  surface, and the record needs the whole thing.
+ *
+ *  `inventors` IS AN ARRAY AND THE ROW PRINTS ONE. Same string, same shape as
+ *  the record's, because a row that received a pre-joined string could not
+ *  print "and 5 others" without parsing prose back into a list.
+ *
+ *  `figs` IS THE TOTAL FIGURE COUNT AND `thumbs` IS WHAT THE STRIP HOLDS. They
+ *  are different numbers on purpose — `thumbs` is capped at twelve and `figs`
+ *  is what the patent has, so the strip's last tile can say what it stands in
+ *  for. `null` means we hold no figure list, which is NOT zero: the tile prints
+ *  nothing rather than `+0`.
+ *
+ *  @typedef {{id:string, number:string|null, skim:string|null, holder:string|null,
+ *             where:string|null, year:number|null, thumbs:Figure[],
  *             status:'live'|'expired'|'abandoned'|'pending'|null,
- *             score:number|null}} PatentRow */
+ *             score:number|null, inventors:string[]|null, abstract:string|null,
+ *             ipcMain:string|null, filed:string|null, published:string|null,
+ *             kind:string|null, figs:number|null}} PatentRow */
 /** @typedef {{patents:PatentRow[], order:string[], matched:number}} PatentSet */
 
 /** The record · the title, eleven identifiers, the abstract, and the claim set AS

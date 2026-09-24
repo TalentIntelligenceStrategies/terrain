@@ -18,10 +18,12 @@
 .card-head h2{margin:0;flex:0 1 auto;min-width:0}
 .card-head .info{margin-left:auto}
 
-/* ── the confirm card · platform.md §4, now in the thread ───
+/* ── the card · platform.md §3.4, §6 ───
    Bordered once. The two sections inside it carry no border of their own:
    a card inside a card inside a column is the nesting impeccable bans.    */
-/* DISSOLVED 2026-09-09 · platform.md §4. This was a ~600px panel — its own
+/* DISSOLVED 2026-09-09, AND THE GATE IT BELONGED TO IS GONE ENTIRELY —
+   platform.md §2: the reading, the five questions, the priced gate and the
+   staged build were four ports and are now none. This was a ~600px panel — its own
    heading, its own bordered gate block, its own actions row — sitting in the
    thread above a composer that had nothing to do. It was IN the conversation
    and did not read as PART of it: a form the chat happened to contain, which is
@@ -89,11 +91,12 @@
 .said .t-micro{color:var(--text-2);margin-bottom:var(--s-12)}
 .said-text{margin:0;color:var(--text-1);line-height:1.6}
 
-/* ── editing what you said · platform.md §4 ──────────────────────────────
+/* ── editing what you said · NO MARKUP RENDERS THIS ──────────────────────────────
    THE FIELD REPLACES THE SENTENCE IN PLACE, at the same size and on the same
    line, so the founder is correcting the thing they were reading rather than
-   answering a copy of it in a dialogue. §4 calls this the one correction
-   point in the product; a modal would make it a second one.
+   answering a copy of it in a dialogue. THE CORRECTION POINT MOVED: there is
+   no gate, and platform.md §4.2 puts the founder's sentence in the search bar
+   with it still editable. Nothing sets `.said` any more.
 
    NOTHING ANIMATES. The two states are the same words at the same place —
    there is no motion that would describe the change, and a height transition
@@ -122,9 +125,10 @@
 .gate b{font-weight:600}
 
 /* ── the build block · in the thread, not a screen ──────────
-   The bar advances on completed stages. Faking determinate progress for a
-   wait whose latency platform.md §5 lists as an open question is the same class of
-   error as a green "open" cell.                                           */
+   NO MARKUP RENDERS THIS EITHER — the staged build went with the gate
+   (platform.md §2). It advanced on completed stages, and faking determinate
+   progress for a wait nobody has timed is the same class of error as a green
+   "open" cell.                                           */
 .bd{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-widget);
     padding:var(--s-20)}
 .bd-head{display:flex;align-items:baseline;gap:var(--s-12)}

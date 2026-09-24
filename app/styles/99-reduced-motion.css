@@ -70,9 +70,4 @@
 
   /* anything that would otherwise fade or rise into place is simply there */
   .grid[data-stagger] .card{opacity:1;transform:none}
-  /* §6: prefers-reduced-motion DECLARES END STATES rather than collapsing
-     durations. The record is open rather than mid-slide, which is the state
-     the founder needs, and it may not wait on a transition — the blank-screen
-     bug that rule came from is exactly this failure. */
-  .rec-open .rec{transform:none;visibility:visible}
 }

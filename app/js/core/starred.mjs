@@ -16,10 +16,10 @@
  * replaces it — the set has to keep what it was told when it was told.
  *
  * ═══ IT SURVIVES A NEW SEARCH ══════════════════════════════════════════════
- * platform.md §7.1. Clearing it on the next query would delete the founder's
+ * platform.md §5.1. Clearing it on the next query would delete the founder's
  * work to save them a click, and it is the one thing here they cannot get back
  * by pressing something again. It is session state and nothing more: there is
- * no persistence port yet, so a reload still empties it — platform.md §12
+ * no persistence port yet, so a reload still empties it — platform.md §10
  * item 2 is where that is tracked.
  */
 

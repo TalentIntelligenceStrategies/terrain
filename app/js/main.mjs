@@ -31,23 +31,33 @@ import { sayNothing } from './core/live-region.mjs';
 import DemoEngine from '../../demo/engine.mjs';
 const ENGINE_FROM_DEMO = DemoEngine;
 
-/* AND ONE STRESS-TEST SEAM BESIDE IT. `?data=real` swaps in corpus/ — ten
-   semiconductor patents captured from Google Patents — to find out what real
-   text does to components written against the demo's well-behaved shapes: a
-   264-character column label, a 5,250-character claim, CJK inventor names, a
-   46-character holder name where the row expects a bar.
+/* ══ THE CORPUS IS THE DEFAULT, AND THE DEMO IS THE FALLBACK ═══════════════
+   IT WAS THE OTHER WAY ROUND, behind `?data=real`. The cost of that was not
+   obvious until the drawings arrived: the demo ships no images at all — six
+   withheld frames on one record, a sentence on the other 123 — so the plain
+   URL, which is the one everybody opens, showed a product with no pictures in
+   it. Every surface built for drawings sat behind a flag nobody types.
 
-   IT MUST DEGRADE RATHER THAN THROW. corpus/ is untracked by decision, so a
-   clean clone does not have it and a static import would fail the whole module
-   — a blank screen, for a flag nobody in that clone can use. The catch is the
-   feature, not defensiveness. */
+   SO THE FLAG INVERTS RATHER THAN GOING. `?data=demo` forces the demo, which
+   is what you want when the question is "what does a skeleton bar look like"
+   or "does this work with nothing on disk". Everything else tries corpus/
+   first — 100 real patents, their real drawings, and the 264-character column
+   label, 5,250-character claim, CJK inventor names and 46-character holder
+   name that a component written against well-behaved shapes falls over on.
+
+   THE CATCH IS THE FEATURE AND IT IS UNCHANGED. corpus/ is untracked by
+   decision, so a clean clone does not have it: the dynamic import throws, this
+   lands on the demo, and that clone behaves exactly as it did before this
+   inversion. A static import would have failed the whole module graph — a
+   blank screen, for a directory nobody in that clone can produce. */
 async function resolveEngine() {
-  if (new URLSearchParams(location.search).get('data') !== 'real') {
+  if (new URLSearchParams(location.search).get('data') === 'demo') {
+    console.info('engine: demo/ — asked for by ?data=demo');
     return ENGINE_FROM_DEMO;
   }
   try {
     const mod = await import('../../corpus/engine.mjs');
-    console.info('engine: corpus/ — ten real patents');
+    console.info('engine: corpus/ — real captured patents');
     return mod.default;
   } catch (e) {
     console.warn('engine: corpus/ is absent, running the demo instead', e);

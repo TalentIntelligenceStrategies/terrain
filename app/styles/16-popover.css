@@ -10,9 +10,10 @@
    shadow is downward-biased with a -6px spread and contributes almost nothing
    at a vertical one.
 
-   NOTHING DIMS BEHIND IT. §3.2: there is no scrim token and no scrim. The page
-   stays live, the outside click is heard by the document, and Escape closes
-   the most recent panel through esc-stack.
+   NOTHING DIMS BEHIND IT. §3.2 permits exactly one scrim and it is the enlarged
+   drawing; a disclosure anchored to a control is not it. The page stays live,
+   the outside click is heard by the document, and Escape closes the most
+   recent panel through esc-stack.
    ═══════════════════════════════════════════════════════════════════════ */
 
 /* 36, ABOVE THE BAR MENUS AT 35. Both can be open on the results surface —

@@ -1,6 +1,7 @@
 <!-- EXTRACTED from design/previews/terrain-prototype.html lines 4965-5105.
-     The prototype is the reference; where this and it disagree, it is
-     right and this is stale. platform.md 8.3. -->
+     PROVENANCE ONLY — the prototype is FROZEN v1 and is not the reference.
+     `app/` is what was decided; where this and the prototype disagree, this
+     is right and that file answers about a product that was replaced. platform.md 8.3. -->
   <section class="view view-page view-acct" data-view="billing" aria-label="Your plan and billing">
     <main class="main">
       <header class="page-head">
@@ -49,7 +50,7 @@
             <p class="t-body" style="margin:var(--s-12) 0 0;color:var(--text-2)">Renews <span class="sk sk-h-body w-md" style="display:inline-block;vertical-align:-2px"></span></p>
             <!-- A SENTENCE WITH A CONTROL AT THE END, not a card and not a
                  meter. What was spent is the other page's whole subject; a
-                 second reading of it here would be the two screens platform.md §8.1
+                 second reading of it here would be the two screens platform.md §6.1
                  separated growing back together. -->
             <p class="plan-spent">
               <span><span class="fig" id="billLeft">0</span> points left this quarter.</span>
@@ -127,8 +128,9 @@
        documentation site rather than a smaller version of one that has.
        Nothing in any document specced a Help surface before this pass.
 
-       THE COMPOSER IS NOT REUSED, and the reason is the reason §5 has no
-       chat panel. .cmp is specced as "one component, one size" and its
+       THE COMPOSER IS NOT REUSED, and the reason is design-language.md §7's:
+       the composer is one component at one size, and it appears twice —
+       centred on the home surface and in the search bar. .cmp is specced as "one component, one size" and its
        identity is THE THING YOU TYPE YOUR IDEA INTO; a support field
        wearing it would be a second conversational surface. This is a .ta —
        a plain multiline field with a labelled Send button, sharing the

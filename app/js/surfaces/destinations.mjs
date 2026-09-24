@@ -1,4 +1,4 @@
-/* surfaces/destinations — points, account, plan & billing, help. platform.md §8.
+/* surfaces/destinations — points, account, plan & billing, help. platform.md §6.
  *
  * FOUR PAGES, ONE FILE, because they are one KIND of surface: account-level,
  * reached from the chrome rather than from the flow, each with a Back control
@@ -14,7 +14,7 @@
  * ═══ 'XXX' IS NOT null ═════════════════════════════════════════════════════
  * They are two different refusals and they render through two different paths
  * on purpose. null is "this value exists and we decline to print it"; 'XXX' is
- * "nobody has chosen one yet". Pricing is open — platform.md §14 — so the plan
+ * "nobody has chosen one yet". Pricing is open — platform.md §12 — so the plan
  * screen prints XXX rather than guessing a number into existence, and a bar
  * there would claim a price exists and is being kept from them.
  */
@@ -42,7 +42,7 @@ async function region(el, port, draw, sayWhat) {
   return null;
 }
 
-/* ── points · platform.md §8.1 ────────────────────────────────────────────
+/* ── points · platform.md §6.1 ────────────────────────────────────────────
    A METER, NOT A TWO-SLICE PIE. A pie of two values is a bar that takes four
    times the room and is harder to read; and the question here is "how much is
    left", which is a length. */
@@ -76,7 +76,7 @@ function runsHTML(d) {
     + '</div>';
 }
 
-/* ── account · platform.md §8.2 ─────────────────────────────────────────── */
+/* ── account · platform.md §6.2 ─────────────────────────────────────────── */
 function accountFill(d) {
   const set = (idBar, idSaid, value) => {
     const b = $(idBar), s = $(idSaid);
@@ -88,7 +88,7 @@ function accountFill(d) {
   set('#acctMailBar', '#acctMailSaid', d.email);
 }
 
-/* ── billing · platform.md §8.3 ─────────────────────────────────────────── */
+/* ── billing · platform.md §6.3 ─────────────────────────────────────────── */
 function billingFill(d, invoices) {
   const price = $('#billPrice');
   if (price) price.textContent = d.price;      /* 'XXX', not a bar */
@@ -98,7 +98,7 @@ function billingFill(d, invoices) {
     inv.innerHTML = '<p class="empty t-body">No invoices yet.</p>';
     return;
   }
-  /* EVERY INVOICE AMOUNT IS THE PLAN PRICE — platform.md §13. A plan that
+  /* EVERY INVOICE AMOUNT IS THE PLAN PRICE — platform.md §11. A plan that
      renews at one figure cannot bill four. */
   inv.innerHTML = '<table class="tbl"><thead><tr>'
     + '<th class="t-micro">Date</th><th class="t-micro num">Amount</th>'
@@ -190,7 +190,7 @@ export function init(ctx) {
 
     const fail = $('#' + key + 'Fail');
     if (fail) fail.hidden = true;
-    btnWait(btn);
+    btnWait(btn, true);
     fld.readOnly = true;
     const res = await ENGINE.saveAccount({ [key]: v });
     btnRest(btn);
@@ -290,11 +290,11 @@ export function init(ctx) {
     if (hsend) hsend.disabled = true;
   });
 
-  /* ── help · the send is a REQUEST · platform.md §9.1 ───────────────────── */
+  /* ── help · the send is a REQUEST · platform.md §7.1 ───────────────────── */
   onActivate(document, '#helpSend', async btn => {
     const msg = $('#helpMsg');
     if (!msg || !msg.value.trim()) return;
-    btnWait(btn);
+    btnWait(btn, true);
     const topic = $('#helpTopicLabel');
     const res = await ENGINE.sendSupport({
       text: msg.value,

@@ -299,6 +299,31 @@ html{color-scheme:light dark;background:var(--ground)}
      call, and a named invariant is checkable where a hex is not. */
   --figure-ground:#FFFFFF;
 
+  /* ── --scrim · the ONE dimming layer in the product ─────────────────────
+     §3.2 read "there is no scrim token, and no scrim" and closed with "a
+     dimming layer would arrive with whatever first needs one". This is that
+     thing: the enlarged patent drawing, which became a lightbox over the
+     viewport on 2026-09-24 because a drawing capped at one column of a split
+     is a drawing nobody can read the reference numerals on.
+
+     NOTHING ELSE MAY READ IT. The menus, the popovers and the record all dim
+     nothing and all still close on an outside click the document hears for
+     itself. A second caller is a sign the rule has stopped holding, not a
+     sign the token turned out to be useful.
+
+     .55 IS MEASURED against the stage it separates. --figure-ground is white
+     in both themes, so in LIGHT theme — where the page behind is --n-2 — the
+     scrim is the only thing making the lightbox's edge an edge. Composited it
+     lands at #838383 and clears the white stage at 3.79:1; at .48 it drops to
+     3.11 and below that it fails 3:1 outright, which is the floor for a
+     boundary that is not text. Above about .65 the page stops reading as a
+     page that is still there.
+
+     THE INK IS --n-10's VALUE AND NOT BLACK, for the reason --key-ring and
+     --veil are alpha: it composites over whatever the surface is, and the
+     ramp's darkest neutral is what the rest of the system dims toward. */
+  --scrim:rgba(37,37,37,.55);
+
   /* elevation. THEMED, which is why it is here rather than with the scale:
      an ink shadow is invisible on ink. --shadow-drop is the same elevation as
      a filter, for the clipped composer — clip-path would eat a box-shadow, but
@@ -365,6 +390,18 @@ html{color-scheme:light dark;background:var(--ground)}
   /* unchanged, deliberately: see the light block. The paper does not swap. */
   --figure-ground:#FFFFFF;
 
+  /* THE SCRIM IS BLACK HERE AND INK IN THE LIGHT BLOCK, which is a real swap
+     rather than the --veil case one line up. --veil composites over a white
+     drawing that does not swap, so it may not swap either; --scrim composites
+     over the APP, which does. Ink at .55 over #141414 is barely a change —
+     it would dim nothing, which is the one thing a scrim exists to do.
+
+     .72 IS NOT A CONTRAST FLOOR. Against the white stage every value in the
+     usable range clears 20:1 here, so the binding constraint is the other
+     side: enough that the masthead and the list stop competing for the eye,
+     little enough that the page reads as behind rather than gone. */
+  --scrim:rgba(0,0,0,.72);
+
   /* an ink shadow is invisible on ink. These go black and heavier, and the
      hairline is doing most of the work regardless. */
   --shadow-float:0 1px 2px rgba(0,0,0,.40), 0 8px 24px -6px rgba(0,0,0,.55);
@@ -409,6 +446,18 @@ html{color-scheme:light dark;background:var(--ground)}
   --veil:rgba(255,255,255,.82);
   /* unchanged, deliberately: see the light block. The paper does not swap. */
   --figure-ground:#FFFFFF;
+
+  /* THE SCRIM IS BLACK HERE AND INK IN THE LIGHT BLOCK, which is a real swap
+     rather than the --veil case one line up. --veil composites over a white
+     drawing that does not swap, so it may not swap either; --scrim composites
+     over the APP, which does. Ink at .55 over #141414 is barely a change —
+     it would dim nothing, which is the one thing a scrim exists to do.
+
+     .72 IS NOT A CONTRAST FLOOR. Against the white stage every value in the
+     usable range clears 20:1 here, so the binding constraint is the other
+     side: enough that the masthead and the list stop competing for the eye,
+     little enough that the page reads as behind rather than gone. */
+  --scrim:rgba(0,0,0,.72);
 
   /* an ink shadow is invisible on ink. These go black and heavier, and the
      hairline is doing most of the work regardless. */

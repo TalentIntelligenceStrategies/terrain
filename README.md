@@ -51,9 +51,11 @@ decision: inventing one reads as a live example, and transliterating a real one 
 
 **`corpus/` is the deliberate exception and it is not tracked.** It holds real patents captured from
 Google Patents, prints real assignee names, and exists to strain renderers written against
-well-behaved demo shapes. It is excluded from git in its entirety, and `?data=real` is what reaches
-it. The cost is stated rather than hidden: **the export is only demonstrable with it**, because a
-spreadsheet of skeleton bars shows nothing.
+well-behaved demo shapes. It is excluded from git in its entirety, and it is **what `app/` loads by
+default when it is present** — `?data=demo` forces the fake engine, and a clone without `corpus/`
+gets it anyway. The cost is stated rather than hidden: **the export and the drawings are only
+demonstrable with it**, because a spreadsheet of skeleton bars shows nothing and the demo ships no
+patent figure.
 
 ## Layout
 

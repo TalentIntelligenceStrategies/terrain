@@ -3,7 +3,7 @@
 
 WHY THEY LIVE HERE. check-publish.py walks the GENERATED tree, where the CSS
 is inside <style> blocks in one HTML file. check-app.py walks the SOURCE tree,
-where the same CSS is 22 separate .css files. Both need the same three
+where the same CSS is 22 separate .css files. Both need the same four
 scanners, and two copies of a scanner is two places for one of them to stop
 being true. Importable, with a main() guard so importing it runs nothing.
 
@@ -86,6 +86,50 @@ def css_depth_errors(css):
     return out
 
 
+def comment_delimiter_errors(css):
+    """Comment delimiters, tracked in one pass over the stylesheet.
+
+    THIS EXISTS BECAUSE css_depth_errors REPORTED CLEAN ON THE FILE IT WAS
+    WRONG ABOUT. 35-record.css closed a comment four paragraphs early, which
+    orphaned the '*/' below it. Those paragraphs became live CSS text, the
+    parser took them as a selector prelude and consumed everything through the
+    next '{', and the whole .rec{...} rule after them was dropped -- display,
+    flex, min-height, background, border and radius, silently gone. The record
+    stopped being a card and the right column stopped scrolling.
+
+    NOTHING CAUGHT IT. The braces still balanced, so css_depth_errors passed;
+    check-app.py's comment stripper is the same non-greedy scan the browser
+    uses, so it AGREED with the browser about the damage instead of reporting
+    it. An orphaned '*/' is invisible to every scanner that treats comments as
+    whitespace, which is all of the others here.
+
+    A '*/' inside a string is not a delimiter -- content:"*/" is legal -- so
+    strings are skipped exactly the way _scan skips them.
+    """
+    out = []
+    i, n, line = 0, len(css), 1
+    while i < n:
+        if css[i:i + 2] == '/*':
+            j = css.find('*/', i + 2)
+            if j < 0:
+                out.append(f"unterminated '/*' opened at stylesheet line {line}")
+                return out
+            line += css.count('\n', i, j + 2); i = j + 2; continue
+        if css[i] in '"\'':
+            q = css[i]; j = i + 1
+            while j < n:
+                if css[j] == '\\': j += 2; continue
+                if css[j] == q: j += 1; break
+                j += 1
+            line += css.count('\n', i, j); i = j; continue
+        if css[i:i + 2] == '*/':
+            out.append(f"stray '*/' at stylesheet line {line}")
+            i += 2; continue
+        if css[i] == '\n': line += 1
+        i += 1
+    return out
+
+
 def _hover_gated(prelude):
     return prelude.startswith('@media') and 'hover:hover' in prelude.replace(' ', '')
 
@@ -154,6 +198,8 @@ def main():
     for p in sys.argv[1:]:
         t = io.open(p, encoding='utf-8').read()
         for blk in styles_in(p, t):
+            for m in comment_delimiter_errors(blk):
+                print(f'{p}: {m}'); bad += 1
             for m in css_depth_errors(blk):
                 print(f'{p}: {m}'); bad += 1
             for ln, sel in ungated_hovers(blk):

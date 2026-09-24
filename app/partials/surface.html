@@ -1,6 +1,8 @@
 <!-- EXTRACTED from design/previews/terrain-prototype.html lines 4039-4649.
-     The prototype is the reference; where this and it disagree, it is
-     right and this is stale. The working surface, INCLUDING the record pane -- .rec is positioned within .panecol. -->
+     PROVENANCE ONLY — the prototype is FROZEN v1 and is not the reference.
+     `app/` is what was decided; where this and the prototype disagree, this
+     is right and that file answers about a product that was replaced. The working surface, INCLUDING the record
+     pane -- .rec is a child of .panecol and takes the right column. -->
   <section class="view view-work" data-view="work" aria-label="Your search">
 
     <!-- ══ THE SEARCH BAR STAYS ══════════════════════════════════════════
@@ -32,13 +34,37 @@
               </button>
               </div>
               <span class="res-tools-sep" aria-hidden="true"></span>
-              <!-- the fishbone is its own control and NOT a view mode: either
-                   list rendering can sit beside it. Their message table agrees
-                   — viewMode has two members and the fishbone has its own pair. -->
+              <!-- ══ THE GROUPING IS A POPOVER · platform.md §4.4 ═══════════
+                   It owned the right column until 2026-09-24, when the record
+                   took that column. Covering it with the record would have
+                   made one region mean three kinds of thing by state — a
+                   control, a reading surface and a drawing — and putting it
+                   above the list costs the list vertical room at every width
+                   and breaks at the 1079 stack.
+
+                   A POPOVER IS WIDTH-INDEPENDENT, which is the deciding
+                   property: it survives the stack and the 1024 floor with no
+                   third region to place. And nothing is hidden by closing it,
+                   because #fbChips is in the LEFT column — the cut the founder
+                   made stays on screen whether the tree is open or not.
+
+                   IT IS STILL NOT A VIEW MODE. Either list rendering can sit
+                   beside it, so it is its own aria-expanded control rather
+                   than a third member of the segmented pair. -->
+              <div class="pop-wrap" id="fishWrapAnchor">
               <button class="icon-btn" id="fishToggle" type="button"
-                      aria-pressed="false" aria-label="Show the grouping">
+                      aria-expanded="false" aria-label="Group the results">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4"/><path d="M7 12 12 7v10z"/><path d="M12 12h9"/><path d="M15 9v6"/><path d="M18 10v4"/></svg>
               </button>
+              <div class="pop pop-fish" id="fishPop" role="group" aria-labelledby="fishPopTitle">
+                <!-- THE BASIS, NOT THE ACT. "Group the results" is what the
+                     button does and it is already the button's own label; the
+                     panel has to say what the branches ARE, which is the
+                     heading fishbone.mjs used to render one level down. -->
+                <h2 class="pop-title t-micro" id="fishPopTitle">Grouped by approach</h2>
+                <div class="pop-body"><div class="fishwrap" id="fishWrap"></div></div>
+              </div>
+              </div>
               <span class="res-tools-sep" aria-hidden="true"></span>
               <div class="seg res-modes" role="group" aria-label="How much of each patent to show">
                 <button class="seg-btn" id="modeText" type="button" aria-pressed="true"
@@ -67,7 +93,11 @@
          regression a screen-reader user meets before anything else. -->
     <main class="work-split" id="workSplit">
 
-      <!-- ── the left column · platform.md §6.3 on its new host ────────── -->
+      <!-- ── the left column · the result list, and only ever the list ──
+           platform.md §4.3. It held the record too until 2026-09-24, swapping
+           with it by display. One region meaning two kinds of thing is what
+           that cost, and the list is the thing a founder navigates BY — it
+           stays. -->
       <div class="listcol" id="listcol">
         <div class="listcol-scroll" id="listScroll">
         <div class="set-wrap" id="setWrap">
@@ -77,9 +107,16 @@
                nothing is recommended any more, because every patent the search
                returns feeds the views, so "top N recommended" and "N added to
                our recommendation" had nothing left to count. What remains is
-               "N matched", a CORPUS value and so a bar under §8, and two facts
-               about what the founder did to the ORDER — both real integers,
-               because they count acts rather than data. -->
+               two facts about what the founder did to the ORDER — both real
+               integers, because they count acts rather than data.
+
+               A THIRD CHIP STOOD HERE UNTIL 2026-09-24 AND SAID NOTHING. It
+               was `[bar] matched`, a skeleton beside a heading that already
+               reads "100 patents matched · 20 shown" — so the row printed the
+               count and then, 40px later, claimed the same fact was withheld.
+               A bar means the value exists and we decline to print it, which
+               cannot be true of a number on the same line. Nothing in app/js
+               ever filled it and no CSS rule ever styled it. -->
           <!-- ONE INFO AFFORDANCE, on the heading, and it has absorbed three
                things now. A four-line lede above the list and a second
                popover in the bar went first; the standing note under the
@@ -96,20 +133,20 @@
                    surface the points page's back control names, and the two
                    now say the same words. -->
               <h2 class="t-title" tabindex="-1" id="setTitle">Your results</h2>
-              <!-- THE CORPUS COUNT JOINS THE HEADING ROW, 2026-09-11. It sat
-                   in a chip row of its own beneath, which at rest held one
-                   chip and two hidden ones — a whole line for one fact. Up
-                   here it sits with the affordance that explains it, and the
-                   row below collapses to nothing until the founder does
-                   something worth reporting. -->
+              <!-- THE COUNT IS IN THE HEADING ITSELF, and #setTitle is what
+                   writes it — "100 patents matched · 20 shown". It had a chip
+                   row of its own until 2026-09-11, which at rest held one chip
+                   and two hidden ones: a whole line for one fact. The row below
+                   collapses to nothing until the founder does something worth
+                   reporting. -->
               <!-- THE STAR COUNT SITS LEFT OF THE CORPUS COUNT, 2026-09-11.
                    It was in .head-meta below, which meant a founder's first
                    star opened a whole second row to report one word — and it
                    reported it about 40px from the count it is a subset of.
                    Two counts about the same list belong on the same line,
-                   and the narrower one reads first: `3 starred` then
-                   `N matched`, which is what the founder did followed by what
-                   they are looking at.
+                   and the narrower one reads first: `3 starred` sits beside
+                   the heading's own `N matched`, which is what the founder did
+                   followed by what they are looking at.
 
                    IT IS STILL A .chip AND STILL NOT A CONTROL. The rank chip
                    stays below, and that is not an inconsistency: `N starred`
@@ -123,8 +160,6 @@
                    it is where they expect to press to see them. -->
               <button class="chip chip-link" id="setStarChip" type="button" hidden
                       data-go="starred"></button>
-              <span class="chip head-count"><span class="sk sk-h-micro w-sm"
-                style="display:inline-block;vertical-align:-1px"></span> matched</span>
               <span class="info">
                 <button class="info-btn" type="button" aria-expanded="false" aria-label="About this list">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
@@ -277,22 +312,45 @@
           <div id="setBuildSlot"></div>
         </div>
         </div>
+      </div>
 
-          <!-- ══ THE RECORD TAKES THE LEFT COLUMN, IN THE LIST'S PLACE ═══════
-               platform.md §4.5. The two columns divide by how hard you are
-               looking: LEFT is for glancing — the identifiers, the abstract,
-               the claims, and the thumbnail strip under them — and RIGHT is
-               for when it matters, holding one drawing as large as the column
-               allows.
+      <!-- ── the right pane · §6's twelve views, map first ───────────────── -->
+      <div class="panecol" id="panecol">
+        <div class="panescroll" id="paneScroll">
 
-               So the record is here rather than opposite the list, and the
-               drawing gets the column the record used to have. A viewer that
-               covered the record made the founder choose between the figure
-               and the text describing it; side by side they are one act.
+          <!-- ══ NOTHING CHOSEN YET, AND THE COLUMN SAYS SO ═══════════════
+               ONE SENTENCE, DOWN FROM TWO. This column used to serve two
+               steps — pick a patent, then pick a drawing — because the
+               drawing opened here. The drawing is a lightbox over the
+               viewport now and the record is in this column, so the column
+               has one empty state and one thing to say about it.
+
+               IT SAYS SOMETHING AT ALL because design-language §8 names the
+               alternative: an empty region that says nothing looks like a
+               region that failed to load. -->
+          <div class="pane-idle" id="paneIdle">
+            <p class="t-body">Pick a patent on the left to read its record.</p>
+          </div>
+
+          <!-- ══ THE RECORD TAKES THE RIGHT COLUMN ═══════════════════════
+               platform.md §4.5. THE TWO COLUMNS DIVIDE BY HOW HARD YOU ARE
+               LOOKING, and the division is now between them rather than
+               inside one. LEFT is the set: three bands a row and an abstract
+               clamped to three lines, and it never goes away. RIGHT is the one patent you are
+               reading: every identifier, the abstract, the claims, and the
+               drawings under the prose.
+
+               IT USED TO BE OPPOSITE, and the swap cost the list. The record
+               stood in the list's place and the founder lost the results
+               while reading one of them — so moving through a set was close,
+               find your place, open, once per patent. Reading a record and
+               keeping your place in the set are one act, and they are side
+               by side now for the same reason the drawing and the text were.
 
                IT IS IN FLOW, not an overlay. The column is the record's while
-               it is open and the list steps aside, which is why closing it is
-               an X rather than a back chevron — nothing is behind it. -->
+               it is open and the idle sentence steps aside, which is why
+               closing it is an X rather than a back chevron — nothing is
+               behind it. -->
           <section class="rec" id="recPane" aria-labelledby="recTitle" hidden>
             <!-- CLOSE IS AN X AT THE TRAILING EDGE, not a back chevron at the
                  leading one. A chevron says "the thing you were looking at is
@@ -308,17 +366,42 @@
                  flip for RTL — the row is already logical. -->
             <div class="rec-head">
               <h2 class="t-title" id="recTitle" tabindex="-1">The patent record</h2>
-              <!-- ══ WHAT THE LEFT COLUMN COSTS, PAID BACK HERE ═════════════
-                   platform.md §4.5. The record takes the list's place, so the
-                   founder cannot see the results while reading one. Without
-                   these, moving through a set is close, find your place, open
-                   — once per patent, and a founder comparing five does it
-                   eight times.
+              <!-- ══ STEPPING, AND IT SURVIVED THE MOVE ═════════════════════
+                   platform.md §4.5. These were built because the record ate
+                   the list and there was no other way through a set. The list
+                   is back and they stay, on a narrower argument that still
+                   holds: reading five in a row is five round trips to the
+                   column beside you, and the founder's eyes are on the record
+                   while they compare. Keeping a hand on the set is worth one
+                   pair of controls.
 
                    THE POSITION IS SPOKEN, not shown as "3 / 41". A visible
                    counter is a fifth fact in a head that has three, and the
                    number is only ever wanted by someone who has lost their
                    place — which is exactly who aria-label serves. -->
+              <!-- ══ THE WAY OUT, AND THE DESTINATION IS A PLACEHOLDER ═════
+                   components.md §4 question 3 is the real answer and it is
+                   still open: the source varies by jurisdiction — Google
+                   Patents, WebPat, TIPO — so the interface CANNOT construct
+                   this URL. The engine has to return both the URL and the
+                   label, per patent. Until it does, every record points at
+                   the same IPtech sign-in, which is honest about being a
+                   stand-in in a way a fabricated per-patent link would not
+                   be.
+
+                   AN ANCHOR AND NOT A BUTTON, because it navigates. The
+                   first external href in the product, so it is also the
+                   first target=_blank and the first anchor focus.mjs treats
+                   as a real tab stop — which it already does, at :64.
+
+                   THE LABEL IS WRITTEN OUT. An arrow-up-right alone says
+                   "somewhere else" and not "where", and the head has room
+                   that the two chevrons beside it do not need. -->
+              <a class="rec-out" id="recOut" href="https://iptech.cc/Member/Account/LogOn?ReturnUrl=%2F"
+                 target="_blank" rel="noopener noreferrer">
+                <span>Open in IPtech</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+              </a>
               <button class="icon-btn" id="recPrev" type="button"
                       aria-label="Previous patent in your results">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -335,104 +418,89 @@
             <div class="rec-body" id="recBody"></div>
           </section>
 
-      </div>
+          <!-- ══ the figure viewer · platform.md §4.5 ══════════════════════
+               ONE DRAWING, LARGE, WITH THE CONTROLS TO READ IT — and since
+               2026-09-24 it takes the VIEWPORT rather than a column. It sat
+               inside .panecol on three rules: §3.2 had no scrim, app/ had no
+               position:fixed, and there was no modal and no focus trap. The
+               record moved into that column, so filling it would cover the
+               text the drawing is read against, and the left column would
+               give a technical drawing 44% of the window.
 
-      <!-- ── the right pane · §6's twelve views, map first ───────────────── -->
-      <div class="panecol" id="panecol">
-        <div class="panescroll" id="paneScroll">
+               ALL THREE RULES ARE NARROWED TO THIS ONE NODE rather than
+               repealed — one scrim, one fixed element, one trap — and §3.2
+               anticipated it: "a dimming layer would arrive with whatever
+               first needs one". figure-viewer.mjs's header carries the full
+               argument and the portal that makes `inert` possible.
 
-          <!-- the grouping. Hidden until the toggle asks for it, and the
-               record replaces it rather than covering it. -->
-          <div class="fishwrap" id="fishWrap" hidden></div>
-
-
-          <!-- ══ NOTHING CHOSEN YET, AND THE COLUMN SAYS WHICH NOTHING ═══
-               This column has two idle states because it serves two steps, and
-               an empty column that says nothing is the defect design-language
-               §8 names one level up: an empty region that looks like a region
-               which failed to load.
-
-               No record open  → pick a patent.
-               Record open     → pick a drawing, or a sentence saying this one
-                                 has none. record.mjs writes the second. -->
-          <div class="pane-idle" id="paneIdle">
-            <p class="t-body" data-idle="set">Pick a patent on the left to read its record.</p>
-            <p class="t-body" data-idle="rec" id="paneIdleRec">Pick a drawing to see it here.</p>
-          </div>
-
-          <!-- ══ the figure viewer · platform.md §6.6 ══════════════════════
-               ONE DRAWING, LARGE, WITH THE CONTROLS TO READ IT. It sits inside
-               .panecol — which is already positioned — rather than over the
-               window, and that is three rules rather than a layout preference:
-               §3.2 has no scrim and nothing in the product dims the page,
-               there is no position:fixed anywhere in app/, and there is no
-               modal and no focus trap. The list on the left stays live and
-               readable the whole time, which is the same arrangement the
-               record itself uses and for the same reason — the founder is
-               comparing, not leaving.
-
-               NOT role="dialog". Announcing it as a dialog would describe the
-               wrong event: this is one of the things a column shows, reached
-               by pressing a thumbnail and left by a control. The record pane
-               beside it gave up the same role for the same reason. -->
+               STILL NOT role="dialog". Announcing it as a dialog would
+               describe the wrong event: this is a drawing, opened by pressing
+               it and left by a control. aria-modal and the inert tree do the
+               work that matters without renaming what the founder sees. -->
           <section class="figview" id="figView" hidden aria-label="Patent drawing">
-            <div class="figview-head">
-              <span class="figview-cap t-micro" id="figCap" role="status" aria-live="polite"></span>
-              <!-- THE X IS AT THE TRAILING EDGE, like the record's. One glyph,
-                   one act, in one place across the surface. -->
-              <button class="icon-btn figview-x" id="figClose" type="button"
-                      aria-label="Close this drawing">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-              </button>
-            </div>
-
-            <div class="figview-stage" id="figStage">
-              <img class="figview-img" id="figImg" alt="" decoding="async">
-
-              <!-- PAGING SITS ON THE STAGE, at the two edges it points at. It
-                   is the one pair of controls whose position IS its meaning. -->
-              <button class="figview-step figview-prev" id="figPrev" type="button"
-                      aria-label="Previous drawing">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-              </button>
-              <button class="figview-step figview-next" id="figNext" type="button"
-                      aria-label="Next drawing">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-              </button>
-
-              <!-- ══ the action bar ══ It floats over the drawing rather than
-                   taking a band of the frame, because the drawing is the
-                   subject and every pixel the chrome takes is a pixel of it.
-                   §5's shadow case exactly: something that floats free of the
-                   page over content it does not push aside. It carries a
-                   hairline too — a shadow cannot separate two surfaces of the
-                   same colour, and this one sits on white line-work. -->
-              <div class="figbar" role="group" aria-label="How the drawing is shown">
-                <button class="figbar-btn" id="figRot" type="button" aria-label="Rotate a quarter turn">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
-                </button>
-                <button class="figbar-btn" id="figReset" type="button" aria-label="Reset the view">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-                </button>
-                <span class="figbar-sep" aria-hidden="true"></span>
-                <button class="figbar-btn" id="figOut" type="button" aria-label="Zoom out">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/></svg>
-                </button>
-                <button class="figbar-btn" id="figIn" type="button" aria-label="Zoom in">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
-                </button>
-                <span class="figbar-sep" aria-hidden="true"></span>
-                <button class="figbar-btn" id="figFull" type="button"
-                        aria-pressed="false" aria-label="Fill the screen">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+            <!-- THE PANEL, INSIDE THE FIXED COVER. The cover owns the scrim
+                 and the gutter; the panel owns the surface, the hairline and
+                 the rounded corners. Two elements because one cannot both
+                 fill the viewport and sit inset from it. -->
+            <div class="figview-panel">
+              <div class="figview-head">
+                <span class="figview-cap t-micro" id="figCap" role="status" aria-live="polite"></span>
+                <!-- THE X IS AT THE TRAILING EDGE, like the record's. One glyph,
+                     one act, in one place across the surface. -->
+                <button class="icon-btn figview-x" id="figClose" type="button"
+                        aria-label="Close this drawing">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                 </button>
               </div>
-            </div>
 
-            <!-- THE STRIP SCROLLS AND THE STAGE DOES NOT. Seventeen drawings
-                 do not fit a column at a readable size, and shrinking them
-                 until they do makes every one of them useless. -->
-            <div class="figstrip" id="figStrip" role="group" aria-label="The other drawings"></div>
+              <div class="figview-stage" id="figStage">
+                <img class="figview-img" id="figImg" alt="" decoding="async">
+
+                <!-- PAGING SITS ON THE STAGE, at the two edges it points at. It
+                     is the one pair of controls whose position IS its meaning. -->
+                <button class="figview-step figview-prev" id="figPrev" type="button"
+                        aria-label="Previous drawing">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <button class="figview-step figview-next" id="figNext" type="button"
+                        aria-label="Next drawing">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+
+                <!-- ══ the action bar ══ It floats over the drawing rather than
+                     taking a band of the frame, because the drawing is the
+                     subject and every pixel the chrome takes is a pixel of it.
+                     §5's shadow case exactly: something that floats free of the
+                     page over content it does not push aside. It carries a
+                     hairline too — a shadow cannot separate two surfaces of the
+                     same colour, and this one sits on white line-work. -->
+                <div class="figbar" role="group" aria-label="How the drawing is shown">
+                  <button class="figbar-btn" id="figRot" type="button" aria-label="Rotate a quarter turn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+                  </button>
+                  <button class="figbar-btn" id="figReset" type="button" aria-label="Reset the view">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+                  </button>
+                  <span class="figbar-sep" aria-hidden="true"></span>
+                  <button class="figbar-btn" id="figOut" type="button" aria-label="Zoom out">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/></svg>
+                  </button>
+                  <button class="figbar-btn" id="figIn" type="button" aria-label="Zoom in">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                  </button>
+                  <span class="figbar-sep" aria-hidden="true"></span>
+                  <button class="figbar-btn" id="figFull" type="button"
+                          aria-pressed="false" aria-label="Fill the screen">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- THE STRIP SCROLLS AND THE STAGE DOES NOT. Seventeen drawings
+                   do not fit a column at a readable size, and shrinking them
+                   until they do makes every one of them useless. -->
+              <div class="figstrip" id="figStrip" role="group" aria-label="The other drawings"></div>
+            </div>
           </section>
         </div>
 

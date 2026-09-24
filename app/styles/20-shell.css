@@ -11,9 +11,10 @@
    Exit is faster than enter: the founder has already decided to
    leave, so the system should look like it is responding rather
    than deliberating. --ease is a strong ease-out already.     */
-/* One shell, two surfaces. The sidebar lives outside the stage and persists
-   across the swap — platform.md §2: moments 1-3 and 4-5 are two surfaces, not
-   five screens, and a sidebar that reloads would say otherwise. */
+/* One shell, two surfaces on the path. The masthead lives outside the stage
+   and persists across the swap — platform.md §2: the four moments run over
+   two surfaces, not four screens, and a bar that reloads would say
+   otherwise. */
 .stage{position:relative;flex:1;min-width:0;overflow:hidden}
 .view{
   position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
@@ -34,7 +35,7 @@
 }
 
 /* ── the shell · a 48px masthead over one working surface ─────────────
-   platform.md §6.1. It was a 260px sidebar until 2026-09-10, and the swap
+   platform.md §4.1. It was a 260px sidebar until 2026-09-10, and the swap
    is arithmetic rather than taste: the map needs 944px of columns and the
    result list stops reading under 340px, which does not fit a 1440px laptop
    beside a 260px rail. The masthead costs ~48px of HEIGHT where the sidebar
@@ -45,7 +46,7 @@
       min-height:48px;padding:var(--s-6) var(--s-16);background:var(--surface);
       border-bottom:1px solid var(--border);position:relative;z-index:6;
       flex-wrap:wrap}
-/* SIX REGIONS IN 48px is platform.md §6.1's named hard problem, and 320px
+/* SIX REGIONS IN 48px is platform.md §4.1's named hard problem, and 320px
    is where it stops being a design question and becomes a blocker: at that
    width the bar overflowed and the balance, the theme control and the
    account menu were all unreachable. (It was seven until the chat control

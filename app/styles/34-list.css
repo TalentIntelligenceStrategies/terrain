@@ -1,40 +1,206 @@
 
 .drill-row{padding:var(--s-16) 0;border-bottom:1px solid var(--border)}
 .drill-row:last-child{border-bottom:0}
-/* NOWRAP, AND THE HOLDER TRUNCATES. This wrapped, and against real data that
-   is not an edge case: the longest assignee in the stress corpus is 81
-   characters — "Shanghai Motor System Energy Saving Engineering Technology
-   Research Center Co Ltd" — which pushed the year and the chevron onto a
-   third line and broke the year's column, which is the one thing that column
-   exists for.
+/* THE HOLDER TRUNCATES, AND THE REASON IS UNCHANGED FROM WHEN THIS WAS A FLEX
+   ROW. Against real data a long assignee is not an edge case: the longest in
+   the stress corpus is 81 characters — "Shanghai Motor System Energy Saving
+   Engineering Technology Research Center Co Ltd" — which used to push the year
+   and the chevron onto a third line. The row is a scanning surface and the
+   record is where the full name lives.
 
-   The row is a scanning surface and the record is where the full name lives.
-   `min-width:0` on the holder is what actually lets it shrink: a flex item's
-   default `min-width:auto` refuses to go below its content, so `ellipsis`
-   alone would have done nothing. */
-.drill-meta{display:flex;align-items:center;gap:var(--s-12);padding-top:var(--s-12);
-            flex-wrap:nowrap}
-.drill-holder{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+   WHAT CHANGED IS WHERE THE min-width:0 GOES. It was on .drill-holder, because
+   a flex item's default min-width:auto refuses to go below its content and
+   `ellipsis` alone would have done nothing. The holder is a grid cell now, so
+   the same floor has to be spelled twice — minmax(0,1fr) on the track and
+   min-width:0 on .dm and .dm-v — and both are below. */
+.drill-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:var(--s-6) var(--s-12);padding-top:var(--s-10)}
 
-/* ── THE YEAR HOLDS A COLUMN · 2026-09-11 ────────────────────────────────
-   It sat directly after the holder, whose bar width varies per patent (rec.w),
-   so twenty years landed at twenty different x positions. A COLUMN OF FIGURES
-   THAT DOES NOT ALIGN CANNOT BE SCANNED — and scanning is the entire reason
-   the year is on the row: it is what lets a founder see that the list
-   reordered.
+/* ── one meta cell · glyph, then value ───────────────────────────────────
+   A 2x2 GRID AND NOT A ROW, and the reason is the holder. The longest
+   assignee in the stress corpus is 81 characters — "Shanghai Motor System
+   Energy Saving Engineering Technology Research Center Co Ltd" — and four
+   values on one line gave it about a fifth of the column. Two columns give it
+   half, which is where it starts truncating at a word rather than at a
+   syllable. The grid also fixes the cells' x positions, so the same fact is
+   in the same place on every row, which is the whole of what makes a column
+   scannable and is what the auto-margin year was reaching for.
 
-   THE AUTO MARGIN MOVES TO THE YEAR AND OFF THE CHEVRON, and that pair is the
-   whole rule. Adding one to the year alone left TWO auto margins on the line,
-   and flexbox splits free space evenly between them — so the year landed
-   halfway into the gap and still moved with the bar, at exactly half the
-   amplitude. Measured 57px on each side of a 114px gap, which is the tell.
-   One auto, on the leading edge of the trailing GROUP, and the year and the
-   chevron travel together.
+   minmax(0,1fr) RATHER THAN 1fr. A grid track's default min-content floor
+   refuses to go below its longest word, so `1fr` alone would let that 81
+   character name push the track wide and break the second column off the
+   row. This is the grid spelling of the min-width:0 the holder already has.
 
-   THE FIGURES ARE ALREADY TABULAR — .fig is Inconsolata — so four digits
-   occupy one width and the column is true to the pixel rather than nearly. */
-.drill-meta>.fig{margin-inline-start:auto}
-.drill-meta>.fig~.drill-chev{margin-inline-start:0}
+   THE GLYPH DOES NOT SHRINK AND DOES NOT COLOUR. --text-3 on the mark,
+   --text-1 on the value: the glyph says which fact this is and the value is
+   the fact. A 14px Lucide stroke at --text-3 clears 4.5:1, which is the floor
+   §3.2 sets for the small text it sits beside. */
+.dm{display:flex;align-items:center;gap:var(--s-6);min-width:0}
+.dm-i{flex:0 0 auto;color:var(--text-3)}
+.dm-v{min-width:0;display:flex;align-items:center;gap:var(--s-6);
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+      font-size:13px;line-height:1.4;color:var(--text-1)}
+/* the inventors this row is not naming. It is a count, so it is a figure. */
+.dm-more{color:var(--text-3)}
+.dm-where{color:var(--text-2)}
+
+/* ── band 1 · what this document IS ──────────────────────────────────────
+   THE NUMBER LEADS AND THE TITLE FOLLOWS IT ON THE SAME LINE. A patent number
+   is the one string a founder carries out of here into their own documents,
+   and it is the thing they match against when they come back — so it reads
+   first, in Inconsolata, at --text-2 so it frames the title rather than
+   competing with it.
+
+   THE RANK AND THE SCORE TRAIL, and they are the only two things on the row
+   that are about the SEARCH rather than about the patent. They sit together
+   at the trailing edge for that reason, not because there was space. */
+.drill-head{display:flex;align-items:baseline;gap:var(--s-8);flex-wrap:wrap}
+.drill-no{flex:0 0 auto;color:var(--text-2)}
+.drill-title{flex:1 1 220px;min-width:0}
+.drill-rank{flex:0 0 auto;color:var(--text-3);margin-inline-start:auto}
+
+/* ── band 3 · what it claims ─────────────────────────────────────────────
+   THREE LINES, AND THE CLAMP IS THE ROW'S RATHER THAN THE ENGINE'S. Corpus
+   abstracts run a median of 831 characters, about nine lines in this column;
+   at twenty rows that is a column nobody reaches the bottom of. Three lines
+   is what clears the boilerplate preamble most patent abstracts open with and
+   reaches the clause that separates this one from the next.
+
+   NO MEASURE CAP HERE, DELIBERATELY. §4 caps body prose at 68ch and this is
+   narrower than 68ch at every supported width — the column is ~374px of
+   content at the 1024 floor and ~560 at 1440, which is about 46ch to 68ch at
+   13px. A cap would bind at exactly one window size and do nothing at the
+   rest, which is a rule that looks enforced and is not.
+
+   -webkit-line-clamp IS NOT A PREFIX HERE. It is the only interoperable
+   spelling of this — every engine ships it unprefixed-in-effect and the
+   unprefixed `line-clamp` is not yet safe alone — so it is written with its
+   own display and orientation rather than as a vendor fallback. */
+.drill-abs{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+           overflow:hidden;margin-block-start:var(--s-10);
+           font-size:13px;line-height:1.55;color:var(--text-2);text-wrap:pretty}
+/* A BARRED ABSTRACT IS THREE BARS AND NOT A CLAMPED BOX. -webkit-box lays its
+   children out as inline boxes, so three block bars inside one collapse onto a
+   single line; this is the one place the clamp has to come off, and it can,
+   because three bars are already three lines. */
+.drill-abs-sk{display:flex;flex-direction:column;gap:var(--s-6)}
+
+/* ── THE YEAR HELD A COLUMN WITH AN AUTO MARGIN UNTIL 2026-09-24 ─────────
+   IT WAS THE RIGHT FIX FOR A FLEX ROW AND THE ROW IS A GRID NOW. The year sat
+   directly after the holder, whose width varies per patent, so twenty years
+   landed at twenty different x positions — and a column of figures that does
+   not align cannot be scanned, which is the entire reason the year is on the
+   row. `margin-inline-start:auto` on the leading edge of the trailing group
+   pinned it to the far edge and fixed that.
+
+   WHAT IT COST WAS THE PAIRING. Pinned to the trailing edge, the year sat
+   about 400px from the holder it qualifies and read as a fourth unrelated
+   column. A 2x2 grid fixes the x positions by construction — every cell in
+   the same track on every row — so the alignment the auto margin bought is
+   free, and the date can sit next to the party it belongs to.
+
+   THE CHEVRON WENT WITH IT. It pointed at the row's own button, which is the
+   thing it was inside: an affordance describing itself. */
+
+/* ══ THE ROW'S DRAWINGS · platform.md §4.3 ════════════════════════════════
+   IT SCROLLS, AND THAT MOVED THE COST FROM WIDTH TO HEIGHT. The track was four
+   fixed 64s because four was what the column could hold at the 1024 floor —
+   six would have wrapped, and a strip that wraps makes row height depend on
+   the data, which is the one thing a list you SCAN cannot have. A scroller
+   answers that outright: twelve tiles or three, the row is the same height,
+   and the count stops being the column's business.
+
+   SO THE ONLY BUDGET LEFT IS ROW HEIGHT, AND 72 IS WHAT IT BUYS. 64 → 72 is
+   +10px of row for +27% of drawing area. 80 would cost +20 AND put the tile at
+   80/104 of the record's, which is where the step §7 argues for stops reading
+   as a step; 72/104 = 0.69 still does. The floor is unchanged and neither is
+   near it — below about 48px a patent drawing is a grey smudge rather than a
+   kind of drawing.
+
+   THE AFFORDANCE IS A CUT TILE, NOT A SHADOW AND NOT A FADE. §5 refuses an
+   elevation shadow to anything sitting IN the layout, and its second clause
+   bites harder here than the first: a shadow cannot separate two surfaces of
+   the same colour, and these are white tiles on a white row. A fade was
+   refused for a different reason — to be honest it has to appear only when
+   there is somewhere left to scroll, which costs either a scroll listener on
+   twenty rows or a fourth keyframe, and §6 sets a high bar for one. What it
+   would buy is a gradient over the last drawing. The track is wider than the
+   column whenever it overflows, so the column's own edge cuts a tile at MOST
+   widths, and a cut edge is the oldest "there is more" signal there is.
+
+   AT MOST WIDTHS, AND THE EXCEPTION IS MEASURED. The tile pitch is 78px
+   (72 + --s-6); when the strip's width lands near a multiple of it, the tiles
+   sit flush and nothing is cut — 79 of 841 widths swept at 1px from 1080 to
+   1920, in five bands, each ~16px of WINDOW and ~6.6px of STRIP, centred on
+   strip widths of 388, 466, 544, 622 and 700. A strip holding twelve drawings
+   and a +N tile then shows no sign that it holds anything more, because an
+   overlay scrollbar is not painted at rest either.
+
+   AND IT DEGRADES RATHER THAN SWITCHING OFF. The cut tile's visible width is
+   continuous, so the flush bands are only the exact-zero case: it shows 8px or
+   less of its 72 at about one width in FIVE, and a 3px sliver is the same
+   absence with a rounding error in front of it. list.mjs carries the
+   distribution and why this is a deferred decision rather than a patch.
+
+   AND NO scrollbar-width HERE. .figstrip declares `thin` because it is ONE
+   strip in a lightbox; twenty thin bars down a scanning column is twenty
+   pieces of furniture. The platform's own is what is left.
+
+   NO SNAP. scroll-snap-align would resolve every rest position to a flush
+   edge, which is the one thing that would delete the affordance above.
+
+   --s-6 OF MARGIN PLUS --s-4 OF PADDING IS THE --s-10 §7 MEASURES, and the 4
+   is not a fudge: overflow-x:auto computes overflow-y to auto as well, so a
+   scroller clips its own focus ring on all four sides. A 2px ring at 2px of
+   offset needs exactly 4, and the negative inline margin puts the first tile
+   back on the title's leading edge.
+
+   WHITE GROUND IN BOTH THEMES, like every other drawing surface here.
+   --figure-ground is a fact about the content: black line-work on #1A1A1A is a
+   blank rectangle. 40-figure.css carries the argument. */
+.set-thumbs{display:flex;gap:var(--s-6);
+            margin-block-start:var(--s-6);
+            padding:var(--s-4);margin-inline:calc(-1 * var(--s-4));
+            overflow-x:auto;overscroll-behavior-x:contain;
+            scroll-padding-inline:var(--s-12)}
+
+/* THE TILE CARRIES THE RATIO, NOT THE IMAGE INSIDE IT. On the <img> it made a
+   picture tile 89.5px tall against a 90px non-picture one — half a pixel of
+   misalignment that only exists once something in the strip is not a drawing,
+   which is exactly what the +N tile is. A definite height on the tile is also
+   what lets height:100% inside it resolve. */
+.set-thumb{flex:0 0 auto;width:72px;aspect-ratio:4/5;
+           display:block;overflow:hidden;padding:0;
+           background:var(--figure-ground);
+           border:1px solid var(--border);border-radius:var(--r-control);
+           transition:border-color var(--dur-1) var(--ease),
+                      transform var(--dur-1) var(--ease)}
+.set-thumb:active{transform:scale(.97)}
+/* A WITHHELD DRAWING IS NOT A CONTROL THAT OPENS AN EMPTY VIEWER. aria-disabled
+   and not disabled, so it keeps its place in the arrow cycle and can carry the
+   reason to a keyboard. It had no rule at all until 2026-09-24 — on the record
+   as well as here — so a dead tile hovered, pressed and looked exactly like a
+   live one, and the only feedback was a live-region sentence. */
+.set-thumb[aria-disabled="true"]{cursor:default}
+.set-thumb[aria-disabled="true"]:active{transform:none}
+.set-thumb-img{display:block;width:100%;height:100%;object-fit:contain;
+               padding:var(--s-4)}
+.set-thumb-sk{display:block;width:100%;height:100%;border-radius:0}
+
+/* ── the last tile, and it is not a drawing ──────────────────────────────
+   SO IT DOES NOT TAKE THE PAPER. --figure-ground means "the sheet this was
+   published on" (§3.2) and this tile was never published on anything; it is a
+   control about the record, so it takes the sunken fill every box inside a
+   card takes. That is also what makes it read as the end of the strip rather
+   than as a drawing that failed to load.
+
+   IT IS LAST AND IT IS NOT STICKY. Pinning it to the visible trailing edge
+   would answer "how many more" before the founder has run out, by covering a
+   drawing to do it. It answers where the question is asked — the end of the
+   scroll — and End reaches it in one press. */
+.set-thumb-more{display:flex;flex-direction:column;align-items:center;
+                justify-content:center;gap:var(--s-2);
+                background:var(--surface-sunken);color:var(--text-2)}
 
 /* ── the list's sort and filter · platform.md §6.3 ──────────────────────
    MENUS RATHER THAN SEGMENTED CONTROLS, and that is a width decision before
@@ -239,3 +405,25 @@
    display, so the sentence does not jump 26px left when it goes. */
 .set-run-in .sweep{opacity:0;flex:0 0 auto;
   transition:opacity var(--dur-1) var(--ease)}
+
+/* ── the drawings' own hover · §6's full form, because it carries a transform ─
+   EVERY SELECTOR IN HERE NAMES :hover, which is gate F, and the gate matters
+   on this block specifically: .set-thumb's base rule, its :active and its
+   disabled state all live OUTSIDE it, because :active fires on touch and a
+   base rule in a hover gate never applies to a coarse pointer at all.
+
+   THE LIFT IS A TRANSFORM. §5 will not give a tile in a layout an elevation
+   shadow and §6 will not animate a layout property; 1px of translate reads as
+   the thing coming toward you and costs no reflow. It is .pn-fig-btn's own
+   hover, restated for a control that exists on the row now too.
+
+   THE NOTE THAT STOOD HERE SAID "NO HOVER, NO ACTIVE, NO CURSOR", and it was
+   right while the tiles were decoration inside the row's button — a thumbnail
+   that lit under the pointer would have promised an act it did not have. They
+   are controls with an act of their own now, so the premise is gone rather
+   than the rule being bent. */
+@media (hover:hover) and (pointer:fine){
+  .set-thumb:not([aria-disabled="true"]):hover{
+    border-color:var(--border-strong);transform:translateY(-1px)}
+  .set-thumb-more:hover{background:var(--surface);color:var(--text-1)}
+}

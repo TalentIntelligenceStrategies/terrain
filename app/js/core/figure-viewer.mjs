@@ -1,19 +1,39 @@
 /* figure-viewer — one patent drawing, large, with the controls to actually
  * read it.
  *
- * ═══ IT IS NOT A LIGHTBOX AND IT CANNOT BE ONE ═════════════════════════════
- * Three rules in this repository decide the shape of this thing before any
- * design question is asked:
+ * ═══ IT IS A LIGHTBOX SINCE 2026-09-24, AND IT DID NOT USED TO BE ══════════
+ * Three rules in this repository decided the old shape before any design
+ * question was asked, and this file argued at length that they were binding:
  *
- *   · There is no scrim (design-language.md §3.2). Nothing in the product dims
- *     the page. The deleted scrim is on record twice, with its token.
- *   · There is no `position:fixed` anywhere in app/, and no full-viewport node.
- *   · There is no modal and no focus trap (13-inline-confirm.css, focus.mjs).
+ *   · There was no scrim (design-language.md §3.2). Nothing dimmed the page.
+ *   · There was no `position:fixed` in app/, and no full-viewport node.
+ *   · There was no modal and no focus trap (13-inline-confirm.css, focus.mjs).
  *
- * So it opens over the RECORD COLUMN — absolute inside `.panecol`, which is
- * already positioned — rather than over the window. The list on the left stays
- * live and readable throughout, which is the same arrangement the record
- * itself uses and for the same reason: the founder is comparing, not leaving.
+ * So it opened over the RECORD COLUMN — absolute inside `.panecol` — and the
+ * list on the left stayed live throughout.
+ *
+ * ═══ WHAT CHANGED IS THE COLUMN ════════════════════════════════════════════
+ * The record moved into the right column on the same day, which is where the
+ * viewer was. Filling that column now means covering the text the drawing is
+ * read against — the exact arrangement the old note existed to avoid. Taking
+ * the LEFT column instead would give a technical drawing 44% of the window,
+ * and reference numerals are the thing a founder enlarges a drawing FOR.
+ *
+ * So all three rules are NARROWED — one scrim, one fixed node, one trap, each
+ * of them this — rather than repealed. design-language.md §3.2 anticipated
+ * exactly this: "a dimming layer would arrive with whatever first needs one."
+ *
+ * ═══ THE PORTAL, AND WHY THERE HAS TO BE ONE ═══════════════════════════════
+ * `inert` works downward. The viewer ships inside surface.html, which puts it
+ * four levels inside `#app` — so inerting `#app` would inert the viewer with
+ * it, and inerting everything-but would be a hand-kept list of regions that
+ * goes stale the first time the surface gains one.
+ *
+ * At init the node is moved to <body>, beside `#app` rather than inside it.
+ * Nothing about its rendering depends on where it lives, because it is
+ * `position:fixed` — its containing block is the viewport either way. It stays
+ * authored in surface.html because that is the surface it belongs to; a second
+ * host in index.html would be markup with no owner.
  *
  * ═══ ZOOM IS A TRANSFORM, AND §6 SAYS "THERE ARE NO EXCEPTIONS" ════════════
  * No transition or animation on a layout property — width, height, margin,
@@ -30,7 +50,7 @@
  */
 import { $, esc } from './dom.mjs';
 import { push, drop } from './esc-stack.mjs';
-import { focusQuietly, captureFocus } from './focus.mjs';
+import { focusQuietly, captureFocus, setInert, focusables } from './focus.mjs';
 import { say } from './live-region.mjs';
 import { reduced } from './motion.mjs';
 
@@ -149,16 +169,21 @@ export function open(figures, index, trigger) {
     el.root.classList.add('is-open');
   });
 
-  /* NOTHING GOES INERT, and that is the arrangement rather than an oversight.
-     The viewer fills the RIGHT column and the record sits in the LEFT one, so
-     there is no node underneath it — every control the keyboard can reach is
-     also one the pointer can reach.
+  /* ══ THE PAGE GOES INERT, WHICH IT NEVER DID BEFORE ═════════════════════
+     This file used to carry the opposite note, and the argument it made was
+     right for a viewer that was a column: there was nothing underneath, so
+     every control the keyboard could reach was one the pointer could reach.
 
-     This is the whole return on putting the drawing beside the record instead
-     of over it: the founder picks the next figure from the strip without
-     closing the one they are looking at, and compares a claim against the
-     figure it names. An overlay had to make the record inert to stay honest
-     about what was reachable; a column does not. */
+     A cover changes that. Something the pointer cannot get to and the tab key
+     can is an interface lying about what is reachable — and `inert` rather
+     than `aria-hidden`, because aria-hidden leaves the tab order intact and
+     produces the worst version of the same lie: a sighted keyboard user tabs
+     into controls a screen reader says are not there.
+
+     `setInert` has been exported from focus.mjs with no caller since it was
+     written. This is the caller. */
+  setInert($('#app'), true);
+  el.root.setAttribute('aria-modal', 'true');
 
   /* ABOVE THE RECORD ON THE STACK. Escape closes the viewer first and the
      record second, which is the order they were opened in and the order the
@@ -173,6 +198,12 @@ export function open(figures, index, trigger) {
 export function close() {
   if (!el.root || el.root.hidden) return;
   el.root.classList.remove('is-open');
+  /* THE PAGE COMES BACK BEFORE FOCUS MOVES, not after. restoreFocus() aims at
+     the thumbnail that opened this, which is inside the tree that is still
+     inert on the line above — and focusing into an inert subtree silently
+     does nothing, which would drop a keyboard user on <body>. */
+  setInert($('#app'), false);
+  el.root.removeAttribute('aria-modal');
   drop('figure');
   if (restoreFocus) restoreFocus();
   restoreFocus = null;
@@ -190,6 +221,13 @@ export function close() {
 export function init() {
   if (!q()) return;
 
+  /* ══ THE PORTAL · see the header ═════════════════════════════════════════
+     Once, at init, and never again — the surface partial is fetched once at
+     boot and views are switched by class rather than re-injected, so there is
+     no second node to catch. Guarded anyway, because an init called twice
+     should not be a bug somebody has to reproduce. */
+  if (el.root.parentElement !== document.body) document.body.appendChild(el.root);
+
   const on = (sel, fn) => {
     const b = $(sel);
     if (b) b.addEventListener('click', fn);
@@ -203,12 +241,16 @@ export function init() {
   on('#figPrev', () => setFig(at - 1, true));
   on('#figNext', () => setFig(at + 1, true));
 
-  /* FULL SCREEN IS THE BROWSER'S, NOT A BIGGER DIV. The viewer is absolute
-     inside the record column by rule — there is no position:fixed in this
-     tree — so "fill the screen" cannot be done by growing the element. The
-     Fullscreen API does it without one, and the button reports which state it
-     is in rather than assuming the request succeeded: Safari refuses it in
-     some contexts and returns a rejected promise. */
+  /* FULL SCREEN IS THE BROWSER'S, NOT A BIGGER DIV — and it still is, now
+     for a better reason than the old one. It used to be that the viewer was
+     absolute inside a column and there was no position:fixed in the tree, so
+     growing the element was not available. The viewer IS the viewport less a
+     24px gutter now, so "fill the screen" would mean dropping that gutter and
+     the browser chrome, which only the Fullscreen API can do.
+
+     The button reports which state it is in rather than assuming the request
+     succeeded: Safari refuses it in some contexts and returns a rejected
+     promise. */
   on('#figFull', () => {
     const node = el.root;
     if (!document.fullscreenElement) {
@@ -264,5 +306,28 @@ export function init() {
     if (!isOpen() || e.defaultPrevented) return;
     if (e.key === 'ArrowRight') { setFig(at + 1, true); e.preventDefault(); }
     else if (e.key === 'ArrowLeft') { setFig(at - 1, true); e.preventDefault(); }
+    /* ══ THE TRAP, AND IT IS SIX LINES BECAUSE inert DID THE REST ══════════
+       Everything outside this node is already unreachable — `#app` carries
+       `inert` for the length of the open. What is left is the two ENDS: Tab
+       off the last control and Shift+Tab off the first both land on the
+       browser's own chrome, and the founder comes back to a page where
+       nothing is focused.
+
+       focusables() FILTERS BY offsetParent, so the thumbnail strip at a
+       narrow width — display:none under 640px — is not in the cycle. A trap
+       that cycles through controls nobody can see is a trap that reads as
+       broken. */
+    else if (e.key === 'Tab') {
+      const stops = focusables(el.root);
+      if (!stops.length) return;
+      const first = stops[0];
+      const last = stops[stops.length - 1];
+      const on = document.activeElement;
+      if (e.shiftKey && (on === first || !el.root.contains(on))) {
+        focusQuietly(last); e.preventDefault();
+      } else if (!e.shiftKey && (on === last || !el.root.contains(on))) {
+        focusQuietly(first); e.preventDefault();
+      }
+    }
   });
 }

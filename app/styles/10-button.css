@@ -24,6 +24,19 @@
 .btn-primary{background:var(--accent);color:var(--accent-ink)}
 .btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text-1)}
 .btn-ghost{color:var(--text-2)}
+/* ══ A WAITING BUTTON HAS NO FILL · 05-wait-fail.css carries the argument ══
+   In dark theme --accent is #F0F0F0, so the resting fill draws a near-white
+   48×36 box around a 20px indicator — the same "box around a dot" 05 already
+   refuses for the list card. The width is held by btnWait(btn, true) so the
+   row keeps its shape without the plate.
+
+   IT IS IN THIS FILE BECAUSE 05 LOADS BEFORE 10. Written there it lost to
+   .btn-primary on source order at equal specificity and silently did nothing.
+
+   --text-2 RESTATES THE INK. currentColor drives the loader, and both
+   --accent-ink and .btn-secondary's --text-1 were chosen against a fill that
+   is no longer there. */
+.btn[data-waiting]{background:none;border-color:transparent;color:var(--text-2)}
 .btn:active{transform:scale(.97)}
 /* THE PRIMARY ACTION IS GATED WHILE THE SENTENCE IS BEING EDITED, so .btn needs
    a disabled state for the first time. Disabled rather than hidden: the dock is
@@ -33,7 +46,7 @@
    would say something is off without saying what. */
 .btn:disabled{opacity:.45;cursor:default}
 .btn:disabled:active{transform:none}
-/* ── a control that is unavailable FOR A REASON · platform.md §9.3 ─────────
+/* ── a control that is unavailable FOR A REASON · platform.md §7.3 ─────────
    SAME PIXELS, DIFFERENT TREE. `disabled` removes a button from the tab order,
    so a keyboard or screen-reader user can never land on it and never meets the
    sentence explaining why it will not act -- they hear the reason announced
@@ -61,7 +74,7 @@
    sunken fill and keep the text legible.
 
    AND IT IS NOT A CONTRAST EXEMPTION QUESTION. WCAG excuses an inactive
-   control, and that excuse is exactly wrong here: platform.md §10 keeps these
+   control, and that excuse is exactly wrong here: platform.md §8 keeps these
    focusable BECAUSE the founder is meant to read them and learn what is not
    ready. A treatment that makes the label unreadable defeats what the
    treatment is for. */
@@ -73,7 +86,7 @@
       border-color:var(--border);cursor:default}
 .btn[aria-disabled="true"] svg{color:var(--text-3)}
 .btn[aria-disabled="true"]:active{transform:none}
-/* ── WHAT IS INERT SAYS SO · platform.md §10, 2026-09-15 ──────────────────
+/* ── WHAT IS INERT SAYS SO · platform.md §8, 2026-09-15 ──────────────────
    The same two declarations for the menu row, because Sign out is the one
    inert control that is not a .btn. Written out rather than folded into the
    selector above: .menu-item has no :active transform to cancel and adding it
@@ -109,4 +122,12 @@
   .btn-secondary:hover{background:var(--surface-sunken)}
   .btn-ghost:hover{background:var(--surface-sunken)}
   .icon-btn:hover{color:var(--text-1);background:var(--surface-sunken)}
+  /* ***AND THE HOVER PAINT IS REFUSED WHILE IT WORKS.*** The pointer is still
+     over the button the founder just pressed, so .btn-primary:hover at (0,3,0)
+     was repainting the fill that [data-waiting] had just taken off — which is
+     why the box survived two attempts to remove it and only a render caught
+     it. Refused here rather than overridden elsewhere, which is the shape
+     34-list.css already uses for #setMore. Last in the block, so it wins the
+     tie on source order. */
+  .btn[data-waiting]:hover{background:none}
 }

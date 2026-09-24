@@ -1,8 +1,8 @@
 /* beat — how long the system takes, and why there are two numbers.
  *
- * NONE OF THESE IS A MEASUREMENT AND NONE IS A CLAIM. platform.md §5 still
- * lists search latency as open, and the elapsed counter on the build remains
- * the only honest duration on any surface. What these buy is that THE WAIT IS
+ * NONE OF THESE IS A MEASUREMENT AND NONE IS A CLAIM. Nothing here was timed
+ * against a real engine, and the elapsed counter beside the match count is the
+ * only honest duration on any surface. What these buy is that THE WAIT IS
  * LEGIBLE AS A WAIT, which is what the founder is actually judging when they
  * decide whether the answer was worth asking for.
  *

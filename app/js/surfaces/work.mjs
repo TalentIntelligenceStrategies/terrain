@@ -1,4 +1,4 @@
-/* surfaces/work — the working surface's own chrome. platform.md §6.2.
+/* surfaces/work — the working surface's own chrome. platform.md §4.2.
  *
  * The head: the project's name and the scope chip. Everything INSIDE the
  * columns belongs to list.mjs and record.mjs; this is only what sits above
@@ -24,47 +24,67 @@ import { onActivate } from '../core/delegate.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
 import { read as readSettings } from './settings.mjs';
+import { popover } from '../core/popover.mjs';
 
 let ENGINE = null;
 
 /* ── the toggles ──────────────────────────────────────────────────────────
    THE FISHBONE IS NOT A VIEW MODE, and that is the one structural fact worth
    getting right here. Their toolbar looks like three controls in a row and is
-   not: the grouping shows or hides independently, and either list rendering
-   can sit beside it. So the fishbone is its own aria-pressed toggle and the
-   two renderings are one group — which is also what their message table says,
-   viewMode having exactly two members. */
-function toggleFishbone(btn) {
-  const on = btn.getAttribute('aria-pressed') !== 'true';
-  btn.setAttribute('aria-pressed', String(on));
-  btn.setAttribute('aria-label', on ? 'Hide the grouping' : 'Show the grouping');
-  const wrap = $('#fishWrap'), idle = $('#paneIdle');
-  if (wrap) wrap.hidden = !on;
-  if (idle) idle.hidden = on;
-  /* THE PANEL ASKS FOR ITS OWN DATA THE FIRST TIME IT IS SHOWN, and this
-     event is how: a grouping nobody opened is an engine run nobody asked for,
-     and work.mjs has no business knowing what fishbone.mjs needs. */
-  if (on) window.dispatchEvent(new CustomEvent('terrain:grouping-shown'));
-  say('work', on ? 'Grouping shown.' : 'Grouping hidden.');
+   not: the grouping opens and closes independently, and either list rendering
+   can sit beside it. So it is its own control and the two renderings are one
+   group — which is also what their message table says, viewMode having
+   exactly two members.
+
+   IT WAS A HALF OF THE SPLIT AND IS A POPOVER SINCE 2026-09-24. This function
+   used to flip `hidden` on a column host and on the idle sentence beside it;
+   the record took that column, so the panel is anchored to its own trigger
+   now and core/popover.mjs owns everything this hand-rolled: aria-expanded,
+   the escape stack, the outside click, and moving focus in. Four things, all
+   of which a hand-rolled toggle still opens and closes correctly without.
+
+   aria-EXPANDED, NOT aria-PRESSED. Pressed describes a control that stays
+   down; expanded describes one that reveals something and names what. The
+   markup changed with it. */
+function fishPopover() {
+  const btn = $('#fishToggle'), panel = $('#fishPop');
+  if (!btn || !panel) return null;
+  return popover({
+    btn, panel, key: 'fishPop',
+    /* THE PANEL ASKS FOR ITS OWN DATA THE FIRST TIME IT IS SHOWN, and this
+       event is still how: a grouping nobody opened is an engine run nobody
+       asked for, and work.mjs has no business knowing what fishbone.mjs
+       needs. */
+    onOpen: () => {
+      window.dispatchEvent(new CustomEvent('terrain:grouping-shown'));
+      say('work', 'Grouping open.');
+    },
+  });
 }
 
-/* `data-mode` DRIVES THE RECORD, and until the drawings arrived it drove
-   nothing at all: this attribute was written by this function and read by no
-   CSS rule and no other module, so both buttons flipped an aria-pressed and
-   changed the screen in no other way. A toggle that cannot change anything is
-   worse than a missing one — the founder presses it, nothing moves, and the
-   next control they try is one they no longer trust.
+/* ══ `data-mode` DRIVES THE LIST, AND IT USED TO DRIVE THE RECORD ══════════
+   It drove NOTHING for the first week — written by this function and read by
+   no rule and no module, so both buttons flipped an aria-pressed and changed
+   the screen in no other way. Then it was pointed at the record, which made it
+   real and left it mis-scoped: a control in the surface-wide search bar that
+   governed one of two columns, and platform.md had to admit in writing that it
+   "does nothing until a record is open".
 
-   IT REFUSES WHAT IT CANNOT DO. record.mjs marks `Drawings only` aria-disabled
-   on a record with no figures, so this checks before switching: a mode that
-   hid the text to show an empty pane would be the toggle reporting a fault in
-   itself. Announced, because the button stays focused and a founder who cannot
-   see the pane gets no other signal. */
+   A CONTROL'S PLACEMENT ZONE IS PART OF ITS MEANING. This one sits in the bar
+   over the whole surface and its group label reads "How much of each patent to
+   show" — EACH PATENT, which is a list-wide phrase. So it governs the list:
+   `Drawings only` strips every row to its drawings, `Details and drawings`
+   puts the text back. The record always shows everything, because the record
+   IS the detailed view and it has the lightbox for a drawing worth enlarging.
+
+   IT REFUSES WHAT IT CANNOT DO, re-aimed. The gate was "does the open record
+   have figures", asked of a control that is not the record's. It is now "does
+   anything in this result set have a drawing" — a mode that emptied the list
+   to show nothing would be the toggle reporting a fault in itself. Announced,
+   because the button stays focused and there is no other signal. */
 function setMode(which) {
-  const imgBtn = $('#modeImages');
-  if (which === 'images' && imgBtn
-      && imgBtn.getAttribute('aria-disabled') === 'true') {
-    say('work', 'This record has no drawings.');
+  if (which === 'images' && !document.querySelector('#setList .set-thumbs')) {
+    say('work', 'None of these results has drawings.');
     return;
   }
   [['modeText', 'text'], ['modeImages', 'images']].forEach(([id, key]) => {
@@ -92,13 +112,13 @@ export function init(ctx) {
     });
   });
 
-  onActivate(document, '#fishToggle', el => toggleFishbone(el));
+  fishPopover();
   onActivate(document, '#modeText', () => setMode('text'));
   onActivate(document, '#modeImages', () => setMode('images'));
 
   /* SEARCHING AGAIN FROM THE RESULTS. The bar is the same component as the
      home surface's and it charges the same way -- this is a run, not a filter,
-     and platform.md §9.2's refund rule applies to it identically. */
+     and platform.md §7.2's refund rule applies to it identically. */
   const field = $('#resQuery'), btn = $('#resSearch');
   if (field && btn) {
     field.addEventListener('keydown', e => {
@@ -110,7 +130,7 @@ export function init(ctx) {
   onActivate(document, '#resSearch', async b => {
     const text = field && field.value.trim();
     if (!text) return;
-    btnWait(b);
+    btnWait(b, true);
     const res = await ENGINE.search({ query: text, settings: readSettings() });
     btnRest(b);
     if (!res.ok) {

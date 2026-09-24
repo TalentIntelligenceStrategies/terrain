@@ -23,6 +23,24 @@
 .t-display-1{font-size:34px;line-height:1.15;font-weight:700;letter-spacing:-.02em}
 .t-display-2{font-size:26px;line-height:1.2;font-weight:700;letter-spacing:-.015em}
 .t-title{font-size:17px;line-height:1.3;font-weight:600;letter-spacing:-.005em}
+/* THE STEP BETWEEN label AND title, AND IT IS EVIDENCE RATHER THAN TASTE.
+   FOUR components had already invented a size in this gap and no two agreed —
+   .drill-name at 13.5, .pn-name-real at 15, .cmp-say and .foot at 14.4. Four
+   independent inventions in one gap is what a missing role looks like from
+   the inside, and it is the same failure this file's header describes for a
+   role split in half: invisible by construction, and no screenshot at any
+   width says which one is wrong.
+
+   EVERY NUMBER IS DERIVED. 15 is the geometric middle of 13 and 17 and is
+   where .pn-name-real already sat. 1.45 is the table's own curve interpolated
+   (34/1.15, 26/1.2, 17/1.3, 14/1.55) and is .drill-name's current value, so a
+   wrapping row title does not re-flow. 600 is title's weight, because this is
+   a title one step down rather than a strong body. Tracking is 0: the honest
+   interpolation between title's -.005em and body's 0 is -.0017em at 15px,
+   which is below what any renderer resolves, and §5's "there is no 28" logic
+   applies to type — inventing a value to be precise about an estimate is how
+   a scale stops being one. */
+.t-title-s{font-size:15px;line-height:1.45;font-weight:600}
 .t-body{font-size:14px;line-height:1.55}
 .t-label{font-size:13px;line-height:1.4;font-weight:500}
 /* ONE DECLARATION, THREE CONSUMERS · 2026-09-11. These five properties were

@@ -23,7 +23,7 @@
 }
 @keyframes sweep{to{transform:translateX(100%)}}
 .sk-h-micro{height:9px}  .sk-h-label{height:11px}
-.sk-h-body{height:12px}  .sk-h-title{height:15px}
+.sk-h-body{height:12px}  .sk-h-title{height:17px}
 .sk-h-fig{height:26px}
 .w-xs{width:28px} .w-sm{width:52px} .w-md{width:88px}
 .w-lg{width:132px} .w-xl{width:180px} .w-full{width:100%}

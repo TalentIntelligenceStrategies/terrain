@@ -10,32 +10,57 @@ first; a second server already bound to `*:8765` on IPv6 will shadow one bound t
 `127.0.0.1:8765` on IPv4, and what you get is somebody else's site with no error anywhere.
 
 **What you should see:** the home surface on arrival — the technology-field tiles, the composer, and
-what is in the corpus. Type a sentence and press Search. `#set` opens the results surface: the list
-on the left, the grouping panel on the right. Clicking a row opens the record **in the left column**,
-in the list's place, with a thumbnail strip under the text; clicking a thumbnail enlarges that
-drawing **in the right column**. Star two rows and *Find similar* appears; the count beside the
-results leads to the starred set, which is where the export lives.
+what is in the corpus. Type a sentence and press Search. `#set` opens the results surface: **the list
+on the left, which never goes away**, each row in three bands — its number and title, then who holds
+it and when, then three clamped lines of its abstract — over **a scrolling strip of its own
+drawings**; and the record on the right when you click a row — every identifier, then the drawings,
+then the abstract and the claims. The open row is marked in the list.
+
+**The strip holds up to twelve drawings and scrolls sideways**, with a `+N` tile at the end carrying
+however many the cap hid; that tile opens the record. It is **one tab stop per row** — arrows move
+inside it, `Home` and `End` reach its ends — because twenty rows at twelve drawings would otherwise be
+240 tab stops. Pressing any drawing, **on a row or in the record**, opens it **as a lightbox over the
+whole viewport**, with zoom, rotation, pan and a thumbnail strip; from a row it opens the record
+underneath it at the same time, so Escape closes the drawing and leaves you in the record. *Drawings only* in the search bar strips the
+**list** to its pictures; the record is unaffected. The grouping control opens a **popover**, and the
+branches you pick stay as chips above the list after it closes. Star two rows and *Find similar*
+appears; the count beside the results leads to the starred set, which is where the export lives.
+
+*Open in IPtech* in the record's head **points at a sign-in page and always the same one.** It is a
+stand-in for a per-patent source URL the engine does not return yet — `design/components.md` §4
+question 3 — and it is the only control in the product whose destination the data did not choose.
 
 `?fail=search,record` arms named ports to refuse and `?fail=all` arms every one, which is how
 `platform.md` §7.1's *a failure is the size of the region that was waiting* gets checked rather than
 asserted. `?slow=3` multiplies every latency. `?theme=light|dark` pins appearance.
 
-**`?data=real` runs the whole thing on real patents** from `corpus/`, which is local only and absent
-from a fresh clone — the flag falls back to the demo and says so in the console rather than failing
-to mount. `corpus/fetch.py` captures the set, `corpus/build.py` shapes it. The flags combine:
-`?data=real&fail=all` is the one that checks a failure state still fits around real text.
+**`corpus/` is the default when it is there, and `?data=demo` forces the demo.** The flag used to
+run the other way — the corpus lived behind `?data=real` — and the cost of that only became obvious
+once the drawings were built: the demo ships no images at all, so the plain URL, which is the one
+everybody opens, showed a product with no pictures in it. `corpus/fetch.py` captures the set,
+`corpus/build.py` shapes it. The flags combine: `?fail=all` against the corpus is the one that checks
+a failure state still fits around real text.
 
-> ### Two features are only visible under `?data=real`, and that is a decision
+**`corpus/` is local only and absent from a fresh clone.** There the dynamic import throws, `app/`
+lands on the demo and says so in the console rather than failing to mount — which is exactly what it
+did before the inversion, so a clone behaves identically either way.
+
+> ### Two features are only visible against the corpus, and that is a decision
 >
 > **The drawings and the export.** `demo/` never names a real holder and never ships a real patent
-> figure — `CLAUDE.md`'s client-data boundary — so the demo record renders numbered *skeleton*
-> frames rather than drawings, and a CSV exported from it has an almost-empty Number column. Both are
-> correct behaviour: a bar means *this value exists and we decline to print it*.
+> figure — `CLAUDE.md`'s client-data boundary — so demo rows and the demo record render numbered
+> *skeleton* frames rather than drawings, and a CSV exported from it has an almost-empty Number
+> column. Both are correct behaviour: a bar means *this value exists and we decline to print it*.
 >
 > **But it means a reader receiving this handoff without `corpus/` cannot watch the product's own
 > ending work.** That is the price of never tracking a third party's data, it was paid deliberately,
-> and `brief.md` §4 carries it. If you need to see the export produce a real file, you need the
-> corpus: `python3 corpus/fetch.py`, then reload with `?data=real`.
+> and `brief.md` §4 carries it. If you need to see the export produce a real file, or a drawing at
+> all, you need the corpus: `python3 corpus/fetch.py`, then reload.
+
+*And one runs the other way.* **The relevance score is only visible under `?data=demo`**, because
+`corpus/` returns `null` for it on every record. That is correct behaviour and not a gap: a score the
+engine did not produce is omitted rather than barred, since a bar would claim a value was withheld.
+`platform.md` §4.3 carries the rule. It is worth knowing before concluding the field was never built.
 
 ---
 
@@ -52,9 +77,12 @@ its source, which is provenance rather than authority. Do not read it to settle 
 **This is a separation, not a rewrite.** The prototype is read; `app/` is built beside it, so every
 step is checked against a known-good reference rather than against a memory of how it used to behave.
 
-**It is not published.** `docs/brief.md` §4 records that: the prototype stays the published artifact
-at `talentintelligencestrategies.github.io/terrain/`, and pointing GitHub Pages at this tree would
-publish forty-odd files of internal reasoning in view-source.
+**It is not published, and neither is anything else.** `docs/brief.md` §4 records that: `gh-pages` was
+emptied and the pipeline retired, because the prototype it served showed the landscape product and a
+link to that misrepresents what Terrain is. Publishing `app/` was considered and is not next —
+pointing GitHub Pages at this tree would publish forty-odd files of internal reasoning in
+view-source, and making it public means first deciding what a stranger sees when the fake engine
+answers.
 
 **This file is not a fifth document.** `CLAUDE.md` holds the four, and the test it applies to the
 repository's own `README.md` applies here: this is the front door for `app/` and holds no rule that
@@ -116,13 +144,13 @@ custom property on `:root`**. `design-language.md` §3.9 is the rule; this is th
 | --- | --- | --- | --- |
 | primitive | 11 | `:root` once | `--n-0`…`--n-10`. No component may read one |
 | scale | 29 | `:root` once | Invariant by construction |
-| semantic | 31 | **all three blocks** | The dark contract |
+| semantic | 32 | **all three blocks** | The dark contract |
 | derived | 3 | `:root` once | Resolves *through* a themed token. **Never in a dark block** |
 | component-scoped | 5 | the component's own class | Never on `:root` |
 
 **Every other copy of the token block is generated.** `tools/sync-tokens.py --write` writes it into
-the two previews between sentinels; `--check` verifies them **byte for byte** and CI runs it before
-the publish. Byte-for-byte rather than value-for-value because the block carries ~130 lines of
+the loading lab between sentinels; `--check` verifies it **byte for byte** and CI runs it on every
+push to `main`. Byte-for-byte rather than value-for-value because the block carries ~130 lines of
 measured reasoning — every contrast ratio, the withdrawn `--mark-1` hue — and a value diff passes
 while all of it drifts. `app/index.html` is not a target: it links `styles/tokens.css` from the
 directory next to it.
@@ -176,7 +204,7 @@ one of them encodes a rule that reads as an implementation detail and is not:
 | `focus` | `preventScroll` is the fix for the record jumping. `isConnected` before restoring — a row re-rendered by a re-rank is the ordinary case |
 | `esc-stack` | Escape closes the most recent. One overlay left; the stack is what makes a second one safe |
 | `live-region` | Clears and re-sets after 60ms so an **identical** second failure announces. Unhides **before** writing |
-| `roving` | One tab stop per group; the stop moves with focus so leaving and returning lands where the founder was |
+| `roving` | One tab stop per group; the stop moves with focus so leaving and returning lands where the founder was. **Two exports**: `roving` binds to one container, `rovingIn` is delegated at an ancestor for N groups that come and go — the result list rebuilds twenty drawing strips on every sort, filter, re-rank and page, and an instance per row is twenty teardowns a render with nothing watching that they happen |
 | `delegate` | `closest`, not `matches` — the founder clicks the label inside the button |
 | `popover` | One floating panel, one trigger, four things every one of them must get right. It exists because there were two private copies and a third would have been the one that drifted |
 | `starred` | The set holds **rows, not ids**: an id is enough to re-order a list and not enough to render a collection or write a CSV, and the client holds one page at a time |
@@ -241,13 +269,20 @@ parse-time element captures: every surface module exports `init(ctx)` and reads 
 dereferences null the first time a partial is slower than an import, and that failure is
 intermittent by construction.
 
-**Neither the record nor the figure viewer is a host of its own.** Both are positioned
-against `.panecol` and both ship inside `surface.html`. The record IS the right column
-now — the ~200px peek went with the twelve widget cards there was something to peek at —
-and the viewer sits over it, `position:absolute` inside the same positioned parent.
-Hoisted to a sibling host either would position against the viewport instead, and the
-viewer would become the full-screen lightbox three separate rules say this product does
-not have.
+**The record is a child of `.panecol` and the figure viewer is not a child of anything
+here.** Both still ship inside `surface.html`, which is the surface they belong to, but
+they resolve differently. The record is in flow and IS the right column while it is open.
+
+**The viewer is moved to `<body>` at init, and that is load-bearing rather than tidy.**
+It became a lightbox — `position:fixed`, a scrim, the page behind it `inert` — and
+`inert` works downward: authored four levels inside `#app`, inerting the page would inert
+the viewer with it, and inerting everything-but would be a hand-kept list of regions that
+goes stale the first time the surface gains one. Nothing about its rendering depends on
+where it lives, because its containing block is the viewport either way.
+
+**Three rules used to say this product had no lightbox** — no scrim, no `position:fixed`,
+no focus trap — and all three are now narrowed to exactly this one node. `design-language.md`
+§3.2 carries the successor and `figure-viewer.mjs`'s header carries why the premise changed.
 
 **Nine surfaces**, one per region rather than one per file that happened to get large:
 `masthead`, `settings`, `home`, `work`, `list`, `fishbone`, `record`, `starred`, `destinations`.
@@ -287,7 +322,8 @@ An inventory, so that a fifth has to argue for itself.
 ## What is deliberately absent
 
 No build step. No framework. No preprocessor. No bundler. No `--dark-*` primitive layer — a third
-indirection buys nothing and hides which value is live. No scrim token and no scrim. No `@layer`.
+indirection buys nothing and hides which value is live. **One** scrim token with **one** reader,
+the enlarged drawing, and nothing else in the product dims anything. No `@layer`.
 No `og:image`, and no link-preview meta at all, because this tree is never published.
 
 ---

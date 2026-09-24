@@ -1,10 +1,10 @@
-/* 35 · the record — platform.md §6.6
+/* 35 · the record — platform.md §4.5
  *
  * EXTRACTED from the prototype. Eleven identifiers, the abstract and the claim
  * set as published. The claim grid, the tabular numeral and the end-aligned
  * number belong to the claim, not to its content. */
 
-/* ── the record, over the right pane · platform.md §6.6 ────────────────────────────
+/* ── the record, over the right pane · platform.md §4.5 ────────────────────────────
    THE ~200px PEEK IS THE SPEC, not a margin. It is what keeps the record
    legible as "this came from there" rather than as "this replaced that",
    and it is platform.md §11's own mitigation for the cost of a record over a map
@@ -37,7 +37,7 @@
    pane's own rhythm, the same step .panescroll pads by and .grid gaps by, so
    the record's top and trailing edges line up with the widgets underneath. The
    LEADING edge stays at 200px because that is the peek, and the peek is the
-   spec (platform.md §6.6) rather than a margin. */
+   spec (platform.md §4.5) rather than a margin. */
 /* ══ THE RECORD IS THE COLUMN, NOT A PANEL OVER IT ═══════════════════════
    It was position:absolute, inset 16px, left:200px, sliding in from the
    trailing edge and stopping short so a ~200px strip of what was behind stayed
@@ -47,7 +47,14 @@
    The pane holds one thing now. There is nothing to peek at, and a panel
    sliding over an empty column is motion that reports nothing — §6 refuses
    motion that carries no information. So it sits in flow and fills the column,
-   and the grouping steps aside while it is open.
+   and the idle sentence steps aside while it is open.
+
+   AND IT IS THE RIGHT COLUMN, since 2026-09-24. It spent two weeks in the
+   left one, standing in the list's place: the founder could read a record or
+   see the set, never both. Reading one patent against the set it came from is
+   one act, so the two sit side by side — the same argument that put the
+   drawing beside the record, applied one level up. What it costs is width,
+   which is why this column is the wider of the two (21-surface.css).
 
    IT IS NO LONGER role="dialog" EITHER. A dialog is a thing you are inside and
    must leave; this is one of two things a column shows, reached by clicking a
@@ -57,77 +64,135 @@
      background:var(--surface);border:1px solid var(--border);
      border-radius:var(--r-shell);overflow:hidden}
 .rec[hidden]{display:none}
-/* the grouping yields the column rather than sitting under a cover */
-/* THE RECORD HIDES THE LIST, NOT THE GROUPING. It is a sibling of
-   .listcol-scroll now and takes the column while it is open; the right column
-   goes on showing the grouping until a drawing is enlarged over it.
+/* ══ THE RECORD HIDES NOTHING THE FOUNDER WAS USING ═══════════════════════
+   It hid the LIST until 2026-09-24 — it was a sibling of .listcol-scroll and
+   took the left column, so opening a patent cost the founder the set they
+   were working through. It is a child of .panecol now and the only thing it
+   displaces is the sentence asking them to pick a patent, which has just been
+   answered.
 
-   THE LIST IS WHAT THIS COSTS, and the record pays it back in its own head:
-   platform.md §4.5 puts previous/next patent there, because without them
-   moving through a set is close, find your place, open — once per patent. */
-.rec-open .listcol-scroll{display:none}
-/* THE RIGHT COLUMN KEEPS ITS IDLE STATE while a record is open — it just says
-   something else. It used to be hidden, which was right when the record WAS
-   this column; now the record is opposite and hiding it leaves a blank half
-   screen that reads as a region which failed to load. */
-.pane-idle [data-idle="rec"]{display:none}
-.rec-open .pane-idle [data-idle="set"]{display:none}
-.rec-open .pane-idle [data-idle="rec"]{display:block}
-/* Nothing hides it when a drawing opens, and nothing needs to: .figview is
-   absolute inset:0 at z-index 40 inside .panecol, so it covers this. */
-/* ~~SWAPPED BEHIND A FADE~~ — the fade is gone, 2026-09-14{opacity:0;filter:blur(2px)}` styled a 120ms
-   crossfade for the founder picking a second patent without closing the first.
-   That duration was right for text trading places and wrong for a record
-   arriving, so the body now waits on a loader instead (platform.md §5) and NOTHING ADDS
-   THE CLASS ANY MORE.
-
-   Deleted rather than left, because a rule nothing can match is a rule the
-   next reader has to disprove. The reasoning it carried is not lost — the
-   container still does not move, and that rule is in §6 where it belongs. */
+   THE IDLE SENTENCE GOES, RATHER THAN CHANGING WHAT IT SAYS. It had a second
+   state — "pick a drawing to see it here" — for when the drawing lived in
+   this column. The drawing is a lightbox over the viewport now (§4.5), so
+   there is no second column waiting to be filled and no sentence to write in
+   it. One idle state, and the record replaces it. */
+.rec-open .pane-idle{display:none}
 .rec-head{display:flex;align-items:center;gap:var(--s-12);flex:0 0 auto;
-          padding:var(--s-16) var(--s-20);border-bottom:1px solid var(--border)}
+          padding:var(--s-16) var(--s-20);border-bottom:1px solid var(--border);
+          container-type:inline-size;container-name:rec-head}
 .rec-head h2{flex:1;min-width:0;margin:0}
+
+/* ══ THE WAY OUT · design-language.md §9, §3.8 ════════════════════════════
+   A LABEL AND A GLYPH, and it is the only control in this head that carries
+   words. The three beside it — previous, next, close — are acts the founder
+   already knows the shape of; this one has a DESTINATION, and an arrow alone
+   would say "somewhere else" without saying where.
+
+   NO ACCENT. §3.8 gives the accent to the primary action of a surface, and
+   the primary action here is reading the record. This is a way out of it.
+   So it reads as a quiet control at rest and comes up on hover, the same as
+   every other control in this head.
+
+   IT IS AN <a>, so it gets the underline-free treatment explicitly: the
+   product has no other external link and no inherited anchor styling to
+   lean on. */
+.rec-out{display:inline-flex;align-items:center;gap:var(--s-6);flex:0 0 auto;
+         padding:var(--s-6) var(--s-8);border-radius:var(--r-control);
+         font-size:13px;font-weight:500;color:var(--text-2);
+         text-decoration:none;white-space:nowrap;
+         transition:background var(--dur-1) var(--ease),
+                    color var(--dur-1) var(--ease),
+                    transform var(--dur-1) var(--ease)}
+.rec-out svg{color:var(--text-3);flex:0 0 auto;
+             transition:color var(--dur-1) var(--ease)}
+.rec-out:active{transform:scale(.97)}
+@media (hover:hover){
+  .rec-out:hover{background:var(--surface-sunken);color:var(--text-1)}
+  .rec-out:hover svg{color:var(--text-2)}
+}
+/* ── below 520px of record · the label goes, the glyph stays ──────────────
+   Four controls and a heading in one row is the head's whole budget. The
+   label is the widest thing in it and the only part with a smaller form that
+   is still honest — an arrow-up-right out of a patent record means one thing.
+   THE NAME DOES NOT GO WITH IT. This is the sr-only technique rather than
+   display:none, so the words stay in the accessibility tree and the link goes
+   on announcing itself as "Open in IPtech" at every width. */
+@container rec-head (max-width:520px){
+  .rec-out>span{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+                overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+}
+/* NO TRANSITION ON THIS. It carried `opacity` and `filter` for a 120ms
+   crossfade when the founder picked a second patent without closing the
+   first — and nothing has set either property since the body started waiting
+   on a loader instead. A transition list naming properties no code writes is
+   a rule the next reader has to disprove before they can change anything
+   here. What it was protecting still holds and is stated where it belongs:
+   §6's "a container already in place does not move to say its contents
+   changed". */
 .rec-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
-          padding:var(--s-20);
-          transition:opacity var(--dur-1) var(--ease),filter var(--dur-1) var(--ease)}
+          padding:var(--s-20)}
 /* [hidden] has to be spelled out, the same as .card, .set-more and every other
    element in this file that carries it — the author display:flex above outranks
    the UA rule, so without this the attribute does nothing for layout AND the
    forced reflow in openRecordOverlay would have nothing to commit. */
 .rec[hidden]{display:none}
 /* ── below the floor · platform.md §4.5 ──────────────────────────────────
-   The columns stack at 1079 and the record is IN the upper one, so it needs
-   no rule of its own to fill the width — it already does. What it does need
-   is its height back: .listcol is capped at 46vh for a LIST, which the reader
-   scrolls a few rows of, and a record at 46vh shows about four fields.
+   The columns stack at 1079 and the record is in the LOWER one now, under a
+   list capped at 46vh. That cap is what makes stacking work — a list the
+   reader scrolls a few rows of, with the record they opened beneath it — so
+   it stays, and the record takes the rest of the height rather than borrowing
+   from the list the way it used to.
 
-   So the cap lifts while the record is open. The drawing column below keeps
-   its own height, which is the arrangement stacking is supposed to produce. */
+   ITS OWN CAP COMES OFF, because a .rec inside a flexing column with nothing
+   below it needs no ceiling. */
 @media (max-width:1079px){
-  .rec-open .listcol{max-height:none}
+  .rec-open .panecol{min-height:60vh}
+}
+
+/* ── the field list, below 600px · design-language.md §7 ─────────────────
+   `auto 1fr` puts the label and the value on one line, which is what makes
+   eleven identifiers scannable — the values share a leading edge and the eye
+   runs down it. Under about 600px the longest values wrap onto second lines
+   under their own labels and that edge stops existing, so the grid stops
+   earning its keep and starts costing a column of whitespace.
+
+   THE BREAK IS ON THE COLUMN, NOT THE VIEWPORT. The record is 56% of the
+   split above 1079 and the whole width below it, so a viewport media query
+   would fire at the wrong moment in both directions. A container query asks
+   the only question that matters: is this column wide enough to hold two
+   columns of its own. */
+.rec-body{container-type:inline-size;container-name:rec}
+@container rec (max-width:600px){
+  .hf{grid-template-columns:1fr;gap:var(--s-4) 0}
+  .hf dt{margin-block-start:var(--s-8)}
+  .hf dt:first-of-type{margin-block-start:0}
 }
 
 /* the engine's relevance score · brief.md §4, platform.md §11 conflict 1.
    LAST IN THE ROW AND IN --text-3, which is the whole of the design decision:
    Innovue's surface puts it top-right where it is the most prominent thing
    after the title, and here it is the quietest thing on the row. An ordering
-   the founder did not ask for should not outrank the four fields §7 caps the
-   row at. tabular, so a column of them does not jitter. */
+   the founder did not ask for should not outrank the bands §7 specifies the
+   row as carrying. tabular, so a column of them does not jitter. */
 /* TOP RIGHT OF THE TITLE since 2026-09-10, and it used to be last in the row.
    The old placement was argued from Terrain not endorsing an ordering the
    founder did not ask for. What changed is that brief.md §4 removed the
    prohibition on printing it at all, so it is Innovue's number rendered as
    Innovue renders it — and burying a figure we have decided to print is a
    half-measure that reads as neither. It stays --text-3 and it still carries
-   NO WORD beside it (platform.md §6.6): the number is a fact about the ranking, an
+   NO WORD beside it (platform.md §4.5): the number is a fact about the ranking, an
    adjective would be ours. */
 .drill-head{display:flex;align-items:flex-start;gap:var(--s-16)}
 .drill-title{flex:1;min-width:0}
 /* the one populated row's title. Body scale rather than the 15px .t-title,
    because a list row is scanned and not read — and --text-1 at 500 is what
    the two 12px bars it replaces were standing in for. */
-.drill-name{display:block;font-size:13.5px;line-height:1.45;font-weight:500;
-  color:var(--text-1)}
+/* SIZE, LINE-HEIGHT AND WEIGHT MOVED TO .t-title-s ON THE MARKUP. They were
+   13.5/1.45/500 here — a size that appears nowhere in §4's table, invented in
+   the gap between `label` and `title` that four components had each answered
+   differently. What is left is what belongs to this component rather than to
+   the role. */
+.drill-name{display:block;color:var(--text-1)}
 /* LABELLED, AND STACKED — 2026-09-10. It was a bare four-decimal figure with
    its only explanation in a title= attribute, which is a tooltip nobody
    opens. The label is the micro-above-the-value idiom this file already uses
@@ -136,22 +201,19 @@
    own first line and compete with it.
 
    "Score" NAMES WHAT THE NUMBER IS. It is not a word about quality, so
-   platform.md §6.6's rule is untouched — that rule forbids "strong match", "best fit"
+   platform.md §4.5's rule is untouched — that rule forbids "strong match", "best fit"
    and "most relevant", which are readings Terrain would be authoring. The
    heading's info popover carries what the score MEANS. */
 .drill-score{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;
   gap:1px;color:var(--text-3);padding-top:1px}
 .drill-score-k{color:var(--text-3)}
-/* the holder on the demonstration row. It reads at the SAME WEIGHT AS THE
-   YEAR beside it — --text-1 at 12.5px — because it is a field of the row and
-   not a note about one, and a muted slot made the one populated row look
-   like it had a gap in it.
+/* .drill-holder WENT WITH THE FLEX META ROW, 2026-09-24. The holder is a cell
+   of the row's meta grid now and takes .dm-v's type and truncation with every
+   other value in it — 34-list.css carries both. A rule for a class nothing
+   emits is worse than no rule, because the next reader takes it for the
+   holder's real treatment. */
 
-   URBANIST, NOT INCONSOLATA. It matches the year's size and colour, not its
-   typeface: .fig is for numerals and a company name is text. */
-.drill-holder{font-size:12.5px;line-height:1.4;color:var(--text-1)}
-
-/* ── the field list · platform.md §6.6 ─────────────────────
+/* ── the field list · platform.md §4.5 ─────────────────────
    THIS WAS THE HANDOFF, and it was a row-level disclosure: the row expanded
    downward onto five identifiers and stopped, because a detail page was
    deferred. The pane below supersedes it -- the same five fields are five of
@@ -161,8 +223,9 @@
 
    IT IS STILL A <dl>, because that is what it is.                        */
 .drill-toggle{display:block;width:100%;text-align:left;padding:0}
-.drill-chev{color:var(--text-3);display:flex;flex:0 0 auto;
-      margin-inline-start:auto;transition:transform var(--dur-1) var(--ease)}
+/* .drill-chev WENT WITH IT. It sat at the trailing edge of the meta row
+   pointing at the row's own button — an affordance describing the thing it
+   was inside. Nothing replaced it: the row is a button and reads as one. */
 .hf{margin:0;padding:var(--s-12) var(--s-14);background:var(--surface-sunken);
       border-radius:var(--r-inner);display:grid;grid-template-columns:auto 1fr;
       gap:var(--s-10) var(--s-14);align-items:center}
@@ -170,10 +233,10 @@
 .hf dd{margin:0;min-width:0;display:flex;flex-wrap:wrap;align-items:center;
       gap:var(--s-6) var(--s-8)}
 
-/* ── the patent record · platform.md §6.6 ─────────────────
+/* ── the patent record · platform.md §4.5 ─────────────────
    THE PANE, built 2026-09-09. platform.md §12's patent-detail-page entry was un-deferred on
-   the session's explicit ask, and §6.6 closed with it -- in favour of the
-   counter-case platform.md §6.6 ITSELF recorded rather than against it: "a founder who
+   the session's explicit ask, and §4.5 closed with it -- in favour of the
+   counter-case platform.md §4.5 ITSELF recorded rather than against it: "a founder who
    cannot see anything about a patent that worries them may go looking in Google
    Patents, which is a worse experience Terrain does not control." That section
    was marked Open. This is the decision it was waiting for.
@@ -223,6 +286,12 @@
 .pn-head{display:flex;align-items:flex-start;gap:var(--s-12);
   padding-bottom:var(--s-14);border-bottom:1px solid var(--border)}
 .pn-head-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-10)}
+/* THE IDENTIFIER LINE SITS TIGHT TO THE TITLE IT NAMES. --s-6 against the
+   block's own --s-10, which is the ratio §5 asks for one level down: a number
+   and the title under it are one thing, and the status below is the next. */
+.pn-no-line{display:flex;align-items:center;gap:var(--s-8);
+            margin-block-end:calc(var(--s-6) - var(--s-10))}
+.pn-no{color:var(--text-2)}
 .pn-name{display:flex;flex-direction:column;gap:var(--s-6)}
 /* THE DEMONSTRATION PATENT'S REAL TITLE, 2026-09-11. It sits where the two
    title-height bars sit and matches their weight, but ONE STEP DOWN from the
@@ -230,8 +299,18 @@
    patent's own title is its subject, so equal size would make the head read as
    two competing headings. 15px is the bars' own height, so the populated pane
    and an unpopulated one are the same shape. */
-.pn-name-real{font-size:15px;line-height:1.4;font-weight:500;color:var(--text-1);
-  text-wrap:pretty}
+/* THE RECORD'S TITLE IS ONE STEP ABOVE THE ROW'S, and the step is the point —
+   §7's own thumbnail argument applied to type. The row's job is WHICH OF
+   THESE, so it takes `title-s`; the record's is THIS ONE, so it takes `title`.
+   Both were inventions before this, and the row was the smaller invention of
+   a pair nobody had put side by side.
+
+   sk-h-title MOVED TO 17 WITH IT. The note that stood here said 15px is the
+   bars' own height, so a populated pane and an empty one are the same shape —
+   true, and it stays true only if the bar moves when the text does. A skeleton
+   that is the wrong height for its content is the same class of defect as a
+   measure nothing declares. */
+.pn-name-real{color:var(--text-1);text-wrap:pretty}
 .pn-meta{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap}
 /* the patent number is a FIGURE and takes Inconsolata like every other one
    — it is the one field on this row a founder retypes or pastes, and a
@@ -244,8 +323,10 @@
 /* REAL TEXT WHERE THE BARS WERE. 1.6 is the bars' own rhythm, so a
    populated record and a skeleton one run at the same lines-per-inch and
    read as one component in two states rather than as two components. */
-.pn-prose{margin:0;font-size:12.5px;line-height:1.6;color:var(--text-1);
-  text-wrap:pretty}
+/* 12.5/1.6 WAS ANOTHER OFF-SCALE INVENTION. It takes `body` on the markup —
+   14/1.55 — which is the role §4 names for prose and the size the abstract and
+   the claims should always have been read at. */
+.pn-prose{margin:0;color:var(--text-1);text-wrap:pretty}
 /* the claims. An <ol> because that is what a claim set is -- numbered, and the
    numbers are cited by number. They carry their own figures rather than a
    list-style marker so the numerals are Inconsolata and tabular like every
@@ -280,7 +361,14 @@
 
 /* the abstract's measure was uncapped: w-full bars in a ~820px card put real
    abstract text near 130 characters a line against §4's 68ch. */
-.pn-sec:first-of-type .pn-lines{max-width:68ch}
+/* THE MEASURE IS THE PROSE'S, NOT A POSITION'S. This was scoped to
+   `.pn-sec:first-of-type` and stopped matching the moment the drawings moved
+   above the abstract — the selector described where the abstract HAPPENED TO
+   BE rather than what it is, and it reported nothing when that stopped being
+   true. The abstract has been running uncapped ever since, which is exactly
+   the failure §4 warns about. The bars take it too, so the skeleton and the
+   text are the same shape. */
+.pn-prose,.pn-lines{max-width:68ch}
 
 /* ── THE SCORE IS INLINE AGAIN, AND THE RULE IS NARROWER · 2026-09-12 ────
    This stacked it — `flex-direction:column` — on the grounds that §7 says a

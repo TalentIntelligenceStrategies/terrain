@@ -9,9 +9,9 @@
    Read the two together; neither is complete alone.
    ═══════════════════════════════════════════════════════════════════════ */
 
-/* ── the dot loaders · platform.md §5 ───────────────────────────────
+/* ── the dot loaders · design-language.md §8 ───────────────────────────────
    A LOADER MEANS WORK IS HAPPENING; A BAR MEANS A VALUE IS WITHHELD. That is
-   §5 as amended 2026-09-14, and it is the whole reason these exist. `.sk`
+   the skeleton contract, and it is the whole reason these exist. `.sk`
    already meant something — §8's refusal to invent a holder's name — and it
    meant it PERMANENTLY, on a resting screen and in every screenshot. A region
    that was working and a region that had arrived were rendering the same
@@ -81,28 +81,17 @@
    whole may keep its own cycle — and to say what it costs: a card can hold a
    1.6s bar and an 887ms loader at once. If a surface ever reads as busy
    rather than as working, this is the first thing to look at. ── */
-.dmx-root{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;
-  --dmx-cycle:1500ms;
-  --dmx-opacity-base:0.16;--dmx-opacity-mid:0.32;--dmx-opacity-peak:1}
-.dmx-root.dmx-matrix-3{--dmx-cycle:1500ms}
-.dmx-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
-  grid-template-rows:repeat(5,minmax(0,1fr))}
-.dmx-dot{border-radius:999px;display:block;background:currentColor;
-  opacity:calc(0.5 * (var(--dmx-opacity-base) + var(--dmx-opacity-mid)));
-  will-change:opacity}
-.dmx-path-3{
-  animation:dmx-ripple-3 calc(0.68 * var(--dmx-cycle) * var(--dmx-speed,1))
-            cubic-bezier(0.42,0,0.58,1) infinite;
-  animation-delay:calc(var(--dmx-path,0) * 0.19 * var(--dmx-cycle) * var(--dmx-speed,1))}
-@keyframes dmx-ripple-3{
-  0%,100%{opacity:var(--dmx-opacity-base)}
-  3%     {opacity:calc(0.62 * var(--dmx-opacity-mid) + 0.38 * var(--dmx-opacity-base))}
-  6%     {opacity:calc(0.35 * var(--dmx-opacity-peak) + 0.65 * var(--dmx-opacity-mid))}
-  10%    {opacity:var(--dmx-opacity-peak)}
-  14%    {opacity:calc(0.35 * var(--dmx-opacity-peak) + 0.65 * var(--dmx-opacity-mid))}
-  17%    {opacity:calc(0.62 * var(--dmx-opacity-mid) + 0.38 * var(--dmx-opacity-base))}
-  20%    {opacity:var(--dmx-opacity-base)}
-}
+/* ══ THE RULES THEMSELVES ARE IN 04-loader.css, AND WERE IN BOTH ═════════
+   This file carried a byte-for-byte second copy of all five — the two files
+   were written a week apart and the second author reproduced the block rather
+   than checking whether it already cascaded. 05 loads after 04, so the copy
+   here was the live one and 04's was dead: editing the file NAMED for the
+   loader would have changed nothing, which is the kind of failure that costs
+   an afternoon.
+
+   The reasoning above is kept here because it is about this file's subject —
+   what a waiting region is permitted to do — rather than about the
+   indicator's geometry. 04 carries the licence note and the rules. */
 
 /* A WAITING REGION. min-height is set inline from the height the region had
    before it emptied, so a card does not collapse to the loader's 20px and the
@@ -179,12 +168,39 @@
    it on screen underneath the loader. */
 #setMore[data-waiting]>*:not(.btn-wait),
 .btn[data-waiting]>*:not(.btn-wait){display:none}
-/* THE FILL STAYS ON .btn, and #setMore's rule below strips its own. Not an
-   inconsistency: #setMore's chrome is a HOVER pill painted because the pointer
-   is still over it, and a filled pill around an indicator reads as a control
-   you could press again. #helpSend's fill is the control's resting identity --
-   it is the primary action of a form -- and stripping it would leave a hole in
-   the row where the button was. What both do is stop being pressable. */
+/* ══ THE FILL COMES OFF EVERY WAITING BUTTON ═════════════════════════════
+   IT USED TO STAY ON .btn, and the argument was that a primary action's fill
+   is its resting identity so stripping it would leave a hole in the row. That
+   argument was made in light theme, where --accent is near-black and a dark
+   pill around a pale indicator reads as a button thinking.
+
+   IN DARK THEME --accent IS #F0F0F0. The same rule draws a near-white 48×36
+   box around a 20px grey mark, which is precisely the failure this file
+   already refuses forty lines up for the list card: "the border stops
+   describing a group and starts drawing a box around a dot". A rule that is
+   right in one theme and wrong in the other is not a rule about buttons, it
+   is a rule about one palette.
+
+   SO THE FENCE NARROWS RATHER THAN MOVING. What survives from the old note is
+   its real content — the row may not lose its shape — and that is now bought
+   with a WIDTH RESERVE instead of a fill. btnWait(btn, true) measures the
+   label before it goes, so the button holds its footprint, nothing beside it
+   slides, and what the founder sees inside that footprint is an indicator on
+   the bar rather than a plate.
+
+   THE INK HAS TO BE RESTATED. The loader is currentColor, and a primary
+   button's colour is --accent-ink: near-white in light, near-black in dark,
+   both of them chosen to sit on a fill that is no longer there. --text-2 is
+   the ink of a control that is not asking to be pressed, which for the length
+   of a wait is exactly what this is. */
+/* ***AND THE DECLARATION IS IN 10-button.css, NOT HERE.*** This file is 05
+   and .btn-primary is 10, so `.btn[data-waiting]{background:none}` written
+   here loses to `.btn-primary{background:var(--accent)}` on source order at
+   equal specificity — it shipped once and did nothing, and the render is what
+   caught it. The number IS the cascade in this tree, so the fix is the file
+   rather than a specificity bump: a button's paint is a button-sheet concern
+   and the override lives beside the rule it overrides. What stays here is
+   everything that is about WAITING rather than about paint. */
 .btn[data-waiting]{cursor:default}
 /* NO WIDTH OF ITS OWN. It had min-width:88px, reserving the label's width so
    the bar would not resize -- but the button sits at the end of a flex row
@@ -199,9 +215,17 @@
    filled pill around an indicator reads as a button you could press again,
    which is the one thing it is not for the length of the wait. The chrome
    goes, the loader stays, and the hit target is unchanged underneath. */
-#setMore[data-waiting]{background:none;padding:0;margin-inline-end:0;cursor:default}
+#setMore[data-waiting]{background:none;padding:0;margin-inline-end:0;cursor:default;
+/* AND THE DOTS GET THE DARKER INK. The button rests at --text-2, which is the
+   right weight for a label and the wrong one for nine 6px dots whose ripple
+   spends most of its cycle at .16 opacity -- on #1A1A1A that is a smudge you
+   have to look for to find. --text-1 puts the peak of the beat where the
+   label used to be. The same value the .btn rule above lands on from the
+   other direction, for the same reason: the ink now has to carry the
+   indicator rather than sit behind it. */
+                       color:var(--text-1)}
 
-/* ── the failed region · design-language.md §7, platform.md §9 ─────────────
+/* ── the failed region · design-language.md §7, platform.md §7 ─────────────
    THE SAME REGION, THE OTHER ENDING. `.is-fail` replaces `.is-wait` on the
    host and inherits its whole geometry -- including the inline min-height,
    which failIn() deliberately does NOT clear. A wait that collapsed into a

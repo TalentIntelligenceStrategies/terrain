@@ -83,9 +83,11 @@ brand/logos/innovue/ a third party's marks, and the theme-aware attribution rend
 brand/fonts/         7 self-hosted woff2 + fonts.css + the two OFL licences
 
     LOCAL ONLY — in the working tree, excluded by .gitignore, never pushed:
-corpus/              THE STRESS-TEST SET. Real patents captured from Google Patents,
-                     reached by ?data=real. It prints real holder names, which is why
-                     the whole directory is excluded — see brief.md §4.
+corpus/              THE STRESS-TEST SET, and what app/ loads by default when it is
+                     here. Real patents captured from Google Patents; ?data=demo is
+                     the flag that forces the fake engine instead. It prints real
+                     holder names, which is why the whole directory is excluded —
+                     see brief.md §4.
 visual-reference/
   pi-vuepat/         the USERFLOW REFERENCE — Innovue's own search product, inventoried
   iptech-semantic-search/  the only evidence on two questions PI-VuePat does not close
@@ -164,7 +166,7 @@ three by a script that refuses:
 - A **download** is no longer the line between software and a report. The line is **what the file is
   permitted to say**, and `brief.md` §1 carries the test: does it state anything the interface did
   not. The founder's starred set leaves as a CSV; a cover page, a summary or a conclusion does not.
-- `platform.md` §12 is an **ordered list of what is not next**, each with what would start it — not a
+- `platform.md` §10 is an **ordered list of what is not next**, each with what would start it — not a
   fence, and not a backlog either.
 - The semantic token count is no longer *the one place that number lives* — it appeared in three —
   it is **one argued place and a gate that refuses any copy disagreeing with `tokens.css`**.
@@ -192,12 +194,15 @@ applying it is a separate, visible pass.
 **Innovue's blue may only ever appear inside the Innovue mark itself.** In a border, a chip or a
 button, it has been misread.
 
-**And the rule describes two palettes.** Dark is a swap of **31 semantic tokens** — `design-language.md`
+**And the rule describes two palettes.** Dark is a swap of **32 semantic tokens** — `design-language.md`
 §10.1 is where that number is argued, and `tools/check-app.py` is what keeps every printed copy of it
 honest — with **two named component exceptions and no others**, the two `.foot-mark-*` selectors on
-the attribution line. **One semantic token does not swap and says so in its own row**: `--figure-ground`
-is the paper a patent drawing was published on, and black line-work composited onto `#1A1A1A` is a
-blank rectangle. **No component may read a primitive (`--n-*`) or
+the attribution line. **Two semantic tokens do not swap and each says so in its own row**, and both are facts about the
+content rather than exemptions: `--figure-ground` is the paper a patent drawing was published on —
+black line-work composited onto `#1A1A1A` is a blank rectangle — and `--veil` is the ground under a
+control bar floating on that paper, so it composites over the drawing rather than over the app.
+*`--scrim` is the one that looks like it belongs with them and does not: it dims the app, which does
+swap, so it swaps.* **No component may read a primitive (`--n-*`) or
 a raw hex**; eleven violations had to be fixed before the pass could work. A component that reads a
 primitive is a component that silently stays light, and `tools/check-app.py` is what refuses one now.
 
@@ -228,7 +233,9 @@ while all of it drifts.
 the reference rule and it is narrow on purpose: two sources of truth is the silent-drift failure this
 repository keeps relearning, and a generated region has exactly one. A page **may** declare its own tokens *below* the
 closing sentinel; **no page currently does**, and the loading lab's `--scrim` — the only candidate —
-went instead, because nothing read it and `design-language.md` §3.2 says there is no scrim.
+went instead, because nothing read it. *There is a `--scrim` in `tokens.css` now, and it is not that
+one coming back: it is authored in the one file that authors tokens, it has exactly one reader, and
+`design-language.md` §3.2 names it.*
 
 **`app/index.html` is not a target and links `app/styles/tokens.css` instead.** The rule exists so a
 page opened from a download works with nothing beside it; `app/` cannot do that under any
@@ -290,7 +297,7 @@ and writing it down stops the next person looking.
 Four things follow:
 
 - **Every figure in `demo/` and in `docs/` is illustrative.** No number is a real filing count, and
-  `platform.md` §13 carries the one invariant that survived the analysis layer. Nothing checks it.
+  `platform.md` §11 carries the one invariant that survived the analysis layer. Nothing checks it.
 - **Never name a real holder as data in `demo/`.** Holder names render as skeleton bars there by
   decision. Inventing one reads as a live example; transliterating a real one is fabrication. Both
   are worse than a bar.
@@ -299,8 +306,9 @@ Four things follow:
   it is real captured data and its whole job is to strain renderers that were written against
   well-behaved shapes. It is excluded from git in its entirety, which is what makes that affordable:
   no real assignee or inventor name enters a tracked file. **The cost is stated rather than hidden** —
-  export is only demonstrable under `?data=real`, because a spreadsheet of skeleton bars shows
-  nothing, and `app/README.md` says so where somebody receiving the handoff will read it.
+  the export and the drawings are only demonstrable against it, because a spreadsheet of skeleton
+  bars shows nothing and `demo/` ships no patent figure at all, and `app/README.md` says so where
+  somebody receiving the handoff will read it.
 - **A worked example is written from scratch, never derived from a client's.** The temptation is real,
   because a set modelled on one that exists has a plausible distribution for free — and that is
   exactly what makes the labels travel with it. **Pick a domain nobody has hired us about.**

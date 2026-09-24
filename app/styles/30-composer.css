@@ -11,10 +11,10 @@
    what they lay out even though the surface stopped being a conversation. */
 
 
-/* ── the conversation surface · moments 1-3 ────────────────
-   One column. Empty state centres the question and the composer; once there
-   is a thread the composer pins to the bottom and the thread scrolls past it.
-   platform.md §2: chat is not a place, it is the means.                    */
+/* ── the home surface · moment 1 ────────────────
+   One column, centring the question and the composer. The thread this was
+   built for is gone with the conversation: platform.md §3 is one composer and
+   one button, and the search runs on submit.                    */
 .conv{min-height:100%;display:flex;flex-direction:column;padding:var(--s-24) var(--s-24) 0;
       background:var(--ground)}
 .conv-body{flex:1;display:flex;flex-direction:column;justify-content:center}
@@ -91,7 +91,9 @@
 /* .said carries a display above, which outranks [hidden] on its own */
 .said[hidden]{display:none}
 
-/* what the gate was told to leave out, shown on the result it shaped (platform.md §3.2) */
+/* RETIRED WITH THE GATE, and the rule is kept only while #setExcl is still in
+   the markup. It showed what the narrowing was told to leave out; there is no
+   narrowing, so nothing sets it and it never renders. */
 .set-excl{margin:calc(var(--s-12) * -1) 0 var(--s-16);font-size:13px;line-height:1.6;
   color:var(--text-2)}
 .set-excl[hidden]{display:none}

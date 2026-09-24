@@ -1,6 +1,7 @@
 <!-- EXTRACTED from design/previews/terrain-prototype.html lines 4696-4964.
-     The prototype is the reference; where this and it disagree, it is
-     right and this is stale. platform.md 8.2. -->
+     PROVENANCE ONLY — the prototype is FROZEN v1 and is not the reference.
+     `app/` is what was decided; where this and the prototype disagree, this
+     is right and that file answers about a product that was replaced. platform.md 8.2. -->
   <section class="view view-page view-acct" data-view="account" aria-label="Your account">
     <main class="main">
       <header class="page-head">
@@ -114,7 +115,7 @@
         </section>
 
         <!-- THE MASTHEAD CONTROL IS UNTOUCHED AND THIS IS ADDITIVE.
-             platform.md §6.1 and design-language.md §10.4 both forbid
+             platform.md §4.1 and design-language.md §10.4 both forbid
              DEMOTING the appearance control into the account menu, and say
              a pass proposing it reverses a recorded decision. This does not
              propose it: the three-state control is still on the bar, at
@@ -168,7 +169,7 @@
              THE RULING IT WAS BUILT TO ILLUSTRATE OUTLIVED THE CARD, AND
              IT NOW OUTLIVES ITS SECTION TOO — the alert-versus-notification
              test is not in the rewritten PRD, which carries filing alerts
-             only as platform.md §12 item 1. What it forbids still holds and
+             only as platform.md §10 item 1. What it forbids still holds and
              is worth restating rather than citing: 專利預警 is a product
              someone subscribes to, and it may not arrive through a settings
              page as a switch nobody chose.                                  -->
@@ -229,7 +230,7 @@
         </section>
 
       </div>
-      <!-- §10: one sentence for the surface, not one per control. The two
+      <!-- platform.md §8: one sentence for the surface, not one per control. The two
            controls it names carry aria-describedby pointing here, so a
            keyboard user meets the reason ON the control rather than having
            to find this line. -->
@@ -240,8 +241,8 @@
 
   <!-- ══ PLAN & BILLING ════════════════════════════════════════════════════
        AND THE DIVISION OF LABOUR WAS WRITTEN BEFORE THIS SCREEN EXISTED.
-       platform.md §8.1: "A Plan & billing row exists in the profile menu
-       and is still undesigned (platform.md §14 keeps pricing open); this page is NOT
+       platform.md §6.1: "A Plan & billing row exists in the profile menu
+       and is still undesigned (platform.md §12 keeps pricing open); this page is NOT
        that screen. It answers WHAT DID I SPEND and never WHAT DO I PAY."
 
        So this one answers what you pay and never what you spent. There is
@@ -249,7 +250,7 @@
        one reference to spend is a sentence with a link at the end of it,
        pointing at the page whose subject that is.
 
-       PRICING IS STILL OPEN AT platform.md §14 AND THE SCREEN SAYS SO RATHER THAN
+       PRICING IS STILL OPEN AT platform.md §12 AND THE SCREEN SAYS SO RATHER THAN
        GUESSING. The allowance is the points page's own figure, illustrative
        like every figure here. THE PRICE IS `XXX` — not a number, and not a
        skeleton bar either. A bar means "a real value, not ours to print";
@@ -265,7 +266,7 @@
        has decided into a public artifact, where it would read as settled.
        The account menu's own plan line is already a bar; this matches it.
 
-       THE PLAN SHAPE IS IN ONE PLACE. platform.md §8.1 and §8.3 split what each screen may say about the allowance and the ring
+       THE PLAN SHAPE IS IN ONE PLACE. platform.md §6.1 and §6.3 split what each screen may say about the allowance and the ring
        "are in one place on purpose", and a second surface asserting an
        allowance breaks that property unless it reads the same constant. It
        does: PLAN, PLAN_PRICE and PLAN_PERIOD sit together in one block and

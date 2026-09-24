@@ -75,7 +75,7 @@ const FAIL_ICON =
 /**
  * The failure block.
  *
- * `act` IS OPTIONAL BY RULE, not by convenience. platform.md §9 requires the
+ * `act` IS OPTIONAL BY RULE, not by convenience. platform.md §7 requires the
  * surface to offer `try again` ONLY where trying again could work: a block
  * with no way forward says so by HAVING NO BUTTON, rather than by having a
  * dead one. This is where the engine contract and the interface meet -- a port
@@ -112,7 +112,7 @@ export function failHTML(say, act) {
  * `retry` IS THE WHOLE SWITCH, and it comes straight from the port's
  * `retryable`. Pass a function and the block offers `Try again` and calls it;
  * pass nothing and the block says there is no way forward BY HAVING NO BUTTON,
- * which is platform.md §9's rule rather than this function's convenience.
+ * which is platform.md §7's rule rather than this function's convenience.
  *
  * `{ once: true }` because a retry that is pressed twice while the first is in
  * flight is two requests for one intention — and the block is replaced by the

@@ -9,7 +9,8 @@
  *
  * WHAT A WAIT LOOKS LIKE IS A LOADER, NOT A SKELETON. A bar is the refusal to
  * invent a value and is permanent; a loader is work in flight and goes when
- * the work does. platform.md §5.
+ * the work does. design-language.md §8 is the skeleton contract that draws
+ * that line.
  *
  * THERE WERE TWO FOR A DAY AND THAT WAS THE WRONG CALL. The first split was on
  * MEANING -- a travelling trail for "being built", a quiet pulse for "being

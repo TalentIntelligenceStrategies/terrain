@@ -1,9 +1,9 @@
-/* surfaces/masthead — the 48px bar. platform.md §6.1.
+/* surfaces/masthead — the 48px bar. platform.md §4.1.
  *
  * The brand, the project switcher, the points meter, the profile menu. It sits
  * OUTSIDE the stage and persists across every view swap — platform.md §2:
- * moments 1-3 and 4-5 are two surfaces, not five screens, and a bar that
- * reloaded between them would say otherwise.
+ * the four moments run over two surfaces on the path, not four screens, and a
+ * bar that reloaded between them would say otherwise.
  */
 import { $, $$, esc } from '../core/dom.mjs';
 import { onActivate } from '../core/delegate.mjs';

@@ -55,6 +55,11 @@ does not **hide** one the engine already produced. No ranking language may read 
 *ranked by relevance* is an ordering; *strong match*, *best fit* and *most relevant* are readings,
 whatever number sits beside them.
 
+**Printed is not the same as always on screen.** An engine that returns no score leaves the row with
+none, and Terrain does not compute one to fill the gap — which is this rule read from the other end
+rather than an exception to it. [`platform.md`](platform.md) §4.3 carries what the interface does
+about it.
+
 ### What makes it a product rather than a search box
 
 **Legibility and self-serve.** The same set an IP professional would assemble, operable by the person
@@ -227,9 +232,13 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
   Terrain **generating** a verdict; what is admitted is Terrain **not hiding** one the engine already
   produced. **No ranking language may read as a verdict** — *ranked by relevance* is an ordering;
   *strong match*, *best fit* and *most relevant* are readings, whatever number sits beside them.
-- **One working screen, two columns.** The result list and the patent record share the left column;
-  the right column carries the grouping panel, and the drawing when one is open. A top masthead, not
-  a sidebar.
+- **One working screen, two columns, and each column means one thing.** The result list has the left
+  and keeps it; the patent record has the right. The grouping is a popover anchored to its control,
+  and an enlarged drawing is a lightbox over the viewport. *This is a narrowed successor, not a
+  reversal*: the rule used to read that the list and the record shared the left column and the right
+  carried whatever else was open, which made one region mean three kinds of thing by state. What
+  survives is the part that was doing the work — two columns, no sidebar, and nothing floating that
+  does not have to. A top masthead, not a sidebar.
 - **The search runs on submit.** No narrowing questions, no criteria to approve, no build stream. The
   commitment is pressing Search, and the points are charged there.
 - **Starring is the one thing the founder curates by hand**, and it is per-row. *This is a narrowed
@@ -247,9 +256,10 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
   considered and is not next: it is 40-odd files with a demo seam, and making it public means
   deciding what a stranger sees when the fake engine answers. `CLAUDE.md` under *Nothing is
   published* carries it, and changing that changes this line first.
-- **`corpus/` is the stress-test set, it is local only, and it prints real holder names.** Ten
-  semiconductor patents captured from Google Patents, sitting beside `demo/` with the same two-file
-  shape and reached by `?data=real`. The whole directory is excluded from git, which is what makes
+- **`corpus/` is the stress-test set, it is local only, and it prints real holder names.** A hundred
+  patents captured from Google Patents, sitting beside `demo/` with the same two-file
+  shape, and **it is what loads by default when it is present** — `?data=demo` is the flag now, and
+  it goes the other way. The whole directory is excluded from git, which is what makes
   the rest of this line affordable: a third party's drawings are never tracked, and no real assignee
   or inventor name enters a tracked file.
 
@@ -260,9 +270,9 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
   neither. The demo keeps its bars, because its rows are fictional and a fictional name reads as a
   live example.
 
-  **The cost is stated rather than hidden: export is only demonstrable under `?data=real`.** A
-  spreadsheet of skeleton bars shows nothing, so anyone receiving this handoff without `corpus/`
-  cannot see the product's own ending work. That is the price of never tracking a real name, it was
+  **The cost is stated rather than hidden: the export and the drawings are only demonstrable against
+  the corpus.** A spreadsheet of skeleton bars shows nothing and the demo ships no patent figure at
+  all, so anyone receiving this handoff without `corpus/` cannot see the product's own ending work. That is the price of never tracking a real name, it was
   paid deliberately, and [`app/README.md`](../app/README.md) says so where an engineer will read it.
 
   **What the corpus is for is finding what the demo cannot ask.** `demo/` is well-behaved by
@@ -314,10 +324,10 @@ accents are a different system, recorded upstream.
 
 - **The name.** Clearance is outstanding. Nothing is locked until it clears.
 - **Pricing** — the allowance, the price and the tier structure. The plan screen prints `XXX` and a
-  bar rather than guessing, and [`platform.md`](platform.md) §12 records why this cannot be settled
+  bar rather than guessing, and [`platform.md`](platform.md) §10 item 1 records why this cannot be settled
   before filing alerts are.
 - **The specific green**, its dark value, and its two tokens.
-- **What a search costs, and what an export costs.** [`platform.md`](platform.md) §8.1 lists the run
+- **What a search costs, and what an export costs.** [`platform.md`](platform.md) §6.1 lists the run
   types that exist and prints illustrative figures against them. Pricing is unsettled, and the one
   question the pivot forces is whether taking your own data out should move the meter at all.
 - **Whether Terrain sits on Innovue's semantic search surface or beside it.**

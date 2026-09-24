@@ -1,51 +1,62 @@
-/* 21 · the working surface — platform.md §6
+/* 21 · the working surface — platform.md §4
  *
  * EXTRACTED from the prototype. Two columns, each with its own scroll context,
  * and the inset on the right matched to the left by hand. The scrollbar rules
  * are here rather than in the reset because they are a property of these two
  * panes and not of the document. */
 
-/* ── the working surface · platform.md §6 ──────────────────────────────────────────
-   THE LIST IS 420px SINCE 2026-09-10, up from 340 — and the note that used to
-   sit here was wrong about what that costs, so the arithmetic is written out
-   in full rather than summarised.
+/* ── the working surface · platform.md §4.3, §4.5 ──────────────────────────
+   THE ARITHMETIC THAT USED TO SIT HERE MEASURED THE MATRIX, and the matrix
+   went with the analysis layer. It is re-derived against the thing that is
+   actually width-critical now, which is the RECORD's field list.
 
-   THE PANE IS NOT THE MATRIX'S CONTAINER. Four insets sit between them, and
-   the old note counted none of them. At a 1440 window:
+   Four insets sit between the window and the eleven identifiers. At 1440:
 
-       1440 − 421 (.listcol + its border)   = 1019   .panecol
-            −  48 (.panescroll, --s-24 × 2) =  971
-            −  64 (.grid, --s-32 × 2)       =  907
-            −   2 (.card border)            =  905
-            −  40 (.card-body, --s-20 × 2)  =  865   what the matrix gets
+       1440 × 0.56 (.panecol)              = 806
+            −  32 (.panescroll, --s-16 × 2) =  774
+            −   2 (.rec border)             =  772
+            −  40 (.rec-body, --s-20 × 2)   =  732   what .hf gets
 
-   The matrix needs 176 + 8×96 = 944. So it OVERFLOWS BY ~79px at 1440 and
-   scrolls inside .matrix-scroll, which is what that element is for.
+   design-language.md §7 measures .hf's two-column form as breaking under
+   about 600px — the longest values wrap under their own labels and the shared
+   leading edge that makes eleven rows scannable stops existing. 732 clears it
+   at 1440, and the crossing point is a window of ~1203px:
 
-   AT 340 IT FITTED BY ONE PIXEL — 945 against 944 — not by the 136px the old
-   note claimed. So this pass did not introduce the scroll so much as spend a
-   1px margin nobody knew was there. Recorded because the next person to widen
-   a column will do the same arithmetic, and the chain is the answer.
+       0.56W − 74 = 600  →  W ≈ 1203
+
+   Between 1203 and the 1079 stack the field list goes single-column, which is
+   a container query in 35-record.css rather than a viewport one — the record
+   is 56% of a split above 1079 and the FULL width below it, so a viewport
+   query would fire at the wrong moment in both directions.
 
    Below 1080 the columns stack and none of this applies. */
 .view-work{overflow:hidden}
 .view-work.is-active{display:flex;flex-direction:column}
 .work-split{display:flex;flex:1;min-height:0}
 
-/* THE RESULTS ARE THE PRIMARY CONTENT AND WERE GETTING 29% OF THE WIDTH.
-   420px fixed against a flex:1 pane measured 420/1020 at 1440 — and the pane
-   is empty until a patent is picked, so two thirds of the screen showed
-   nothing while the list it serves wrapped every title to three lines.
+/* ══ 44 / 56, AND THE RECORD TAKES THE LARGER HALF ═══════════════════════
+   It was fifty-fifty, on the argument that the list is the primary content
+   and had been getting 29% of the width. That was right while the right
+   column held one drawing — a drawing is legible at any size and the list
+   was the thing being read.
 
-   That split was right when the pane held twelve widget cards. It holds one
-   record now.
+   THE RECORD IS OVER THERE NOW, and it carries eleven identifiers, an
+   abstract, the claims and the drawings. The list carries three bands a row
+   and a clamped abstract.
+   Equal halves would give the denser column the same room as the sparser
+   one, and the head arithmetic above says what that costs: the field list
+   collapses to one column below ~1203px at 50/50 against ~1203 at 56% —
+   which is the whole reason to spend the twelve points.
 
-   FIFTY-FIFTY, AND IT IS `flex:1 1 0` RATHER THAN `width:50%`. A percentage
-   width would be measured before the border between them and leave the two
-   columns a hairline apart; flexing from a zero basis divides what is actually
-   left after the border, so the halves are equal on the screen rather than on
-   paper. It still collapses at the 1024 floor the shell already defines. */
-.listcol{position:relative;flex:1 1 0;min-width:0;
+   THE LIST IS FLOORED RATHER THAN FIXED. 340px is design-language.md §7's
+   measured minimum for a readable result row; below that the split has
+   already stacked.
+
+   AND IT IS A PERCENTAGE BASIS WITH `flex:0 1`, not `width:44%`. A width
+   would be measured before the border between them and leave the two columns
+   a hairline apart; a shrinkable basis divides what is actually left after
+   the border, so the ratio holds on the screen rather than on paper. */
+.listcol{position:relative;flex:0 1 44%;min-width:340px;
          border-right:1px solid var(--border);background:var(--surface);
          display:flex;flex-direction:column;overflow:hidden}
 
@@ -71,11 +82,11 @@
    clamp anywhere in this file, so a button sitting mid-row put a 300px
    popover at x = -72 — off the column, and clipped by .listcol's own
    overflow:hidden. Every card header already solves it this way. */
-/* THE AUTO MARGIN MOVED TO THE HEADING, 2026-09-11, and it had to. It sat on
-   .head-count, which worked while the count was the first thing after the
-   title and breaks the moment anything joins the row ahead of it — `N starred`
-   would have been stranded beside the heading with the gap opening between two
-   chips that belong together. Pushing from the TITLE'S trailing edge packs the
+/* THE AUTO MARGIN IS ON THE HEADING, and it has to be. On a chip it works
+   only while that chip is the first thing after the title, and breaks the
+   moment anything joins the row ahead of it — `N starred` would be stranded
+   beside the heading with the gap opening between two chips that belong
+   together. Pushing from the TITLE'S trailing edge packs the
    whole trailing group right regardless of which of them are rendered, which
    is what a row with two conditionally-present chips needs. */
 .listhead-top #setTitle{margin-inline-end:auto}
@@ -116,9 +127,15 @@
   .panescroll::-webkit-scrollbar-thumb:hover{background:var(--text-3);background-clip:content-box}
 }
 
-/* a column, not a canvas for an overlay: the scroller takes the height
-   that is left and the attribution sits beneath it. */
-.panecol{position:relative;flex:1 1 0;min-width:0;overflow:hidden;
+/* THE READING COLUMN. The scroller takes the height that is left and the
+   attribution sits beneath it.
+
+   `position:relative` is kept on purpose and no longer for .figview, which
+   became a lightbox against the viewport on 2026-09-24. It is here because a
+   column that anything inside may ever anchor to wants a containing block,
+   and removing it is a one-line change somebody would then have to rediscover
+   the need for. */
+.panecol{position:relative;flex:1 1 56%;min-width:0;overflow:hidden;
          display:flex;flex-direction:column}
 
 /* ── the pane's inset · matched to the left column, 2026-09-11 ──────────
@@ -127,22 +144,15 @@
    top of the pane that mismatch was the loudest thing left on the surface.
    ONE RULE FOR BOTH COLUMNS at 16px.
 
-   AND IT PUTS THE MATRIX BACK INSIDE ITS CARD AT 1440. Measured rather than
-   predicted: the scroller is 954px against the 944 the eight columns need,
-   so it fits with 10px to spare, and at 1600 the columns simply grow. **At
-   1280 it overflows by 148px and scrolls inside .matrix-scroll**, which is
-   what that element is for.
-
-   *The 79px overflow the 420px list introduced on 2026-09-10 is therefore
-   paid back, and the arithmetic written up then — which reasoned to a
-   one-pixel fit at 340px — was close but not measured. The chain is worth
-   trusting; the last digit of it is worth checking in a browser.* */
+   IT IS ALSO THE FIRST TERM OF THE RECORD'S ARITHMETIC at the top of this
+   file — 16px a side is the 32 that comes off .panecol before the record's
+   own border and padding. Changing it moves the ~1203px crossing point. */
 .panescroll{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;
             padding:var(--s-16) var(--s-16) 0;scrollbar-gutter:stable}
 
 @media (max-width:1079px){
   .work-split{flex-direction:column}
-  .listcol{flex:0 0 auto;width:auto;max-height:46vh;border-right:0;
+  .listcol{flex:0 0 auto;width:auto;min-width:0;max-height:46vh;border-right:0;
            border-bottom:1px solid var(--border)}
 }
 @media (hover:hover){ }
@@ -188,7 +198,7 @@
    PAGES rather than a sort inside a card, so it gets the body-adjacent 12.5px
    and a 28px target instead of the 11.5/24 a widget header uses. */
 
-/* ── the set surface · platform.md §6.3 ────────────────────
+/* ── the set surface · platform.md §4.3 ────────────────────
    The row is the drill-down row, unchanged. What is added is ONE control
    beside it, which is why .drill-toggle is not the whole row here: a star
    cannot live inside a button.

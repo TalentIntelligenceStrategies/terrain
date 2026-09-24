@@ -8,7 +8,7 @@
  * ═══ EVERY FIGURE HERE IS ILLUSTRATIVE ═════════════════════════════════════
  * No number is a real filing count and no party is real. The figures are the
  * prototype's own, carried across rather than re-invented, because they satisfy
- * platform.md §13's invariants and re-deriving them would mean re-deriving the
+ * platform.md §11's invariants and re-deriving them would mean re-deriving the
  * arithmetic that makes the surface internally consistent:
  *
  *   cells sum to shown (51), shown < total (124), a sentence says why
@@ -169,6 +169,60 @@ export function patentRows(count = SET_CEILING) {
          closest to what the founder described; a set where the nearest match
          is the one we can say nothing about would be the odd arrangement. */
       score: i === 0 ? 0.9880 : s.score,
+      /* THE ROW'S DRAWINGS, AND THE SAME TWO ABSENCES THE RECORD USES. The
+         demonstration row HAS drawings and Terrain declines to print them, so
+         four withheld frames; every other row has none at all, so an empty
+         array and no strip.
+
+         SIX, AND IT MATCHES recordFor's SIX AGAIN. It was four, because the
+         row drew a fixed four-up grid; the strip scrolls now and caps at
+         twelve, so the row can carry everything this patent has. Six frames
+         is also the only way to see the strip scroll at all in the demo,
+         which is the state it exists to show.
+
+         A DEMO DRAWING COULD NOT BE INVENTED HERE. The argument is written out
+         at recordFor below and it holds identically on the row: .gitignore
+         refuses a raster wholesale, so a demo drawing would have to be inline
+         SVG somebody drew — an invented technical drawing presented as a
+         patent's own. A frame invents nothing. */
+      thumbs: i === 0
+        ? [1, 2, 3, 4, 5, 6].map(n => ({ n, src: null, alt: null }))
+        : [],
+      /* ══ THE FIELDS THE ROW GAINED, AND ALL BUT ONE ARE BARS ═══════════
+         §8 is unambiguous about every one of them: inventors are a party,
+         IPC symbols are an identifier, and a party or an identifier we do
+         not hold is a bar rather than a plausible string. Inventing
+         "Dr. A. Chen" here would read as a live example; transliterating a
+         real one would be fabrication. Both are worse than a bar.
+
+         `abstract` IS A BAR FOR A DIFFERENT REASON and it is worth saying
+         which. It is not a party — it is the patent's own prose, and there
+         is no way to write three lines of plausible patent abstract that is
+         not simply an invented patent. The record has barred it since it was
+         built; the row follows the record.
+
+         THE DATES AND THE COUNT ARE ILLUSTRATIVE, which is the third column
+         of §8's table — they are figures, they are derived from the seed like
+         `year` and `score` above, and no number here is a real filing date.
+
+         `figs` AGREES WITH `thumbs` ON THE DEMONSTRATION ROW and is null
+         everywhere else. Six withheld frames and `figs: 6` is a patent whose
+         drawings we hold and decline to show; `figs: null` beside `thumbs: []`
+         is a patent with no drawings at all. The two absences must not
+         collapse, on the row exactly as in the record. */
+      inventors: null,
+      abstract: null,
+      ipcMain: null,
+      kind: i === 0 ? DEMO_RECORD.kind : null,
+      /* SEEDED FROM THE ROW'S OWN YEAR, not read off DEMO_RECORD, which
+         carries no dates — a `DEMO_RECORD.filed` would have been `undefined`
+         rather than `null`, and undefined is not a value the skeleton contract
+         has a word for. It renders neither prose nor a bar; it renders
+         "undefined". Filed two years before publication, which is the ordinary
+         shape and is illustrative like every other figure here. */
+      filed: (s.year - 2) + '-03-12',
+      published: s.year + '-05-10',
+      figs: i === 0 ? 6 : null,
     });
   }
   return out;
@@ -249,8 +303,8 @@ export function recordFor(id) {
       status: s.status, abstract: null, claims: null,
       /* EMPTY, NOT null, AND NOT A BAR. The skeleton contract covers values
          that exist and are being withheld; the demo corpus has no drawings at
-         all, and a row of grey rectangles would claim it does. `?data=real`
-         runs on corpus/, where they are real. */
+         all, and a row of grey rectangles would claim it does. corpus/ is what
+         runs by default when it is on disk, and there they are real. */
       figures: [],
     };
   }
@@ -320,7 +374,7 @@ export const ACCOUNT = { name: null, email: null, org: null, twoFactor: false };
 
 /* 'XXX' IS NOT null, AND THE TWO RENDER THROUGH DIFFERENT PATHS ON PURPOSE.
    null is "this value exists and we decline to print it"; 'XXX' is "nobody has
-   chosen one yet". Pricing is open — platform.md §14 — so the plan screen
+   chosen one yet". Pricing is open — platform.md §12 — so the plan screen
    prints XXX and a bar rather than guessing a number into existence. */
 export const BILLING = { plan: null, price: 'XXX', renews: null, seats: 1 };
 
