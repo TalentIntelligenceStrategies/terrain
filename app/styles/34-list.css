@@ -53,11 +53,48 @@
 
    THE RANK AND THE SCORE TRAIL, and they are the only two things on the row
    that are about the SEARCH rather than about the patent. They sit together
-   at the trailing edge for that reason, not because there was space. */
-.drill-head{display:flex;align-items:baseline;gap:var(--s-8);flex-wrap:wrap}
+   at the trailing edge for that reason, not because there was space.
+
+   EVERY .drill-* RULE IS HERE NOW, 2026-09-24, AND THIS MOVE CHANGES NOTHING.
+   Five of them lived in 35-record.css, which loads after this file, so ITS
+   value won every property both declared: `align-items:baseline` and
+   `flex:1 1 220px` stood here and were dead code, and nothing said so. The
+   values below are 35's, carried over unchanged.
+
+   THE RESIDUE IS EXPLAINED AT THAT FILE'S OWN FOOT: the drilldown those rules
+   were written for became these expanding rows, and they stayed behind in the
+   record's sheet. The row is emitted by list.mjs and by nothing else, so the
+   row's stylesheet owns it — and a rule whose behaviour depends on two sheets
+   keeping their link order is a rule that breaks silently the first time
+   somebody reorders index.html, which check-app.py's manifest gate proves is
+   a thing that gets edited. */
+.drill-toggle{display:block;width:100%;text-align:left;padding:0}
+.drill-head{display:flex;align-items:flex-start;gap:var(--s-16);flex-wrap:wrap}
 .drill-no{flex:0 0 auto;color:var(--text-2)}
-.drill-title{flex:1 1 220px;min-width:0}
+.drill-title{flex:1;min-width:0}
+/* SIZE, LINE-HEIGHT AND WEIGHT ARE .t-title-s's, ON THE MARKUP. They were
+   13.5/1.45/500 — a size that appears nowhere in §4's table, invented in the
+   gap between `label` and `title` that four components had each answered
+   differently. What is left here is what belongs to the component. */
+.drill-name{display:block;color:var(--text-1)}
 .drill-rank{flex:0 0 auto;color:var(--text-3);margin-inline-start:auto}
+/* TOP RIGHT OF THE TITLE, AND IT USED TO BE LAST IN THE ROW. The old
+   placement was argued from Terrain not endorsing an ordering the founder did
+   not ask for. What changed is that brief.md removed the prohibition on
+   printing it at all, so it is the engine's number rendered as the engine
+   returned it — and burying a figure we have decided to print is a
+   half-measure that reads as neither. It stays --text-3, and it carries NO
+   WORD beside it beyond its own label: the number is a fact about the
+   ranking, an adjective would be ours.
+
+   LABELLED AND STACKED. It was a bare four-decimal figure whose only
+   explanation was a title= attribute, which is a tooltip nobody opens.
+   "Score" names what the number IS, so brief.md's ban on "strong match",
+   "best fit" and "most relevant" — readings Terrain would be authoring — is
+   untouched. The heading's info popover carries what the score MEANS. */
+.drill-score{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;
+             gap:1px;color:var(--text-3);padding-top:1px}
+.drill-score-k{color:var(--text-3)}
 
 /* ── band 3 · what it claims ─────────────────────────────────────────────
    THREE LINES, AND THE CLAMP IS THE ROW'S RATHER THAN THE ENGINE'S. Corpus

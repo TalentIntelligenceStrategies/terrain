@@ -168,51 +168,6 @@
   .hf dt:first-of-type{margin-block-start:0}
 }
 
-/* the engine's relevance score · brief.md §4, platform.md §11 conflict 1.
-   LAST IN THE ROW AND IN --text-3, which is the whole of the design decision:
-   Innovue's surface puts it top-right where it is the most prominent thing
-   after the title, and here it is the quietest thing on the row. An ordering
-   the founder did not ask for should not outrank the bands §7 specifies the
-   row as carrying. tabular, so a column of them does not jitter. */
-/* TOP RIGHT OF THE TITLE since 2026-09-10, and it used to be last in the row.
-   The old placement was argued from Terrain not endorsing an ordering the
-   founder did not ask for. What changed is that brief.md §4 removed the
-   prohibition on printing it at all, so it is Innovue's number rendered as
-   Innovue renders it — and burying a figure we have decided to print is a
-   half-measure that reads as neither. It stays --text-3 and it still carries
-   NO WORD beside it (platform.md §4.5): the number is a fact about the ranking, an
-   adjective would be ours. */
-.drill-head{display:flex;align-items:flex-start;gap:var(--s-16)}
-.drill-title{flex:1;min-width:0}
-/* the one populated row's title. Body scale rather than the 15px .t-title,
-   because a list row is scanned and not read — and --text-1 at 500 is what
-   the two 12px bars it replaces were standing in for. */
-/* SIZE, LINE-HEIGHT AND WEIGHT MOVED TO .t-title-s ON THE MARKUP. They were
-   13.5/1.45/500 here — a size that appears nowhere in §4's table, invented in
-   the gap between `label` and `title` that four components had each answered
-   differently. What is left is what belongs to this component rather than to
-   the role. */
-.drill-name{display:block;color:var(--text-1)}
-/* LABELLED, AND STACKED — 2026-09-10. It was a bare four-decimal figure with
-   its only explanation in a title= attribute, which is a tooltip nobody
-   opens. The label is the micro-above-the-value idiom this file already uses
-   for the gate's read-back and for every table header, and it is stacked
-   rather than inline because inline would put two type sizes on the skim's
-   own first line and compete with it.
-
-   "Score" NAMES WHAT THE NUMBER IS. It is not a word about quality, so
-   platform.md §4.5's rule is untouched — that rule forbids "strong match", "best fit"
-   and "most relevant", which are readings Terrain would be authoring. The
-   heading's info popover carries what the score MEANS. */
-.drill-score{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;
-  gap:1px;color:var(--text-3);padding-top:1px}
-.drill-score-k{color:var(--text-3)}
-/* .drill-holder WENT WITH THE FLEX META ROW, 2026-09-24. The holder is a cell
-   of the row's meta grid now and takes .dm-v's type and truncation with every
-   other value in it — 34-list.css carries both. A rule for a class nothing
-   emits is worse than no rule, because the next reader takes it for the
-   holder's real treatment. */
-
 /* ── the field list · platform.md §4.5 ─────────────────────
    THIS WAS THE HANDOFF, and it was a row-level disclosure: the row expanded
    downward onto five identifiers and stopped, because a detail page was
@@ -222,10 +177,6 @@
    unreachable; platform.md §6.3's "the row expands in place" is amended with this pass.
 
    IT IS STILL A <dl>, because that is what it is.                        */
-.drill-toggle{display:block;width:100%;text-align:left;padding:0}
-/* .drill-chev WENT WITH IT. It sat at the trailing edge of the meta row
-   pointing at the row's own button — an affordance describing the thing it
-   was inside. Nothing replaced it: the row is a button and reads as one. */
 .hf{margin:0;padding:var(--s-12) var(--s-14);background:var(--surface-sunken);
       border-radius:var(--r-inner);display:grid;grid-template-columns:auto 1fr;
       gap:var(--s-10) var(--s-14);align-items:center}
