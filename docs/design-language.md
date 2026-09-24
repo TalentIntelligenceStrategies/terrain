@@ -40,8 +40,12 @@ hierarchy, weight and spacing.
 | **Direction of change** | a delta pill rising or falling — §3.3 |
 | **The accent** | the primary action, the focus ring, a selected control — §3.8 |
 
-*A fourth was **chart layers**, and it left with the charts. §3.5 narrows to the one token that
-survives, `--chart-series`, because the points page still draws daily columns.*
+*A fourth was **chart layers**, and it left with the charts entirely. §3.5 is retired and its number
+is not reused.*
+
+**A new chart is an amendment to [`brief.md`](brief.md) §4, not a design task.** The tokens are gone
+rather than parked, so drawing one means declaring them again, in all three theme blocks, with
+measured contrast — which is the friction this rule is for.
 
 **Colour encodes direction, never desirability.** This is the load-bearing half. A patent being live
 is not good or bad for a founder — it is information, and whether it is a problem depends entirely on
@@ -106,9 +110,7 @@ what lets an accent sit on the system without fighting a temperature.
 | `--text-disabled` | `--n-6` | non-text use only |
 | `--text-inverse` | `#FAFAFA` | on ink fills |
 | `--ink-hover` | `--n-9` | hover on an ink fill |
-| `--indicator-rest` | `--n-5` | a dot or ring for a thing not yet current |
 | `--track-pressed` | `--n-4` | a bar track under the selected row |
-| `--key-ring` | `rgba(37,37,37,.24)` | the 1px ring on a 9px legend key |
 | `--veil` | `rgba(255,255,255,.82)` | the ground under a control bar floating over content |
 | `--scrim` | `rgba(37,37,37,.55)` | the one dimming layer, under the enlarged drawing |
 | `--figure-ground` | `#FFFFFF` | the paper a patent drawing was published on |
@@ -193,24 +195,10 @@ the first already carries would be colour doing a word's job, which §2 puts the
 `--state-up` / `--state-down` are aliases, not new hues. **They apply only to delta pills**, never to
 a series, a score or a status.
 
-### 3.5 · Chart layers, and what is left of them
-
-| Token | Value | Role |
-|---|---|---|
-| `--chart-series` | `#595959` | the data — neutral line, area fill at 8% |
-
-**One column chart is left in the product**: the points page's per-day usage. Everything else that
-read a chart token left with the analysis layer, and `--chart-trend`, `--chart-unknown`,
-`--chart-grid`, the five `--density-*` steps and the four `--mark-*` marks went with it.
-
-**Series is grey on purpose, and that reason outlived the charts it was written for.** A coloured
-series says *this direction is the good one*; a neutral one says *this is how many*. The points page
-is the one place left where a founder watches a number move over time, and it is the last place the
-interface should imply that moving up is success.
-
-**A new chart is an amendment to `brief.md` §1, not a design task.** The tokens are gone rather than
-parked, so drawing one means declaring the tokens again, in all three theme blocks, with measured
-contrast — which is the friction this section is now for.
+*§3.5 was chart layers and is retired. It survived the analysis layer on one claim — that the points
+page still drew a column per day — and the points page draws no chart: it renders a meter bar and a
+table. `--chart-series` went with the section, and §3.5's number is not reused, for the reason §3
+opens with.*
 
 ### 3.6 · Skeleton
 
@@ -291,15 +279,15 @@ blocks that goes stale. `tools/check-app.py` refuses one declared anywhere else.
 | Tier | Count | Declared | The rule |
 | --- | --- | --- | --- |
 | **primitive** | 11 | `:root`, once | `--n-0`…`--n-10`. **No component may read one.** |
-| **scale** | 29 | `:root`, once | `--s-*` `--r-*` `--dur-*` `--ease*` `--cycle`. Invariant by construction: a step is not a different size at night. |
-| **semantic** | 32 | **all three blocks** | This is the dark contract. §10.1. |
+| **scale** | 28 | `:root`, once | `--s-*` `--r-*` `--dur-*` `--ease*` `--cycle`. Invariant by construction: a step is not a different size at night. |
+| **semantic** | 28 | **all three blocks** | This is the dark contract. §10.1. |
 | **derived** | 3 | `:root`, once | Resolves *through* a themed token, so it inverts for free. **Never add one to a dark block.** |
 | **component-scoped** | 5 | on the component's own class | Never on `:root`, never read outside that component. |
 
 **The file is ordered by theme-variance, not by document section**, so *the three blocks carry the
 same names in the same order* is a one-line assertion and **added to light, forgot dark** is
-impossible to commit. The cost is that `--shadow-float` and `--shadow-drop` sit under §5 here and in
-the themed half there; that mismatch is exactly why the file is not organised by §.
+impossible to commit. The cost is that `--shadow-float` sits under §5 here and in the themed half
+there; that mismatch is exactly why the file is not organised by §.
 
 **The derived three** are `--state-up`, `--state-down` and `--focus`. A literal for any of them
 inside a dark block would pin the value to one palette **while reading as perfectly correct CSS** —
@@ -398,11 +386,10 @@ inner radius is the outer minus the inset.
 
 ```
 --shadow-float: 0 1px 2px rgba(37,37,37,.04), 0 8px 24px -6px rgba(37,37,37,.10);
---shadow-drop:  drop-shadow(0 1px 1px rgba(37,37,37,.05)) drop-shadow(0 6px 16px rgba(37,37,37,.10));
 ```
 
-`--shadow-drop` is the same elevation as a `filter` rather than a `box-shadow`, for the clipped
-composer: `clip-path` eats a `box-shadow`, but a filter on the unclipped parent sees the clip.
+*`--shadow-drop` stood beside it — the same elevation as a `filter` rather than a `box-shadow`, for a
+composer that was clipped. The composer carries no `clip-path` now, so nothing read it and it went.*
 
 **The shadow belongs to anything that floats free of the page, over content it does not push aside** —
 menus, popovers, the figure viewer's action bar. **A card that reaches for a shadow has not
@@ -420,7 +407,6 @@ needs a background that recedes. The record floats over cards of its own surface
 ```
 --ease:        cubic-bezier(.2, 0, 0, 1);      strong ease-out
 --ease-in-out: cubic-bezier(.77, 0, .175, 1);  system-driven movement only
---ease-drawer: cubic-bezier(.32, .72, 0, 1);   an overlay entering from an edge
 
 --dur-1: 120ms;   hover, press
 --dur-2: 200ms;   popover, chip, tooltip
@@ -434,7 +420,6 @@ needs a background that recedes. The record floats over cards of its own surface
 | --- | --- |
 | Anything the founder initiated — entrances, exits, click-triggered morphs | `--ease` |
 | **System-driven** on-screen movement, where nobody is waiting on their own click | `--ease-in-out` |
-| An overlay entering from an edge | `--ease-drawer` |
 | Constant motion — the loader, the skeleton shimmer | `linear`, no token |
 
 The middle row is narrower than it looks. `cubic-bezier(.77,0,.175,1)` is flat for its first half —
@@ -519,6 +504,12 @@ Fixing either alone leaves the other.
 
 `app/` is the component reference: every rule below is implemented in `app/styles/`, with the
 reasoning in its own comments. This section carries what a reader cannot get from the CSS.
+
+**The balance bar is neutral, and that is a rule rather than a leftover.** A coloured meter says
+*this direction is the good one*; a neutral one says *this is how much*. The points page is the one
+place an inventor watches a number move, and it is the last place the interface should imply that
+moving is success. It fills with `--text-1` on a `--surface-sunken` track and takes no hue at all.
+*This argument outlived the charts it was written for, which is why it is here rather than in §3.*
 
 **The shell.** TIS submark at the leading edge of a **48px top masthead**, inlined with
 `fill="currentColor"` so it inverts for free. Content on `--ground`, cards on `--surface`, one working
@@ -819,7 +810,7 @@ The list is **duplicated on purpose.** CSS cannot share a declaration block betw
 a third indirection layer of `--dark-*` primitives buys nothing and hides which value is live.
 Whatever writes one writes both.
 
-**32 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
+**28 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
 here, `CLAUDE.md`, and `app/README.md`'s tier table — and **a gate keeps them equal to the file**
 rather than a sentence asking everyone to keep them equal to each other.
 
@@ -880,7 +871,6 @@ this section.
 | `--text-disabled` | `#5A5A5A` | 2.52 | 38.2 |
 | `--text-inverse` | `#141414` | — | 6.3 |
 | `--ink-hover` | `#FFFFFF` | — | 100 |
-| `--indicator-rest` | `#4A4A4A` | — | 31.4 |
 | `--track-pressed` | `#2A2A2A` | — | 17.1 |
 
 **State.** Ink on `--surface`, and ink on its own tint.
@@ -891,11 +881,10 @@ this section.
 | `--state-expired` | `#D98B80` | `#2A1A17` | 6.59 | 6.32 |
 | `--state-pending` | `#C9A45C` | `#251E10` | 7.42 | 7.04 |
 
-**Chart and skeleton.**
+**Skeleton.**
 
 | Token | Hex | Note |
 | --- | --- | --- |
-| `--chart-series` | `#A8A8A8` | 7.32 on surface |
 | `--skeleton` | `#2A2A2A` | |
 | `--skeleton-shimmer` | `#343434` | |
 | `--skeleton-strong` | `#424242` | |

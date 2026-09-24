@@ -179,7 +179,7 @@ three by a script that refuses:
 
 **Three permitted places and no more**: discrete states, direction of change, and the accent. No
 gradient, no decorative colour, no tinted background. *Chart layers were a fourth and left with the
-charts; `--chart-series` survives for the points page's daily columns and is the last of them.*
+charts entirely. There is no chart token and no chart: the points page draws a meter bar and a table.*
 
 **Colour encodes direction, never desirability.** No green-means-good anywhere: a status chip says
 *Live* or *Expired* and neither is good news, because whether a live patent is a problem depends
@@ -194,7 +194,7 @@ applying it is a separate, visible pass.
 **Innovue's blue may only ever appear inside the Innovue mark itself.** In a border, a chip or a
 button, it has been misread.
 
-**And the rule describes two palettes.** Dark is a swap of **32 semantic tokens** — `design-language.md`
+**And the rule describes two palettes.** Dark is a swap of **28 semantic tokens** — `design-language.md`
 §10.1 is where that number is argued, and `tools/check-app.py` is what keeps every printed copy of it
 honest — with **two named component exceptions and no others**, the two `.foot-mark-*` selectors on
 the attribution line. **Two semantic tokens do not swap and each says so in its own row**, and both are facts about the

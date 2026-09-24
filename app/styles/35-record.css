@@ -273,8 +273,8 @@
    that is a bug, not a variant" holds by construction instead of by care.   */
 /* NO ENTRANCE OF ITS OWN, and its removal is the fix for the second half of
    the jump. .pn used to carry `animation:pn-in var(--dur-2) var(--ease) both`
-   — 200ms, 4px of Y, on --ease — INSIDE a container travelling 320ms on
-   --ease-drawer. Two curves, two durations, one object: at a tenth speed the
+   — 200ms, 4px of Y, on --ease — INSIDE a container travelling 320ms on the
+   drawer's own curve. Two curves, two durations, one object: at a tenth speed the
    text visibly settles inside a box that is still moving. A drawer's contents
    do not fade in after the drawer opens; content already inside a sliding
    container is the honest model. It was also a KEYFRAME, so clicking a second

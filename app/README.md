@@ -143,10 +143,10 @@ custom property on `:root`**. `design-language.md` §3.9 is the rule; this is th
 | Tier | Count | Declared | Rule |
 | --- | --- | --- | --- |
 | primitive | 11 | `:root` once | `--n-0`…`--n-10`. No component may read one |
-| scale | 29 | `:root` once | Invariant by construction |
-| semantic | 32 | **all three blocks** | The dark contract |
+| scale | 28 | `:root` once | Invariant by construction |
+| semantic | 28 | **all three blocks** | The dark contract |
 | derived | 3 | `:root` once | Resolves *through* a themed token. **Never in a dark block** |
-| component-scoped | 5 | the component's own class | Never on `:root` |
+| component-scoped | 4 | the component's own class | Never on `:root` |
 
 **Every other copy of the token block is generated.** `tools/sync-tokens.py --write` writes it into
 the loading lab between sentinels; `--check` verifies it **byte for byte** and CI runs it on every
@@ -163,14 +163,11 @@ passes.
 
 | Property | Set by | Read with fallback | What it carries |
 | --- | --- | --- | --- |
-| `--i` | the renderer, per visible item | `var(--i,0)` | the stagger index. **Set from the visible index, never counted by `:nth-child`** — cards are hidden with `[hidden]`, not removed, so a positional ladder counts hidden ones |
 | `--rest` | the loader build, per dot | `var(--rest, calc(…))` | the idle opacity ramp under reduced motion |
-| `--stage-delay` | the build runner | `var(--stage-delay,0ms)` | per-stage entrance delay |
 | `--dmx-speed` | the loader | `var(--dmx-speed,1)` | cycle multiplier |
 | `--dmx-path` | the loader, per dot | `var(--dmx-path,0)` | position along the ripple path |
 | `--dmx-opacity-base` | the loader | on `.dmx-root` | trough of the pulse |
 | `--dmx-opacity-mid` | the loader | on `.dmx-root` | midpoint of the pulse |
-| `--uc-cap` | the usage chart | `var(--uc-cap,44px)` | column cap height |
 | `--fig-scale` | the figure viewer | `var(--fig-scale,1)` | zoom, as a step off a fixed ladder rather than a free multiplier |
 | `--fig-rot` | the figure viewer | `var(--fig-rot,0deg)` | rotation, a quarter turn at a time |
 | `--fig-x` `--fig-y` | the figure viewer, while panning | `var(--fig-x,0px)` | pan offset. **All four compose into ONE transform, and the CSS decides the order** — a JS-built transform string is three call sites that can disagree about whether rotation happens before scale |

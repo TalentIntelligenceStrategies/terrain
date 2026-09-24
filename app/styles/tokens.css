@@ -14,15 +14,15 @@
    commit. Safe, because custom properties resolve by cascade, not by position.
 
    The cost is that a token does not sit where design-language.md discusses it:
-   --shadow-float and --shadow-drop are under §5 "Space, radius, elevation"
-   there and are THEMED, so they are in the themed half here. That mismatch is
+   --shadow-float is under §5 "Space, radius, elevation" there and is THEMED,
+   so it is in the themed half here. That mismatch is
    the reason the file is not organised by §.
 
    FIVE TIERS, and the rule for each is on its own block:
      1 primitive  11   no component may read one
-     2 scale      29   invariant by construction
-     3 semantic   41   declared in all three blocks — this is the dark contract
-     4 derived     5   resolves THROUGH a themed token. Never in a dark block
+     2 scale      28   invariant by construction
+     3 semantic   28   declared in all three blocks — this is the dark contract
+     4 derived     3   resolves THROUGH a themed token. Never in a dark block
      5 component   —   not here at all. On the component's own class,
                        design-language.md §3.9
 
@@ -59,18 +59,22 @@ html{color-scheme:light dark;background:var(--ground)}
   --s-40:40px; --s-56:56px; --s-72:72px;
   --r-chip:4px; --r-seg:6px; --r-control:8px; --r-inner:12px;
   --r-widget:16px; --r-shell:20px; --r-pill:999px;
-  /* three curves. --ease for anything the founder initiated; --ease-in-out for
-     system-driven movement only, because it is flat at the start; --ease-drawer
-     for the slide-over. Constant motion is linear. design-language.md §6.      */
+  /* two curves. --ease for anything the founder initiated; --ease-in-out for
+     system-driven movement only, because it is flat at the start. Constant
+     motion is linear. design-language.md §6.                                  */
   --ease:cubic-bezier(.2,0,0,1);
   --ease-in-out:cubic-bezier(.77,0,.175,1);
-  --ease-drawer:cubic-bezier(.32,.72,0,1);
   --dur-1:120ms; --dur-2:200ms; --dur-3:320ms; --dur-4:520ms;
+  /* --dur-4 and --ease-in-out have no reader today. Both stay: the ladder
+     is invariant by construction, and a curve is part of a named vocabulary
+     rather than a rung. --ease-drawer went, because it was named for the
+     slide-over and the slide-over is retired -- a curve named for a dead
+     component is dead with it. */
   --cycle:1.6s;                     /* one indicator cycle for the whole page */
 }
 
 /* ── 3 · SEMANTIC · light ──────────────────────────────────────────────────
-   COMPONENTS READ ONLY THESE. The next three blocks carry the same 41 names in
+   COMPONENTS READ ONLY THESE. The next three blocks carry the same 28 names in
    the same order, and check-app.py gate D refuses any drift between them.   */
 :root{
   --ground:var(--n-2); --surface:var(--n-0); --surface-sunken:var(--n-3);
@@ -102,7 +106,6 @@ html{color-scheme:light dark;background:var(--ground)}
      that was reaching past --n-* into the ramp: §10 makes dark cheap only if
      no component reads a primitive, and eleven of them did. */
   --ink-hover:var(--n-9);        /* hover on an ink fill — the only ink state */
-  --indicator-rest:var(--n-5);   /* a dot or ring for a thing not yet current */
   --track-pressed:var(--n-4);    /* a bar track under the selected row */
 
   /* state — the only colour in the system */
@@ -118,17 +121,12 @@ html{color-scheme:light dark;background:var(--ground)}
      §3.5 narrows with it rather than being deleted: one series, no trend line,
      no unpublished-window band. A second layer here means a second question is
      being asked on one chart, and the destinations do not ask one. */
-  --chart-series:#595959;
 
   --skeleton:var(--n-4); --skeleton-shimmer:var(--n-3); --skeleton-strong:var(--n-5);
 
-  /* composited over a coloured surface, so these cannot be flat neutrals.
-     --key-ring is the 1px ring on a 9px legend key: alpha for the same reason,
-     it sits on --surface in the key and on a slice in the chart. */
-  --key-ring:rgba(37,37,37,.24);
   /* --veil is the translucent ground under a control bar FLOATING OVER
      CONTENT — the figure viewer's zoom/rotate bar, sitting on a patent's own
-     line-work. Alpha for the same reason as --key-ring: what is behind it is
+     line-work. Alpha because what is behind it is
      the drawing and varies pixel to pixel, so a flat neutral would either
      hide the drawing or fail to separate the buttons from it.
 
@@ -172,17 +170,16 @@ html{color-scheme:light dark;background:var(--ground)}
      boundary that is not text. Above about .65 the page stops reading as a
      page that is still there.
 
-     THE INK IS --n-10's VALUE AND NOT BLACK, for the reason --key-ring and
-     --veil are alpha: it composites over whatever the surface is, and the
+     THE INK IS --n-10's VALUE AND NOT BLACK, for the reason --veil is alpha:
+     it composites over whatever the surface is, and the
      ramp's darkest neutral is what the rest of the system dims toward. */
   --scrim:rgba(37,37,37,.55);
 
   /* elevation. THEMED, which is why it is here rather than with the scale:
-     an ink shadow is invisible on ink. --shadow-drop is the same elevation as
-     a filter, for the clipped composer — clip-path would eat a box-shadow, but
-     a filter on the unclipped parent sees the clip. */
+     an ink shadow is invisible on ink. --shadow-drop stood beside it as the
+     same elevation expressed as a filter, for a composer that was clipped;
+     nothing clips the composer now and nothing read it. */
   --shadow-float:0 1px 2px rgba(37,37,37,.04), 0 8px 24px -6px rgba(37,37,37,.10);
-  --shadow-drop:drop-shadow(0 1px 1px rgba(37,37,37,.05)) drop-shadow(0 6px 16px rgba(37,37,37,.10));
 }
 
 /* ── 3 · SEMANTIC · dark · design-language.md §10 ──────────────────────────
@@ -220,7 +217,7 @@ html{color-scheme:light dark;background:var(--ground)}
   --text-disabled:#5A5A5A; --text-inverse:#141414;
   /* --text-1 is the primary fill and --text-inverse its label, so a near-black
      button becomes a near-white one with no component rule changing. */
-  --ink-hover:#FFFFFF; --indicator-rest:#4A4A4A; --track-pressed:#2A2A2A;
+  --ink-hover:#FFFFFF; --track-pressed:#2A2A2A;
 
   /* state — chosen against this ground, never lightened from the light pair.
      A dusty sage, an oxblood and a dull gold, which is what §10 asks for.
@@ -230,11 +227,9 @@ html{color-scheme:light dark;background:var(--ground)}
   --state-expired:#D98B80; --state-expired-tint:#2A1A17;
   --state-pending:#C9A45C; --state-pending-tint:#251E10;
 
-  --chart-series:#A8A8A8;
 
   /* the sweep is still the lighter band, so it still reads as a sweep */
   --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
-  --key-ring:rgba(245,245,245,.30);
   /* the stage under it stays WHITE in both themes — black line-work on #1A1A1A
      is a blank rectangle — so the veil is the light value in the dark block
      too. It is not an inversion that was forgotten: the surface this
@@ -258,7 +253,6 @@ html{color-scheme:light dark;background:var(--ground)}
   /* an ink shadow is invisible on ink. These go black and heavier, and the
      hairline is doing most of the work regardless. */
   --shadow-float:0 1px 2px rgba(0,0,0,.40), 0 8px 24px -6px rgba(0,0,0,.55);
-  --shadow-drop:drop-shadow(0 1px 1px rgba(0,0,0,.40)) drop-shadow(0 6px 16px rgba(0,0,0,.50));
   }
 }
 :root[data-theme="dark"]{
@@ -277,7 +271,7 @@ html{color-scheme:light dark;background:var(--ground)}
   --text-disabled:#5A5A5A; --text-inverse:#141414;
   /* --text-1 is the primary fill and --text-inverse its label, so a near-black
      button becomes a near-white one with no component rule changing. */
-  --ink-hover:#FFFFFF; --indicator-rest:#4A4A4A; --track-pressed:#2A2A2A;
+  --ink-hover:#FFFFFF; --track-pressed:#2A2A2A;
 
   /* state — chosen against this ground, never lightened from the light pair.
      A dusty sage, an oxblood and a dull gold, which is what §10 asks for.
@@ -287,11 +281,9 @@ html{color-scheme:light dark;background:var(--ground)}
   --state-expired:#D98B80; --state-expired-tint:#2A1A17;
   --state-pending:#C9A45C; --state-pending-tint:#251E10;
 
-  --chart-series:#A8A8A8;
 
   /* the sweep is still the lighter band, so it still reads as a sweep */
   --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
-  --key-ring:rgba(245,245,245,.30);
   /* the stage under it stays WHITE in both themes — black line-work on #1A1A1A
      is a blank rectangle — so the veil is the light value in the dark block
      too. It is not an inversion that was forgotten: the surface this
@@ -315,7 +307,6 @@ html{color-scheme:light dark;background:var(--ground)}
   /* an ink shadow is invisible on ink. These go black and heavier, and the
      hairline is doing most of the work regardless. */
   --shadow-float:0 1px 2px rgba(0,0,0,.40), 0 8px 24px -6px rgba(0,0,0,.55);
-  --shadow-drop:drop-shadow(0 1px 1px rgba(0,0,0,.40)) drop-shadow(0 6px 16px rgba(0,0,0,.50));
 }
 
 /* ── 4 · DERIVED ───────────────────────────────────────────────────────────

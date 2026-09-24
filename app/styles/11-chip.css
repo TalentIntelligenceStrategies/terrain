@@ -37,7 +37,9 @@
 .status-live .dot{background:var(--state-live)}
 .status-expired .dot{background:var(--state-expired)}
 .status-pending .dot{background:var(--state-pending)}
-.delta{display:inline-flex;align-items:center;gap:3px;font-size:11.5px;font-weight:500;
-       height:22px;padding:0 var(--s-8);border-radius:var(--r-pill)}
-.delta-up{background:var(--state-live-tint);color:var(--state-up)}
-.delta-down{background:var(--state-expired-tint);color:var(--state-down)}
+/* THE DELTA PILL WAS SPECCED HERE AND EMITTED NOWHERE. It was the only
+   component for §2's third permitted colour case, direction of change, and it
+   never shipped. THE CASE STAYS RESERVED AND THE COMPONENT GOES: --state-up
+   and --state-down are derived aliases rather than new hues, so reserving them
+   costs nothing, and deleting them would move the derived count in four gated
+   places for a rule that is still permitted. */
