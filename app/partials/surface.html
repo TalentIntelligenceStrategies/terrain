@@ -494,11 +494,15 @@
               <div class="figstrip" id="figStrip" role="group" aria-label="The other drawings"></div>
             </div>
           </section>
-        </div>
 
-        <!-- UNDER the column it attributes, not above it. It sat at the top
-             because the twelve cards it followed were deleted out from over it. -->
+        <!-- UNDER the column it attributes, and INSIDE the scroller it belongs
+             to. It was a sibling of #paneScroll in .panecol, which is a flex
+             column with overflow:hidden — so it was pinned to the column's
+             bottom edge at every scroll position, a credit floating over the
+             claims rather than following them. It was never position:fixed;
+             being outside the scroller was enough. -->
         <p class="foot"><em>Powered by</em><img class="foot-mark foot-mark-light" src="../brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg" alt="Innovue" width="95" height="13"><img class="foot-mark foot-mark-dark" src="../brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg" alt="Innovue" width="95" height="13"></p>
+        </div>
       </div>
 
     </main>

@@ -369,6 +369,18 @@ async function open(id, trigger, stepping, opts = {}) {
   if (app) requestAnimationFrame(() => app.classList.add('rec-open'));
   push('record', close);
 
+  /* THE COLUMN GOES BACK TO THE TOP, AND IT HAS TO BE SAID OUT LOUD NOW.
+     Replacing #recBody's innerHTML used to reset the scroll for free, because
+     #recBody WAS the scroller. .panescroll is the scroller since 2026-09-24
+     and the head is constant content inside it, so stepping Next from claim
+     30 would land on claim 30 of the next patent. focusQuietly cannot do it:
+     it is focus({preventScroll:true}) by design, which is the fix for the
+     record jumping on open.
+     BEFORE waitOn, so the wait block is seen from the top rather than
+     scrolled past. */
+  const col = $('#paneScroll');
+  if (col) col.scrollTop = 0;
+
   const token = bump('record');
   waitOn(body, 360);
   const [res] = await Promise.all([ENGINE.record({ id }), pause(FLOOR)]);

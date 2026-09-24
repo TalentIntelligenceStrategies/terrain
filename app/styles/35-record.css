@@ -60,9 +60,29 @@
    must leave; this is one of two things a column shows, reached by clicking a
    row and left by a Back control. Announcing it as a dialog would describe the
    wrong event (design-language.md §7). */
-.rec{display:flex;flex-direction:column;min-height:0;flex:1;
+/* flex:1 0 auto — GROW INTO FREE SPACE, NEVER SHRINK, BASIS IS CONTENT. A
+   two-claim patent still reaches the bottom of the column and the attribution
+   sits under it exactly as it always did; a long record exceeds the port and
+   .panescroll scrolls. One value answers both halves of it. `flex:1` is
+   `flex:1 1 0%`, which forced the card to the port's height and is precisely
+   what made the column's own scroller inert.
+
+   overflow:clip AND NOT hidden, AND THIS IS THE TRAP THE WHOLE CHANGE TURNS
+   ON. `hidden` makes an element a SCROLL CONTAINER, so a sticky .rec-head
+   inside it resolves against .rec — which never scrolls — and simply travels
+   away with it. `clip` clips to the radius WITHOUT creating a scrollport, so
+   the head sticks to the column and the 20px corner still cuts its children.
+   Verified rendered, both halves: sticky delta 0, computed radius 20px. It
+   throws nothing and logs nothing when it is wrong, which is why it is
+   written down here.
+
+   THE TOP MARGIN IS .panescroll's OLD PADDING. See the note there: as padding
+   it made the sticky head pin 16px low with content sliding through the gap
+   above it. */
+.rec{display:flex;flex-direction:column;flex:1 0 auto;
+     margin-block-start:var(--s-16);
      background:var(--surface);border:1px solid var(--border);
-     border-radius:var(--r-shell);overflow:hidden}
+     border-radius:var(--r-shell);overflow:clip}
 .rec[hidden]{display:none}
 /* ══ THE RECORD HIDES NOTHING THE FOUNDER WAS USING ═══════════════════════
    It hid the LIST until 2026-09-24 — it was a sibling of .listcol-scroll and
@@ -77,7 +97,15 @@
    there is no second column waiting to be filled and no sentence to write in
    it. One idle state, and the record replaces it. */
 .rec-open .pane-idle{display:none}
+/* IT PINNED FOR FREE UNTIL THE COLUMN BECAME THE SCROLLER. A non-flexing item
+   above a scrolling sibling stays put without saying so; it has to say so now.
+   THE BACKGROUND IS ITS OWN because it was transparent over .rec's fill, and
+   text passing under a transparent bar is not a bar. The hairline below it is
+   the separation — §5 refuses a shadow to anything sitting in the layout, and
+   refuses one outright between two surfaces of the same colour. */
 .rec-head{display:flex;align-items:center;gap:var(--s-12);flex:0 0 auto;
+          position:sticky;inset-block-start:0;z-index:1;
+          background:var(--surface);
           padding:var(--s-16) var(--s-20);border-bottom:1px solid var(--border);
           container-type:inline-size;container-name:rec-head}
 .rec-head h2{flex:1;min-width:0;margin:0}
@@ -129,8 +157,11 @@
    here. What it was protecting still holds and is stated where it belongs:
    §6's "a container already in place does not move to say its contents
    changed". */
-.rec-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
-          padding:var(--s-20)}
+/* THE SCROLLER MOVED UP TWO LEVELS. What is left here is the padding and, at
+   the foot of this file, the container the field list queries —
+   container-type:inline-size constrains the inline axis only, so it survives
+   an auto block size unchanged. */
+.rec-body{padding:var(--s-20)}
 /* [hidden] has to be spelled out, the same as .card, .set-more and every other
    element in this file that carries it — the author display:flex above outranks
    the UA rule, so without this the attribute does nothing for layout AND the

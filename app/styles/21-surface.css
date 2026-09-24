@@ -147,8 +147,36 @@
    IT IS ALSO THE FIRST TERM OF THE RECORD'S ARITHMETIC at the top of this
    file — 16px a side is the 32 that comes off .panecol before the record's
    own border and padding. Changing it moves the ~1203px crossing point. */
-.panescroll{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;
-            padding:var(--s-16) var(--s-16) 0;scrollbar-gutter:stable}
+/* ══ THE COLUMN SCROLLS AS ONE · 2026-09-24 ══════════════════════════════
+   THIS SCROLLER WAS INERT AND THE RECORD'S BODY DID THE WORK. .rec was
+   `flex:1` — that is `flex:1 1 0%` — so the card was forced to exactly this
+   box's height and there was never any overflow here to scroll. All 1485px of
+   a real record overflowed one level further down, inside a rounded card,
+   against a scrollbar 1px from its own border. Two scrollers in one column,
+   and the attribution pinned outside both of them.
+
+   ONE SCROLLER NOW, at the column's edge, the same as the list's. .rec takes
+   `flex:1 0 auto`, so a short record still fills the column and a long one is
+   allowed to be long.
+
+   THE TOP PADDING IS A MARGIN ON .rec INSTEAD. As padding it belonged to this
+   box, so a sticky .rec-head pinned at the CONTENT edge — 16px down — and
+   the record slid visibly through the gap above it. As a margin it scrolls
+   away with the record and the head pins flush. Measured: delta 0.
+
+   scroll-padding SO scrollIntoView DOES NOT PARK A THUMBNAIL UNDER THE HEAD.
+   The head measures ~53px; 56 is the next step on §5's scale and there is
+   no 54. */
+.panescroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+            display:flex;flex-direction:column;
+            padding:0 var(--s-16);scrollbar-gutter:stable;
+            scroll-padding-block-start:var(--s-56)}
+/* THE ATTRIBUTION IS IN THE FLOW NOW, so it needs the gap the flex column no
+   longer gives it from outside. --s-24 is .pn-body's own section rhythm: the
+   credit is one more step in the record's reading, not a line stuck to the
+   bottom of the window. It is here rather than in 37 because 37 owns the MARK
+   and this owns the column. */
+.panescroll>.foot{margin-block-start:var(--s-24)}
 
 @media (max-width:1079px){
   .work-split{flex-direction:column}

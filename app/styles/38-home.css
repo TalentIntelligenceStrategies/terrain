@@ -162,8 +162,15 @@
 .res-modes .seg-btn[aria-pressed="true"]{background:var(--surface);color:var(--text-1)}
 .res-meta{text-align:right;font-variant-numeric:tabular-nums}
 
-/* ══ the right column ════════════════════════════════════════════════════ */
-.panescroll{padding:var(--s-16)}
+/* ══ the right column ════════════════════════════════════════════════════
+   .panescroll's PADDING IS 21-surface.css's, 2026-09-24. A second declaration
+   of it stood here and won on load order, which is the same fork .drill-head
+   had in this pass: 21 deliberately set the bottom to 0 because the
+   attribution supplied --s-32 under it, and this put 16 back without knowing
+   why the 0 was there. It also defeated the change that made the record's
+   head sticky — the head pinned at the CONTENT edge, 16px below the
+   scrollport, with the record sliding through the gap above it.
+   21-surface.css owns the column. This file owns the home surface. */
 /* nothing chosen yet. Not a skeleton: a skeleton says a value is coming, and
    nothing is coming until the founder picks a row. §8. */
 .pane-idle{flex:1;display:flex;align-items:center;justify-content:center;
