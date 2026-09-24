@@ -210,12 +210,20 @@
    answers that outright: twelve tiles or three, the row is the same height,
    and the count stops being the column's business.
 
-   SO THE ONLY BUDGET LEFT IS ROW HEIGHT, AND 72 IS WHAT IT BUYS. 64 → 72 is
-   +10px of row for +27% of drawing area. 80 would cost +20 AND put the tile at
-   80/104 of the record's, which is where the step §7 argues for stops reading
-   as a step; 72/104 = 0.69 still does. The floor is unchanged and neither is
-   near it — below about 48px a patent drawing is a grey smudge rather than a
-   kind of drawing.
+   SO THE ONLY BUDGET LEFT IS ROW HEIGHT, AND 102 IS WHAT IT BUYS. The tile
+   ran 64, then 72, and is 102 now: five across this strip instead of not
+   quite seven, which is what a drawing has to be before it is a drawing
+   rather than a kind of drawing. The floor is unchanged and none of them is
+   near it — below about 48px a patent figure is a grey smudge.
+
+   AND THE STEP AGAINST THE RECORD'S TILE SURVIVED THE CHANGE, WHICH IS WHAT
+   HAD TO BE CHECKED. §7 argued 72/104 = 0.69 and warned that 80/104 = 0.77
+   stops reading as a step. BOTH NUMBERS WERE THE WRONG ONES: 104 is the
+   minmax FLOOR of .pn-figs' auto-fill grid, not a rendered width. Measured in
+   a 732px record column it packed six columns at 115px, so the real step was
+   72/115 = 0.624. The floor is 148 now, which packs FOUR columns at 177px,
+   and the step is 102/177 = 0.576 — further from 0.77 than it has ever been.
+   Check it rendered, not declared.
 
    THE AFFORDANCE IS A CUT TILE, NOT A SHADOW AND NOT A FADE. §5 refuses an
    elevation shadow to anything sitting IN the layout, and its second clause
@@ -228,19 +236,27 @@
    column whenever it overflows, so the column's own edge cuts a tile at MOST
    widths, and a cut edge is the oldest "there is more" signal there is.
 
-   AT MOST WIDTHS, AND THE EXCEPTION IS MEASURED. The tile pitch is 78px
-   (72 + --s-6); when the strip's width lands near a multiple of it, the tiles
-   sit flush and nothing is cut — 79 of 841 widths swept at 1px from 1080 to
-   1920, in five bands, each ~16px of WINDOW and ~6.6px of STRIP, centred on
-   strip widths of 388, 466, 544, 622 and 700. A strip holding twelve drawings
-   and a +N tile then shows no sign that it holds anything more, because an
+   AT MOST WIDTHS, AND THE EXCEPTION IS MEASURED. The tile pitch is 108px
+   (102 + --s-6); when the strip's width lands near a multiple of it the tiles
+   sit flush and nothing is cut. Swept at 1px from 1080 to 1920 against the
+   strip's measured width (W = 0.4403·window − 109.4, five sample points, max
+   residual 0.33px): 44 of 841 widths are flush, and it shows 8px or less of
+   its 102 at 95 of them, in THREE bands. A strip holding twelve drawings and
+   a +N tile then shows no sign that it holds anything more, because an
    overlay scrollbar is not painted at rest either.
 
    AND IT DEGRADES RATHER THAN SWITCHING OFF. The cut tile's visible width is
-   continuous, so the flush bands are only the exact-zero case: it shows 8px or
-   less of its 72 at about one width in FIVE, and a 3px sliver is the same
-   absence with a rounding error in front of it. list.mjs carries the
-   distribution and why this is a deferred decision rather than a patch.
+   continuous, so the flush bands are only the exact-zero case, and a 3px
+   sliver is the same absence with a rounding error in front of it. The honest
+   figure is the 11.3% at 8px or less, not the 5.2% at zero.
+
+   THE BIGGER TILE MADE THIS BETTER RATHER THAN WORSE, which was not obvious
+   and is why it was re-swept rather than rescaled. At the old 78px pitch the
+   same sweep gave 8.8% flush, 18.9% at 8px or less, in FIVE bands. A longer
+   pitch lands the remainder inside a tile more often than in the 6px gap, so
+   raising the tile to 102 roughly halved the widths at which the affordance
+   says nothing. list.mjs carries why this is a deferred decision rather than
+   a patch.
 
    AND NO scrollbar-width HERE. .figstrip declares `thin` because it is ONE
    strip in a lightbox; twenty thin bars down a scanning column is twenty
@@ -269,7 +285,7 @@
    misalignment that only exists once something in the strip is not a drawing,
    which is exactly what the +N tile is. A definite height on the tile is also
    what lets height:100% inside it resolve. */
-.set-thumb{flex:0 0 auto;width:72px;aspect-ratio:4/5;
+.set-thumb{flex:0 0 auto;width:102px;aspect-ratio:4/5;
            display:block;overflow:hidden;padding:0;
            background:var(--figure-ground);
            border:1px solid var(--border);border-radius:var(--r-control);

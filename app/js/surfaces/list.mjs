@@ -343,29 +343,39 @@ function rowHTML(rec, i) {
 }
 
 /* ── the row's drawings ────────────────────────────────────────────────────
-   TWELVE AT MOST, FOUR TO NINE VISIBLE, AND IT SCROLLS. Measured at every
-   1px of window from 1080 to 1920 — 841 widths, against a row carrying the
-   full twelve plus a +N tile, which is the case that has to scroll: 4 whole
-   tiles at 1080, 6 at 1440, 9 at the top of the range.
+   TWELVE AT MOST, THREE TO SIX VISIBLE, AND IT SCROLLS. Measured at every 1px
+   of window from 1080 to 1920 — 841 widths, against a row carrying the full
+   twelve plus a +N tile, which is the case that has to scroll: 3 whole tiles
+   at 1080, 4 at 1440, 6 at the top of the range, and 4.86 tiles of strip at
+   1440 counting the cut one.
 
-   A SINGLE NUMBER WAS WRONG HERE AND IS WORTH NOT PUTTING BACK. It read
-   "about five", which is true at 1200 and nowhere else.
+   A SINGLE NUMBER WAS WRONG HERE TWICE AND IS WORTH NOT PUTTING BACK. It read
+   "about five", which was true at 1200 and nowhere else; then it read
+   "four to nine visible", which was true of a 72px tile and is not of a 102px
+   one. A count that depends on the window does not get a single number.
 
    AND SO WAS THE INVARIANT THAT REPLACED IT. It read "always exactly one cut
    at the trailing edge", which is the affordance doing its job — and it is
-   false at about one width in eleven. The tile pitch is 78px (72 + --s-6), so
-   whenever the strip's own width lands near a multiple of it the tiles sit
-   flush and NOTHING IS CUT. Measured: 79 of 841 widths, 9.4%, in FIVE bands —
-   window 1111-1126, 1288-1303, 1465-1480, 1643-1657 and 1820-1835, which is
-   ~16px of window and ~6.6px of strip each, at strip widths of 388, 466, 544,
-   622 and 700.
+   false at a measurable share of widths. The tile pitch is 108px
+   (102 + --s-6), so whenever the strip's own width lands near a multiple of
+   it the tiles sit flush and NOTHING IS CUT. Measured against the strip's own
+   width (W = 0.4403·window − 109.4, fitted on five sample points, max
+   residual 0.33px): 44 of 841 widths, 5.2%.
 
    AND IT DEGRADES RATHER THAN SWITCHING OFF, which is the part a band count
-   hides. The cut tile's visible width is continuous: at 9.4% of widths it is
-   zero, and at 19.6% it is 8px or less of a 72px tile. A 3px sliver is not
-   a smaller affordance than a 40px one, it is the same absence with a
-   rounding error in front of it. The honest figure for "no usable signal" is
-   about one width in five, not one in eleven.
+   hides. The cut tile's visible width is continuous: at 5.2% of widths it is
+   zero, and at 11.3% it is 8px or less of a 102px tile, in THREE bands —
+   window 1216-1247, 1462-1493 and 1707-1738, 32px of window each. A 3px
+   sliver is not a smaller affordance than a 40px one, it is the same absence
+   with a rounding error in front of it. The honest figure for "no usable
+   signal" is about one width in nine.
+
+   THE BIGGER TILE HALVED THAT, WHICH IS WHY IT WAS RE-SWEPT RATHER THAN
+   RESCALED. At the old 78px pitch the same sweep gives 8.8% flush and 18.9%
+   at 8px or less, in FIVE bands — one width in five. A longer pitch lands the
+   remainder inside a tile more often than in the 6px gap, so a change made
+   for legibility improved the affordance as a side effect. It was not
+   obvious in advance and it is not a reason to stop measuring.
 
    WHAT THAT COSTS IS THE WHOLE AFFORDANCE. The strip still holds twelve
    drawings and a +N tile, still scrolls, and says so with nothing — there is
