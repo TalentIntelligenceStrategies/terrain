@@ -31,9 +31,18 @@
    line of text against a 13px image and the two never agreed. The mark is
    inline-block below, so its baseline is its bottom margin edge: the logo's
    bottom now sits on the text's baseline, which is what "bottom aligned"
-   means for type. The text is 14.4px -- 12 + 20%, asked for in the same pass. */
+   means for type.
+
+   THE TEXT IS `body` 14px, AND IT WAS 14.4. That number was 12 + 20%, asked
+   for in the same pass, and it is the only kind of off-scale value worth
+   having: argued, attributed and written down. It still went, because 14 is
+   0.4px away, is a real role, and appears in §4's table -- and a sweep that
+   re-finds an argued exception every time is a sweep nobody finishes. The
+   size that was wanted is what shipped; the scale is now where it is
+   recorded. .conv-foot moved with it, since the two lines are one credit on
+   two surfaces. */
 .foot{display:flex;align-items:baseline;justify-content:center;gap:var(--s-6);margin:0;
-      padding:0 var(--s-16) var(--s-32);font-size:14.4px;color:var(--text-3)}
+      padding:0 var(--s-16) var(--s-32);font-size:14px;color:var(--text-3)}
 .foot em,.conv-foot em{font-style:italic}
 /* Their primary in light, their own white mark in dark — both are Innovue's
    own files, identical viewBox 0 32 300 41, so the swap is pixel-stable and

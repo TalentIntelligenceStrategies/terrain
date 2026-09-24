@@ -68,7 +68,7 @@
        padding:var(--s-20) var(--s-14);text-align:center;
        background:var(--surface);border:1px solid var(--border);
        border-radius:var(--r-widget);cursor:pointer;color:var(--text-2);
-       font:inherit;font-size:13.5px;line-height:1.4;
+       font:inherit;font-size:13px;line-height:1.4;
        transition:border-color var(--dur-1) var(--ease),
                   background var(--dur-1) var(--ease),
                   color var(--dur-1) var(--ease)}

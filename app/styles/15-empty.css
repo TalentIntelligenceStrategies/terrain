@@ -32,4 +32,4 @@
    belonged under. The menu keeps the inset, because its rows have one. */
 .card-body .empty-note{padding:var(--s-4) 0}
 .menu-note{margin:0;padding:var(--s-4) var(--s-12) var(--s-8);
-      font-size:12px;line-height:1.5;color:var(--text-3)}
+      font-size:12.5px;line-height:1.5;color:var(--text-3)}

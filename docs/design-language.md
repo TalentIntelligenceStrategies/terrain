@@ -348,6 +348,7 @@ exception — mixed numeral rendering across a dense table is immediately visibl
 | `body` | Urbanist | 14 / 1.55 | 400 | 0 |
 | `body-strong` | Urbanist | 14 / 1.5 | 500 | 0 |
 | `label` | Urbanist | 13 / 1.4 | 500 | 0 |
+| `label-s` | Urbanist | 12.5 / 1.4 | 500 | 0 |
 | `micro` | Urbanist | 10.5 / 1.2 | 500 | 0.08em, uppercase |
 | `figure-xl` | Inconsolata | 40 / 1.0 | 500 | -0.01em |
 | `figure-l` | Inconsolata | 26 / 1.1 | 500 | 0 |
@@ -356,6 +357,24 @@ exception — mixed numeral rendering across a dense table is immediately visibl
 
 `font-variant-numeric: tabular-nums` on every Inconsolata run, so columns of numbers align and
 figures do not jitter when they change.
+
+**`label-s` is a step the tree had already invented, and adding it is the honest direction.** The gap
+from `label` 13 to `micro` 10.5 is 1.24×, and everything compact in the product fell into it. A sweep
+**by typeface** — 12.5px is `figure-s` in Inconsolata and was nothing in Urbanist — found fifteen
+declarations off this table, and **six had independently landed on 12.5**: the menu button, the
+popover chip, the info popover, the starred row's meta line and note, and *Find similar*. Six
+components agreeing is evidence about the scale, not about the components, so the step was added and
+the seven stragglers at 11.5, 12 and 13.5 moved onto it rather than six being moved off their own
+agreement.
+
+**12.5 and not 12, because it is `figure-s`'s size.** A meta line mixes Urbanist words with
+Inconsolata numerals — the starred row does it on one line — and words and figures at different sizes
+is the mixed-numeral defect this section opens with, read from the other end.
+
+*The attribution line was the fifteenth and is now `body`. It ran at 14.4px — 12 + 20%, asked for and
+recorded — which is the only kind of off-scale value worth having. It still went: 14 is 0.4px away
+and is a real role, and a sweep that re-finds an argued exception every time is a sweep nobody
+finishes.*
 
 **A role is one class, never two.** Each `figure-*` carries the family, the numeric setting and the
 weight along with its size, because a role split across a base class and a size class is a role that

@@ -211,7 +211,7 @@
 /* ── segmented control ──────────────────────────────────── */
 .seg{display:inline-flex;gap:2px;padding:2px;border-radius:var(--r-control);
      background:var(--surface-sunken);flex:0 0 auto}
-.seg-btn{font-size:11.5px;font-weight:500;color:var(--text-3);height:24px;padding:0 var(--s-8);
+.seg-btn{font-size:12.5px;font-weight:500;color:var(--text-3);height:24px;padding:0 var(--s-8);
          border-radius:var(--r-seg);white-space:nowrap;
          transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease),
                     transform var(--dur-1) var(--ease)}
