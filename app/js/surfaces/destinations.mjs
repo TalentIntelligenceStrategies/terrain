@@ -26,6 +26,9 @@ import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { wait as pause } from '../core/timers.mjs';
 import { bar, sk, pgCard, numCell } from '../core/primitives.mjs';
 import { popover } from '../core/popover.mjs';
+import { reduced } from '../core/motion.mjs';
+import { focusQuietly } from '../core/focus.mjs';
+import { push, drop } from '../core/esc-stack.mjs';
 
 let ENGINE = null;
 const done = new Set();
@@ -110,8 +113,63 @@ function billingFill(d, invoices) {
     + '</tbody></table>';
 }
 
+/* ── account · the delete disclosure · platform.md §6.2 ────────────────
+   THE TOGGLE IS LIVE AND THE ACT IS NOT, and that split is §8's rather than a
+   half-measure. What cannot run is deleting an account there is no model of,
+   and #acctDelYes carries §8's treatment for exactly that. Opening a panel to
+   READ the consequence is pure client state, which is what §8 says stays live.
+   A control promising `aria-expanded` and then doing nothing is the press a
+   founder blames themselves for — which is the failure §8 opens by naming.
+
+   `data-done` TAKES THE CLIP OFF ONCE IT HAS LANDED. `.dc>div` is
+   overflow:hidden, which clips a 2px ring at 2px of offset, so until it lands
+   the two buttons inside have NO VISIBLE FOCUS STATE. With motion off there is
+   no transitionend to hang it on, so reduced() sets it synchronously — read
+   LIVE and never cached, because turning reduced motion on mid-session moves
+   the CSS and would otherwise leave this behind.
+
+   ESCAPE GOES THROUGH THE STACK, not a local keydown. One overlay closes at a
+   time and the most recent wins; a private listener here would close this
+   panel from under whatever opened over it. */
+const DEL = 'acctDel';
+
+function delOpen() {
+  const el = $('#acctDel'), btn = $('#acctDelBtn');
+  if (!el || !btn || el.hasAttribute('data-open')) return;
+  el.setAttribute('data-open', '');
+  btn.setAttribute('aria-expanded', 'true');
+  if (reduced()) el.setAttribute('data-done', '');
+  focusQuietly($('#acctDelIn'));
+  push(DEL, delClose);
+}
+
+function delClose() {
+  const el = $('#acctDel'), btn = $('#acctDelBtn');
+  if (!el || !btn || !el.hasAttribute('data-open')) return;
+  /* ONLY TAKE FOCUS BACK IF IT WAS INSIDE. A founder who clicked away and then
+     pressed Escape is not asking to be sent to the trigger. */
+  const was = el.contains(document.activeElement);
+  el.removeAttribute('data-open');
+  el.removeAttribute('data-done');
+  btn.setAttribute('aria-expanded', 'false');
+  drop(DEL);
+  if (was) focusQuietly(btn);
+}
+
 export function init(ctx) {
   ENGINE = ctx.engine;
+
+  /* the delete disclosure · §6.2 */
+  onActivate(document, '#acctDelBtn', () => {
+    const el = $('#acctDel');
+    if (el && el.hasAttribute('data-open')) delClose(); else delOpen();
+  });
+  onActivate(document, '#acctDelNo', delClose);
+  const delEl = $('#acctDel');
+  if (delEl) delEl.addEventListener('transitionend', e => {
+    if (e.propertyName === 'grid-template-rows' && delEl.hasAttribute('data-open'))
+      delEl.setAttribute('data-done', '');
+  });
 
   ctx.onRoute(async view => {
     if (done.has(view)) return;
