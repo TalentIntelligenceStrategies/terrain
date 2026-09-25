@@ -1,0 +1,87 @@
+/* ══ 30 · THE COMPOSER, AND THE COLUMN IT SITS IN ═══════════════════════════
+   platform.md §3. NAMED FOR THE COMPOSER RATHER THAN FOR A SURFACE, because
+   the composer appears on two: centred on the home surface, and above the two
+   columns on the results surface still holding what the founder typed. A file
+   called `30-home.css` would be wrong about half of what is in it, and
+   `38-home.css` — the field tiles, the coverage block, the right column's idle
+   state — is the one that is genuinely the home surface's.
+
+   The `.conv-*` classes are the home surface's column layout and keep their
+   names: renaming a class is a markup change, and these are accurate about
+   what they lay out even though the surface stopped being a conversation. */
+
+
+/* ── the home surface · moment 1 ────────────────
+   One column, centring the question and the composer. The thread this was
+   built for is gone with the conversation: platform.md §3 is one composer and
+   one button, and the search runs on submit.                    */
+.conv{min-height:100%;display:flex;flex-direction:column;padding:var(--s-24) var(--s-24) 0;
+      background:var(--ground)}
+.conv-body{flex:1;display:flex;flex-direction:column;justify-content:center}
+/* 680px was a reading measure for a thread of messages. The home surface
+   carries a row of tiles and a two-column table instead, and neither is
+   prose — 940 is what fits five tiles at a legible size without the
+   composer becoming a field nobody can track a line across. */
+.conv-col{width:100%;max-width:940px;margin-left:auto;margin-right:auto}
+.conv-intro{margin-bottom:var(--s-32)}
+.conv-intro h1{margin:0 0 var(--s-12);text-wrap:balance}
+.conv-sub{margin:0;color:var(--text-2);max-width:52ch;text-wrap:pretty}
+/* the dock carries the gate's primary action, so it is the one piece of
+   sticky chrome that must clear the home indicator */
+.conv-dock{padding-bottom:max(var(--s-16),env(safe-area-inset-bottom))}
+.conv-foot{padding:var(--s-12) 0 var(--s-24);display:flex;align-items:baseline;
+      justify-content:center;gap:var(--s-6);font-size:14px;color:var(--text-3)}
+
+/* ── the thread ─────────────────────────────────────────────
+   Nothing's visibility depends on a transition having run: .is-in is added on
+   the same frame, and reduced motion declares the end state outright.      */
+/* .thread WENT WITH THE CONVERSATION. There is no thread; the home surface
+   is one column with a composer in it. */
+
+/* ── the composer ───────────────────────────────────────────
+   One component, two sizes: the whole column here, docked on the map. It
+   carries its own working state, so the founder never navigates to a loading
+   screen (design-language.md §7).                                          */
+.cmp{width:100%}
+.cmp-inner{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-widget);
+      padding:var(--s-14) var(--s-16) var(--s-10);
+      transition:border-color var(--dur-2) var(--ease)}
+.cmp-inner:focus-within{border-color:var(--border-strong)}
+.cmp-field{position:relative}
+/* no transition on the height. Typing is the most repeated action in the
+   product, and a transitioning box lags the caret. Also a layout property. */
+.cmp-field textarea{width:100%;border:0;outline:0;resize:none;background:none;font:inherit;
+      color:var(--text-1);line-height:1.55;padding:0;display:block;
+      min-height:60px;max-height:200px;overflow-y:auto;position:relative;z-index:1}
+/* the placeholder is VISIBLE again. It was transparent because .ghost drew a
+   rotating one over it, and the rotation left with the conversation. */
+.cmp-field textarea::placeholder{color:var(--text-3)}
+.cmp-field textarea:disabled{color:var(--text-3);cursor:default}
+.cmp-row{display:flex;align-items:center;gap:var(--s-12);padding-top:var(--s-8);
+      border-top:1px solid var(--border);margin-top:var(--s-8)}
+.cmp-hint{flex:1;min-width:0;font-size:12.5px;color:var(--text-3)}
+.cmp-status{margin:var(--s-8) 0 0;font-size:12.5px;color:var(--text-3);min-height:17px;
+      transition:opacity var(--dur-2) var(--ease),filter var(--dur-2) var(--ease)}
+
+/* the sweep · a sweep, not a percentage. currentColor, so it costs no palette,
+   and one shared --cycle so every indicator on the page reads as one system. */
+.sweep{width:16px;height:3px;border-radius:var(--r-pill);position:relative;overflow:hidden;
+       background:currentColor;flex:0 0 16px}
+.sweep::after{content:"";position:absolute;top:0;bottom:0;width:45%;border-radius:inherit;
+       background:currentColor;animation:sweepx var(--cycle) linear infinite}
+@keyframes sweepx{0%{transform:translateX(-120%)}100%{transform:translateX(255%)}}
+/* A GRID, NOT FLEX-WRAP · 2026-09-11. Five answers of wildly different lengths
+   were sized to their own content, so one sentence-length DIRECTION pushed the
+   four short answers out of any rhythm and no label ever lined up with the one
+   under it. auto-fit gives even tracks whatever the values say, and it is the
+   pattern .rt-grid already uses — driven by the space that exists rather than
+   by a media query that cannot see this container.
+
+   The gap between pairs is well over twice the gap inside one, or the column of
+   two lines reads as four unrelated ones. One value now, not 14/16. */
+/* NOT the same shape as the answers above: exclusions are label-less phrases,
+   so there is nothing to line up into columns and the grid does not apply. An
+   explicit gap rather than the --s-6 inherited from .cf-answers .head-meta,
+   which was the only reason the two boxes looked different. */
+
+/* .set-excl WENT WITH #setExcl. The narrowing it reported does not exist. */

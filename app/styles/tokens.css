@@ -1,0 +1,407 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   TIS Terrain — tokens. THE ONE AUTHORED COPY.
+
+   Every other copy of this block is generated. tools/sync-tokens.py --write
+   writes it into the region between the sentinels, --check verifies it BYTE
+   FOR BYTE, and CI runs --check on every push. A value diff would pass while
+   the comments drifted, and the comments are where the measured contrast
+   ratios live.
+
+   THERE IS ONE TARGET NOW AND THIS SAID THREE. It named the prototype, the
+   loading lab and app/index.html, "and CI runs it before the publish". The
+   prototype is frozen and reads tokens that left with the analysis layer, so
+   regenerating its block would blank it rather than update it; app/index.html
+   links this file directly, because it cannot work from a download under any
+   circumstances and a third generated copy beside the authored one is drift
+   risk bought for nothing; and nothing publishes. sync-tokens.py's TARGETS
+   list is the count, and it holds the loading lab.
+
+   THE FILE IS ORDERED BY THEME-VARIANCE, NOT BY DOCUMENT SECTION. That is what
+   makes "the three blocks carry the same names in the same order" a one-line
+   assertion, and it makes ADDED TO LIGHT, FORGOT DARK — whose symptom is a
+   component that silently stays light and throws nothing — impossible to
+   commit. Safe, because custom properties resolve by cascade, not by position.
+
+   The cost is that a token does not sit where design-language.md discusses it:
+   --shadow-float is under §5 "Space, radius, elevation" there and is THEMED,
+   so it is in the themed half here. That mismatch is
+   the reason the file is not organised by §.
+
+   FIVE TIERS, and the rule for each is on its own block:
+     1 primitive  11   no component may read one
+     2 scale      28   invariant by construction
+     3 semantic   32   declared in all three blocks — this is the dark contract
+     4 derived     3   resolves THROUGH a themed token. Never in a dark block
+     5 component   —   not here at all. On the component's own class,
+                       design-language.md §3.9
+
+   THIS IS THE ONLY FILE PERMITTED TO DECLARE A CUSTOM PROPERTY ON :root.
+   check-app.py gate C refuses one anywhere else, which turns §3.2's exemption
+   into a FILE rather than a list of blocks that goes stale.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* both schemes declared, so the scrollbars, form controls and the canvas
+   behind the page follow the theme. [data-theme] pins it once the founder
+   has chosen — the attribute is what the toggle writes. */
+html{color-scheme:light dark;background:var(--ground)}
+:root[data-theme="light"]{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+
+/* ── 1 · PRIMITIVE ─────────────────────────────────────────────────────────
+   NO COMPONENT MAY READ ONE. A component that reads --n-* is a component that
+   stays light and throws nothing, logs nothing, and reads as correct CSS.
+   design-language.md §3.2; check-app.py gate A refuses it. */
+:root{
+  /* neutral ramp — even in L*, true neutral (R = G = B) */
+  --n-0:#FFFFFF; --n-1:#FCFCFC; --n-2:#F6F6F6; --n-3:#F0F0F0;
+  --n-4:#E4E4E4; --n-5:#D1D1D1; --n-6:#B0B0B0; --n-7:#6F6F6F;
+  --n-8:#595959; --n-9:#383838; --n-10:#252525;
+}
+
+/* ── 2 · SCALE ─────────────────────────────────────────────────────────────
+   Invariant by construction: a step, a radius and a duration are the same in
+   both themes, and a dark block that redefined one would be saying the
+   interface is a different size at night. */
+:root{
+  --s-2:2px; --s-4:4px; --s-6:6px; --s-8:8px; --s-10:10px; --s-12:12px;
+  --s-14:14px; --s-16:16px; --s-20:20px; --s-24:24px; --s-32:32px;
+  --s-40:40px; --s-56:56px; --s-72:72px;
+  --r-chip:4px; --r-seg:6px; --r-control:8px; --r-inner:12px;
+  --r-widget:16px; --r-shell:20px; --r-pill:999px;
+  /* two curves. --ease for anything the founder initiated; --ease-in-out for
+     system-driven movement only, because it is flat at the start. Constant
+     motion is linear. design-language.md §6.                                  */
+  --ease:cubic-bezier(.2,0,0,1);
+  --ease-in-out:cubic-bezier(.77,0,.175,1);
+  --dur-1:120ms; --dur-2:200ms; --dur-3:320ms; --dur-4:520ms;
+  /* --dur-4 and --ease-in-out have no reader today. Both stay: the ladder
+     is invariant by construction, and a curve is part of a named vocabulary
+     rather than a rung. --ease-drawer went, because it was named for the
+     slide-over and the slide-over is retired -- a curve named for a dead
+     component is dead with it. */
+  --cycle:1.6s;                     /* one indicator cycle for the whole page */
+}
+
+/* ── 3 · SEMANTIC · light ──────────────────────────────────────────────────
+   COMPONENTS READ ONLY THESE. The next three blocks carry the same 28 names in
+   the same order, and check-app.py gate D refuses any drift between them.   */
+:root{
+  --ground:var(--n-2); --surface:var(--n-0); --surface-sunken:var(--n-3);
+  --border:var(--n-4); --border-strong:var(--n-5);
+  /* THE ACCENT SLOT · brief.md §5, design-language.md §3.8.
+     Green is decided. The specific hue, its dark value and the ink that sits
+     on it are NOT, so both are ALIASED TO THE INK PAIR here — which is a
+     faithful description of what ships today ("the prototype ships with
+     near-black primary fills") rather than a placeholder. The three permitted
+     use sites already read these, so the repaint is a two-value edit in each
+     of the three blocks and not a hunt.
+
+     Declaring them aliased rather than omitting them is the whole point:
+     tokens that exist and are read by NOTHING leave the repaint a hunt anyway.
+     A loud sentinel value was the other option and was turned down — it
+     violates §2's one rule and it would ship the day somebody forgot.
+
+     THERE ARE THREE, NOT TWO. --accent-hover exists because --ink-hover is a
+     NEUTRAL: it is one step along the neutral ramp, which is the correct hover
+     for a near-black fill and turns a green button GREY the day the accent
+     lands. A hover on an accent fill is a measured darker accent and cannot be
+     derived from the accent by a formula, so it is its own semantic token in
+     all three blocks. It is aliased to --ink-hover's value today, so nothing
+     moves until the hue does. */
+  --accent:var(--n-10); --accent-ink:#FAFAFA; --accent-hover:var(--n-9);
+  --text-1:var(--n-10); --text-2:var(--n-8); --text-3:var(--n-7);
+  --text-disabled:var(--n-6); --text-inverse:#FAFAFA;
+  /* three more semantics, added with the dark pass. Each replaced a component
+     that was reaching past --n-* into the ramp: §10 makes dark cheap only if
+     no component reads a primitive, and eleven of them did. */
+  --ink-hover:var(--n-9);        /* hover on an ink fill — the only ink state */
+  --track-pressed:var(--n-4);    /* a bar track under the selected row */
+
+  /* state — the only colour in the system */
+  --state-live:#1B6B45;    --state-live-tint:#E4F1EA;
+  --state-expired:#A32B21; --state-expired-tint:#FAE9E7;
+  --state-pending:#7A5200; --state-pending-tint:#FBF0D9;
+
+  /* THE CHART LAYER, SINGULAR — narrowed 2026-09-23. There were three, for a
+     dashboard of twelve widgets that no longer exists. --chart-trend and
+     --chart-unknown went with the filings chart; this one stayed because the
+     points page still draws a column per day, and a column is still a chart.
+
+     §3.5 narrows with it rather than being deleted: one series, no trend line,
+     no unpublished-window band. A second layer here means a second question is
+     being asked on one chart, and the destinations do not ask one. */
+
+  --skeleton:var(--n-4); --skeleton-shimmer:var(--n-3); --skeleton-strong:var(--n-5);
+
+  /* --veil is the translucent ground under a control bar FLOATING OVER
+     CONTENT — the figure viewer's zoom/rotate bar, sitting on a patent's own
+     line-work. Alpha because what is behind it is
+     the drawing and varies pixel to pixel, so a flat neutral would either
+     hide the drawing or fail to separate the buttons from it.
+
+     .82 IS MEASURED, not chosen for feel. Below about .78 the 1.5px Lucide
+     strokes stop clearing 4.5:1 against the black line-work that shows through;
+     above .90 the bar stops reading as floating and becomes a solid plate over
+     the figure. It is paired with a 1px --border, because §5 is explicit that a
+     shadow cannot separate two surfaces of the same colour and this one sits on
+     white. */
+  --veil:rgba(255,255,255,.82);
+  /* --veil-edge IS --veil's OWN ARGUMENT, APPLIED TO THE EDGE. The note above
+     says a translucent surface "composites over something whose colour varies
+     and cannot be a flat neutral". The BORDER on that same surface composites
+     over the same varying thing and was a flat neutral -- --border, which
+     SWAPS. So in dark the figure bar wore a #2E2E2E hairline measuring 13.6:1
+     against the #FFFFFF pill it edges, where light's #E4E4E4 measures 1.27:1.
+     A factor of ten for one declaration. The reasoning had been applied to the
+     fill and not to the edge; this is the other half of it.
+
+     .12 IS MEASURED TWICE, ONCE PER BACKDROP.
+     - Over WHITE paper the pill composites to #FFFFFF and this edge to
+       #E5E5E5: 1.26:1, against the 1.27:1 --border gives in light today. Dark
+       stops changing the edge; it keeps the one light already had.
+     - Over BLACK line-work the pill composites to #D1D1D1 and this edge to
+       #BCBCBC: 1.24:1. The edge is the same WEIGHT against both backdrops,
+       which is what an edge has to be.
+
+     AND THAT IS WHY IT IS ALPHA AND NOT A HEX. A solid #E4E4E4 edge measures
+     1.20:1 on the #D1D1D1 pill -- but INVERTED, lighter than what it edges. A
+     hairline darker than its pill over paper and lighter than it over a drawn
+     line changes polarity as the founder pans, and an edge that changes
+     polarity reads as an artefact rather than as an edge.
+
+     INK AND NOT BLACK, for --scrim's reason: it composites over whatever is
+     there, and the ramp's darkest neutral is what the rest of the system dims
+     toward. IT DOES NOT SWAP, for --veil's reason: the surface under it does
+     not. */
+  --veil-edge:rgba(37,37,37,.12);
+
+  /* --figure-ground IS WHITE IN BOTH THEMES, and that is a fact about the
+     content rather than an exemption from §10. A patent drawing is black
+     line-work on a transparent background; composited onto #1A1A1A it is a
+     blank rectangle. The dark contract swaps the tokens whose meaning is "the
+     surface under our own chrome"; this one means "the paper this drawing was
+     published on", which has no dark value.
+
+     A TOKEN RATHER THAN A LITERAL because §3.2's rule is that every colour is
+     a token. The gate is what stops the next white from being a judgement
+     call, and a named invariant is checkable where a hex is not. */
+  --figure-ground:#FFFFFF;
+  /* --figure-ink AND --figure-ink-strong ARE --figure-ground's HALF OF THE
+     SAME ARGUMENT. Paper does not swap, so the ink on it may not either. Every
+     caption that sits ON a drawing had been taking --text-*, which does swap:
+     measured in dark, the record's figure number was #8E8E8E on #FFFFFF paper
+     at 3.28:1, under the 4.5:1 §3.2 sets for small text, and a caption raised
+     to --text-1 was #F0F0F0 at 1.14:1 — invisible.
+
+     THE TWO VALUES ARE LIGHT'S OWN --text-2 AND --text-1, frozen. On white
+     paper they measure 7.00:1 and 14.68:1, so the quiet one clears the floor
+     for 10.5px text and the raised one is the same step up the ramp the rest
+     of the system uses. Freezing them rather than inventing a pair keeps the
+     figure captions reading like every other quiet-then-raised label.
+
+     THEY ARE NOT --text-2 AND --text-1 WITH A NOTE. A component reading a
+     token that swaps, over a surface that does not, is the exact defect
+     --veil-edge was added for three tokens ago. */
+  --figure-ink:#595959; --figure-ink-strong:#252525;
+
+  /* ── --scrim · the ONE dimming layer in the product ─────────────────────
+     §3.2 read "there is no scrim token, and no scrim" and closed with "a
+     dimming layer would arrive with whatever first needs one". This is that
+     thing: the enlarged patent drawing, which became a lightbox over the
+     viewport on 2026-09-24 because a drawing capped at one column of a split
+     is a drawing nobody can read the reference numerals on.
+
+     NOTHING ELSE MAY READ IT. The menus, the popovers and the record all dim
+     nothing and all still close on an outside click the document hears for
+     itself. A second caller is a sign the rule has stopped holding, not a
+     sign the token turned out to be useful.
+
+     .55 IS MEASURED against the stage it separates. --figure-ground is white
+     in both themes, so in LIGHT theme — where the page behind is --n-2 — the
+     scrim is the only thing making the lightbox's edge an edge. Composited it
+     lands at #838383 and clears the white stage at 3.79:1; at .48 it drops to
+     3.11 and below that it fails 3:1 outright, which is the floor for a
+     boundary that is not text. Above about .65 the page stops reading as a
+     page that is still there.
+
+     THE INK IS --n-10's VALUE AND NOT BLACK, for the reason --veil is alpha:
+     it composites over whatever the surface is, and the
+     ramp's darkest neutral is what the rest of the system dims toward. */
+  --scrim:rgba(37,37,37,.55);
+
+  /* elevation. THEMED, which is why it is here rather than with the scale:
+     an ink shadow is invisible on ink. --shadow-drop stood beside it as the
+     same elevation expressed as a filter, for a composer that was clipped;
+     nothing clips the composer now and nothing read it. */
+  --shadow-float:0 1px 2px rgba(37,37,37,.04), 0 8px 24px -6px rgba(37,37,37,.10);
+  /* --shadow-raise IS --shadow-float AT A THIRD OF THE GEOMETRY: offset 8->3,
+     blur 24->8, spread -6->-3. It is the second of exactly two rungs, and the
+     difference between them is how far off the page a thing is.
+
+     A THING THAT HAS LIFTED WITHOUT LEAVING. Still in the flow, pushing
+     nothing aside, under the founder's pointer -- a drawing tile coming
+     toward them. It is ALWAYS paired with the 1px translate that causes it,
+     because a shadow with no movement is a thing that grew rather than rose.
+
+     THE CONTACT LAYER GOES .04 -> .05 IN LIGHT and the ambient stays at .10.
+     A 1px lift needs its contact to read at all, where a floating panel has
+     the ambient doing the work. The negative spread survives at both rungs,
+     which is what keeps both downward-biased. */
+  --shadow-raise:0 1px 2px rgba(37,37,37,.05), 0 3px 8px -3px rgba(37,37,37,.10);
+}
+
+/* ── 3 · SEMANTIC · dark · design-language.md §10 ──────────────────────────
+   §10 is a contract with two halves and this is both of them.
+
+   The mechanical half: dark redefines SEMANTIC TOKENS ONLY and touches no
+   component rule. Two selectors carry the identical list — the media query so
+   an unset preference follows the system, the attribute so an explicit choice
+   beats the system in BOTH directions. That is why the media query is written
+   :not([data-theme="light"]) rather than bare: without it, choosing light on a
+   dark OS would do nothing.
+
+   The half that is not mechanical: this is not an inversion. Surfaces stop
+   being fills, and the state hues are picked against this ground rather than
+   lightened from their light values. Every number in the comments below was
+   measured, the same way §3.3 and §3.4 measure the light set.
+
+   The list is duplicated on purpose. CSS has no way to share a declaration
+   block between two selectors, and the alternative — a third indirection
+   layer of --dark-* primitives — buys nothing and hides which value is live. */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+  /* neutral — a re-step, not an inversion. The ground/surface step is 1.06
+     against 1.08 in light, so --border does the separating that the step does
+     there. §10's reading of the dark reference screen. */
+  --ground:#141414; --surface:#1A1A1A; --surface-sunken:#101010;
+  --border:#2E2E2E; --border-strong:#454545;
+  /* the accent slot, aliased to the ink pair here exactly as in light: the
+     near-black fill becomes a near-white one, which is what ships today. The
+     specific green needs a value MEASURED against this ground — a hue chosen
+     against white and carried unchanged into dark is how a component silently
+     stops meeting contrast (brief.md §5). */
+  --accent:#F0F0F0; --accent-ink:#141414; --accent-hover:#FFFFFF;
+  --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
+  --text-disabled:#5A5A5A; --text-inverse:#141414;
+  /* --text-1 is the primary fill and --text-inverse its label, so a near-black
+     button becomes a near-white one with no component rule changing. */
+  --ink-hover:#FFFFFF; --track-pressed:#2A2A2A;
+
+  /* state — chosen against this ground, never lightened from the light pair.
+     A dusty sage, an oxblood and a dull gold, which is what §10 asks for.
+     live 7.71 on surface / 7.10 on tint · expired 6.59 / 6.32 ·
+     pending 7.42 / 7.04. The light set measures 6.49, 7.18 and 6.92. */
+  --state-live:#84B899;    --state-live-tint:#18241D;
+  --state-expired:#D98B80; --state-expired-tint:#2A1A17;
+  --state-pending:#C9A45C; --state-pending-tint:#251E10;
+
+
+  /* the sweep is still the lighter band, so it still reads as a sweep */
+  --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
+  /* the stage under it stays WHITE in both themes — black line-work on #1A1A1A
+     is a blank rectangle — so the veil is the light value in the dark block
+     too. It is not an inversion that was forgotten: the surface this
+     composites over does not swap, so neither may this. */
+  --veil:rgba(255,255,255,.82);
+  --veil-edge:rgba(37,37,37,.12);
+  /* unchanged, deliberately: see the light block. The paper does not swap. */
+  --figure-ground:#FFFFFF;
+  --figure-ink:#595959; --figure-ink-strong:#252525;
+
+  /* THE SCRIM IS BLACK HERE AND INK IN THE LIGHT BLOCK, which is a real swap
+     rather than the --veil case one line up. --veil composites over a white
+     drawing that does not swap, so it may not swap either; --scrim composites
+     over the APP, which does. Ink at .55 over #141414 is barely a change —
+     it would dim nothing, which is the one thing a scrim exists to do.
+
+     .72 IS NOT A CONTRAST FLOOR. Against the white stage every value in the
+     usable range clears 20:1 here, so the binding constraint is the other
+     side: enough that the masthead and the list stop competing for the eye,
+     little enough that the page reads as behind rather than gone. */
+  --scrim:rgba(0,0,0,.72);
+
+  /* an ink shadow is invisible on ink. These go black and heavier, and the
+     hairline is doing most of the work regardless. */
+  --shadow-float:0 1px 2px rgba(0,0,0,.40), 0 8px 24px -6px rgba(0,0,0,.55);
+  --shadow-raise:0 1px 2px rgba(0,0,0,.45), 0 3px 8px -3px rgba(0,0,0,.55);
+  }
+}
+:root[data-theme="dark"]{
+  /* neutral — a re-step, not an inversion. The ground/surface step is 1.06
+     against 1.08 in light, so --border does the separating that the step does
+     there. §10's reading of the dark reference screen. */
+  --ground:#141414; --surface:#1A1A1A; --surface-sunken:#101010;
+  --border:#2E2E2E; --border-strong:#454545;
+  /* the accent slot, aliased to the ink pair here exactly as in light: the
+     near-black fill becomes a near-white one, which is what ships today. The
+     specific green needs a value MEASURED against this ground — a hue chosen
+     against white and carried unchanged into dark is how a component silently
+     stops meeting contrast (brief.md §5). */
+  --accent:#F0F0F0; --accent-ink:#141414; --accent-hover:#FFFFFF;
+  --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
+  --text-disabled:#5A5A5A; --text-inverse:#141414;
+  /* --text-1 is the primary fill and --text-inverse its label, so a near-black
+     button becomes a near-white one with no component rule changing. */
+  --ink-hover:#FFFFFF; --track-pressed:#2A2A2A;
+
+  /* state — chosen against this ground, never lightened from the light pair.
+     A dusty sage, an oxblood and a dull gold, which is what §10 asks for.
+     live 7.71 on surface / 7.10 on tint · expired 6.59 / 6.32 ·
+     pending 7.42 / 7.04. The light set measures 6.49, 7.18 and 6.92. */
+  --state-live:#84B899;    --state-live-tint:#18241D;
+  --state-expired:#D98B80; --state-expired-tint:#2A1A17;
+  --state-pending:#C9A45C; --state-pending-tint:#251E10;
+
+
+  /* the sweep is still the lighter band, so it still reads as a sweep */
+  --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
+  /* the stage under it stays WHITE in both themes — black line-work on #1A1A1A
+     is a blank rectangle — so the veil is the light value in the dark block
+     too. It is not an inversion that was forgotten: the surface this
+     composites over does not swap, so neither may this. */
+  --veil:rgba(255,255,255,.82);
+  --veil-edge:rgba(37,37,37,.12);
+  /* unchanged, deliberately: see the light block. The paper does not swap. */
+  --figure-ground:#FFFFFF;
+  --figure-ink:#595959; --figure-ink-strong:#252525;
+
+  /* THE SCRIM IS BLACK HERE AND INK IN THE LIGHT BLOCK, which is a real swap
+     rather than the --veil case one line up. --veil composites over a white
+     drawing that does not swap, so it may not swap either; --scrim composites
+     over the APP, which does. Ink at .55 over #141414 is barely a change —
+     it would dim nothing, which is the one thing a scrim exists to do.
+
+     .72 IS NOT A CONTRAST FLOOR. Against the white stage every value in the
+     usable range clears 20:1 here, so the binding constraint is the other
+     side: enough that the masthead and the list stop competing for the eye,
+     little enough that the page reads as behind rather than gone. */
+  --scrim:rgba(0,0,0,.72);
+
+  /* an ink shadow is invisible on ink. These go black and heavier, and the
+     hairline is doing most of the work regardless. */
+  --shadow-float:0 1px 2px rgba(0,0,0,.40), 0 8px 24px -6px rgba(0,0,0,.55);
+  --shadow-raise:0 1px 2px rgba(0,0,0,.45), 0 3px 8px -3px rgba(0,0,0,.55);
+}
+
+/* ── 4 · DERIVED ───────────────────────────────────────────────────────────
+   EACH RESOLVES THROUGH A THEMED TOKEN, SO IT INVERTS FOR FREE. None of them
+   may ever be added to a dark block: a literal there would pin the value to
+   one palette while reading as perfectly correct CSS, which is the same
+   failure mode as a component reading a primitive.
+
+   Declared after the dark blocks on purpose, so that "the three blocks above
+   carry the same names in the same order" is true of the blocks and nothing
+   else has to be excepted from it. Position is otherwise irrelevant — custom
+   properties resolve by cascade. */
+:root{
+  /* direction of change, which is the one place the state hues are reused for
+     something that is not a legal status. design-language.md §3.3. */
+  --state-up:var(--state-live); --state-down:var(--state-expired);
+  /* THE FOCUS RING IS THE ACCENT. §3.8 names three places the accent may
+     appear and this is one of them, so it derives rather than being declared
+     twice — one edit to --accent moves the primary fill, the selected control
+     and the ring together. It resolved to the same near-black/near-white pair
+     before this became an alias, so the repaint is visible in exactly the
+     three places §3.8 permits and nowhere else. */
+  --focus:var(--accent);
+}

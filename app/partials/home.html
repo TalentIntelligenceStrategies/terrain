@@ -1,0 +1,100 @@
+<!-- THE HOME SURFACE. platform.md §3.
+     Rebuilt 2026-09-23 against Innovue's PI-VuePat v1.0.7 home page: the field
+     tiles, the composer, the coverage block, in that order down the page. The
+     LAYOUT is theirs; every component in it is Terrain's.
+
+     WHAT IS DELIBERATELY NOT COPIED. Their page sits on a printed grid and
+     tints its live tile teal. design-language.md §2 admits colour in four
+     places and decoration is not one of them, so the grid is absent and the
+     live tile is marked by border and weight instead. Their teal is their
+     brand; ours is the accent, and §3.8 says a selected control is one of the
+     three places it may appear. -->
+  <section class="view" data-view="home" aria-label="Search">
+    <main class="conv" id="conv">
+      <div class="conv-body">
+
+        <div class="conv-col conv-intro" id="convIntro">
+          <h1 class="t-display-1" tabindex="-1" id="convHeading">What are you building?</h1>
+          <p class="conv-sub t-body">Describe it in a sentence, or paste a patent number.
+             TIS&nbsp;Terrain finds the patents closest to it — and gives you the data to take
+             anywhere.</p>
+        </div>
+
+        <!-- ══ the technology fields ══════════════════════════════════════
+             One tile per field, the covered one live and the rest not yet.
+
+             aria-disabled, NOT disabled. A disabled button is removed from the
+             tab order, so a founder using a keyboard cannot reach the tile that
+             would tell them the field is coming — the control's whole job is to
+             be found and to explain itself. design-language.md §7. -->
+        <div class="conv-col">
+          <h2 class="t-micro fields-lbl" id="fieldsLbl">Patent technology fields</h2>
+          <div class="fields" id="fields" role="group" aria-labelledby="fieldsLbl"></div>
+        </div>
+
+        <div class="conv-dock">
+          <div class="conv-col">
+            <div class="cmp" id="cmpMain">
+              <div class="cmp-inner">
+                <div class="cmp-field">
+                  <textarea rows="2" aria-label="Describe what you are building"
+                    placeholder="For example: a folding drone arm that locks without a latch"></textarea>
+                </div>
+
+                <!-- ══ the toolbar ══════════════════════════════════════════
+                     Settings at the leading edge, the run's own figures in the
+                     middle, the one primary action at the trailing edge.
+
+                     IT IS A LABELLED BUTTON NOW, NOT THE SEND ARROW. The arrow
+                     said "post this message", which was true of a conversation
+                     and is not true of a search: the founder is starting a run
+                     that costs a point and returns a set. A word is what makes
+                     that legible, and §7 allows one primary action per surface,
+                     which this is. -->
+                <div class="cmp-row">
+                  <div class="pop-wrap" id="cmpSetWrap">
+                  <button class="icon-btn" id="cmpSettings" type="button"
+                          aria-label="Search settings" aria-expanded="false">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
+                  </button>
+                  </div>
+                  <span class="cmp-hint" id="cmpMeta"></span>
+                  <button class="btn btn-primary cmp-search" id="cmpSearch" type="button" disabled>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    <span>Search</span>
+                  </button>
+                </div>
+              </div>
+              <p class="cmp-status" id="cmpStatus" role="status" aria-live="polite"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ what is in the corpus ══════════════════════════════════════
+             A claim about coverage belongs on the screen where the founder
+             decides what to type, not behind a link. The prose line and the
+             table answer two different questions — what the product stands
+             behind, and when each source was last taken in. -->
+        <div class="conv-col">
+          <section class="card cover" id="coverCard">
+            <div class="card-head">
+              <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg></span>
+              <h2 class="t-title">Data coverage</h2>
+            </div>
+            <div class="card-body">
+              <p class="cover-scope t-body" id="coverScope"></p>
+              <table class="tbl cover-tbl">
+                <thead>
+                  <tr><th class="t-micro" scope="col">Source</th>
+                      <th class="t-micro num" scope="col">Last updated</th></tr>
+                </thead>
+                <tbody id="coverRows"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+      </div>
+      <div class="conv-foot"><em>Powered by</em><img class="foot-mark foot-mark-light" src="../brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg" alt="Innovue" width="95" height="13"><img class="foot-mark foot-mark-dark" src="../brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg" alt="Innovue" width="95" height="13"></div>
+    </main>
+  </section>

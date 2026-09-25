@@ -1,0 +1,595 @@
+<!-- EXTRACTED from design/previews/terrain-prototype.html lines 4039-4649.
+     PROVENANCE ONLY — the prototype is FROZEN v1 and is not the reference.
+     `app/` is what was decided; where this and the prototype disagree, this
+     is right and that file answers about a product that was replaced. The working surface, INCLUDING the record
+     pane -- .rec is a child of .panecol and takes the right column. -->
+  <section class="view view-work" data-view="work" aria-label="Your search">
+
+    <!-- ══ THE SEARCH BAR STAYS ══════════════════════════════════════════
+         It was a header of a project title and three chips until 2026-09-23,
+         on a surface you arrived at from somewhere else. The founder is now
+         searching rather than reading a built thing, so the field they searched
+         with is still here, still holding what they typed, and still the way to
+         run the next one.
+
+         FOUR TOGGLES, AND THE PIN IS NOT ONE. Their bar carries five: settings,
+         pin-to-top, fishbone, text+image, images. The pin exists because their
+         search box scrolls away and has to be nailed down; ours does not
+         scroll, so a control to stop it scrolling would do nothing. A toggle
+         that cannot change anything is worse than a missing one.  -->
+    <div class="res-search">
+      <h1 class="sr-only" tabindex="-1" id="dashTitle">Your results</h1>
+      <div class="cmp res-cmp" id="resCmp">
+        <div class="cmp-inner">
+          <div class="cmp-field">
+            <textarea rows="2" id="resQuery" aria-label="Describe what you are building"
+              placeholder="For example: a folding drone arm that locks without a latch"></textarea>
+          </div>
+          <div class="cmp-row">
+            <div class="res-tools" role="group" aria-label="How the results are shown">
+              <div class="pop-wrap" id="resSetWrap">
+              <button class="icon-btn" id="resSettings" type="button"
+                      aria-label="Search settings" aria-expanded="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
+              </button>
+              </div>
+              <span class="res-tools-sep" aria-hidden="true"></span>
+              <!-- ══ THE GROUPING IS A POPOVER · platform.md §4.4 ═══════════
+                   It owned the right column until 2026-09-24, when the record
+                   took that column. Covering it with the record would have
+                   made one region mean three kinds of thing by state — a
+                   control, a reading surface and a drawing — and putting it
+                   above the list costs the list vertical room at every width
+                   and breaks at the 1079 stack.
+
+                   A POPOVER IS WIDTH-INDEPENDENT, which is the deciding
+                   property: it survives the stack and the 1024 floor with no
+                   third region to place. And nothing is hidden by closing it,
+                   because #fbChips is in the LEFT column — the cut the founder
+                   made stays on screen whether the tree is open or not.
+
+                   IT IS STILL NOT A VIEW MODE. Either list rendering can sit
+                   beside it, so it is its own aria-expanded control rather
+                   than a third member of the segmented pair. -->
+              <div class="pop-wrap" id="fishWrapAnchor">
+              <button class="icon-btn" id="fishToggle" type="button"
+                      aria-expanded="false" aria-label="Group the results">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4"/><path d="M7 12 12 7v10z"/><path d="M12 12h9"/><path d="M15 9v6"/><path d="M18 10v4"/></svg>
+              </button>
+              <div class="pop pop-fish" id="fishPop" role="group" aria-labelledby="fishPopTitle">
+                <!-- THE BASIS, NOT THE ACT. "Group the results" is what the
+                     button does and it is already the button's own label; the
+                     panel has to say what the branches ARE, which is the
+                     heading fishbone.mjs used to render one level down. -->
+                <h2 class="pop-title t-micro" id="fishPopTitle">Grouped by approach</h2>
+                <div class="pop-body"><div class="fishwrap" id="fishWrap"></div></div>
+              </div>
+              </div>
+              <span class="res-tools-sep" aria-hidden="true"></span>
+              <div class="seg res-modes" role="group" aria-label="How much of each patent to show">
+                <button class="seg-btn" id="modeText" type="button" aria-pressed="true"
+                        aria-label="Details and drawings">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 15l4-4 5 5"/><circle cx="9" cy="9" r="1.5"/></svg>
+                </button>
+                <button class="seg-btn" id="modeImages" type="button" aria-pressed="false"
+                        aria-label="Drawings only">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="7" y="3" rx="2"/><path d="M3 7v12a2 2 0 0 0 2 2h12"/><path d="M11 11l3 3 3-3"/></svg>
+                </button>
+              </div>
+            </div>
+            <span class="cmp-hint res-meta" id="resMeta"></span>
+            <button class="btn btn-primary cmp-search" id="resSearch" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <span>Search</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ONE <main> PER SURFACE. The map, the set and the widget page each
+         had their own before 2026-09-10; collapsing three views into one
+         left the working surface with no main landmark at all, which is a
+         regression a screen-reader user meets before anything else. -->
+    <main class="work-split" id="workSplit">
+
+      <!-- ── the left column · the result list, and only ever the list ──
+           platform.md §4.3. It held the record too until 2026-09-24, swapping
+           with it by display. One region meaning two kinds of thing is what
+           that cost, and the list is the thing a founder navigates BY — it
+           stays. -->
+      <div class="listcol" id="listcol">
+        <div class="listcol-scroll" id="listScroll">
+        <div class="set-wrap" id="setWrap">
+          <!-- the list's own head. It was a `.page-head` on a surface of its
+               own; it is a chip row above a column now. TWO of the four facts
+               it carried went on 2026-09-10 with the recommendation itself:
+               nothing is recommended any more, because every patent the search
+               returns feeds the views, so "top N recommended" and "N added to
+               our recommendation" had nothing left to count. What remains is
+               two facts about what the founder did to the ORDER — both real
+               integers, because they count acts rather than data.
+
+               A THIRD CHIP STOOD HERE UNTIL 2026-09-24 AND SAID NOTHING. It
+               was `[bar] matched`, a skeleton beside a heading that already
+               reads "100 patents matched · 20 shown" — so the row printed the
+               count and then, 40px later, claimed the same fact was withheld.
+               A bar means the value exists and we decline to print it, which
+               cannot be true of a number on the same line. Nothing in app/js
+               ever filled it and no CSS rule ever styled it. -->
+          <!-- ONE INFO AFFORDANCE, on the heading, and it has absorbed three
+               things now. A four-line lede above the list and a second
+               popover in the bar went first; the standing note under the
+               list followed on 2026-09-10, along with the only explanation
+               the relevance score had — a title= attribute nobody opens.
+               The rule this keeps arriving at: a narrow column has room for
+               the list or for prose about the list, and every sentence that
+               is not the list belongs behind one control. -->
+          <div class="listhead">
+            <div class="listhead-top">
+              <!-- "What the search found" until 2026-09-11. Every card across
+                   the split is a noun phrase — The map, Rivals, Lineage — and
+                   this was the one clause among them. It also names the same
+                   surface the points page's back control names, and the two
+                   now say the same words. -->
+              <h2 class="t-title" tabindex="-1" id="setTitle">Your results</h2>
+              <!-- THE COUNT IS IN THE HEADING ITSELF, and #setTitle is what
+                   writes it — "100 patents matched · 20 shown". It had a chip
+                   row of its own until 2026-09-11, which at rest held one chip
+                   and two hidden ones: a whole line for one fact. The row below
+                   collapses to nothing until the founder does something worth
+                   reporting. -->
+              <!-- THE STAR COUNT SITS LEFT OF THE CORPUS COUNT, 2026-09-11.
+                   It was in .head-meta below, which meant a founder's first
+                   star opened a whole second row to report one word — and it
+                   reported it about 40px from the count it is a subset of.
+                   Two counts about the same list belong on the same line,
+                   and the narrower one reads first: `3 starred` sits beside
+                   the heading's own `N matched`, which is what the founder did
+                   followed by what they are looking at.
+
+                   IT IS STILL A .chip AND STILL NOT A CONTROL. The rank chip
+                   stays below, and that is not an inconsistency: `N starred`
+                   is a count of the same kind as `N matched` and belongs
+                   beside it, where `Ordered around N starred` is a sentence
+                   about the ORDER and would be the longest thing in a 345px
+                   heading row.
+
+                   THE COUNT IS ALSO THE WAY TO THE SET. It is the only place on
+                   this surface that knows how many the founder has starred, so
+                   it is where they expect to press to see them. -->
+              <button class="chip chip-link" id="setStarChip" type="button" hidden
+                      data-go="starred"></button>
+              <span class="info">
+                <button class="info-btn" type="button" aria-expanded="false" aria-label="About this list">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                </button>
+                <span class="info-pop t-body" role="note"><b>Sorting, filtering and grouping change
+                  what you are looking at, never what was searched.</b> The set is fixed by your
+                  sentence and your search settings; everything in the bar above rearranges it. To
+                  search for something else, edit the sentence at the top and search again.
+                  <br><br><b>Star a patent that is close to your idea.</b> Your starred patents
+                  stay with you while you search, and they are what you can take out of Terrain.
+                  Starring also makes <b>Find similar</b> available, which re-orders the set by how
+                  near each patent is to what you starred — no patent enters or leaves, only the
+                  order changes, and you can put it back.<br><br><b>The figure on the right of each
+                  row is the engine's relevance score.</b> It is how close the search put that
+                  patent to what you described.<br><br><b>That ordering is a ranking, not a
+                  verdict.</b> A patent near the top is close to what you described. It does not
+                  mean it affects you, and it does not mean the ones below it do not.</span>
+              </span>
+            </div>
+            <!-- THE RANK CHIP, AND IT HAS NO WRAPPER ANY MORE. It shared a
+                 .head-meta row with the star chip; that chip has gone up into
+                 the heading row and a flex wrapper around one conditionally
+                 hidden chip is a row that costs its gap to draw nothing.
+
+                 IT IS THE SETTLED STATE'S LIVE REGION SINCE 2026-09-11, which
+                 is a role it inherited rather than gained. The panel's sentence
+                 was this surface's one live region and it is deleted; the chip
+                 is what carries the settled state now, so it is what should
+                 announce it. "Nothing announces twice" still holds — the panel
+                 announces the beat STARTING and is emptied at land, emptying a
+                 live region is silent, and the chip announces only the landing.
+                 Two regions, two moments, never the same fact.
+
+                 IT SHIPS EMPTY AND HIDDEN for the reason .set-run does: a
+                 region registered at load and silent until there is something
+                 true to say is the only kind that reliably announces a later
+                 polite update. -->
+            <span class="chip" id="setRankChip" role="status" aria-live="polite" hidden></span>
+          </div>
+        <!-- #setExcl STOOD HERE and showed what the narrowing was told to leave
+             out. There is no narrowing: the search runs on submit. Nothing set
+             it, so it never rendered. -->
+
+        <section class="card">
+          <div class="set-bar">
+            <div class="lm" id="sortWrap">
+              <button class="lm-btn" id="sortBtn" type="button" aria-haspopup="menu"
+                      aria-expanded="false" aria-controls="sortMenu">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
+                <span id="sortLabel">Relevance</span>
+                <svg class="lm-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="lm-menu" id="sortMenu" role="menu" aria-label="Sort the list">
+              <button class="lm-item" type="button" role="menuitemradio" aria-checked="true" data-sort="relevance"><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Relevance</span></button>
+              <button class="lm-item" type="button" role="menuitemradio" aria-checked="false" data-sort="newest"><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Newest first</span></button>
+              <button class="lm-item" type="button" role="menuitemradio" aria-checked="false" data-sort="oldest"><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Oldest first</span></button>
+              </div>
+            </div>
+            <div class="lm" id="filtWrap">
+              <button class="lm-btn" id="filtBtn" type="button" aria-haspopup="menu"
+                      aria-expanded="false" aria-controls="filtMenu">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+                <span>Filter</span>
+                <span class="lm-count fig fig-s" id="filtCount" hidden>0</span>
+                <svg class="lm-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="lm-menu" id="filtMenu" role="menu" aria-label="Filter the list">
+              <p class="lm-group t-micro">Legal status</p>
+              <button class="lm-item" type="button" role="menuitemradio" aria-checked="true" data-facet="all"><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Any status</span></button>
+              <button class="lm-item" type="button" role="menuitemradio" aria-checked="false" data-facet="live"><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Live</span></button>
+              <button class="lm-item" type="button" role="menuitemradio" aria-checked="false" data-facet="expired"><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Expired</span></button>
+              <button class="lm-item" type="button" role="menuitemradio" aria-checked="false" data-facet="abandoned"><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Abandoned</span></button>
+              <button class="lm-item" type="button" role="menuitemradio" aria-checked="false" data-facet="pending"><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Pending</span></button>
+              </div>
+            </div>
+            <!-- THE STAR'S CONSEQUENCE, in the bar since 2026-09-11. It was a
+                 button inside a collapsing strip below this one, beside the
+                 sentence "Find patents like the one you starred." The strip is
+                 gone and the sentence is in the heading's popover, which already
+                 carried the same fact in its own words.
+
+                 IT IS THE ONLY FILLED CONTROL ON THIS SURFACE, and that is now
+                 the WHOLE of how it draws the eye — a one-turn ring traced the
+                 button on arrival for one pass and is deleted: §2 leaves no
+                 accent to spend, and
+                 near-black fill is what CLAUDE.md reserves for a primary action.
+                 Against two outlined menu triggers a filled button is the loudest
+                 thing in a 345px bar without a hue existing.
+
+                 HIDDEN, NOT DISABLED. The strip used to collapse away when there
+                 was nothing to rank, so nothing was on screen; a disabled button
+                 loitering in the bar would be new clutter, and [hidden] takes it
+                 out of the tab order the way #setRestore below already does. -->
+            <button class="btn btn-primary set-rank" id="setRebase" type="button" hidden>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h11"/><path d="M10 12h11"/><path d="M10 18h11"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+              <span>Find similar</span>
+            </button>
+            <!-- THE WAY BACK, and it lives here rather than in the panel because this
+                 is where the surface's other undo-shaped control already is. Hidden by
+                 [hidden] rather than visibility, so it leaves the tab order and the
+                 a11y tree with it; the geometry it changes is absorbed by setReorder's
+                 before() callback, which mutates AFTER the FLIP has measured. -->
+            <button class="btn btn-ghost" id="setRestore" type="button" hidden>Restore the
+              original order</button>
+            <span class="spacer"></span>
+          </div>
+
+          <!-- #setRun STOOD HERE: a collapsed band for a beat passing through,
+               with its own live region. Nothing ever opened it — there was no
+               [data-open] rule and no writer — so it sat at 0fr permanently and
+               the region it registered never spoke. The re-rank says what it
+               did through #setRankChip above. -->
+          <div class="set-listcol">
+            <!-- THE GROUPING'S CHIPS LIVE HERE, not in the panel that made
+                 them. The panel can be hidden; the filter it applied cannot
+                 be, or the founder reads a shortened list with nothing on
+                 screen saying why it is short. -->
+            <div class="fb-chips" id="fbChips" hidden></div>
+            <div class="set-list" id="setList" aria-busy="false"></div>
+
+            <!-- THE LIST'S FOOT, and it is a foot rather than a call to
+                 action. It was a centred .btn-secondary reading "View more
+                 patents" — a bordered pill in the middle of a column of
+                 rows, which made paging look like the surface's next step
+                 rather than like more of the list.
+
+                 TWO ENDS, TWO JOBS. Where you are, at the leading edge, in
+                 the quiet tone. What to do about it, at the trailing edge,
+                 as plain text with a chevron and a hover ground. The count
+                 is the half that is always true, so it stays when there is
+                 nothing left to show and the action goes. -->
+            <div class="set-more" id="setMoreWrap">
+              <p class="set-more-n fig-s" id="setMoreN"></p>
+              <span class="spacer"></span>
+              <button class="set-more-btn" id="setMore" type="button">
+                <span id="setMoreLabel">Show more</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+          </div>
+
+        </section>
+        </div>
+        </div>
+      </div>
+
+      <!-- ── the right pane · §6's twelve views, map first ───────────────── -->
+      <div class="panecol" id="panecol">
+        <div class="panescroll" id="paneScroll">
+
+          <!-- ══ NOTHING CHOSEN YET, AND THE COLUMN SAYS SO ═══════════════
+               ONE SENTENCE, DOWN FROM TWO. This column used to serve two
+               steps — pick a patent, then pick a drawing — because the
+               drawing opened here. The drawing is a lightbox over the
+               viewport now and the record is in this column, so the column
+               has one empty state and one thing to say about it.
+
+               IT SAYS SOMETHING AT ALL because design-language §8 names the
+               alternative: an empty region that says nothing looks like a
+               region that failed to load. -->
+          <div class="pane-idle" id="paneIdle">
+            <p class="t-body">Pick a patent on the left to read its record.</p>
+          </div>
+
+          <!-- ══ THE RECORD TAKES THE RIGHT COLUMN ═══════════════════════
+               platform.md §4.5. THE TWO COLUMNS DIVIDE BY HOW HARD YOU ARE
+               LOOKING, and the division is now between them rather than
+               inside one. LEFT is the set: three bands a row and an abstract
+               clamped to three lines, and it never goes away. RIGHT is the one patent you are
+               reading: every identifier, the abstract, the claims, and the
+               drawings under the prose.
+
+               IT USED TO BE OPPOSITE, and the swap cost the list. The record
+               stood in the list's place and the founder lost the results
+               while reading one of them — so moving through a set was close,
+               find your place, open, once per patent. Reading a record and
+               keeping your place in the set are one act, and they are side
+               by side now for the same reason the drawing and the text were.
+
+               IT IS IN FLOW, not an overlay. The column is the record's while
+               it is open and the idle sentence steps aside, which is why
+               closing it is an X rather than a back chevron — nothing is
+               behind it. -->
+          <section class="rec" id="recPane" aria-labelledby="recTitle" hidden>
+            <!-- CLOSE IS AN X AT THE TRAILING EDGE, not a back chevron at the
+                 leading one. A chevron says "the thing you were looking at is
+                 behind this and you are stepping back to it" — which was true
+                 when the record slid over the pane and left a peek of it. The
+                 record IS the column now. So the control
+                 dismisses this pane rather than retreating from it, and an X
+                 is the glyph for that.
+
+                 DOM ORDER IS WHAT PINS IT RIGHT. `.rec-head h2` is `flex:1`,
+                 so the heading takes every spare pixel and whatever follows it
+                 is pushed to the trailing edge. No auto margin, and nothing to
+                 flip for RTL — the row is already logical. -->
+            <div class="rec-head">
+              <h2 class="t-title" id="recTitle" tabindex="-1">The patent record</h2>
+              <!-- ══ WHAT THIS DOES TO YOUR SET ══════════════════════════════
+                   THESE TWO ARE HERE AND THE OTHER THREE ARE AT THE FOOT, and
+                   the split is by WHERE THE ACT LANDS rather than by how often
+                   it is pressed. Star and Find similar change the founder's own
+                   set — one adds to the shortlist that leaves the product, the
+                   other re-orders the column beside this one. Neither of them
+                   is about this document; both of them are about the search
+                   they are standing in. So they sit in the head, beside the
+                   stepping pair, which is the other control here that moves
+                   through the set rather than reading the record.
+
+                   THE FOOT KEEPS WHAT TAKES THE PATENT OUT. Open in IPtech,
+                   Copy citation and Export are the end of reading this record,
+                   and they belong where the reading ends.
+
+                   IT IS ONE STAR, NOT A SECOND ONE. Same .set-star class, same
+                   data-star written by record.mjs, same delegated handler in
+                   list.mjs — moving the button moves nothing else, because
+                   paintStars() writes aria-pressed on every [data-star] in the
+                   document and never knew where they were. -->
+              <button class="rec-act set-star" id="recStar" type="button"
+                      data-star="" aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.9 5.88 6.5.95-4.7 4.58 1.11 6.47L12 17.33l-5.81 3.05 1.11-6.47-4.7-4.58 6.5-.95z"/></svg>
+                <span>Star</span>
+              </button>
+              <button class="rec-act" id="recSimilar" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h11"/><path d="M10 12h11"/><path d="M10 18h11"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+                <span>Find similar</span>
+              </button>
+              <span class="rec-head-sep" aria-hidden="true"></span>
+
+              <!-- ══ STEPPING, AND IT SURVIVED THE MOVE ═════════════════════
+                   platform.md §4.5. These were built because the record ate
+                   the list and there was no other way through a set. The list
+                   is back and they stay, on a narrower argument that still
+                   holds: reading five in a row is five round trips to the
+                   column beside you, and the founder's eyes are on the record
+                   while they compare. Keeping a hand on the set is worth one
+                   pair of controls.
+
+                   THE POSITION IS SPOKEN, not shown as "3 / 41". A visible
+                   counter is a fifth fact in a head that has three, and the
+                   number is only ever wanted by someone who has lost their
+                   place — which is exactly who aria-label serves. -->
+              <button class="icon-btn" id="recPrev" type="button"
+                      aria-label="Previous patent in your results">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <button class="icon-btn" id="recNext" type="button"
+                      aria-label="Next patent in your results">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+              <button class="icon-btn" id="recClose" type="button"
+                      aria-label="Close this patent">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+            <div class="rec-body" id="recBody"></div>
+
+            <!-- ══ THE CLOSING BLOCK · platform.md §4.5 ═══════════════════════
+                 NOT A .pn-sec. Drawings, Abstract and Claims are the published
+                 document; these are five things to DO with it, and a fourth
+                 section in the same grammar would claim they are part of the
+                 patent. It sits OUTSIDE .rec-body, which is the element the
+                 record renderer owns and replaces.
+
+                 THE DIVIDER IS THE RECORD'S OWN, USED ONCE ALREADY. .pn-head
+                 closes with the same 1px --border rule, so the patent is
+                 bracketed between two identical hairlines: everything between
+                 them is the document, everything outside is Terrain.
+
+                 STATIC RATHER THAN RENDERED, for two reasons. lmMenu binds by
+                 id at init and is not delegated, so a menu rebuilt on every
+                 record open would need a delegated driver written for it. And
+                 a block outside #recBody is a block waitOn() and failWith()
+                 cannot leave standing over a record that never arrived —
+                 record.mjs hides it explicitly instead. -->
+            <div class="rec-end" id="recEnd" hidden>
+              <!-- NO HEADING. "Take this further" named five acts in two
+                   groups; what is left is three ways of taking the patent out,
+                   under a hairline, each one labelled. A heading over three
+                   labelled controls restates them. -->
+              <div class="rec-acts">
+        <a class="rec-act" id="recOut" href="https://iptech.cc/Member/Account/LogOn?ReturnUrl=%2F"
+           target="_blank" rel="noopener noreferrer">
+          <span>Open in IPtech</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        </a>
+
+                <button class="rec-act" id="recCite" type="button">
+                  <!-- BOTH GLYPHS SHIP AND [data-done] SWAPS THEM. The mark
+                       confirms; the LABEL does not change, because changing it
+                       would change the accessible name and announce the same
+                       fact twice — §7's "live regions announce once". -->
+                  <svg class="rec-act-i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  <svg class="rec-act-ok" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  <span>Copy citation</span>
+                </button>
+
+                <!-- IT OPENS UPWARD. This is the last control in a .rec that
+                     is overflow:clip, so a menu below it is a menu nobody
+                     sees. .lm-up is the one modifier that says so. -->
+                <div class="lm lm-up" id="recExpWrap">
+                  <button class="rec-act" id="recExpBtn" type="button" aria-haspopup="menu"
+                          aria-expanded="false" aria-controls="recExpMenu">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                    <span>Export this record</span>
+                    <svg class="lm-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                  <div class="lm-menu" id="recExpMenu" role="menu" aria-label="Export this record">
+                    <button class="lm-item" type="button" role="menuitem" data-rec-export="csv"><span>Spreadsheet</span></button>
+                    <button class="lm-item" type="button" role="menuitem" data-rec-export="md"><span>Markdown</span></button>
+                  </div>
+                </div>
+
+                <!-- WHAT THE FILE CONTAINS, BEHIND ONE CONTROL. It was a
+                     paragraph standing open under the row, and the sentence it
+                     carries is true and worth having: a founder pressing Copy
+                     or Export has no way to see inside the file first. What it
+                     is not is something to read every time a record opens.
+                     §7: "a narrow column has room for the list or for prose
+                     about the list — every sentence that is not the list lives
+                     behind one control." This is that control, and it is the
+                     same .info the results heading uses. -->
+                <span class="info rec-end-info">
+                  <button class="info-btn" type="button" aria-expanded="false"
+                          aria-label="What these take with them">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                  </button>
+                  <span class="info-pop t-body" role="note"><b>Copy citation</b> takes the number,
+                    title, holder, where, status and main class.<br><br><b>Export this record</b>
+                    carries the same fields as your starred set, so a file of one and a file of
+                    fifty say the same things about a patent.<br><br>Neither writes anything the
+                    record above did not.</span>
+                </span>
+              </div>
+          </section>
+
+          <!-- ══ the figure viewer · platform.md §4.5 ══════════════════════
+               ONE DRAWING, LARGE, WITH THE CONTROLS TO READ IT — and since
+               2026-09-24 it takes the VIEWPORT rather than a column. It sat
+               inside .panecol on three rules: §3.2 had no scrim, app/ had no
+               position:fixed, and there was no modal and no focus trap. The
+               record moved into that column, so filling it would cover the
+               text the drawing is read against, and the left column would
+               give a technical drawing 44% of the window.
+
+               ALL THREE RULES ARE NARROWED TO THIS ONE NODE rather than
+               repealed — one scrim, one fixed element, one trap — and §3.2
+               anticipated it: "a dimming layer would arrive with whatever
+               first needs one". figure-viewer.mjs's header carries the full
+               argument and the portal that makes `inert` possible.
+
+               STILL NOT role="dialog". Announcing it as a dialog would
+               describe the wrong event: this is a drawing, opened by pressing
+               it and left by a control. aria-modal and the inert tree do the
+               work that matters without renaming what the founder sees. -->
+          <section class="figview" id="figView" hidden aria-label="Patent drawing">
+            <!-- THE PANEL, INSIDE THE FIXED COVER. The cover owns the scrim
+                 and the gutter; the panel owns the surface, the hairline and
+                 the rounded corners. Two elements because one cannot both
+                 fill the viewport and sit inset from it. -->
+            <div class="figview-panel">
+              <div class="figview-head">
+                <span class="figview-cap t-micro" id="figCap" role="status" aria-live="polite"></span>
+                <!-- THE X IS AT THE TRAILING EDGE, like the record's. One glyph,
+                     one act, in one place across the surface. -->
+                <button class="icon-btn figview-x" id="figClose" type="button"
+                        aria-label="Close this drawing">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+              </div>
+
+              <div class="figview-stage" id="figStage">
+                <img class="figview-img" id="figImg" alt="" decoding="async">
+
+                <!-- PAGING SITS ON THE STAGE, at the two edges it points at. It
+                     is the one pair of controls whose position IS its meaning. -->
+                <button class="figview-step figview-prev" id="figPrev" type="button"
+                        aria-label="Previous drawing">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <button class="figview-step figview-next" id="figNext" type="button"
+                        aria-label="Next drawing">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+
+                <!-- ══ the action bar ══ It floats over the drawing rather than
+                     taking a band of the frame, because the drawing is the
+                     subject and every pixel the chrome takes is a pixel of it.
+                     §5's shadow case exactly: something that floats free of the
+                     page over content it does not push aside. It carries a
+                     hairline too — a shadow cannot separate two surfaces of the
+                     same colour, and this one sits on white line-work. -->
+                <div class="figbar" role="group" aria-label="How the drawing is shown">
+                  <button class="figbar-btn" id="figRot" type="button" aria-label="Rotate a quarter turn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+                  </button>
+                  <button class="figbar-btn" id="figReset" type="button" aria-label="Reset the view">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+                  </button>
+                  <span class="figbar-sep" aria-hidden="true"></span>
+                  <button class="figbar-btn" id="figOut" type="button" aria-label="Zoom out">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/></svg>
+                  </button>
+                  <button class="figbar-btn" id="figIn" type="button" aria-label="Zoom in">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                  </button>
+                  <span class="figbar-sep" aria-hidden="true"></span>
+                  <button class="figbar-btn" id="figFull" type="button"
+                          aria-pressed="false" aria-label="Fill the screen">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- THE STRIP SCROLLS AND THE STAGE DOES NOT. Seventeen drawings
+                   do not fit a column at a readable size, and shrinking them
+                   until they do makes every one of them useless. -->
+              <div class="figstrip" id="figStrip" role="group" aria-label="The other drawings"></div>
+            </div>
+          </section>
+
+        <!-- UNDER the column it attributes, and INSIDE the scroller it belongs
+             to. It was a sibling of #paneScroll in .panecol, which is a flex
+             column with overflow:hidden — so it was pinned to the column's
+             bottom edge at every scroll position, a credit floating over the
+             claims rather than following them. It was never position:fixed;
+             being outside the scroller was enough. -->
+        <p class="foot"><em>Powered by</em><img class="foot-mark foot-mark-light" src="../brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg" alt="Innovue" width="95" height="13"><img class="foot-mark foot-mark-dark" src="../brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg" alt="Innovue" width="95" height="13"></p>
+        </div>
+      </div>
+
+    </main>
+  </section>

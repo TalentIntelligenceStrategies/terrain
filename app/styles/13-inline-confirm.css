@@ -1,0 +1,82 @@
+/* ══ 13 · INLINE CONFIRM ════════════════════════════════════════════════════
+   THE ONE PLACE ON ANY SURFACE THAT SITS BETWEEN A FOUNDER AND SOMETHING
+   IRREVERSIBLE, which is why 99-reduced-motion.css declares it OPEN outright
+   rather than shortening its transition. A collapsed track that never ticks
+   would hide the consequence AND both actions -- a blank region, in exactly
+   the place a blank region costs most.
+
+   CANCEL LEADS AND THE ACT FOLLOWS. Tab must reach the retreat before the
+   commitment. The safe path carries the weight and the act is the quiet one:
+   neither is .btn-primary, because the primary action of a settings card is
+   never deletion.
+
+   THE CLIP COMES OFF ONCE IT HAS LANDED, and that is not cosmetic:
+   overflow:hidden clips a 2px focus ring at 2px offset, so without
+   [data-done] the two buttons inside have no visible focus state. `data-done`
+   stays a data- attribute rather than becoming .is-done, because it rides with
+   [data-open], which is a FINDER -- the state conventions in app/README.md.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── .dc · the inline confirm ────────────────────────────────────────────
+   THERE IS NO MODAL IN THIS PRODUCT, no <dialog>, and the slide-over is
+   retired. §4's gate is the one place the product asks "are you sure" and
+   it does it by being a turn in a conversation, not by covering the screen.
+   So a destructive act confirms where it lives: the card grows a region.
+
+   grid-template-rows 0fr -> 1fr is §6's named alternative to a height
+   transition and the mechanism .tmsg-grow and .set-run already use. ENTER
+   --dur-3, EXIT --dur-2 — the base rule carries the exit and the attribute
+   overrides it, .set-run's shape, because "exit is faster than enter" is
+   everywhere and not only on the view swap.
+
+   AND NOTHING INSIDE IT MOVES. .tmsg-grow fades its contents in while the
+   track is still opening and earns it, because it is masking a
+   SUBSTITUTION — a sweep leaving and a card arriving, which is what the
+   blur is for. Nothing is substituted here, so the only motion is the
+   track, which is what the prohibition on contents moving inside a moving
+   container asks for. Getting it for free is the reward for not needing a
+   crossfade.                                                             */
+.dc{display:grid;grid-template-rows:0fr;
+    transition:grid-template-rows var(--dur-2) var(--ease)}
+.dc[data-open]{grid-template-rows:1fr;transition-duration:var(--dur-3)}
+.dc>div{overflow:hidden;min-height:0}
+/* once it has landed the clip and the fr track come off. NOT cosmetic:
+   overflow:hidden clips a 2px ring at 2px offset, so without this the two
+   buttons inside have no visible focus state. .tmsg-answer.is-done is the
+   precedent and the same two lines. */
+.dc[data-open][data-done]{grid-template-rows:auto;transition:none}
+.dc[data-open][data-done]>div{overflow:visible}
+/* --r-inner BY NAME, NOT BY THE CONCENTRIC ARITHMETIC, and the difference is
+   worth stating because the arithmetic looks like it should apply and does
+   not. The region sits inside .card-body's own --s-20, so the inset (20)
+   EXCEEDS the card's radius (16) and there is no shared curve left to be
+   concentric with — the rule binds only while the inner box is inside the
+   outer corner. --r-inner is simply the token for a box inside a card. */
+.dc-in{margin:var(--s-4) 0 var(--s-4);padding:var(--s-16);
+    background:var(--surface-sunken);border-radius:var(--r-inner)}
+/* §5: a label that heads a box is not a label inside it. --text-2 and a
+   12px gap, and .t-label rather than micro — micro is a leaf label, and
+   that is the mistake "AND YOU TOLD US" made and had corrected. */
+.dc-title{margin:0 0 var(--s-12);color:var(--text-2)}
+/* the consequence, in words. .gate's cap and .gate's wrap, because it is
+   doing .gate's job one surface down. */
+.dc-say{margin:0;color:var(--text-1);line-height:1.6;
+    max-width:68ch;text-wrap:pretty}
+.dc-say b{font-weight:600}
+/* SPECCED AND NOT BUILT · the skeleton contract. The field worth having
+   types the thing being destroyed — typing "DELETE" tests obedience,
+   typing the identifier tests knowledge — and §8 puts the account name in
+   the grey-bar column, so the string to type is a bar. A field that asks
+   you to type a grey bar is not a confirmation. It returns the moment a
+   real account identifier prints on screen, and it types THAT, not a word.
+.dc-field{margin-top:var(--s-16)}
+.dc-field label{display:block;margin-bottom:var(--s-6);color:var(--text-2)}
+.dc-field .fld{width:min(320px,100%)}                                     */
+/* 32 above the actions against 12 and 16 inside: 2x the largest gap in the
+   group, which is §5's floor, and the same 32 the confirm card's two turns
+   settled on. There is no 28.
+   CANCEL LEADS AND THE ACT FOLLOWS, left-aligned. Tab must reach the
+   retreat before the commitment, and .dock-act already broke the
+   trailing-primary habit on 2026-09-11. */
+.dc-act{display:flex;align-items:center;gap:var(--s-8);margin-top:var(--s-32);
+    flex-wrap:wrap}

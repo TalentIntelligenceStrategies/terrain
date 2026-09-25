@@ -1,0 +1,228 @@
+/* ══ 12 · FIELD, SWITCH AND THE PREFERENCE ROW ═════════════════════════════
+   DISABLED IS NOT OPACITY, AND NEITHER IS INVALID (design-language.md §7).
+   The fill is the signal and the text stays legible -- the licence to fade
+   covers a control whose label is ALL there is in it, and a filled control
+   fades its fill and its label TOWARDS each other. Measured: a secondary
+   button at 45% came out at 1.06:1, which is a label nobody can read.
+
+   THE SWITCH'S ON STATE IS --text-1 AND DELIBERATELY NOT THE ACCENT. §2
+   settled that VALUE is how this system says "this one is on", and a switch is
+   a STATE rather than an ACTION. An accent means act on this. A switch that
+   went green with the accent would be saying on-means-good, which is the one
+   thing colour may not say here.
+
+   EVERY NUMBER IS A STEP, and the geometry is CONCENTRIC BY ARITHMETIC rather
+   than by exemption: 40x24 track, 16 knob, 4 inset, 16 of travel.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── .pref · the settings row ────────────────────────────────────────────
+   §7's "a list, not a page" applied to preferences: a label, optionally one
+   sentence of consequence, one control at the trailing edge, rows dividing
+   on a hairline. A settings card and a runs list are the same object.
+
+   A GRID AND NOT A FLEX LINE, and the help text is the whole reason. With
+   flex, align-items:center centres a 36px control against a two-line body
+   and drops the switch below the thing it switches; flex-start pins it to
+   the label's ascender. Both are wrong. The grid puts label and control on
+   ROW ONE and the help on ROW TWO under the label only, so the control
+   centres against the label whether or not help exists. Same finding as
+   #cfAnswerChips on 2026-09-11.
+
+   THE CARD IS ITS OWN QUERY CONTAINER, and this is the first container-type
+   in the file. A settings card is handed whatever width its column has; a
+   viewport query cannot see that. 480 is where a 280px field plus the 16px
+   gap leaves under 180px for the label, which is where a two-word label
+   starts wrapping.
+   *It is also the only one, and the note further up says why: three other
+   @container blocks styled two split layouts whose markup no longer exists.
+   A container query needs a subject that exists and a width the viewport
+   does not know. This has both.*                                        */
+.pref-card{container-type:inline-size}
+/* THE DIVIDER IS ON THE TOP EDGE, and the runs list's is on the bottom — a deliberate
+   difference rather than a slip. A trailing border plus :last-child works only
+   while a row IS the last child, and the Your data card puts the inline
+   confirm after its one row, so the row stopped being last and kept a line
+   nothing was under. Leading borders make that structurally impossible: the
+   first row has none and every row after it draws its own, whatever follows
+   the group. Renders identically.
+   *The alternative was :has(+ .dc), and this file has no :has, no :is and no
+   :where anywhere — one rule is not worth introducing a selector idiom for.* */
+.pref{display:grid;grid-template-columns:1fr auto;align-items:center;
+      column-gap:var(--s-16);row-gap:var(--s-4);
+      padding:var(--s-14) 0;border-top:1px solid var(--border)}
+.pref:first-child{border-top:0;padding-top:var(--s-4)}
+.pref:last-child{padding-bottom:var(--s-4)}
+/* --text-1 because the label is the thing being looked for. The step to
+   --text-2 below is the whole of the hierarchy; §2 has no colour to spend
+   here and does not need any. */
+.pref-label{grid-column:1;grid-row:1;min-width:0;color:var(--text-1)}
+.pref-help{grid-column:1;grid-row:2;margin:0;
+      font-size:13px;line-height:1.55;color:var(--text-2);
+      max-width:68ch;text-wrap:pretty}
+/* 36px RESERVED IN EVERY STATE, so a switch row and a field row are the
+   same height and nothing on the card moves when a value becomes a field.
+   Reserved rather than transitioned: .lm-tick's rule, one component over. */
+.pref-ctl{grid-column:2;grid-row:1;display:flex;align-items:center;
+      gap:var(--s-8);min-height:36px}
+.pref-val{grid-column:2;grid-row:1;display:flex;align-items:center;
+      gap:var(--s-8);min-height:36px;justify-content:flex-end;min-width:0}
+.pref-val[hidden]{display:none}
+.pref-val .fld{width:min(240px,100%)}
+.pref-edit{display:flex;align-items:center;gap:var(--s-6);flex:0 0 auto}
+/* a field that can fail needs a second axis: the row, then the message under
+   it. .pref-val is a flex line, so the column variant is the exception and
+   not the default — one row in four validates anything. */
+.pref-val-col{flex-direction:column;align-items:flex-end;gap:var(--s-6)}
+.pref-editrow{display:flex;align-items:center;gap:var(--s-8);min-width:0}
+/* a value the founder has just changed. --skeleton-strong is the token for
+   exactly this and had one user; this is its second. One step darker, so
+   "changed" reads without leaving the skeleton grammar. */
+.pref-val .sk[data-changed]{background:var(--skeleton-strong)}
+/* the password row. Not a bar, because a run of dots is what a password
+   looks like everywhere and a bar would read as a value we are hiding
+   rather than as one that is masked. It is chrome, not an identity. */
+.pref-dots{font-family:'Inconsolata',ui-monospace,monospace;
+      letter-spacing:.18em;color:var(--text-2)}
+
+/* STACKED. 4 of row-gap plus 8 here is 12 inside the group against 28
+   between two rows' content — 2.3x, and §5's floor is 2x. Both addends are
+   steps; 28 is two --s-14 paddings and not a step written as one. */
+@container (max-width:480px){
+  .pref{grid-template-columns:1fr}
+  .pref-ctl,.pref-val{grid-column:1;grid-row:auto;
+      justify-content:flex-start;margin-block-start:var(--s-8)}
+  .pref-val .fld{width:100%}
+}
+
+/* ── .fld · the text field ───────────────────────────────────────────────
+   THE FIRST ONE IN THE FILE. Two <input>-shaped things existed and neither
+   was a field: the composer is a --r-widget panel that owns its own edge,
+   and ~~.side-search~~ was a sunken strip with a transparent input inside it.
+   Both are components; neither drops into a row. *The second is deleted —
+   see its own note — and the distinction it illustrated is why this one had
+   to be built rather than borrowed.*
+
+   36px IS .btn'S HEIGHT, because field-plus-Save is the commonest pairing
+   in the product and two pixels between them reads as a mistake. --s-10
+   inline is .lm-btn's and .said-edit's padding, so the caret lands where
+   every other control's label does.
+
+   FOCUS IS THE RING AND NOT THE EDGE, and this settles a question the file
+   was answering two ways. Measured on --surface: --border is 1.27:1 and
+   --border-strong is 1.53:1, so .cmp-inner's focus signal is a step between
+   two edges BOTH under the 3:1 a focus indicator owes — a state nobody can
+   see. .said-edit's --text-2 edge is 6.99:1 and does read. They look like
+   the same decision and are not. The ring is already declared, it is the
+   same indicator as every other control on the screen, and it survives
+   forced colours where a swap between two greys does not.                */
+.fld{display:block;width:100%;height:36px;padding:0 var(--s-10);
+     font-size:14px;line-height:1.55;
+     color:var(--text-1);background:var(--surface);
+     border:1px solid var(--border);border-radius:var(--r-control);
+     transition:border-color var(--dur-1) var(--ease)}
+.fld::placeholder{color:var(--text-3)}
+/* a multiline field — the same object at a different height. resize is
+   vertical rather than the composer's none-plus-autogrow, because nothing
+   here is one component at two sizes: this is a box you write a paragraph
+   in and the founder may want it bigger. */
+.ta{display:block;width:100%;min-height:104px;padding:var(--s-10);
+     font:inherit;font-size:14px;line-height:1.55;
+     color:var(--text-1);background:var(--surface);
+     border:1px solid var(--border);border-radius:var(--r-control);
+     resize:vertical;
+     transition:border-color var(--dur-1) var(--ease)}
+.ta::placeholder{color:var(--text-3)}
+/* NOT opacity. .btn:disabled fades because its label is all there is in it;
+   a faded field fades its value to unreadable. The sunken fill is what the
+   token layer assigns to an input track. --text-disabled is deliberately
+   NOT used: it is a non-text token, and the value in a field is text. */
+.fld:disabled,.ta:disabled{background:var(--surface-sunken);color:var(--text-3);
+     cursor:default}
+/* INVALID IS WEIGHT, NOT COLOUR, and the reason is narrower than §2's.
+   §2 would permit a hue — an error is a discrete state — but the hue it
+   would take is --state-expired, which in this product means EXPIRED PATENT
+   and may be on a chip the founder is reading on the same screen. Two reds
+   meaning two things is worse than no red. So the edge doubles in weight:
+   an inset 1px ring over the 1px border, two pixels of ink and no layout
+   change. A border-width change would move the value one pixel right,
+   which is a layout property doing a state's job. */
+.fld[aria-invalid="true"],.ta[aria-invalid="true"]{border-color:var(--text-1);
+     box-shadow:inset 0 0 0 1px var(--text-1)}
+/* and the message is what carries the fact. The edge only says WHERE. */
+.fld-msg{display:flex;align-items:flex-start;gap:var(--s-6);
+     margin:var(--s-6) 0 0;font-size:13px;line-height:1.55;
+     color:var(--text-1);max-width:68ch;text-wrap:pretty}
+.fld-msg svg{flex:0 0 16px;margin-block-start:var(--s-2);color:var(--text-2)}
+.fld-msg[hidden]{display:none}   /* display:flex outranks [hidden] alone */
+
+/* ── .sw · the switch ────────────────────────────────────────────────────
+   A SWITCH AND NOT A TWO-OPTION .seg, and §7's own finding decides it: a
+   segmented control is a tablist when it selects one of N, and a group of
+   aria-pressed buttons when each is independently on or off. A two-option
+   On/Off seg is NEITHER — it is one boolean drawn as two mutually exclusive
+   buttons, so aria-pressed on both is false and the honest role is radio.
+   role="switch" is a boolean with one name and one aria-checked, which is
+   what the fact is. Three more, in descending weight: .seg is 24px at
+   11.5px because it was sized to the chip metrics beside it in .work-head
+   and this row is 13px beside a 36px field; a seg costs the width of both
+   labels, so ten rows have ten trailing edges where ten switches have one;
+   and reading two labels to learn one fact is two glances.
+
+   ON IS --text-1, AND THAT IS DELIBERATELY NOT THE ACCENT. It is the fill the
+   star takes and the fill --mark-1 takes for the entity being tracked. §2
+   settled that VALUE is how this system says "this one is on", and a switch is
+   a state rather than an action.
+
+   .btn-primary READ --text-1 TOO AND NO LONGER DOES — it is §3.8's primary
+   action and now reads --accent. The two are the same colour today and will
+   not be, so the distinction has to be carried in the token rather than in the
+   value: an accent means ACT ON THIS, a near-black switch means THIS IS ON.
+   A switch that went green with the accent would be saying on-means-good,
+   which is the one thing §2 forbids colour from saying here.
+
+   EVERY NUMBER IS A STEP. 40x24 track, 16 knob, 4 inset, 16 of travel
+   (40 - 4 - 16 - 4). CONCENTRIC BY ARITHMETIC rather than by exemption:
+   --r-pill on 24 resolves to 12, --r-pill on 16 resolves to 8, 12 - 4 = 8.
+
+   THE KNOB CARRIES THE STATE AND THE RING CARRIES THE STRUCTURE. Measured
+   on --surface: the off knob is 3.97:1 against its own track and 4.70:1
+   against the card, both over the 3:1 a component state owes; the on track
+   is 15.3:1. The 1.53:1 ring is the hairline every bordered control in this
+   file carries — "elevation is a hairline", at control scale.
+
+   NO GLYPH IN THE KNOB. A check at stroke 1.5 in a 16px circle renders as a
+   smudge, and "never colour alone" is satisfied twice over already:
+   position is the primary channel and fill is the second, neither a hue. */
+.sw{position:relative;flex:0 0 var(--s-40);width:var(--s-40);height:var(--s-24);
+    border-radius:var(--r-pill);background:var(--surface-sunken);
+    box-shadow:inset 0 0 0 1px var(--border-strong);
+    transition:background var(--dur-1) var(--ease),
+               box-shadow var(--dur-1) var(--ease)}
+/* 44px of target on a 40x24 control, and the control does not move to get
+   it — the device .meter buys with a negative margin. 24+20 and 40+4. */
+.sw::before{content:"";position:absolute;
+    inset:calc(var(--s-10) * -1) calc(var(--s-2) * -1)}
+.sw-knob{position:absolute;top:var(--s-4);left:var(--s-4);
+    width:var(--s-16);height:var(--s-16);border-radius:var(--r-pill);
+    background:var(--text-3);
+    transition:transform var(--dur-1) var(--ease),
+               background var(--dur-1) var(--ease),
+               scale var(--dur-1) var(--ease)}
+.sw[aria-checked="true"]{background:var(--text-1);box-shadow:none}
+.sw[aria-checked="true"] .sw-knob{background:var(--surface);
+    transform:translateX(var(--s-16))}
+/* PRESS AND TRAVEL ON ONE OBJECT. §6 forbids contents moving while their
+   container moves; here there is no container and no contents, because the
+   press is the independent `scale` property and the travel is `transform`,
+   both on the knob. First use of `scale` as a property in this file, and
+   that is the reason for it — transform:scale() would have had to restate
+   the translate, and the two would fight. */
+.sw:active .sw-knob{scale:.88}
+/* NO OPACITY. A faded switch is a switch whose position cannot be read.
+   Position and fill both survive; only the press goes. --text-disabled is
+   the non-text token doing exactly the job it is reserved for. */
+.sw:disabled{cursor:default;box-shadow:inset 0 0 0 1px var(--border)}
+.sw:disabled .sw-knob{background:var(--text-disabled)}
+.sw:disabled[aria-checked="true"]{background:var(--text-disabled);box-shadow:none}
+.sw:disabled[aria-checked="true"] .sw-knob{background:var(--surface)}
+.sw:disabled:active .sw-knob{scale:1}

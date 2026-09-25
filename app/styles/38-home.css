@@ -1,0 +1,203 @@
+/* ── 38 · the home surface ────────────────────────────────────────────────
+   The field tiles, the composer's toolbar and the coverage block. Its layout
+   follows Innovue's PI-VuePat home page; every value in it is Terrain's.
+
+   ONE COLUMN WIDTH FOR ALL THREE BLOCKS. Their page centres the tiles, the
+   composer and the coverage card at three different widths, which reads as
+   three decisions nobody made. Here the left edge is the same line down the
+   whole page, and the eye gets one ruler instead of three. */
+
+/* ══ the technology fields ═══════════════════════════════════════════════ */
+
+.fields-lbl{margin:0 0 var(--s-10);color:var(--text-3)}
+/* the tiles choose what the search runs against, so they sit with the
+   composer rather than floating above it as a banner. */
+.conv-body > .conv-col:has(.fields){margin-bottom:var(--s-14)}
+
+/* THE DOCK'S BOTTOM PADDING AND THE STATUS LINE'S RESERVED HEIGHT BOTH EXIST
+   FOR A SURFACE THIS NO LONGER IS. The dock used to be the sticky foot of a
+   scrolling thread, and .cmp-status held 17px open so a message arriving under
+   the composer could not shift the page. Nothing scrolls under the composer
+   now and the status is empty until a search fails, so the reserved band is
+   just a gap before the coverage card.
+
+   The height is still RESERVED rather than collapsed — a failure sentence that
+   pushes the card down is the jump the reservation was for. It is reserved
+   inside the dock instead of under it. */
+.conv-dock{padding-bottom:0}
+.conv-dock .cmp-status:empty{min-height:0;margin-top:0}
+
+/* auto-fit rather than repeat(5,1fr): the tile count is the engine's, not the
+   stylesheet's, and a hard 5 breaks the day a sixth field opens. */
+.fields{display:grid;gap:var(--s-10);
+        grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+
+/* width:100% IS WHAT MAKES THE TILES THE SAME WIDTH, and the grid was never
+   the problem. The columns computed as 180px 180px 180px 180px 180px and the
+   tiles inside them measured 170/163/141/140/148 — because a <button> is a
+   form control, and a form control is not stretched to fill its grid track the
+   way a <div> is. It sizes to its own content and sits in the middle.
+
+   So the ruler disagreed with every rule in this file, and the rules were all
+   correct. Any grid or flex cell that IS a button needs this line.
+
+   min-width:0 stays because the other trap is real too: `1fr` is
+   minmax(auto,1fr), whose auto floor is min-content, so a long word can push a
+   column wider. It is not what happened here. */
+.field{position:relative;width:100%;min-width:0}
+.field-name{overflow-wrap:break-word}
+
+/* THE TILE IS THE ONE PLACE A GLYPH IS NOT 16 OR 18px. §9 sizes icons for
+   controls in a row and card heads; a 150px selection tile is neither, and a
+   16px mark inside one reads as a mistake. 24px, same Lucide set, same 1.5
+   stroke. It is an extension to §9 rather than an exception to it, and it
+   belongs in design-language.md. */
+/* CONTENT IS TOP-ANCHORED, NOT CENTRED, and the badge is why. Four of the five
+   tiles carry a third row and one does not, so centring put the covered field's
+   icon 13px below the other four — a row of five marks that did not line up,
+   with nothing on screen to say why.
+
+   Anchoring from the top makes the icon and the name land at the same y on
+   every tile whatever hangs below them, and it survives the name wrapping to
+   two lines at a narrow column. The alternative — pinning the badge to the
+   tile's bottom edge — aligns the same marks and then collides with the second
+   line of a wrapped name, which is the failure the corner placement existed to
+   avoid and is not worth reintroducing lower down. */
+.field{display:flex;flex-direction:column;align-items:center;
+       justify-content:flex-start;gap:var(--s-10);min-height:120px;
+       padding:var(--s-20) var(--s-14);text-align:center;
+       background:var(--surface);border:1px solid var(--border);
+       border-radius:var(--r-widget);cursor:pointer;color:var(--text-2);
+       font:inherit;font-size:13px;line-height:1.4;
+       transition:border-color var(--dur-1) var(--ease),
+                  background var(--dur-1) var(--ease),
+                  color var(--dur-1) var(--ease)}
+.field-icon{display:flex;color:var(--text-3);
+            transition:color var(--dur-1) var(--ease)}
+.field-name{font-weight:500}
+
+/* §3.8 SITE 3 OF 3 — the selected state of a control. The LABEL and the glyph
+   take the accent; the tile stays --surface, because a filled accent tile here
+   would be a second primary action on a surface that already has Search. */
+.field[aria-pressed="true"]{border-color:var(--border-strong);color:var(--text-1)}
+.field[aria-pressed="true"] .field-name{color:var(--accent);font-weight:600}
+.field[aria-pressed="true"] .field-icon{color:var(--accent)}
+
+/* not yet covered. aria-disabled, so it keeps its tab stop and can say why. */
+.field[aria-disabled="true"]{background:var(--surface-sunken);color:var(--text-3);
+                             cursor:default}
+.field[aria-disabled="true"] .field-icon{color:var(--text-disabled)}
+/* THE BADGE SITS UNDER THE NAME, in flow, and it is a chip rather than a line
+   of text — which is the distinction that stops it reading as part of what the
+   field is called. A bordered chip on its own row is metadata about the tile,
+   the same relation a status chip has to a row; an unbordered third line of
+   the name is not.
+
+   NEGATIVE MARGIN AGAINST THE FLEX GAP, and it is grouping rather than nudging.
+   The tile's gap is s-10 and §5 wants a group's inner gap at no more than half
+   its outer one, so the name and its badge close to s-4 while the icon stays a
+   full s-10 away. Both values are on the scale; the subtraction is not a third
+   value, it is the one the gap already committed to being cancelled.
+
+   No bolt. §9 is one glyph, one act — that one named no act, it decorated a
+   state a word already states. */
+.field-soon{margin-top:calc(var(--s-4) - var(--s-10));
+            padding:2px var(--s-6);border-radius:var(--r-chip);
+            background:var(--surface);border:1px solid var(--border);
+            font-size:10.5px;line-height:1.5;letter-spacing:.02em;
+            font-weight:500;color:var(--text-3);white-space:nowrap}
+
+@media (hover:hover){
+  .field:hover:not([aria-disabled="true"]){border-color:var(--border-strong);
+                                           color:var(--text-1)}
+}
+.field:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+/* ══ the composer's toolbar ══════════════════════════════════════════════ */
+
+/* the one primary action on this surface. It carries a word because a search
+   spends a point and returns a set, and an arrow cannot say that. */
+.cmp-search{flex:0 0 auto;gap:var(--s-8)}
+.cmp-search[disabled]{opacity:.5;cursor:default}
+
+/* ══ the coverage block ══════════════════════════════════════════════════ */
+
+.cover{margin-top:var(--s-24)}
+
+/* 86ch, NOT §5's 68ch, and the difference is what this sentence is. The measure
+   cap is for body prose — several lines the eye has to track back across. This
+   is one line that states the scope of the table under it, and breaking it in
+   two puts "Europe, Korea and Japan" on a row of its own where it reads as a
+   second, smaller claim. It is a caption above a table, so it is capped to the
+   longest it can be while staying one line at this column's width, and it wraps
+   below ~760px like anything else. */
+.cover-scope{margin:0 0 var(--s-14);color:var(--text-2);max-width:86ch;
+             text-wrap:pretty}
+/* the dates are figures, so they are Inconsolata and they align on the right;
+   the source names are text and stay left. §4. */
+.cover-tbl{width:100%}
+.cover-tbl td:last-child,.cover-tbl th:last-child{text-align:right;
+           font-variant-numeric:tabular-nums}
+
+@media (max-width:640px){
+  .fields{grid-template-columns:repeat(auto-fit,minmax(132px,1fr))}
+  .field{padding:var(--s-14) var(--s-8)}
+}
+
+/* ══ the results surface's search bar ════════════════════════════════════
+   The same .cmp component as the home surface, kept on screen after the run.
+   It does not scroll away, which is why there is no pin control: theirs exists
+   because their box scrolls, and a toggle that cannot change anything is worse
+   than a missing one. */
+.res-search{padding:var(--s-16) var(--s-16) var(--s-12);flex:0 0 auto}
+.res-cmp .cmp-field textarea{min-height:44px}
+
+.res-tools{display:flex;align-items:center;gap:var(--s-6);flex:0 0 auto}
+.res-tools-sep{width:1px;height:18px;background:var(--border);flex:0 0 auto;
+               margin-inline:var(--s-2)}
+/* the fishbone is a toggle, so it carries pressed state the way every other
+   toggle in this system does — value, not hue. §2. */
+.res-tools .icon-btn[aria-pressed="true"]{background:var(--surface-sunken);
+                                          color:var(--text-1)}
+.res-modes .seg-btn[aria-pressed="true"]{background:var(--surface);color:var(--text-1)}
+.res-meta{text-align:right;font-variant-numeric:tabular-nums}
+
+/* ══ the right column ════════════════════════════════════════════════════
+   .panescroll's PADDING IS 21-surface.css's, 2026-09-24. A second declaration
+   of it stood here and won on load order, which is the same fork .drill-head
+   had in this pass: 21 deliberately set the bottom to 0 because the
+   attribution supplied --s-32 under it, and this put 16 back without knowing
+   why the 0 was there. It also defeated the change that made the record's
+   head sticky — the head pinned at the CONTENT edge, 16px below the
+   scrollport, with the record sliding through the gap above it.
+   21-surface.css owns the column. This file owns the home surface. */
+/* nothing chosen yet. Not a skeleton: a skeleton says a value is coming, and
+   nothing is coming until the founder picks a row. §8. */
+.pane-idle{flex:1;display:flex;align-items:center;justify-content:center;
+           padding:var(--s-40) var(--s-24);text-align:center}
+/* AND IT HAS TO BEAT ITS OWN display:flex. `[hidden]` is a UA rule at the same
+   specificity as this class, so an author `display:flex` wins and the element
+   stays on screen while its `hidden` property reads true. work.mjs has set
+   that property since the grouping toggle was written and it did nothing —
+   the idle sentence sat over the panel. Every element in this product that
+   both declares a display and is hidden by property needs this line; the
+   record has one, and this is the other. */
+.pane-idle[hidden]{display:none}
+.pane-idle p{margin:0;color:var(--text-3);max-width:34ch}
+.panecol .foot{flex:0 0 auto;padding:var(--s-12) var(--s-16) var(--s-16)}
+
+/* ── review fixes · 2026-09-23 ─────────────────────────────────────────────
+   THE TOOLBAR WAS CRAMPED AT 6px BETWEEN 28px TARGETS. better-layout starts
+   borderless icon controls at 24px apart; better-accessibility's AA baseline
+   is a 24x24 target, which 28 clears, but the two together were reading as one
+   undifferentiated strip. The gap does the work rather than a bigger button,
+   so the bar keeps its height. */
+.res-tools{gap:var(--s-8)}
+.res-tools .icon-btn{width:32px;height:32px}
+.res-tools-sep{margin-inline:var(--s-4)}
+
+/* a heading that names a count should not re-wrap every time the count
+   changes width. §4's tabular figures, and balance so two lines split evenly
+   rather than leaving one word alone. */
+#setTitle{text-wrap:balance;font-variant-numeric:tabular-nums}
+.field-name{text-wrap:balance}

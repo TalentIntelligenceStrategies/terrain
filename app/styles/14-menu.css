@@ -1,0 +1,46 @@
+/* ══ 14 · MENU ═════════════════════════════════════════════════════════════
+   ONLY ONE MAY BE OPEN. Both close on a DOCUMENT-level listener, which is
+   also what makes Escape and a click on a third menu work -- and is why the
+   scrim that claimed to catch the outside click was deleted along with its
+   token: nothing referenced it, and a dead full-viewport node at z-index 50
+   is one visibility flip away from covering the product.
+
+   A MENU FLATTENS, and both of these do. The project switcher held a nested
+   version block until versions were removed; nothing in the product nests a
+   menu now, and a new one would have to argue for itself.
+
+   THE SELECTED STATE IS §3.8's ACCENT SITE 3, on the LABEL. The row's fill
+   stays neutral -- a filled accent row inside a menu would be a second
+   primary action on the surface.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── the two masthead menus ─────────────────────────────────────────────
+   ONLY ONE MAY BE OPEN. Two dropdowns anchored to the same 48px bar overlap
+   whatever is in them, so opening one closes the other. */
+.mast-menu-wrap{position:relative;flex:0 0 auto}
+.mast-menu{position:absolute;top:calc(100% + var(--s-6));min-width:260px;
+      background:var(--surface);border:1px solid var(--border);border-radius:var(--r-inner);
+      box-shadow:var(--shadow-float);padding:var(--s-8);transform-origin:top center;
+      opacity:0;visibility:hidden;transform:translateY(-4px) scale(.97);z-index:7;
+      transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
+                 visibility 0s linear var(--dur-2)}
+.mast-menu-proj{left:0;width:300px;max-height:min(70vh,540px);overflow-y:auto}
+#acctMenu{right:0;left:auto;min-width:220px}
+.proj-open #projMenu,.menu-open #acctMenu{opacity:1;visibility:visible;transform:none;
+      transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
+                 visibility 0s linear 0s}
+/* --s-6 AND NOT 5. Five is not a step on §5's scale and nothing argued it;
+   the name-over-address stack is the same label-over-value pair every other
+   surface spaces with --s-6. */
+.menu-who{display:flex;flex-direction:column;gap:var(--s-6);padding:var(--s-8)}
+
+/* ── MOVED HERE FROM THE RESET SECTION, and it is safe to move because it
+   wins on SPECIFICITY wherever it lands rather than on order.
+
+   A ROVING TABINDEX IS NOT A PROGRAMMATIC FOCUS TARGET, and the reset's
+   [tabindex="-1"]:focus{outline:none} cannot tell them apart. A heading
+   focused on arrival should not flash a ring -- but a menu item reached by
+   ArrowDown is a keyboard user NAVIGATING, and hiding the ring there is the
+   whole interaction gone. Inset by 2 so it sits inside the item rather than
+   against the menu's own 8px of padding. */
+#acctMenu .menu-item:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}

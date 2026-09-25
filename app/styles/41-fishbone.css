@@ -1,0 +1,106 @@
+/* ══ 41 · THE GROUPING PANEL ════════════════════════════════════════════════
+   platform.md §4.4. A popover anchored to its own control in the search bar.
+
+   IT WAS THE RIGHT COLUMN WHILE NO RECORD WAS OPEN, until 2026-09-24 put the
+   record in that column. The skin here is the only part that changed: 16's
+   .pop supplies the surface, the hairline, the shadow, the ceiling and the
+   scroll, so this file went from owning a column's layout to owning a tree's
+   typography. Everything below the head is untouched.
+
+   IT IS NAVIGATION AND IT LOOKS LIKE IT. No card, no chart, no caption — a
+   heading, a list of branches, and a count per branch. Every visual decision
+   below follows from that: this is a way of moving through results, so it is
+   built out of the same parts as a menu rather than out of the parts of a
+   widget, and design-language.md §7's "there are no widget cards" is why.
+
+   NO ACCENT ANYWHERE IN HERE. §3.8 gives the accent three sites — a primary
+   action, a focus ring, a selected control — and a selected BRANCH is closer
+   to a filter than to a control: fourteen of them can be lit at once, which is
+   the "eight simultaneously filled chips read as data" failure the settings
+   popover already refuses. Selection is weight and a hairline.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* NO SURFACE, NO PADDING, NO CEILING OF ITS OWN. All four belong to .pop and
+   .pop-body one file down, and declaring them twice is how two owners of one
+   box start disagreeing. This is a flex column inside the panel's scroller and
+   nothing else. */
+.fishwrap{display:flex;flex-direction:column;min-height:0}
+
+/* WIDER THAN THE SETTINGS PANEL, because a two-level tree has an indent and
+   .pop's 320px floor was measured for a form of chips. 380 holds a branch
+   label, its count and the indent without wrapping the labels this corpus
+   actually produces; the max is .pop's own, so a narrow window still wins. */
+.pop-fish{min-width:380px}
+
+/* THE HEAD IS THE PANEL'S OWN TITLE NOW. .fb-head was a second heading above
+   the branches when this filled a column and had to say what the column was;
+   inside a panel that names itself in .pop-title, it was the same words twice
+   in 40px. */
+.fb-thin{margin:0;color:var(--text-3);max-width:44ch}
+
+.fb-spines{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;
+           gap:var(--s-20)}
+.fb-spine-h{color:var(--text-2);margin:0 0 var(--s-8)}
+
+.fb-leaves{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+
+/* THE COUNT LEADS, and it is the one place in this panel where alignment does
+   real work: a column of right-aligned tabular figures is scannable in a way
+   that "Rotor and propeller (9)" is not, and the founder is here to find the
+   big branches. --s-32 is one step on the scale and fits three digits. */
+.fb-leaf{display:flex;align-items:baseline;gap:var(--s-10);width:100%;
+         padding:var(--s-6) var(--s-8);border:0;background:none;cursor:pointer;
+         border-radius:var(--r-control);text-align:start;
+         color:var(--text-2);
+         transition:color var(--dur-1) var(--ease),
+                    background-color var(--dur-1) var(--ease)}
+.fb-leaf-n{flex:0 0 var(--s-32);text-align:end;color:var(--text-3);
+           font-variant-numeric:tabular-nums;
+           transition:color var(--dur-1) var(--ease)}
+/* TWO LINES AT MOST. A real classification description runs to 149 characters
+   and a branch that takes six lines stops being a list you can scan, which is
+   the only thing this panel is for. The full text is on the control's title
+   for a pointer, and the aria-label carries it whole. */
+.fb-leaf-l{min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+           overflow:hidden}
+/* align the count to the first line of a wrapped label */
+.fb-leaf{align-items:flex-start}
+.fb-leaf-n{padding-top:1px}
+
+@media (hover:hover) and (pointer:fine){
+  .fb-leaf:hover{background:var(--surface-sunken);color:var(--text-1)}
+  .fb-leaf:hover .fb-leaf-n{color:var(--text-2)}
+}
+
+/* SELECTED IS INK AND WEIGHT, plus a hairline on the leading edge. No fill:
+   the fill is what hover uses, and a selected row that looked hovered would
+   make the founder unable to tell which state they were reading. */
+.fb-leaf[aria-checked="true"]{color:var(--text-1);font-weight:500;
+                              box-shadow:inset 2px 0 0 var(--text-1)}
+.fb-leaf[aria-checked="true"] .fb-leaf-n{color:var(--text-1)}
+
+/* ── the chips above the list ────────────────────────────────────────────── */
+
+/* THEY LIVE WITH THE RESULTS, NOT WITH THE PANEL. The panel can be hidden and
+   the filter it applied cannot be, or the founder reads a shortened list with
+   nothing on screen saying why it is short. */
+.fb-chips{display:flex;flex-wrap:wrap;gap:var(--s-6);margin-bottom:var(--s-12)}
+.fb-chips[hidden]{display:none}
+
+.fb-chip{display:inline-flex;align-items:center;gap:var(--s-6);
+         padding:var(--s-4) var(--s-8);
+         border:1px solid var(--border-strong);border-radius:var(--r-chip);
+         background:var(--surface);color:var(--text-1);
+         /* label-s, AND THE WEIGHT WAS THE HALF THAT WAS MISSING. It carried
+            the size and inherited 400, so a fishbone chip rendered lighter
+            than every other chip in the product -- .chip, .pop-chip and
+            .seg-btn are all 500. Two chips at two weights is the split-role
+            defect wearing a component's clothes. */
+         font-size:12.5px;font-weight:500;line-height:1.3;cursor:pointer;
+         transition:border-color var(--dur-1) var(--ease)}
+.fb-chip svg{flex:0 0 12px;color:var(--text-3)}
+
+@media (hover:hover) and (pointer:fine){
+  .fb-chip:hover{border-color:var(--text-1)}
+  .fb-chip:hover svg{color:var(--text-1)}
+}

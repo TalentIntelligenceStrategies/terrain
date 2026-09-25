@@ -1,0 +1,174 @@
+<!-- EXTRACTED from design/previews/terrain-prototype.html lines 5106-5275.
+     PROVENANCE ONLY — the prototype is FROZEN v1 and is not the reference.
+     `app/` is what was decided; where this and the prototype disagree, this
+     is right and that file answers about a product that was replaced. platform.md 8.4. -->
+  <section class="view view-page view-acct" data-view="help" aria-label="Help">
+    <main class="main">
+      <header class="page-head">
+        <div class="page-head-lines pg-head-lines">
+          <button class="pg-back" id="helpBack" type="button" data-go="back">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            <span id="helpBackLabel">Back</span>
+          </button>
+          <h1 class="t-display-2" id="helpTitle" tabindex="-1">Help</h1>
+        </div>
+      </header>
+
+      <div class="grid">
+
+        <section class="card">
+          <div class="card-head">
+            <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+            <h2 class="t-title">Tell us what is happening</h2>
+          </div>
+          <div class="card-body" id="helpForm">
+            <!-- A MENU AND NOT A SELECT, because there is no select in this
+                 system and the docs already made that choice once: four
+                 options do not fit a chip row, and .lm is what the list's
+                 sort and filter became for the same reason. One of four, so
+                 menuitemradio. -->
+            <div class="lm" id="helpTopicWrap" style="margin-bottom:var(--s-12)">
+              <button class="lm-btn" id="helpTopicBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="helpTopicMenu">
+                <span id="helpTopicLabel">Something is not working</span>
+                <svg class="lm-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="lm-menu" id="helpTopicMenu" role="menu" aria-label="What this is about"></div>
+            </div>
+            <label class="sr-only" for="helpMsg">Your message</label>
+            <textarea class="ta" id="helpMsg" placeholder="My second search came back empty."></textarea>
+            <div class="dc-act" style="margin-top:var(--s-16)">
+              <button class="btn btn-primary" type="button" id="helpSend" disabled><span>Send message</span></button>
+              <span class="t-body" style="color:var(--text-2)">We reply within one working day.</span>
+            </div>
+            <!-- platform.md §7.1: what survives a message that did not send is "the message
+                 and the topic", so the failure goes UNDER the form rather than
+                 over it -- the composer, the topic and every word typed stay
+                 exactly where they were, and Send is the retry. -->
+            <p class="fld-msg" id="helpFail" hidden></p>
+          </div>
+          <!-- THE SENT STATE REPLACES THE FORM RATHER THAN SITTING UNDER IT.
+               A composer left on screen beneath a confirmation invites a
+               second send of the same message, which is the one failure a
+               contact form actually has. -->
+          <div class="card-body" id="helpSent" hidden>
+            <p class="t-body" style="margin:0 0 var(--s-8);color:var(--text-1)">Thanks — we have your message.</p>
+            <p class="t-body" style="margin:0;color:var(--text-2);max-width:68ch">We will reply to <span class="sk sk-h-body w-lg" style="display:inline-block;vertical-align:-2px"></span> within one working day.</p>
+            <div class="dc-act" style="margin-top:var(--s-16)">
+              <button class="btn btn-secondary" type="button" id="helpAgain">Send another message</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ COMMON QUESTIONS ═══════════════════════════════════════════
+             THIS WAS "Before you write" AND THREE ANSWERS. The three are
+             still here, unchanged, and they are still the ones platform.md §6.4
+             argued for; what changed is that three answers sitting above a
+             contact form read as a hurdle before writing rather than as a
+             page worth reading. Twelve, grouped, is a page.
+
+             THE RULE THAT GOVERNS EVERY ANSWER HERE, and it is the one
+             thing to check before adding a thirteenth: platform.md §6.4 says the
+             answers MAY NOT RESTATE LABELLING. design-language.md §7 makes
+             the same demand of the info popover from the other side — the
+             test is whether a screenshot with no popover open still says
+             what the founder is looking at. So a Help page that hoovered
+             up captions would break it in reverse, and every question
+             below answers something NO OTHER SURFACE STATES.
+
+             THREE GROUPS, BY SPACE AND NOT BY RULES. --s-32 between groups
+             against --s-16 between pairs clears the 2x that makes grouping
+             read as grouping, which is the same arithmetic the record's
+             own five field clusters use. No dividers drawn.
+
+             AND NO <details>, WHICH IS THE OLD NOTE NARROWED RATHER THAN
+             REPEALED. It read "three one-line answers that collapse are
+             three controls hiding two sentences", and at twelve that
+             premise is simply gone — twelve controls hiding twelve
+             answers is a different trade. The conclusion survives on a
+             different argument: THE QUESTIONS ARE THE SCAN TARGET, the
+             answers are one to three lines, and a founder looking for
+             "can it tell me whether I am free to file" finds it by
+             reading down the bold line either way. Collapsing would add a
+             click to every answer to save scrolling past ones already
+             short enough to skip. If the answers ever grow to paragraphs,
+             this is the note to reopen — .dc is the pattern to copy. -->
+        <section class="card">
+          <div class="card-head">
+            <span class="card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+            <h2 class="t-title">Common questions</h2>
+          </div>
+          <div class="card-body">
+
+            <div class="hlp-grp">
+              <h3 class="t-micro hlp-grp-h">Your search and your results</h3>
+              <dl class="hlp-qa">
+                <div>
+                  <dt>How long does a search take?</dt>
+                  <dd>The bar at the top of your results says how long the last one took, and holds the words you searched with so you can change them and run it again.</dd>
+                </div>
+                <div>
+                  <dt>Can Terrain tell me whether I am free to file?</dt>
+                  <dd>No. Terrain shows you what has already been filed and which company holds it. Whether any of it stands in your way is a legal question, and that one is for a patent attorney.</dd>
+                </div>
+                <div>
+                  <dt>What does starring a patent do?</dt>
+                  <dd>Two things. It adds the patent to your starred set, which has a page of its own and is what you can take out of Terrain. And it makes <b>Find similar</b> available: that re-orders the whole result set by how near each patent is to the one you starred, so closer ones surface to the top. No patent enters or leaves the set, and Restore puts the original order back.</dd>
+                </div>
+                <div>
+                  <dt>Where does the patent data come from?</dt>
+                  <dd>The Innovue database — around 180 million records, aggregating the USPTO, TIPO, Google Patents and the other major offices. Terrain searches it and lays out what it returns; it does not hold a database of its own.</dd>
+                </div>
+                <div>
+                  <dt>Why does a search cover only some countries?</dt>
+                  <dd>Data coverage on the home screen lists every source and when each was last taken in. Search settings let you narrow to the ones you care about before a run.</dd>
+                </div>
+                <div>
+                  <dt>Does sorting or filtering run a new search?</dt>
+                  <dd>No, and neither spends a point. They change the order and what is shown of the set you already have. Pressing Search is what starts a new run.</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="hlp-grp">
+              <h3 class="t-micro hlp-grp-h">Points and your plan</h3>
+              <dl class="hlp-qa">
+                <div>
+                  <dt>When do points come back?</dt>
+                  <dd>At the start of each quarter. Points you have not spent do not carry over, and a search is charged when you press Search rather than when the results finish arriving.</dd>
+                </div>
+                <div>
+                  <dt>What spends points?</dt>
+                  <dd>Running a search. Working with what it returns does not — opening a record, reading its drawings, sorting, filtering, starring and finding similar are all free, however many times you do them.</dd>
+                </div>
+                <div>
+                  <dt>What happens if I run out?</dt>
+                  <dd>Every search you have already run stays open and stays readable, and so does everything you starred. You cannot run a new search until the next quarter or until you move up a plan.</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="hlp-grp">
+              <h3 class="t-micro hlp-grp-h">Your starred set</h3>
+              <dl class="hlp-qa">
+                <div>
+                  <dt>Who can see my projects?</dt>
+                  <dd>Only you. There are no shared workspaces and no seats in Terrain — an account is one person's.</dd>
+                </div>
+                <div>
+                  <dt>Can I take my results out of Terrain?</dt>
+                  <dd>Yes — the patents you starred. Their own page has two buttons: a spreadsheet and a Markdown list, both carrying the fields already on your screen. The point is that you can work on the data wherever you already work.</dd>
+                </div>
+                <div>
+                  <dt>What happens to my projects if I close my account?</dt>
+                  <dd>They go, along with every search you have run and everything you starred. Nothing is recoverable afterwards, so export what you need first.</dd>
+                </div>
+              </dl>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+      <p class="foot"><em>Powered by</em><img class="foot-mark foot-mark-light" src="../brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg" alt="Innovue" width="95" height="13"><img class="foot-mark foot-mark-dark" src="../brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg" alt="Innovue" width="95" height="13"></p>
+    </main>
+  </section>

@@ -1,0 +1,48 @@
+<!-- EXTRACTED from design/previews/terrain-prototype.html lines 4659-4695.
+     PROVENANCE ONLY — the prototype is FROZEN v1 and is not the reference.
+     `app/` is what was decided; where this and the prototype disagree, this
+     is right and that file answers about a product that was replaced. platform.md 8.1. Account-level, reached from the chrome rather than the flow. -->
+  <section class="view view-page" data-view="usage" aria-label="Your points">
+    <main class="main">
+      <header class="page-head">
+        <div class="page-head-lines pg-head-lines">
+          <!-- `data-go` IS THE WHOLE WIRING and all four destination pages
+               were missing it. masthead.mjs delegates on [data-go]; a back
+               button without it renders, focuses, takes a press and does
+               nothing — which is worse than one that is absent, because the
+               founder blames the press. #starBack had it and these four did
+               not, which is exactly how a copied pattern loses its one
+               load-bearing attribute. -->
+          <button class="pg-back" id="usBack" type="button" data-go="back">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            <span id="usBackLabel">Back</span>
+          </button>
+          <h1 class="t-display-2" id="usTitle" tabindex="-1">Points</h1>
+          <div class="head-meta">
+            <span class="chip">Meters when a run finishes</span>
+            <span class="chip">Renews <span class="sk sk-h-micro w-xs" style="display:inline-block;vertical-align:-1px;margin-left:4px"></span></span>
+          </div>
+        </div>
+      </header>
+      <div class="grid" id="usGrid"></div>
+      <p class="foot"><em>Powered by</em><img class="foot-mark foot-mark-light" src="../brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg" alt="Innovue" width="95" height="13"><img class="foot-mark foot-mark-dark" src="../brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg" alt="Innovue" width="95" height="13"></p>
+    </main>
+  </section>
+
+  <!-- ══ ACCOUNT SETTINGS ══════════════════════════════════════════════════
+       THE FIRST OF THREE DESTINATIONS ADDED 2026-09-11. Until this pass the
+       four rows in the account menu were inert: design-language.md §7 and
+       platform.md §6.1 both recorded the destinations as undesigned, and
+       both gave the same reason — platform.md §12 keeps pricing open and a Plan screen
+       would have been designing against an undecided thing.
+
+       A session named all three and asked for them, which is the one route
+       out of platform.md §10 that CLAUDE.md admits. The discipline that comes with it is
+       that using the route is not a licence to widen the item: SIGN OUT IS
+       STILL INERT, because a session model was not named and authentication
+       is still deferred.
+
+       These are DESTINATIONS in platform.md §6's sense — somewhere the founder goes
+       and returns from in place, never a step on the path to a map. No
+       moment routes through any of them and platform.md §1's one-tab rule is intact.
+                                                                          -->

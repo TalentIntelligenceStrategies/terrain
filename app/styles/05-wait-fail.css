@@ -1,0 +1,298 @@
+/* ══ 05 · WAIT AND FAIL ══ THE CSS HALF OF app/js/core/wait.mjs ═════════════
+   THIS FILE IS NOT A COMPONENT AND THAT IS WHY IT HAS ITS OWN NUMBER.
+   .card-body.is-wait and .rec-body.is-wait span two component families FOR THE
+   SAME REASON -- they share one CONTRACT, not one appearance. Splitting them
+   into 31-card.css and 35-record.css would put half a contract in each file
+   and leave the rule that connects them written nowhere.
+
+   The JavaScript half is core/wait.mjs: waitOn, landIn, failIn, failHTML.
+   Read the two together; neither is complete alone.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── the dot loaders · design-language.md §8 ───────────────────────────────
+   A LOADER MEANS WORK IS HAPPENING; A BAR MEANS A VALUE IS WITHHELD. That is
+   the skeleton contract, and it is the whole reason these exist. `.sk`
+   already meant something — §8's refusal to invent a holder's name — and it
+   meant it PERMANENTLY, on a resting screen and in every screenshot. A region
+   that was working and a region that had arrived were rendering the same
+   device, so the founder could not tell which they were looking at at exactly
+   the moment that matters most.
+
+   So a resolving region is EMPTY WITH A LOADER IN IT, and the bars appear when
+   the data lands. The two are never in one region at once.
+
+   ─── ONE LOADER, ONE SIZE, EVERY WAIT · DRIFT TL AT 20px ─────────────────
+   The column, a card, the record, the pane, the list's "show more" button --
+   all the same 20px mark. There is no second loader and no size variation.
+
+   ***THREE ARRANGEMENTS WERE TRIED AND THIS IS THE ONE THAT SURVIVED LOOKING
+   AT IT.*** A big grid for regions and a small one for controls; then one
+   36px mark everywhere; now one 20px mark everywhere. Each earlier pair was
+   defensible in the abstract and each read as an inconsistency on screen --
+   a second indicator asks "why is this one different", which is never a
+   question about the data, and it does not stop asking it just because the
+   answer is a good one.
+
+   ***THE COST IS NAMED SO IT IS NOT REDISCOVERED.*** 20px in a ~986px card is
+   about 2% of its width, which is small. That was measured, seen and chosen:
+   a loader is a mark meaning "working", not a thing that fills the space it
+   is waiting on. If it ever reads as too faint the fix is the mark's own
+   opacity, NOT its size -- the moment size varies by region it has started
+   carrying information, and then it is a chart.
+
+   ***IT WAS TWO FOR A DAY AND THAT WAS THE WRONG CALL.*** Drift TL carried the
+   smaller waits on the theory that a travelling trail should mean "being
+   built" and a quiet pulse "being changed", and the distinction did not
+   survive contact with the product. Two consequences, both bad:
+
+   1 · IT WAS NOT LEGIBLE. Nobody reads two indicators as a vocabulary. They
+       read them as two things, and then as an inconsistency — the question a
+       second loader raises is "why is this one different", which is not a
+       question about the data.
+   2 · IT DRAGGED IN SCALING. The smaller loader was lost in a 986px card, so
+       the span started following the region, and then no two waits on the
+       screen were the same object. A loader is a fixed mark meaning "working";
+       the moment its size carries information, it is a chart.
+
+   So: one mark, one size, no variants, no region scaling. Whatever region is
+   waiting, that is what sits in it. **A second loader now needs the argument
+   the first one did not have to make.**
+
+   *Drift TL and the size-scaling are DELETED rather than left unused --
+   dmx-ripple-3 went with them and the file is back to three keyframes.
+   terrain-loading-lab.html keeps both loaders as the reference it is.*
+
+   ─── `.sweep` IS UNTOUCHED AND KEEPS ALL FOUR OF ITS SLOTS ───────────────
+   The send button, the build stage, the pending answer and the re-rank band
+   were each judged on their merits, and the answer was the same every time:
+   .sweep is 16x3 and those hosts are 32px, 18px, 22px and a text baseline.
+   Drift TL's own span is 20px, so it is larger than three of the four and
+   would stand taller than the fourth's line. These take only new ground.
+
+   ─── FOUR KEYFRAMES NOW, AND THAT IS WRITTEN DOWN ────────────────────────
+   design-language.md §6 prohibited a third without a written reason; the
+   reason is recorded there as of 2026-09-14 and it is the same one that
+   licensed sweep and sweepx: constant, indeterminate motion with no end state
+   to transition to. A loader that resolved would assert a duration.
+
+   ─── AND THEY DO NOT TAKE --cycle, WHICH IS A REAL COST ──────────────────
+   1111ms and 887ms, the timings of the library they were ported from. §6's
+   one-cycle rule is amended to permit exactly this — an indicator adopted
+   whole may keep its own cycle — and to say what it costs: a card can hold a
+   1.6s bar and an 887ms loader at once. If a surface ever reads as busy
+   rather than as working, this is the first thing to look at. ── */
+/* ══ THE RULES THEMSELVES ARE IN 04-loader.css, AND WERE IN BOTH ═════════
+   This file carried a byte-for-byte second copy of all five — the two files
+   were written a week apart and the second author reproduced the block rather
+   than checking whether it already cascaded. 05 loads after 04, so the copy
+   here was the live one and 04's was dead: editing the file NAMED for the
+   loader would have changed nothing, which is the kind of failure that costs
+   an afternoon.
+
+   The reasoning above is kept here because it is about this file's subject —
+   what a waiting region is permitted to do — rather than about the
+   indicator's geometry. 04 carries the licence note and the rules. */
+
+/* A WAITING REGION. min-height is set inline from the height the region had
+   before it emptied, so a card does not collapse to the loader's 20px and the
+   grid does not reflow twice per resolve -- the same reason .cmp-status
+   reserves 17px for a line it does not yet have. */
+.is-wait{display:grid;place-items:center}
+.is-wait>.dmx-root{grid-area:1/1}
+/* ***THESE THREE ARE NOT REDUNDANT AND THAT IS THE WHOLE NOTE.*** `.is-wait`
+   alone is (0,1,0), and so are `.card-body`, `.set-list` and `.rec-body` --
+   which are declared LATER in this sheet, so their `display:flex` won on
+   source order and the grid centring above never applied to them. The loader
+   then sat at the top of the region rather than in the middle of it, which
+   looks like a layout bug and was one.
+
+   Two-class selectors, not !important: the point is to beat a rule of equal
+   specificity declared further down, and that is exactly what one extra class
+   does. */
+.card-body.is-wait,.rec-body.is-wait{display:grid;place-items:center}
+/* .card-body is padded 0 top and 16 bottom, so centring inside the CONTENT
+   box put the loader 8px above the card's visual middle. Symmetric padding
+   for the length of the wait only -- the landed card keeps its own spacing,
+   which is set for a chart sitting under a heading rather than for a mark
+   floating in an empty box. */
+.card-body.is-wait{padding-block:var(--s-16)}
+/* the column is the one waiting region that can hold something ALREADY TRUE
+   while it waits — the filter chip, which states the cut the founder just
+   made. So it stacks rather than centring everything into one cell: chip at
+   the top where it always sits, loader centred in what is left. */
+.set-list.is-wait{grid-template-rows:auto 1fr;justify-items:center}
+/* ROW 2 ALWAYS, chip or no chip. Left to flow the loader lands in row 1 --
+   the chip's row -- and sits hard against the top of the column when there is
+   no chip to displace it, which reads as a thing stuck under the toolbar
+   rather than as the column working. With no chip row 1 collapses to 0 and
+   the 1fr below it is the whole region. */
+.set-list.is-wait>.dmx-root{grid-row:2;align-self:center;justify-self:center}
+
+/* ── THE CARD DOES NOT FRAME A WAIT ──────────────────────────────────────
+   A widget card's hairline says "these things belong together". While the
+   list is out there is one thing inside it — a 20px mark — and the border
+   stops describing a group and starts drawing a box around a dot: 450px of
+   empty white panel, which reads as a region that failed rather than one
+   that is working.
+
+   So the card's paint comes off for the length of the wait and the loader
+   sits on --ground. The BAR STAYS, because it is chrome and §8 says chrome
+   is real — and because every wait on this surface was started by a control
+   in it, so hiding the sort you just pressed would be the interface losing
+   the thing you did.
+
+   TRANSPARENT, NOT `border:none`. The 1px stays in the box model, so nothing
+   moves by a pixel when the list lands and the colour comes back. Same for
+   the two inner hairlines, which would otherwise hang in the air with no
+   card edge to meet.
+
+   Scoped to the list card by its waiting child rather than to `.card`: a
+   card with a HEAD is still framing its title while its body waits, and that
+   border is doing its job. This one has no head. */
+.card:has(>.set-listcol>#setList.is-wait){background:none;border-color:transparent}
+.card:has(>.set-listcol>#setList.is-wait)>.set-bar{border-bottom-color:transparent}
+.card:has(>.set-listcol>#setList.is-wait) .set-more{border-top-color:transparent}
+/* the foot's button, mid-request. Sized to the label it replaces so the bar
+   does not change width while it waits — the same reserve .cmp-status makes
+   for a line it does not have yet. */
+/* EVERYTHING the button holds goes, not just its label. Hiding the label
+   alone left the chevron floating beside the loader -- two marks where the
+   control is one thing doing one thing.
+
+   ***AND IT IS `.btn-wait` RATHER THAN `.set-more-wait` BECAUSE THERE ARE TWO
+   NOW.*** #helpSend sends a message over the same kind of round trip and got
+   the same treatment in Phase 4; a mechanism named after its first host is one
+   the second host copies instead of reusing. Every child is an ELEMENT on both
+   -- #helpSend's label had to be wrapped in a span to join -- because `>*` does
+   not match a bare text node and a button whose label is loose text would keep
+   it on screen underneath the loader. */
+#setMore[data-waiting]>*:not(.btn-wait),
+.btn[data-waiting]>*:not(.btn-wait){display:none}
+/* ══ THE FILL COMES OFF EVERY WAITING BUTTON ═════════════════════════════
+   IT USED TO STAY ON .btn, and the argument was that a primary action's fill
+   is its resting identity so stripping it would leave a hole in the row. That
+   argument was made in light theme, where --accent is near-black and a dark
+   pill around a pale indicator reads as a button thinking.
+
+   IN DARK THEME --accent IS #F0F0F0. The same rule draws a near-white 48×36
+   box around a 20px grey mark, which is precisely the failure this file
+   already refuses forty lines up for the list card: "the border stops
+   describing a group and starts drawing a box around a dot". A rule that is
+   right in one theme and wrong in the other is not a rule about buttons, it
+   is a rule about one palette.
+
+   SO THE FENCE NARROWS RATHER THAN MOVING. What survives from the old note is
+   its real content — the row may not lose its shape — and that is now bought
+   with a WIDTH RESERVE instead of a fill. btnWait(btn, true) measures the
+   label before it goes, so the button holds its footprint, nothing beside it
+   slides, and what the founder sees inside that footprint is an indicator on
+   the bar rather than a plate.
+
+   THE INK HAS TO BE RESTATED. The loader is currentColor, and a primary
+   button's colour is --accent-ink: near-white in light, near-black in dark,
+   both of them chosen to sit on a fill that is no longer there. --text-2 is
+   the ink of a control that is not asking to be pressed, which for the length
+   of a wait is exactly what this is. */
+/* ***AND THE DECLARATION IS IN 10-button.css, NOT HERE.*** This file is 05
+   and .btn-primary is 10, so `.btn[data-waiting]{background:none}` written
+   here loses to `.btn-primary{background:var(--accent)}` on source order at
+   equal specificity — it shipped once and did nothing, and the render is what
+   caught it. The number IS the cascade in this tree, so the fix is the file
+   rather than a specificity bump: a button's paint is a button-sheet concern
+   and the override lives beside the rule it overrides. What stays here is
+   everything that is about WAITING rather than about paint. */
+.btn[data-waiting]{cursor:default}
+/* NO WIDTH OF ITS OWN. It had min-width:88px, reserving the label's width so
+   the bar would not resize -- but the button sits at the end of a flex row
+   after a spacer, so all that reserve did was centre the loader inside an
+   invisible 88px box and hold it ~34px off the right edge it belongs on.
+   Nothing else in the foot moves when it shrinks, because everything to its
+   left is pushed by the spacer rather than pulled by it. */
+.btn-wait{display:inline-grid;place-items:center;height:20px}
+/* ***AND THE BUTTON STOPS LOOKING LIKE A BUTTON WHILE IT WORKS.*** The pill
+   behind the loader was .set-more-btn:hover -- --surface-sunken, painted
+   because the pointer is still over the control the founder just pressed. A
+   filled pill around an indicator reads as a button you could press again,
+   which is the one thing it is not for the length of the wait. The chrome
+   goes, the loader stays, and the hit target is unchanged underneath. */
+#setMore[data-waiting]{background:none;padding:0;margin-inline-end:0;cursor:default;
+/* AND THE DOTS GET THE DARKER INK. The button rests at --text-2, which is the
+   right weight for a label and the wrong one for nine 6px dots whose ripple
+   spends most of its cycle at .16 opacity -- on #1A1A1A that is a smudge you
+   have to look for to find. --text-1 puts the peak of the beat where the
+   label used to be. The same value the .btn rule above lands on from the
+   other direction, for the same reason: the ink now has to carry the
+   indicator rather than sit behind it. */
+                       color:var(--text-1)}
+
+/* ── the failed region · design-language.md §7, platform.md §7 ─────────────
+   THE SAME REGION, THE OTHER ENDING. `.is-fail` replaces `.is-wait` on the
+   host and inherits its whole geometry -- including the inline min-height,
+   which failIn() deliberately does NOT clear. A wait that collapsed into a
+   short sentence would move everything below it a second time, and the second
+   jump is the one that loses the founder's place. Landing clears the reserve
+   because real content sets its own height; failing keeps it because a
+   sentence does not.
+
+   THE THREE COMPOUNDS ARE HERE FOR THE REASON .is-wait's ARE, and it is worth
+   not rediscovering: `.card-body`, `.rec-body` and `.set-list` are declared
+   later in this sheet at equal specificity, so their `display:flex` wins on
+   source order and the centring never applies. One extra class beats it. */
+.is-fail{display:grid;place-items:center}
+.card-body.is-fail,.rec-body.is-fail{display:grid;place-items:center}
+.card-body.is-fail{padding-block:var(--s-16)}
+/* THE CAPTION WENT ENTIRELY, so the rule that hid it on a failure went too.
+   It stated the widget's finding, a finding is a reading of the data, and
+   brief.md §1 puts those outside the product. The argument this rule carried
+   is still worth having if a caption ever returns: a sentence drawn from data
+   that failed to arrive is the interface making a claim about numbers it does
+   not have, under a block saying it does not have them. */
+/* the column keeps the chip that is still true while the rest of it failed --
+   the cut the founder made did not stop being the cut they made. Same two
+   rows the wait uses, for the same reason. */
+.set-list.is-fail{grid-template-rows:auto 1fr;justify-items:center}
+.set-list.is-fail>.fail{grid-row:2;align-self:center}
+
+/* ── .fail · the block itself ──────────────────────────────────────────────
+   WEIGHT, NOT COLOUR, and the device is not the field's. `.fld[aria-invalid]`
+   doubles a 1px border to 2px because it already HAS a resting border and may
+   not change width -- a border-width change there would move the value one
+   pixel right, which is a layout property doing a state's job. A block has no
+   resting border to double, and 2px of --text-1 around something 300px wide
+   out-shouts the primary action on the same screen. So it takes ONE hairline
+   at full ink, which is the same argument at the right scale: --border is
+   1.27:1 and reads as furniture, --text-1 reads as a statement.
+
+   NO HUE, and none is available anyway: red is --state-expired, amber is
+   --state-pending, green is --state-live and now the accent. Two reds meaning
+   two things is worse than no red.
+
+   --surface-sunken IS THE SYSTEM'S BOX-INSIDE-A-CARD FILL, the same one
+   .dc-in takes, so a failure is furniture the founder has seen before rather
+   than a shape that only appears when something is wrong.
+
+   16 BETWEEN THE SENTENCE AND THE ACTION, 8 INSIDE THE SENTENCE. §5's floor
+   is that a group gap is at least twice the gaps inside the group, and this
+   is exactly twice. */
+.fail{display:flex;flex-direction:column;gap:var(--s-16);
+      width:100%;max-width:52ch;padding:var(--s-16);
+      background:var(--surface-sunken);border:1px solid var(--text-1);
+      border-radius:var(--r-inner)}
+/* the icon-beside-sentence row is .fld-msg's shape, reused rather than
+   reinvented: this is that message one surface up. */
+.fail-say{display:flex;align-items:flex-start;gap:var(--s-8);margin:0;
+      font-size:14px;line-height:1.6;color:var(--text-1);
+      max-width:68ch;text-wrap:pretty}
+.fail-say svg{flex:0 0 16px;margin-block-start:var(--s-4);color:var(--text-2)}
+/* CANCEL-LEADS ordering does not apply: there is one control and it is the
+   way out, so it leads by being the only thing there. .btn-secondary rather
+   than .btn-primary because a surface has one primary action and a failure
+   block is never it -- and on --surface-sunken the --surface fill is what
+   makes it read as raised. */
+.fail-act{display:flex;align-items:center;gap:var(--s-8);flex-wrap:wrap}
+
+/* clip-rect rather than display:none or width:0 — the two that remove the
+   text from the accessibility tree along with the screen. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+     clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+

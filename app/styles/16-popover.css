@@ -1,0 +1,153 @@
+/* ══ 16 · POPOVER ══════════════════════════════════════════════════════════
+   A floating panel anchored to the control that opens it. The masthead menus
+   and the list's sort/filter menus have their own skins in 14-menu.css and
+   34-list.css; this is the one that holds a FORM rather than a list of acts,
+   which is why it is wider, sectioned, and does not close when you touch it.
+
+   IT FLOATS FREE OVER CONTENT IT DOES NOT PUSH ASIDE, which is exactly the
+   case design-language.md §5 names for --shadow-float: "menus, popovers, the
+   record over the right pane". The hairline is still what draws the edge — the
+   shadow is downward-biased with a -6px spread and contributes almost nothing
+   at a vertical one.
+
+   NOTHING DIMS BEHIND IT. §3.2 permits exactly one scrim and it is the enlarged
+   drawing; a disclosure anchored to a control is not it. The page stays live,
+   the outside click is heard by the document, and Escape closes the most
+   recent panel through esc-stack.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 36, ABOVE THE BAR MENUS AT 35. Both can be open on the results surface —
+   they are anchored 300px apart and neither closes the other — and a settings
+   panel that opened beneath the sort menu would be a panel the founder cannot
+   read. 50 stays burned: both deleted scrims sat there. */
+.pop{position:absolute;z-index:36;min-width:320px;max-width:min(420px,calc(100vw - var(--s-32)));
+     background:var(--surface);border:1px solid var(--border);
+     border-radius:var(--r-inner);box-shadow:var(--shadow-float);
+     padding:var(--s-16);transform-origin:top left;
+     display:flex;flex-direction:column;gap:var(--s-16)}
+
+/* THE PANEL SCALES FROM ITS TRIGGER, not from its own centre. A popover that
+   grows from the middle of itself has no relationship to the thing that opened
+   it; growing from the anchored corner says where it came from. transform-origin
+   above is the leading edge because both triggers sit at the leading edge of
+   their row.
+
+   .97 AND NOT 0, and §6 is explicit: nothing in the world appears from nothing.
+   Exit is faster than enter, everywhere. */
+.pop{opacity:0;visibility:hidden;transform:translateY(-4px) scale(.97);
+     transition:opacity var(--dur-1) var(--ease),
+                transform var(--dur-1) var(--ease),
+                visibility 0s linear var(--dur-1)}
+.is-open>.pop,.pop.is-open{opacity:1;visibility:visible;transform:none;
+     transition:opacity var(--dur-2) var(--ease),
+                transform var(--dur-2) var(--ease),
+                visibility 0s}
+
+/* THE GEOMETRY IS HERE; WHICH ONE APPLIES IS MEASURED. settings.mjs picks the
+   side with more room on every open and caps the panel to it, because the two
+   facts that decide it — where the trigger landed and how tall the window is —
+   are both unknowable from a stylesheet. A class that named a direction per
+   anchor was tried first and put the panel off the top of the screen. */
+.pop-down{top:calc(100% + var(--s-8));bottom:auto}
+.pop-up{bottom:calc(100% + var(--s-8));top:auto;transform-origin:bottom left}
+
+/* A CEILING AND A SCROLLBAR, because the panel's height is content and the
+   viewport's is not. 14-menu.css caps the masthead menu the same way and for
+   the same reason: a panel taller than the window is a panel with controls
+   nobody can reach, and the founder cannot scroll a page that the popover is
+   floating over to find them. */
+.pop{max-height:min(72vh,560px);overflow:hidden}
+/* min-height:0 IS THE WHOLE OF WHY THIS SCROLLS. A flex item's default
+   min-height is auto, which is its content — so the body refuses to shrink
+   below its natural height, the panel grows past its cap, and overflow:auto
+   never has anything to do. */
+.pop-body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+          display:flex;flex-direction:column;gap:var(--s-16)}
+
+.pop-title{margin:0;color:var(--text-2)}
+
+.pop-sec{display:flex;flex-direction:column;gap:var(--s-8)}
+.pop-lbl{color:var(--text-3)}
+
+/* ── the multi-select chips ─────────────────────────────────────────────
+   NOT THE ACCENT, and §3.8 is the reason rather than taste: the accent marks
+   ONE selected control, and six chips on at once would be the accent
+   describing a set of values. The tick is the signal and it is a shape, which
+   is also what keeps this readable with colour alone removed. */
+.pop-chips{display:flex;flex-wrap:wrap;gap:var(--s-6)}
+.pop-chip{display:inline-flex;align-items:center;gap:var(--s-6);
+          font-size:12.5px;font-weight:500;color:var(--text-3);
+          padding:var(--s-6) var(--s-10);border-radius:var(--r-pill);
+          border:1px solid var(--border);background:var(--surface);
+          transition:color var(--dur-1) var(--ease),
+                     border-color var(--dur-1) var(--ease),
+                     transform var(--dur-1) var(--ease)}
+.pop-chip:active{transform:scale(.96)}
+.pop-chip[aria-pressed="true"]{color:var(--text-1);border-color:var(--border-strong)}
+
+/* THE MARK IS DRAWN BY THE STATE, NOT TOGGLED IN JS. It is a pseudo-element
+   keyed off aria-pressed, so there is one source of truth for "chosen" and no
+   way for the mark and the attribute to disagree.
+
+   FILLED OR OUTLINED, not a tick glyph. A tick would be a fourth thing to
+   position against a box whose own size is set here, and the fill/outline pair
+   says the same thing with nothing to align. It also survives being read with
+   hue removed, which is the half of §2's rule that bites on a control where
+   every chip is the same colour. */
+.pop-chip::before{content:"";width:11px;height:11px;flex:0 0 11px;
+                  border-radius:var(--r-chip);border:1px solid var(--border-strong);
+                  transition:background var(--dur-1) var(--ease),
+                             border-color var(--dur-1) var(--ease)}
+.pop-chip[aria-pressed="true"]::before{background:var(--text-1);border-color:var(--text-1)}
+
+/* ── the segmented controls ─────────────────────────────────────────────
+   §3.8 SITE 3 OF 3. 21-surface.css reserved this selector against the settings
+   panel arriving, and this is it: the selected state of a segmented control
+   takes the accent, one at a time, on a control rather than on data. */
+.pop-seg{align-self:flex-start;max-width:100%;flex-wrap:wrap}
+.pop-seg .seg-btn[aria-pressed="true"]{background:var(--surface);color:var(--accent)}
+
+/* ── the year range ─────────────────────────────────────────────────────
+   Inconsolata, because they are figures and §4 says figures are Inconsolata.
+   Tabular so 1999 and 2026 are the same width and the dash does not move. */
+.pop-dates{display:flex;align-items:center;gap:var(--s-8)}
+.pop-year{width:88px;flex:0 0 88px;font-variant-numeric:tabular-nums;
+          text-align:center}
+.pop-dash{color:var(--text-3);flex:0 0 auto}
+
+/* THE FOOT DOES NOT SCROLL. It is the panel's floor rather than its last
+   section, so Reset and Done are reachable at any height the anchor allows. */
+.pop-foot{flex:0 0 auto;display:flex;align-items:center;gap:var(--s-8);
+          padding-top:var(--s-12);border-top:1px solid var(--border)}
+.pop-title{flex:0 0 auto}
+.pop-foot .spacer{flex:1 1 auto}
+.pop-reset{gap:var(--s-6);padding-inline:var(--s-8)}
+
+/* ── hover, gated ── every rule here NAMES :hover; nothing else may. ──── */
+@media (hover:hover) and (pointer:fine){
+  .pop-chip:hover{color:var(--text-1);border-color:var(--border-strong)}
+  .pop-seg .seg-btn:not([aria-pressed="true"]):hover{color:var(--text-1)}
+}
+
+.pop-chip:focus-visible,.pop-year:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+/* THE ANCHOR. `position:relative` is what the panel positions against, and the
+   wrap exists only to provide it: the toolbar rows are flex, so a positioned
+   button would still work but would make the panel's offset depend on the
+   button's own padding. A zero-size wrapper keeps the two facts apart. */
+.pop-wrap{position:relative;flex:0 0 auto;display:flex}
+
+/* THE TRIGGER SAYS SOMETHING IS SET, because the founder cannot see inside a
+   closed panel and a search narrowed to one jurisdiction has to look different
+   from one over all six.
+
+   INK, NOT THE ACCENT. §3.8 gives the accent three sites — the primary action,
+   the focus ring, and a selected state — and this is none of them: it reports
+   that values behind a control differ from their defaults, which is a fact
+   about data rather than about the control. The dot is a SHAPE that is either
+   there or not, so it carries its meaning with hue removed, and the label says
+   the same thing to anything that cannot see it at all. */
+.icon-btn.has-set{position:relative;color:var(--text-1)}
+.icon-btn.has-set::after{content:"";position:absolute;top:var(--s-4);inset-inline-end:var(--s-4);
+                         width:5px;height:5px;border-radius:var(--r-pill);
+                         background:var(--text-1)}

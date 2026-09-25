@@ -1,0 +1,604 @@
+
+.drill-row{padding:var(--s-16) 0;border-bottom:1px solid var(--border)}
+.drill-row:last-child{border-bottom:0}
+/* THE HOLDER TRUNCATES, AND THE REASON IS UNCHANGED FROM WHEN THIS WAS A FLEX
+   ROW. Against real data a long assignee is not an edge case: the longest in
+   the stress corpus is 81 characters — "Shanghai Motor System Energy Saving
+   Engineering Technology Research Center Co Ltd" — which used to push the year
+   and the chevron onto a third line. The row is a scanning surface and the
+   record is where the full name lives.
+
+   WHAT CHANGED IS WHERE THE min-width:0 GOES. It was on .drill-holder, because
+   a flex item's default min-width:auto refuses to go below its content and
+   `ellipsis` alone would have done nothing. The holder is a grid cell now, so
+   the same floor has to be spelled twice — minmax(0,1fr) on the track and
+   min-width:0 on .dm and .dm-v — and both are below. */
+/* THE GAPS WENT UP BECAUSE THE TYPE DID. A 6px row gap between two 18.2px
+   line boxes reads differently from 6px between two 21.7px ones. 8 and 16 are
+   one step each, and they hold §5's 2:1 exactly — the band's own gaps are 8,
+   the gap out of the band is 16. */
+.drill-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:var(--s-8) var(--s-16);padding-block-start:var(--s-16)}
+
+/* ── one meta cell · glyph, then value ───────────────────────────────────
+   A 2x2 GRID AND NOT A ROW, and the reason is the holder. The longest
+   assignee in the stress corpus is 81 characters — "Shanghai Motor System
+   Energy Saving Engineering Technology Research Center Co Ltd" — and four
+   values on one line gave it about a fifth of the column. Two columns give it
+   half, which is where it starts truncating at a word rather than at a
+   syllable. The grid also fixes the cells' x positions, so the same fact is
+   in the same place on every row, which is the whole of what makes a column
+   scannable and is what the auto-margin year was reaching for.
+
+   minmax(0,1fr) RATHER THAN 1fr. A grid track's default min-content floor
+   refuses to go below its longest word, so `1fr` alone would let that 81
+   character name push the track wide and break the second column off the
+   row. This is the grid spelling of the min-width:0 the holder already has.
+
+   THE GLYPH DOES NOT SHRINK AND DOES NOT COLOUR. --text-3 on the mark,
+   --text-1 on the value: the glyph says which fact this is and the value is
+   the fact. A 14px Lucide stroke at --text-3 clears 4.5:1, which is the floor
+   §3.2 sets for the small text it sits beside. */
+.dm{display:flex;align-items:center;gap:var(--s-6);min-width:0}
+.dm-i{flex:0 0 auto;color:var(--text-3)}
+/* SIZE AND LEADING MOVED TO .t-body ON THE MARKUP. They were 13/1.4 at weight
+   400 here — `label`'s metrics carrying `body`'s weight, a role invented in
+   the gap between two real ones. What is left is what belongs to the
+   component: the grid floor, the truncation and the colour. */
+.dm-v{min-width:0;display:flex;align-items:center;gap:var(--s-6);
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+      color:var(--text-1)}
+/* the inventors this row is not naming. It is a count, so it is a figure —
+   and until 2026-09-24 that was true only in this comment: the markup carried
+   no figure role, so every "+5" rendered in Urbanist. list.mjs carries fig-s
+   now and this rule carries only the colour. */
+.dm-more{color:var(--text-3)}
+/* A JURISDICTION IS A PLACE, NOT A CODE. §4 reads "Inconsolata for every
+   number, date, year, count and code" and `United States` is none of those, so
+   the rule never reached it. Set in Inconsolata beside the IPC symbol it made
+   the whole tag row read as machine output, against a calendar row directly
+   above that says `Published` in Urbanist and only the date in figures — two
+   meta rows of the same kind, set two different ways. It takes the row's body
+   role from .dm-v like every other prose value; this carries only the colour.
+
+   THE IPC SYMBOL BESIDE IT KEEPS fig-s, and that is the distinction rather
+   than an inconsistency: a classification symbol is a code and a country is
+   not. */
+.dm-where{color:var(--text-2)}
+
+/* ── band 1 · what this document IS ──────────────────────────────────────
+   THE NUMBER LEADS AND THE TITLE FOLLOWS IT ON THE SAME LINE. A patent number
+   is the one string a founder carries out of here into their own documents,
+   and it is the thing they match against when they come back — so it reads
+   first, in Inconsolata, at --text-2 so it frames the title rather than
+   competing with it.
+
+   THE RANK AND THE SCORE ARE THE ONLY TWO THINGS ON THE ROW THAT ARE ABOUT
+   THE SEARCH RATHER THAN ABOUT THE PATENT, and they travel together at the
+   trailing edge. The eyebrow is two clusters: what the document IS leads --
+   status and number, true of it wherever it was found -- and what the QUERY
+   made of it trails, both of which exist only because this search ran and
+   both of which change when the sort does.
+
+   AN ORDINAL BETWEEN A STATUS AND AN IDENTIFIER READS AS A THIRD FACT ABOUT
+   THE PATENT, which is what the rank leading produced. It is not one. Grouped
+   at the trailing edge the pair reads as the search's own margin note, and the
+   number regains the leading position it is scanned from down a column of
+   twenty.
+
+   EVERY .drill-* RULE IS HERE NOW, 2026-09-24, AND THIS MOVE CHANGES NOTHING.
+   Five of them lived in 35-record.css, which loads after this file, so ITS
+   value won every property both declared: `align-items:baseline` and
+   `flex:1 1 220px` stood here and were dead code, and nothing said so. The
+   values below are 35's, carried over unchanged.
+
+   THE RESIDUE IS EXPLAINED AT THAT FILE'S OWN FOOT: the drilldown those rules
+   were written for became these expanding rows, and they stayed behind in the
+   record's sheet. The row is emitted by list.mjs and by nothing else, so the
+   row's stylesheet owns it — and a rule whose behaviour depends on two sheets
+   keeping their link order is a rule that breaks silently the first time
+   somebody reorders index.html, which check-app.py's manifest gate proves is
+   a thing that gets edited. */
+.drill-toggle{display:block;width:100%;text-align:left;padding:0}
+/* flex-direction:column AND NOT display:grid. The band is an eyebrow over a
+   title, which is one axis, and §5 says flex for 1D. It was also load-bearing
+   against a `display:flex` restatement in 40-figure.css that would have
+   flattened a grid into a row in Drawings-only mode; band one no longer hides
+   in that mode, so the restatement is gone and this is a preference again. */
+.drill-head{display:flex;flex-direction:column;gap:var(--s-6)}
+
+/* WHAT SEPARATES THEM IS SPACE, AND NOTHING ELSE — no middle dot, no rule.
+   The status chip already carries a .dot as its own encoding, and a second
+   mark 8px away from it would mean nothing. Every item is already its own
+   shape: a tinted pill, a number in Inconsolata at --text-2, #N at --text-3,
+   and a labelled figure.
+
+   IT WRAPS RATHER THAN QUERYING A CONTAINER. At the split's own floor — a
+   1080px window, which leaves .drill-row 368px — the longest corpus number
+   (15 characters), the longest status word and a four-decimal score measure
+   about 339px and fit on one line. Past that the score drops to a second line
+   and its auto margin keeps it at the trailing edge. §7 makes a fourth
+   container query argue two things before it may exist; wrapping answers this
+   one for free. */
+.drill-eyebrow{display:flex;align-items:center;flex-wrap:wrap;
+               gap:var(--s-6) var(--s-8);min-width:0}
+.drill-no{flex:0 0 auto;color:var(--text-2);white-space:nowrap}
+.drill-title{min-width:0}
+/* SIZE, LINE-HEIGHT AND WEIGHT ARE .t-title-s's, ON THE MARKUP. They were
+   13.5/1.45/500 — a size that appears nowhere in §4's table, invented in the
+   gap between `label` and `title` that four components had each answered
+   differently. What is left here is what belongs to the component. */
+/* CLAMPED TO TWO, AND THE REASON IS THE ROW'S HEIGHT RATHER THAN THE TITLE'S
+   LENGTH. §7's whole argument for a scrolling drawing strip is that row height
+   must not depend on what the patent carries; an unclamped title breaks the
+   same invariant from the other end. Measured over 100 corpus titles at 17px
+   across 518px, two lines hold about 126 characters and cover 97% of them.
+   The three that clip are reachable in the record and in this button's own
+   aria-label — the trade the holder already makes one band down. */
+.drill-name{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+            overflow:hidden;color:var(--text-1);text-wrap:pretty}
+/* A BARRED TITLE IS TWO BARS IN A COLUMN, the shape .drill-abs-sk already
+   uses. The 74% was an inline style= attribute on the markup — one of the two
+   the row carried — and it is a fact about this component rather than a width
+   the system needs a class for. */
+.drill-title-sk{display:flex;flex-direction:column;gap:var(--s-6)}
+.drill-title-sk .sk:last-child{width:74%}
+.drill-rank{flex:0 0 auto;color:var(--text-3);white-space:nowrap}
+/* TOP RIGHT OF THE TITLE, AND IT USED TO BE LAST IN THE ROW. The old
+   placement was argued from Terrain not endorsing an ordering the founder did
+   not ask for. What changed is that brief.md removed the prohibition on
+   printing it at all, so it is the engine's number rendered as the engine
+   returned it — and burying a figure we have decided to print is a
+   half-measure that reads as neither. It stays --text-3, and it carries NO
+   WORD beside it beyond its own label: the number is a fact about the
+   ranking, an adjective would be ours.
+
+   LABELLED AND STACKED. It was a bare four-decimal figure whose only
+   explanation was a title= attribute, which is a tooltip nobody opens.
+   "Score" names what the number IS, so brief.md's ban on "strong match",
+   "best fit" and "most relevant" — readings Terrain would be authoring — is
+   untouched. The heading's info popover carries what the score MEANS.
+
+   IT IS INLINE NOW, AND THE ARGUMENT FOR STACKING IT IS DISCHARGED RATHER
+   THAN OVERRULED. It was stacked because inline "would put two type sizes on
+   the skim's own first line and compete with it" — true while it sat on the
+   TITLE's line. It sits on the eyebrow's, which is a line of two type sizes
+   by construction.
+
+   WHAT THAT BUYS IS A ROW HEIGHT THAT DOES NOT DEPEND ON THE ENGINE. Stacked,
+   the block measured 32.1px against a 21.75px head, so a scored row stood
+   10.35px taller than an unscored one. Inline, the eyebrow is 20px either
+   way — the same invariant the scrolling strip is built on. The two off-scale
+   1px values went with the stack. */
+/* THE CLUSTER CARRIES THE AUTO MARGIN, NOT THE SCORE. It sat on .drill-score,
+   which was correct while the score was the only thing at the trailing edge;
+   with the rank beside it, an auto margin on the score would push the two
+   apart and leave the rank stranded mid-eyebrow.
+
+   IT IS ONE ELEMENT SO THE PAIR WRAPS AS A PAIR. The eyebrow wraps rather than
+   querying a container, and a rank ending one line with its score starting the
+   next is exactly the split this grouping exists to undo. */
+.drill-sr{flex:0 0 auto;display:flex;align-items:baseline;gap:var(--s-8);
+          margin-inline-start:auto}
+.drill-score{flex:0 0 auto;display:flex;align-items:baseline;gap:var(--s-6);
+             color:var(--text-3)}
+.drill-score-k{color:var(--text-3)}
+
+/* ── band 3 · what it claims ─────────────────────────────────────────────
+   THREE LINES, AND THE CLAMP IS THE ROW'S RATHER THAN THE ENGINE'S. Corpus
+   abstracts run a median of 831 characters, about nine lines in this column;
+   at twenty rows that is a column nobody reaches the bottom of. Three lines
+   is what clears the boilerplate preamble most patent abstracts open with and
+   reaches the clause that separates this one from the next.
+
+   NO MEASURE CAP HERE, DELIBERATELY. §4 caps body prose at 68ch and this is
+   narrower than 68ch at every supported width — the column is ~374px of
+   content at the 1024 floor and ~560 at 1440, which is about 46ch to 68ch at
+   13px. A cap would bind at exactly one window size and do nothing at the
+   rest, which is a rule that looks enforced and is not.
+
+   -webkit-line-clamp IS NOT A PREFIX HERE. It is the only interoperable
+   spelling of this — every engine ships it unprefixed-in-effect and the
+   unprefixed `line-clamp` is not yet safe alone — so it is written with its
+   own display and orientation rather than as a vendor fallback. */
+.drill-abs{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+           overflow:hidden;margin-block-start:var(--s-16);
+           color:var(--text-2);text-wrap:pretty}
+/* A BARRED ABSTRACT IS THREE BARS AND NOT A CLAMPED BOX. -webkit-box lays its
+   children out as inline boxes, so three block bars inside one collapse onto a
+   single line; this is the one place the clamp has to come off, and it can,
+   because three bars are already three lines. */
+.drill-abs-sk{display:flex;flex-direction:column;gap:var(--s-6)}
+
+/* ── THE YEAR HELD A COLUMN WITH AN AUTO MARGIN UNTIL 2026-09-24 ─────────
+   IT WAS THE RIGHT FIX FOR A FLEX ROW AND THE ROW IS A GRID NOW. The year sat
+   directly after the holder, whose width varies per patent, so twenty years
+   landed at twenty different x positions — and a column of figures that does
+   not align cannot be scanned, which is the entire reason the year is on the
+   row. `margin-inline-start:auto` on the leading edge of the trailing group
+   pinned it to the far edge and fixed that.
+
+   WHAT IT COST WAS THE PAIRING. Pinned to the trailing edge, the year sat
+   about 400px from the holder it qualifies and read as a fourth unrelated
+   column. A 2x2 grid fixes the x positions by construction — every cell in
+   the same track on every row — so the alignment the auto margin bought is
+   free, and the date can sit next to the party it belongs to.
+
+   THE CHEVRON WENT WITH IT. It pointed at the row's own button, which is the
+   thing it was inside: an affordance describing itself. */
+
+
+/* ══ THE ROW'S DRAWINGS · platform.md §4.3 ════════════════════════════════
+   IT SCROLLS, AND THAT MOVED THE COST FROM WIDTH TO HEIGHT. The track was four
+   fixed 64s because four was what the column could hold at the 1024 floor —
+   six would have wrapped, and a strip that wraps makes row height depend on
+   the data, which is the one thing a list you SCAN cannot have. A scroller
+   answers that outright: twelve tiles or three, the row is the same height,
+   and the count stops being the column's business.
+
+   SO THE ONLY BUDGET LEFT IS ROW HEIGHT, AND 102 IS WHAT IT BUYS. The tile
+   ran 64, then 72, and is 102 now: five across this strip instead of not
+   quite seven, which is what a drawing has to be before it is a drawing
+   rather than a kind of drawing. The floor is unchanged and none of them is
+   near it — below about 48px a patent figure is a grey smudge.
+
+   AND THE STEP AGAINST THE RECORD'S TILE SURVIVED THE CHANGE, WHICH IS WHAT
+   HAD TO BE CHECKED. §7 argued 72/104 = 0.69 and warned that 80/104 = 0.77
+   stops reading as a step. BOTH NUMBERS WERE THE WRONG ONES: 104 is the
+   minmax FLOOR of .pn-figs' auto-fill grid, not a rendered width. Measured in
+   a 732px record column it packed six columns at 115px, so the real step was
+   72/115 = 0.624. The floor is 148 now, which packs FOUR columns at 177px,
+   and the step is 102/177 = 0.576 — further from 0.77 than it has ever been.
+   Check it rendered, not declared.
+
+   THE AFFORDANCE IS A CUT TILE, NOT A SHADOW AND NOT A FADE. §5 refuses an
+   elevation shadow to anything sitting IN the layout, and its second clause
+   bites harder here than the first: a shadow cannot separate two surfaces of
+   the same colour, and these are white tiles on a white row. A fade was
+   refused for a different reason — to be honest it has to appear only when
+   there is somewhere left to scroll, which costs either a scroll listener on
+   twenty rows or a fourth keyframe, and §6 sets a high bar for one. What it
+   would buy is a gradient over the last drawing. The track is wider than the
+   column whenever it overflows, so the column's own edge cuts a tile at MOST
+   widths, and a cut edge is the oldest "there is more" signal there is.
+
+   AT MOST WIDTHS, AND THE EXCEPTION IS MEASURED. The tile pitch is 108px
+   (102 + --s-6); when the strip's width lands near a multiple of it the tiles
+   sit flush and nothing is cut. Swept at 1px from 1080 to 1920 against the
+   strip's measured width (W = 0.4403·window − 109.4, five sample points, max
+   residual 0.33px): 44 of 841 widths are flush, and it shows 8px or less of
+   its 102 at 95 of them, in THREE bands. A strip holding twelve drawings and
+   a +N tile then shows no sign that it holds anything more, because an
+   overlay scrollbar is not painted at rest either.
+
+   AND IT DEGRADES RATHER THAN SWITCHING OFF. The cut tile's visible width is
+   continuous, so the flush bands are only the exact-zero case, and a 3px
+   sliver is the same absence with a rounding error in front of it. The honest
+   figure is the 11.3% at 8px or less, not the 5.2% at zero.
+
+   THE BIGGER TILE MADE THIS BETTER RATHER THAN WORSE, which was not obvious
+   and is why it was re-swept rather than rescaled. At the old 78px pitch the
+   same sweep gave 8.8% flush, 18.9% at 8px or less, in FIVE bands. A longer
+   pitch lands the remainder inside a tile more often than in the 6px gap, so
+   raising the tile to 102 roughly halved the widths at which the affordance
+   says nothing. list.mjs carries why this is a deferred decision rather than
+   a patch.
+
+   AND NO scrollbar-width HERE. .figstrip declares `thin` because it is ONE
+   strip in a lightbox; twenty thin bars down a scanning column is twenty
+   pieces of furniture. The platform's own is what is left.
+
+   NO SNAP. scroll-snap-align would resolve every rest position to a flush
+   edge, which is the one thing that would delete the affordance above.
+
+   --s-6 OF MARGIN PLUS --s-4 OF PADDING IS THE --s-10 §7 MEASURES, and the 4
+   is not a fudge: overflow-x:auto computes overflow-y to auto as well, so a
+   scroller clips its own focus ring on all four sides. A 2px ring at 2px of
+   offset needs exactly 4, and the negative inline margin puts the first tile
+   back on the title's leading edge.
+
+   WHITE GROUND IN BOTH THEMES, like every other drawing surface here.
+   --figure-ground is a fact about the content: black line-work on #1A1A1A is a
+   blank rectangle. 40-figure.css carries the argument. */
+.set-thumbs{display:flex;gap:var(--s-6);
+            margin-block-start:var(--s-6);
+            padding:var(--s-4);margin-inline:calc(-1 * var(--s-4));
+            overflow-x:auto;overscroll-behavior-x:contain;
+            scroll-padding-inline:var(--s-12)}
+
+/* THE TILE CARRIES THE RATIO, NOT THE IMAGE INSIDE IT. On the <img> it made a
+   picture tile 89.5px tall against a 90px non-picture one — half a pixel of
+   misalignment that only exists once something in the strip is not a drawing,
+   which is exactly what the +N tile is. A definite height on the tile is also
+   what lets height:100% inside it resolve. */
+.set-thumb{flex:0 0 auto;width:102px;aspect-ratio:4/5;
+           display:block;overflow:hidden;padding:0;
+           background:var(--figure-ground);
+           border:1px solid var(--border);border-radius:var(--r-control);
+           transition:border-color var(--dur-1) var(--ease),
+                      box-shadow var(--dur-1) var(--ease),
+                      transform var(--dur-1) var(--ease)}
+.set-thumb:active{transform:scale(.97)}
+/* A WITHHELD DRAWING IS NOT A CONTROL THAT OPENS AN EMPTY VIEWER. aria-disabled
+   and not disabled, so it keeps its place in the arrow cycle and can carry the
+   reason to a keyboard. It had no rule at all until 2026-09-24 — on the record
+   as well as here — so a dead tile hovered, pressed and looked exactly like a
+   live one, and the only feedback was a live-region sentence. */
+.set-thumb[aria-disabled="true"]{cursor:default}
+.set-thumb[aria-disabled="true"]:active{transform:none}
+.set-thumb-img{display:block;width:100%;height:100%;object-fit:contain;
+               padding:var(--s-4)}
+.set-thumb-sk{display:block;width:100%;height:100%;border-radius:0}
+
+/* ── the last tile, and it is not a drawing ──────────────────────────────
+   SO IT DOES NOT TAKE THE PAPER. --figure-ground means "the sheet this was
+   published on" (§3.2) and this tile was never published on anything; it is a
+   control about the record, so it takes the sunken fill every box inside a
+   card takes. That is also what makes it read as the end of the strip rather
+   than as a drawing that failed to load.
+
+   IT IS LAST AND IT IS NOT STICKY. Pinning it to the visible trailing edge
+   would answer "how many more" before the founder has run out, by covering a
+   drawing to do it. It answers where the question is asked — the end of the
+   scroll — and End reaches it in one press. */
+.set-thumb-more{display:flex;flex-direction:column;align-items:center;
+                justify-content:center;gap:var(--s-2);
+                background:var(--surface-sunken);color:var(--text-2)}
+
+/* ── the list's sort and filter · platform.md §6.3 ──────────────────────
+   MENUS RATHER THAN SEGMENTED CONTROLS, and that is a width decision before
+   it is a semantic one. A .seg lays every option out at once and costs their
+   full width; three sort options and five facets do not fit a 420px column,
+   and spending the column on the controls would push the list below the fold
+   on the surface the list IS.
+
+   THE TWO ROLES DIFFER because the two acts do — the same distinction §7
+   draws between a tablist and a group of aria-pressed buttons, one level
+   down. Sort is `menuitemradio`: one of N, exactly one selected. Filter is
+   `menuitemcheckbox`: each facet independently on or off.
+
+   CONCENTRIC. The menu is --r-inner (12) with --s-4 (4) of padding, so its
+   items take --r-control (8): 8 + 4 = 12. */
+.lm{position:relative;flex:0 0 auto}
+.lm-btn{display:inline-flex;align-items:center;gap:var(--s-6);height:30px;
+  padding:0 var(--s-10);border-radius:var(--r-control);
+  background:var(--surface);border:1px solid var(--border);
+  font-size:12.5px;font-weight:500;color:var(--text-1);white-space:nowrap;
+  transition:background var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
+.lm-btn:active{transform:scale(.97)}
+@media (hover:hover){ .lm-btn:hover{background:var(--surface-sunken)} }
+.lm-btn>svg{flex:0 0 auto;color:var(--text-3)}
+.lm-chev{transition:transform var(--dur-2) var(--ease)}
+.lm.is-open .lm-chev{transform:rotate(180deg)}
+/* HOW MANY FACETS ARE ON, as a figure and not a dot. A filtered list that
+   looks like an unfiltered one is the oldest bug in this pattern, and colour
+   alone may not carry it (§2) — so the count is a word-shaped fact sitting
+   inside the control that caused it. */
+.lm-count{display:inline-flex;align-items:center;justify-content:center;
+  min-width:17px;height:17px;padding:0 4px;border-radius:var(--r-pill);
+  background:var(--text-1);color:var(--text-inverse)}
+/* display:inline-flex outranks [hidden] on its own — the same reason .btn,
+   .said and .card each declare this. */
+.lm-count[hidden]{display:none}
+.lm-menu{position:absolute;top:calc(100% + var(--s-6));left:0;min-width:196px;z-index:35;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-inner);
+  box-shadow:var(--shadow-float);padding:var(--s-4);text-align:left;
+  transform-origin:top left;opacity:0;visibility:hidden;transform:translateY(-4px) scale(.97);
+  transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
+             visibility 0s linear var(--dur-2)}
+.lm.is-open .lm-menu{opacity:1;visibility:visible;transform:none;
+  transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
+             visibility 0s linear 0s}
+/* ── .lm-up · a menu at the foot of a scroller opens upward ──────────────
+   The record's closing block is the last thing inside a .rec that is
+   overflow:clip, so a menu below its last control is a menu nobody sees. This
+   is the whole modifier: flip the edge it hangs from and the origin it grows
+   from, and flip the sign of the 4px the entrance travels.
+
+   THE .is-open OVERRIDE IS SPELLED OUT because .lm-up .lm-menu and
+   .lm.is-open .lm-menu are both (0,2,0) and order decides — this pair is
+   later in the file, so it wins, and it has to restate transform:none rather
+   than inherit it. */
+.lm-up .lm-menu{top:auto;bottom:calc(100% + var(--s-6));
+  transform-origin:bottom left;transform:translateY(4px) scale(.97)}
+.lm-up.is-open .lm-menu{transform:none}
+.lm-item{display:flex;align-items:center;gap:var(--s-10);width:100%;text-align:left;
+  padding:var(--s-8);border-radius:var(--r-control);font-size:13px;font-weight:500;
+  color:var(--text-2);transition:background var(--dur-1) var(--ease),
+             color var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
+.lm-item:active{transform:scale(.985)}
+@media (hover:hover){ .lm-item:hover{background:var(--surface-sunken);color:var(--text-1)} }
+.lm-item[aria-checked="true"]{color:var(--text-1)}
+/* the tick is ALWAYS IN THE BOX, at opacity 0 when unchecked, so nothing
+   reflows when a facet is turned on and the labels stay on one left edge. */
+.lm-tick{flex:0 0 16px;height:16px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-1);opacity:0;transition:opacity var(--dur-1) var(--ease)}
+.lm-item[aria-checked="true"] .lm-tick{opacity:1}
+/* THE ROLE IS .t-micro's, ON THE MARKUP. This spelled all six of micro's
+   declarations out by hand -- size, leading, weight, tracking, case, colour --
+   which is the split-role failure 02-type.css's header was written to close,
+   in the direction that looks harmless. What is left here is the padding,
+   which is this component's. */
+.lm-group{padding:var(--s-10) var(--s-8) var(--s-6)}
+.lm-group:first-child{padding-top:var(--s-6)}
+.set-list{padding:0}
+/* the row becomes a grid: controls, then the expandable body. The inline
+   padding is PERMANENT and holds the anchor rail — reserved in every state, so
+   nothing shifts when the rail comes and goes. */
+/* LOGICAL PROPERTIES, and the inline-end value is the whole fix. The row read
+   `padding:14px 0 14px 10px` — a trailing gutter of ZERO — so the relevance
+   score at the row's trailing edge sat flush against the card's border. It is
+   written as padding-inline start/end now, which is also what makes the rule
+   survive an RTL surface rather than putting the gutter on the star. */
+.set-row{position:relative;display:grid;grid-template-columns:auto 1fr;
+  align-items:start;gap:var(--s-16);
+  padding-block:var(--s-20);padding-inline:var(--s-10) var(--s-16);
+  border-bottom:1px solid var(--border)}
+.set-row:last-child{border-bottom:0}
+/* THE ANCHOR RAIL — what the founder starred, while the list is flat.
+   It hands off to the band: present only when .is-ranked is absent, because
+   inside a band headed "what you starred" a rail on every row restates the
+   heading. IT IS NOW THE ONLY RAIL ON THIS SURFACE, and that is the point:
+   until 2026-09-11 the row open in the record carried an identical one ~48px
+   in, and two identical marks meaning different things is not a distinction,
+   it is a thing the reader has to be told. The two states are now different
+   KINDS of mark — a rail for what you starred, a surface for what is open —
+   so they read independently on a row that is both. */
+.set-wrap:not(.is-ranked) .set-row[data-starred]::before{content:'';
+  position:absolute;inset-block:var(--s-20);inset-inline-start:0;width:2px;
+  border-radius:1px;background:var(--text-1)}
+/* THE OPEN ROW — what is showing in the record. A surface rather than a mark,
+   which is not an invention here: .proj[aria-current] and .meter[aria-current]
+   in the masthead menus already say "this is the current item in a list" with
+   exactly this token, and .rival-row[data-filtered] says it on the pane. No
+   hue, no new token, and it survives the re-rank because being open is
+   independent of the band (hence no :not(.is-ranked) qualifier). */
+.set-row[data-open]{background:var(--surface-sunken)}
+.set-row .drill-row{padding:0;border-bottom:0;min-width:0}
+.set-ctl{display:flex;align-items:center;justify-content:center;
+  width:32px;height:32px;margin-top:2px;border-radius:var(--r-chip);color:var(--text-3);
+  /* transform was missing from this list while :active below needed it, so the
+     one control on this surface that carries the founder's only input was also
+     the only one whose press snapped. .btn, .suggest, .drill-close, .lm-btn,
+     .set-more-btn and .pg-back all name it. */
+  transition:color var(--dur-1) var(--ease),background var(--dur-1) var(--ease),
+             transform var(--dur-1) var(--ease)}
+.set-ctl:active{transform:scale(.94)}
+/* the star — outline to filled, no hue. The fill IS the encoding, so the fill
+   is the thing that has to ease. It did not: the base was `fill:none` and
+   none → currentColor is not an animatable pair, so the declaration below was
+   a no-op and only the parent's colour moved. `transparent` renders exactly as
+   `none` here and interpolates. */
+.set-star svg{fill:transparent;
+              transition:fill var(--dur-1) var(--ease),
+                         transform var(--dur-1) var(--ease)}
+/* ENTER SLOWER THAN EXIT, which is §6 the right way round: starring is the act
+   the founder is waiting to see land, un-starring is a correction they have
+   already decided on. Both were --dur-1, so filling and emptying looked the
+   same and neither looked like an acknowledgement.
+
+   AND THE GLYPH LIFTS 6%. It is a transition and not a keyframe — there are
+   three of those and three is the list — so it holds at the larger size
+   rather than springing back, which is what makes it a STATE rather than a
+   flourish: a starred row is legible as starred from the shape alone at the
+   edge of vision, before the fill resolves. §6's test is "could a transition
+   have done this", and here it not only could, it says more. */
+.set-star[aria-pressed="true"] svg{transform:scale(1.06);
+              transition:fill var(--dur-2) var(--ease),
+                         transform var(--dur-2) var(--ease)}
+/* THE .set-ctl QUALIFIER WENT, 2026-09-24. It was there for specificity over
+   .set-ctl{color:var(--text-3)} and nothing else, and at (0,2,0) this still
+   beats it — but the record's star is a .rec-act rather than a .set-ctl, and
+   one treatment has to reach every host of the class. */
+.set-star[aria-pressed="true"]{color:var(--text-1)}
+.set-star[aria-pressed="true"] svg{fill:currentColor}
+/* SCOPED TO THE TITLE, 2026-09-24. It read `.drill-toggle .sk:first-child`,
+   which meant "the title's first bar" only while the title was the first
+   thing in the button. The eyebrow's number bar is first in DOM order now, so
+   the rule would have marked the wrong withheld value. */
+.set-row[data-starred] .drill-title .sk:first-child{background:var(--skeleton-strong)}
+.set-more{display:flex;align-items:center;gap:var(--s-12);
+  padding:var(--s-14) var(--s-20);border-top:1px solid var(--border)}
+.set-more .spacer{flex:1 1 auto}
+/* display:flex outranks [hidden] here for the same reason .btn does */
+.set-more[hidden]{display:none}
+/* THE SIZE AND LEADING ARE .fig-s's, ON THE MARKUP, AND SO IS THE FAMILY --
+   which is the half that was missing. #setMoreN holds String(left): a bare
+   COUNT, and §4 says Inconsolata for every count without exception. It had
+   figure-s's metrics in Urbanist, without tabular-nums, which is the same
+   defect .dm-more carried one band up. */
+.set-more-n{margin:0;color:var(--text-3)}
+/* NO BORDER AND NO FILL. Its placement zone is what marks it as a control —
+   the trailing edge of the list's own foot, which is the one place on this
+   surface an action about the list can sit. The hover ground is the whole
+   affordance, and the negative trailing margin lets the padding exist
+   without pushing the label off the column's own rule. */
+.set-more-btn{display:inline-flex;align-items:center;gap:var(--s-6);flex:0 0 auto;
+  padding:var(--s-6) var(--s-8);margin-inline-end:calc(-1 * var(--s-8));
+  border-radius:var(--r-control);font-size:13px;font-weight:500;color:var(--text-2);
+  transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease),
+             transform var(--dur-1) var(--ease)}
+.set-more-btn:active{transform:scale(.97)}
+.set-more-btn svg{color:var(--text-3);flex:0 0 auto}
+.set-more-btn[hidden]{display:none}
+@media (hover:hover){
+  .set-more-btn:hover{background:var(--surface-sunken);color:var(--text-1)}
+  .set-more-btn:hover svg{color:var(--text-2)}
+  /* the hover fill is what drew the pill round the loader, so it is refused
+     for the length of the wait rather than merely overridden elsewhere */
+  #setMore[data-waiting]:hover{background:none}
+}
+
+/* ── the star's prompt ───────────────────────────────────────────────────
+   THE STRIP IS GONE, 2026-09-11. It was a grid-template-rows collapse holding
+   a sentence and the re-rank button, opening the moment a star made the button
+   live. The button is in .set-bar now and the sentence is in the heading's
+   popover. What the strip did that mattered — a consequence on screen the
+   moment you star — the button does by ARRIVING, and it arrives somewhere the
+   founder is already looking rather than in a region of its own.
+   *The cost, named: the strip's collapse handed off to .set-run in the same
+   frame, which read as the prompt becoming the work. The beat still opens; it
+   just no longer has anything closing as it does.* */
+
+/* ── the re-baseline panel · TWO states ────────────────────
+   rest -> running -> rest. IT WAS THREE, and the third is deleted 2026-09-11.
+   The settled state held a statement — "N patents moved. What you starred is
+   now at the top — and what the views count has not changed, only the order."
+   — in a permanent sunken band above the list.
+
+   WHY IT WENT, and the reasons compound rather than repeat:
+   1. THE FIGURE WENT CONSTANT. It counted positions that changed, which was a
+      real measurement while the re-rank only hoisted the starred rows past
+      their neighbours; now that it re-sequences the whole list it reads 122 of
+      124 every time. A number that never varies is a label wearing a
+      measurement's clothes.
+   2. THE DISCLOSURE HAS A HOME ALREADY. "What the views count has not changed,
+      only the order" was documented as un-relocatable — true only just after a
+      re-rank, so it could not follow the standing note into the heading's
+      popover in 2026-09-10. But the popover's own re-rank paragraph ends "No
+      patent enters or leaves; only the sequence changes", which is that clause,
+      stated durably, about this exact control. It was carrying a fact it had
+      stopped being the only carrier of.
+   3. THREE STANDING CUES SURVIVE IT, and none of them is a transient band: the
+      rank chip in the heading, the two band headings over the rows, and
+      `Restore the original order` arriving in the bar. §6's rule is that motion
+      may never be the only thing carrying a state — it isn't.
+
+   SO THE BEAT STILL OPENS AND NOW IT CLOSES. The running line no longer
+   resolves into a result in place; it collapses, and what is left on screen is
+   the reordered list with the chip above it.
+
+   THE ENTER AND THE EXIT ARE DIFFERENT DURATIONS, which is why the base rule
+   carries the exit and the state class overrides it — §6 says exit is faster
+   than enter everywhere, not only on the view swap. */
+/* .set-run WENT WITH ITS MARKUP. It declared a collapsed track and a
+   transition to open it, and nothing ever wrote the state that opened it. */
+
+
+
+
+/* ── the drawings' own hover · §6's full form, because it carries a transform ─
+   EVERY SELECTOR IN HERE NAMES :hover, which is gate F, and the gate matters
+   on this block specifically: .set-thumb's base rule, its :active and its
+   disabled state all live OUTSIDE it, because :active fires on touch and a
+   base rule in a hover gate never applies to a coarse pointer at all.
+
+   THE LIFT IS A TRANSFORM. §5 will not give a tile in a layout an elevation
+   shadow and §6 will not animate a layout property; 1px of translate reads as
+   the thing coming toward you and costs no reflow. It is .pn-fig-btn's own
+   hover, restated for a control that exists on the row now too.
+
+   THE NOTE THAT STOOD HERE SAID "NO HOVER, NO ACTIVE, NO CURSOR", and it was
+   right while the tiles were decoration inside the row's button — a thumbnail
+   that lit under the pointer would have promised an act it did not have. They
+   are controls with an act of their own now, so the premise is gone rather
+   than the rule being bent. */
+@media (hover:hover) and (pointer:fine){
+  /* THE SHADOW ARRIVED WITH §5's SECOND RUNG. The translate was carrying this
+     on its own because an elevation shadow was refused to anything in the
+     layout; they belong together. */
+  .set-thumb:not([aria-disabled="true"]):hover{
+    border-color:var(--border-strong);transform:translateY(-1px);
+    box-shadow:var(--shadow-raise)}
+  .set-thumb-more:hover{background:var(--surface);color:var(--text-1)}
+}

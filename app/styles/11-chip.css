@@ -1,0 +1,51 @@
+/* ══ 11 · CHIP, STATUS AND DELTA ══════════════════════════════════════════
+   NEVER COLOUR ALONE. A status chip carries a DOT and a word; a delta carries
+   an ARROW and a number. design-language.md §2: every coloured element also
+   carries a word or a shape, so the state survives greyscale, print, forced
+   colours and the reader who cannot separate the two hues.
+
+   COLOUR ENCODES DIRECTION, NEVER DESIRABILITY. --state-up and --state-down
+   are DERIVED from --state-live and --state-expired -- the same two hues doing
+   a second job -- and they mean rising and falling, not good and bad.
+
+   ── THE [hidden] OVERRIDES ARE NOT DECORATION. `display:inline-flex` here is an
+   AUTHOR declaration and `[hidden]{display:none}` is a USER-AGENT one, so
+   author origin wins whatever the specificity and a chip given [hidden] stays
+   on screen. There are 15 of these across the sheet and every one is
+   `X[hidden]` at (0,2,0) against the component's own `.X` at (0,1,0) -- they
+   are SPECIFICITY-protected, not ORDER-protected, so they may live in any file
+   in any order and still win.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.chip{display:inline-flex;align-items:center;gap:var(--s-6);height:24px;padding:0 var(--s-8);
+      border-radius:var(--r-pill);background:var(--surface-sunken);color:var(--text-2);
+      font-size:12.5px;font-weight:500;white-space:nowrap}
+.chip svg{color:var(--text-3)}
+.chip[hidden]{display:none}      /* display:inline-flex above outranks [hidden] */
+.dot{width:6px;height:6px;border-radius:var(--r-pill);flex:0 0 6px}
+
+.mark{width:22px;height:22px;flex:0 0 22px;color:var(--text-1)}
+.wordmark{font-size:15px;font-weight:700;letter-spacing:-.01em;white-space:nowrap}
+.wordmark span{color:var(--text-3);font-weight:500}
+
+/* status chip + delta pill — dot or arrow plus a word, never colour alone */
+/* SIZE, WEIGHT, TRACKING AND CASE ARE .t-micro's, ON THE MARKUP. This rule
+   carried font-size:11.5px and font-weight:500 -- an off-table size invented
+   in the gap between `micro` and `label`. statusHTML() emits the role now, so
+   all three of its hosts move together.
+   HEIGHT IS --s-20 AND NOT 22, because 22 is off §5's scale and a micro chip
+   wants the smaller pill anyway. */
+.status{display:inline-flex;align-items:center;gap:var(--s-6);
+        height:var(--s-20);padding:0 var(--s-8);border-radius:var(--r-pill);white-space:nowrap}
+.status-live{background:var(--state-live-tint);color:var(--state-live)}
+.status-expired{background:var(--state-expired-tint);color:var(--state-expired)}
+.status-pending{background:var(--state-pending-tint);color:var(--state-pending)}
+.status-live .dot{background:var(--state-live)}
+.status-expired .dot{background:var(--state-expired)}
+.status-pending .dot{background:var(--state-pending)}
+/* THE DELTA PILL WAS SPECCED HERE AND EMITTED NOWHERE. It was the only
+   component for §2's third permitted colour case, direction of change, and it
+   never shipped. THE CASE STAYS RESERVED AND THE COMPONENT GOES: --state-up
+   and --state-down are derived aliases rather than new hues, so reserving them
+   costs nothing, and deleting them would move the derived count in four gated
+   places for a rule that is still permitted. */

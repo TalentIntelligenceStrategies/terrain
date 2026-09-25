@@ -1,0 +1,322 @@
+/* ports — the engine contract, as code.
+ *
+ * WHAT THIS FILE IS. design/components.md §1 is a table of what each component
+ * needs from the engine. This is that table made executable: one named port
+ * per data-bearing row, a typedef for each shape, and a NullEngine that
+ * implements every one of them by refusing. It is the seam an engine team
+ * builds against, and it is the reason app/js/** can hold no data.
+ *
+ * ═══ THE ONE ENVELOPE ═══════════════════════════════════════════════════════
+ * Every port resolves to { ok:true, data } or { ok:false, code, retryable }.
+ * That is components.md §0.1 made executable, and each clause of it is load
+ * bearing:
+ *
+ *   A FAILURE IS A RESPONSE AND IS NOT THE SAME AS AN EMPTY ONE. "No patents
+ *   matched" is an answer; "the search did not run" is not. A component that
+ *   cannot tell them apart renders "nothing found" over an outage, which is
+ *   the one wrong thing it can say. An empty array is not a failure signal.
+ *
+ *   PARTIAL SUCCESS IS THE NORMAL CASE. The views resolve independently and
+ *   each arrives when its own data lands, so one view failing while the others
+ *   succeed is ordinary. That is why every view is its own port rather than
+ *   one call returning everything: a response that can only be wholly good or
+ *   wholly bad forces the surface to blank nine working views to report one
+ *   broken one.
+ *
+ *   THE REASON IS MACHINE-READABLE; THE SENTENCE IS OURS. `code` is for our
+ *   logs and for choosing which sentence to print. NEVER return prose intended
+ *   for display: our copy states the fix rather than the fault and does it in
+ *   our own voice, and an engine cannot know either. A message we did not
+ *   write is a message that cannot be made true of our interface.
+ *
+ *   `retryable` IS PART OF THE ANSWER, not a guess the client makes. It is
+ *   exactly what core/wait.mjs's failHTML(say, act) consumes: retryable true
+ *   means pass an `act` and the block offers `Try again`; false means pass
+ *   none, and the block says there is no way forward BY HAVING NO BUTTON.
+ *   Guessing wrong in either direction wastes the founder's time or hides
+ *   their way out.
+ *
+ *   A RUN THAT DID NOT FINISH IS NOT A RUN THAT WAS CHARGED. The meter returns
+ *   to where it was, so the ledger behind these has to distinguish an
+ *   attempted run from a completed one.
+ *
+ * ═══ null MEANS RENDER THE SKELETON BAR ═════════════════════════════════════
+ * AND IT IS THE ONLY THING THAT MEANS THAT. components.md already uses this
+ * device once, for the map's holders; here it is a system rule. Four things
+ * follow, and the fourth is the one that matters most:
+ *
+ *   · Width strings and label arrays leave the data entirely. A list of
+ *     identities stops being CSS width-class strings and becomes the
+ *     contract's shape.
+ *   · The skeleton contract becomes greppable: one rule, one meaning.
+ *   · A real engine returning real names changes NOTHING but the presence of a
+ *     value. No renderer branches on "is this demo data".
+ *   · `null` and `'XXX'` stay distinct. They are two different refusals —
+ *     "this value exists and we decline to print it" versus "nobody has chosen
+ *     one yet" — and they render through two different code paths on purpose.
+ *
+ * ═══ AND THE FAKE ENGINE BENDS TOWARD THIS, NEVER THE REVERSE ═══════════════
+ * Never bend a component toward the demo data's shape. demo/ is deletable by
+ * construction and app/js/** is the contract; a component shaped around the
+ * fake engine is a component that breaks against the real one.
+ */
+
+/** @typedef {{ok:true, data:any}} Ok */
+/** @typedef {{ok:false, code:string, retryable:boolean, detail?:any}} Err */
+/** @typedef {Ok|Err} Result */
+
+export const ok  = data => ({ ok: true, data });
+export const err = (code, retryable = false, detail) =>
+  ({ ok: false, code, retryable, detail });
+
+/* The codes the surface knows how to speak. An engine may return others; the
+ * surface treats an unknown code as UNAVAILABLE and logs the original, because
+ * a sentence we did not write is worse than a general one we did. */
+export const CODE = {
+  UNAVAILABLE:   'UNAVAILABLE',    // transient. retryable
+  TIMEOUT:       'TIMEOUT',        // transient. retryable
+  RATE_LIMITED:  'RATE_LIMITED',   // transient. retryable
+  NO_CORPUS:     'NO_CORPUS',      // permanent for these criteria. NOT retryable
+  NOT_FOUND:     'NOT_FOUND',      // permanent. NOT retryable
+  UNSUPPORTED:   'UNSUPPORTED',    // permanent. NOT retryable
+  INSUFFICIENT:  'INSUFFICIENT',   // not enough points. NOT retryable — a different route
+};
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * THE SHAPES. Field names are ours and illustrative; the SHAPE is the claim.
+ * Each names the components.md row it comes from.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+/** @typedef {{id:string, label:string|null}} Labelled — label null renders a bar */
+
+/** The list · FOUR FIELDS PER ROW AND NO MORE — that rule is about what the row
+ *  DRAWS, and the row still draws four. `number` and `where` are carried and not
+ *  drawn, because the starred set leaves as a seven-column file and the export
+ *  cannot reach the record port: fifty starred patents would be fifty calls to
+ *  fill in two columns the list already had.
+ *
+ *  `thumbs` IS CARRIED FOR THE SAME REASON AND IS NOT A FIFTH FIELD. A field is
+ *  a value read OFF the patent — its holder, its year, its status. A drawing is
+ *  the patent. The row draws its fields and up to twelve pictures, and the rule
+ *  it narrows is the one about how many facts a row asserts.
+ *
+ *  UP TO TWELVE, AND THE ENGINE DECIDES WHICH. They are the row's glance value —
+ *  is this the kind of mechanism I meant — so the first few are what matter and
+ *  the rest are there because the strip scrolls. They are carried with the row rather than
+ *  fetched per-row for the reason `number` is: twenty rows would be twenty
+ *  record calls to fill a strip the search already had.
+ *
+ *  THE SKELETON CONTRACT IS UNCHANGED and is the same one `figures` carries:
+ *  `[]` means this patent HAS no drawings, `[{n, src:null}]` means it has them
+ *  and we decline to show them. The engine may point `src` at a SMALLER
+ *  rendition than the record's — a 64px thumbnail has no business decoding the
+ *  full drawing — and nothing in the contract says the two must be one file.
+ *
+ *  THE ID IS NOT THE NUMBER, and the export is where that stops being pedantry.
+ *  `id` is whatever the engine keys on; `number` is what is printed on the patent
+ *  and what the founder searches their own document for. Writing the id into a
+ *  column headed *Number* puts a string that is not a patent number into their
+ *  data, and nothing downstream can tell.
+ *
+ *  `order` is a first-class field and not an array index — rows are keyed
+ *  by patent, and the FLIP, the rail, the focus return and the reversal all resolve
+ *  through that key. `matched` and `patents.length` differ by what was binned, and
+ *  printing the wrong one beneath the standing chip is a recorded regression. */
+/** `status` HAS FOUR VALUES AND `null`, and the fourth is not decoration.
+ *  Real data carries at least Active, Granted, Expired, Abandoned and Pending;
+ *  folding the last two into `expired` makes the interface say *Expired* about
+ *  an application that was never granted, which is a different fact stated
+ *  with full confidence. `null` means we do not know, and renders nothing. */
+/** THE ROW DRAWS TWELVE FIELDS NOW AND IT USED TO DRAW FOUR, and the rule that
+ *  changed is not "how many facts may a row assert" but WHICH SURFACE ANSWERS
+ *  THE GLANCE. Four fields — title, holder, year, status — could not separate a
+ *  TSMC filing from a university one without opening the record, so the record
+ *  was opened on every row and the list was a table of contents rather than a
+ *  result. The fields added are the ones that end that trip: who invented it,
+ *  what class it sits in, when it published, and what it actually claims.
+ *
+ *  `abstract` IS THE ONE THAT PAYS FOR ITSELF and the one to watch. It is the
+ *  only field here that is prose rather than an identifier, the row clamps it
+ *  to three lines, and a clamp is a rendering decision rather than a contract:
+ *  the engine sends the abstract as published and the row decides how much of
+ *  it fits. An engine that pre-truncates has made that decision for every
+ *  surface, and the record needs the whole thing.
+ *
+ *  `inventors` IS AN ARRAY AND THE ROW PRINTS ONE. Same string, same shape as
+ *  the record's, because a row that received a pre-joined string could not
+ *  print "and 5 others" without parsing prose back into a list.
+ *
+ *  `figs` IS THE TOTAL FIGURE COUNT AND `thumbs` IS WHAT THE STRIP HOLDS. They
+ *  are different numbers on purpose — `thumbs` is capped at twelve and `figs`
+ *  is what the patent has, so the strip's last tile can say what it stands in
+ *  for. `null` means we hold no figure list, which is NOT zero: the tile prints
+ *  nothing rather than `+0`.
+ *
+ *  @typedef {{id:string, number:string|null, skim:string|null, holder:string|null,
+ *             where:string|null, year:number|null, thumbs:Figure[],
+ *             status:'live'|'expired'|'abandoned'|'pending'|null,
+ *             score:number|null, inventors:string[]|null, abstract:string|null,
+ *             ipcMain:string|null, filed:string|null, published:string|null,
+ *             kind:string|null, figs:number|null}} PatentRow */
+/** @typedef {{patents:PatentRow[], order:string[], matched:number}} PatentSet */
+
+/** The record · the title, eleven identifiers, the abstract, and the claim set AS
+ *  PUBLISHED. `claims` is an ARRAY, one entry per claim, never one blob: a patent
+ *  numbers its claims and counsel is pointed at claim 4 by number. Nothing here may
+ *  arrive INTERPRETED — no highlight offsets, no decode.
+ *
+ *  `title` WAS MISSING FROM THIS TYPEDEF AND THE RECORD PANE DRAWS IT. The list row
+ *  carries `skim` and the pane carries `title`, and they are the same string for the
+ *  same patent — but the pane receives a record and never an index, so it cannot
+ *  reach the row's copy. Found by building app/: the pane rendered a skeleton where
+ *  the prototype prints a title, and the only reason nothing looked broken is that a
+ *  bar is what every OTHER record draws there.
+ *
+ *  It is `string|null` like every other identity-shaped field, and null means the
+ *  bar — a patent whose title we decline to print is the ordinary case, not an
+ *  error. */
+/* `figures` CARRIES THE SKELETON CONTRACT LIKE EVERY OTHER FIELD, and the two
+ *  cases it has to keep apart are the whole of its design.
+ *
+ *    figures: []              this record HAS NO DRAWINGS. A fact about it.
+ *    figures: [{n, src:null}] it has drawings and we decline to show them.
+ *
+ *  The first renders a sentence; the second renders numbered skeleton frames,
+ *  exactly as a withheld holder name renders a bar. Collapsing them would be
+ *  the same error in either direction: an empty array where drawings exist says
+ *  a patent has none, and a frame where none exist claims one is being
+ *  withheld. `src === null` is the ONLY thing that means render the frame,
+ *  which is `null`'s meaning everywhere else in this file.
+ *
+ *  `n` IS THE PUBLISHED FIGURE NUMBER AND IS NOT THE INDEX. The claims refer to
+ *  figures by number; a renumbered figure is a different document. It is carried
+ *  rather than derived from position for exactly that reason. */
+/** @typedef {{n:number, src:string|null, alt:string|null}} Figure */
+
+/** The grouping · TWO LEVELS AND NO MORE. A third is a taxonomy, which is the
+ *  authored artifact a founder cannot produce and the thing this product
+ *  refuses to require. `n` is the leaf's size over the WHOLE set, not over the
+ *  page the client is holding. */
+/** @typedef {{id:string, label:string, n:number}} Leaf */
+/** @typedef {{label:string, leaves:Leaf[]}} Spine */
+/** @typedef {{head:string, spines:Spine[]}} Cluster */
+
+/** @typedef {{title:string|null, number:string|null, appno:string|null, kind:string|null,
+ *             ipcMain:string|null, ipc:string[]|null, holder:string|null,
+ *             inventors:string[]|null, filed:string|null, published:string|null,
+ *             where:string|null, status:string|null, abstract:string|null,
+ *             claims:string[]|null, figures:Figure[]}} Record */
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * THE PORTS. One per data-bearing row of components.md §1, named after it.
+ * Every one returns Promise<Result>.
+ * ───────────────────────────────────────────────────────────────────────── */
+export const PORTS = [
+  /* the home surface */
+  'fields',          // the technology fields, and which are covered yet
+  'coverage',        // what is in the corpus, and when each source was taken in
+
+  /* the search. ONE CALL, NO STEP BETWEEN THE SENTENCE AND THE SET — the
+     reading, the five questions, the gate and the build stream were four
+     ports and are now none. CHARGED HERE: the approval used to be the
+     commitment, and with no approval the commitment is pressing Search. */
+  /* `settings` is the search-settings panel's whole state and it travels as
+     one object, not as six loose arguments: the panel is the only thing that
+     builds it and the engine is the only thing that reads it, so a shape
+     change is a change in two places rather than in every call site.
+       sources[] · jurisdictions, at least one
+       kinds[]   · 'granted' | 'applications', at least one
+       count     · 10 | 20 | 50 | 100 | 500
+       basis     · 'filed' | 'published' — which date the range applies to
+       from, to  · four-digit years as strings, '' meaning no bound */
+  'search',          // {query, field, settings} → PatentSet
+
+  /* the list. ALL THREE ARE REQUESTS — twenty rows arrive at a time, so the
+     client never holds the whole set and sorting what it has would sort a page
+     rather than a result. Both wait, both can fail, neither spends points. */
+  'patents',         // → PatentSet
+  'patentsPage',     // Show more
+  'sort',            // {sort:'relevance'|'newest'|'oldest'} → PatentSet
+  'facets',          // {facets:{status,kind}, groups:[leafId]} → PatentSet
+  'rerank',          // {anchors:[id]} → {order:[id]} over the SAME set
+
+  /* THE GROUPING. It partitions the set the search returned; it does not
+     re-query, and it covers the WHOLE set rather than the page.
+
+     A LEAF CARRIES A COUNT, NOT A LIST OF IDS, and that follows from the line
+     above `patents`: the client holds twenty rows at a time and never the
+     whole set, so a leaf naming its patents would name ones the list does not
+     have. Selecting a branch is therefore a REQUEST, exactly as sort and
+     facets are — `facets({groups:[leafId]})` returns a fresh first page — and
+     `n` is what the badge prints. One number, from the engine, so the badge
+     and the filtered count cannot disagree.
+
+     TOO FEW TO GROUP IS A SUCCESSFUL RESPONSE, not a failure: `spines: []`
+     with `ok:true`. A set of three has no structure to show, and refusing
+     would make the panel offer a retry that cannot help. */
+  'cluster',         // → {head, spines:[{label, leaves:[{id,label,n}]}]}
+
+  /* THE EXPORT PORT IS THE LEDGER, NOT THE FILE. Every field that goes into a
+     CSV or a Markdown list is already in the client — core/starred.mjs holds
+     the rows the list port returned — so the bytes are built there and this
+     call exists because a run costs points and the balance has to move. It
+     follows that a refusal here must NOT cost the founder their download:
+     surfaces/starred.mjs hands the file over first and updates the balance
+     only if this answered. */
+  'export',          // {ids:[id], format:'csv'|'md'} → {balance}
+
+  /* the record */
+  'record',          // → Record
+
+  /* projects */
+  'projects',
+
+  /* the destinations */
+  'points',
+  'runs',
+  'account',
+  'saveAccount',
+  'billing',
+  'invoices',
+  'sendSupport',
+];
+
+/**
+ * NullEngine — every port, implemented by refusing.
+ *
+ * NOT A STUB AND NOT A MOCK. It is what `app/` runs against when `demo/` is
+ * deleted, and that is the point: deleting the demo has to leave a product
+ * that says "this did not run" on every surface, rather than one that throws.
+ * It is also the check that no component secretly requires data to render its
+ * chrome — a surface that cannot draw itself against this is a surface that
+ * cannot draw its own failure state either.
+ *
+ * `retryable:true` because UNAVAILABLE is transient by definition, so every
+ * region shows its retry affordance and the whole failure vocabulary is
+ * exercised by running with no engine at all.
+ */
+export const NullEngine = Object.freeze(
+  Object.fromEntries(PORTS.map(name => [
+    name,
+    async () => err(CODE.UNAVAILABLE, true, `NullEngine: ${name} is not wired to anything`),
+  ]))
+);
+
+/**
+ * Refuse an engine that is missing a port, at mount rather than at first use.
+ *
+ * A MISSING PORT IS OTHERWISE A TypeError AT THE MOMENT A FOUNDER PRESSES
+ * SOMETHING, several surfaces into the product, and it reads as that surface
+ * being broken rather than as the engine being incomplete.
+ */
+export function assertEngine(engine) {
+  const missing = PORTS.filter(p => typeof engine?.[p] !== 'function');
+  if (missing.length) {
+    throw new Error(
+      `engine is missing ${missing.length} port(s): ${missing.join(', ')}. ` +
+      `Every port in ports.mjs is named after a data-bearing row of ` +
+      `design/components.md §1; an engine that cannot answer one has to say so ` +
+      `with { ok:false, code, retryable } rather than by not being there.`);
+  }
+  return engine;
+}

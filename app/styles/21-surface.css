@@ -1,0 +1,280 @@
+/* 21 · the working surface — platform.md §4
+ *
+ * EXTRACTED from the prototype. Two columns, each with its own scroll context,
+ * and the inset on the right matched to the left by hand. The scrollbar rules
+ * are here rather than in the reset because they are a property of these two
+ * panes and not of the document. */
+
+/* ── the working surface · platform.md §4.3, §4.5 ──────────────────────────
+   THE ARITHMETIC THAT USED TO SIT HERE MEASURED THE MATRIX, and the matrix
+   went with the analysis layer. It is re-derived against the thing that is
+   actually width-critical now, which is the RECORD's field list.
+
+   Four insets sit between the window and the eleven identifiers. At 1440:
+
+       1440 × 0.56 (.panecol)              = 806
+            −  32 (.panescroll, --s-16 × 2) =  774
+            −   2 (.rec border)             =  772
+            −  40 (.rec-body, --s-20 × 2)   =  732   what .hf gets
+
+   design-language.md §7 measures .hf's two-column form as breaking under
+   about 600px — the longest values wrap under their own labels and the shared
+   leading edge that makes eleven rows scannable stops existing. 732 clears it
+   at 1440, and the crossing point is a window of ~1203px:
+
+       0.56W − 74 = 600  →  W ≈ 1203
+
+   Between 1203 and the 1079 stack the field list goes single-column, which is
+   a container query in 35-record.css rather than a viewport one — the record
+   is 56% of a split above 1079 and the FULL width below it, so a viewport
+   query would fire at the wrong moment in both directions.
+
+   Below 1080 the columns stack and none of this applies. */
+.view-work{overflow:hidden}
+.view-work.is-active{display:flex;flex-direction:column}
+.work-split{display:flex;flex:1;min-height:0}
+
+/* ══ 44 / 56, AND THE RECORD TAKES THE LARGER HALF ═══════════════════════
+   It was fifty-fifty, on the argument that the list is the primary content
+   and had been getting 29% of the width. That was right while the right
+   column held one drawing — a drawing is legible at any size and the list
+   was the thing being read.
+
+   THE RECORD IS OVER THERE NOW, and it carries eleven identifiers, an
+   abstract, the claims and the drawings. The list carries three bands a row
+   and a clamped abstract.
+   Equal halves would give the denser column the same room as the sparser
+   one, and the head arithmetic above says what that costs: the field list
+   collapses to one column below ~1203px at 50/50 against ~1203 at 56% —
+   which is the whole reason to spend the twelve points.
+
+   THE LIST IS FLOORED RATHER THAN FIXED. 340px is design-language.md §7's
+   measured minimum for a readable result row; below that the split has
+   already stacked.
+
+   AND IT IS A PERCENTAGE BASIS WITH `flex:0 1`, not `width:44%`. A width
+   would be measured before the border between them and leave the two columns
+   a hairline apart; a shrinkable basis divides what is actually left after
+   the border, so the ratio holds on the screen rather than on paper. */
+/* IT IS GROUND, NOT A SURFACE, AND THAT IS WHAT MAKES THE TWO COLUMNS PEERS.
+   It carried `background:var(--surface)` and a right-hand hairline, so the
+   left column WAS a panel and the record on the right was a panel sitting on
+   the app. brief.md: "two columns, and each column means one thing" — the two
+   meant different kinds of thing, and the chrome said so before any content
+   did. Both columns are ground now, each carrying one panel, and the hairline
+   goes with the background: two panels 32px apart separate themselves, and a
+   rule between them would be a third edge in a gap that already has two. */
+.listcol{position:relative;flex:0 1 44%;min-width:340px;
+         display:flex;flex-direction:column;overflow:hidden}
+
+/* ── the left column's density · one step up, 2026-09-10 ────────────────
+   The whole column read tight, and one value in it was a defect rather than
+   a preference: .set-row had NO inline-end padding at all, so the relevance
+   score sat against the card's border.
+
+   EVERY NEW VALUE IS AN EXISTING STEP on the scale. --s-18 and --s-28 would
+   have been the arithmetic middle and neither exists: the scale runs
+   2·4·6·8·10·12·14·16·20·24·32, so "one step up" means 14 to 20, not 14 to
+   18. Inventing two off-rhythm tokens to hit a rounder number is how a
+   spacing scale stops being one.
+
+   THE ROW HEIGHT QUOTED HERE WAS FROM THAT PASS AND IS LONG GONE. It read
+   "the row goes ~90px to ~102px", which was true of a four-field row before
+   it gained an abstract, a drawing strip, an eyebrow and a title on the type
+   scale. It is ~340px now and design-language.md §7 is where that number is
+   argued — a second copy of it here is a second place for it to drift. This
+   note is about the PADDING it changed, which is unchanged. */
+.listcol-scroll{flex:1;min-height:0;overflow-y:auto;
+  padding:var(--s-20) var(--s-16) var(--s-24);scrollbar-gutter:stable}
+.listhead{display:flex;flex-direction:column;gap:var(--s-10);margin-bottom:var(--s-16)}
+.listhead-top{display:flex;align-items:center;gap:var(--s-8)}
+/* THE INFO BUTTON TAKES THE TRAILING EDGE, and this is a bug fix rather than
+   a preference. .info-pop is anchored to its trailing edge with no flip or
+   clamp anywhere in this file, so a button sitting mid-row put a 300px
+   popover at x = -72 — off the column, and clipped by .listcol's own
+   overflow:hidden. Every card header already solves it this way. */
+/* THE AUTO MARGIN IS ON THE HEADING, and it has to be. On a chip it works
+   only while that chip is the first thing after the title, and breaks the
+   moment anything joins the row ahead of it — `N starred` would be stranded
+   beside the heading with the gap opening between two chips that belong
+   together. Pushing from the TITLE'S trailing edge packs the
+   whole trailing group right regardless of which of them are rendered, which
+   is what a row with two conditionally-present chips needs. */
+.listhead-top #setTitle{margin-inline-end:auto}
+/* THE WRAPPER IS GONE AND THE ROW NOW GENUINELY COLLAPSES. `:empty` was the
+   rule here and it never matched once: a div holding a hidden span holds an
+   element child and two whitespace text nodes, so the flex column kept paying
+   its 10px gap for a row that drew nothing. The chip is a direct child now,
+   .chip[hidden] takes it out of the flow for real, and there is no wrapper
+   left to be wrong about. align-self is what stops a 24px pill stretching to
+   the column's full width in a flex-direction:column parent. */
+.listhead>.chip{align-self:flex-start}
+
+/* ── scrollbars · added 2026-09-10 ──────────────────────────────────────
+   There was no scrollbar rule in this file at all — every scroller was the
+   UA default, tinted only by color-scheme, and on the list that read as the
+   heaviest thing on a surface made of hairlines.
+
+   THIN, NEUTRAL AND ALWAYS THERE. Hidden-until-hover was refused: a scroll
+   affordance you cannot see is one a founder does not know is there, and it
+   does nothing at all for touch. --border-strong at rest is the same weight
+   as the row dividers it runs beside; --text-3 on hover is the same step
+   every other control on this surface takes. No hue, per §2.
+
+   scrollbar-gutter:stable is what stops the list jumping sideways by 8px the
+   first time it grows past one screen — the same class of shift the FLIP
+   work elsewhere in this file exists to prevent. */
+.listcol-scroll,.panescroll{scrollbar-width:thin;
+  scrollbar-color:var(--border-strong) transparent}
+.listcol-scroll::-webkit-scrollbar,.panescroll::-webkit-scrollbar{width:8px;height:8px}
+.listcol-scroll::-webkit-scrollbar-track,.panescroll::-webkit-scrollbar-track{background:transparent}
+/* the 2px transparent border plus background-clip is what makes an 8px track
+   carry a 4px thumb without a second element to style. */
+.listcol-scroll::-webkit-scrollbar-thumb,.panescroll::-webkit-scrollbar-thumb{
+  background:var(--border-strong);border-radius:var(--r-pill);
+  border:2px solid transparent;background-clip:content-box}
+@media (hover:hover){
+  .listcol-scroll::-webkit-scrollbar-thumb:hover,
+  .panescroll::-webkit-scrollbar-thumb:hover{background:var(--text-3);background-clip:content-box}
+}
+
+/* THE READING COLUMN. The scroller takes the height that is left and the
+   attribution sits beneath it.
+
+   `position:relative` is kept on purpose and no longer for .figview, which
+   became a lightbox against the viewport on 2026-09-24. It is here because a
+   column that anything inside may ever anchor to wants a containing block,
+   and removing it is a one-line change somebody would then have to rediscover
+   the need for. */
+.panecol{position:relative;flex:1 1 56%;min-width:0;overflow:hidden;
+         display:flex;flex-direction:column}
+
+/* ── the pane's inset · matched to the left column, 2026-09-11 ──────────
+   The cards sat 56px in from the pane edge — 24 of scroller plus 32 of grid
+   — against the left column's 16, and with the toggle's band gone from the
+   top of the pane that mismatch was the loudest thing left on the surface.
+   ONE RULE FOR BOTH COLUMNS at 16px.
+
+   IT IS ALSO THE FIRST TERM OF THE RECORD'S ARITHMETIC at the top of this
+   file — 16px a side is the 32 that comes off .panecol before the record's
+   own border and padding. Changing it moves the ~1203px crossing point. */
+/* ══ THE COLUMN SCROLLS AS ONE · 2026-09-24 ══════════════════════════════
+   THIS SCROLLER WAS INERT AND THE RECORD'S BODY DID THE WORK. .rec was
+   `flex:1` — that is `flex:1 1 0%` — so the card was forced to exactly this
+   box's height and there was never any overflow here to scroll. All 1485px of
+   a real record overflowed one level further down, inside a rounded card,
+   against a scrollbar 1px from its own border. Two scrollers in one column,
+   and the attribution pinned outside both of them.
+
+   ONE SCROLLER NOW, at the column's edge, the same as the list's. .rec takes
+   `flex:1 0 auto`, so a short record still fills the column and a long one is
+   allowed to be long.
+
+   THE TOP PADDING IS A MARGIN ON .rec INSTEAD. As padding it belonged to this
+   box, so a sticky .rec-head pinned at the CONTENT edge — 16px down — and
+   the record slid visibly through the gap above it. As a margin it scrolls
+   away with the record and the head pins flush. Measured: delta 0.
+
+   scroll-padding SO scrollIntoView DOES NOT PARK A THUMBNAIL UNDER THE HEAD.
+   The head measures ~53px; 56 is the next step on §5's scale and there is
+   no 54. */
+.panescroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+            display:flex;flex-direction:column;
+            padding:0 var(--s-16);scrollbar-gutter:stable;
+            scroll-padding-block-start:var(--s-56)}
+/* THE ATTRIBUTION IS IN THE FLOW NOW, so it needs the gap the flex column no
+   longer gives it from outside. --s-24 is .pn-body's own section rhythm: the
+   credit is one more step in the record's reading, not a line stuck to the
+   bottom of the window. It is here rather than in 37 because 37 owns the MARK
+   and this owns the column. */
+.panescroll>.foot{margin-block-start:var(--s-24)}
+
+@media (max-width:1079px){
+  .work-split{flex-direction:column}
+  .listcol{flex:0 0 auto;width:auto;min-width:0;max-height:46vh}
+}
+
+/* ── the Market / Technology toggle, in the surface's head ──────────────
+   IT HAD A BAND OF ITS OWN inside the right pane until 2026-09-11 — a
+   .pane-head row costing 28px of control plus 16px of padding above the
+   first card, for one segmented control. In the head's chip row it costs
+   nothing: that row was already drawn and had space at its trailing end.
+
+   TRAILING, so it lines up with the info affordance every card header puts
+   on the same edge, and so the row reads left-to-right as facts-then-control.
+   The auto margin is scoped to .work-head because .head-meta is three
+   different rows in this file — this one, the list's, and the points page's.
+
+   AND IT KEEPS THE BASE .seg SIZE. The 12.5px/28px override it carried in
+   the pane is gone: the base .seg-btn is 24px at 11.5px, which is exactly
+   the chip metrics beside it, and the .seg's own 2px padding puts the
+   control at 28px against their 24px — distinct without being loud, which
+   is the whole requirement for a control in a row of statements. */
+/* .card is display:flex, which outranks [hidden] on its own — the same
+   reason .set-more and .said each declare this. */
+.card[hidden]{display:none}
+
+/* ── segmented control ──────────────────────────────────── */
+.seg{display:inline-flex;gap:2px;padding:2px;border-radius:var(--r-control);
+     background:var(--surface-sunken);flex:0 0 auto}
+.seg-btn{font-size:12.5px;font-weight:500;color:var(--text-3);height:24px;padding:0 var(--s-8);
+         border-radius:var(--r-seg);white-space:nowrap;
+         transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease),
+                    transform var(--dur-1) var(--ease)}
+/* §3.8 SITE 3 OF 3 — THE SELECTED STATE of a segmented control — IS CURRENTLY
+   UNOCCUPIED. The Market/Technology tablist was the only aria-selected control
+   in the tree and it left with the analysis surfaces on 2026-09-23. The theme
+   switcher beside it is aria-PRESSED, which 20-shell.css argues for: three
+   toggles in a group is not one-of-these-am-I-looking-at.
+
+   The rule is removed rather than kept warm, because check-app.py refuses a
+   selector nothing sets and it is right to. The site comes back with the
+   search settings' own segmented controls, and §3.8 still reserves it. */
+.seg-btn:active{transform:scale(.96)}
+/* the page toggle is the same control at reading size: it selects one of two
+   PAGES rather than a sort inside a card, so it gets the body-adjacent 12.5px
+   and a 28px target instead of the 11.5/24 a widget header uses. */
+
+/* ── the set surface · platform.md §4.3 ────────────────────
+   The row is the drill-down row, unchanged. What is added is ONE control
+   beside it, which is why .drill-toggle is not the whole row here: a star
+   cannot live inside a button.
+
+   IT WAS TWO UNTIL 2026-09-10 — a checkbox that decided what the views were
+   drawn over, and the star. The checkbox is gone because the views are drawn
+   over everything the search returned, so there was nothing for it to
+   include or exclude. The star's meaning is unchanged and now unshared:
+   MORE LIKE THIS ONE, an anchor for the re-rank and nothing else.       */
+/* THE CAP CAME OFF 2026-09-09. It was max-width:900px with no auto margin,
+   inside a flex column that stretches -- so it resolved to 900px flush LEFT and
+   left a third of a wide screen empty. Centring it would have been the smaller
+   fix and the wrong one: the record pane wanted exactly that space, so the
+   surface now USES the width instead of balancing the hole. */
+.set-wrap{min-width:0}
+/* THE RESULT PANEL TAKES THE RECORD'S RADIUS, NOT THE WIDGET'S. .card is
+   --r-widget (16), which is right for a card among cards; this is the only
+   panel in its column and its counterpart across the split is .rec at
+   --r-shell (20). Two panels of equal standing rounded four pixels apart is
+   the kind of mismatch that reads as an accident rather than a distinction.
+
+   IT IS SCOPED HERE RATHER THAN CHANGED IN 31-card.css, because every other
+   surface's cards are cards and should stay at 16. */
+.set-wrap>.card{border-radius:var(--r-shell)}
+.set-bar{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap;
+  padding:var(--s-14) var(--s-20);border-bottom:1px solid var(--border)}
+.set-bar .spacer{flex:1 1 auto}
+
+/* ── the re-rank control, in the bar · 2026-09-11 ────────────────────────
+   .btn IS 36px AND THIS ROW IS 30px. Everything else in the bar is an .lm-btn,
+   so the primary fill is taken from .btn-primary and the geometry from .lm-btn
+   rather than letting a page-sized button sit six pixels proud of its
+   neighbours. Same --r-control, so the three read as one row of controls that
+   happen to differ in weight — which is exactly the difference being drawn. */
+.set-rank{height:30px;padding:0 var(--s-10);font-size:12.5px;gap:var(--s-6)}
+/* THE ONE UNGATED :hover IN THE FILE, and on a touch screen a hover state
+   applies on tap and STAYS applied until something else is tapped — so
+   Re-rank sat filled with --ink-hover, reading as held down, over a list that
+   had already finished re-ranking. Every other hover in this sheet is inside
+   one of these blocks; this rule was written next to .set-rank rather than
+   into the bar's block below and missed the gate by position. */
+@media (hover:hover){ .set-rank:hover{background:var(--ink-hover)} }

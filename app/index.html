@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TIS Terrain</title>
+
+<!-- NO LINK-PREVIEW META, and that is deliberate rather than missing. app/ is
+     never published (brief.md §4) and the prototype stays the published
+     artifact, so there is no link for a card to describe. check-publish.py
+     gate 11 requires the tags on the thing that IS published. -->
+
+<link rel="icon" href="../brand/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../brand/fonts/fonts.css">
+
+<!-- THE NUMBER IS THE CASCADE. One <link> per stylesheet, in order, and no
+     @import: @import serialises discovery and hides which file a rule came
+     from in DevTools. check-app.py asserts this list matches what is on disk
+     and that 99-reduced-motion.css is LAST. -->
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/01-reset.css">
+<link rel="stylesheet" href="styles/02-type.css">
+<link rel="stylesheet" href="styles/03-skeleton.css">
+<link rel="stylesheet" href="styles/04-loader.css">
+<link rel="stylesheet" href="styles/05-wait-fail.css">
+<link rel="stylesheet" href="styles/10-button.css">
+<link rel="stylesheet" href="styles/11-chip.css">
+<link rel="stylesheet" href="styles/12-field.css">
+<link rel="stylesheet" href="styles/13-inline-confirm.css">
+<link rel="stylesheet" href="styles/14-menu.css">
+<link rel="stylesheet" href="styles/15-empty.css">
+<link rel="stylesheet" href="styles/16-popover.css">
+<link rel="stylesheet" href="styles/20-shell.css">
+<link rel="stylesheet" href="styles/21-surface.css">
+<link rel="stylesheet" href="styles/30-composer.css">
+<link rel="stylesheet" href="styles/31-card.css">
+<link rel="stylesheet" href="styles/34-list.css">
+<link rel="stylesheet" href="styles/35-record.css">
+<link rel="stylesheet" href="styles/36-destination.css">
+<link rel="stylesheet" href="styles/37-attribution.css">
+<link rel="stylesheet" href="styles/38-home.css">
+<link rel="stylesheet" href="styles/39-starred.css">
+<link rel="stylesheet" href="styles/40-figure.css">
+<link rel="stylesheet" href="styles/41-fishbone.css">
+<link rel="stylesheet" href="styles/99-reduced-motion.css">
+
+<script>
+/* Before first paint, and it has to be. A stored choice applied from a module
+   at the end of <body> paints one light frame on the way to a dark page, which
+   is the single most visible defect a theme toggle can ship with. It is inline
+   and NOT a module for the same reason: a module is deferred by definition and
+   would run after first paint however early it is written.
+
+   try/catch because a private window throws on localStorage rather than
+   returning null, and an exception here would take the stylesheet with it. */
+(function(){
+  /* ?theme= wins over the stored choice and is NOT persisted, so a host
+     document can pin the appearance of an embedded copy. Clicking the control
+     inside the frame still overrides, which keeps this a default and not a lock. */
+  var q = /[?&]theme=(light|dark)\b/.exec(location.search);
+  if (q){ document.documentElement.setAttribute('data-theme', q[1]); return; }
+  try{var t=localStorage.getItem('terrain-theme');
+      if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}
+})();
+</script>
+</head>
+<body>
+
+<!-- ══ document-level defs ═══════════════════════════════════════════════
+     ONE defs block, not one per SVG, and the ids are PREFIXED.
+
+     In the prototype the hatch pattern is injected into every SVG that needs
+     it, so a page with four charts carries four id="hatch". url(#hatch)
+     resolves to the first in document order and today all four are identical,
+     so it renders correctly BY ACCIDENT. A receiving team embedding this in a
+     page that already owns #hatch gets the other one silently.
+
+     #terrain- prefixed for the same reason: these ids live in the host
+     document's single id namespace, and this is a component going into
+     somebody else's page. ══ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="terrain-tis-mark" viewBox="0 0 1000 1000">
+    <polygon points="638.46,455.19 638.64,455.19 776.68,364.9 777.05,364.67 639.63,273.74 502.39,182.97 638.69,92.59 639.05,92.36 501.84,2.62 501.68,2.53 87.46,273.37 87.09,273.63 227.16,365.22 227.32,365.34 364.81,274.18 501.7,364.72 638.36,455.14"/>
+    <polygon points="74.44,292.6 74.44,444.7 212.46,530.2 212.46,674.02 74.88,588.77 74.44,588.52 74.44,726.72 488.06,997.17 488.5,997.47 488.5,843.46 352.78,759.38 352.78,617.98 488.06,701.78 488.5,702.06 488.5,563.35 74.88,292.9"/>
+    <polygon points="925.42,443.57 925.56,443.48 925.56,292.6 511.64,563.26 511.5,563.35 511.5,795.06 718.53,667.3 718.53,715.98 511.64,845.21 511.5,845.3 511.5,997.47 925.42,726.81 925.56,726.72 925.56,493.26 720.83,619.62 720.83,571.38"/>
+  </symbol>
+</svg>
+
+<div class="app" id="app">
+
+  <!-- ══ THE ONE ASSERTIVE REGION ══ Outside every partial so it survives
+       every swap, empty and unhidden from load so a later write actually
+       announces, and sr-only because the VISIBLE failure is the .fail block in
+       the region that failed. It carries failure alone — an assertive region
+       that also carries routine confirmations trains the listener to ignore
+       it. design-language.md §7. -->
+  <p class="sr-only" id="alertRegion" role="alert"></p>
+
+  <!-- ══ THE FOUR POLITE REGIONS ══ One per surface, and they live HERE
+       rather than inside the partial they describe. A live region inside a
+       partial that gets replaced stops announcing: the browser watches a NODE,
+       and a new node with the same id is a different node with no history.
+       That is the bug the shell exists to make impossible. -->
+  <p class="sr-only" id="sayHome"         role="status" aria-live="polite"></p>
+  <p class="sr-only" id="sayList"          role="status" aria-live="polite"></p>
+  <p class="sr-only" id="sayWork"          role="status" aria-live="polite"></p>
+  <p class="sr-only" id="sayDestination"   role="status" aria-live="polite"></p>
+
+  <!-- ══ THE REGIONS ══ One empty host per partial. main.mjs awaits all of
+       them before calling any init(), which is the ordering contract that
+       replaces 55 scattered parse-time element captures: every surface module
+       exports init() and reads the DOM there, so nothing dereferences null
+       because markup had not arrived yet. -->
+  <div data-partial="masthead"></div>
+
+  <!-- THE STAGE IS HERE AND NOT IN A PARTIAL. One view at a time is the
+       router's primitive, and every view below is a child of it — a stage
+       injected by one partial and populated by four others would make the
+       order they resolve in load-bearing. -->
+  <div class="stage" id="stage">
+    <div data-partial="home"></div>
+    <div data-partial="surface"></div>
+    <div data-partial="starred"></div>
+    <div data-partial="points"></div>
+    <div data-partial="account"></div>
+    <div data-partial="billing"></div>
+    <div data-partial="help"></div>
+  </div>
+
+  <!-- THE RECORD IS NOT A HOST OF ITS OWN, and that is a correction to this
+       file rather than an omission. `.rec` is positioned against `.panecol`
+       and leaves a ~200px peek of the views behind it — platform.md §4.5 calls
+       the peek the spec rather than a margin. Hoisted to a sibling host it
+       would position against the viewport and the peek would be whatever the
+       window happened to be. It ships inside surface.html. -->
+
+  <!-- PARKED COMPONENTS. The gate card and the build block are moved into
+       whichever thread needs them rather than duplicated, so the card on the
+       panel is literally the same node as the one on the home surface — "same
+       component, same gate" in the DOM rather than by resemblance. -->
+  <div data-partial="parked"></div>
+
+</div>
+
+<script type="module" src="js/main.mjs"></script>
+
+</body>
+</html>

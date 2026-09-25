@@ -1,0 +1,56 @@
+/* 31 · cards and tables
+ *
+ * EXTRACTED from the prototype, where this file also held the gate and the
+ * build block. Both were deleted with the analysis layer; what is left is the
+ * card every destination is built from, and the table two of them draw. */
+
+/* ── the widget card ────────────────────────────────────────
+   design-language.md §7: surface, radius 16, one hairline, no shadow. Depth
+   here is the ground↔surface step. §5 has two shadow rungs since 2026-09-24
+   and a card takes neither: --shadow-raise is for something that has lifted
+   under the pointer, and a card does not lift.                            */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-widget);
+      display:flex;flex-direction:column;min-width:0}
+/* WRAPS. The head carries a title, a kind line, an info affordance and
+   sometimes a segmented control, and at a narrow pane they were overlapping
+   rather than reflowing — the kind line sat on top of the title. Nothing has
+   a fixed width and the row is allowed to become two. */
+.card-head{display:flex;align-items:center;gap:var(--s-8) var(--s-12);
+           flex-wrap:wrap;padding:var(--s-14) var(--s-20) var(--s-10)}
+.card-head h2{margin:0;flex:0 1 auto;min-width:0}
+.card-head .info{margin-left:auto}
+/* MOVED FROM 37 · the card's head and body. They were extracted into the
+   attribution file by accident, which set the card body's padding from a
+   sheet named for the Innovue mark. */
+.card-head .t-title{flex:1;min-width:0}
+.card-icon{color:var(--text-3);display:flex}
+.card-body{padding:0 var(--s-20) var(--s-16);flex:1;display:flex;flex-direction:column;min-width:0}
+
+/* ── WHAT STOOD HERE WENT WITH THE GATE AND THE BUILD ──────────────────
+   132 lines: .cf and its turns, #mxScope, .said and its inline editor, .gate,
+   and the whole build block — .bd, .prog, .stages, .done. Every one of them
+   styled markup that no longer exists; parked.html records that the gate card
+   and the build block were deleted rather than parked, and says Git has them.
+
+   THE ANALYSIS LAYER'S LAST RULE WENT WITH THEM: a selector literally named
+   `.chart`, 150px tall, in a product whose first rule is that it does not draw
+   one. Nothing emitted it, which is the only reason it survived this long.
+
+   .sr-only WENT TOO, AND THAT ONE IS A DUPLICATE RATHER THAN A RETIREMENT.
+   It was byte-identical to 05-wait-fail.css's, and 05 is the copy that
+   matters: lab.html links 05 and does not link this file at all. */
+
+/* ── tables ─────────────────────────────────────────────── */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{padding:var(--s-8) 0;border-bottom:1px solid var(--border);text-align:left}
+.tbl td{padding:var(--s-12) 0;border-bottom:1px solid var(--border);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl .num{text-align:right}
+/* THE RIVALS TABLE'S FURNITURE LEFT ON 2026-09-23 — .cellpair, .sq, its
+   [data-tracked] mark and .rival-row's three rules. Nothing emits them: the
+   Rivals card went with the analysis surfaces, and .sq[data-tracked] read
+   --mark-1, which is no longer a token. check-app.py is what found it, which
+   is the gate working: a var() declared nowhere and carrying no fallback is
+   invalid at computed-value time, and the property takes its initial value
+   rather than erroring. */
+

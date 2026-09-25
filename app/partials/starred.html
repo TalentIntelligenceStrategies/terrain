@@ -1,0 +1,98 @@
+<!-- ══ the starred set · platform.md §5.2 ═══════════════════════════════════
+     The founder's own shortlist, read as a whole rather than one row at a
+     time, and the place it leaves the product from.
+
+     IT BORROWS THE PAGE SKELETON rather than inventing one: `.view-page`,
+     `.main`, `.page-head`, `.pg-back`, `.foot`. Points, account, billing and
+     help all render in it, and a fifth full-width reading surface that looked
+     different from those four would be a layout claiming a distinction that is
+     not there.
+
+     WHAT IT IS NOT is a destination. The four above are places you step off to
+     and come back from, and nothing on the path routes through one. This is on
+     the path — it is what the founder was assembling while they read the list.
+     The distinction is §1's and it shows in one place: the back control here
+     returns to the results rather than to wherever you came from. -->
+  <section class="view view-page view-starred" data-view="starred" aria-label="What you starred">
+    <main class="main">
+      <header class="page-head">
+        <div class="page-head-lines pg-head-lines">
+          <button class="pg-back" id="starBack" type="button" data-go="set">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            <span>Your results</span>
+          </button>
+          <h1 class="t-display-2" id="starTitle" tabindex="-1">What you starred</h1>
+          <div class="head-meta">
+            <span class="chip" id="starCount" hidden></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- THE LEDE HAS TO SURVIVE THE FOUNDER ARRIVING BY ACCIDENT. Starring
+           is cheap and its consequences are not obvious, so a page that opened
+           on a list of rows with no statement of what they are would leave the
+           download buttons as the only clue to what the set is for. -->
+      <p class="star-lede t-body">These are the patents you marked as close to what you
+        are building. They stay here while you search, and they are what you can take
+        out of Terrain.</p>
+
+      <!-- ══ the empty state ══ §8: an empty list is not a list of bars. A bar
+           says a value exists and is being withheld; nothing is being withheld
+           here, there is nothing. Two sentences, the second quieter — what
+           this place is, then what fills it — and no button, because nothing
+           the founder can press from here fills it. -->
+      <div id="starEmpty" hidden>
+        <p class="empty-note t-body">Nothing starred yet.
+          <span class="empty-then">Star a patent on your results and it lands here, with
+            everything Terrain knows about it. Starring also turns on <b>Find similar</b>,
+            which re-orders your results by how near each patent is to the ones you
+            starred — no patent enters or leaves, only the order changes.</span></p>
+      </div>
+
+      <div id="starBody" hidden>
+        <!-- ══ what leaves, and in what shape ══════════════════════════════
+             TWO FORMATS AND NO THIRD. A spreadsheet opens in the tool the
+             founder already works in; a Markdown list pastes into the document
+             they are already writing.
+
+             brief.md §1 draws the line at what a file may SAY rather than at
+             whether a file exists. Neither of these carries a cover page, a
+             summary or a conclusion, and both carry exactly the fields already
+             on screen. A PDF would cross that line and is not offered — and
+             neither is primary, because §3.8 allows one filled button per
+             surface and taking the set out is two equal ways of doing one
+             thing rather than a recommended one and an alternative. -->
+        <div class="star-bar">
+          <span class="spacer"></span>
+          <button class="btn btn-secondary" id="starCsv" type="button">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+            <span>Spreadsheet</span>
+          </button>
+          <button class="btn btn-secondary" id="starMd" type="button">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+            <span>Markdown</span>
+          </button>
+        </div>
+
+        <!-- THE ORDER IS THE ORDER THEY STARRED IN, and the page says so
+             because the file reproduces it. core/starred.mjs is a Map for this
+             reason — insertion order IS the order — and a founder who opens
+             the CSV expecting relevance would read the sequence as a ranking
+             Terrain authored. It is the one thing about this list that is not
+             visible from looking at it. -->
+        <p class="star-order t-body" id="starOrder">In the order you starred them.</p>
+
+        <ul class="star-list" id="starList"></ul>
+
+        <!-- WHAT THE FILE CONTAINS, STATED BEFORE IT IS DOWNLOADED. A founder
+             pressing a download has no way to see inside it first, and what
+             the file says is the one thing §1's lock is about. So the page
+             says it, where they are standing when they decide. -->
+        <p class="star-note t-body">Both files carry the same fields as the rows above —
+          number, title, holder, where, status, date and score — and nothing else.
+          Terrain does not write a summary of your set.</p>
+      </div>
+
+      <p class="foot"><em>Powered by</em><img class="foot-mark foot-mark-light" src="../brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg" alt="Innovue" width="95" height="13"><img class="foot-mark foot-mark-dark" src="../brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg" alt="Innovue" width="95" height="13"></p>
+    </main>
+  </section>
