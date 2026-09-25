@@ -251,17 +251,20 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
   preprocessor variable also resolves at build time, which the theme swap cannot survive. `app/` is
   the reference implementation and [`app/README.md`](../app/README.md) is what an engineer reads
   first.
-- **Nothing publishes.** The prototype that used to be the published artifact showed the landscape
-  product, so `gh-pages` was emptied and the pipeline retired with it. Publishing `app/` was
-  considered and is not next: it is 40-odd files with a demo seam, and making it public means
-  deciding what a stranger sees when the fake engine answers. `CLAUDE.md` under *Nothing is
-  published* carries it, and changing that changes this line first.
-- **`corpus/` is the stress-test set, it is local only, and it prints real holder names.** A hundred
-  patents captured from Google Patents, sitting beside `demo/` with the same two-file
-  shape, and **it is what loads by default when it is present** — `?data=demo` is the flag now, and
-  it goes the other way. The whole directory is excluded from git, which is what makes
-  the rest of this line affordable: a third party's drawings are never tracked, and no real assignee
-  or inventor name enters a tracked file.
+- **`app/` publishes to GitHub Pages, against the real corpus.** The question that held it back was
+  what a stranger sees when the fake engine answers — bars where every holder should be, and no
+  drawing at all. They do not see it: the published site carries `corpus/`, so the link shows real
+  titles, real assignees and 2,247 real plates, with `demo/` along only as the fallback the seam
+  requires. The site is `noindex`, which is not the same as private: **anyone with the URL can open
+  it.** `CLAUDE.md` under *What is published* carries the argument, including why this corpus is
+  publishable and why the next one might not be.
+- **`corpus/` is the stress-test set and it prints real holder names.** A hundred patents captured
+  from Google Patents, sitting beside `demo/` with the same two-file shape, and **it is what loads by
+  default when it is present** — `?data=demo` is the flag now, and it goes the other way. The whole
+  directory is excluded from `main`, which is what keeps the demo rule meaningful: no real assignee
+  or inventor name enters a file tracked there. **Its four runtime paths are published to
+  `gh-pages`**, because the site would show nothing without them — a separate decision resting on how
+  the set was assembled rather than on the exclusion it breaks.
 
   **Real names are printed, and that does not reopen §1.** The rule §1 carries governs what copy may
   claim about a *set* — that nothing came back is not that nothing exists. Naming a holder who did

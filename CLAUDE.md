@@ -73,21 +73,23 @@ design/
                               Not the reference, not maintained, not published.
     terrain-loading-lab.html  the loader bench
 
-tools/               everything CI runs, and every one of them can refuse —
-                     check-app.py, sync-tokens.py, cssgates.py, test-gates.sh
-.github/workflows/   gates.yml — runs the gates on every push to main. NOTHING PUBLISHES
+tools/               everything that can refuse — check-app.py, sync-tokens.py,
+                     cssgates.py, test-gates.sh, and publish-pages.py, which
+                     refuses before it writes
+.github/workflows/   gates.yml — runs the gates on every push to main. It does NOT
+                     publish: publishing is a deliberate act, run by hand
 brand/assets/imagery/terrain/  the ONE permitted raster family — see Rules
 brand/favicon.svg    the browser-tab icon — the submark, with its own dark/light block
 brand/logos/tis/     TIS SVGs, copied from the monorepo (read-only, do not edit)
 brand/logos/innovue/ a third party's marks, and the theme-aware attribution renders two
 brand/fonts/         7 self-hosted woff2 + fonts.css + the two OFL licences
 
-    LOCAL ONLY — in the working tree, excluded by .gitignore, never pushed:
-corpus/              THE STRESS-TEST SET, and what app/ loads by default when it is
-                     here. Real patents captured from Google Patents; ?data=demo is
-                     the flag that forces the fake engine instead. It prints real
-                     holder names, which is why the whole directory is excluded —
-                     see brief.md §4.
+    EXCLUDED FROM main — in the working tree, never tracked on this branch:
+corpus/              THE STRESS-TEST SET, and what app/ loads by default. Real
+                     patents captured from Google Patents; ?data=demo is the flag
+                     that forces the fake engine instead. Excluded from main
+                     because it prints real holder names; four of its paths ARE
+                     published to gh-pages — see "What is published" above.
 visual-reference/
   pi-vuepat/         the USERFLOW REFERENCE — Innovue's own search product, inventoried
   iptech-semantic-search/  the only evidence on two questions PI-VuePat does not close
@@ -100,17 +102,38 @@ repository at tag `v1-landscape`. They argued a direction that no longer exists.
 Add directories when work actually needs them, not in advance — and a decision about where code goes
 is recorded in `docs/brief.md` before the directory exists. `app/` and `demo/` are in §4 Locked.
 
-## Nothing is published
+## What is published, and what a stranger sees
 
-**Terrain publishes nothing, and that is a decision rather than a gap.** The public URL served a
-single-file prototype of the landscape product; that product was replaced, and a link showing it
-misrepresents what Terrain is. `gh-pages` was emptied and the pipeline that filled it was retired —
-`publish-prototype.sh`, `strip-comments.py`, `check-publish.py` and `check-figures.mjs` are gone,
-along with the fifteen publish plants and the eight arithmetic plants in `tools/test-gates.sh`.
+**`app/` is published to GitHub Pages, against the real corpus.** The question that held this back
+was *what does a stranger see when the fake engine answers* — bars where every holder and title
+should be, and no drawing at all, because `demo/` ships none. The answer is that they do not see the
+fake engine: the published site carries `corpus/`, so the link shows the product with real titles,
+real assignees and 2,247 real plates. `demo/` ships with it as the fallback the seam requires, not
+as what anybody lands on.
 
-**Publishing `app/` was considered and is not next.** It is 40-odd files with a demo seam, and making
-it public means deciding what a stranger sees when the fake engine answers. That is a real piece of
-work, not a build-script change, and nothing depends on it today.
+**The corpus is publishable because of how it was assembled, and that is the whole argument.** Ten
+seed patents plus ninety reached by following each seed's own `similar` list on Google Patents — one
+domain **by adjacency rather than by assertion**, and the grouping on screen is CPC's own published
+classification. The thing the client-data boundary protects is *a taxonomy*, because a taxonomy is
+what an analyst was paid for; there is no analyst in this set. Every record is a public patent
+document. **A corpus assembled any other way is a different decision** — if the seeds ever come from
+a client's technology area, the set carries that aim even though each patent is public.
+
+**What is published is named, not filtered.** `app/`, `demo/`, `brand/`, and from `corpus/` exactly
+four things: `engine.mjs`, `data.mjs`, `figures/` and `thumbs/`. What stays local is larger than what
+goes: `corpus/raw/` is 58 MB of scraped HTML, `corpus/patents/` 19 MB of intermediate JSON — both
+build inputs the app never loads — and `FINDINGS.md`, `build.py` and `fetch.py` are working material
+rather than product. **A publisher that copied a directory wholesale would have shipped all five**,
+which is why `tools/publish-pages.py` lists paths and refuses anything it was not given.
+
+**The site is `noindex`, and that is not the same as private.** It is a pre-release product shown to
+a named few; `robots.txt` and the root redirect both say so. Anyone with the URL can open it, and
+GitHub Pages cannot be made otherwise on this plan. **Treat the link as public** — that is the fact
+that governs what may go into the tree it serves.
+
+**`main` keeps the raster rule and the corpus exclusion.** The published bytes live on `gh-pages`
+and reach it through a worktree, so nothing on `main` tracks a PNG and `corpus/` stays excluded
+there in its entirety. The rules did not lift; the branch they apply to is the one being protected.
 
 **What CI does now is refuse.** `.github/workflows/gates.yml` runs `check-app.py`,
 `sync-tokens.py --check` and `test-gates.sh` on every push to `main`. No paths filter, deliberately —
@@ -172,8 +195,11 @@ three by a script that refuses:
   it is **one argued place and a gate that refuses any copy disagreeing with `tokens.css`**.
 - Tokens are no longer *inlined by hand*; they are **inlined by a generator with a byte-level
   check**, and `sync-tokens.py --check` is the successor to the honour system.
-- `tools/` is no longer *everything CI or a publish runs*; it is **everything CI runs, that can
-  refuse** — a fence one step in, and still a fence, because there is no publish.
+- `tools/` is no longer *everything CI or a publish runs*, and it is not *everything CI runs* either:
+  it is **everything that can refuse**. `publish-pages.py` is admitted on that qualifier and on
+  nothing else — it refuses a dirty tree, a failing gate, a missing corpus and a path it was not
+  given, before it writes a byte. `publish-prototype.sh` was deleted for the lack of exactly that,
+  so this is the fence holding rather than the fence moving back.
 
 ### Colour carries information, or it is not there
 
@@ -250,19 +276,23 @@ which is why the tokens are copied into each page rather than fetched by it.
 
 ### What belongs in `tools/`
 
-**Every file in `tools/` is run by CI, and every one of them can refuse.** Two kinds qualify and there
-is no third:
+**Every file in `tools/` can refuse, and that is now the whole test.** It read *run by CI* as well,
+which stopped being the right fence the moment something was published by hand. Three kinds qualify
+and there is no fourth:
 
 - **It refuses** — `check-app.py` gates the source tree; `sync-tokens.py --check` gates the generated
   token regions byte for byte. `cssgates.py` is the lexer they share and refuses nothing on its own,
-  which is why it is not a third kind: it is part of `check-app.py`, in its own file because two
+  which is why it is not a separate kind: it is part of `check-app.py`, in its own file because two
   callers read it.
 - **It proves a gate fires** — `test-gates.sh`.
+- **It refuses before it writes** — `publish-pages.py`. A dirty tree, a failing gate, a missing
+  corpus or a path it was not given each stop it before a byte reaches `gh-pages`.
 
-**The kind that built the published tree is gone with the publish.** `publish-prototype.sh` and
-`strip-comments.py` were the whole of it, and a script whose output nothing serves is a script that
-rots pointing at a frozen file. Deleting them is the rule working rather than the rule being
-suspended — this fence narrowed, it did not move.
+**The third kind is narrow on purpose, because its predecessor is why the fence exists.**
+`publish-prototype.sh` checked nothing, and a script whose output nothing serves is a script that
+rots pointing at a frozen file; it was deleted rather than kept. **A publisher that cannot refuse is
+not admissible here** — that is the clause doing the work, not the fact that something is published
+again.
 
 **A generator that writes into the tree is admissible only when it also checks.** `sync-tokens.py`
 qualifies because `--check` exists and CI runs it; a `--write` with no `--check` would be a second
@@ -304,11 +334,15 @@ Four things follow:
 
   **`corpus/` is the narrower rule, not an exception to it.** It prints real assignee names because
   it is real captured data and its whole job is to strain renderers that were written against
-  well-behaved shapes. It is excluded from git in its entirety, which is what makes that affordable:
-  no real assignee or inventor name enters a tracked file. **The cost is stated rather than hidden** —
-  the export and the drawings are only demonstrable against it, because a spreadsheet of skeleton
-  bars shows nothing and `demo/` ships no patent figure at all, and `app/README.md` says so where
-  somebody receiving the handoff will read it.
+  well-behaved shapes. It is excluded from `main` in its entirety, which is what keeps the demo rule
+  meaningful: no real assignee or inventor name enters a tracked file *there*.
+
+  **It is published on `gh-pages`, and that rests on a separate fact rather than on the exclusion,
+  which it plainly breaks.** Every record is a public patent document, and the set was assembled by
+  following Google Patents' own `similar` links out from ten seeds, so there is no taxonomy in it and
+  no client's aim behind the selection. **Check that the next corpus is the same kind of thing before
+  publishing it**: the same hundred records chosen by an analyst around a client's technology area
+  would be a landscape, and publishing it would leak the one thing this boundary exists to protect.
 - **A worked example is written from scratch, never derived from a client's.** The temptation is real,
   because a set modelled on one that exists has a plausible distribution for free — and that is
   exactly what makes the labels travel with it. **Pick a domain nobody has hired us about.**
@@ -332,10 +366,16 @@ is refused. Verify with `git check-ignore -v <path>`. **Adding a product means a
 deliberately, one line each** — if that ever feels tedious enough to replace with a glob, that is the
 guard working.
 
-*The rule cost an `og:image` back when something was published — one would have to be a PNG or JPG,
-and scrapers will not render SVG. Nothing is published now, so the cost is currently nil and the
-guard is unchanged: it is the kind of rule that has to hold while it costs nothing, or it will not
-hold when it costs something.*
+*The rule costs an `og:image` again now that something is published — one would have to be a PNG or
+JPG, and scrapers will not render SVG. The guard is unchanged, which is the test it was written for:
+it is the kind of rule that has to hold while it costs nothing, or it will not hold when it costs
+something. It costs something now.*
+
+**The 4,592 published drawings are not an exception to it, and the reason is which branch they are
+on.** `corpus/**.png` is refused on `main` exactly as before; `tools/publish-pages.py` stages them
+into a `gh-pages` worktree and force-adds paths it named itself. **A force-add is admissible only
+from a script that enumerates what it is adding** — `git add -f -A` from a shell is the failure this
+rule exists to catch, and the difference is whether a stray capture in the tree would ride along.*
 
 ### Do not invent brand law
 

@@ -859,9 +859,9 @@ confirmation invites a second send of the same message.
 
 **`corpus/` is the deliberate exception and it is not in this table**, because it is not illustrative
 data — it is real patents, captured, and its whole job is to strain renderers written against
-well-behaved shapes. It prints real assignee names, it is excluded from git in its entirety, and it
-is **what loads by default when it is present** — `?data=demo` forces the fake engine. `brief.md` §4
-carries it.
+well-behaved shapes. It prints real assignee names, it is excluded from `main` in its entirety while
+its four runtime paths are published to `gh-pages`, and it is **what loads by default when it is
+present** — `?data=demo` forces the fake engine. `brief.md` §4 carries it.
 
 **No party is invented.** A named company is never invented, because an invented one reads as a live
 example — and transliterating a real one is fabrication. Both are worse than a bar.

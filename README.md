@@ -32,12 +32,16 @@ python3 -m http.server 8765      # from the repo root
 `file://` will never work — `<script type="module">` is CORS-fetched and a `file://` origin is
 opaque. [`app/README.md`](app/README.md) is the handoff document and says so on its first line.
 
-**Nothing is published.** This repository served a single-file prototype at a public URL; that
-prototype showed a landscape-analysis product that has been replaced, so the link was retired rather
-than left pointing at the wrong thing.
-[`design/previews/terrain-prototype.html`](design/previews/terrain-prototype.html) is that frozen v1.
-It is kept because every partial in `app/` names it as the file it was extracted from — provenance,
-not reference. Do not read it to find out what Terrain is.
+**`app/` is published to GitHub Pages**, running against the real patent corpus rather than the fake
+engine. The site is `noindex` because this is a pre-release product shown to a named few, but that is
+not the same as private: anyone with the URL can open it. `tools/publish-pages.py` builds it, and
+`CLAUDE.md` under *What is published* says what goes up, what stays local, and why this corpus is
+publishable when a differently assembled one would not be.
+
+[`design/previews/terrain-prototype.html`](design/previews/terrain-prototype.html) is the frozen v1
+prototype, and it is **not** what is published. It is kept because every partial in `app/` names it
+as the file it was extracted from — provenance, not reference. Do not read it to find out what
+Terrain is.
 
 ## Every figure here is illustrative
 
@@ -51,11 +55,17 @@ decision: inventing one reads as a live example, and transliterating a real one 
 
 **`corpus/` is the deliberate exception and it is not tracked.** It holds real patents captured from
 Google Patents, prints real assignee names, and exists to strain renderers written against
-well-behaved demo shapes. It is excluded from git in its entirety, and it is **what `app/` loads by
+well-behaved demo shapes. It is excluded from `main` in its entirety, and it is **what `app/` loads by
 default when it is present** — `?data=demo` forces the fake engine, and a clone without `corpus/`
 gets it anyway. The cost is stated rather than hidden: **the export and the drawings are only
 demonstrable with it**, because a spreadsheet of skeleton bars shows nothing and the demo ships no
 patent figure.
+
+**Four of its paths are published to `gh-pages`** — `engine.mjs`, `data.mjs`, `figures/`, `thumbs/` —
+because the published site would show nothing without them. That rests on how the set was assembled,
+not on the exclusion: ten seeds plus ninety followed from Google Patents' own `similar` links, so it
+carries no taxonomy anybody was paid for. `corpus/raw/`, `corpus/patents/`, `FINDINGS.md` and the two
+scrapers stay local.
 
 ## Layout
 

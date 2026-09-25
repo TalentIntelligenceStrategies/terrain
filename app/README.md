@@ -41,9 +41,10 @@ everybody opens, showed a product with no pictures in it. `corpus/fetch.py` capt
 `corpus/build.py` shapes it. The flags combine: `?fail=all` against the corpus is the one that checks
 a failure state still fits around real text.
 
-**`corpus/` is local only and absent from a fresh clone.** There the dynamic import throws, `app/`
-lands on the demo and says so in the console rather than failing to mount — which is exactly what it
-did before the inversion, so a clone behaves identically either way.
+**`corpus/` is absent from a fresh clone of `main`.** There the dynamic import throws, `app/` lands on
+the demo and says so in the console rather than failing to mount — which is exactly what it did
+before the inversion, so a clone behaves identically either way. **The published site is the other
+case**: it carries the corpus, so the fallback never fires there and a visitor sees real data.
 
 > ### Two features are only visible against the corpus, and that is a decision
 >
@@ -77,12 +78,16 @@ its source, which is provenance rather than authority. Do not read it to settle 
 **This is a separation, not a rewrite.** The prototype is read; `app/` is built beside it, so every
 step is checked against a known-good reference rather than against a memory of how it used to behave.
 
-**It is not published, and neither is anything else.** `docs/brief.md` §4 records that: `gh-pages` was
-emptied and the pipeline retired, because the prototype it served showed the landscape product and a
-link to that misrepresents what Terrain is. Publishing `app/` was considered and is not next —
-pointing GitHub Pages at this tree would publish forty-odd files of internal reasoning in
-view-source, and making it public means first deciding what a stranger sees when the fake engine
-answers.
+**This tree is published to GitHub Pages as it stands**, against the real corpus rather than the fake
+engine — `docs/brief.md` §4 records the decision and `tools/publish-pages.py` is what does it.
+
+**The comments go up with it, and that costs nothing here.** Publishing forty-odd files of internal
+reasoning in view-source was the objection, and it was answered by the repository rather than by a
+stripper: this repo is public, so every comment on the published site is already readable on GitHub.
+A `strip-comments.py` would protect nothing and would mean the bytes a stranger runs are not the
+bytes anybody reviewed. **That reasoning holds only while the repository is public** — if it ever
+goes private, publishing the tree unstripped becomes a real disclosure and this paragraph is the one
+to reopen.
 
 **This file is not a fifth document.** `CLAUDE.md` holds the four, and the test it applies to the
 repository's own `README.md` applies here: this is the front door for `app/` and holds no rule that
