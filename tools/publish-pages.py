@@ -147,7 +147,18 @@ def main():
         run('git', 'worktree', 'remove', '--force', str(work))
         shutil.rmtree(work, ignore_errors=True)
 
-    r = run('git', 'worktree', 'add', '--force', str(work), BRANCH)
+    # THE WORKTREE IS BUILT ON THE REMOTE TIP, NOT THE LOCAL REF. Nothing here
+    # ever checks gh-pages out, so the local branch is whatever it was the last
+    # time anybody did — and building on a stale ref produces a push that is
+    # either rejected as non-fast-forward, which is what happened, or accepted
+    # and silently drops whatever was published in between.
+    r = run('git', 'fetch', 'origin', BRANCH)
+    if r.returncode != 0:
+        print(r.stderr, file=sys.stderr)
+        return 1
+
+    r = run('git', 'worktree', 'add', '--force', '--detach',
+            str(work), f'origin/{BRANCH}')
     if r.returncode != 0:
         print(r.stderr, file=sys.stderr)
         return 1
@@ -175,7 +186,10 @@ def main():
         if r.returncode != 0:
             print(r.stdout + r.stderr, file=sys.stderr)
             return 1
-        r = run('git', 'push', 'origin', BRANCH, cwd=work)
+        # HEAD:branch BECAUSE THE WORKTREE IS DETACHED. It has no branch name to
+        # push, which is the point: the ref that moves is the remote's, and it
+        # moves only from the commit just built on top of what it already had.
+        r = run('git', 'push', 'origin', f'HEAD:{BRANCH}', cwd=work)
         if r.returncode != 0:
             print(r.stdout + r.stderr, file=sys.stderr)
             return 1
