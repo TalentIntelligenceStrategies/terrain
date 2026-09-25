@@ -104,11 +104,39 @@
    text passing under a transparent bar is not a bar. The hairline below it is
    the separation — §5 refuses a shadow to anything sitting in the layout, and
    refuses one outright between two surfaces of the same colour. */
-.rec-head{display:flex;align-items:center;gap:var(--s-12);flex:0 0 auto;
+.rec-head{display:flex;align-items:center;gap:var(--s-8);flex:0 0 auto;
           position:sticky;inset-block-start:0;z-index:1;
           background:var(--surface);
-          padding:var(--s-16) var(--s-20);border-bottom:1px solid var(--border)}
-.rec-head h2{flex:1;min-width:0;margin:0}
+          padding:var(--s-12) var(--s-20);border-bottom:1px solid var(--border)}
+.rec-head h2{flex:1;min-width:0;margin:0;margin-inline-end:var(--s-4)}
+/* THE GAP IS --s-8 AND IT WAS --s-12, because the row went from three icon
+   buttons to two labelled controls, a rule and three icon buttons. At 12 the
+   two groups stopped reading as two groups — §5 wants the gap BETWEEN groups
+   at least twice the gap inside, and .rec-head-sep is what carries that now:
+   8 inside, a hairline plus 8 either side between. The heading keeps its auto
+   flex, so everything after it still packs at the trailing edge with no auto
+   margin and nothing to flip for RTL.
+
+   PADDING DROPPED 16 -> 12 for the same reason the gap did: .rec-act is a
+   28px control against a 24px icon button, so the row grew 4px taller and the
+   sticky head is the one element on this surface whose height is spent twice
+   — once as chrome and once as scroll-padding. */
+.rec-head-sep{flex:0 0 auto;align-self:stretch;width:1px;
+              margin-inline:var(--s-4);background:var(--border)}
+/* THE LABELS GO AT THE FLOOR, NOT THE CONTROLS. Below 1080 the split stacks
+   and the record gets the full width back, so this is scoped to the two-column
+   range where the head is competing for ~570px.
+
+   IT IS THE sr-only TREATMENT AND NOT display:none, which is the whole reason
+   these two need no aria-label of their own: clipped text is still in the
+   accessible name, so the buttons stay "Star" and "Find similar" to a screen
+   reader at every width. display:none would drop the name and leave two
+   unlabelled glyphs — §9's icon-only rule, failed by the fix for it. */
+@media (max-width:1240px) and (min-width:1080px){
+  .rec-head .rec-act span{position:absolute;width:1px;height:1px;padding:0;
+                          margin:-1px;overflow:hidden;clip-path:inset(50%);
+                          white-space:nowrap;border:0}
+}
 
 /* ══ THE CLOSING BLOCK · platform.md §4.5 ═════════════════════════════════
    .rec-act IS .rec-out's OWN TREATMENT, RENAMED. That control was the one
@@ -143,11 +171,23 @@
 /* THE NEGATIVE START MARGIN IS .set-more-btn's ARGUMENT: the first label
    lines up with the heading above it and the note below it, while the hover
    ground keeps its own padding. */
+/* ONE ROW, NOT TWO GROUPS. The two-group gap (--s-24 against --s-12 inside)
+   existed to separate what changed your set from what left with the patent;
+   the set actions are in the head now, so every control on this row does the
+   same kind of thing and a group gap would be drawing a boundary that is not
+   there. .rec-act-grp went with it. */
 .rec-acts{display:flex;flex-wrap:wrap;align-items:center;
-          gap:var(--s-8) var(--s-24);
+          gap:var(--s-8) var(--s-12);
           margin-inline-start:calc(-1 * var(--s-8))}
-.rec-act-grp{display:flex;flex-wrap:wrap;align-items:center;
-             gap:var(--s-8) var(--s-12)}
+/* THE NOTE TAKES THE TRAILING EDGE. .info-pop is anchored to its own trailing
+   edge with no flip anywhere, so a mid-row button would put a 300px panel off
+   the column — the same fix .listhead-top's carries, for the same reason. */
+.rec-end-info{margin-inline-start:auto}
+/* AND IT OPENS UPWARD, for .lm-up's reason: this row is the last thing in a
+   .rec that is overflow:clip, so a panel hanging below it is a panel nobody
+   sees. */
+.rec-end-info .info-pop{top:auto;bottom:calc(100% + var(--s-6));
+                        transform-origin:bottom right}
 .rec-act{display:inline-flex;align-items:center;gap:var(--s-6);flex:0 0 auto;
          padding:var(--s-6) var(--s-8);border-radius:var(--r-control);
          font-size:13px;font-weight:500;color:var(--text-2);
@@ -174,8 +214,9 @@
 /* A HEADING, NOT A LABEL. design-language.md §4: "a label that heads a box is
    not a label inside it" — this heads the box, so --text-2 and the 12px gap
    below it, which .rec-end's own flex gap supplies. */
-.rec-end-h{margin:0;color:var(--text-2)}
-.rec-end-note{margin:0;max-width:68ch;color:var(--text-2)}
+/* .rec-end-h AND .rec-end-note WENT WITH THE HEADING AND THE PARAGRAPH. The
+   sentence they carried is in .rec-end-info's panel; the heading named a group
+   that is now two groups in two places. */
 @media (hover:hover){
   .rec-act:hover{background:var(--surface-sunken);color:var(--text-1)}
   .rec-act:hover svg{color:var(--text-2)}
@@ -331,6 +372,14 @@
    measure nothing declares. */
 .pn-name-real{color:var(--text-1);text-wrap:pretty}
 .pn-meta{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap}
+/* THE SAME TREATMENT AS THE ROW'S .drill-score, and it has to be: the founder
+   reads one number in two places and a second styling would read as a second
+   number. Label in --text-3, value in Inconsolata, baseline-aligned so the
+   10.5px word sits on the 12.5px figure rather than centred against it. NO
+   auto margin — the row's version takes one because it anchors a trailing
+   cluster; this one follows the status chip at the --s-10 the row sets. */
+.pn-score{display:flex;align-items:baseline;gap:var(--s-6);color:var(--text-3)}
+.pn-score-k{color:var(--text-3)}
 /* the patent number is a FIGURE and takes Inconsolata like every other one
    — it is the one field on this row a founder retypes or pastes, and a
    proportional face is where a 1 and an l stop being distinguishable. */

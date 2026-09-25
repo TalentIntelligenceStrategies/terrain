@@ -463,7 +463,7 @@ thing that grew rather than rose. It is `--shadow-float` at a third of the geome
 contact to read where a floating panel has the ambient doing the work.
 
 **`--shadow-float` is a thing drawn over the page** — out of the flow, anchored to a trigger,
-closable. Menus, popovers, the figure viewer's action bar, the row's figure peek.
+closable. Menus, popovers, the figure viewer's panel and its action bar.
 
 **There is no third rung, and the reason is measurable.** The one thing that covers the product is the
 enlarged drawing, and it sits on `--scrim`. In light the scrim composites to `#838383`, and
@@ -473,10 +473,10 @@ token is carried there and does almost nothing, which is the honest amount.
 
 **A shadow cannot separate two surfaces of the same colour.** Both tokens are downward-biased with a
 negative spread, so they contribute almost nothing at a *vertical* edge, and an elevation shadow needs
-a background that recedes. The record floats over cards of its own surface value, and the figure peek
-is `--figure-ground` white on a white column in light — both carry `1px --border` on all four sides,
-and there the hairline is what draws the edge, not the shadow. **This clause is not a taste rule and
-does not lift.**
+a background that recedes. The record and the result panel are `--surface` on a `--surface` column,
+and the figure viewer's panel is `--figure-ground` white against a light scrim — all three carry
+`1px --border` on all four sides, and there the hairline is what draws the edge, not the shadow.
+**This clause is not a taste rule and does not lift.**
 
 **A shadow on an ink fill is invisible.** `.btn` takes neither rung: in dark it disappears, and in
 light it reads as a button from 2010.

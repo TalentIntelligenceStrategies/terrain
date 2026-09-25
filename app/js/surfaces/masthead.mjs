@@ -10,6 +10,7 @@ import { onActivate } from '../core/delegate.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
 import { bar } from '../core/primitives.mjs';
 import { focusQuietly } from '../core/focus.mjs';
+import * as Starred from '../core/starred.mjs';
 
 let ENGINE = null;
 
@@ -126,6 +127,53 @@ export function init(ctx) {
     const { balance, allowance } = res.data;
     const n = $('#meterN');
     if (n) n.textContent = String(balance);
+  });
+
+  /* ── the starred count · what the founder has built ─────────────────────
+     onChange FIRES IMMEDIATELY ON SUBSCRIBE, which is the whole reason this is
+     one call and not a call plus a paint. The masthead mounts before any
+     surface does, and core/starred.mjs reads localStorage at module load, so
+     the count is already right by the time this runs on a reload.
+
+     THE LABEL IS REWRITTEN, NOT JUST THE NUMBER. A control announced as
+     "Starred" says the same thing at nought and at forty, and the number
+     beside it is not in the accessible name — .meter-n is a <span>, so a
+     screen reader reads the label and nothing else. §7's rule that a count is
+     a figure AND a word applies to what is heard as much as what is seen.
+
+     IT IS NOT A LIVE REGION. The founder pressed a star and the row they
+     pressed announces the change; a second announcement from the bar would be
+     the same fact twice, which §7 refuses. */
+  let painted = false;
+  Starred.onChange(rows => {
+    const n = $('#mastStarN'), btn = $('#mastStar');
+    if (n) n.textContent = String(rows.length);
+    /* THE ACKNOWLEDGEMENT, AND NOT ON THE FIRST CALL. onChange fires
+       immediately on subscribe so a surface mounting late paints correctly;
+       that first call is not a change and a bar that pulses at boot is
+       reporting one that did not happen. On a reload with a stored set it
+       would pulse for every one of them at once.
+
+       TWO FRAMES, NOT ONE. Setting and clearing inside one frame is a style
+       the browser never computes, so the transition has nothing to run from.
+       The attribute goes on now and comes off after the next paint, which is
+       what makes 20-shell.css's two durations fire in order. */
+    if (btn && painted) {
+      btn.setAttribute('data-bump', '');
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => btn.removeAttribute('data-bump')));
+    }
+    painted = true;
+    if (btn) {
+      btn.setAttribute('aria-label', rows.length === 0
+        ? 'Nothing starred yet. Open your starred set.'
+        : rows.length + (rows.length === 1 ? ' patent starred.' : ' patents starred.')
+          + ' Open your starred set.');
+      /* EMPTY IS A STATE THE CONTROL SHOWS, not a reason to hide. The
+         stylesheet quietens it; it stays pressable, because the page explains
+         what starring is for and that is exactly what an empty set needs. */
+      btn.toggleAttribute('data-empty', rows.length === 0);
+    }
   });
 
   /* ── navigation out of the bar ────────────────────────────────────────

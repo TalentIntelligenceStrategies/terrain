@@ -15,18 +15,72 @@
  * starred on page one is an id nothing on screen can resolve after page three
  * replaces it — the set has to keep what it was told when it was told.
  *
- * ═══ IT SURVIVES A NEW SEARCH ══════════════════════════════════════════════
+ * ═══ IT SURVIVES A NEW SEARCH, AND NOW A RELOAD ════════════════════════════
  * platform.md §5.1. Clearing it on the next query would delete the founder's
  * work to save them a click, and it is the one thing here they cannot get back
- * by pressing something again. It is session state and nothing more: there is
- * no persistence port yet, so a reload still empties it — platform.md §10
- * item 2 is where that is tracked.
+ * by pressing something again. The same argument reaches one step further: a
+ * refresh emptied it too, and a refresh is not a decision the founder made
+ * about their shortlist. platform.md §10 item 2 called that "urgent rather
+ * than tidy" and named the trigger as "any surface has to survive a reload".
+ *
+ * ═══ localStorage IS A FLOOR, NOT THE SESSION MODEL ════════════════════════
+ * It is one browser on one machine and it is not an account. What it buys is
+ * the one failure that actually loses work — a reload, a crash, a closed tab —
+ * and it buys it without a port, a server or a login. When the session model
+ * arrives it replaces read() and write() below and nothing else in this file
+ * changes, because everything outside them speaks to the Map.
+ *
+ * EVERY ACCESS IS WRAPPED. Safari in private mode throws on setItem rather
+ * than failing quietly, and a throw in here would take the store down with it
+ * — the founder would lose the starring they were doing, to protect the
+ * starring they had done.
+ *
+ * IT HOLDS ROWS AND ROWS CHANGE SHAPE, so the payload carries a version and a
+ * mismatch drops the cache rather than rendering whatever it finds. A row read
+ * back as a shape the list no longer emits is bars where there were names.
  */
 
 /* Map rather than Set, keyed by id, because insertion order IS the order the
    founder starred them in and that is the order the collection reads in. */
 const ROWS = new Map();
 const LISTENERS = [];
+
+const KEY = 'terrain:starred';
+/* BUMP THIS WHEN THE ROW SHAPE CHANGES. components.md §1 names the fields a
+   row carries; a stored row from before a rename is a row the list cannot
+   draw. */
+const VERSION = 1;
+
+function read() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return;
+    const box = JSON.parse(raw);
+    if (!box || box.v !== VERSION || !Array.isArray(box.rows)) return;
+    /* THE ID IS RE-DERIVED FROM THE KEY POSITION rather than trusted from the
+       row, because toggle() is what guarantees `id` matches the key and a
+       hand-edited localStorage has made no such promise. */
+    box.rows.forEach(row => {
+      if (row && typeof row.id === 'string') ROWS.set(row.id, row);
+    });
+  } catch (e) {
+    /* A CORRUPT OR UNREADABLE STORE IS AN EMPTY ONE. Better an empty shortlist
+       the founder can rebuild than a boot that fails on a JSON error. */
+    console.warn('starred: could not read the stored set', e);
+  }
+}
+
+function write() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify({ v: VERSION, rows: list() }));
+  } catch (e) {
+    /* QUOTA OR PRIVATE MODE. The set still works for this session; it just
+       will not outlive it, which is exactly where this started. */
+    console.warn('starred: could not store the set', e);
+  }
+}
+
+read();
 
 function announce() {
   const rows = list();
@@ -52,6 +106,7 @@ export function toggle(id, row) {
   const on = !ROWS.has(id);
   if (on) ROWS.set(id, { ...row, id });
   else ROWS.delete(id);
+  write();
   announce();
   return on;
 }

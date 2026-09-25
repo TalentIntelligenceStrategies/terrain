@@ -31,6 +31,14 @@ import { bump, stale } from '../core/generation.mjs';
 import { reduced } from '../core/motion.mjs';
 import * as Starred from '../core/starred.mjs';
 import * as Viewer from '../core/figure-viewer.mjs';
+/* THE SCORE IS THE ROW'S, NOT THE RECORD'S, and this import is what says so.
+   components.md gives `score` to the list row and not to the record, because
+   it is a fact about the SEARCH rather than about the document — the same
+   patent fetched from a different query has a different one, and fetched from
+   no query has none. Adding it to the record port would make the engine answer
+   a question the record was not asked. surfaces/starred.mjs reaches across the
+   same way and for the same reason. */
+import { rowFor } from './list.mjs';
 
 let ENGINE = null;
 let restore = null;
@@ -202,7 +210,45 @@ function figuresHTML(figures) {
     + '</section>';
 }
 
-function paneHTML(rec) {
+/* THE ID COMES FROM THE CALLER, NOT OFF THE RECORD, because a Record has no
+   id — components.md does not give it one and neither engine returns one. The
+   thing that knows which patent this is, is whoever asked for it.
+
+   IT IS NOT AN ERROR FOR THE ROW TO BE GONE. The client holds one page at a
+   time, so a record opened before a page turn outlives the row it came from;
+   an absent row means the same as a null score, which is that there is nothing
+   to print. */
+function scoreHTML(id) {
+  const row = rowFor(id);
+  if (!row || row.score == null) return '';
+  return '<span class="pn-score">'
+    + '<span class="t-micro pn-score-k">Score</span>'
+    + '<span class="fig fig-s">' + row.score.toFixed(4) + '</span>'
+    + '</span>';
+}
+
+/* THE HEAD'S TWO SET CONTROLS, RAISED AND LOWERED TOGETHER. data-star IS THE
+   WHOLE WIRING for the star: list.mjs's delegated .set-star handler reads it,
+   so the record's star is the row's star with a label on it — one treatment,
+   one handler, one set. Clearing it to "" rather than removing it keeps the
+   attribute selector in 35-record.css matching an empty, hidden control rather
+   than falling through to an unstyled one for a frame. */
+function setActs(on, id) {
+  const star = $('#recStar'), sim = $('#recSimilar'), sep = $('.rec-head-sep');
+  if (star) {
+    star.hidden = !on;
+    star.setAttribute('data-star', on ? id : '');
+    star.setAttribute('aria-pressed', String(Boolean(on) && Starred.has(id)));
+  }
+  if (sim) {
+    sim.hidden = !on;
+    if (on) sim.setAttribute('data-pn', id);
+    else sim.removeAttribute('data-pn');
+  }
+  if (sep) sep.hidden = !on;
+}
+
+function paneHTML(rec, id) {
   const claims = (rec.claims || []).map((c, k) =>
     '<li class="pn-claim"><span class="fig fig-s pn-cn">' + (k + 1) + '</span>'
     + '<span class="pn-prose t-body">' + esc(claimText(c, k + 1)) + '</span></li>').join('');
@@ -228,7 +274,20 @@ function paneHTML(rec) {
       ? '<span class="pn-name-real t-title">' + esc(rec.title || rec.skim) + '</span>'
       : bar('w-full', 'title') + bar('w-lg', 'title'))
     + '</div>'
+    /* THE SCORE SITS WITH THE STATUS, as a peer on a row that is read across.
+       §7's "a figure block puts its label above, never beside" describes a
+       block you read AT — a micro label over a figure, on its own. This is a
+       meta row, and stacking one of two would make the shortest item the
+       tallest.
+
+       SAME SHAPE AS THE ROW'S, down to the four decimals and the omission.
+       The record and the list printing one number two ways is the founder
+       having to work out that it is the same number. And when the engine
+       returned none, the whole block goes: platform.md's "the label goes with
+       the value or neither goes", which is why every corpus record shows a
+       status chip here and nothing beside it. */
     + '<div class="pn-meta">' + (rec.status ? statusHTML(rec.status) : '')
+    + scoreHTML(id)
     + '</div></div></div>'
     + '<div class="pn-body">'
     + '<dl class="hf">' + FIELDS.map(([k, label]) =>
@@ -297,6 +356,7 @@ function close() {
      of how the LIST is drawn now, and the list outlives any one record. */
   const end = $('#recEnd');
   if (end) { end.hidden = true; end.removeAttribute('data-pn'); }
+  setActs(false, null);
   REC = null;
   drop('record');
   /* `restore` IS A FUNCTION, NOT A NODE. captureFocus hands back the act of
@@ -416,12 +476,20 @@ async function open(id, trigger, stepping, opts = {}) {
   const col = $('#paneScroll');
   if (col) col.scrollTop = 0;
 
-  /* THE CLOSING BLOCK GOES BEFORE THE WAIT DOES. It lives outside #recBody, so
-     waitOn() and failWith() cannot take it down — five controls offering to
-     star, cite and export a record that has not arrived, or has just failed
-     to. record.mjs owns it explicitly because the markup is static. */
+  /* THE CONTROLS GO DOWN BEFORE THE WAIT DOES. They live outside #recBody, so
+     waitOn() and failWith() cannot take them down — controls offering to star,
+     cite and export a record that has not arrived, or has just failed to.
+     record.mjs owns them explicitly because the markup is static.
+
+     IT IS TWO PLACES NOW, and that is the cost of splitting the block. The
+     three that take the patent out are inside #recEnd and go down with it; the
+     two that act on the set are in the sticky head, which stays up because it
+     holds the heading and the stepping pair. So they are hidden by name. A
+     star still showing the PREVIOUS record's data-star for the length of a
+     fetch is a button that stars the wrong patent. */
   const end = $('#recEnd');
   if (end) end.hidden = true;
+  setActs(false, null);
   REC = null;
 
   const token = bump('record');
@@ -439,18 +507,10 @@ async function open(id, trigger, stepping, opts = {}) {
   }
   FIGURES = Array.isArray(res.data.figures) ? res.data.figures : [];
   REC = res.data;
-  landIn(body, paneHTML(res.data));
+  landIn(body, paneHTML(res.data, id));
+  setActs(true, id);
   if (end) {
-    const star = $('#recStar'), sim = $('#recSimilar'),
-          out = $('#recOut'), cite = $('#recCite');
-    /* data-star IS THE WHOLE WIRING. list.mjs's delegated .set-star handler
-       reads it, so the record's star is the row's star with a label on it —
-       one treatment, one handler, one set. */
-    if (star) {
-      star.setAttribute('data-star', id);
-      star.setAttribute('aria-pressed', String(Starred.has(id)));
-    }
-    if (sim) sim.setAttribute('data-pn', id);
+    const out = $('#recOut'), cite = $('#recCite');
     /* OMITTED, NOT DISABLED, and it is the score's rule applied to a control:
        there is no act here and no sentence to read, so a disabled button would
        be a promise the engine has not made. `sourceUrl` is not in the port

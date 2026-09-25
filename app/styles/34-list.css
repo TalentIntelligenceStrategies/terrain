@@ -53,8 +53,17 @@
    no figure role, so every "+5" rendered in Urbanist. list.mjs carries fig-s
    now and this rule carries only the colour. */
 .dm-more{color:var(--text-3)}
-/* a jurisdiction is a CODE, so it takes fig-s on the markup beside the IPC —
-   §4 allows no exception. This carries only the colour. */
+/* A JURISDICTION IS A PLACE, NOT A CODE. §4 reads "Inconsolata for every
+   number, date, year, count and code" and `United States` is none of those, so
+   the rule never reached it. Set in Inconsolata beside the IPC symbol it made
+   the whole tag row read as machine output, against a calendar row directly
+   above that says `Published` in Urbanist and only the date in figures — two
+   meta rows of the same kind, set two different ways. It takes the row's body
+   role from .dm-v like every other prose value; this carries only the colour.
+
+   THE IPC SYMBOL BESIDE IT KEEPS fig-s, and that is the distinction rather
+   than an inconsistency: a classification symbol is a code and a country is
+   not. */
 .dm-where{color:var(--text-2)}
 
 /* ── band 1 · what this document IS ──────────────────────────────────────
@@ -64,13 +73,18 @@
    first, in Inconsolata, at --text-2 so it frames the title rather than
    competing with it.
 
-   THE RANK AND THE SCORE ARE STILL THE ONLY TWO THINGS ON THE ROW THAT ARE
-   ABOUT THE SEARCH RATHER THAN ABOUT THE PATENT, and they no longer travel
-   together. This read "they sit together at the trailing edge for that
-   reason", which was true while band one was one line. The rank is an
-   ORDINAL -- the Nth of these -- so it leads, beside the identifier it
-   counts; the score is a MAGNITUDE, and the trailing edge is reserved for it.
-   Being about the search is what they share, not where they sit.
+   THE RANK AND THE SCORE ARE THE ONLY TWO THINGS ON THE ROW THAT ARE ABOUT
+   THE SEARCH RATHER THAN ABOUT THE PATENT, and they travel together at the
+   trailing edge. The eyebrow is two clusters: what the document IS leads --
+   status and number, true of it wherever it was found -- and what the QUERY
+   made of it trails, both of which exist only because this search ran and
+   both of which change when the sort does.
+
+   AN ORDINAL BETWEEN A STATUS AND AN IDENTIFIER READS AS A THIRD FACT ABOUT
+   THE PATENT, which is what the rank leading produced. It is not one. Grouped
+   at the trailing edge the pair reads as the search's own margin note, and the
+   number regains the leading position it is scanned from down a column of
+   twenty.
 
    EVERY .drill-* RULE IS HERE NOW, 2026-09-24, AND THIS MOVE CHANGES NOTHING.
    Five of them lived in 35-record.css, which loads after this file, so ITS
@@ -86,21 +100,18 @@
    somebody reorders index.html, which check-app.py's manifest gate proves is
    a thing that gets edited. */
 .drill-toggle{display:block;width:100%;text-align:left;padding:0}
-/* flex-direction:column AND NOT display:grid, AND THAT IS LOAD-BEARING.
-   40-figure.css restates `display:flex` on .drill-head to bring the band back
-   for rows whose drawings are withheld in Drawings-only mode; its own comment
-   explains that `revert` there would land on the UA's span default instead. A
-   grid here would be silently flattened into a row by that restatement — in
-   exactly one mode, on exactly the rows with no picture to show instead. A
-   column flex survives it, because flex-direction is not what that rule
-   sets. */
+/* flex-direction:column AND NOT display:grid. The band is an eyebrow over a
+   title, which is one axis, and §5 says flex for 1D. It was also load-bearing
+   against a `display:flex` restatement in 40-figure.css that would have
+   flattened a grid into a row in Drawings-only mode; band one no longer hides
+   in that mode, so the restatement is gone and this is a preference again. */
 .drill-head{display:flex;flex-direction:column;gap:var(--s-6)}
 
-/* WHAT SEPARATES THE THREE IS SPACE, AND NOTHING ELSE — no middle dot, no
-   rule. The status chip already carries a .dot as its own encoding, and a
-   second mark 8px away from it would mean nothing. The three items are
-   already three shapes: a tinted pill, #N in --text-3, and a number in
-   Inconsolata at --text-2.
+/* WHAT SEPARATES THEM IS SPACE, AND NOTHING ELSE — no middle dot, no rule.
+   The status chip already carries a .dot as its own encoding, and a second
+   mark 8px away from it would mean nothing. Every item is already its own
+   shape: a tinted pill, a number in Inconsolata at --text-2, #N at --text-3,
+   and a labelled figure.
 
    IT WRAPS RATHER THAN QUERYING A CONTAINER. At the split's own floor — a
    1080px window, which leaves .drill-row 368px — the longest corpus number
@@ -159,8 +170,18 @@
    10.35px taller than an unscored one. Inline, the eyebrow is 20px either
    way — the same invariant the scrolling strip is built on. The two off-scale
    1px values went with the stack. */
+/* THE CLUSTER CARRIES THE AUTO MARGIN, NOT THE SCORE. It sat on .drill-score,
+   which was correct while the score was the only thing at the trailing edge;
+   with the rank beside it, an auto margin on the score would push the two
+   apart and leave the rank stranded mid-eyebrow.
+
+   IT IS ONE ELEMENT SO THE PAIR WRAPS AS A PAIR. The eyebrow wraps rather than
+   querying a container, and a rank ending one line with its score starting the
+   next is exactly the split this grouping exists to undo. */
+.drill-sr{flex:0 0 auto;display:flex;align-items:baseline;gap:var(--s-8);
+          margin-inline-start:auto}
 .drill-score{flex:0 0 auto;display:flex;align-items:baseline;gap:var(--s-6);
-             margin-inline-start:auto;color:var(--text-3)}
+             color:var(--text-3)}
 .drill-score-k{color:var(--text-3)}
 
 /* ── band 3 · what it claims ─────────────────────────────────────────────
@@ -206,79 +227,6 @@
    THE CHEVRON WENT WITH IT. It pointed at the row's own button, which is the
    thing it was inside: an affordance describing itself. */
 
-/* ══ THE FIGURE PEEK ══════════════════════════════════════════════════════
-   A GLANCE AT ONE DRAWING, AND THE SIZE SITS ON A MEASURED CLIFF. All 2,246
-   renditions in corpus/thumbs were sampled and the object-fit:contain scale
-   into each candidate card computed. 176 puts the median at 1.68x with 6%
-   of drawings over 2x; 208 puts the median at 2.02x with FIFTY-SIX percent
-   over 2x, because that is where the median rendition itself crosses. 176 is
-   the last size before the cliff, and the ladder reads 102 -> 148 -> 176 ->
-   the viewport.
-
-   IT IS ABSOLUTE IN .listcol, which is position:relative and is NOT the
-   scroller. A preview anchored inside .listcol-scroll is clipped by it on all
-   four sides; this escapes the clip and holds still while the list moves
-   under it, and the column's own overflow:hidden is the outer clamp.
-
-   pointer-events:none IS LOAD-BEARING, NOT TIDINESS. The peek is a glance and
-   not a target, so the pointer can never enter it: there is no safe-triangle
-   problem, no travel grace needed on close, and a peek overlapping the rows
-   below steals none of their hover.
-
-   aria-hidden, AND THE TILE IS WHY. .set-thumb's accessible name already
-   reads "Figure N, open the record at this drawing" — a superset of what this
-   prints. Exposing it would announce the figure number twice.
-
-   z-index 5 · ONE BELOW THE MASTHEAD. Above everything in the scroller, which
-   is all z:auto, and below every surface the founder opened ON PURPOSE: the
-   masthead at 6, its menus at 7, .lm-menu and .info-pop at 35, .pop at 36,
-   the enlarged drawing at 60. A preview that merely happened under the
-   pointer may not cover a menu that was asked for.
-
-   NO :hover RULE ANYWHERE IN HERE, so check-app.py's hover gate is not
-   engaged. The gate lives in JS as e.pointerType, which is strictly better
-   than a media query: a hybrid laptop gets a peek from its trackpad and none
-   from its touchscreen, in the same session. */
-.set-peek{position:absolute;top:0;left:0;z-index:5;
-          width:176px;aspect-ratio:4/5;
-          pointer-events:none;overflow:hidden;
-          background:var(--figure-ground);
-          border:1px solid var(--veil-edge);
-          border-radius:var(--r-inner);
-          box-shadow:var(--shadow-float);
-          opacity:0;
-          transform:translate(var(--peek-x,0px),var(--peek-y,0px))
-                    translateY(var(--peek-dy,-4px))
-                    scale(var(--peek-s,.97));
-          transform-origin:50% 100%;
-          transition:opacity var(--dur-1) var(--ease),
-                     transform var(--dur-1) var(--ease)}
-.set-peek[hidden]{display:none}
-/* THE ANCHOR IS STATED ONCE, as two custom properties, so re-anchoring while
-   open is two setProperty calls and touches no rule. It moves by TRANSFORM
-   and never by left/top — §6 forbids animating a layout property outright. */
-.set-peek[data-open]{opacity:1;--peek-dy:0px;--peek-s:1;
-                     transition:opacity var(--dur-2) var(--ease),
-                                transform var(--dur-2) var(--ease)}
-/* THE ORIGIN FLIPS AND THE LIFT DOES NOT, which is .pop's own convention and
-   .lm-menu's: always translateY(-4px), and only the origin says which side of
-   the trigger it came from. */
-.set-peek[data-below]{transform-origin:50% 0%}
-/* NAMING ONLY opacity DROPS transform OUT OF THE TRANSITION, which is the
-   point. A keyboard walks this strip with the arrows, and a 200ms entrance
-   replayed on every keypress is animation on a repeated key action — the
-   focus ring is already carrying the movement. Declared after [data-open]
-   because the two are equal specificity and order decides. */
-.set-peek[data-via="key"]{transition:opacity var(--dur-1) var(--ease)}
-.set-peek-img{display:block;width:100%;height:100%;object-fit:contain;
-              padding:var(--s-8)}
-/* THE NUMBER IS THE FEATURE'S JUSTIFICATION, not decoration. The row's tile
-   prints one NOWHERE — the record's strip does (.pn-fig-n) and the enlarged
-   view's does (.figstrip-n) and the row's does not — so this is the only
-   place on the results surface a sighted founder learns WHICH figure a tile
-   is. That is information gain, which is why it survives reduced motion. */
-.set-peek-n{position:absolute;bottom:var(--s-6);inset-inline-start:var(--s-8);
-            color:var(--figure-ink-strong)}
 
 /* ══ THE ROW'S DRAWINGS · platform.md §4.3 ════════════════════════════════
    IT SCROLLS, AND THAT MOVED THE COST FROM WIDTH TO HEIGHT. The track was four
@@ -521,7 +469,23 @@
    none → currentColor is not an animatable pair, so the declaration below was
    a no-op and only the parent's colour moved. `transparent` renders exactly as
    `none` here and interpolates. */
-.set-star svg{fill:transparent;transition:fill var(--dur-1) var(--ease)}
+.set-star svg{fill:transparent;
+              transition:fill var(--dur-1) var(--ease),
+                         transform var(--dur-1) var(--ease)}
+/* ENTER SLOWER THAN EXIT, which is §6 the right way round: starring is the act
+   the founder is waiting to see land, un-starring is a correction they have
+   already decided on. Both were --dur-1, so filling and emptying looked the
+   same and neither looked like an acknowledgement.
+
+   AND THE GLYPH LIFTS 6%. It is a transition and not a keyframe — there are
+   three of those and three is the list — so it holds at the larger size
+   rather than springing back, which is what makes it a STATE rather than a
+   flourish: a starred row is legible as starred from the shape alone at the
+   edge of vision, before the fill resolves. §6's test is "could a transition
+   have done this", and here it not only could, it says more. */
+.set-star[aria-pressed="true"] svg{transform:scale(1.06);
+              transition:fill var(--dur-2) var(--ease),
+                         transform var(--dur-2) var(--ease)}
 /* THE .set-ctl QUALIFIER WENT, 2026-09-24. It was there for specificity over
    .set-ctl{color:var(--text-3)} and nothing else, and at (0,2,0) this still
    beats it — but the record's star is a .rec-act rather than a .set-ctl, and

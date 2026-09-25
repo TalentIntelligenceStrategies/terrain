@@ -56,8 +56,15 @@
    would be measured before the border between them and leave the two columns
    a hairline apart; a shrinkable basis divides what is actually left after
    the border, so the ratio holds on the screen rather than on paper. */
+/* IT IS GROUND, NOT A SURFACE, AND THAT IS WHAT MAKES THE TWO COLUMNS PEERS.
+   It carried `background:var(--surface)` and a right-hand hairline, so the
+   left column WAS a panel and the record on the right was a panel sitting on
+   the app. brief.md: "two columns, and each column means one thing" — the two
+   meant different kinds of thing, and the chrome said so before any content
+   did. Both columns are ground now, each carrying one panel, and the hairline
+   goes with the background: two panels 32px apart separate themselves, and a
+   rule between them would be a third edge in a gap that already has two. */
 .listcol{position:relative;flex:0 1 44%;min-width:340px;
-         border-right:1px solid var(--border);background:var(--surface);
          display:flex;flex-direction:column;overflow:hidden}
 
 /* ── the left column's density · one step up, 2026-09-10 ────────────────
@@ -184,8 +191,7 @@
 
 @media (max-width:1079px){
   .work-split{flex-direction:column}
-  .listcol{flex:0 0 auto;width:auto;min-width:0;max-height:46vh;border-right:0;
-           border-bottom:1px solid var(--border)}
+  .listcol{flex:0 0 auto;width:auto;min-width:0;max-height:46vh}
 }
 
 /* ── the Market / Technology toggle, in the surface's head ──────────────
@@ -245,6 +251,15 @@
    fix and the wrong one: the record pane wanted exactly that space, so the
    surface now USES the width instead of balancing the hole. */
 .set-wrap{min-width:0}
+/* THE RESULT PANEL TAKES THE RECORD'S RADIUS, NOT THE WIDGET'S. .card is
+   --r-widget (16), which is right for a card among cards; this is the only
+   panel in its column and its counterpart across the split is .rec at
+   --r-shell (20). Two panels of equal standing rounded four pixels apart is
+   the kind of mismatch that reads as an accident rather than a distinction.
+
+   IT IS SCOPED HERE RATHER THAN CHANGED IN 31-card.css, because every other
+   surface's cards are cards and should stay at 16. */
+.set-wrap>.card{border-radius:var(--r-shell)}
 .set-bar{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap;
   padding:var(--s-14) var(--s-20);border-bottom:1px solid var(--border)}
 .set-bar .spacer{flex:1 1 auto}

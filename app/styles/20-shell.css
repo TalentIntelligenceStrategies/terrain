@@ -119,6 +119,31 @@
 /* §4: every number is Inconsolata, and .fig carries tabular-nums so the balance
    does not shift sideways as it decrements. The word stays Urbanist micro. */
 .meter-n{color:var(--text-2)}
+
+/* ══ THE STARRED COUNT ════════════════════════════════════════════════════
+   EMPTY IS QUIETER, NOT ABSENT. The control is the way in to a page that
+   explains what starring is for, so hiding it at nought would hide the
+   explanation from exactly the founder who needs it. --text-3 on the number
+   is the same step down .meter uses for its own unit: present, pressable,
+   and plainly holding nothing yet. */
+.mast-star[data-empty] .meter-n{color:var(--text-3)}
+.mast-star svg{transition:transform var(--dur-3) var(--ease),
+                          color var(--dur-1) var(--ease)}
+/* THE COUNT ACKNOWLEDGES, AND IT IS A TRANSITION RATHER THAN A KEYFRAME.
+   masthead.mjs sets data-bump and clears it on the next frame, so the glyph
+   snaps out at --dur-1 and eases back over --dur-3. §6: "could a transition
+   have done this" — this is the shape of question it is asking about, and two
+   rules with two durations answer it without a fourth @keyframes.
+
+   THE CONTROL ITSELF DOES NOT MOVE, only the mark inside it. §6: "a container
+   already in place does not move to say its contents changed." The number
+   beside it does not move either, because a figure that jumps is a figure you
+   cannot read at the moment you most want to.
+
+   IT DOES NOT FIRE ON LOAD. onChange calls back immediately on subscribe, and
+   a masthead that pulses at boot is announcing a change that did not happen. */
+.mast-star[data-bump] svg{transform:scale(1.28);
+                          transition:transform var(--dur-1) var(--ease)}
 /* aria-PRESSED, not aria-selected: these are three toggles in a group, not
    options in a listbox. design-language.md §7 keeps that distinction as a
    general finding now that the tablist it was contrasted with is gone. */

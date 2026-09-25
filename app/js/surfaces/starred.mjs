@@ -148,10 +148,28 @@ function rowHTML(r) {
         : '<span class="sk sk-h-micro w-sm"></span>')
     + title
     + '</div>'
+    /* EVERY COLUMN THE FILE CARRIES IS ON THE ROW, and that is a correctness
+       rule rather than a completeness one. .star-note tells the founder the
+       files carry "the same fields as the rows above" and then names seven;
+       the row drew five. `where` and `score` left in the file without ever
+       appearing on screen, which is the one thing brief.md §1's test is about
+       — a file that states something the interface did not. Either the row
+       shows them or the file stops carrying them, and the row is the cheaper
+       half of that pair to fix.
+
+       THE SCORE OBEYS THE SAME OMISSION RULE AS THE LIST'S. null means the
+       engine returned none, so the whole block goes rather than printing a
+       label over a gap — and the CSV writes an empty cell for the same
+       reason. Against corpus/ that is every row. */
     + '<div class="starrow-meta">'
     + (r.status ? statusHTML(r.status) : '')
     + holder
+    + (r.where != null ? '<span class="starrow-where">' + esc(r.where) + '</span>' : '')
     + '<span class="fig fig-s">' + (r.year == null ? '' : r.year) + '</span>'
+    + (r.score == null ? ''
+       : '<span class="starrow-score">'
+         + '<span class="t-micro starrow-score-k">Score</span>'
+         + '<span class="fig fig-s">' + r.score.toFixed(4) + '</span></span>')
     + '</div>'
     /* UNSTARRING IS AVAILABLE WHERE THE SET IS READ. A collection you can only
        add to from somewhere else is a collection that only grows. */

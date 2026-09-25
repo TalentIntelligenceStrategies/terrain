@@ -244,9 +244,17 @@ export function init() {
   /* FULL SCREEN IS THE BROWSER'S, NOT A BIGGER DIV — and it still is, now
      for a better reason than the old one. It used to be that the viewer was
      absolute inside a column and there was no position:fixed in the tree, so
-     growing the element was not available. The viewer IS the viewport less a
-     24px gutter now, so "fill the screen" would mean dropping that gutter and
-     the browser chrome, which only the Fullscreen API can do.
+     growing the element was not available.
+
+     IT IS THE ONLY ROUTE TO A FULL VIEWPORT NOW, and that is what the control
+     is for. The panel opens at 1100 x 82vh — sized to a portrait plate rather
+     than to the screen — so there is a real second size for this to reach, and
+     40-figure.css's :fullscreen rule is what drops the maxima when it does.
+     Between them the viewer has two states a founder chooses between, instead
+     of one state and a button that shaved off a 24px gutter.
+
+     IT PROMOTES el.root AND NOT THE PANEL, so the scrim goes up with it and
+     nothing behind shows through at the edges while the browser animates.
 
      The button reports which state it is in rather than assuming the request
      succeeded: Safari refuses it in some contexts and returns a rejected

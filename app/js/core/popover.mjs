@@ -117,3 +117,32 @@ export function popover(opts) {
 
   return api;
 }
+
+/* ══ THE INFO NOTE, AND IT HAD NO DRIVER AT ALL ════════════════════════════
+ * `.info` shipped as markup and a stylesheet and nothing else: `.info.is-open
+ * .info-pop` was the only rule that revealed the panel and no line in app/js
+ * ever wrote `is-open`. The one instance in the product — the results
+ * heading's (i), carrying what the relevance score means — has never opened
+ * since the day it was added. It reads as a working control: it has a hover
+ * state, an :active scale and an aria-expanded="false" hard-coded in the
+ * partial, which is exactly what makes a dead disclosure hard to see.
+ *
+ * NOTHING ABOUT THE PATTERN NEEDED INVENTING — popover() already carries the
+ * four things it has to get right, and `.info` is shaped for it: the panel's
+ * parent is the host and `is-open` is the default open class. What was
+ * missing was the call.
+ *
+ * IT WIRES EVERY .info IN A ROOT rather than taking ids, because these are
+ * notes rather than named controls and a surface may hold several. The key
+ * comes off the button's accessible name, which is what makes two notes on
+ * one surface distinct on the escape stack.
+ */
+export function infoPopovers(root = document) {
+  return [...root.querySelectorAll('.info')].map(host => {
+    const btn = host.querySelector('.info-btn');
+    const panel = host.querySelector('.info-pop');
+    if (!btn || !panel) return null;
+    const key = 'info:' + (btn.getAttribute('aria-label') || panel.id || 'note');
+    return popover({ btn, panel, key, host });
+  }).filter(Boolean);
+}

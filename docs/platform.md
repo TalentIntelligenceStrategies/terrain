@@ -175,8 +175,8 @@ could read a patent or see the set it came from, never both. Reading one patent 
 one act, and one region that means two things by state is what that cost.
 
 **Three bands a row, then the drawings.** Band one is identity, on two lines: an **eyebrow** carrying
-the status chip, the position in the order and the patent number, with the engine's score at its
-trailing edge if there was one — and the **title on its own full width** below it. Band two is a 2×2
+the status chip and the patent number at its leading edge, the position in the order and the
+engine's score together at its trailing edge — and the **title on its own full width** below it. Band two is a 2×2
 grid of who and when: the first inventor, the holder, the publication date, and a cell carrying the
 jurisdiction and the main classification. Band three is the abstract, clamped to three lines. The
 drawings are not a fourth band: a field is a value read *off* the patent, and a drawing is the
@@ -197,6 +197,16 @@ because it is the only coloured thing on the row and it has a dot as well as a w
 stood 10.35px taller than an unscored one, so row height depended on what the engine returned.
 Inline, the eyebrow is one height either way — the same invariant the scrolling drawing strip is
 built on, and the row went from six possible heights to two.
+
+**The position travels with it, and the eyebrow is two clusters rather than four positions.** What
+the document *is* leads — the status and the number, true of the patent wherever it was found. What
+the *query* made of it trails — the position and the score, which exist only because this search ran
+and which change when the sort does. A position sitting between a status chip and an identifier
+reads as a third fact about the patent, and it is not one. They wrap together for the same reason
+they sit together.
+
+**The position always renders; the score may not.** There is no engine to withhold an ordinal. A
+score the engine did not return takes its label with it and the cluster is the position alone.
 
 **The row answers the glance, and four fields could not.** It carried the skim, the status, the
 holder and the year, and a founder could not tell a corporate filing from a university one, or a
@@ -378,12 +388,20 @@ Until it does, every record points at the same sign-in, which is honest about be
 way a constructed per-patent link would not be. *At the foot of the reading a placeholder is cheap;
 pinned in permanent chrome at the top of every record it was a placeholder at maximum prominence.*
 
-**The record closes with what to do about it.** A hairline, then five controls: star it, open the
-source, find similar to this one, copy a citation, export just this record. **It is chrome and not a
-fourth section of the patent** — Drawings, Abstract and Claims are the published document, and a
-fourth heading in the same grammar would claim these belong to it. The divider is the same rule the
-identity block closes with, so the patent is bracketed between two identical hairlines and everything
-between them is the document.
+**The record closes with what leaves, and the head carries what changes the set.** Five controls,
+split by where the act lands rather than by how often it is pressed. *Star* and *Find similar* change
+the founder's own set — one adds to the shortlist that leaves the product, the other re-orders the
+column beside this one — so they sit in the head with the stepping pair, the other control here that
+moves through the set rather than reading the record. *Open in IPtech*, *Copy citation* and *Export
+this record* are the end of reading this patent, and they sit where the reading ends. **The foot is
+chrome and not a fourth section of the patent** — Drawings, Abstract and Claims are the published
+document, and a fourth heading in the same grammar would claim these belong to it. The divider is the
+same rule the identity block closes with, so the patent is bracketed between two identical hairlines
+and everything between them is the document.
+
+**It is one star, not a second one.** The head's star is the row's star with a label on it: the same
+class, the same `data-star`, the same delegated handler, because the thing that paints them writes to
+every star in the document and never knew where they were.
 
 It renders **the record, not an opinion about the record**: eleven identifiers, the abstract, the
 claim set as published, and the drawings. **The five-field handoff — number, holder, where, status,
@@ -392,7 +410,15 @@ citation without one is a handoff line and not a citation. Printing five of the 
 foot of a record that has just printed all eleven is the repetition the *Classes* rule refuses one
 paragraph down; its stated purpose is the founder taking this to counsel, which is something that
 **leaves**. The closing block names the fields it copies where the founder is standing when they
-press it.
+press it — **behind one control rather than standing open**. It was a paragraph under the row, read
+in full every time a record opened, saying the same thing about every patent. `design-language.md` is
+the rule: a narrow column has room for the reading or for prose about the reading, and every sentence
+that is not the reading lives behind one control.
+
+**The record prints the score the row printed.** It is the search's number rather than the patent's,
+so it sits with the status chip on the meta line rather than among the eleven identifiers, and it is
+read from the row rather than added to the record contract — the same patent fetched from a different
+query has a different one, and fetched from no query has none.
 
 **As published does not mean twice.** Claim text arrives carrying its own number — *1. A method of…*
 — and the claim list prints a number in its gutter, so both appeared. The leading number is removed
@@ -401,10 +427,27 @@ stay, because a claim set that does not start at 1 is telling the reader somethi
 governs *Classes*, which lists the classifications **other than** the main one: the main symbol
 already has its own row above, and a reader who sees it twice looks for the difference.
 
-**The enlarged drawing takes the viewport, over a scrim.** It filled the right column until the
-record moved into that column — where filling it would cover the text the drawing is read against,
-which is the arrangement the column version existed to avoid. The left column would give a technical
-drawing 44% of the window, and reference numerals are what a founder enlarges a drawing *for*.
+**The enlarged drawing is a panel over a scrim, and it has two sizes.** It filled the right column
+until the record moved into that column — where filling it would cover the text the drawing is read
+against, which is the arrangement the column version existed to avoid. The left column would give a
+technical drawing 44% of the window, and reference numerals are what a founder enlarges a drawing
+*for*.
+
+**It opens sized to the plate rather than to the screen.** Taking the whole viewport less a gutter
+made it the page rather than a panel on the page, and a patent drawing is a portrait plate, so most
+of that width went to empty ground either side of it while the scrim was reduced to a frame nobody
+reads as one. It opens at a size the drawing fills, with enough scrim left to say the page is still
+behind it.
+
+**Full bleed is reached from inside it.** *Fill the screen* is the browser's own fullscreen, and it
+is the only route to a full viewport. A founder reading a dense schematic asks for that; a founder
+glancing at a thumbnail does not, and the default serves the second one.
+
+**A drawing in a result row opens the same panel, and nothing opens on hover.** A hover preview
+existed and is withdrawn: it was a third way to see a drawing, available only to a mouse, in a
+product whose other two work for everyone. Pressing a row's tile opens the record at that figure and
+the panel over it — the row carries small renditions of the first twelve and the panel needs the
+published plate, so the record fetch is where the drawing comes from rather than a detour around it.
 
 **So it is the product's one scrim, one `position:fixed` node and one focus trap**, and each of
 those rules is narrowed rather than repealed —
@@ -449,7 +492,10 @@ which is why one of them is a button rather than a consequence:
 
 - **It collects.** The starred set is the founder's own shortlist and it is the only thing in the
   product they curate by hand. It **survives a new search**, because the set is what they are taking
-  out and clearing it on the next query would delete their work to save them a click.
+  out and clearing it on the next query would delete their work to save them a click. **It survives a
+  reload for the same reason**, in browser storage: a refresh is not a decision the founder made
+  about their shortlist. That is a floor rather than the session model — one browser on one machine,
+  and §10 item 2 is what an account adds.
 - **It finds similar.** With at least one patent starred, *Find similar* re-orders the set by
   nearness to what was starred. **No patent enters or leaves; only the sequence changes**, and
   *Restore the original order* puts it back.
@@ -470,8 +516,19 @@ described. It does not mean it affects them, and the interface never says it doe
 
 ### 5.2 · The starred set leaves as data
 
-The starred set has **its own surface**, reached from the count beside the results. It is where the
-shortlist is read as a whole rather than one row at a time, and it is where the set leaves.
+The starred set has **its own surface**, reached from a standing count in the masthead and from the
+count beside the results. It is where the shortlist is read as a whole rather than one row at a time,
+and it is where the set leaves.
+
+**The masthead count shows at nought, and that is the point.** The contextual chip beside the results
+appears only once something is starred, so the page explaining what starring is for was reachable
+only by a founder who had already worked it out. A count that is visibly empty is what makes filling
+it obvious, and it is the difference between the set being somewhere you go and something you watch
+accumulate.
+
+**Every column the file carries is on the row above it.** The page tells the founder the files carry
+the same fields as the rows, so a field that leaves in the file without appearing on screen is the
+one thing `brief.md` §1's test is about. The row shows all seven.
 
 **It leaves as a CSV or a Markdown list, and as nothing else.** Both carry the fields already on
 screen — number, title, holder, where, status, date, score — and neither carries a cover page, a
@@ -743,11 +800,13 @@ postponed, it says so.
    value feature in the engine, and without it v1 launches with no subscription rationale beyond
    re-running searches: a founder searches, gets an answer, and has no reason to return next month.
    **Starts when:** pricing is decided, because pricing cannot be decided without it.
-2. **Authentication and the session model.** Every *has the founder done X yet* test is currently a
+2. **Authentication and the session model.** Every *has the founder done X yet* test is a
    page-lifetime flag, so a reload starts the founder over and the real product will not. **The
-   starred set makes this urgent rather than tidy** — it is the founder's own work, it survives a new
-   search by decision, and it does not survive a refresh. **Starts when:** any surface has to survive
-   a reload, which is now.
+   starred set no longer waits on this** — it is stored in the browser and survives a reload on its
+   own (§5.1), which was the one case that actually lost work. What is still ahead is everything an
+   account buys that a browser cannot: the same set on a second machine, a set that survives cleared
+   site data, and a set that is the founder's rather than the browser's. **Starts when:** the founder
+   is expected to be the same person on two devices.
 3. **Recent searches.** PI-VuePat keeps thirty in browser storage, capped and clearable. Cheap, and
    it makes a return visit mean something without an account. **Starts when:** item 2 settles whether
    this is local or server-side.
@@ -800,9 +859,10 @@ knowing before changing one.*
   metered control, and nothing on the results surface says so.
 - **Pricing.** The allowance, the price, and the tier structure are all open, which is why the plan
   screen prints `XXX` and a bar rather than guessing.
-- **Does the starred set survive a reload, and where does it live?** It survives a new search by
-  decision. It does not survive a refresh, because there is no persistence and no account — §10
-  items 2 and 3.
+- **Where does the starred set live when the founder has two machines?** It survives a new search and
+  a reload, the second in browser storage (§5.1). What it does not survive is a different browser,
+  cleared site data, or being handed to a colleague — all of which need an account rather than a
+  key. §10 items 2 and 3.
 - **How many results should a search return by default?** The settings ladder offers 10 · 20 · 50 ·
   100 · 500, and whether 500 is an engine ceiling or an interface one is unanswered.
 - **Whether Terrain sits on Innovue's semantic search surface or beside it.**

@@ -72,20 +72,13 @@
      override with them: nothing writes data-stagger, and the entrance it
      declared an end state for is not declared anywhere either. */
 
-  /* ── the figure peek · present and flat ─────────────────────────────────
-     IT MAY NOT SIMPLY BE SWITCHED OFF, and the reason is the figure NUMBER.
-     The row's tile prints one nowhere — the record's strip does and the
-     enlarged view's does and the row's does not — so this is the only place
-     on the results surface a sighted founder learns WHICH figure a tile is.
-     Withholding that under reduced motion is reduced INFORMATION, which §6
-     refuses outright.
 
-     WHAT GOES IS THE 4px LIFT AND THE .97 SCALE, declared here rather than
-     left to a transition that never ticks. The glance is unchanged.
-
-     THE 160ms DWELL STAYS, and it is in peek.mjs rather than here. A delay is
-     an intent filter, not motion; removing it would fire the peek on every
-     sweep of the pointer across the strip, which is MORE movement on screen
-     rather than less. */
-  .set-peek[data-open]{opacity:1;--peek-dy:0px;--peek-s:1}
+  /* ── the star and its count · state without travel ──────────────────────
+     THE FILL STAYS AND THE SCALE GOES. The fill IS the encoding — outline
+     means not starred, solid means starred — so removing it would be reduced
+     INFORMATION, which §6 refuses outright. The 6% lift and the count's bump
+     are the parts that are only motion, and both are declared flat here
+     rather than left to a transition that never ticks. */
+  .set-star[aria-pressed="true"] svg{transform:none}
+  .mast-star[data-bump] svg{transform:none}
 }

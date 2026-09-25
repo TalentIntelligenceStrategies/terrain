@@ -42,7 +42,6 @@ import { focusQuietly } from '../core/focus.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import * as Starred from '../core/starred.mjs';
 import { rovingIn } from '../core/roving.mjs';
-import * as Peek from '../core/peek.mjs';
 
 let ENGINE = null;
 let MATCHED = 0;
@@ -259,22 +258,34 @@ function rowHTML(rec, i) {
        it is the only coloured thing on the row and it has a dot as well as a
        word.
 
-       THE RANK LEADS WITH IT AND THE SCORE TRAILS, which splits a pair this
-       file used to argue for keeping together. The rank is an ORDINAL — the
-       Nth of these — and belongs beside the identifier it counts. The score
-       is a MAGNITUDE, and the trailing edge is reserved for it. */
+       THE RANK AND THE SCORE TRAIL TOGETHER, and the eyebrow reads as two
+       clusters rather than three positions. What the patent IS leads — its
+       status and its number, the two facts that are true of the document
+       wherever it was found. What the SEARCH made of it trails — the position
+       and the engine's figure, the two facts that exist only because this
+       query ran and that change when the sort does.
+
+       SPLITTING THEM PUT AN ORDINAL BETWEEN A STATUS AND AN IDENTIFIER, which
+       reads as a third fact about the patent. It is not one. Grouped at the
+       trailing edge the pair is legible as the search's own margin note, and
+       the number regains the leading position it is scanned from. */
     + '<span class="drill-head">'
     + '<span class="drill-eyebrow">'
     + (rec.status ? statusHTML(rec.status) : '')
-    /* THE RANK IS THE POSITION IN THE ORDER THE FOUNDER IS LOOKING AT, which
-       is true under relevance, newest and oldest alike — it is not a claim
-       about relevance, and it does not become one when the sort changes. */
-    + '<span class="drill-rank fig fig-s">#' + (i + 1) + '</span>'
     /* w-md AND NOT w-sm/micro. The longest number in this corpus is 15
        characters — US20130146987A1, about 112px at fig-s — and a 52x9 bar is
        a skeleton the wrong size for the thing it withholds. */
     + '<span class="drill-no fig fig-s">'
     + (rec.number != null ? esc(rec.number) : bar('w-md')) + '</span>'
+    /* THE SEARCH'S OWN CLUSTER. It is one element so that the pair travels
+       together when the eyebrow wraps: a rank at the end of one line and a
+       score at the start of the next is the split this grouping undoes. */
+    + '<span class="drill-sr">'
+    /* THE RANK IS THE POSITION IN THE ORDER THE FOUNDER IS LOOKING AT, which
+       is true under relevance, newest and oldest alike — it is not a claim
+       about relevance, and it does not become one when the sort changes. It
+       always renders: unlike the score, there is no engine to withhold it. */
+    + '<span class="drill-rank fig fig-s">#' + (i + 1) + '</span>'
     /* THE LABEL GOES WITH THE VALUE. Printing one without the other was a real
        defect against real data: every corpus record has `score: null`, so every
        row printed the word SCORE over an empty space. The whole block is
@@ -288,6 +299,7 @@ function rowHTML(rec, i) {
        + '<span class="t-micro drill-score-k">Score</span>'
        + '<span class="fig fig-s">' + rec.score.toFixed(4) + '</span>'
        + '</span>')
+    + '</span>'
     + '</span>'
     + '<span class="drill-title">'
     + (real
@@ -327,7 +339,7 @@ function rowHTML(rec, i) {
        says Inconsolata for every code without exception, and `US` / `EP` /
        `WO` had been inheriting .dm-v and rendering in Urbanist. */
     + cell('what', (rec.where != null
-            ? '<span class="dm-where fig fig-s">' + esc(rec.where) + '</span>' : '')
+            ? '<span class="dm-where">' + esc(rec.where) + '</span>' : '')
         + (rec.ipcMain != null
             ? '<span class="fig fig-s">' + esc(rec.ipcMain) + '</span>' : ''))
     + '</span>'
@@ -720,12 +732,6 @@ export function init(ctx) {
      tile, -1 on the rest — so a fresh render resets the stop to the head of
      the strip, which is the correct fresh state. */
   rovingIn(document, '.set-thumbs', '.set-thumb');
-
-  /* THE PEEK IS THE STRIP'S, so it is started where the strip is. It needs
-     nothing from rovingIn and rovingIn needs nothing from it: roving calls
-     focusQuietly, whose focus event bubbles to the peek's delegated focusin
-     handler, and the two never speak. */
-  Peek.init();
 
   ctx.onRoute(view => {
     if (view !== 'work' || loaded) return;

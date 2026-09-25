@@ -75,6 +75,35 @@
     <!-- the control rail: the balance and the appearance control, on the bar.
          Both are account-level and true everywhere, which is why they are
          chrome. design-language.md §7. -->
+    <!-- ══ THE STARRED SET, AND IT IS STANDING CHROME ══════════════════════
+         THE ONLY DOOR USED TO APPEAR AFTER YOU HAD ALREADY GONE THROUGH IT.
+         #setStarChip beside the results is hidden until the count is non-zero,
+         so a founder with nothing starred could not reach the page, and one
+         who reloaded lost the chip along with the set. platform.md names the
+         risk in its own open questions: "the part most likely to be wrong is
+         that the starred set is a place you go rather than something that
+         accumulates visibly beside the list."
+
+         SO IT SHOWS AT ZERO. That is the whole point — the shortlist is the
+         thing the founder is building and the thing that leaves, and a
+         container you can see is empty is what makes filling it obvious.
+
+         IT IS THE SAME SHAPE AS .meter, deliberately. Both are account-level
+         counts that are true on every surface, both open a page, and §9's
+         repetition rule cuts the other way here: two controls doing the same
+         kind of thing should look the same. #setStarChip stays where it is —
+         that one is contextual, next to the results it came from.
+
+         THE COUNT IS THE ACCESSIBLE NAME'S JOB TOO. masthead.mjs rewrites the
+         label as the number changes, because "Starred" alone would announce
+         the same string whether the founder has one or forty. -->
+    <button class="meter mast-star" id="mastStar" type="button" data-go="starred"
+            aria-label="Nothing starred yet. Open your starred set.">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.9 5.88 6.5.95-4.7 4.58 1.11 6.47L12 17.33l-5.81 3.05 1.11-6.47-4.7-4.58 6.5-.95z"/></svg>
+      <span class="meter-n fig fig-s" id="mastStarN">0</span>
+      <span class="meter-unit t-micro">starred</span>
+    </button>
+
     <button class="meter" id="meter" type="button" data-go="usage"
             aria-label="Points left on your plan. Open your points page.">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>

@@ -13,22 +13,23 @@
    16px inline padding by name, and this surface has neither of those between
    the head and the list — so it declares the same padding and the same 820px
    cap that `.view-acct` uses, for the same reason: a list of rows set to
-   1440px is a line the eye loses its place on between the title and the year. */
-.view-starred .page-head,
-.view-starred .star-lede,
-.view-starred .star-bar,
-.view-starred .star-list,
-.view-starred .star-note,
-.view-starred #starEmpty{max-width:820px;margin-inline:auto;width:100%}
-.view-starred .star-lede,
-.view-starred .star-bar,
-.view-starred .star-list,
-.view-starred .star-note,
-.view-starred #starEmpty{padding-inline:var(--s-16)}
-/* the foot sits under the column rather than centred on the viewport, so it
-   ends the page where the page ends. */
-.view-starred .foot{max-width:820px;margin-inline:auto;width:100%;
-                    padding-inline:var(--s-16)}
+   1440px is a line the eye loses its place on between the title and the year.
+
+   IT IS THE CHILDREN OF .main, NOT A LIST OF NAMES. This was six selectors
+   enumerated twice, one per element in the page — which meant the column was
+   a property of a list somebody had to remember to join. Adding one sentence
+   to the page put it at x=0, full-bleed across a 1440px window, while every
+   element around it stayed in the column: the rule did not fail, it simply did
+   not apply, which is the failure mode this repository keeps relearning.
+
+   A child selector cannot miss a child. The wrapper #starBody takes the cap
+   and its own contents inherit it, so the bar, the list and the two notes are
+   in the column by being inside the page rather than by being named. */
+.view-starred .main>*{max-width:820px;margin-inline:auto;width:100%}
+/* THE HEAD IS THE ONE EXCEPTION, and it is .view-page's rather than ours: it
+   already carries its own inline padding by name, so a second one here would
+   indent the title 32px against a list at 16. */
+.view-starred .main>*:not(.page-head){padding-inline:var(--s-16)}
 
 .star-lede{margin:0 0 var(--s-20);color:var(--text-2);max-width:68ch;
            text-wrap:pretty}
@@ -45,6 +46,11 @@
    boxes to read the edges of; the set is one thing and the rows are its
    members, so one hairline between each is what says so. §5: elevation is a
    hairline, and a widget card that reaches for a shadow has not earned one. */
+/* IT SITS WITH THE LIST, NOT WITH THE EXPORT BAR. The sentence describes the
+   sequence below it, so it reads as that list's caption rather than as a note
+   about the buttons above. --text-3 and no top border: it is the quietest
+   thing on the page and the hairline under it belongs to the first row. */
+.star-order{margin:var(--s-16) 0 var(--s-8);color:var(--text-3)}
 .star-list{list-style:none;margin:0;padding:0;
            border-top:1px solid var(--border)}
 .starrow{display:grid;grid-template-columns:1fr auto auto;
@@ -63,6 +69,13 @@
               flex:0 0 auto;color:var(--text-3);font-size:12.5px}
 .starrow-holder{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
                 max-width:22ch}
+/* A JURISDICTION IS A PLACE AND TAKES NO FIGURE ROLE, the same call 34-list
+   makes for .dm-where. It inherits .starrow-meta's 12.5px. */
+.starrow-where{white-space:nowrap;flex:0 0 auto}
+/* THE SAME TREATMENT AS .drill-score AND .pn-score, for the third and last
+   time: one number, three surfaces, one shape. */
+.starrow-score{display:flex;align-items:baseline;gap:var(--s-6);flex:0 0 auto}
+.starrow-score-k{color:var(--text-3)}
 
 /* ITS MARKUP ALREADY CARRIED .t-body AND THIS OVERRODE IT -- 39 loads after
    02, so the role class was decoration and the component decided. That is the

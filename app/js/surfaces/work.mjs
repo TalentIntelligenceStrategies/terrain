@@ -24,7 +24,7 @@ import { onActivate } from '../core/delegate.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
 import { read as readSettings } from './settings.mjs';
-import { popover } from '../core/popover.mjs';
+import { popover, infoPopovers } from '../core/popover.mjs';
 
 let ENGINE = null;
 
@@ -113,6 +113,11 @@ export function init(ctx) {
   });
 
   fishPopover();
+  /* THE NOTES ON THIS SURFACE, both of them: the results heading's and the
+     record's. They are wired here rather than in list.mjs and record.mjs
+     because neither is a list row or a record field — they are chrome on the
+     work surface, which is what this module owns. */
+  infoPopovers($('.view-work'));
   onActivate(document, '#modeText', () => setMode('text'));
   onActivate(document, '#modeImages', () => setMode('images'));
 

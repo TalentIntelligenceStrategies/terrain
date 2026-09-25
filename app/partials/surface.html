@@ -99,30 +99,6 @@
            that cost, and the list is the thing a founder navigates BY — it
            stays. -->
       <div class="listcol" id="listcol">
-        <!-- ══ THE FIGURE PEEK · one node, and it belongs to the COLUMN ══════
-             A GLANCE, NOT A TARGET. Hovering or keyboard-focusing a drawing in
-             a result row raises it large enough to read; moving away puts it
-             back. Clicking still opens the record at that figure, and the full
-             viewer — zoom, rotate, paging — stays inside the record, because
-             that is where somebody who wants more than a glance has gone.
-
-             IT IS A SIBLING OF THE SCROLLER AND NOT A CHILD OF A ROW. A
-             preview anchored inside .listcol-scroll is clipped on all four
-             sides by it; .listcol is position:relative and is NOT the
-             scroller, so a child of it escapes the clip and holds still while
-             the list moves underneath. .listcol's own overflow:hidden is then
-             the outer clamp, which is the correct clamp — the peek must never
-             reach the record.
-
-             ONE NODE FOR THE WHOLE COLUMN. Twenty rows of thirteen tiles is
-             260 of these otherwise, for a thing that exists once.
-
-             NO SECOND position:fixed NODE. The enlarged drawing is the one,
-             and this does not need to leave the column — it must not. -->
-        <div class="set-peek" id="setPeek" hidden aria-hidden="true">
-          <img class="set-peek-img" id="setPeekImg" alt="" decoding="async">
-          <span class="set-peek-n fig fig-s" id="setPeekN"></span>
-        </div>
         <div class="listcol-scroll" id="listScroll">
         <div class="set-wrap" id="setWrap">
           <!-- the list's own head. It was a `.page-head` on a surface of its
@@ -382,6 +358,37 @@
                  flip for RTL — the row is already logical. -->
             <div class="rec-head">
               <h2 class="t-title" id="recTitle" tabindex="-1">The patent record</h2>
+              <!-- ══ WHAT THIS DOES TO YOUR SET ══════════════════════════════
+                   THESE TWO ARE HERE AND THE OTHER THREE ARE AT THE FOOT, and
+                   the split is by WHERE THE ACT LANDS rather than by how often
+                   it is pressed. Star and Find similar change the founder's own
+                   set — one adds to the shortlist that leaves the product, the
+                   other re-orders the column beside this one. Neither of them
+                   is about this document; both of them are about the search
+                   they are standing in. So they sit in the head, beside the
+                   stepping pair, which is the other control here that moves
+                   through the set rather than reading the record.
+
+                   THE FOOT KEEPS WHAT TAKES THE PATENT OUT. Open in IPtech,
+                   Copy citation and Export are the end of reading this record,
+                   and they belong where the reading ends.
+
+                   IT IS ONE STAR, NOT A SECOND ONE. Same .set-star class, same
+                   data-star written by record.mjs, same delegated handler in
+                   list.mjs — moving the button moves nothing else, because
+                   paintStars() writes aria-pressed on every [data-star] in the
+                   document and never knew where they were. -->
+              <button class="rec-act set-star" id="recStar" type="button"
+                      data-star="" aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.9 5.88 6.5.95-4.7 4.58 1.11 6.47L12 17.33l-5.81 3.05 1.11-6.47-4.7-4.58 6.5-.95z"/></svg>
+                <span>Star</span>
+              </button>
+              <button class="rec-act" id="recSimilar" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h11"/><path d="M10 12h11"/><path d="M10 18h11"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+                <span>Find similar</span>
+              </button>
+              <span class="rec-head-sep" aria-hidden="true"></span>
+
               <!-- ══ STEPPING, AND IT SURVIVED THE MOVE ═════════════════════
                    platform.md §4.5. These were built because the record ate
                    the list and there was no other way through a set. The list
@@ -429,81 +436,64 @@
                  cannot leave standing over a record that never arrived —
                  record.mjs hides it explicitly instead. -->
             <div class="rec-end" id="recEnd" hidden>
-              <h4 class="t-micro rec-end-h">Take this further</h4>
-
+              <!-- NO HEADING. "Take this further" named five acts in two
+                   groups; what is left is three ways of taking the patent out,
+                   under a hairline, each one labelled. A heading over three
+                   labelled controls restates them. -->
               <div class="rec-acts">
-                <!-- group one · what this does to your SET -->
-                <div class="rec-act-grp">
-                  <!-- .set-star AND NOT A SECOND STAR. One treatment, one
-                       delegated handler, three hosts: the row, the starred
-                       view and now the record. data-star is written per
-                       record by record.mjs. -->
-                  <button class="rec-act set-star" id="recStar" type="button"
-                          data-star="" aria-pressed="false">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.9 5.88 6.5.95-4.7 4.58 1.11 6.47L12 17.33l-5.81 3.05 1.11-6.47-4.7-4.58 6.5-.95z"/></svg>
-                    <span>Star</span>
-                  </button>
-
-                  <!-- THE SAME ACT AS THE BAR'S Find similar, ANCHORED
-                       DIFFERENTLY, so it takes the same glyph. platform.md
-                       §5.1: starring and finding similar "are separate acts,
-                       which is why one of them is a button rather than a
-                       consequence" — this does not star the patent. -->
-                  <button class="rec-act" id="recSimilar" type="button">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h11"/><path d="M10 12h11"/><path d="M10 18h11"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
-                    <span>Find similar to this one</span>
-                  </button>
-                </div>
-
-                <!-- group two · what LEAVES. --s-24 between the groups against
-                     --s-12 inside them: §5, "group gaps are at least twice the
-                     gaps inside the group, or the grouping does not read." -->
-                <div class="rec-act-grp">
         <a class="rec-act" id="recOut" href="https://iptech.cc/Member/Account/LogOn?ReturnUrl=%2F"
            target="_blank" rel="noopener noreferrer">
           <span>Open in IPtech</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
         </a>
 
-                  <button class="rec-act" id="recCite" type="button">
-                    <!-- BOTH GLYPHS SHIP AND [data-done] SWAPS THEM. The mark
-                         confirms; the LABEL does not change, because changing it
-                         would change the accessible name and announce the same
-                         fact twice — §7's "live regions announce once". -->
-                    <svg class="rec-act-i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-                    <svg class="rec-act-ok" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                    <span>Copy citation</span>
-                  </button>
+                <button class="rec-act" id="recCite" type="button">
+                  <!-- BOTH GLYPHS SHIP AND [data-done] SWAPS THEM. The mark
+                       confirms; the LABEL does not change, because changing it
+                       would change the accessible name and announce the same
+                       fact twice — §7's "live regions announce once". -->
+                  <svg class="rec-act-i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  <svg class="rec-act-ok" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  <span>Copy citation</span>
+                </button>
 
-                  <!-- IT OPENS UPWARD. This is the last control in a .rec that
-                       is overflow:clip, so a menu below it is a menu nobody
-                       sees. .lm-up is the one modifier that says so. -->
-                  <div class="lm lm-up" id="recExpWrap">
-                    <button class="rec-act" id="recExpBtn" type="button" aria-haspopup="menu"
-                            aria-expanded="false" aria-controls="recExpMenu">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-                      <span>Export just this record</span>
-                      <svg class="lm-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                    </button>
-                    <div class="lm-menu" id="recExpMenu" role="menu" aria-label="Export this record">
-                      <button class="lm-item" type="button" role="menuitem" data-rec-export="csv"><span>Spreadsheet</span></button>
-                      <button class="lm-item" type="button" role="menuitem" data-rec-export="md"><span>Markdown</span></button>
-                    </div>
+                <!-- IT OPENS UPWARD. This is the last control in a .rec that
+                     is overflow:clip, so a menu below it is a menu nobody
+                     sees. .lm-up is the one modifier that says so. -->
+                <div class="lm lm-up" id="recExpWrap">
+                  <button class="rec-act" id="recExpBtn" type="button" aria-haspopup="menu"
+                          aria-expanded="false" aria-controls="recExpMenu">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                    <span>Export this record</span>
+                    <svg class="lm-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                  <div class="lm-menu" id="recExpMenu" role="menu" aria-label="Export this record">
+                    <button class="lm-item" type="button" role="menuitem" data-rec-export="csv"><span>Spreadsheet</span></button>
+                    <button class="lm-item" type="button" role="menuitem" data-rec-export="md"><span>Markdown</span></button>
                   </div>
                 </div>
-              </div>
 
-              <!-- WHAT THE FILE CONTAINS, STATED BEFORE IT IS TAKEN. This is
-                   .star-note's own argument one surface over: a founder
-                   pressing copy or download has no way to see inside it first,
-                   so the page says it where they are standing when they
-                   decide. It NAMES the fields; it does not print them again —
-                   the <dl> above has already printed all eleven. -->
-              <p class="rec-end-note t-body">Copy citation takes the number, title,
-                holder, where, status and main class. The export carries the same
-                fields as the starred set, and neither writes anything the record
-                did not.</p>
-            </div>
+                <!-- WHAT THE FILE CONTAINS, BEHIND ONE CONTROL. It was a
+                     paragraph standing open under the row, and the sentence it
+                     carries is true and worth having: a founder pressing Copy
+                     or Export has no way to see inside the file first. What it
+                     is not is something to read every time a record opens.
+                     §7: "a narrow column has room for the list or for prose
+                     about the list — every sentence that is not the list lives
+                     behind one control." This is that control, and it is the
+                     same .info the results heading uses. -->
+                <span class="info rec-end-info">
+                  <button class="info-btn" type="button" aria-expanded="false"
+                          aria-label="What these take with them">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                  </button>
+                  <span class="info-pop t-body" role="note"><b>Copy citation</b> takes the number,
+                    title, holder, where, status and main class.<br><br><b>Export this record</b>
+                    carries the same fields as your starred set, so a file of one and a file of
+                    fifty say the same things about a patent.<br><br>Neither writes anything the
+                    record above did not.</span>
+                </span>
+              </div>
           </section>
 
           <!-- ══ the figure viewer · platform.md §4.5 ══════════════════════

@@ -141,6 +141,7 @@
     height and the overflow happens inside the stage, where it is handled. */
 .figview{position:fixed;inset:0;z-index:60;
          display:grid;grid-template-rows:minmax(0,1fr);
+         place-items:center;
          padding:var(--s-24);
          overflow:hidden}
 .figview::before{content:"";position:absolute;inset:0;
@@ -148,19 +149,44 @@
 .figview>*{position:relative}
 .figview[hidden]{display:none}
 
-/* ══ PROPORTIONAL, NOT EDGE TO EDGE ══════════════════════════════════════
-   The panel takes the viewport less a --s-24 gutter, which is what keeps it
-   reading as a thing ON the page rather than a new page. At 1600×1000 that is
-   1552×952 against the 864 the right column gave it — the drawing very nearly
-   doubles, which is the whole reason for the move.
+/* ══ A PANEL ON THE PAGE, AND THERE ARE NOW TWO SIZES OF IT ══════════════
+   IT TOOK THE WHOLE VIEWPORT LESS A --s-24 GUTTER, on the argument that the
+   drawing very nearly doubles against the 864px the right column gave it.
+   The measurement was right and the conclusion overshot: at 1600x1000 the
+   panel was 1552x952, which is not a thing ON the page, it IS the page — and
+   a patent drawing is a portrait plate, so most of that width went to empty
+   --figure-ground either side of it while the scrim it was supposed to float
+   on was reduced to a 24px frame nobody reads as one.
+
+   1100 x 82vh IS SIZED TO THE PLATE, NOT TO THE SCREEN. The stage still holds
+   a portrait drawing at full height, the scrim keeps enough area to say the
+   page is still behind it, and the panel stays a panel. It is a max rather
+   than a size, so a narrow window falls back to the gutter it always had.
+
+   AND FULL BLEED IS STILL REACHABLE, from inside. #figFull — "Fill the
+   screen" — is the browser's own Fullscreen API and the :fullscreen rule
+   below drops both maxima, so the control that says it fills the screen does.
+   A founder reading a dense schematic asks for that; a founder glancing at a
+   thumbnail does not, and the default now serves the second one.
 
    IT KEEPS ITS OWN SURFACE AND ITS HAIRLINE. §5 says a shadow cannot separate
    two surfaces of the same colour; here the scrim does the separating and the
    border is what stops the white stage bleeding into it at the corners. */
 .figview-panel{display:flex;flex-direction:column;min-height:0;
+               width:100%;height:100%;
+               max-width:1100px;max-height:82vh;
                background:var(--surface);border:1px solid var(--border);
                border-radius:var(--r-shell);overflow:hidden;
                box-shadow:var(--shadow-float)}
+
+/* FULLSCREEN IS THE ONE PLACE THE MAXIMA COME OFF. The element the browser
+   promotes is .figview itself — figure-viewer.mjs requests it on the root so
+   the scrim goes with it — so the panel is addressed through that. Radius and
+   border go too: there is no page behind it to sit on any more, and a hairline
+   against the screen edge is a line with nothing on the other side of it. */
+.figview:fullscreen{padding:0}
+.figview:fullscreen .figview-panel{max-width:none;max-height:none;
+                                   border-radius:0;border:0;box-shadow:none}
 
 /* ══ TWO THINGS ARRIVE, AND THEY ARRIVE DIFFERENTLY ══════════════════════
    THE SCRIM FADES AND DOES NOT SCALE. A dimming layer that grows is a dimming
@@ -379,7 +405,17 @@
    `Drawings only` changes what is on the screen and changes nothing about what
    the row is called, which is the correct asymmetry: it is a view of the set,
    not a different set. */
-[data-mode="images"] .drill-head,
+/* THE HEAD STAYS IN BOTH MODES. It hid, and a row became a star and a strip of
+   tiles: no status, no number, no rank, no score, no title. That is not a
+   denser view of the set, it is an unlabelled one — a founder scrolling
+   drawings had nothing to tell them which patent they were looking at, and the
+   mode's own group label says `How much of each patent to show`, which
+   presumes the patent is still identified.
+
+   WHAT THE MODE DROPS IS THE READING, NOT THE IDENTITY. The 2x2 meta grid and
+   the abstract are what you read when you are assessing a patent; the eyebrow
+   and the title are what you need to know which one it is. So band one stays
+   and bands two and three go. */
 [data-mode="images"] .drill-meta,
 [data-mode="images"] .drill-abs{display:none}
 /* the strip is the same scroller in both modes; what the mode frees is HEIGHT,
@@ -387,26 +423,23 @@
    step below the record's 104. The mode's recorded reason for a grid — "a
    wider window should show more of each drawing rather than more white space"
    — was an argument about width, and a scroller has no white space to give
-   away. */
-[data-mode="images"] .set-thumbs{margin-block-start:0}
+   away.
+
+   THE STRIP KEEPS ITS OWN --s-6 LEAD IN BOTH MODES. It was zeroed here while
+   nothing sat above it; band one does now, and a strip flush against a title
+   is the two reading as one block. Same gap in both modes, because the mode
+   changes how much of the row is shown and not how the row is spaced. */
 [data-mode="images"] .set-thumb{width:128px}
 
-/* ── THE ROW'S CONTROL GOES WHERE A DRAWING CAN DO ITS JOB ────────────────
-   Moving the strip out of .drill-toggle left that button, in this mode, with
-   three hidden children and no height: a focusable, invisible, full-width 0px
-   target sitting above the drawings. So here the tiles ARE the row's control —
-   every one of them opens the record, which is exactly what the button did.
-
-   AND ONLY WHERE A TILE CAN BE PRESSED. A strip of withheld frames opens
-   nothing, so such a row keeps its button and gets its title back.
-   .set-thumb-img is the test because it exists on a live tile and on nothing
-   else — it covers both "no strip at all" and "a strip with nothing
-   pressable", which is the demo's own case.
-
-   display:flex IS RESTATED RATHER THAN revert, for the reason the rule above
-   gives: revert would take it to the UA's span, not to .drill-head's own. */
-[data-mode="images"] .set-row:has(.set-thumb-img) .drill-toggle{display:none}
-[data-mode="images"] .set-row:not(:has(.set-thumb-img)) .drill-head{display:flex}
+/* THE ROW'S BUTTON IS THE ROW'S CONTROL IN BOTH MODES, and the pair of
+   :has() rules that used to sit here is gone with the reason for it. They
+   hid .drill-toggle wherever a live tile could be pressed, because the button
+   was left holding three hidden children and no height — a focusable,
+   invisible, full-width 0px target above the drawings. Band one no longer
+   hides, so the button has a title and an eyebrow in it and is a real target
+   again; and the exception that put the head back on a row of withheld frames
+   has nothing left to put back. One rule for every row beats two rules and a
+   :has() test that has to agree with them. */
 
 /* THE SEGMENTED CONTROL'S DISABLED HALF. `.field` and `.btn` both have one and
    the segmented control did not, because until the drawings arrived neither of
