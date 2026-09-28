@@ -26,7 +26,8 @@ underneath it at the same time, so Escape closes the drawing and leaves you in t
 branches you pick stay as chips above the list after it closes. Star two rows and *Find similar*
 appears; the count beside the results leads to the starred set, which is where the export lives.
 
-*Open in IPtech* in the record's head **points at a sign-in page and always the same one.** It is a
+*Open in IPtech* at the record's **foot** — `platform.md` §6.3's *the way out is at the end of the
+reading, not the top of it* — **points at a sign-in page and always the same one.** It is a
 stand-in for a per-patent source URL the engine does not return yet — `design/components.md` §4
 question 3 — and it is the only control in the product whose destination the data did not choose.
 
@@ -149,7 +150,7 @@ custom property on `:root`**. `design-language.md` §3.9 is the rule; this is th
 | --- | --- | --- | --- |
 | primitive | 11 | `:root` once | `--n-0`…`--n-10`. No component may read one |
 | scale | 28 | `:root` once | Invariant by construction |
-| semantic | 32 | **all three blocks** | The dark contract |
+| semantic | 33 | **all three blocks** | The dark contract |
 | derived | 3 | `:root` once | Resolves *through* a themed token. **Never in a dark block** |
 | component-scoped | 4 | the component's own class | Never on `:root` |
 

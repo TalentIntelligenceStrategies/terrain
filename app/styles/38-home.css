@@ -80,8 +80,8 @@
    take the accent; the tile stays --surface, because a filled accent tile here
    would be a second primary action on a surface that already has Search. */
 .field[aria-pressed="true"]{border-color:var(--border-strong);color:var(--text-1)}
-.field[aria-pressed="true"] .field-name{color:var(--accent);font-weight:600}
-.field[aria-pressed="true"] .field-icon{color:var(--accent)}
+.field[aria-pressed="true"] .field-name{color:var(--accent-on-surface);font-weight:600}
+.field[aria-pressed="true"] .field-icon{color:var(--accent-on-surface)}
 
 /* not yet covered. aria-disabled, so it keeps its tab stop and can say why. */
 .field[aria-disabled="true"]{background:var(--surface-sunken);color:var(--text-3);
@@ -149,7 +149,20 @@
    It does not scroll away, which is why there is no pin control: theirs exists
    because their box scrolls, and a toggle that cannot change anything is worse
    than a missing one. */
-.res-search{padding:var(--s-16) var(--s-16) var(--s-12);flex:0 0 auto}
+/* THE PADDING IS 16 ON ALL FOUR SIDES, and the bottom is the half that
+   changed. It was 12, so the gap to the panels below was 28 against the 32
+   between the two columns — near enough to read as the same value and not be
+   it. 16 here plus 16 on each column is 32, which is the surface's one rule:
+   16 to the window, doubled between panels. */
+.res-search{padding:var(--s-16);flex:0 0 auto}
+/* --r-shell AND NOT --r-widget, on the results surface only. The composer is
+   the third panel on this screen, over two at --r-shell, and 21-surface.css
+   already argues this exact mismatch about the other pair: "two panels of
+   equal standing rounded four pixels apart is the kind of mismatch that reads
+   as an accident rather than a distinction." On the home surface the composer
+   sits among .field widgets rather than over shell-radius panels, so it keeps
+   the widget radius and this is scoped to .res-cmp. */
+.res-cmp .cmp-inner{border-radius:var(--r-shell)}
 .res-cmp .cmp-field textarea{min-height:44px}
 
 .res-tools{display:flex;align-items:center;gap:var(--s-6);flex:0 0 auto}
@@ -163,18 +176,29 @@
 .res-meta{text-align:right;font-variant-numeric:tabular-nums}
 
 /* ══ the right column ════════════════════════════════════════════════════
-   .panescroll's PADDING IS 21-surface.css's, 2026-09-24. A second declaration
-   of it stood here and won on load order, which is the same fork .drill-head
-   had in this pass: 21 deliberately set the bottom to 0 because the
-   attribution supplied --s-32 under it, and this put 16 back without knowing
-   why the 0 was there. It also defeated the change that made the record's
-   head sticky — the head pinned at the CONTENT edge, 16px below the
-   scrollport, with the record sliding through the gap above it.
-   21-surface.css owns the column. This file owns the home surface. */
+   THE COLUMN'S BOX IS 21-surface.css's, NOT THIS FILE'S. A second declaration
+   of the pane scroller's padding stood here and won on load order, which is
+   the same fork .drill-head had in that pass. 21-surface.css owns the column
+   and the two panels in it. This file owns the home surface, and the two
+   rules below are here because .pane-idle is the home-shaped state of the
+   right column — nothing chosen yet — rather than part of its frame. */
 /* nothing chosen yet. Not a skeleton: a skeleton says a value is coming, and
-   nothing is coming until the founder picks a row. §8. */
-.pane-idle{flex:1;display:flex;align-items:center;justify-content:center;
-           padding:var(--s-40) var(--s-24);text-align:center}
+   nothing is coming until the founder picks a row. §8.
+
+   IT IS THE PANEL, EMPTY, AND NOT GROUND · 2026-09-26. It was a centred
+   sentence on the column's ground, so on arrival — which is the first thing
+   anybody sees — the left column was a framed panel and the right was nothing
+   at all, and the region then GAINED a frame when a row was picked. One region
+   meaning two kinds of thing by state is what platform.md §4.3 rules out, and
+   the empty state is the half of the surface a founder looks at longest.
+
+   IT TAKES .rec's OWN THREE VALUES rather than sharing a class with it,
+   because it is not a record and has no head: the frame is the column saying
+   the region exists, and the record replaces what is inside it. */
+.pane-idle{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
+           padding:var(--s-40) var(--s-24);text-align:center;
+           background:var(--surface);border:1px solid var(--border);
+           border-radius:var(--r-shell)}
 /* AND IT HAS TO BEAT ITS OWN display:flex. `[hidden]` is a UA rule at the same
    specificity as this class, so an author `display:flex` wins and the element
    stays on screen while its `hidden` property reads true. work.mjs has set
@@ -184,7 +208,6 @@
    record has one, and this is the other. */
 .pane-idle[hidden]{display:none}
 .pane-idle p{margin:0;color:var(--text-3);max-width:34ch}
-.panecol .foot{flex:0 0 auto;padding:var(--s-12) var(--s-16) var(--s-16)}
 
 /* ── review fixes · 2026-09-23 ─────────────────────────────────────────────
    THE TOOLBAR WAS CRAMPED AT 6px BETWEEN 28px TARGETS. better-layout starts

@@ -26,7 +26,7 @@ import { onActivate } from '../core/delegate.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
 import { focusQuietly, captureFocus } from '../core/focus.mjs';
 import { wait as pause } from '../core/timers.mjs';
-import { bar, bars, statusHTML, statusWord } from '../core/primitives.mjs';
+import { bar, bars, statusHTML, statusWord, langAttr } from '../core/primitives.mjs';
 import { bump, stale } from '../core/generation.mjs';
 import { reduced } from '../core/motion.mjs';
 import * as Starred from '../core/starred.mjs';
@@ -59,7 +59,17 @@ const FLOOR = 240;
 /* how many thumbnails the strip shows before the control. See figuresHTML. */
 const CAP = 12;
 
-const MONO = { number: 1, appno: 1, ipcMain: 1, ipc: 1 };
+/* WHICH FIELDS ARE SET IN THE FIGURE FACE. §4 reads "Inconsolata for every
+   number, date, year, count and code" and this map had the numbers and the
+   codes and not the dates — so `Filed 2003-12-02` rendered in Urbanist four
+   rows above `Number US20040174570A1` in Inconsolata, in a column the eye
+   reads straight down. A date is the clearest case the rule names. */
+const MONO = { number: 1, appno: 1, filed: 1, published: 1, ipcMain: 1, ipc: 1 };
+/* WHICH FIELDS TAKE A WHOLE ROW of the two-pair grid. Both are lists rather
+   than single values, so both wrap; 35-record.css carries the rule and the
+   argument. It is a map beside MONO rather than a test inside the renderer
+   because the two answer the same shape of question about a field. */
+const WIDE = { inventors: 1, ipc: 1 };
 /* platform.md §4.5's five-field handoff, and the only place it exists. It was
    specified, claimed as built, and never built: 35-record.css said "the
    five-field handoff is now a SUBSET VIEW of this same record through the
@@ -152,7 +162,12 @@ function claimText(text, n) {
 function figuresHTML(figures) {
   const figs = Array.isArray(figures) ? figures : [];
   if (!figs.length) {
-    return '<section class="pn-sec"><h4 class="t-micro pn-sec-h">Drawings</h4>'
+    /* h3 AND NOT h4. The pane's own heading is the h2 in .rec-head, so a
+       section inside it is the next level down — these were h4, and a screen
+       reader navigating the record by heading level got an outline reporting
+       two missing sections between the record and its contents. The SIZE is
+       t-micro either way; the level is the outline, not the type. */
+    return '<section class="pn-sec"><h3 class="t-micro pn-sec-h">Drawings</h3>'
       + '<p class="pn-nofig t-body">This record has no drawings.</p></section>';
   }
   /* ══ TWO ROWS, AND THE REST BEHIND A CONTROL ════════════════════════════
@@ -174,8 +189,8 @@ function figuresHTML(figures) {
      hide most of them. */
   const capped = figs.length > CAP;
   return '<section class="pn-sec pn-figs-sec">'
-    + '<h4 class="t-micro pn-sec-h">Drawings '
-    + '<span class="fig fig-s">' + figs.length + '</span></h4>'
+    + '<h3 class="t-micro pn-sec-h">Drawings '
+    + '<span class="fig fig-s">' + figs.length + '</span></h3>'
     + '<ol class="pn-figs" id="pnFigs"' + (capped ? ' data-capped' : '') + '>'
     + figs.map((f, i) =>
         '<li class="pn-fig">'
@@ -205,7 +220,7 @@ function figuresHTML(figures) {
     + '</ol>'
     + (capped
       ? '<button class="pn-figs-more" type="button" aria-expanded="false">'
-        + '<span>Show all ' + figs.length + ' drawings</span></button>'
+        + '<span>Show all <span class="fig fig-s">' + figs.length + '</span> drawings</span></button>'
       : '')
     + '</section>';
 }
@@ -251,7 +266,8 @@ function setActs(on, id) {
 function paneHTML(rec, id) {
   const claims = (rec.claims || []).map((c, k) =>
     '<li class="pn-claim"><span class="fig fig-s pn-cn">' + (k + 1) + '</span>'
-    + '<span class="pn-prose t-body">' + esc(claimText(c, k + 1)) + '</span></li>').join('');
+    + '<span class="pn-prose t-body"' + langAttr(claimText(c, k + 1), rec.number) + '>'
+    + esc(claimText(c, k + 1)) + '</span></li>').join('');
 
   const claimCount = rec.claims ? rec.claims.length : 0;
 
@@ -290,10 +306,17 @@ function paneHTML(rec, id) {
     + scoreHTML(id)
     + '</div></div></div>'
     + '<div class="pn-body">'
-    + '<dl class="hf">' + FIELDS.map(([k, label]) =>
-        '<dt class="t-micro">' + label + '</dt>'
-        + '<dd' + (MONO[k] ? ' class="fig"' : '') + '>' + valueHTML(rec, k) + '</dd>'
-      ).join('') + '</dl>'
+    + '<dl class="hf">' + FIELDS.map(([k, label]) => {
+        /* .hf IS TWO PAIRS A ROW SINCE 2026-09-26 and these two are lists —
+           a run of inventor names, a run of class codes — so they wrap, and a
+           wrapping list in a half-track is the whitespace the second pair was
+           added to remove. The class goes on BOTH halves: a <dt> left in a
+           half-track strands its own label a row above its value. */
+        const wide = WIDE[k] ? ' hf-wide' : '';
+        return '<dt class="t-micro' + wide + '">' + label + '</dt>'
+          + '<dd class="' + (MONO[k] ? 'fig' : '') + wide + '">'
+          + valueHTML(rec, k) + '</dd>';
+      }).join('') + '</dl>'
     /* ══ THE DRAWINGS SIT UNDER THE FIELD PANEL ═══════════════════════════
        platform.md §4.5, and this is the third position they have had. They
        were here, then last — under the claims — on the reading that "under
@@ -310,14 +333,15 @@ function paneHTML(rec, id) {
        rather than a fact about it. They follow it, at the section rhythm
        everything else in this pane uses. */
     + figuresHTML(rec.figures)
-    + '<section class="pn-sec"><h4 class="t-micro pn-sec-h">Abstract</h4>'
+    + '<section class="pn-sec"><h3 class="t-micro pn-sec-h">Abstract</h3>'
     + '<div class="pn-lines">'
     + (rec.abstract
-      ? '<p class="pn-prose t-body">' + esc(rec.abstract) + '</p>'
+      ? '<p class="pn-prose t-body"' + langAttr(rec.abstract, rec.number) + '>'
+        + esc(rec.abstract) + '</p>'
       : bars(4, ['w-full', 'w-full', 'w-full', 'w-lg']))
     + '</div></section>'
-    + '<section class="pn-sec"><h4 class="t-micro pn-sec-h">Claims '
-    + '<span class="fig fig-s">' + (claimCount || '') + '</span></h4>'
+    + '<section class="pn-sec"><h3 class="t-micro pn-sec-h">Claims '
+    + '<span class="fig fig-s">' + (claimCount || '') + '</span></h3>'
     + (claimCount
       ? '<ol class="pn-claims">' + claims + '</ol>'
       : '<ol class="pn-claims">' + Array.from({ length: 6 }, (_, k) =>
@@ -464,16 +488,15 @@ async function open(id, trigger, stepping, opts = {}) {
   if (app) requestAnimationFrame(() => app.classList.add('rec-open'));
   push('record', close);
 
-  /* THE COLUMN GOES BACK TO THE TOP, AND IT HAS TO BE SAID OUT LOUD NOW.
+  /* THE PANEL GOES BACK TO THE TOP, AND IT HAS TO BE SAID OUT LOUD.
      Replacing #recBody's innerHTML used to reset the scroll for free, because
-     #recBody WAS the scroller. .panescroll is the scroller since 2026-09-24
-     and the head is constant content inside it, so stepping Next from claim
-     30 would land on claim 30 of the next patent. focusQuietly cannot do it:
-     it is focus({preventScroll:true}) by design, which is the fix for the
-     record jumping on open.
+     #recBody WAS the scroller. It is #recScroll now — the panel's body, head
+     excluded — so stepping Next from claim 30 would land on claim 30 of the
+     next patent. focusQuietly cannot do it: it is focus({preventScroll:true})
+     by design, which is the fix for the record jumping on open.
      BEFORE waitOn, so the wait block is seen from the top rather than
      scrolled past. */
-  const col = $('#paneScroll');
+  const col = $('#recScroll');
   if (col) col.scrollTop = 0;
 
   /* THE CONTROLS GO DOWN BEFORE THE WAIT DOES. They live outside #recBody, so
@@ -483,7 +506,7 @@ async function open(id, trigger, stepping, opts = {}) {
 
      IT IS TWO PLACES NOW, and that is the cost of splitting the block. The
      three that take the patent out are inside #recEnd and go down with it; the
-     two that act on the set are in the sticky head, which stays up because it
+     two that act on the set are in the panel's head, which stays up because it
      holds the heading and the stepping pair. So they are hidden by name. A
      star still showing the PREVIOUS record's data-star for the length of a
      fetch is a button that stars the wrong patent. */
@@ -500,9 +523,9 @@ async function open(id, trigger, stepping, opts = {}) {
   if (!res.ok) {
     /* NOT retryable for a record — the engine says so, and the block then says
        there is no way forward BY HAVING NO BUTTON rather than by saying so. */
-    failWith(body, 'This record could not be opened.',
+    failWith(body, 'This record did not load.',
       res.retryable ? () => open(id, trigger) : null);
-    say('list', 'This record could not be opened.');
+    say('list', 'This record did not load.');
     return;
   }
   FIGURES = Array.isArray(res.data.figures) ? res.data.figures : [];

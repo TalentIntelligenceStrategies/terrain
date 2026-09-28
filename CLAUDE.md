@@ -82,7 +82,7 @@ brand/assets/imagery/terrain/  the ONE permitted raster family — see Rules
 brand/favicon.svg    the browser-tab icon — the submark, with its own dark/light block
 brand/logos/tis/     TIS SVGs, copied from the monorepo (read-only, do not edit)
 brand/logos/innovue/ a third party's marks, and the theme-aware attribution renders two
-brand/fonts/         7 self-hosted woff2 + fonts.css + the two OFL licences
+brand/fonts/         6 self-hosted woff2 + fonts.css + the two OFL licences
 
     EXCLUDED FROM main — in the working tree, never tracked on this branch:
 corpus/              THE STRESS-TEST SET, and what app/ loads by default. Real
@@ -220,7 +220,7 @@ applying it is a separate, visible pass.
 **Innovue's blue may only ever appear inside the Innovue mark itself.** In a border, a chip or a
 button, it has been misread.
 
-**And the rule describes two palettes.** Dark is a swap of **32 semantic tokens** — `design-language.md`
+**And the rule describes two palettes.** Dark is a swap of **33 semantic tokens** — `design-language.md`
 §10.1 is where that number is argued, and `tools/check-app.py` is what keeps every printed copy of it
 honest — with **two named component exceptions and no others**, the two `.foot-mark-*` selectors on
 the attribution line. **Two semantic tokens do not swap and each says so in its own row**, and both are facts about the
@@ -271,7 +271,7 @@ rule**: it reads 28 tokens that left with the analysis layer, so regenerating it
 the page rather than update it. `tools/sync-tokens.py` carries the argument at its `TARGETS` list.
 
 *The typefaces are the other shared thing.* Every page links `brand/fonts/fonts.css` rather than
-inlining seven base64 payloads. A linked font stylesheet locks nothing; a linked token sheet would,
+inlining six base64 payloads. A linked font stylesheet locks nothing; a linked token sheet would,
 which is why the tokens are copied into each page rather than fetched by it.
 
 ### What belongs in `tools/`
@@ -401,7 +401,7 @@ Two, carried over from TIS and locked:
 omission. Don't add one, and don't write bilingual markup or `data-zh` attributes out of habit from
 the parent site.
 
-`brand/fonts/` holds the 7 self-hosted woff2, `fonts.css`, and the two OFL licences. **The licences
+`brand/fonts/` holds the 6 self-hosted woff2, `fonts.css`, and the two OFL licences. **The licences
 must stay with them**: these are subsets, which OFL permits, and OFL 1.1 requires the notice travel
 with the Font Software wherever it is redistributed. This repository is public, so that is not
 theoretical.

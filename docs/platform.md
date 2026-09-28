@@ -122,9 +122,23 @@ coverage table a founder will assume is complete.
 One screen. Moments 2 and 3 both happen on it without it ever being left, and the founder returns to
 it from the starred set.
 
-**Two columns, 44 / 56, and each means one thing.** The left carries the result list and never gives
-it up; the right carries the record of whichever patent is open. The grouping is a popover anchored
-to its own control, and an enlarged drawing is a lightbox over the viewport.
+**Two columns, evenly split, and each means one thing.** The left carries the result list and never
+gives it up; the right carries the record of whichever patent is open. The grouping is a popover
+anchored to its own control, and an enlarged drawing is a lightbox over the viewport.
+
+**Three panels in one frame, and each is frozen to its box.** The search bar, the list and the
+record are peers: 16px to the window on all four sides, 32 between any two of them, one radius. Each
+column holds exactly one panel that fills it, so a panel's head stays at the column's top edge and
+only its body scrolls — both rounded ends are on screen at every scroll position. The list was the
+odd one out until this held: its heading and its controls sat on ground above the panel and left on
+the first gesture, so the founder lost what they were looking at and every control that changes it,
+while the record beside them kept its head. A column whose identity scrolls away is a column that is
+not a component, and two columns of equal standing cannot be one of each.
+
+**The attribution is the surface's foot, under both columns.** It was the last thing in the right
+column's scroller, which made the credit a tail on the record: the left column carried none and the
+two columns ended at different heights. It also holds the fourth gutter — without it the window edge
+cuts both panels' corners square.
 
 **The search bar stays.** It sits above both columns with the founder's sentence still in it, so
 changing the search is editing what is already there rather than navigating back to a blank one.
@@ -169,7 +183,7 @@ emptying the list.
 
 ### 4.3 · The list
 
-**The left column, and it never gives it up.** 44% of the split, floored at 340px. It held the
+**The left column, and it never gives it up.** Half of the split, floored at 340px. It held the
 record too until the record moved opposite it, swapping with it by display — which meant the founder
 could read a patent or see the set it came from, never both. Reading one patent against the set is
 one act, and one region that means two things by state is what that cost.
@@ -357,10 +371,12 @@ by what the reader came for.
 control for the rest. The count in the heading is what states how many there are, so the control is
 disclosure rather than a claim about the data.
 
-**The right column is the wider half**, 56% against the list's 44%, because the record's eleven-field
-list is the width-critical thing on the surface and the list's four are not.
-[`design-language.md`](design-language.md) §7 carries the measurement and the point at which the
-field list goes single-column.
+**The two halves are even.** The record's eleven-field list is the width-critical thing on the
+surface and the list's four are not, which is what bought the record the wider half — and the
+container query enforcing that width floor had never fired, so the share was protecting a constraint
+that did not exist. With the floor working the record adapts its own field list and the split no
+longer has to hold it up. [`design-language.md`](design-language.md) §7 carries the measurement and
+the point at which the field list goes single-column.
 
 **Previous and next survived the move on a narrower argument.** They were built because the record
 ate the list and there was no other way through a set. The list is back, and they stay because
@@ -368,14 +384,15 @@ reading five in a row is otherwise five round trips to the column beside you whi
 eyes are on the record. **The list marks the open row**, which is what makes the pair legible rather
 than a second navigation with no anchor.
 
-**The column scrolls as one, and the record's head stays on it.** The record used to be a contained
-scroll inside a contained scroll — the card was forced to the column's height, so the column's own
-scroller never had anything to scroll and 1,500px of claims overflowed one level further down, inside
-a rounded card, against a scrollbar 1px from its own border. There is one scroller now, at the
-column's edge. The card grows to its content, the head is `sticky` so *previous*, *next* and *close*
-stay reachable through a long claim set, and **the attribution follows the claims instead of being
-pinned under them** — it was never fixed to the viewport, it was simply outside the scroller, which
-pins just as effectively.
+**One scroller, and it is the panel's body.** The record used to be a contained scroll inside a
+contained scroll — the card was forced to the column's height, so the column's own scroller never had
+anything to scroll and 1,500px of claims overflowed one level further down, against a scrollbar 1px
+from its own border. Moving the scroll out to the column's edge fixed that and cost the panel its
+edges: the card grew to its content, so the record's rounded top and bottom left the frame the moment
+anything moved. The scroller sits below the head now — inside the card, under the hairline, within
+the padding. The card fills its column, *previous*, *next* and *close* stay reachable through a long
+claim set because the head does not move, and the three ways out at the end stay inside the scroll
+where the reading leaves them.
 
 **The way out is at the end of the reading, not the top of it.** *Open in IPtech*, with a label
 rather than a bare glyph, because it has a destination and an arrow alone says only *somewhere else*.
@@ -439,9 +456,12 @@ of that width went to empty ground either side of it while the scrim was reduced
 reads as one. It opens at a size the drawing fills, with enough scrim left to say the page is still
 behind it.
 
-**Full bleed is reached from inside it.** *Fill the screen* is the browser's own fullscreen, and it
-is the only route to a full viewport. A founder reading a dense schematic asks for that; a founder
-glancing at a thumbnail does not, and the default serves the second one.
+**Full bleed is reached from inside it, and it is the page's own.** *Fill the screen* drops the
+panel's two maxima and the viewer's padding, so the drawing fills the viewport the lightbox already
+covers. It was the browser's Fullscreen API, which meant a control inside a drawing changed what
+application the founder appeared to be running — the tab strip and the OS chrome went, and Escape
+left fullscreen instead of closing the drawing. A founder reading a dense schematic asks for a bigger
+drawing; a founder glancing at a thumbnail does not, and the default serves the second one.
 
 **A drawing in a result row opens the same panel, and nothing opens on hover.** A hover preview
 existed and is withdrawn: it was a third way to see a drawing, available only to a mouse, in a
@@ -526,14 +546,37 @@ only by a founder who had already worked it out. A count that is visibly empty i
 it obvious, and it is the difference between the set being somewhere you go and something you watch
 accumulate.
 
+**It is a table, because a shortlist is the one collection here that gets compared.** It was a list
+of title-led rows with a meta line that flowed — holder, jurisdiction, year and score packed to the
+trailing edge in whatever order they fitted — so no two rows put the same fact at the same place and
+the set could not be read down a column. A founder deciding which of twelve matters reads one field
+down twelve rows, not twelve fields across one. Fixed columns, a header row that names them, and a
+long value truncates rather than widening its column and dragging the rest sideways. It takes the
+full width of the surface inside the same 16px gutter the results surface uses; the two sentences
+around it keep a reading measure of their own, because those are prose and the table is not.
+
+**It is grouped by the search each patent was starred under, most recent search first.** A shortlist
+built across three searches is three questions, and reading it as one undifferentiated list loses
+which question each answer belongs to. Inside a group the order is the order they were starred,
+which is the only order the set has.
+
+**That means a star is stamped when it happens.** Nothing afterwards knows which search a row came
+from, so the store records the **query that ran** — not what is in the search box at the moment the
+star is pressed, because the founder can edit that sentence without searching again. The stored row
+carries two fields of the store's own beside the engine's, and they are named so they read as ours.
+
 **Every column the file carries is on the row above it.** The page tells the founder the files carry
 the same fields as the rows, so a field that leaves in the file without appearing on screen is the
-one thing `brief.md` §1's test is about. The row shows all seven.
+one thing `brief.md` §1's test is about. The row shows all eight.
 
 **It leaves as a CSV or a Markdown list, and as nothing else.** Both carry the fields already on
-screen — number, title, holder, where, status, date, score — and neither carries a cover page, a
-summary or a conclusion. `brief.md` §1 is the rule and the test is one question: **does the file
-state anything the interface did not?** If it does, Terrain has written a report.
+screen — number, title, holder, where, status, date, score, and the search it was starred under —
+and neither carries a cover page, a summary or a conclusion. The CSV carries the search as a column;
+the Markdown has no columns, so it carries it as a heading per search, in the order the page shows
+them. One grouping function feeds both, because two would be two chances for the file and the screen
+to disagree about the order of the founder's own work. `brief.md` §1 is the rule and the test is one
+question: **does the file state anything the interface did not?** If it does, Terrain has written a
+report.
 
 **One record can leave on its own, through the same two builders.** The record's closing block offers
 the same CSV and Markdown for the patent being read, and it reads the **row** rather than the record

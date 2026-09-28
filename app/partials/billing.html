@@ -43,9 +43,16 @@
               <span class="fig fig-l" id="billAllow">6000</span>
               <span class="t-body" style="color:var(--text-2)">points a quarter</span>
             </div>
+            <!-- THE SHAPE IS THE PRICED ONE and destinations.mjs collapses it when
+                 there is no price. ports.mjs keeps 'XXX' distinct from null on
+                 purpose -- "nobody has chosen one yet" is a different refusal
+                 from "this exists and we decline to print it" -- so the
+                 sentinel is right and stays in the contract. What it may not do
+                 is reach the founder verbatim: XXX is a developer's token, not
+                 English, and it renders at 26px beside a real 6000. -->
             <div class="plan-fig" style="margin-top:var(--s-8)">
               <span class="fig fig-l" id="billPrice">$XXX</span>
-              <span class="fig fig-l fig-sub">/ quarter</span>
+              <span class="fig fig-l fig-sub" id="billPer">/ quarter</span>
             </div>
             <p class="t-body" style="margin:var(--s-12) 0 0;color:var(--text-2)">Renews <span class="sk sk-h-body w-md" style="display:inline-block;vertical-align:-2px"></span></p>
             <!-- A SENTENCE WITH A CONTROL AT THE END, not a card and not a
@@ -75,7 +82,7 @@
             </div>
             <div class="pref">
               <span class="t-label pref-label">Billing email</span>
-              <p class="pref-help">Where receipts go. Separate from your sign-in address.</p>
+              <p class="pref-help t-body">Where receipts go. Separate from your sign-in address.</p>
               <div class="pref-val">
                 <span class="sk sk-h-body w-lg"></span>
                 <button class="btn btn-ghost" type="button" id="billMail"
@@ -91,7 +98,7 @@
                  product cannot honour, which left that card empty. -->
             <div class="pref">
               <span class="t-label pref-label" id="billRcptL">Email a receipt when the plan renews</span>
-              <p class="pref-help" id="billRcptH">Sent to the billing address above, once a quarter. Nothing else goes there.</p>
+              <p class="pref-help t-body" id="billRcptH">Sent to the billing address above, once a quarter. Nothing else goes there.</p>
               <div class="pref-ctl">
                 <button class="sw" type="button" role="switch" aria-checked="true" aria-labelledby="billRcptL" aria-describedby="billRcptH"><span class="sw-knob"></span></button>
               </div>

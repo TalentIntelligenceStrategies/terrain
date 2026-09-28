@@ -5,8 +5,8 @@
  * primitives at 12 and 13 and are not repeated here. */
 
 /* ── the points page's margins · 2026-09-11 ──────────────────────────────
-   .grid CARRIES NO INLINE PADDING because on the working screen .panescroll
-   supplies it (--s-16 both sides). The points page puts .grid straight inside
+   .grid CARRIES NO INLINE PADDING because on the working screen the column
+   supplies it (--s-16 both sides, on .panecol). The points page puts .grid inside
    .main, which is inset:0 with no padding, so nothing supplied it and the
    cards ran EDGE TO EDGE at 1440 — while the "Points" title above them sat
    32px in. Not merely tight: two edges 32px apart on one page, which is the
@@ -15,7 +15,7 @@
    Both are --s-16 now, the step the right pane already uses, so the title and
    the cards share one edge and this page reads at the same rhythm as the
    surface it is reached from. Scoped to .view-page rather than added to .grid,
-   because .grid inside .panescroll would then be padded twice.
+   because .grid inside the working screen's right column would be padded twice.
 
    NOT CAPPED, and that was checked rather than assumed. A max-width would
    have been the obvious tidy: at 1440 these cards are ~1376px against ~988px
@@ -149,7 +149,11 @@
 .hlp-grp + .hlp-grp{margin-block-start:var(--s-32)}
 .hlp-grp-h{margin:0 0 var(--s-12);color:var(--text-2)}
 .hlp-qa dt{color:var(--text-1);font-size:13px;line-height:1.4;font-weight:500}
-.hlp-qa dd{margin:var(--s-4) 0 0;font-size:13px;line-height:1.6;
+/* THE ANSWER IS BODY AND THE QUESTION IS LABEL, which is the pair §4 has. The
+   answer was 13/1.6 -- label's size on a third leading -- so every Help answer
+   rendered one step smaller than every other sentence in the product, and sat
+   1px under the size of its own one-line question. t-body is on the markup. */
+.hlp-qa dd{margin:var(--s-4) 0 0;
     color:var(--text-2);max-width:68ch;text-wrap:pretty}
 
 /* ── the three pages take a measure, and the points page does not ────────

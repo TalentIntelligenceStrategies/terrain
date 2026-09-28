@@ -16,6 +16,7 @@ import { say } from '../core/live-region.mjs';
 import { read as readSettings } from './settings.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { bar } from '../core/primitives.mjs';
+import * as STARRED from '../core/starred.mjs';
 
 let ENGINE = null;
 let FIELD = null;          // the chosen technology field
@@ -142,6 +143,13 @@ export function init(ctx) {
     const res = await ENGINE.search({ query: text, field: FIELD, settings: readSettings() });
     btnRest(btn);
 
+    /* THE SEARCH THE SET IS FILED UNDER, and this is where it is first known.
+       Told after the engine answered rather than before it was asked: a query
+       that failed produced no rows to star. work.mjs does the same at the
+       re-search, and core/starred.mjs carries why the store holds this rather
+       than the caller passing it in. */
+    if (res.ok) STARRED.setSearch(text);
+
     if (!res.ok) {
       const status = $('#cmpStatus');
       if (status) {
@@ -163,8 +171,11 @@ export function init(ctx) {
     if (resQ) resQ.value = text;
     const resMeta = $('#resMeta');
     if (resMeta && res.data.matched != null) {
-      resMeta.textContent = res.data.matched + ' results'
-        + (res.data.elapsedMs != null ? ' \u00b7 ' + (res.data.elapsedMs / 1000).toFixed(2) + ' s' : '');
+      /* a count and a duration, both figures — see list.mjs's setTitle */
+      const fig = v => '<span class="fig fig-s">' + v + '</span>';
+      resMeta.innerHTML = fig(res.data.matched) + ' results'
+        + (res.data.elapsedMs != null
+            ? ' \u00b7 ' + fig((res.data.elapsedMs / 1000).toFixed(2)) + ' s' : '');
     }
     location.hash = '#set';
   });

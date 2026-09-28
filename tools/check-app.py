@@ -65,6 +65,14 @@ def strip_comments_css(css):
     return re.sub(r'/\*.*?\*/', '', css, flags=re.S)
 
 
+def strip_comments_js(js):
+    # THE LINE COMMENT MUST OWN ITS LINE. `//` also occurs inside a URL, and a
+    # naive strip-to-end-of-line would eat real code after `https://`. A
+    # comment that starts its own line cannot be inside a string literal.
+    js = re.sub(r'/\*.*?\*/', '', js, flags=re.S)
+    return re.sub(r'(?m)^[ \t]*//.*$', '', js)
+
+
 # ── the four lifted CSS scanners, now over .css files too ─────────────────
 # This is the cover that goes dark when the CSS leaves the HTML.
 for p, t in texts.items():
@@ -107,6 +115,25 @@ for p in APP_CSS:
     for m in FN.finditer(body):
         fail(f"{p}: inline {m.group(1)}() -- an alpha is a token too; "
              f"--key-ring and --veil are the two that exist")
+
+# ── GATE A, CONTINUED · and app/js, because a colour can be written there ──
+# THE GATE ITERATED APP_CSS ONLY AND REPORTED CLEAN ON A REAL VIOLATION.
+# main.mjs's boot-failure banner carried three raw Tailwind reds in an inline
+# style attribute -- #7f1d1d on #fef2f2 over a 4px #b91c1c edge -- for as long
+# as it existed. No component read a primitive, no stylesheet held a hex, and
+# the gate said so truthfully while the one surface nobody looks at stayed
+# pale pink in dark mode. A rule that only inspects the files where the team
+# is already careful is the failure this repository keeps relearning.
+#
+# HEX ONLY, NOT FN. An rgba() in a module is not the same claim: there is no
+# canvas here today, and if one arrives it will compose colours at runtime
+# from tokens it was handed. The hex literal is the one that means "somebody
+# picked a colour here and it will not follow the theme".
+for p in APP_JS:
+    body = strip_comments_js(texts[p])
+    for m in HEX.finditer(body):
+        fail(f"{p}: raw hex {m.group(0)} in a module -- every colour is a token "
+             f"({TOKENS}). An inline style is still a component")
 
 
 # ── GATE C · only tokens.css may declare a custom property on :root ───────

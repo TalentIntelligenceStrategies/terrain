@@ -187,7 +187,7 @@ match.
 ## Typefaces
 
 **Urbanist** for text and display, **Inconsolata** for every numeral. Self-hosted in `brand/fonts/`
-as seven subset `woff2` plus `fonts.css`, linked by every page:
+as six subset `woff2` plus `fonts.css`, linked by every page:
 
 ```html
 <link rel="stylesheet" href="../../brand/fonts/fonts.css">

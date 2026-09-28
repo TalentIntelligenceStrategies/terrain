@@ -198,6 +198,14 @@ export function open(figures, index, trigger) {
 export function close() {
   if (!el.root || el.root.hidden) return;
   el.root.classList.remove('is-open');
+  /* MAXIMISED IS NOT A PREFERENCE, so it does not survive the close. It is a
+     state of THIS reading of THIS plate — the founder went full bleed for a
+     dense schematic — and a viewer that reopened maximised would be answering
+     a question the next drawing did not ask. It is cleared here rather than in
+     open() so nothing is ever painted in the wrong state for a frame. */
+  el.root.removeAttribute('data-full');
+  const full = $('#figFull');
+  if (full) full.setAttribute('aria-pressed', 'false');
   /* THE PAGE COMES BACK BEFORE FOCUS MOVES, not after. restoreFocus() aims at
      the thumbnail that opened this, which is inside the tree that is still
      inert on the line above — and focusing into an inert subtree silently
@@ -241,35 +249,33 @@ export function init() {
   on('#figPrev', () => setFig(at - 1, true));
   on('#figNext', () => setFig(at + 1, true));
 
-  /* FULL SCREEN IS THE BROWSER'S, NOT A BIGGER DIV — and it still is, now
-     for a better reason than the old one. It used to be that the viewer was
+  /* FILL THE SCREEN IS THIS PAGE'S, NOT THE BROWSER'S · 2026-09-26.
+     It called requestFullscreen(), so a founder asking a drawing to get
+     bigger got the whole BROWSER instead: the tab strip and the OS chrome
+     went, and Escape left fullscreen rather than closing the drawing they
+     were looking at. A control inside a lightbox cannot mean "change what
+     application you appear to be running".
+
+     THE ARGUMENT FOR IT WAS TRUE AND IS NOT ANY MORE. It read "the viewer was
      absolute inside a column and there was no position:fixed in the tree, so
-     growing the element was not available.
+     growing the element was not available" — .figview is position:fixed;
+     inset:0 since it became a lightbox, so it already covers the viewport and
+     the only thing between it and full bleed is 24px of padding and the
+     panel's two maxima. That is a state on an element, not an API call.
 
-     IT IS THE ONLY ROUTE TO A FULL VIEWPORT NOW, and that is what the control
-     is for. The panel opens at 1100 x 82vh — sized to a portrait plate rather
-     than to the screen — so there is a real second size for this to reach, and
-     40-figure.css's :fullscreen rule is what drops the maxima when it does.
-     Between them the viewer has two states a founder chooses between, instead
-     of one state and a button that shaved off a 24px gutter.
+     THE PANEL STILL OPENS AT 1100 x 82vh, sized to a portrait plate rather
+     than to the screen, so there is a real second size for this to reach.
+     40-figure.css's [data-full] rules are what drop the maxima.
 
-     IT PROMOTES el.root AND NOT THE PANEL, so the scrim goes up with it and
-     nothing behind shows through at the edges while the browser animates.
-
-     The button reports which state it is in rather than assuming the request
-     succeeded: Safari refuses it in some contexts and returns a rejected
-     promise. */
+     NO fullscreenchange LISTENER AND NO REJECTION TO HANDLE. The old one
+     existed because Safari refuses the request in some contexts and returns a
+     rejected promise, so the button could not assume it had worked. An
+     attribute always applies. */
   on('#figFull', () => {
-    const node = el.root;
-    if (!document.fullscreenElement) {
-      if (node.requestFullscreen) node.requestFullscreen().catch(() => {});
-    } else if (document.exitFullscreen) {
-      document.exitFullscreen().catch(() => {});
-    }
-  });
-  document.addEventListener('fullscreenchange', () => {
     const b = $('#figFull');
-    if (b) b.setAttribute('aria-pressed', String(Boolean(document.fullscreenElement)));
+    const full = !el.root.hasAttribute('data-full');
+    el.root.toggleAttribute('data-full', full);
+    if (b) b.setAttribute('aria-pressed', String(full));
   });
 
   if (el.strip) {

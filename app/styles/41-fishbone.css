@@ -29,8 +29,13 @@
 /* WIDER THAN THE SETTINGS PANEL, because a two-level tree has an indent and
    .pop's 320px floor was measured for a form of chips. 380 holds a branch
    label, its count and the indent without wrapping the labels this corpus
-   actually produces; the max is .pop's own, so a narrow window still wins. */
-.pop-fish{min-width:380px}
+   actually produces; the max is .pop's own, so a narrow window still wins.
+
+   THE FLOOR CARRIES .pop's VIEWPORT CAP TOO. "a narrow window still wins" was
+   the intent and was not true: a bare 380px floor overrode .pop's ceiling the
+   same way .pop's own floor did, and this panel ran 139px off the edge at
+   320px — the widest overflow in the tree, because it is the widest panel. */
+.pop-fish{min-width:min(380px,calc(100vw - var(--s-32)))}
 
 /* THE HEAD IS THE PANEL'S OWN TITLE NOW. .fb-head was a second heading above
    the branches when this filled a column and had to say what the column was;

@@ -70,6 +70,10 @@ s_sentinel() { sed -i.bak 's|/\* ══ end tokens ══ \*/||' "$1/design/prev
 a_prim()  { printf '.probe{color:var(--n-7)}\n'          > "$1/app/styles/90-probe.css"; }
 a_hex()   { printf '.probe{color:#BADA55}\n'             > "$1/app/styles/90-probe.css"; }
 a_alpha() { printf '.probe{color:rgba(0,0,0,.4)}\n'      > "$1/app/styles/90-probe.css"; }
+# ── A · a raw hex in a MODULE. The gate read app/styles only, and main.mjs's
+#    boot banner carried three Tailwind reds in an inline style the whole time.
+a_hexjs() { printf 'export const probe = `<i style="color:#BADA55"></i>`;\n' \
+                                                     > "$1/app/js/probe.mjs"; }
 # ── B · a var() set by nothing, with no fallback. THE --rest SHAPE ──
 b_novar() { printf '.probe{opacity:var(--rest)}\n'       > "$1/app/styles/90-probe.css"; }
 # ── C · a custom property on :root outside tokens.css ──
@@ -119,6 +123,7 @@ runsrc "token region · sentinel gone"  "sentinel"        "tools/sync-tokens.py 
 runsrc "A · component reads --n-*"     "primitive"       "tools/check-app.py"           a_prim
 runsrc "A · raw hex in a component"    "raw hex"         "tools/check-app.py"           a_hex
 runsrc "A · inline alpha"              "inline rgba"     "tools/check-app.py"           a_alpha
+runsrc "A · raw hex in a module"       "in a module"     "tools/check-app.py"           a_hexjs
 runsrc "B · var() set by nothing"      "declared nowhere" "tools/check-app.py"          b_novar
 runsrc "C · :root outside tokens.css"  "custom property on" "tools/check-app.py"        c_root
 runsrc "D · token added to light only" "stays light"     "tools/check-app.py"           d_drift

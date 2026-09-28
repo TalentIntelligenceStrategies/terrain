@@ -15,7 +15,10 @@
    ═══════════════════════════════════════════════════════════════════════ */
 
 /* ── skeleton ───────────────────────────────────────────── */
-.sk{display:block;border-radius:3px;background:var(--skeleton);position:relative;overflow:hidden}
+/* --r-chip AND NOT 3px. The radius scale is 4 · 6 · 8 · 12 · 16 · 20 · pill
+   and there is no 3 on it, so this was the one rounded thing in the product
+   reading no token — beside 4px chips it bars stand in for. */
+.sk{display:block;border-radius:var(--r-chip);background:var(--skeleton);position:relative;overflow:hidden}
 .sk::after{
   content:"";position:absolute;inset:0;transform:translateX(-100%);
   background:linear-gradient(90deg,transparent,var(--skeleton-shimmer),transparent);

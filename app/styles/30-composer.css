@@ -47,10 +47,36 @@
       padding:var(--s-14) var(--s-16) var(--s-10);
       transition:border-color var(--dur-2) var(--ease)}
 .cmp-inner:focus-within{border-color:var(--border-strong)}
+/* THE RING IS ON THE PANEL, NOT ON THE TEXTAREA, and the reason is what the
+   focused thing IS. The composer is one control — a field, a row of toggles
+   and the Search button share an edge — so a ring drawn round the textarea
+   alone is a sharp rectangle floating inside a 16px radius, marking a third
+   of the control the founder is actually in.
+
+   It replaces a border swap measuring 1.24:1 in light and 1.42:1 in dark,
+   both under the 3:1 a focus indicator owes. 12-field.css:112 names that
+   failure and fixed .fld; the composer kept its own outline:0 at (0,1,1) and
+   went on beating the reset's ring at (0,1,0), so the one field the whole
+   product turns on had no indicator at all.
+
+   :focus-visible ON THE TEXTAREA AND NOT :focus-within ON THE PANEL, because
+   .cmp-inner also contains the toggles and the Search button. :focus-within
+   would ring the whole composer when the founder tabs to Search, around a
+   control already drawing its own ring.
+
+   This does still paint on a click: :focus-visible matches pointer focus on a
+   text field by spec, since typing is coming either way. That is the ordinary
+   behaviour of every text input and is left alone. */
+.cmp-inner:has(.cmp-field textarea:focus-visible){
+      outline:2px solid var(--focus);outline-offset:2px}
+.cmp-field textarea:focus-visible{outline:none}
 .cmp-field{position:relative}
 /* no transition on the height. Typing is the most repeated action in the
    product, and a transitioning box lags the caret. Also a layout property. */
-.cmp-field textarea{width:100%;border:0;outline:0;resize:none;background:none;font:inherit;
+/* no outline:0 in this declaration any more — see .cmp-inner's ring above.
+   The suppression it used to carry is scoped to :focus-visible now, so the
+   ring moves to the panel instead of disappearing. */
+.cmp-field textarea{width:100%;border:0;resize:none;background:none;font:inherit;
       color:var(--text-1);line-height:1.55;padding:0;display:block;
       min-height:60px;max-height:200px;overflow-y:auto;position:relative;z-index:1}
 /* the placeholder is VISIBLE again. It was transparent because .ghost drew a

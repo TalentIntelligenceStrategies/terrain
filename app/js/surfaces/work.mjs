@@ -25,6 +25,7 @@ import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
 import { read as readSettings } from './settings.mjs';
 import { popover, infoPopovers } from '../core/popover.mjs';
+import * as STARRED from '../core/starred.mjs';
 
 let ENGINE = null;
 
@@ -142,6 +143,12 @@ export function init(ctx) {
       say('work', 'The search did not run. Nothing was charged.');
       return;
     }
+    /* THE SET IS NOW FILED UNDER THE SEARCH THAT PRODUCED IT. Told after the
+       engine answered, not before it was asked: a query that failed produced
+       no rows to star, and stamping it would file the next star under a
+       search that returned nothing. core/starred.mjs carries the argument for
+       the store holding this rather than the caller passing it. */
+    STARRED.setSearch(text);
     const meta = $('#resMeta');
     if (meta && res.data.matched != null) {
       meta.textContent = res.data.matched + ' results'

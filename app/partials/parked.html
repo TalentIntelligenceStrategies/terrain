@@ -67,11 +67,15 @@
       <div class="pop-sec">
         <div class="t-micro pop-lbl" id="popCountLbl">How many to bring back</div>
         <div class="seg pop-seg" role="group" aria-labelledby="popCountLbl">
-          <button class="seg-btn" type="button" aria-pressed="false" data-count="10">10</button>
-          <button class="seg-btn" type="button" aria-pressed="false" data-count="20">20</button>
-          <button class="seg-btn" type="button" aria-pressed="true"  data-count="50">50</button>
-          <button class="seg-btn" type="button" aria-pressed="false" data-count="100">100</button>
-          <button class="seg-btn" type="button" aria-pressed="false" data-count="500">500</button>
+          <!-- fig AND NOT fig-s: the label IS a count, so §4 gives it the figure
+               face, but .seg-btn already sets this control's 12.5px/500 and a
+               size role on top of it would be two rules for one metric. .fig
+               alone carries the family and tabular-nums. -->
+          <button class="seg-btn fig" type="button" aria-pressed="false" data-count="10">10</button>
+          <button class="seg-btn fig" type="button" aria-pressed="false" data-count="20">20</button>
+          <button class="seg-btn fig" type="button" aria-pressed="true"  data-count="50">50</button>
+          <button class="seg-btn fig" type="button" aria-pressed="false" data-count="100">100</button>
+          <button class="seg-btn fig" type="button" aria-pressed="false" data-count="500">500</button>
         </div>
       </div>
 

@@ -236,13 +236,25 @@ state, not a second grey.
 **Terrain's accent is green.** [`brief.md`](brief.md) §5 is the decision and carries the reasoning;
 this section is how it behaves.
 
-**Three tokens, all themed:**
+**Four tokens, all themed:**
 
 ```
---accent          the fill
---accent-ink      text and glyphs on that fill
---accent-hover    hover on an accent fill
+--accent             the fill
+--accent-ink         text and glyphs on that fill
+--accent-hover       hover on an accent fill
+--accent-on-surface  the accent as ink, on --surface
 ```
+
+**The fourth exists because two of the three sites below do not want a fill.** The other three tokens
+all describe a filled shape — the accent, what sits on it, and what it becomes on hover — and site 3
+is frequently *not* one: the selected technology tile keeps `--surface` because a filled accent tile
+would be a second primary action on a surface that already has Search, and the settings panel's
+segmented control is a pill on a track. Both of those pointed `--accent` — **the fill token** — at
+`color`. That is invisible today only because the accent is aliased to the ink, and on repaint it
+would have rendered a selected tile's *name* as a green word at 13px/600, four pixels from a green
+`Live` chip. **The constraint below — that the accent must not be confusable with `--state-live` —
+was written about a fill and would not have caught two green words side by side.** A foreground
+accent needs its own value measured against `--surface`, not the fill's value borrowed.
 
 **The third is not an afterthought.** `--ink-hover` is one step along the *neutral* ramp, which is
 the correct hover for a near-black fill and turns a green button grey the day the accent lands. A
@@ -300,7 +312,7 @@ blocks that goes stale. `tools/check-app.py` refuses one declared anywhere else.
 | --- | --- | --- | --- |
 | **primitive** | 11 | `:root`, once | `--n-0`…`--n-10`. **No component may read one.** |
 | **scale** | 28 | `:root`, once | `--s-*` `--r-*` `--dur-*` `--ease*` `--cycle`. Invariant by construction: a step is not a different size at night. |
-| **semantic** | 32 | **all three blocks** | This is the dark contract. §10.1. |
+| **semantic** | 33 | **all three blocks** | This is the dark contract. §10.1. |
 | **derived** | 3 | `:root`, once | Resolves *through* a themed token, so it inverts for free. **Never add one to a dark block.** |
 | **component-scoped** | 5 | on the component's own class | Never on `:root`, never read outside that component. |
 
@@ -665,30 +677,61 @@ widths. **Measured at the 108px pitch**, swept at 1px from 1080 to 1920: 5.2% of
 only-when-scrollable fade a three-line change with no listener and no keyframe. It is Chrome 133+ and
 not yet in Safari. When it reaches baseline, re-argue the fade on the dark-theme asymmetry above.*
 
-**The columns are 44 / 56, and the record has the larger half.** They were even until the record
-moved into the right column; equal halves would then have given the denser column the same room as
-the sparser one. The list carries three bands a row and floors at 340px; the record carries eleven
-identifiers, an abstract, the claims and the drawings.
+**One frame value, doubled between panels.** The working surface is three panels — the composer, the
+list, the record — and they sit in a 16px gutter on all four sides with 32 between any two of them.
+One number produces both, because 16 on each column's facing edge is the 32 between the columns and
+16 under the composer plus 16 above the panels is the 32 there. It was 16 / 16 / 16 / **0**: the
+columns ran flush to the bottom of the viewport, so both panels' 20px corners were cut square by the
+window while the other three sides sat inside a gutter. The attribution supplies the fourth side, and
+that is a job as much as a credit.
 
-**The record's field list is the width-critical thing on the surface.** It is a two-column grid —
-label, value — and what makes eleven rows scannable is that the values share a leading edge. Under
-about 600px the longest values wrap onto second lines under their own labels, the shared edge stops
-existing, and the grid costs a column of whitespace for nothing. Below that it goes single-column,
-label above value.
+**And the three take one radius.** The composer was `--r-widget` over two panels at `--r-shell` —
+four pixels apart, which is the mismatch this file already refuses between two panels of equal
+standing. On the home surface it keeps the widget radius, because there it sits among field tiles
+rather than over shell-radius panels.
+
+**The columns are even, and the list is the product.** They were 44 / 56 against the list while the
+record held the larger half, on the argument that the denser column needs more room. The list is
+where the whole flow happens — search, find similar, star, export — so the half the founder works in
+was the smaller one, and on arrival the larger one held a single sentence. The list carries three
+bands a row and floors at 340px; the record carries eleven identifiers, an abstract, the claims and
+the drawings, and it adapts itself rather than being held up by the split.
+
+**The record's field list is the width-critical thing on the surface.** It is a grid of label/value
+pairs, **two pairs to a row**, and what makes eleven identifiers scannable is that the values share a
+leading edge. One pair to a row is what it was: eleven rows and 437px deep in a 646px column, the one
+block on the surface spending a whole row on one identifier, beside a list whose rows put four facts
+in a 2×2 grid. Two pairs makes it seven rows and 270px.
+
+**The labels stay words, and that is the line between this and the list's cells.** The list leads
+each cell with an icon, which is right for four facts that recur on every row; eleven identifiers are
+not four, and there is no glyph that separates *Number* from *Application* from *Main class*. Density
+comes from the second pair, never from deleting a field name.
+
+**Inventors and Classes take the whole row.** Both are lists — a run of names, a run of codes — so
+both wrap, and a wrapping list inside a half-track is exactly the column of whitespace the second
+pair was added to remove.
+
+**Under about 600px the longest values wrap onto second lines under their own labels**, the shared
+edge stops existing, and the grid costs whitespace for nothing — so it halves to one pair. Below
+420px the label goes above the value.
 
 The chain, at a 1440px window:
 
 ```
-1440 × 0.56 (the record's column)   = 806
-     −  32  (the pane's inset)       = 774
-     −   2  (the record's border)    = 772
-     −  40  (the record body's pad)  = 732   what the field list gets
+1440 × 0.50 (the record's column)   = 720
+     −  32  (the pane's inset)       = 688
+     −   2  (the record's border)    = 686
+     −  40  (the record body's pad)  = 646   what the field list gets
 ```
 
-**So the crossing point is a window of about 1203px**, from `0.56W − 74 = 600`. Between 1203 and the
-stack the field list is single-column, which is the arrangement working rather than a defect.
+**So the crossing point is a window of about 1348px**, from `0.50W − 74 = 600`. Between 1348 and the
+stack the field list is single-column, which is the arrangement working rather than a defect — and
+it is worth saying that this constraint was dead code until 2026-09-25: the container query sat above
+`.hf`'s base rule and lost to it on source order, so the field list had never collapsed at any width.
+The share was protecting a floor nothing enforced.
 
-**It is a container query and not a viewport one**, and the reason is that the same element is 56% of
+**It is a container query and not a viewport one**, and the reason is that the same element is half of
 a split above the stack and the full width below it — a viewport query would fire at the wrong moment
 in both directions.
 
@@ -703,7 +746,7 @@ thumbnail strip fits fewer per row, the field tiles reflow.
 subject that exists in the markup, and a width the viewport does not know.
 
 - `.pref-card` — a settings card is handed whatever width its column has.
-- `.rec-body` — the record's field list, §7. The column is 56% of a split or the whole width,
+- `.rec-body` — the record's field list, §7. The column is half of a split or the whole width,
   depending on a breakpoint above it.
 
 *`.rec-head` was a third and went when the control that needed it did.* It existed solely so
@@ -717,18 +760,26 @@ pass.
 *A container query whose subject was never built does not fail — it sits in the stylesheet looking
 like responsive behaviour, and no screenshot at any width can show you that it is not there.*
 
-**There is one sticky element, and it is the record's head.** A `sticky` bar is a claim that what it
-holds is needed at every scroll position, and almost nothing is: a menu closes, a chip is read once,
-a heading is read once. The record's head holds *previous*, *next* and *close* over a claim set that
-runs to 1,500px, and *close* is how the founder leaves. It pinned for free until the column became
-the scroller — a non-flexing item above a scrolling sibling stays put without saying so — so this is
-a rule arriving to describe something that was already true rather than a new affordance. **A second
-one is evidence this rule has stopped holding**, not evidence that sticky turned out to be useful.
+**A head is pinned only where a panel owns its own scroll, and there are exactly two.** A bar that
+stays is a claim that what it holds is needed at every scroll position, and almost nothing is: a menu
+closes, a chip is read once. The two that qualify are the two panels on the working surface, and they
+qualify for the same reason — each fills its column, each scrolls its own body, and each head carries
+the thing the founder is looking at plus the controls that change it. The record's holds *previous*,
+*next* and *close* over a claim set that runs to 1,500px. The list's holds the count and the
+Sort/Filter pair, which were ordinary content in a scroller until 2026-09-26 and left on the first
+gesture, taking the column's identity with them. **A third is evidence this rule has stopped
+holding**, not evidence that pinning turned out to be useful.
 
-*It also depends on a detail worth writing down once: the card that holds it is `overflow:clip` and
-not `overflow:hidden`. `hidden` makes an element a scroll container, so a sticky child resolves
-against the card — which never scrolls — and travels away with it, throwing nothing and logging
-nothing. `clip` clips to the radius without creating a scrollport.*
+**Neither is `position:sticky` at two columns, and that is the mechanism rather than a detail.** A
+non-flexing item above a scrolling sibling stays put without saying so, which is what a panel that
+fills its column gives for free. The rule is about what persists, not about a property: a `sticky`
+declaration that reproduces this arrangement is the same claim and answers to the same count.
+
+*The record's head keeps its `sticky` anyway, because below 1080 the panel is not frozen and sticky
+is the whole of what holds it. That depends on a detail worth writing down once: the card is
+`overflow:clip` and not `overflow:hidden`. `hidden` makes an element a scroll container, so a sticky
+child resolves against the card — which never scrolls — and travels away with it, throwing nothing
+and logging nothing. `clip` clips to the radius without creating a scrollport.*
 
 **The lockup routes home unless there is no home to route to.** On the working screen it scrolls both
 columns to the top — both, because the surface has two and returning one is a half-answer. On a
@@ -943,7 +994,7 @@ The list is **duplicated on purpose.** CSS cannot share a declaration block betw
 a third indirection layer of `--dark-*` primitives buys nothing and hides which value is live.
 Whatever writes one writes both.
 
-**32 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
+**33 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
 here, `CLAUDE.md`, and `app/README.md`'s tier table — and **a gate keeps them equal to the file**
 rather than a sentence asking everyone to keep them equal to each other.
 
@@ -1045,7 +1096,9 @@ thing a scrim exists to do. In dark the binding constraint is not contrast — e
 clears 20:1 against the white stage — but the other side: enough that the masthead and the list stop
 competing for the eye, little enough that the page reads as behind rather than gone.
 
-**`--accent` and `--accent-ink` gain rows here when the specific green is chosen.** A hue measured
+**`--accent`, `--accent-ink` and `--accent-on-surface` gain rows here when the specific green is
+chosen** — and the third is the one that must be measured against `--surface` rather than derived
+from the fill, because it is read as text. A hue measured
 only against white is a hue that has not been measured.
 
 ### 10.4 · The control

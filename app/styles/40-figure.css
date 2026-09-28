@@ -164,8 +164,9 @@
    than a size, so a narrow window falls back to the gutter it always had.
 
    AND FULL BLEED IS STILL REACHABLE, from inside. #figFull — "Fill the
-   screen" — is the browser's own Fullscreen API and the :fullscreen rule
-   below drops both maxima, so the control that says it fills the screen does.
+   screen" — sets data-full on .figview and the rule below drops both maxima,
+   so the control that says it fills the screen fills the SCREEN and not the
+   browser window's chrome along with it.
    A founder reading a dense schematic asks for that; a founder glancing at a
    thumbnail does not, and the default now serves the second one.
 
@@ -179,13 +180,18 @@
                border-radius:var(--r-shell);overflow:hidden;
                box-shadow:var(--shadow-float)}
 
-/* FULLSCREEN IS THE ONE PLACE THE MAXIMA COME OFF. The element the browser
-   promotes is .figview itself — figure-viewer.mjs requests it on the root so
-   the scrim goes with it — so the panel is addressed through that. Radius and
-   border go too: there is no page behind it to sit on any more, and a hairline
-   against the screen edge is a line with nothing on the other side of it. */
-.figview:fullscreen{padding:0}
-.figview:fullscreen .figview-panel{max-width:none;max-height:none;
+/* MAXIMISED IS THE ONE PLACE THE MAXIMA COME OFF · 2026-09-26. It was
+   `:fullscreen`, and the browser's own fullscreen with it — figure-viewer.mjs
+   carries why that went. The selector is an attribute now and every
+   declaration under it is unchanged, because the geometry was never the
+   problem: .figview is already position:fixed over the viewport, so dropping
+   its padding and the panel's two maxima IS full bleed.
+
+   Radius and border go too: there is no page behind it to sit on any more,
+   and a hairline against the screen edge is a line with nothing on the other
+   side of it. */
+.figview[data-full]{padding:0}
+.figview[data-full] .figview-panel{max-width:none;max-height:none;
                                    border-radius:0;border:0;box-shadow:none}
 
 /* ══ TWO THINGS ARRIVE, AND THEY ARRIVE DIFFERENTLY ══════════════════════
@@ -266,7 +272,7 @@
               width:36px;height:36px;display:grid;place-items:center;
               border-radius:var(--r-pill);
               background:var(--veil);border:1px solid var(--veil-edge);
-              box-shadow:var(--shadow-float);color:var(--text-2);
+              box-shadow:var(--shadow-float);color:var(--figure-ink);
               backdrop-filter:blur(6px);
               transition:color var(--dur-1) var(--ease),
                          background var(--dur-1) var(--ease)}
@@ -291,8 +297,20 @@
         background:var(--veil);border:1px solid var(--veil-edge);
         box-shadow:var(--shadow-float);
         backdrop-filter:blur(8px)}
+/* EVERY INK ON THIS BAR IS A FIGURE TOKEN, and that is the whole of the fix
+   this block carries. --veil and --figure-ground do not swap — the bar floats
+   on a patent drawing, which is white paper in both themes — and every control
+   rule on it read a token that DOES. Measured in dark, composited over paper:
+   the enabled glyph at --text-2 was 2.07:1, hover at --text-1 dropped it to
+   1.14:1 so the button vanished under the pointer, and the one DISABLED
+   control was the darkest thing on the bar at 6.90:1, with the polarity of
+   the state inverted. --figure-ink and --figure-ink-strong are frozen at
+   light's --text-2 and --text-1 and measure 7.00 and 15.33 on paper in both
+   themes. The sweep that added --veil-edge and moved .figbar-sep covered the
+   fill, the edge, the separator and the captions and missed the only
+   interactive things here. */
 .figbar-btn{width:32px;height:32px;display:grid;place-items:center;
-            border-radius:var(--r-pill);color:var(--text-2);
+            border-radius:var(--r-pill);color:var(--figure-ink);
             transition:color var(--dur-1) var(--ease),
                        background var(--dur-1) var(--ease),
                        transform var(--dur-1) var(--ease)}
@@ -300,7 +318,12 @@
 /* A ZOOM BUTTON AT THE END OF ITS LADDER IS DISABLED, NOT HIDDEN. It is one of
    a pair and the pair's shape is the control; removing one would move the
    other under the founder's finger mid-gesture. */
-.figbar-btn:disabled{color:var(--text-disabled);cursor:default}
+/* opacity AND NOT A PALER INK, which is 10-button.css:47's pattern for the
+   same state — and here it is also the only one available, since a fourth
+   frozen figure token would have to be argued in §10.1 and counted by gate G
+   to say what .45 says. --text-disabled was the bug: it swaps, so in dark it
+   landed at #5A5A5A and made the dead control the strongest glyph on the bar. */
+.figbar-btn:disabled{color:var(--figure-ink);opacity:.45;cursor:default}
 /* AND THE SEPARATOR TOO, which is the site nobody had named. A 1px x 18px
    --border tick INSIDE the white pill read as a black mark between the
    buttons in dark, for the same reason the pill's own edge did. */
@@ -311,7 +334,14 @@
    primary action, the focus ring, and the selected state of a segmented
    control or menu item — and a fullscreen toggle inside a floating bar is none
    of them. Ink and weight say pressed. */
-.figbar-btn[aria-pressed="true"]{color:var(--text-1);background:var(--surface-sunken)}
+/* THE PRESSED PILL IS INVERTED RATHER THAN TINTED. --surface-sunken swaps, so
+   the same rule painted a #F0F0F0 pill invisible on the white bar in light
+   (1.14:1) and a #101010 blob on it in dark (19.03:1) — the state changed
+   polarity between themes. Ink on paper, reversed, is the one pair that holds
+   in both: the glyph takes --figure-ground and the pill takes the ink. It also
+   separates pressed from hover, which tints. */
+.figbar-btn[aria-pressed="true"]{color:var(--figure-ground);
+            background:var(--figure-ink-strong)}
 
 /* ── the thumbnail strip ────────────────────────────────────────────────
    IT SCROLLS AND THE STAGE DOES NOT. Seventeen drawings do not fit a column at
@@ -358,8 +388,12 @@
   .figstrip-btn:hover{border-color:var(--border-strong);transform:translateY(-1px);
                       box-shadow:var(--shadow-raise)}
   .figstrip-btn:hover .figstrip-n{color:var(--figure-ink-strong)}
-  .figbar-btn:not(:disabled):hover{color:var(--text-1);background:var(--surface-sunken)}
-  .figview-step:hover{color:var(--text-1)}
+  /* --veil-edge is the tint, for the reason .figbar-sep uses it: it is the
+     one frozen surface value on this bar, so hover does not change weight
+     between themes the way --surface-sunken did. */
+  .figbar-btn:not(:disabled):hover{color:var(--figure-ink-strong);
+                                   background:var(--veil-edge)}
+  .figview-step:hover{color:var(--figure-ink-strong)}
 }
 
 .pn-fig-btn:focus-visible,.figstrip-btn:focus-visible,

@@ -56,8 +56,12 @@
    --text-2 below is the whole of the hierarchy; §2 has no colour to spend
    here and does not need any. */
 .pref-label{grid-column:1;grid-row:1;min-width:0;color:var(--text-1)}
-.pref-help{grid-column:1;grid-row:2;margin:0;
-      font-size:13px;line-height:1.55;color:var(--text-2);
+/* SIZE AND LEADING ARE .t-body's, ON THE MARKUP -- .empty-note's fix, applied
+   to the second site that had the same defect. This was 13/1.55: `label`'s
+   size carrying a leading that is neither role's, invented in the gap between
+   two real ones. §4: "Prose is `body` wherever it appears." What is left here
+   is what belongs to the component -- its cell, its measure and its colour. */
+.pref-help{grid-column:1;grid-row:2;margin:0;color:var(--text-2);
       max-width:68ch;text-wrap:pretty}
 /* 36px RESERVED IN EVERY STATE, so a switch row and a field row are the
    same height and nothing on the card moves when a value becomes a field.

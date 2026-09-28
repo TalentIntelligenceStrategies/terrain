@@ -62,15 +62,23 @@
              neither is primary, because §3.8 allows one filled button per
              surface and taking the set out is two equal ways of doing one
              thing rather than a recommended one and an alternative. -->
+        <!-- THE LABEL LEADS WITH THE VERB. These read "Spreadsheet" and
+             "Markdown" — a format with the action left to an arrow glyph, so
+             the one thing a founder could not tell from the label was whether
+             pressing it downloads a file or opens a preview. On the surface
+             whose whole purpose is that the set LEAVES, that is the word that
+             has to be there. Both stay .btn-secondary, so §3.8's one-filled-
+             button rule is untouched and neither is recommended over the
+             other. -->
         <div class="star-bar">
           <span class="spacer"></span>
           <button class="btn btn-secondary" id="starCsv" type="button">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-            <span>Spreadsheet</span>
+            <span>Download spreadsheet</span>
           </button>
           <button class="btn btn-secondary" id="starMd" type="button">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-            <span>Markdown</span>
+            <span>Download Markdown</span>
           </button>
         </div>
 
@@ -80,17 +88,60 @@
              the CSV expecting relevance would read the sequence as a ranking
              Terrain authored. It is the one thing about this list that is not
              visible from looking at it. -->
-        <p class="star-order t-body" id="starOrder">In the order you starred them.</p>
+        <p class="star-order t-body" id="starOrder">Grouped by the search you starred them
+          from, most recent search first, and within each one in the order you starred them.</p>
 
-        <ul class="star-list" id="starList"></ul>
+        <!-- ══ A TABLE, AND IT HAS TO BE ONE · 2026-09-26 ═══════════════════
+             It was a <ul> of title-led rows with a meta line that flowed —
+             holder, jurisdiction, year and score packed to the trailing edge
+             in whatever order they fitted — so no two rows put the same fact
+             at the same x and the set could not be read down a column. A
+             shortlist is compared, and comparison is a column.
+
+             IT IS SEMANTICALLY A TABLE TOO, not a grid wearing one. The
+             columns are the fields the export carries; a screen reader
+             announcing "Holder, Silverbrook Research Pty Ltd" is the same
+             affordance the header row gives a sighted reader, and neither is
+             available from a list of paragraphs.
+
+             ONE <tbody> PER SEARCH, with the sentence in a spanning row above
+             it. A <table> per group would say the groups are unrelated sets;
+             they are one set with an internal order, which is exactly what a
+             row group is for. -->
+        <div class="star-tblwrap">
+          <table class="star-tbl" id="starList">
+            <caption class="sr-only">Your starred patents, grouped by search</caption>
+            <thead>
+              <!-- EVERY WIDTH CLASS IS ON THE HEADER, and that is the whole
+                   of how table-layout:fixed works: it resolves the columns
+                   from the FIRST row and ignores every row after it. With the
+                   classes only on the <td>s, six of the nine columns were
+                   `auto` in the row that decides and split the leftover
+                   equally — Where came out 300px wide beside a Title that
+                   truncated at the same 300. The <td>s keep them too, because
+                   the classes carry colour and truncation as well as width. -->
+              <tr>
+                <th scope="col" class="t-micro star-c-n">#</th>
+                <th scope="col" class="t-micro star-c-num">Number</th>
+                <th scope="col" class="t-micro star-c-t">Title</th>
+                <th scope="col" class="t-micro star-c-h">Holder</th>
+                <th scope="col" class="t-micro star-c-w">Where</th>
+                <th scope="col" class="t-micro star-c-st">Status</th>
+                <th scope="col" class="t-micro star-c-y">Year</th>
+                <th scope="col" class="t-micro star-c-sc">Score</th>
+                <th scope="col" class="star-c-x"><span class="sr-only">Remove</span></th>
+              </tr>
+            </thead>
+          </table>
+        </div>
 
         <!-- WHAT THE FILE CONTAINS, STATED BEFORE IT IS DOWNLOADED. A founder
              pressing a download has no way to see inside it first, and what
              the file says is the one thing §1's lock is about. So the page
              says it, where they are standing when they decide. -->
         <p class="star-note t-body">Both files carry the same fields as the rows above —
-          number, title, holder, where, status, date and score — and nothing else.
-          Terrain does not write a summary of your set.</p>
+          number, title, holder, where, status, date, score and the search you starred it
+          from — and nothing else. Terrain does not write a summary of your set.</p>
       </div>
 
       <p class="foot"><em>Powered by</em><img class="foot-mark foot-mark-light" src="../brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg" alt="Innovue" width="95" height="13"><img class="foot-mark foot-mark-dark" src="../brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg" alt="Innovue" width="95" height="13"></p>

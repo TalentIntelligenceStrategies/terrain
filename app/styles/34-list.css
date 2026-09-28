@@ -45,9 +45,26 @@
    400 here — `label`'s metrics carrying `body`'s weight, a role invented in
    the gap between two real ones. What is left is what belongs to the
    component: the grid floor, the truncation and the colour. */
+/* text-overflow DOES NOT APPLY TO A FLEX CONTAINER, and it sat here for the
+   whole life of this rule doing nothing. .dm-v is display:flex, so the
+   declaration was inert and the cell simply CLIPPED: measured at 390px,
+   "Silverbrook Research Pty Ltd" needs 174px, gets 113, and rendered as
+   "Silverbrook Resear" — cut mid-word with no ellipsis to say it had been.
+   Four values on every row, on every width below about 1080.
+
+   THE ELLIPSIS BELONGS TO THE VALUE, NOT THE ROW. Each cell is a flex row of
+   a value and the small fixed things that qualify it — "+1" more inventors,
+   an IPC symbol, a date — and those must never be the part that disappears.
+   So the row clips, .dm-t is the only item allowed to give way, and everything
+   else holds its width. The value used to be a bare TEXT NODE in three of the
+   four cells, which is the other half of why this could not be fixed in CSS
+   alone: an anonymous flex item takes no class and no min-width. list.mjs
+   wraps it now. */
 .dm-v{min-width:0;display:flex;align-items:center;gap:var(--s-6);
-      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+      overflow:hidden;white-space:nowrap;
       color:var(--text-1)}
+.dm-v>*{flex:0 0 auto}
+.dm-t{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
 /* the inventors this row is not naming. It is a count, so it is a figure —
    and until 2026-09-24 that was true only in this comment: the markup carried
    no figure role, so every "+5" rendered in Urbanist. list.mjs carries fig-s
@@ -191,18 +208,28 @@
    is what clears the boilerplate preamble most patent abstracts open with and
    reaches the clause that separates this one from the next.
 
-   NO MEASURE CAP HERE, DELIBERATELY. §4 caps body prose at 68ch and this is
-   narrower than 68ch at every supported width — the column is ~374px of
-   content at the 1024 floor and ~560 at 1440, which is about 46ch to 68ch at
-   13px. A cap would bind at exactly one window size and do nothing at the
-   rest, which is a rule that looks enforced and is not.
+   THE MEASURE CAP IS §4's, AND THIS RULE USED TO ARGUE AGAINST HAVING ONE.
+   The argument was that the column is narrower than 68ch at every supported
+   width — "~374px at the 1024 floor and ~560 at 1440" — so a cap would bind
+   at one window size and do nothing at the rest. That was true of a column
+   taking 44% of the split. It is not true now: the split is even (21-surface
+   .css), and measured, this line runs 83 characters at 1440, 99 at 1680, 115
+   at 1920 and 159 at 2560 — against the record's own abstract, the SAME TEXT,
+   held at 77 by .pn-prose. The widest measure in the product belonged to the
+   line that is read twenty times per screen while scanning.
+
+   68ch RATHER THAN A NEW NUMBER, because the record's prose already uses it
+   and this is the same sentence one surface over. It resolves to 77 rendered
+   characters here, not 68 — `ch` is the advance of `0` and Urbanist's zero is
+   narrow — which is a fact about the unit that §4 owns, not something for a
+   component to correct on its own.
 
    -webkit-line-clamp IS NOT A PREFIX HERE. It is the only interoperable
    spelling of this — every engine ships it unprefixed-in-effect and the
    unprefixed `line-clamp` is not yet safe alone — so it is written with its
    own display and orientation rather than as a vendor fallback. */
 .drill-abs{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
-           overflow:hidden;margin-block-start:var(--s-16);
+           overflow:hidden;margin-block-start:var(--s-16);max-width:68ch;
            color:var(--text-2);text-wrap:pretty}
 /* A BARRED ABSTRACT IS THREE BARS AND NOT A CLAMPED BOX. -webkit-box lays its
    children out as inline boxes, so three block bars inside one collapse onto a

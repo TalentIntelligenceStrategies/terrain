@@ -35,9 +35,10 @@ import { waitOn, landIn, failWith } from '../core/wait.mjs';
 import { say } from '../core/live-region.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { wait as pause } from '../core/timers.mjs';
-import { bar, statusHTML, statusWord } from '../core/primitives.mjs';
+import { bar, statusHTML, statusWord, langAttr } from '../core/primitives.mjs';
 import { bump, stale } from '../core/generation.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
+import { clampIntoView } from '../core/popover.mjs';
 import { focusQuietly } from '../core/focus.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import * as Starred from '../core/starred.mjs';
@@ -195,7 +196,7 @@ function inventorHTML(list) {
      the exact split-role failure 02-type.css's header was written to close.
      THE LITERAL LEADING SPACE WENT TOO: .dm-v is a flex row with gap --s-6,
      so the space and the gap were a double gap you could see. */
-  return esc(list[0]) + (rest > 0
+  return '<span class="dm-t">' + esc(list[0]) + '</span>' + (rest > 0
     ? '<span class="dm-more fig fig-s">+' + rest + '</span>' : '');
 }
 
@@ -322,7 +323,7 @@ function rowHTML(rec, i) {
            it. `title` is not the accessible name — rowName already carries the
            holder in full — it is for the pointer user who can see the name is
            cut and wants the rest without opening the record. */
-        ? '<span title="' + esc(rec.holder) + '">' + esc(rec.holder) + '</span>'
+        ? '<span class="dm-t" title="' + esc(rec.holder) + '">' + esc(rec.holder) + '</span>'
         : bar('w-md', 'micro'))
     /* "Published" AND NOT "Pub.". The record's own field list has said
        Published since it was written (record.mjs FIELDS), so the row was the
@@ -330,16 +331,16 @@ function rowHTML(rec, i) {
        character, PI-VuePat's own pubDateLabel. The column is 2x1fr and the
        word fits. */
     + cell('when', rec.published != null
-        ? 'Published <span class="fig fig-s">' + esc(rec.published) + '</span>'
+        ? '<span class="dm-t">Published</span><span class="fig fig-s">' + esc(rec.published) + '</span>'
         : (rec.year != null
-            ? 'Published <span class="fig fig-s">' + rec.year + '</span>'
+            ? '<span class="dm-t">Published</span><span class="fig fig-s">' + rec.year + '</span>'
             : bar('w-sm', 'micro')))
     /* THE STATUS CHIP LEFT THIS CELL FOR THE EYEBROW. What is left is the
        jurisdiction and the main classification, which are both CODES — §4
        says Inconsolata for every code without exception, and `US` / `EP` /
        `WO` had been inheriting .dm-v and rendering in Urbanist. */
     + cell('what', (rec.where != null
-            ? '<span class="dm-where">' + esc(rec.where) + '</span>' : '')
+            ? '<span class="dm-where dm-t">' + esc(rec.where) + '</span>' : '')
         + (rec.ipcMain != null
             ? '<span class="fig fig-s">' + esc(rec.ipcMain) + '</span>' : ''))
     + '</span>'
@@ -358,7 +359,8 @@ function rowHTML(rec, i) {
         /* t-body. It was 13/1.55 — `label`'s SIZE on `body`'s LEADING, the
            same invented role from the other direction. The substance of the
            row was rendering a pixel smaller than nothing in §4's table. */
-        ? '<span class="drill-abs t-body">' + esc(rec.abstract) + '</span>'
+        ? '<span class="drill-abs t-body"' + langAttr(rec.abstract, rec.number) + '>'
+        + esc(rec.abstract) + '</span>'
         : '<span class="drill-abs t-body drill-abs-sk">'
           + bar('w-full') + bar('w-full') + bar('w-md') + '</span>')
     + '</button>'
@@ -537,9 +539,22 @@ function render(data, append) {
      old form wrapped to three lines in this column. */
   if (title) {
     const m = data.matched, n = data.patents.length;
-    title.textContent = m === 1
-      ? '1 patent matched'
-      : (m === n ? `${m} patents matched` : `${m} patents matched · ${n} shown`);
+    /* THE COUNTS ARE FIGURES AND THE WORDS ARE NOT. Whole-string textContent
+       is what put them in Urbanist: §4 gives every count the figure face, and
+       a heading that reads "100 patents matched · 20 shown" is two counts and
+       three words. innerHTML rather than textContent is safe here because
+       both values are numbers this module computed.
+
+       .fig ALONE, WITHOUT A SIZE ROLE. fig-s is 12.5px and this heading is 17,
+       so the pair rendered the numbers visibly smaller than the words around
+       them — a size role inside a line that already has one. .fig carries the
+       family, tabular-nums and the figure weight and inherits the size, which
+       is what an inline numeral in running text wants. */
+    const fig = v => '<span class="fig">' + v + '</span>';
+    title.innerHTML = m === 1
+      ? fig(1) + ' patent matched'
+      : (m === n ? fig(m) + ' patents matched'
+                 : fig(m) + ' patents matched · ' + fig(n) + ' shown');
   }
 }
 
@@ -605,12 +620,17 @@ function lmMenu(wrapId, btnId, panelId) {
     if (!wrap.classList.contains('is-open')) return;
     wrap.classList.remove('is-open');
     btn.setAttribute('aria-expanded', 'false');
+    panel.style.left = '';
+    panel.style.right = '';
     drop(panelId);
   };
   const open = () => {
     wrap.classList.add('is-open');
     btn.setAttribute('aria-expanded', 'true');
     push(panelId, close);
+    /* the Filter menu sits far enough along .set-bar that its left:0 ran it
+       36px off the right edge at 320. */
+    clampIntoView(panel);
     const first = panel.querySelector('[role="menuitemradio"]');
     if (first) focusQuietly(first);
   };
@@ -706,7 +726,7 @@ async function reorderTo(anchors, label) {
 
 /* THE ROW BEHIND AN ID, for the one reader outside this file that needs it.
    components.md §1 says the row carries `number` and `where` it does not draw
-   "because the starred set leaves as a seven-column file and the export reads
+   "because the starred set leaves as an eight-column file and the export reads
    the row rather than the record" — so a single record leaving has to leave
    through a row too, or one file carries different fields from the set it
    came out of. The list is what holds rows; it hands one over rather than

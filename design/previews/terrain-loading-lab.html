@@ -199,9 +199,20 @@ html{color-scheme:light dark;background:var(--ground)}
    stays light and throws nothing, logs nothing, and reads as correct CSS.
    design-language.md §3.2; check-app.py gate A refuses it. */
 :root{
-  /* neutral ramp — even in L*, true neutral (R = G = B) */
+  /* neutral ramp — even in L*, true neutral (R = G = B)
+
+     --n-7 IS MEASURED AGAINST --surface-sunken AND NOT SPACED WITH THE REST.
+     It has exactly one consumer, --text-3, and --text-3's hardest ground is
+     not --surface but --n-3, the sunken fill that .seg, .hf, .set-row[data-open]
+     and .set-thumb-more all use. At #6F6F6F that pair measured 4.41:1 against
+     the 4.5 owed to text under 18.66px — failing on the theme switch's own
+     labels, the record's eleven field labels, the open row's rank and the
+     drawing strip's MORE. Two steps darker clears it at 4.54:1 and costs
+     nothing anywhere else: on --surface it moves 5.02 -> 5.17. Dark's
+     --text-3 is a separate value and already measured 5.81 on its own sunken,
+     so it does not move. */
   --n-0:#FFFFFF; --n-1:#FCFCFC; --n-2:#F6F6F6; --n-3:#F0F0F0;
-  --n-4:#E4E4E4; --n-5:#D1D1D1; --n-6:#B0B0B0; --n-7:#6F6F6F;
+  --n-4:#E4E4E4; --n-5:#D1D1D1; --n-6:#B0B0B0; --n-7:#6D6D6D;
   --n-8:#595959; --n-9:#383838; --n-10:#252525;
 }
 
@@ -230,8 +241,14 @@ html{color-scheme:light dark;background:var(--ground)}
 }
 
 /* ── 3 · SEMANTIC · light ──────────────────────────────────────────────────
-   COMPONENTS READ ONLY THESE. The next three blocks carry the same 28 names in
-   the same order, and check-app.py gate D refuses any drift between them.   */
+   COMPONENTS READ ONLY THESE. The next three blocks carry THE SAME NAMES IN
+   THE SAME ORDER, and check-app.py gate D refuses any drift between them.
+
+   THE COUNT IS NOT REPEATED HERE. This read "the same 28 names" while the
+   tier table eleven lines up read 32 and the file held 32 -- a tally nothing
+   checks, gone stale exactly the way the ramp comment above says they do.
+   Gate D asserts the PROPERTY, and gate G is what holds the number, in the
+   one place it is argued.                                                  */
 :root{
   --ground:var(--n-2); --surface:var(--n-0); --surface-sunken:var(--n-3);
   --border:var(--n-4); --border-strong:var(--n-5);
@@ -248,6 +265,22 @@ html{color-scheme:light dark;background:var(--ground)}
      A loud sentinel value was the other option and was turned down — it
      violates §2's one rule and it would ship the day somebody forgot.
 
+     THERE ARE FOUR, AND THE FOURTH IS THE ACCENT AS A FOREGROUND.
+     --accent is a FILL, --accent-ink is what sits ON that fill, and the whole
+     trio assumed the accent would always arrive as a filled shape. Two of
+     §3.8's three permitted sites do not want a fill: the selected technology
+     tile keeps --surface because "a filled accent tile here would be a second
+     primary action on a surface that already has Search" (38-home.css), and
+     the settings panel's segmented control is a pill on a track. Both pointed
+     --accent -- the FILL token -- at `color`, which is invisible today only
+     because --accent is aliased to the ink. On repaint it would have rendered
+     a selected tile's NAME as a green word at 13px/600, four pixels from a
+     green `Live` chip meaning "this patent is enforceable" -- and §3.8's own
+     constraint, "it must not be confusable with --state-live", was written
+     about a fill and would not have caught it. A foreground accent needs its
+     own measured value against --surface, so it is its own token rather than
+     a second job for --accent.
+
      THERE ARE THREE, NOT TWO. --accent-hover exists because --ink-hover is a
      NEUTRAL: it is one step along the neutral ramp, which is the correct hover
      for a near-black fill and turns a green button GREY the day the accent
@@ -256,6 +289,7 @@ html{color-scheme:light dark;background:var(--ground)}
      all three blocks. It is aliased to --ink-hover's value today, so nothing
      moves until the hue does. */
   --accent:var(--n-10); --accent-ink:#FAFAFA; --accent-hover:var(--n-9);
+  --accent-on-surface:var(--n-10);   /* the accent as INK, on --surface */
   --text-1:var(--n-10); --text-2:var(--n-8); --text-3:var(--n-7);
   --text-disabled:var(--n-6); --text-inverse:#FAFAFA;
   /* three more semantics, added with the dark pass. Each replaced a component
@@ -428,6 +462,7 @@ html{color-scheme:light dark;background:var(--ground)}
      against white and carried unchanged into dark is how a component silently
      stops meeting contrast (brief.md §5). */
   --accent:#F0F0F0; --accent-ink:#141414; --accent-hover:#FFFFFF;
+  --accent-on-surface:#F0F0F0;
   --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
   --text-disabled:#5A5A5A; --text-inverse:#141414;
   /* --text-1 is the primary fill and --text-inverse its label, so a near-black
@@ -485,6 +520,7 @@ html{color-scheme:light dark;background:var(--ground)}
      against white and carried unchanged into dark is how a component silently
      stops meeting contrast (brief.md §5). */
   --accent:#F0F0F0; --accent-ink:#141414; --accent-hover:#FFFFFF;
+  --accent-on-surface:#F0F0F0;
   --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
   --text-disabled:#5A5A5A; --text-inverse:#141414;
   /* --text-1 is the primary fill and --text-inverse its label, so a near-black

@@ -8,6 +8,7 @@
 import { $, $$, esc } from '../core/dom.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
+import { clampIntoView } from '../core/popover.mjs';
 import { bar } from '../core/primitives.mjs';
 import { focusQuietly } from '../core/focus.mjs';
 import * as Starred from '../core/starred.mjs';
@@ -38,6 +39,8 @@ function menu(btn, panel, key) {
     if (!app.classList.contains(cls)) return;
     app.classList.remove(cls);
     btn.setAttribute('aria-expanded', 'false');
+    panel.style.left = '';
+    panel.style.right = '';
     drop(key);
   };
   const open = () => {
@@ -48,6 +51,10 @@ function menu(btn, panel, key) {
     app.classList.add(cls);
     btn.setAttribute('aria-expanded', 'true');
     push(key, close);
+    /* #acctMenu is anchored right:0 to a wrapper that starts a NEW ROW once
+       the bar wraps, which put it 52px past the leading edge at 768 and 146px
+       at 860 — with .app{overflow:hidden} and nothing to scroll. */
+    clampIntoView(panel);
     const first = panel.querySelector('[role="menuitem"], button, a');
     if (first) focusQuietly(first);
   };
