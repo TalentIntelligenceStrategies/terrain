@@ -800,7 +800,12 @@ export function init(ctx) {
     render(e.detail);
   });
 
-  onActivate(document, '.set-star', el =>
+  /* [data-star] IN THE SELECTOR, NOT JUST THE CLASS. The starred page's
+     remove buttons wear .set-star for its look and carry data-unstar, not
+     data-star; matched on the class alone, every removal there also ran this
+     handler with a null id, and the store filed a phantom row under "null"
+     — a row with no patent that then rode out in the CSV. */
+  onActivate(document, '.set-star[data-star]', el =>
     toggleStar(el.getAttribute('data-star'), el));
 
   /* FIND SIMILAR IS THE ONLY FILLED CONTROL ON THIS SURFACE and it sends the
