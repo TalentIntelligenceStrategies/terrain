@@ -3,8 +3,7 @@
 .drill-row:last-child{border-bottom:0}
 /* THE HOLDER TRUNCATES, AND THE REASON IS UNCHANGED FROM WHEN THIS WAS A FLEX
    ROW. Against real data a long assignee is not an edge case: the longest in
-   the stress corpus is 81 characters — "Shanghai Motor System Energy Saving
-   Engineering Technology Research Center Co Ltd" — which used to push the year
+   the stress corpus is 81 characters, which used to push the year
    and the chevron onto a third line. The row is a scanning surface and the
    record is where the full name lives.
 
@@ -22,8 +21,7 @@
 
 /* ── one meta cell · glyph, then value ───────────────────────────────────
    A 2x2 GRID AND NOT A ROW, and the reason is the holder. The longest
-   assignee in the stress corpus is 81 characters — "Shanghai Motor System
-   Energy Saving Engineering Technology Research Center Co Ltd" — and four
+   assignee in the stress corpus is 81 characters, and four
    values on one line gave it about a fifth of the column. Two columns give it
    half, which is where it starts truncating at a word rather than at a
    syllable. The grid also fixes the cells' x positions, so the same fact is
