@@ -52,7 +52,7 @@ import { $, esc } from './dom.mjs';
 import { push, drop } from './esc-stack.mjs';
 import { focusQuietly, captureFocus, setInert, focusables } from './focus.mjs';
 import { say } from './live-region.mjs';
-import { reduced } from './motion.mjs';
+import { reduced, DUR1 } from './motion.mjs';
 
 /* THE LADDER IS DISCRETE, not a continuous multiplier. A founder pressing zoom
    four times should land somewhere they can predict and get back from, and a
@@ -219,7 +219,7 @@ export function close() {
      viewer vanishes rather than leaving. */
   setTimeout(() => {
     if (el.root && !el.root.classList.contains('is-open')) el.root.hidden = true;
-  }, reduced() ? 0 : 140);
+  }, reduced() ? 0 : DUR1 + 20);
 }
 
 /* ── the controls ──────────────────────────────────────────────────────────

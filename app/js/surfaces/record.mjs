@@ -28,7 +28,7 @@ import { focusQuietly, captureFocus } from '../core/focus.mjs';
 import { wait as pause } from '../core/timers.mjs';
 import { bar, bars, statusHTML, statusWord, langAttr } from '../core/primitives.mjs';
 import { bump, stale } from '../core/generation.mjs';
-import { reduced } from '../core/motion.mjs';
+import { reduced, DUR2 } from '../core/motion.mjs';
 import * as Starred from '../core/starred.mjs';
 import * as Viewer from '../core/figure-viewer.mjs';
 /* THE SCORE IS THE ROW'S, NOT THE RECORD'S, and this import is what says so.
@@ -397,7 +397,7 @@ function close() {
   restore = null;
   setTimeout(() => {
     if (!app || !app.classList.contains('rec-open')) pane.hidden = true;
-  }, reduced() ? 0 : 220);
+  }, reduced() ? 0 : DUR2 + 20);
 }
 
 /* ══ THE LIST SAYS WHICH ROW IS OPEN ═════════════════════════════════════

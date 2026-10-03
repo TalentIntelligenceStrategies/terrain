@@ -37,9 +37,23 @@ export function onMotionChange(fn) {
   return () => watchers.delete(fn);
 }
 
-/* The three transition durations, matching --dur-1..--dur-3. They are here as
+/* The four transition durations, matching --dur-1..--dur-4. They are here as
  * well as in CSS because JavaScript has to know when a transition has finished
  * in order to hide a node after it -- and a JS constant that has drifted from
- * its token hides the node mid-flight. If one moves, both move. */
+ * its token hides the node mid-flight. If one moves, both move.
+ *
+ * A HIDE WAITS ITS DURATION PLUS 20ms, never a number typed at the call site.
+ * The slack is one frame and a margin; a literal 240 beside a 200ms exit is how
+ * the router and its own stylesheet comment came to disagree. */
+export const DUR1 = 120;
 export const DUR2 = 200;
+export const DUR3 = 320;
+export const DUR4 = 520;
+
+/* THE STAGGER, design-language.md §6 "Lists and records". Rows that a request
+ * brought into existence arrive 30ms apart, and only the first eight do -- the
+ * ninth row is below the fold on every supported window, and a stagger that
+ * kept counting would make the last visible row wait on rows nobody can see. */
+export const STAGGER = 30;
+export const STAGGER_MAX = 8;
 

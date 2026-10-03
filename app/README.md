@@ -126,8 +126,9 @@ JavaScript half is `core/wait.mjs`. And `#acctMenu .menu-item:focus-visible` sat
 and belongs to the shell; it moved to `14-menu.css`, which is safe because it wins on **specificity**
 wherever it lands rather than on order.
 
-**`99-reduced-motion.css` must load last because 20 of its 28 rules are same-specificity overrides
-declaring end states.** Same specificity means order decides.
+**`99-reduced-motion.css` must load last because most of its rules are same-specificity overrides
+declaring end states.** Same specificity means order decides. The contract it implements is
+`design-language.md` §6 *Reduced motion*; this paragraph is only where the file sits.
 
 **There is no `@layer`, and the reason is `!important`.** Inside a layer, `!important` *reverses*
 layer order: an important declaration in an earlier layer beats one in a later layer. Three of the
@@ -196,7 +197,7 @@ one of them encodes a rule that reads as an implementation detail and is not:
 | Module | The rule it carries |
 | --- | --- |
 | `dom` | `esc` is used in exactly one place — the exclusion chips. Everywhere else renders typed text with `textContent` |
-| `motion` | `reduced()` is read **live**, never cached. The prototype read it once at parse time, so turning reduced motion on mid-session moved the CSS and left the JS behind |
+| `motion` | `reduced()` is read **live**, never cached. The prototype read it once at parse time, so turning reduced motion on mid-session moved the CSS and left the JS behind. `DUR1`–`DUR4` mirror `--dur-1`–`--dur-4`; a hide waits `DURn + 20`, never a literal |
 | `loader` | One mark, one size, no variants, no region scaling. Third-party motion: permitted in the product, **not** republishable as a standalone component |
 | `wait` | `waitOn` captures `offsetHeight` **before** emptying. `failIn` deliberately does **not** clear `minHeight`. `failHTML`'s retry button is optional **by rule** |
 | `button-wait` | Re-applies the label as `aria-label`, because `display:none` children are excluded from the accessible name. Not `disabled` — that drops focus to `<body>` |

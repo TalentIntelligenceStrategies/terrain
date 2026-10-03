@@ -585,6 +585,30 @@ Both were real, both were invisible in review, and neither would have failed a s
 
 Fixing either alone leaves the other.
 
+### Reduced motion
+
+**Flat, never absent.** A founder who asks for less movement has asked for less movement, not for
+less information, so every rule below keeps what the motion was saying and drops only the travel.
+
+- **One blanket rule stops it.** `99-reduced-motion.css` sets `transition-property: none` and
+  `animation: none` on everything, and it **loads last**, because the end states under it are
+  same-specificity overrides and order decides. It carries no `@layer`: inside a layer `!important`
+  reverses, and the blanket stop would become the weakest rule in the sheet.
+- **Every end state is declared outright.** Nothing depends on a transition having run, and nothing
+  waits on `transitionend` to finish a state — a transition that never ticks would leave a view at
+  `opacity: 0` and the screen blank.
+- **Motion started from JavaScript checks `reduced()` and does not start.** A stagger, a FLIP, a
+  smooth scroll: each reads the preference live through `motion.mjs`, never from a copy cached at
+  parse time, and goes straight to its end state.
+- **Information survives.** The star keeps its fill, the shimmer and the sweep go flat rather than
+  off, and the loader stays on screen, motionless, at its resting ramp.
+- **A beat is never shortened.** A wait the system is genuinely having is information; reduced motion
+  stills the indicator and leaves the duration alone.
+
+**JavaScript knows the durations.** `motion.mjs` exports `DUR1`–`DUR4` beside the tokens, because
+code that hides a node after its exit has to know when the exit ends. A hide waits its duration plus
+20ms, never a literal typed at the call site.
+
 ---
 
 ## 7 · Components

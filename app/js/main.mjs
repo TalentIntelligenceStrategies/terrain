@@ -22,6 +22,7 @@ import { assertEngine, NullEngine } from './ports.mjs';
 import { bindEscape } from './core/esc-stack.mjs';
 import { disarmAll } from './core/armed.mjs';
 import { sayNothing } from './core/live-region.mjs';
+import { DUR2 } from './core/motion.mjs';
 
 /* ══════════════════════════════════════════════════════════════════════════
    THE DEMO SEAM · one import, and app/js/** holds no data by construction.
@@ -173,7 +174,7 @@ export function go(view) {
   if (prev) {
     prev.classList.remove('is-active');
     prev.classList.add('is-leaving');
-    setTimeout(() => prev.classList.remove('is-leaving'), 240);
+    setTimeout(() => prev.classList.remove('is-leaving'), DUR2 + 20);
   }
   next.classList.add('is-active');
   current = view;
