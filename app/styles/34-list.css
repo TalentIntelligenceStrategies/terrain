@@ -48,8 +48,8 @@
 /* text-overflow DOES NOT APPLY TO A FLEX CONTAINER, and it sat here for the
    whole life of this rule doing nothing. .dm-v is display:flex, so the
    declaration was inert and the cell simply CLIPPED: measured at 390px,
-   "Silverbrook Research Pty Ltd" needs 174px, gets 113, and rendered as
-   "Silverbrook Resear" — cut mid-word with no ellipsis to say it had been.
+   a 28-character corpus holder needs 174px, gets 113, and rendered its
+   first 18 characters — cut mid-word with no ellipsis to say it had been.
    Four values on every row, on every width below about 1080.
 
    THE ELLIPSIS BELONGS TO THE VALUE, NOT THE ROW. Each cell is a flex row of
