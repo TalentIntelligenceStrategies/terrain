@@ -23,7 +23,7 @@
    prose — 940 is what fits five tiles at a legible size without the
    composer becoming a field nobody can track a line across. */
 .conv-col{width:100%;max-width:940px;margin-left:auto;margin-right:auto}
-.conv-intro{margin-bottom:var(--s-32)}
+.conv-intro{margin-bottom:var(--s-40)}
 .conv-intro h1{margin:0 0 var(--s-12);text-wrap:balance}
 .conv-sub{margin:0;color:var(--text-2);max-width:52ch;text-wrap:pretty}
 /* the dock carries the gate's primary action, so it is the one piece of

@@ -67,7 +67,18 @@ on the path — reached from the count beside the results, and returned from to 
 
 The surface opens on **What are you building?** and a row of technology-field tiles. One is ready;
 the rest carry a *Coming soon* badge **under the name, in flow** — a corner badge on a disabled tile
-reads as decoration, and this one has to read as a reason.
+reads as decoration, and this one has to read as a reason. **The name and its badge are one group,
+8px apart, and the icon sits 16px above them**: at 4px the badge touched the name and read as its
+second line.
+
+**The tiles and the composer are the closest pair of blocks on the page.** Choosing a field and
+describing the idea are one decision, so the rhythm down the page is 10 · 20 · 40: label to tiles,
+tiles to composer, and 40 either side of that pair.
+
+**On a phone the tiles are one row that scrolls sideways**, each a compact tile with the icon beside
+the name. Stacked two-across they were 400px of an 844px screen and put the composer below the fold.
+The row has no scroll snap, and its last visible tile is cut by the screen edge, which is what says
+there are more.
 
 **A tile that is not ready is `aria-disabled`, not `disabled`.** It keeps its tab stop, so a founder
 moving by keyboard finds out the field exists and is not yet covered, rather than finding nothing

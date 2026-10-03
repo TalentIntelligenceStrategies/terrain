@@ -42,8 +42,16 @@ function fieldHTML(f) {
   return '<button class="field" type="button" data-field="' + esc(f.id) + '"'
     + (ready ? ' aria-pressed="false"' : ' aria-disabled="true"') + '>'
     + '<span class="field-icon">' + svg(ICON[f.icon] || ICON.cpu, 24) + '</span>'
+    /* THE NAME AND ITS BADGE ARE ONE GROUP, so they are one element. The badge
+       used to be a third flex item pulled up under the name by a negative
+       margin, which put it 4px from the name it qualifies and read as part of
+       the field's title. A wrapper with its own gap is what §5's "inner gap
+       at most half the outer" looks like when it is built rather than
+       subtracted. */
+    + '<span class="field-text">'
     + '<span class="field-name">' + (f.label == null ? bar('w-md', 'body') : esc(f.label)) + '</span>'
     + (ready ? '' : '<span class="field-soon">Coming soon</span>')
+    + '</span>'
     + '</button>';
 }
 

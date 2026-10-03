@@ -12,7 +12,13 @@
 .fields-lbl{margin:0 0 var(--s-10);color:var(--text-3)}
 /* the tiles choose what the search runs against, so they sit with the
    composer rather than floating above it as a banner. */
-.conv-body > .conv-col:has(.fields){margin-bottom:var(--s-14)}
+/* THE PAGE'S RHYTHM IS 10 · 20 · 40. Label to tiles 10, tiles to composer 20,
+   and 40 either side of that pair — intro above it (30-composer.css) and the
+   coverage card below it. The tiles and the composer are one decision, which
+   field and what to search in it, so they are the closest pair of blocks on
+   the page; it was 32 / 14 / 24, which put the one primary action 14px under
+   a row of tiles and further from nothing than from them. */
+.conv-body > .conv-col:has(.fields){margin-bottom:var(--s-20)}
 
 /* THE DOCK'S BOTTOM PADDING AND THE STATUS LINE'S RESERVED HEIGHT BOTH EXIST
    FOR A SURFACE THIS NO LONGER IS. The dock used to be the sticky foot of a
@@ -41,10 +47,16 @@
    So the ruler disagreed with every rule in this file, and the rules were all
    correct. Any grid or flex cell that IS a button needs this line.
 
+   AND height:100% FOR THE SAME REASON ON THE OTHER AXIS. While every tile fit
+   inside min-height the row looked stretched; once the badge took its own gap
+   the four badged tiles grew past 120 and the covered one, with no badge,
+   stayed 120 and sat centred in a taller track — 5px low, its icon off the
+   line the other four share.
+
    min-width:0 stays because the other trap is real too: `1fr` is
    minmax(auto,1fr), whose auto floor is min-content, so a long word can push a
    column wider. It is not what happened here. */
-.field{position:relative;width:100%;min-width:0}
+.field{position:relative;width:100%;height:100%;min-width:0}
 .field-name{overflow-wrap:break-word}
 
 /* THE TILE IS THE ONE PLACE A GLYPH IS NOT 16 OR 18px. §9 sizes icons for
@@ -64,7 +76,7 @@
    line of a wrapped name, which is the failure the corner placement existed to
    avoid and is not worth reintroducing lower down. */
 .field{display:flex;flex-direction:column;align-items:center;
-       justify-content:flex-start;gap:var(--s-10);min-height:120px;
+       justify-content:flex-start;gap:var(--s-16);min-height:120px;
        padding:var(--s-20) var(--s-14);text-align:center;
        background:var(--surface);border:1px solid var(--border);
        border-radius:var(--r-widget);cursor:pointer;color:var(--text-2);
@@ -75,6 +87,7 @@
 .field-icon{display:flex;color:var(--text-3);
             transition:color var(--dur-1) var(--ease)}
 .field-name{font-weight:500}
+.field-text{display:flex;flex-direction:column;align-items:center;gap:var(--s-8)}
 
 /* §3.8 SITE 3 OF 3 — the selected state of a control. The LABEL and the glyph
    take the accent; the tile stays --surface, because a filled accent tile here
@@ -93,16 +106,14 @@
    the same relation a status chip has to a row; an unbordered third line of
    the name is not.
 
-   NEGATIVE MARGIN AGAINST THE FLEX GAP, and it is grouping rather than nudging.
-   The tile's gap is s-10 and §5 wants a group's inner gap at no more than half
-   its outer one, so the name and its badge close to s-4 while the icon stays a
-   full s-10 away. Both values are on the scale; the subtraction is not a third
-   value, it is the one the gap already committed to being cancelled.
+   8px UNDER THE NAME, 16 FROM THE ICON. The name and its badge are one group
+   in .field-text and the icon is the next thing out, so the inner gap is half
+   the outer one, which is §5's ratio exactly. At 4px the chip touched the
+   descenders of the name above it and read as its second line.
 
    No bolt. §9 is one glyph, one act — that one named no act, it decorated a
    state a word already states. */
-.field-soon{margin-top:calc(var(--s-4) - var(--s-10));
-            padding:2px var(--s-6);border-radius:var(--r-chip);
+.field-soon{padding:2px var(--s-6);border-radius:var(--r-chip);
             background:var(--surface);border:1px solid var(--border);
             font-size:10.5px;line-height:1.5;letter-spacing:.02em;
             font-weight:500;color:var(--text-3);white-space:nowrap}
@@ -122,7 +133,7 @@
 
 /* ══ the coverage block ══════════════════════════════════════════════════ */
 
-.cover{margin-top:var(--s-24)}
+.cover{margin-top:var(--s-40)}
 
 /* 86ch, NOT §5's 68ch, and the difference is what this sentence is. The measure
    cap is for body prose — several lines the eye has to track back across. This
@@ -139,9 +150,33 @@
 .cover-tbl td:last-child,.cover-tbl th:last-child{text-align:right;
            font-variant-numeric:tabular-nums}
 
+/* ── ON A PHONE THE TILES ARE ONE ROW THAT SCROLLS · platform.md §3.1 ─────
+   Five 120px tiles stacked two-across are three rows and 400px of a 844px
+   screen, and they put the composer — the one thing the founder came to use —
+   below the fold. One horizontal row of compact tiles is 64px: icon beside
+   the name, badge under the name, the same three facts in a third of the
+   height. The order on screen is still the order in the DOM, which is why
+   the composer is not lifted above the tiles with `order` — focus would walk
+   up the page.
+
+   NO SCROLL SNAP, for the drawing strip's reason: a snap fights the trackpad
+   and the tile that half-shows at the edge is what says the row continues.
+   The row bleeds into the page gutter so that half-tile reaches the screen's
+   edge rather than stopping short of it. */
 @media (max-width:640px){
-  .fields{grid-template-columns:repeat(auto-fit,minmax(132px,1fr))}
-  .field{padding:var(--s-14) var(--s-8)}
+  .conv{padding-inline:var(--s-16)}
+  .conv-body > .conv-col:has(.fields){margin-bottom:var(--s-16)}
+  .conv-intro{margin-bottom:var(--s-32)}
+  .cover{margin-top:var(--s-32)}
+  .fields{display:flex;gap:var(--s-8);overflow-x:auto;overscroll-behavior-x:contain;
+          margin-inline:calc(-1 * var(--s-16));padding:var(--s-2) var(--s-16);
+          scrollbar-width:none}
+  .fields::-webkit-scrollbar{display:none}
+  .field{flex:0 0 auto;width:auto;height:auto;min-width:168px;min-height:64px;
+         flex-direction:row;align-items:center;gap:var(--s-12);
+         padding:var(--s-10) var(--s-14);text-align:start}
+  .field-text{align-items:flex-start;gap:var(--s-6)}
+  .field-name{white-space:nowrap}
 }
 
 /* ══ the results surface's search bar ════════════════════════════════════
