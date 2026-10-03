@@ -412,7 +412,38 @@
    row, not a broken one. Both values are steps on §5's scale. */
 @media (max-width:1240px) and (min-width:1080px){
   .set-bar{gap:var(--s-8);padding-inline:var(--s-16)}
+}
+/* ── FIND SIMILAR HOLDS ITS SLOT · platform.md §4.3 "Bar" ─────────────────
+   The founder's first star brought two things into this row at once — the
+   `N starred` chip and Find similar — and the row broke to a second line on
+   the commonest action on the surface: the whole list jumped 40px under the
+   pointer that had just pressed a star. The button now keeps its box while
+   nothing is starred. visibility:hidden, not opacity, because it also takes
+   the button out of the tab order and the accessibility tree, which is what
+   [hidden] was doing for it; the attribute stays the one switch and
+   list.mjs's syncStarUI is unchanged.
+
+   THE NUMBERS. At 1440 the bar is 686px; heading, chip, info, Sort, Filter
+   and the full Find similar come to 667 with gaps and padding. Below 1400
+   that stops fitting, so Filter's label clips to its icon, which holds the
+   full Find similar to 1340 — a 1366 laptop keeps the word on the one filled
+   control. Below 1340 Find similar's label clips too. Both use sr-only's
+   clip rather than display:none, so the accessible names survive. From 1240
+   the gap and padding step down as well, which holds the row to about 1160
+   (measured: one row at 1280, two at 1150). Between 1080 and 1160 the first
+   star still wraps it — up to 41px short with nothing left to clip but the
+   heading's own counts — and a second row is what flex-wrap does rather than
+   a break.
+   Restore the original order is the other known wrap — it is a sentence,
+   and it only appears after the founder has pressed Find similar. */
+.set-bar #setRebase[hidden]{display:inline-flex;visibility:hidden}
+@media (max-width:1400px) and (min-width:1080px){
   .set-bar #filtBtn>span:not(.lm-count){position:absolute;width:1px;height:1px;
+                          padding:0;margin:-1px;overflow:hidden;
+                          clip-path:inset(50%);white-space:nowrap;border:0}
+}
+@media (max-width:1340px) and (min-width:1080px){
+  .set-bar #setRebase>span{position:absolute;width:1px;height:1px;
                           padding:0;margin:-1px;overflow:hidden;
                           clip-path:inset(50%);white-space:nowrap;border:0}
 }

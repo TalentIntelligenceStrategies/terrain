@@ -280,7 +280,12 @@ behind that control.
 
 **Bar** — Sort (Relevance · Newest filed · Oldest filed), Filter (status and kind facets, with a
 count), **Find similar** and **Restore the original order**. Find similar is the only filled control
-on the surface and is hidden rather than disabled when nothing is starred.
+on the surface and is hidden rather than disabled when nothing is starred — **and it holds its slot
+while hidden**, so the first star does not break the bar onto a second row under the pointer that
+pressed it. Where the column is too narrow to hold the slot at full width, Filter's label and then
+Find similar's clip to their icons, keeping their accessible names. The heading's two-count form is
+`100 matched · 20 shown`: the noun is the subject of every row beneath it, and dropping it is what
+buys the slot.
 
 **Rows** — each carries the patent's identity, a status chip, and the engine's relevance score on
 the right. Twenty rows, then a foot that says how many are left and offers `Show more`.

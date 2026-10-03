@@ -83,7 +83,8 @@ function syncStarUI() {
   }
   /* HIDDEN, NOT DISABLED, exactly as the markup's own note says: a disabled
      button loitering in a 345px bar is clutter, and [hidden] takes it out of
-     the tab order too. */
+     the tab order too. 21-surface.css holds its slot while it is hidden, so
+     the first star does not push the bar to a second row. */
   const rebase = $('#setRebase');
   if (rebase) rebase.hidden = STARRED.size() === 0;
 }
@@ -538,7 +539,13 @@ function render(data, append) {
      ONE TEMPLATED STRING PER PLURAL FORM, not a sentence assembled around two
      numbers. Word order moves between languages and "1 patents matched" is
      what fragment concatenation ships. It is also shorter now, because the
-     old form wrapped to three lines in this column. */
+     old form wrapped to three lines in this column.
+
+     THE TWO-COUNT FORM DROPS ITS NOUN. "100 matched · 20 shown" is 70px
+     narrower than the form with "patents" in it, and those 70px are what let
+     the bar hold Find similar's slot at rest without breaking to a second
+     row — the noun is already the subject of every row underneath. The
+     one-count forms keep it, because they have the room. */
   if (title) {
     const m = data.matched, n = data.patents.length;
     /* THE COUNTS ARE FIGURES AND THE WORDS ARE NOT. Whole-string textContent
@@ -556,7 +563,7 @@ function render(data, append) {
     title.innerHTML = m === 1
       ? fig(1) + ' patent matched'
       : (m === n ? fig(m) + ' patents matched'
-                 : fig(m) + ' patents matched · ' + fig(n) + ' shown');
+                 : fig(m) + ' matched · ' + fig(n) + ' shown');
   }
 }
 
