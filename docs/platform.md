@@ -734,6 +734,11 @@ figure here is illustrative. A tier *name* is a taxonomy, and inventing Pro / Te
 put a tier structure nobody has decided into a public artifact. `XXX` means nobody has chosen a price
 yet; a bar would mean a real value exists and is not ours to print. The two must not be conflated.
 
+**The balance in that sentence is read live, every visit, from the same `points` port the masthead and
+the points page read.** Searching spends points between visits, and a plan page that disagreed with
+the masthead beside it would be two answers to the one question the page is opened to ask. Until the
+read lands it is a bar, never a zero.
+
 ### 6.4 · Help
 
 **Contact-first**, which is honest about a product with no documentation site. A topic menu, a message
@@ -790,6 +795,12 @@ without it.
 | An export | **The file, which was already written** — see §5.2 | The starred set, and the balance if the ledger refused |
 | A save | The field, still open, still holding the value | What was typed |
 | A message | The form, not the sent state | The message and the topic |
+
+**Every failure names the next move.** Where a retry exists it is the button; where none does, the
+sentence says what still works — *the other patents in your results still open* — because a failure
+that offers nothing reads as the product being stuck. **And a failure is on screen, not only spoken**:
+a search run again from the results bar that does not run says so in a line under the bar, and that
+the list below is from the last search, rather than only to the live region.
 
 **A region that fails keeps the height it reserved.** A wait that collapses into a short sentence
 moves everything below it twice — once for the wait and once for the failure — and the second jump is

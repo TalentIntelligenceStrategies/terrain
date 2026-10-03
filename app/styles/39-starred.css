@@ -44,12 +44,25 @@
 
 .star-lede{margin:0 0 var(--s-20);color:var(--text-2);max-width:68ch;
            text-wrap:pretty}
+.star-lede[hidden]{display:none}
+/* the empty note's own 12px inset is for a note inside a card; here it sits
+   on the page, and the inset put it 12px off the edge the heading and the
+   back control share. */
+#starEmpty .empty-note{padding-inline:0;max-width:68ch}
 
 /* THE BAR IS IN THE HEAD, at the trailing end of the title's line. Both
    controls act on the whole set rather than on a row, so they belong to the
    page's heading and not to a toolbar over the list. It wraps under the
    title on a narrow window, as the head's flex-wrap allows. */
-.star-bar{display:flex;align-items:center;gap:var(--s-8);flex:0 0 auto}
+.star-bar{display:flex;align-items:center;gap:var(--s-8);flex:0 0 auto;flex-wrap:wrap}
+/* ON A PHONE THE BAR TAKES ITS OWN ROW AND THE BUTTONS SHARE IT. Held at its
+   content width it measured 356px against a 288px column at 320 and pushed
+   Download Markdown past the screen edge, where nothing could reach it. The
+   buttons wrap onto a second line before either is cut. */
+@media (max-width:640px){
+  .star-bar{flex:1 1 100%}
+  .star-bar .btn{flex:1 1 auto}
+}
 .star-bar[hidden]{display:none}
 .view-starred .page-head{flex-wrap:wrap}
 

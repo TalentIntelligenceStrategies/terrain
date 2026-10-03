@@ -162,11 +162,12 @@ export function init(ctx) {
     if (!res.ok) {
       const status = $('#cmpStatus');
       if (status) {
+        /* EACH SAYS WHAT TO DO NEXT, not only what happened. */
         status.textContent = res.code === 'INSUFFICIENT'
-          ? 'There are not enough points for this search. Nothing was charged.'
-          : 'The search did not run. Nothing was charged.';
+          ? 'There are not enough points for this search. Nothing was charged. Points renew at the start of each quarter.'
+          : 'The search did not run. Nothing was charged. Press Search to try again.';
       }
-      say('home', 'The search did not run. Nothing was charged.');
+      say('home', status ? status.textContent : 'The search did not run. Nothing was charged.');
       return;
     }
     const meter = $('#meterN');

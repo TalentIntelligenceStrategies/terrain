@@ -120,6 +120,9 @@
           </div>
         </div>
       </div>
+      <!-- what went wrong with the last search from this bar. Empty, and
+           taking no room, until a search fails. -->
+      <p class="cmp-status res-status" id="resStatus"></p>
     </div>
 
     <!-- ONE <main> PER SURFACE. The map, the set and the widget page each
@@ -398,7 +401,10 @@
                alternative: an empty region that says nothing looks like a
                region that failed to load. -->
           <div class="pane-idle" id="paneIdle">
-            <p class="t-body">Pick a patent on the left to read its record.</p>
+            <!-- "from your results", not "on the left": below 1080 the
+                 columns stack and the list is above this panel, so a
+                 direction was true at one width and wrong at the other. -->
+            <p class="t-body">Pick a patent from your results to read its record.</p>
           </div>
 
           <!-- ══ THE RECORD TAKES THE RIGHT COLUMN ═══════════════════════

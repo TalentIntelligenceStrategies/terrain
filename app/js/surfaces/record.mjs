@@ -543,9 +543,13 @@ async function open(id, trigger, stepping, opts = {}) {
   if (!res.ok) {
     /* NOT retryable for a record — the engine says so, and the block then says
        there is no way forward BY HAVING NO BUTTON rather than by saying so. */
-    failWith(body, 'This record did not load.',
-      res.retryable ? () => open(id, trigger) : null);
-    say('list', 'This record did not load.');
+    /* AND WHEN THERE IS NO BUTTON, THE SENTENCE NAMES THE NEXT MOVE. A failure
+       that offers nothing reads as the product being stuck; the founder's way
+       on is the rest of the list, which still opens, so the block says so. */
+    const why = res.retryable ? 'This record did not load.'
+      : 'This record did not load. The other patents in your results still open.';
+    failWith(body, why, res.retryable ? () => open(id, trigger) : null);
+    say('list', why);
     return;
   }
   FIGURES = Array.isArray(res.data.figures) ? res.data.figures : [];

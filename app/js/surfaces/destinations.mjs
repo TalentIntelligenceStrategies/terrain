@@ -200,6 +200,19 @@ export function init(ctx) {
   });
 
   ctx.onRoute(async view => {
+    /* THE BALANCE ON THE PLAN PAGE IS READ EVERY VISIT, above the once-only
+       guard. It shipped as a literal 0 in the markup and nothing ever wrote
+       it, so the plan page said "0 points left" beside a masthead saying 140
+       — two answers to the one question a founder opens that page to ask.
+       It reads the same `points` port the points page and the masthead read,
+       and it is re-read because searching spends points between visits. A
+       failed read leaves the bar standing rather than inventing a number. */
+    if (view === 'billing') {
+      const left = $('#billLeft');
+      const pts = left && await ENGINE.points();
+      if (left && pts && pts.ok && pts.data.balance != null)
+        left.textContent = String(pts.data.balance);
+    }
     if (done.has(view)) return;
 
     if (view === 'usage') {

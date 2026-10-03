@@ -263,6 +263,11 @@
 /* the meta stops sharing the slack, or the line and it would split the row
    between them and the sentence would truncate at half the width it has. */
 .res-cmp .res-meta{flex:0 0 auto}
+/* the re-search's failure line, under the bar. It reserves nothing while
+   empty — the home composer's reservation exists for a page that cannot move,
+   and this bar sits over a list that is about to stay put anyway. */
+.res-status{margin:var(--s-8) var(--s-4) 0;color:var(--text-2)}
+.res-status:empty{display:none}
 
 /* ── ON A PHONE THE FOLDED BAR IS THE SENTENCE AND SEARCH ─────────────────
    At 390 the toolbar is ~170px of a 358px row, and with the meta and a

@@ -267,6 +267,12 @@ function paint(rows) {
   empty.hidden = n !== 0;
   const bar = $('#starBar');
   if (bar) bar.hidden = n === 0;
+  /* THE LEDE DESCRIBES A SET, SO IT GOES WHEN THERE IS NONE. "These are the
+     patents you marked" over "Nothing starred yet" was two sentences
+     disagreeing about whether there was anything here; the empty note
+     already says what the page is for. */
+  const lede = $('.star-lede');
+  if (lede) lede.hidden = n === 0;
   if (count) {
     count.hidden = n === 0;
     /* the count is a figure — see list.mjs's setTitle */

@@ -240,10 +240,22 @@ export function init(ctx) {
     btnWait(b, true);
     const res = await ENGINE.search({ query: text, settings: readSettings() });
     btnRest(b);
+    /* THE FAILURE IS ON SCREEN, NOT ONLY SPOKEN. It used to go to the live
+       region alone, so a sighted founder pressed Search, watched the button
+       come back, and was looking at the old list with nothing saying the new
+       search had not run. #resStatus sits under the bar the way #cmpStatus
+       sits under the home composer; it is not itself live, because say()
+       already announces it once. */
+    const status = $('#resStatus');
     if (!res.ok) {
-      say('work', 'The search did not run. Nothing was charged.');
+      const why = res.code === 'INSUFFICIENT'
+        ? 'There are not enough points for this search. Nothing was charged. Points renew at the start of each quarter.'
+        : 'The search did not run. Nothing was charged. The results below are from your last search.';
+      if (status) status.textContent = why;
+      say('work', why);
       return;
     }
+    if (status) status.textContent = '';
     /* THE SET IS NOW FILED UNDER THE SEARCH THAT PRODUCED IT. Told after the
        engine answered, not before it was asked: a query that failed produced
        no rows to star, and stamping it would file the next star under a
