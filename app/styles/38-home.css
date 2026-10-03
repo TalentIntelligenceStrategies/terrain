@@ -200,6 +200,68 @@
 .res-cmp .cmp-inner{border-radius:var(--r-shell)}
 .res-cmp .cmp-field textarea{min-height:44px}
 
+/* ══ THE FOLD · platform.md §4.2 ═════════════════════════════════════════
+   TWO STATES, ONE COMPONENT. Open is the home composer's grammar — a field
+   over a hairline over a toolbar. Folded is the toolbar alone with the
+   sentence on it, 58px against ~150. design-language.md §7 carries the rule
+   and work.mjs carries when each state applies.
+
+   THE PADDING IS EVEN, 10 ALL ROUND, AND THE FIELD'S SPACE IS INSIDE THE
+   TRACK. Padding cannot be transitioned (§6), so everything that has to
+   vanish with the field — the 4px over it, the hairline under it, the 8px
+   under the hairline — sits in .cmp-track-in, under the clip. The row
+   carries no border or margin of its own here, which is the difference
+   from the home composer. Margin and not padding for the last 8px, because
+   a padding on the clipped item is a floor the 0fr row cannot go under;
+   overflow:hidden makes the item a formatting context, so the child's margin
+   stays inside it rather than collapsing through.
+
+   OPEN TAKES --dur-3 AND FOLDING TAKES --dur-2, the .dc pattern: §6 names
+   the composer's expansion as a --dur-3 thing, and exit is faster than
+   enter. */
+.res-cmp .cmp-inner{padding:var(--s-10) var(--s-16)}
+.cmp-track{display:grid;grid-template-rows:1fr;
+           transition:grid-template-rows var(--dur-3) var(--ease)}
+.cmp-track-in{min-height:0;overflow:hidden}
+.res-cmp .cmp-field{padding-top:var(--s-4);padding-bottom:var(--s-8);
+                    border-bottom:1px solid var(--border);margin-bottom:var(--s-8)}
+.res-cmp .cmp-row{border-top:0;margin-top:0;padding-top:0}
+.res-cmp[data-compact] .cmp-track{grid-template-rows:0fr;transition-duration:var(--dur-2)}
+
+/* THE SENTENCE, FOLDED. It reads as the field it stands in for — 14px,
+   --text-1, the caret cursor — and presses like a control: a sunken ground
+   under a fine pointer, the focus ring from the reset. flex:1 in BOTH states,
+   so it is the one thing that takes the row's slack whether it is visible or
+   not, and the meta and Search hold their x through the fold.
+
+   IT LEAVES AT ONCE AND ARRIVES LATE. Opening, it fades on --dur-1 before
+   the track has moved far; folding, it waits out the track's --dur-2 before
+   it fades in — §6's "nothing fades in while its container is still
+   moving". visibility rides with opacity, flipping at the end of the exit
+   and at the start of the entrance, so it is never a tab stop nobody can
+   see. */
+.cmp-line{flex:1 1 auto;min-width:0;display:flex;align-items:center;height:32px;
+          margin-inline-start:var(--s-4);padding:0 var(--s-10);
+          border:0;border-radius:var(--r-control);background:none;
+          font:inherit;font-size:14px;line-height:1.55;color:var(--text-1);
+          text-align:start;cursor:text;
+          opacity:0;visibility:hidden;
+          transition:opacity var(--dur-1) var(--ease),
+                     visibility 0s linear var(--dur-1),
+                     background var(--dur-1) var(--ease)}
+.cmp-line-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res-cmp[data-compact] .cmp-line{opacity:1;visibility:visible;
+          transition:opacity var(--dur-1) var(--ease) var(--dur-2),
+                     visibility 0s linear 0s,
+                     background var(--dur-1) var(--ease)}
+.cmp-line:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media (hover:hover) and (pointer:fine){
+  .cmp-line:hover{background:var(--surface-sunken)}
+}
+/* the meta stops sharing the slack, or the line and it would split the row
+   between them and the sentence would truncate at half the width it has. */
+.res-cmp .res-meta{flex:0 0 auto}
+
 .res-tools{display:flex;align-items:center;gap:var(--s-6);flex:0 0 auto}
 .res-tools-sep{width:1px;height:18px;background:var(--border);flex:0 0 auto;
                margin-inline:var(--s-2)}

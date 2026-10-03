@@ -39,9 +39,10 @@
    is one column with a composer in it. */
 
 /* ── the composer ───────────────────────────────────────────
-   One component, two sizes: the whole column here, docked on the map. It
-   carries its own working state, so the founder never navigates to a loading
-   screen (design-language.md §7).                                          */
+   One component, two states: open here and while editing on the results
+   surface, folded to one line there once a search has run (38-home.css,
+   design-language.md §7). It carries its own working state, so the founder
+   never navigates to a loading screen.                                     */
 .cmp{width:100%}
 .cmp-inner{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-widget);
       padding:var(--s-14) var(--s-16) var(--s-10);

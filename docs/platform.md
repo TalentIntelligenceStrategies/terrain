@@ -91,9 +91,10 @@ something is typed. Enter runs the search; Shift+Enter breaks the line; an IME c
 excluded, because a founder composing in any input method presses Enter to commit characters and
 would otherwise search half a word.
 
-**The primary action sits under the composer, full width.** The two things a founder may do — search,
-or change what they typed — are one decision, so they are one zone. The send arrow already owns the
-bottom-right corner, and a right-aligned pill beneath it reads as a second send.
+**The primary action sits at the trailing edge of the composer's toolbar row.** The two things a
+founder may do — search, or change what they typed — are one decision, so they are one zone: the
+field and the button share an edge of one panel. Search settings sit at the leading edge of the same
+row.
 
 **The button is labelled `Search`, not an arrow.** It spends points and it is the commitment; a glyph
 that means *send* understates both.
@@ -154,7 +155,8 @@ cuts both panels' corners square.
 **The search bar stays.** It sits above both columns with the founder's sentence still in it, so
 changing the search is editing what is already there rather than navigating back to a blank one.
 There is no pin control on it, because this surface does not scroll as a whole — a toggle that cannot
-change anything is worse than a missing one.
+change anything is worse than a missing one. **It stays folded**, §4.2: one line, so the list starts
+65px higher than it did under the open field.
 
 ### 4.1 · The masthead
 
@@ -176,8 +178,16 @@ One region is protected by name: the appearance control.
 
 ### 4.2 · The search bar
 
-The founder's sentence, still editable, with the elapsed time and the match count beside it. Four
-toggles sit under it:
+The founder's sentence, still editable, with the elapsed time and the match count beside it.
+
+**It folds to one line once a search has run.** The sentence moves onto the toolbar row, ellipsised,
+and pressing it opens the field with the caret at the end. **Leaving the composer folds it again only
+if the sentence is still the one that ran** — an edit in progress is never folded away under the
+founder; it waits for Search, which runs it and folds, or Escape, which puts the sentence back and
+folds. Escape closes the thing the founder is in, so focusing the field lifts the composer above an
+open record on the Escape stack, and a popover opened from the toolbar still closes before it.
+
+Four toggles sit on the same row:
 
 1. **Search settings** — the same popover §3.3 describes, anchored here instead.
 2. **Grouping** — opens the branch panel, §4.4, as a popover under this control.

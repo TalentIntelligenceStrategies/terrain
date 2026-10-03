@@ -813,14 +813,24 @@ width — burying it in a menu is the same loss as dropping it.
 **One `<main>` per surface.** Collapsing surfaces is how a screen-reader user loses the landmark they
 meet before anything else.
 
-**The composer is one component at one size**, and it appears twice: centred on the home surface, and
-above the columns on the results surface still holding what the founder typed. It is inert until
-something is typed. **A support field may not wear it** — the composer's identity is *the thing you
-type your idea into*, and a second one would claim the help form searches.
+**The composer is one component with two states**, and it appears twice: centred on the home surface,
+and above the columns on the results surface still holding what the founder typed. **Open** is a
+field over a hairline over a toolbar, and it is the only state the home surface uses. **Folded** is
+the toolbar alone with the sentence on it as one ellipsised line, 58px against ~150, and it is the
+results surface's resting state once a search has run — the sentence is still on screen, so the
+founder can still read and press what they searched. It is inert until something is typed. **A
+support field may not wear it** — the composer's identity is *the thing you type your idea into*, and
+a second one would claim the help form searches.
 
-**Its primary action sits under it, full width.** Search and *change what you typed* are one decision,
-so they are one zone. The send arrow already owns the bottom-right corner, and a right-aligned pill
-beneath it reads as a second send.
+**The fold moves on one axis.** The field folds on `grid-template-rows` from `1fr` to `0fr` — open on
+`--dur-3`, folded on `--dur-2` — and the folded sentence holds its box at both states, so the meta and
+Search keep their x while the field moves above them. The sentence leaves on `--dur-1` before the
+field has moved far, and arrives only after it has stopped.
+
+**Its primary action sits at the trailing edge of the toolbar row**, labelled `Search`. The field and
+the button share one edge of one panel, so search and *change what you typed* are still one zone; a
+full-width button under the panel would be a second zone with nothing to separate it from the
+first.
 
 **One primary action per surface.** A near-black fill (an accent fill, once §3.8 is applied) is what
 says *this is the way forward*. Two filled buttons on one screen make the smaller one look like the

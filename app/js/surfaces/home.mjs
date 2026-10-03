@@ -17,6 +17,7 @@ import { read as readSettings } from './settings.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { bar } from '../core/primitives.mjs';
 import * as STARRED from '../core/starred.mjs';
+import { landQuery } from './work.mjs';
 
 let ENGINE = null;
 let FIELD = null;          // the chosen technology field
@@ -174,17 +175,10 @@ export function init(ctx) {
     /* THE RESULTS BAR KEEPS THE SENTENCE. Both partials are in the DOM from
        boot, so this is a write rather than a handoff — and the founder arriving
        at the results finds the words they searched with still in the field,
-       which is what makes it the way to run the next one. */
-    const resQ = $('#resQuery');
-    if (resQ) resQ.value = text;
-    const resMeta = $('#resMeta');
-    if (resMeta && res.data.matched != null) {
-      /* a count and a duration, both figures — see list.mjs's setTitle */
-      const fig = v => '<span class="fig fig-s">' + v + '</span>';
-      resMeta.innerHTML = fig(res.data.matched) + ' results'
-        + (res.data.elapsedMs != null
-            ? ' \u00b7 ' + fig((res.data.elapsedMs / 1000).toFixed(2)) + ' s' : '');
-    }
+       which is what makes it the way to run the next one. work.mjs's
+       landQuery writes the field, the folded line and the meta, and folds
+       the bar. */
+    landQuery(text, res.data);
     location.hash = '#set';
   });
 }

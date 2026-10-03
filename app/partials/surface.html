@@ -19,12 +19,28 @@
          that cannot change anything is worse than a missing one.  -->
     <div class="res-search">
       <h1 class="sr-only" tabindex="-1" id="dashTitle">Your results</h1>
+      <!-- ══ ONE LINE AFTER A SEARCH, OPEN WHILE EDITING · platform.md §4.2 ══
+           The bar used to keep its two-row field after the run: ~170px of a
+           900px window spent on a sentence the founder had just finished
+           writing, with fewer than two results under it. data-compact folds
+           the field away and puts the sentence on the toolbar row as
+           #resLine; pressing it opens the field again with the caret at the
+           end. "The search bar stays" still holds — the sentence is on screen
+           in both states.
+
+           THE TRACK IS A GRID ROW AT 0fr OR 1fr, the .dc pattern. §6 forbids
+           a transition on height or padding, so the field's spacing lives
+           inside .cmp-track-in, under the overflow clip, and the row below
+           carries none of its own. The track is inert while folded, which is
+           what keeps a textarea nobody can see out of the tab order. -->
       <div class="cmp res-cmp" id="resCmp">
         <div class="cmp-inner">
+          <div class="cmp-track" id="resTrack"><div class="cmp-track-in">
           <div class="cmp-field">
             <textarea rows="2" id="resQuery" aria-label="Describe what you are building"
               placeholder="For example: a folding drone arm that locks without a latch"></textarea>
           </div>
+          </div></div>
           <div class="cmp-row">
             <div class="res-tools" role="group" aria-label="How the results are shown">
               <div class="pop-wrap" id="resSetWrap">
@@ -86,6 +102,16 @@
                 </button>
               </div>
             </div>
+            <!-- THE SENTENCE, FOLDED. A button and not a read-only field: it
+                 does one thing, which is open the composer, and a second text
+                 control holding the same words would be two fields for one
+                 value. It keeps its box in the open state, invisible, so the
+                 meta and Search never move sideways while the track opens
+                 above them; visibility:hidden is what takes it out of the tab
+                 order while it is not there to press. -->
+            <button class="cmp-line" id="resLine" type="button">
+              <span class="cmp-line-t" id="resLineT"></span>
+            </button>
             <span class="cmp-hint res-meta" id="resMeta"></span>
             <button class="btn btn-primary cmp-search" id="resSearch" type="button">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
