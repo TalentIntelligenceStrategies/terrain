@@ -1,8 +1,8 @@
 /* ══ 10 · BUTTON ══════════════════════════════════════════════════════════
    THE PRIMARY ACTION READS --accent, NOT --text-1 (design-language.md §3.8,
-   site 1 of 3). They resolve to the same near-black today, which is what makes
-   the repaint reviewable by a screenshot that must be identical -- and they
-   will not resolve to the same thing for long.
+   site 1 of 3). They resolve to the same near-black, because the accent is
+   achromatic -- but they answer different questions, and the token is what
+   lets §3.8 name its three sites.
 
    EVERY :hover IS IN THE GATED BLOCK AT THE FOOT OF THIS FILE, and every
    declaration outside it describes the control rather than hovering it. Both
@@ -17,10 +17,10 @@
      border-radius:var(--r-control);font-size:13px;font-weight:500;padding:0 var(--s-14);
      height:36px;white-space:nowrap;
      transition:background var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
-/* §3.8 SITE 1 OF 3 — THE PRIMARY ACTION. Reads the accent slot rather than
-   --text-1, so the repaint is a token edit and not a hunt. The alias resolves
-   to the same near-black today, which is what makes this change reviewable by
-   a screenshot that must be identical. One filled button per surface. */
+/* §3.8 SITE 1 OF 3 — THE PRIMARY ACTION. Reads the accent rather than
+   --text-1: the values agree because the accent is the ink pair, and the
+   role is what keeps the three sites countable. One filled button per
+   surface. */
 .btn-primary{background:var(--accent);color:var(--accent-ink)}
 .btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text-1)}
 .btn-ghost{color:var(--text-2)}

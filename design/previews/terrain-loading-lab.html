@@ -252,42 +252,42 @@ html{color-scheme:light dark;background:var(--ground)}
 :root{
   --ground:var(--n-2); --surface:var(--n-0); --surface-sunken:var(--n-3);
   --border:var(--n-4); --border-strong:var(--n-5);
-  /* THE ACCENT SLOT · brief.md §5, design-language.md §3.8.
-     Green is decided. The specific hue, its dark value and the ink that sits
-     on it are NOT, so both are ALIASED TO THE INK PAIR here — which is a
-     faithful description of what ships today ("the prototype ships with
-     near-black primary fills") rather than a placeholder. The three permitted
-     use sites already read these, so the repaint is a two-value edit in each
-     of the three blocks and not a hunt.
+  /* THE ACCENT · brief.md §5, design-language.md §3.8.
+     Terrain's accent is ACHROMATIC. It is the near-black ink pair, and that is
+     the decision rather than a slot waiting on a hue.
 
-     Declaring them aliased rather than omitting them is the whole point:
-     tokens that exist and are read by NOTHING leave the repaint a hunt anyway.
-     A loud sentinel value was the other option and was turned down — it
-     violates §2's one rule and it would ship the day somebody forgot.
+     WHY THERE IS NO COLOUR HERE. §2 permits colour in three places: discrete
+     states, direction of change, and the accent. A chromatic accent spends the
+     third on a CONTROL, and then every coloured thing on the screen has to be
+     read twice — a green `Live` chip means "this patent is enforceable", and a
+     green button means "click here", and the founder has to know which kind of
+     green they are looking at before either one tells them anything. Dropping
+     the hue leaves the STATES as the only colour in the system. That is the
+     strongest available form of the rule §2 exists to enforce, and it costs
+     one thing worth naming: a near-black primary action is calmer and less
+     inviting than a coloured one.
+
+     THE FOUR TOKENS STAY, BECAUSE THE ACCENT IS A ROLE AND NOT A HUE.
+     All four hold ink values today, and that is not a reason to fold them into
+     --text-1. §3.8's three permitted sites have to be able to SAY they are the
+     accent; a site that read --text-1 would leave §3.8 pointing at nothing,
+     and the rule would stop being enforceable the moment somebody added a
+     fourth site. The VALUE is settled. The ROLE still needs a name.
 
      THERE ARE FOUR, AND THE FOURTH IS THE ACCENT AS A FOREGROUND.
-     --accent is a FILL, --accent-ink is what sits ON that fill, and the whole
-     trio assumed the accent would always arrive as a filled shape. Two of
-     §3.8's three permitted sites do not want a fill: the selected technology
-     tile keeps --surface because "a filled accent tile here would be a second
-     primary action on a surface that already has Search" (38-home.css), and
-     the settings panel's segmented control is a pill on a track. Both pointed
-     --accent -- the FILL token -- at `color`, which is invisible today only
-     because --accent is aliased to the ink. On repaint it would have rendered
-     a selected tile's NAME as a green word at 13px/600, four pixels from a
-     green `Live` chip meaning "this patent is enforceable" -- and §3.8's own
-     constraint, "it must not be confusable with --state-live", was written
-     about a fill and would not have caught it. A foreground accent needs its
-     own measured value against --surface, so it is its own token rather than
-     a second job for --accent.
+     --accent is a FILL, --accent-ink is what sits ON that fill. Two of §3.8's
+     three sites do not want a fill: the selected technology tile keeps
+     --surface because "a filled accent tile here would be a second primary
+     action on a surface that already has Search" (38-home.css), and the
+     settings panel's segmented control is a pill on a track. Both point the
+     FILL token at `color`, which is a foreground job, so the foreground gets
+     its own token rather than a second job for --accent.
 
-     THERE ARE THREE, NOT TWO. --accent-hover exists because --ink-hover is a
-     NEUTRAL: it is one step along the neutral ramp, which is the correct hover
-     for a near-black fill and turns a green button GREY the day the accent
-     lands. A hover on an accent fill is a measured darker accent and cannot be
-     derived from the accent by a formula, so it is its own semantic token in
-     all three blocks. It is aliased to --ink-hover's value today, so nothing
-     moves until the hue does. */
+     AND --accent-hover IS THE THIRD, NOT A SPARE. --ink-hover is a NEUTRAL:
+     one step along the neutral ramp, which is the correct hover for a
+     near-black fill. It and --accent-hover agree today and are still two
+     tokens, because one answers "how does an ink fill hover" and the other
+     answers "how does the accent hover", and those stay two questions. */
   --accent:var(--n-10); --accent-ink:#FAFAFA; --accent-hover:var(--n-9);
   --accent-on-surface:var(--n-10);   /* the accent as INK, on --surface */
   --text-1:var(--n-10); --text-2:var(--n-8); --text-3:var(--n-7);
@@ -456,11 +456,12 @@ html{color-scheme:light dark;background:var(--ground)}
      there. §10's reading of the dark reference screen. */
   --ground:#141414; --surface:#1A1A1A; --surface-sunken:#101010;
   --border:#2E2E2E; --border-strong:#454545;
-  /* the accent slot, aliased to the ink pair here exactly as in light: the
-     near-black fill becomes a near-white one, which is what ships today. The
-     specific green needs a value MEASURED against this ground — a hue chosen
-     against white and carried unchanged into dark is how a component silently
-     stops meeting contrast (brief.md §5). */
+  /* the accent, achromatic here exactly as in light: the near-black fill
+     becomes a near-white one and --accent-ink inverts with it. There is no
+     hue to re-measure against this ground, which is the maintenance cost §3.8
+     stops paying by dropping the colour — a hue chosen against white and
+     carried unchanged into dark is how a component silently stops meeting
+     contrast (brief.md §5). */
   --accent:#F0F0F0; --accent-ink:#141414; --accent-hover:#FFFFFF;
   --accent-on-surface:#F0F0F0;
   --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
@@ -514,11 +515,12 @@ html{color-scheme:light dark;background:var(--ground)}
      there. §10's reading of the dark reference screen. */
   --ground:#141414; --surface:#1A1A1A; --surface-sunken:#101010;
   --border:#2E2E2E; --border-strong:#454545;
-  /* the accent slot, aliased to the ink pair here exactly as in light: the
-     near-black fill becomes a near-white one, which is what ships today. The
-     specific green needs a value MEASURED against this ground — a hue chosen
-     against white and carried unchanged into dark is how a component silently
-     stops meeting contrast (brief.md §5). */
+  /* the accent, achromatic here exactly as in light: the near-black fill
+     becomes a near-white one and --accent-ink inverts with it. There is no
+     hue to re-measure against this ground, which is the maintenance cost §3.8
+     stops paying by dropping the colour — a hue chosen against white and
+     carried unchanged into dark is how a component silently stops meeting
+     contrast (brief.md §5). */
   --accent:#F0F0F0; --accent-ink:#141414; --accent-hover:#FFFFFF;
   --accent-on-surface:#F0F0F0;
   --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
@@ -583,9 +585,9 @@ html{color-scheme:light dark;background:var(--ground)}
   /* THE FOCUS RING IS THE ACCENT. §3.8 names three places the accent may
      appear and this is one of them, so it derives rather than being declared
      twice — one edit to --accent moves the primary fill, the selected control
-     and the ring together. It resolved to the same near-black/near-white pair
-     before this became an alias, so the repaint is visible in exactly the
-     three places §3.8 permits and nowhere else. */
+     and the ring together. The accent is achromatic, so the ring is the same
+     near-black/near-white pair as the ink; deriving it still matters, because
+     it is what keeps the three permitted places to one declaration. */
   --focus:var(--accent);
 }
 /* ══ end tokens ══ */

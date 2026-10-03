@@ -52,8 +52,9 @@ is not good or bad for a founder — it is information, and whether it is a prob
 what they are building. Green and red are confined to state chips and delta pills, where direction is
 unambiguous.
 
-**Nothing means *good* because it is green.** The accent is a hue for a control, not a verdict about
-data, and it may not enter a status, a score or a rank.
+**Nothing means *good* because it is green.** The accent is a control's colour, not a verdict about
+data — it is achromatic precisely so it cannot be read as one — and it may not enter a status, a score
+or a rank.
 
 **Never colour alone.** Every coloured element also carries a word or a shape — a dot plus a label,
 an arrow plus a number, a hatch plus a legend entry.
@@ -233,8 +234,8 @@ state, not a second grey.
 
 ### 3.8 · The accent
 
-**Terrain's accent is green.** [`brief.md`](brief.md) §5 is the decision and carries the reasoning;
-this section is how it behaves.
+**Terrain's accent is achromatic** — the ink pair, near-black in light and near-white in dark.
+[`brief.md`](brief.md) §5 is the decision and carries the reasoning; this section is how it behaves.
 
 **Four tokens, all themed:**
 
@@ -245,25 +246,24 @@ this section is how it behaves.
 --accent-on-surface  the accent as ink, on --surface
 ```
 
-**The fourth exists because two of the three sites below do not want a fill.** The other three tokens
-all describe a filled shape — the accent, what sits on it, and what it becomes on hover — and site 3
-is frequently *not* one: the selected technology tile keeps `--surface` because a filled accent tile
-would be a second primary action on a surface that already has Search, and the settings panel's
-segmented control is a pill on a track. Both of those pointed `--accent` — **the fill token** — at
-`color`. That is invisible today only because the accent is aliased to the ink, and on repaint it
-would have rendered a selected tile's *name* as a green word at 13px/600, four pixels from a green
-`Live` chip. **The constraint below — that the accent must not be confusable with `--state-live` —
-was written about a fill and would not have caught two green words side by side.** A foreground
-accent needs its own value measured against `--surface`, not the fill's value borrowed.
+**They hold ink values and are still four tokens, because the accent is a role and not a hue.** The
+three sites below have to be able to *say* they are the accent. A site that read `--text-1` would
+leave this section pointing at nothing, and the rule would stop being enforceable the moment somebody
+added a fourth site.
 
-**The third is not an afterthought.** `--ink-hover` is one step along the *neutral* ramp, which is
-the correct hover for a near-black fill and turns a green button grey the day the accent lands. A
-hover on an accent is a measured darker accent and cannot be derived from the accent by a formula,
-so it is its own token in all three blocks.
+**The fourth exists because two of the three sites do not want a fill.** The selected technology tile
+keeps `--surface` because a filled accent tile would be a second primary action on a surface that
+already has Search, and the settings panel's segmented control is a pill on a track. Both put the
+accent on `color`, which is a foreground job, so the foreground has its own token rather than a second
+job for the fill token.
 
-**`--focus` is derived from `--accent`, not declared beside it.** One edit moves the primary fill,
-the selected control and the ring together, which is what makes site 2 below true by construction
-rather than by discipline. §3.9 carries the tier.
+**`--accent-hover` is the third, not a spare.** `--ink-hover` is one step along the neutral ramp, the
+correct hover for a near-black fill. The two agree today and stay two tokens, because one answers
+*how does an ink fill hover* and the other *how does the accent hover*, and those remain two questions.
+
+**`--focus` is derived from `--accent`, not declared beside it.** One declaration moves the primary
+fill, the selected control and the ring together, which is what makes site 2 below true by
+construction rather than by discipline. §3.9 carries the tier.
 
 **Where it appears — three places, and they are the whole list:**
 
@@ -279,24 +279,11 @@ rather than by discipline. §3.9 carries the tier.
 - **As decoration.** No gradient, no wash, no tinted card background, no accent border.
 - **Anywhere it could be read as a verdict.**
 
-**Two constraints that are easy to miss:**
-
-- **It must not be confusable with `--state-live` `#1B6B45`.** That green already means *this patent
-  is enforceable*, on a chip the founder reads as a fact. An accent close enough to be mistaken for it
-  makes the primary button look like a status.
-- **It needs a measured dark value.** A hue chosen against `#FFFFFF` and carried unchanged onto
-  `#1A1A1A` is how a control silently stops meeting contrast. §10.3's table gains two rows when the
-  specific green is chosen.
-
-**The slot exists and is read; the hue does not.** All three tokens are declared in
-`app/styles/tokens.css` **aliased to the ink pair**, and the three sites above read them today. That
-is a faithful description of what ships — near-black primary fills, which is what the no-accent rule
-left behind — rather than a placeholder, and it makes the repaint a **three-value edit in each of the
-three token blocks** instead of a hunt through the stylesheet.
-
-Declaring them aliased rather than omitting them is the point: tokens that exist and are read by
-nothing leave the repaint a hunt anyway. A loud sentinel value was the other option and was turned
-down — it violates §2's one rule and it would ship the day somebody forgot.
+**What being achromatic buys.** The accent cannot be confused with `--state-live` `#1B6B45`, which
+means *this patent is enforceable* on a chip the founder reads as a fact, and it needs no separately
+measured dark value: the ink pair inverts with the theme and §10.3's ink rows already carry its
+contrast. **A future hue would have to answer both** — a value distinct from every state colour, and
+its own measurement against `#1A1A1A` — and §2's one rule is what it would be argued against.
 
 **Innovue's blue is not an accent and never becomes one.** `#006CB6` appears inside the Innovue mark
 on the attribution line and nowhere else — a third party's mark reproduced as issued.
@@ -324,7 +311,7 @@ there; that mismatch is exactly why the file is not organised by §.
 **The derived three** are `--state-up`, `--state-down` and `--focus`. A literal for any of them
 inside a dark block would pin the value to one palette **while reading as perfectly correct CSS** —
 the same failure mode as a component reading a primitive. `--focus` is the clearest case: it
-re-reads `--accent` at use time, so choosing the green once gives the focus ring both its values.
+re-reads `--accent` at use time, so the one accent declaration gives the focus ring both its values.
 
 *This read `the derived five` and named two tokens the file had already deleted. It is the same
 drift §10.1 describes, in the prose rather than the table, which is why the gate added there counts
@@ -1096,10 +1083,10 @@ thing a scrim exists to do. In dark the binding constraint is not contrast — e
 clears 20:1 against the white stage — but the other side: enough that the masthead and the list stop
 competing for the eye, little enough that the page reads as behind rather than gone.
 
-**`--accent`, `--accent-ink` and `--accent-on-surface` gain rows here when the specific green is
-chosen** — and the third is the one that must be measured against `--surface` rather than derived
-from the fill, because it is read as text. A hue measured
-only against white is a hue that has not been measured.
+**`--accent`, `--accent-ink` and `--accent-on-surface` have no rows of their own** because they hold
+the ink pair's values, and the ink rows above are their measurement. A hue would give each of them a
+row, and the third would have to be measured against `--surface` rather than derived from the fill,
+because it is read as text.
 
 ### 10.4 · The control
 
@@ -1116,8 +1103,6 @@ that — an external favicon cannot inherit `currentColor` the way the inlined s
 
 ## 11 · Open
 
-- **The specific green**, its `--accent-ink`, and both dark values. §3.8 is the rule; the hue is not
-  chosen.
 - **The figure viewer has no measured floor.** It takes the viewport less a 24px gutter now, so the
   question moved rather than going away: nothing states the width below which a patent figure stops
   being readable, and the strip's 640px breakpoint is re-derived from the old column figure rather

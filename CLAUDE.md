@@ -184,8 +184,8 @@ it outright leaves a vacuum that the next session fills with a guess. **Six rule
 this way, and each successor is checkable** — three by a document that says exactly what is permitted,
 three by a script that refuses:
 
-- Terrain **has** an accent (green), and `design-language.md` §3.8 says the three places it may appear
-  and the places it may not.
+- Terrain **has** an accent, and it is **achromatic** — the ink pair. `design-language.md` §3.8 says
+  the three places it may appear and the places it may not.
 - A **download** is no longer the line between software and a report. The line is **what the file is
   permitted to say**, and `brief.md` §1 carries the test: does it state anything the interface did
   not. The founder's starred set leaves as a CSV; a cover page, a summary or a conclusion does not.
@@ -214,8 +214,8 @@ never colour alone.
 
 **The accent is for controls, never for data.** A primary action, a focus ring, a selected control.
 Not a status, not a score, not a relevance rank. `design-language.md` §3.8 is the rule and
-`brief.md` §5 is the decision. **`app/` has not been repainted** — the specific green is unchosen, and
-applying it is a separate, visible pass.
+`brief.md` §5 is the decision. **The accent is achromatic**, so the states are the only colour in
+the product; Terrain's green is the website's marketing hue and does not enter the interface.
 
 **Innovue's blue may only ever appear inside the Innovue mark itself.** In a border, a chip or a
 button, it has been misread.

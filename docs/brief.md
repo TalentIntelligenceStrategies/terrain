@@ -287,9 +287,21 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
 
 ## 5 · The accent
 
-**Terrain's accent is green**, decided 2026-09-15. It is the hue Terrain's row carries in the TIS
-website's Products menu, and `brand/assets/imagery/terrain/` is the gradient thumbnail that already
-uses it.
+**Terrain's accent is achromatic.** It is the near-black ink pair — near-white in dark — and that is
+the decision, not a slot waiting on a hue.
+
+**Why there is no colour in it.** [`design-language.md`](design-language.md) §2 permits colour in
+three places: discrete states, direction of change, and the accent. A chromatic accent spends the third
+on a *control*, and then every coloured thing on the screen has to be read twice — a green *Live* chip
+means *this patent is enforceable*, a green button means *press here*, and the founder has to know
+which kind of green they are looking at before either tells them anything. Without a hue, **the
+states are the only colour in the product.** That is the strongest available form of the rule, and
+it costs one thing worth naming: a near-black primary action is calmer and less inviting than a
+coloured one.
+
+**The accent is still a role, and it keeps its tokens.** The three sites below have to be able to
+*say* they are the accent; a site that read `--text-1` would leave the rule pointing at nothing, and
+it would stop being enforceable the moment a fourth site appeared.
 
 **Where it may appear:**
 
@@ -303,23 +315,11 @@ uses it.
   cases in [`design-language.md`](design-language.md) §2 — discrete states and direction of change —
   are unchanged and the accent is not one of them.
 - **As decoration.** No gradient, no wash, no accent border on a card, no tinted background.
-- **Anywhere it could be read as a verdict.** Nothing in this product means *good* because it is
-  green.
+- **Anywhere it could be read as a verdict.**
 
-**Two constraints that are easy to miss:**
-
-1. **It must not be confusable with `--state-live`.** Live-versus-expired is already a green and a
-   red, on a chip the founder reads as a fact about a patent. An accent green close enough to be
-   mistaken for it would make the primary button look like a status.
-2. **It needs a dark value, measured.** A hue chosen against white and carried unchanged into the
-   dark palette is how a component silently stops meeting contrast.
-
-**`app/` has not been repainted.** It ships with near-black primary fills, which is what the
-no-accent rule left behind. Applying this decision is a separate, visible pass.
-
-**A green marketing page was never licence to put green in the product**, and that separation still
-holds in the other direction: this decision governs the product interface. The TIS website's surface
-accents are a different system, recorded upstream.
+**Terrain's green lives on the TIS website, not in the product.** It is the hue Terrain's row carries
+in the website's Products menu, and `brand/assets/imagery/terrain/` is the gradient thumbnail that
+uses it. That is the marketing system's accent, recorded upstream; it does not enter the interface.
 
 ---
 
@@ -329,7 +329,6 @@ accents are a different system, recorded upstream.
 - **Pricing** — the allowance, the price and the tier structure. The plan screen prints `XXX` and a
   bar rather than guessing, and [`platform.md`](platform.md) §10 item 1 records why this cannot be settled
   before filing alerts are.
-- **The specific green**, its dark value, and its two tokens.
 - **What a search costs, and what an export costs.** [`platform.md`](platform.md) §6.1 lists the run
   types that exist and prints illustrative figures against them. Pricing is unsettled, and the one
   question the pivot forces is whether taking your own data out should move the meter at all.
@@ -343,8 +342,8 @@ Decisions recorded here that belong in the TIS monorepo when Terrain graduates. 
 monorepo from this folder** — record it here and leave it for a deliberate propagation pass.
 
 - The Terrain name and the endorsed-sub-brand lockup → `brand/positioning.md`.
-- **Terrain's accent decision and its two tokens** → `brand/visual-guide.md`, where the
-  gradient ↔ pillar pairings live.
+- **Terrain's accent decision** — an achromatic product accent beside a green marketing hue →
+  `brand/visual-guide.md`, where the gradient ↔ pillar pairings live.
 - Terrain's neutral ramp and semantic-colour rule → the two systems will need deliberate
   reconciliation, not a copy.
 - **Terrain's dark palette** — the semantic tokens in `design-language.md` §10, and more usefully the
