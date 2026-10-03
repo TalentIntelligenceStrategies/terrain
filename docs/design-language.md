@@ -631,8 +631,13 @@ moving is success. It fills with `--text-1` on a `--surface-sunken` track and ta
 `fill="currentColor"` so it inverts for free. Content on `--ground`, cards on `--surface`, one working
 surface beneath the bar.
 
-**The results surface has a floor, and below it Terrain says so rather than reflowing.** **The
-supported floor is 1024px.** Below it the product states that it needs a wider window and stops.
+**Below 1080px the columns stack, and the layout is designed down to 375px.** The list sits over the
+record, each still one panel, and nothing is dropped to make it fit: every region keeps its control
+and loses its words. On a phone the masthead is one row of glyphs with the labels as accessible names,
+the field tiles are one row that scrolls sideways, the folded search bar is the sentence and Search
+alone, and a row's meta is one column so no qualifier is cut. **At 320px the masthead wraps to a
+second row rather than hiding anything** — height is what a phone has to spare, and a control that
+is not there cannot be found.
 
 **A result row is ~370px, and it buys back the trip into the record.** Measured at 1440 it is 371px
 with a one-line title and 393 with two: an eyebrow, a full-width title, the who-and-when grid as a

@@ -176,6 +176,11 @@ change anything is worse than a missing one. **It stays folded**, §4.2: one lin
 
 One region is protected by name: the appearance control.
 
+**On a phone every region keeps its control and loses its words.** Below 720px the lockup is the
+mark alone, New search and the switcher are their glyphs, the meters drop their units and the profile
+its chevron, and the bar is one 48px row at 390px. Every dropped word is still the control's
+accessible name. At 320px the bar wraps to a second row rather than hiding a region.
+
 ### 4.2 · The search bar
 
 The founder's sentence, still editable, with the elapsed time and the match count beside it.

@@ -436,7 +436,12 @@
    a break.
    Restore the original order is the other known wrap — it is a sentence,
    and it only appears after the founder has pressed Find similar. */
-.set-bar #setRebase[hidden]{display:inline-flex;visibility:hidden}
+/* FROM 1080 ONLY. Below it the columns stack, the bar is the window's width
+   and wraps to two rows at rest anyway, and a held slot is an empty third
+   row under Sort and Filter. */
+@media (min-width:1080px){
+  .set-bar #setRebase[hidden]{display:inline-flex;visibility:hidden}
+}
 @media (max-width:1400px) and (min-width:1080px){
   .set-bar #filtBtn>span:not(.lm-count){position:absolute;width:1px;height:1px;
                           padding:0;margin:-1px;overflow:hidden;

@@ -634,3 +634,12 @@
     box-shadow:var(--shadow-raise)}
   .set-thumb-more:hover{background:var(--surface);color:var(--text-1)}
 }
+
+/* ── ONE COLUMN OF META ON A PHONE ────────────────────────────────────────
+   Two columns of ~150px cut "Published" to "Publis…" and the jurisdiction to
+   "Unit…" — the ellipsis landed on the word that says what the date is, and
+   34-list.css's own rule is that the value, never its qualifier, gives way.
+   One column gives each fact the row's width back. */
+@media (max-width:640px){
+  .drill-meta{grid-template-columns:minmax(0,1fr)}
+}
