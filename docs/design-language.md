@@ -948,12 +948,20 @@ rather than extended.
 result. Mixing sets is immediately visible in the stroke weight and the corner radius, and it reads as
 an interface assembled from parts.
 
-**Three sizes and each has one home.** 1.5px stroke, round caps and joins throughout.
+**One release, too.** Every icon's geometry is copied from `lucide-static` 1.51.0. An icon taken from
+an older release is a different drawing under the same name, and mixing releases shows in the corners
+and proportions exactly as mixing sets does. Upgrading means re-copying every icon, not the ones that
+happen to be touched.
+
+**Six sizes, each with one home.** 1.5px stroke, round caps and joins throughout.
 
 | Size | Where |
 |---|---|
-| 16px | controls — buttons, menu rows, the masthead, the figure viewer's action bar |
-| 18px | the head of a destination page |
+| 14px | inline with small text — the row's meta glyphs, menu ticks and chevrons, the masthead's theme control and counters |
+| 15px | the results toolbar and the list bar — settings, view mode, sort, filter, *Find similar*, and *Back* |
+| 16px | standalone controls — buttons, record actions, masthead buttons, the figure viewer's action bar |
+| 17px | the row's star, the one control a row carries beside its toggle |
+| 18px | the head of a destination page, and the figure viewer's previous and next |
 | 24px | a technology-field tile on the home surface, where the glyph is the tile's subject rather than a marker on a control |
 
 **One glyph, one act.** Two controls in one region carrying the same mark for different acts is the
