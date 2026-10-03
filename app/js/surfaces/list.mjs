@@ -180,11 +180,14 @@ function glyph(k) {
 /* one cell of the meta grid. `inner` is already-escaped HTML, because half the
    callers pass a bar and half pass text. */
 function cell(k, inner) {
-  /* t-body ON THE VALUE. It was 13/1.4 at weight 400 in 34-list.css — `label`'s
-     metrics carrying `body`'s weight, which is a sixth role invented in a gap
-     rather than a role from §4's table. */
-  return '<span class="dm">' + glyph(k)
-    + '<span class="dm-v t-body">' + inner + '</span></span>';
+  /* NO ROLE CLASS ON THE VALUE: it is a meta line, 12.5/400, and 34-list.css
+     spells that size the way §4 says a meta line does. It carried t-body, and
+     at 14px in --text-1 the four facts under the title outweighed the
+     abstract beneath them — the row read title, meta, prose in the wrong
+     order. The cell names its kind so the holder can lead its three
+     neighbours by colour alone. */
+  return '<span class="dm dm-' + k + '">' + glyph(k)
+    + '<span class="dm-v">' + inner + '</span></span>';
 }
 
 /* THE INVENTOR LINE PRINTS ONE NAME AND COUNTS THE REST. A patent with six

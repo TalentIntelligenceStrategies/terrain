@@ -227,10 +227,9 @@ holder and the year, and a founder could not tell a corporate filing from a univ
 printing patent from a motor-control one, without opening the record — so the record was opened on
 every row and the list read as a table of contents rather than as a result. What changed is not how
 many facts a row may assert; it is which surface answers the glance. **The cost is stated rather
-than hidden**: the row measures about 340px against the old 176, so a 1000px column shows three
-results where it showed five. *Of the most recent 46px, more than half is the eyebrow's own line;
-the rest is the type coming up onto the scale — the meta and the abstract were rendering at sizes
-that appear nowhere in [`design-language.md`](design-language.md) §4's table.*
+than hidden**: the row measures about 370px against the old 176, so a 1000px column shows under
+three results where it showed five. [`design-language.md`](design-language.md) §7 carries the
+measurement.
 
 **The abstract is barred when it is withheld and absent when there is none**, which is the skeleton
 contract in the one place on the row where the two are easy to confuse. Three lines rather than the
@@ -371,6 +370,15 @@ meant under all of it. Measured, that put them about 950px down a 1300px scrolle
 opened a patent to see what it looks like scrolled past five to forty claims of legal prose and
 mostly concluded there were no pictures. Ordering by what a patent is published in lost to ordering
 by what the reader came for.
+
+**The record's title is the largest type in the pane.** It is `display-2`, two steps above the row's
+`title`: the row answers *which of these*, the record answers *this one*, and a row and the document
+it opens set at one size is a page with no subject. **The pane is named for assistive technology
+only** — *The patent record* is the head's `<h2>` and the focus target on open, visually hidden,
+because an eyebrow over a 26px title that already says what the pane holds is chrome read first and
+used never. **Drawings, Abstract and Claims are `title-s`**, so the published document's sections
+sit a clear step above its 14px prose and a step below the title, with the field labels in `micro`
+a level under both.
 
 **A long strip is capped.** Real records run to hundreds of figures; the strip shows two rows and a
 control for the rest. The count in the heading is what states how many there are, so the control is

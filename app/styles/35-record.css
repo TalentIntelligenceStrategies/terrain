@@ -112,6 +112,9 @@
           background:var(--surface);
           padding:var(--s-12) var(--s-20);border-bottom:1px solid var(--border)}
 .rec-head h2{flex:1;min-width:0;margin:0;margin-inline-end:var(--s-4)}
+/* the heading is sr-only now (surface.html), so this is what pushes the
+   actions to the trailing edge. */
+.rec-head-fill{flex:1 1 auto}
 /* THE GAP IS --s-8 AND IT WAS --s-12, because the row went from three icon
    buttons to two labelled controls, a rule and three icon buttons. At 12 the
    two groups stopped reading as two groups — §5 wants the gap BETWEEN groups
@@ -426,18 +429,21 @@
    patent's own title is its subject, so equal size would make the head read as
    two competing headings. 15px is the bars' own height, so the populated pane
    and an unpopulated one are the same shape. */
-/* THE RECORD'S TITLE IS ONE STEP ABOVE THE ROW'S, and the step is the point —
-   §7's own thumbnail argument applied to type. The row's job is WHICH OF
-   THESE, so it takes `title-s`; the record's is THIS ONE, so it takes `title`.
-   Both were inventions before this, and the row was the smaller invention of
-   a pair nobody had put side by side.
+/* THE RECORD'S TITLE IS display-2, TWO STEPS ABOVE THE ROW'S. The row's job
+   is WHICH OF THESE, so it takes `title`; the record's is THIS ONE, so it is
+   the largest type in the pane. Both sat at 17 — the row had moved up a step
+   and the record had not — and a list row and the document it opens set at
+   one size is a page with no subject.
 
-   sk-h-title MOVED TO 17 WITH IT. The note that stood here said 15px is the
-   bars' own height, so a populated pane and an empty one are the same shape —
-   true, and it stays true only if the bar moves when the text does. A skeleton
-   that is the wrong height for its content is the same class of defect as a
-   measure nothing declares. */
-.pn-name-real{color:var(--text-1);text-wrap:pretty}
+   balance, not pretty: a 26px title over two lines with one word on the
+   second reads as a fragment, and this is the one heading in the product long
+   enough and large enough for the difference to show.
+
+   THE SKELETON BAR MOVES WITH IT. sk-h-display is the display-2 height, so a
+   populated pane and an empty one are the same shape — a skeleton that is the
+   wrong height for its content is the same class of defect as a measure
+   nothing declares. */
+.pn-name-real{color:var(--text-1);text-wrap:balance}
 .pn-meta{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap}
 /* THE SAME TREATMENT AS THE ROW'S .drill-score, and it has to be: the founder
    reads one number in two places and a second styling would read as a second
@@ -477,11 +483,14 @@
    sk-h-body at 12px, so the patent's own title had no more presence than its
    Number field. Seven changes, no field added or removed. */
 
-/* the section headings were t-micro, IDENTICAL to the eleven <dt> labels — a
-   heading and a leaf label rendering the same. Headings take t-label; the
-   <dt>s keep t-micro, so the levels separate without a new type role. */
-.pn-sec-h{font-size:13px;line-height:1.4;font-weight:500;
-          letter-spacing:0;text-transform:none;color:var(--text-2)}
+/* THE SECTION HEADINGS ARE title-s, IN THE MARKUP AND NOWHERE ELSE. They were
+   t-micro in the markup and 13/500 here — two roles on one node, which §4
+   rules out — and 13px over 14px prose is a heading the eye reads as the
+   first line of the paragraph. 15/600 over 14/400 separates the levels by
+   size and weight both; the <dt>s stay t-micro, a third level below.
+   The count beside the word inherits the heading's size, the way the list
+   head's figures do, and steps back by colour alone. */
+.pn-sec-n{color:var(--text-3)}
 
 /* eleven fields in one undifferentiated block. Five clusters now — identity ·
    classification · people · dates · where+status — grouped BY SPACE inside the

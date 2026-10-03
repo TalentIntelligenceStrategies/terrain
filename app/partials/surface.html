@@ -408,14 +408,16 @@
                  is pushed to the trailing edge. No auto margin, and nothing to
                  flip for RTL — the row is already logical. -->
             <div class="rec-head">
-              <!-- t-micro AND NOT t-title. The demotion to an eyebrow is argued in
-                   35-record.css and is right; the markup had not caught up, so
-                   grepping t-title to find every title in the product returned a
-                   false hit and changing .t-title changed everything except this.
-                   §4: a role is one class, never two. It stays an <h2> and stays
-                   the focus target -- the heading LEVEL is the pane's place in the
-                   outline, which is a different question from its size. -->
-              <h2 class="t-micro" id="recTitle" tabindex="-1">The patent record</h2>
+              <!-- SPOKEN, NOT SHOWN. An eyebrow reading "The patent record" sat
+                   over a 26px patent title that already says what this pane is,
+                   and it was the first thing a sighted founder read in the
+                   column every time. It stays an <h2> — the pane's place in
+                   the outline and the target the record focuses on open — and
+                   sr-only keeps it in the accessibility tree. The spacer after
+                   it takes over the flex:1 that pushed the actions to the
+                   trailing edge. -->
+              <h2 class="sr-only" id="recTitle" tabindex="-1">The patent record</h2>
+              <span class="rec-head-fill" aria-hidden="true"></span>
               <!-- ══ WHAT THIS DOES TO YOUR SET ══════════════════════════════
                    THESE TWO ARE HERE AND THE OTHER THREE ARE AT THE FOOT, and
                    the split is by WHERE THE ACT LANDS rather than by how often

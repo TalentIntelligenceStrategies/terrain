@@ -62,7 +62,13 @@
    wraps it now. */
 .dm-v{min-width:0;display:flex;align-items:center;gap:var(--s-6);
       overflow:hidden;white-space:nowrap;
-      color:var(--text-1)}
+      font-size:12.5px;line-height:1.4;font-weight:400;color:var(--text-2)}
+/* THE HOLDER LEADS. Of the four facts under a title, who owns the patent is
+   the one a founder reads first and the one they sort the set by in their own
+   spreadsheet afterwards, so it keeps --text-1 while its neighbours step
+   back. Colour and not weight: §4 gives a meta line 400, and a 500 holder
+   would be one fact in two weights between this row and the starred table. */
+.dm-firm .dm-v{color:var(--text-1)}
 .dm-v>*{flex:0 0 auto}
 .dm-t{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
 /* the inventors this row is not naming. It is a count, so it is a figure —
@@ -76,7 +82,8 @@
    the whole tag row read as machine output, against a calendar row directly
    above that says `Published` in Urbanist and only the date in figures — two
    meta rows of the same kind, set two different ways. It takes the row's body
-   role from .dm-v like every other prose value; this carries only the colour.
+   size from .dm-v like every other value in the grid; this carries only the
+   colour.
 
    THE IPC SYMBOL BESIDE IT KEEPS fig-s, and that is the distinction rather
    than an inconsistency: a classification symbol is a code and a country is

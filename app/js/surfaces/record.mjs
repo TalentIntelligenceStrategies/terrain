@@ -166,8 +166,8 @@ function figuresHTML(figures) {
        section inside it is the next level down — these were h4, and a screen
        reader navigating the record by heading level got an outline reporting
        two missing sections between the record and its contents. The SIZE is
-       t-micro either way; the level is the outline, not the type. */
-    return '<section class="pn-sec"><h3 class="t-micro pn-sec-h">Drawings</h3>'
+       title-s either way; the level is the outline, not the type. */
+    return '<section class="pn-sec"><h3 class="t-title-s pn-sec-h">Drawings</h3>'
       + '<p class="pn-nofig t-body">This record has no drawings.</p></section>';
   }
   /* ══ TWO ROWS, AND THE REST BEHIND A CONTROL ════════════════════════════
@@ -189,8 +189,8 @@ function figuresHTML(figures) {
      hide most of them. */
   const capped = figs.length > CAP;
   return '<section class="pn-sec pn-figs-sec">'
-    + '<h3 class="t-micro pn-sec-h">Drawings '
-    + '<span class="fig fig-s">' + figs.length + '</span></h3>'
+    + '<h3 class="t-title-s pn-sec-h">Drawings '
+    + '<span class="fig pn-sec-n">' + figs.length + '</span></h3>'
     + '<ol class="pn-figs" id="pnFigs"' + (capped ? ' data-capped' : '') + '>'
     + figs.map((f, i) =>
         '<li class="pn-fig">'
@@ -287,8 +287,8 @@ function paneHTML(rec, id) {
     + '</div>'
     + '<div class="pn-name">'
     + (rec.title || rec.skim
-      ? '<span class="pn-name-real t-title">' + esc(rec.title || rec.skim) + '</span>'
-      : bar('w-full', 'title') + bar('w-lg', 'title'))
+      ? '<span class="pn-name-real t-display-2">' + esc(rec.title || rec.skim) + '</span>'
+      : bar('w-full', 'display') + bar('w-lg', 'display'))
     + '</div>'
     /* THE SCORE SITS WITH THE STATUS, as a peer on a row that is read across.
        §7's "a figure block puts its label above, never beside" describes a
@@ -333,15 +333,15 @@ function paneHTML(rec, id) {
        rather than a fact about it. They follow it, at the section rhythm
        everything else in this pane uses. */
     + figuresHTML(rec.figures)
-    + '<section class="pn-sec"><h3 class="t-micro pn-sec-h">Abstract</h3>'
+    + '<section class="pn-sec"><h3 class="t-title-s pn-sec-h">Abstract</h3>'
     + '<div class="pn-lines">'
     + (rec.abstract
       ? '<p class="pn-prose t-body"' + langAttr(rec.abstract, rec.number) + '>'
         + esc(rec.abstract) + '</p>'
       : bars(4, ['w-full', 'w-full', 'w-full', 'w-lg']))
     + '</div></section>'
-    + '<section class="pn-sec"><h3 class="t-micro pn-sec-h">Claims '
-    + '<span class="fig fig-s">' + (claimCount || '') + '</span></h3>'
+    + '<section class="pn-sec"><h3 class="t-title-s pn-sec-h">Claims '
+    + '<span class="fig pn-sec-n">' + (claimCount || '') + '</span></h3>'
     + (claimCount
       ? '<ol class="pn-claims">' + claims + '</ol>'
       : '<ol class="pn-claims">' + Array.from({ length: 6 }, (_, k) =>

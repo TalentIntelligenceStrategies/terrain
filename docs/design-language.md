@@ -383,12 +383,17 @@ is what `.lm-item` and `.rec-act` already do for `label`. A rule defined and car
 selector nothing references, which is what this repository refuses for a stylesheet.
 
 **A meta line takes the size at 400, and the weight is the only thing it borrows from elsewhere.**
-Three short factual strings sit at 12.5 — the results meta line, the composer's status, the starred
-row's meta — and they are neither controls nor prose. **The list row already settled this one size
-up**: `.dm-v` is `body` 14/400 holding `figure-s` 12.5/500, so the words are 400 and the figures
-beside them are 500. The smaller meta lines follow it. Forcing them to `label-s`'s 500 would render
-the same holder name at 400 in the list and 500 in the starred set, which is one fact in two weights
-on two surfaces — a worse outcome than a role with a stated exception.
+Four short factual strings sit at 12.5 — the results meta line, the composer's status, the starred
+row's meta and the list row's who-and-when grid — and they are neither controls nor prose. The words
+are 400 and the `figure-s` numerals beside them are 500, at the same size, so the line reads as one
+run. Forcing them to `label-s`'s 500 would render the same holder name at 400 in one place and 500
+in another, which is one fact in two weights — a worse outcome than a role with a stated exception.
+
+**The list row's grid is a meta line and not body.** At 14px in `--text-1` the four facts under a
+title outweighed the abstract under them — prose at the same size in a lighter ink — so the row read
+title, meta, prose with the middle band loudest. The grid is 12.5/400 in `--text-2`, and **the holder
+alone keeps `--text-1`**: it is the fact a founder reads first and sorts by later, and colour is the
+only lever a meta line has, because its weight is fixed.
 
 *Every chip is 500, including the grouping panel's, which inherited 400 and rendered lighter than the
 three chips beside it until this was swept.*
@@ -629,10 +634,10 @@ surface beneath the bar.
 **The results surface has a floor, and below it Terrain says so rather than reflowing.** **The
 supported floor is 1024px.** Below it the product states that it needs a wider window and stops.
 
-**A result row is ~340px, and it buys back the trip into the record.** It was ~102px with four
-fields on it, ~176px once it gained drawings, ~290px at three bands, and ~340px since band one became
-an eyebrow over a full-width title and the type came up onto the scale. Measured, that takes a 1000px
-column from five results to about three. **That is the largest single cost in this document and it is
+**A result row is ~370px, and it buys back the trip into the record.** Measured at 1440 it is 371px
+with a one-line title and 393 with two: an eyebrow, a full-width title, the who-and-when grid as a
+12.5px meta line, a three-line abstract and the drawing strip. A row of four fields was ~102px.
+That takes a 1000px column from five results to under three. **That is the largest single cost in this document and it is
 spent on one thing:** four fields could not answer the glance, so the record was opened on every row
 and the list was a table of contents rather than a result. A row that settles *not this one* without
 a press is worth more than two more rows that cannot.
