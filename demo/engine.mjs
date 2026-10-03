@@ -20,7 +20,7 @@
  * deletes the first ending and the second along with it.
  *
  * ═══ FAILURE IS REACHABLE ON PURPOSE ═══════════════════════════════════════
- * `?fail=map,record` arms named ports to refuse, and `?fail=all` arms every
+ * `?fail=search,record` arms named ports to refuse, and `?fail=all` arms every
  * one. This is how the failure vocabulary gets exercised without editing code:
  * platform.md §7.1 says a failure is the size of the region that was waiting,
  * and that claim is only checkable if the regions can be made to fail one at a
@@ -31,7 +31,7 @@ import * as D from './data.mjs';
 
 const qs = new URLSearchParams(location.search);
 
-/* ?fail=map,record  ·  ?fail=all  ·  ?slow=3 */
+/* ?fail=search,record  ·  ?fail=all  ·  ?slow=3 */
 const FAILING = new Set((qs.get('fail') || '').split(',').filter(Boolean));
 const FAIL_ALL = FAILING.has('all');
 const SLOW = Number(qs.get('slow') || 1) || 1;
@@ -51,7 +51,6 @@ const wait = ms => new Promise(r => setTimeout(r, ms * SLOW));
    demonstrate partial success, which components.md §0.1 calls the normal case. */
 const DELAY = {
   fields: 180, coverage: 340, search: 900,
-  read: 900, narrow: 650, approve: 500,
   patents: 700, patentsPage: 520, sort: 420, facets: 420, rerank: 1100, cluster: 1400,
   export: 500,
   record: 600,
@@ -83,7 +82,7 @@ const PAGE = 20;
 function page(order, n) {
   const ids = order.slice(0, n);
   const by = new Map(ALL.map(r => [r.id, r]));
-  return { patents: ids.map(id => by.get(id)), order, matched: D.MATCHED };
+  return { patents: ids.map(id => by.get(id)), order, matched: order.length };
 }
 
 let shown = PAGE;
@@ -115,13 +114,12 @@ export const DemoEngine = {
      same synthetic shape, so filtering by jurisdiction would return the same
      set with a smaller number on it, which is a lie with a number attached.
      They reach the engine and `corpus/` is where they mean something. */
-  search: async ({ query = '', settings = {} } = {}) => {
+  search: async ({ settings = {} } = {}) => {
     LIMIT = Number(settings.count) || PAGE;
     shown = Math.min(LIMIT, ALL.length);
     ORDER = ALL.map(r => r.id).sort(cmp.relevance);
     return respond('search', {
       ...page(ORDER, shown),
-      said: String(query || D.DEMO_IDEA),
       elapsedMs: 240,
       balance: D.POINTS.balance - 2,
     });
@@ -205,14 +203,22 @@ export const DemoEngine = {
     return respond('cluster', tree);
   },
 
-  record: async ({ id } = {}) => respond('record', D.recordFor(id)),
+  /* AN UNKNOWN ID IS NOT_FOUND, never ok(null): the pane offers no retry for
+     a record that does not exist, and it can only know that from the code. */
+  record: async ({ id } = {}) => {
+    if (!byId.has(id)) {
+      await wait(DELAY.record);
+      return err(CODE.NOT_FOUND, false, `demo: no record ${id}`);
+    }
+    return respond('record', D.recordFor(id));
+  },
 
   /* THE LEDGER, and nothing else. It is handed the ids so a real engine can
      record WHAT left, and it answers with the balance. It never returns the
      rows: the client already has them, and a second copy of the columns here
      would be a second place the export's shape is decided. */
   export: async ({ ids = [] } = {}) =>
-    respond('export', { balance: D.POINTS.balance - 8, exported: ids.length }),
+    respond('export', { balance: D.POINTS.balance - 8 }),
 
   /* ── projects ────────────────────────────────────────────────────────── */
   projects: async () => respond('projects', { projects: D.PROJECTS }),
@@ -221,11 +227,15 @@ export const DemoEngine = {
   points: async () => respond('points', {
     balance: D.POINTS.balance, allowance: D.POINTS.allowance,
     runTypes: D.RUN_TYPES,
-    daily: D.FILINGS.map(v => Math.round(v / 4)),
   }),
   runs: async () => respond('runs', { runs: D.RUNS }),
   account: async () => respond('account', D.ACCOUNT),
-  saveAccount: async (patch) => respond('saveAccount', { ...D.ACCOUNT, ...patch }),
+  /* ONE FIELD PER CALL, KEYED BY THE CONTROL THAT EDITED IT — acctName or
+     acctMail — and the answer is the account as it now stands. */
+  saveAccount: async (patch = {}) => respond('saveAccount', {
+    name:  'acctName' in patch ? patch.acctName : D.ACCOUNT.name,
+    email: 'acctMail' in patch ? patch.acctMail : D.ACCOUNT.email,
+  }),
   billing: async () => respond('billing', D.BILLING),
   invoices: async () => respond('invoices', { invoices: D.INVOICES }),
   sendSupport: async () => respond('sendSupport', { sent: true }),

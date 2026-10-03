@@ -32,7 +32,6 @@
  * of nothing but bars cannot demonstrate a record pane. Exactly one.
  */
 
-export const FILINGS = [18, 22, 19, 28, 25, 34, 31, 44, 40, 52, 58, 55];
 
 /* JURISDICTION WENT WITH sharePie. The demo's own split fed a chart that is
    not in the product; corpus/ keeps its copy because a dead port there still
@@ -107,9 +106,10 @@ export const DEMO_PROJECT = 'Drone airframe and body structure';
 export const DEMO_IDEA = 'drone';
 
 /* ── the list ────────────────────────────────────────────────────────────────
-   SET_CEILING is the demo's own answer to the fifth narrowing question: 500
-   asked, 162 matched, 124 recommended. */
-export const MATCHED = 162;
+   SET_CEILING is how many rows the demo set holds, and it is also what the
+   set reports as `matched`: matched is the count the founder can page
+   through, so a larger number would keep Show more on screen with nothing
+   behind it. */
 export const SET_CEILING = 124;
 
 /* a seeded pseudo-record, so the list is stable across reloads and a reorder
@@ -366,13 +366,13 @@ export const RUNS = [
    temptation is strongest. A password renders as a run of dots, which is what a
    password looks like everywhere and is chrome rather than an identity being
    withheld. */
-export const ACCOUNT = { name: null, email: null, org: null, twoFactor: false };
+export const ACCOUNT = { name: null, email: null };
 
 /* 'XXX' IS NOT null, AND THE TWO RENDER THROUGH DIFFERENT PATHS ON PURPOSE.
    null is "this value exists and we decline to print it"; 'XXX' is "nobody has
    chosen one yet". Pricing is open — platform.md §12 — so the plan screen
    prints XXX and a bar rather than guessing a number into existence. */
-export const BILLING = { plan: null, price: 'XXX', renews: null, seats: 1 };
+export const BILLING = { price: 'XXX' };
 
 export const INVOICES = [
   { id: 'i1', when: '2026-09-01', amount: 'XXX', status: 'paid' },
