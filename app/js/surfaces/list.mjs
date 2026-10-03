@@ -32,6 +32,7 @@
  */
 import { $, esc } from '../core/dom.mjs';
 import { waitOn, landIn, failWith } from '../core/wait.mjs';
+import { enter, flip } from '../core/motion.mjs';
 import { say } from '../core/live-region.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { wait as pause } from '../core/timers.mjs';
@@ -510,12 +511,25 @@ function thumbsHTML(rec, i) {
    So paging renders only the tail and leaves what is above it alone. `landIn`
    with a null body is doing the half of its job that still applies: clear
    `is-wait`/`is-fail` and the inline min-height, touch no content. */
-function render(data, append) {
+/* `mode` SAYS WHAT THE REQUEST DID TO THE ROWS, and the motion follows from
+   it rather than from which button was pressed — design-language.md §6
+   "Lists and records":
+
+     'arrive'  — the surface's first list. The view itself is still moving
+                 in, so the rows land with it and do not stagger on top of it.
+     'replace' — a new set: a search, a filter, the grouping. The region
+                 emptied to a loader, and the rows arrive in a short stagger.
+     'append'  — Show more. The rows above are untouched; the new tail fades
+                 up under them.
+     'reorder' — a sort or a restore: the same patents in another order. The
+                 rows stood while the engine answered, and each moves from
+                 where it was to where it is. */
+function render(data, mode = 'replace') {
   const list = $('#setList');
   if (!list) return;
   MATCHED = data.matched;
   data.patents.forEach(r => ROW_BY_ID.set(r.id, r));
-  if (append) {
+  if (mode === 'append') {
     const have = list.querySelectorAll('.set-row').length;
     landIn(list, null);
     /* the offset keeps data-i and the "Patent N" fallback name global rather
@@ -523,9 +537,17 @@ function render(data, append) {
        the same thing to a screen reader. */
     const fresh = data.patents.slice(have)
       .map((rec, k) => rowHTML(rec, have + k)).join('');
-    if (fresh) list.insertAdjacentHTML('beforeend', fresh);
+    if (fresh) {
+      list.insertAdjacentHTML('beforeend', fresh);
+      enter([...list.querySelectorAll('.set-row')].slice(have));
+    }
+  } else if (mode === 'reorder') {
+    flip(list, '.set-row', el => el.getAttribute('data-id'),
+      () => landIn(list, data.patents.map(rowHTML).join('')),
+      list.closest('.set-listcol'));
   } else {
     landIn(list, data.patents.map(rowHTML).join(''));
+    if (mode === 'replace') enter(list.querySelectorAll('.set-row'));
   }
   list.setAttribute('aria-busy', 'false');
 
@@ -582,13 +604,15 @@ function render(data, append) {
    was written for #setMore before anything set the attribute: 05-wait-fail.css
    styles `#setMore[data-waiting]` by name, strips the button's ground and
    hides its label and chevron together. It has been unreachable since. */
-async function request(port, arg, sayWhat, into) {
+async function request(port, arg, sayWhat, into, mode) {
   const list = $('#setList');
   if (!list) return;
   const btn = into && $(into);
   /* btnWait returns false when the button is already waiting, which is the
-     re-press guard: two presses of Show more is one intention. */
-  if (btn && !btnWait(btn)) return null;
+     re-press guard: two presses of Show more is one intention. A reorder
+     reserves the trigger's width, because Sort sits in a row of controls and
+     a trigger shrinking to its loader slides Filter under the pointer. */
+  if (btn && !btnWait(btn, mode === 'reorder')) return null;
   const token = bump('list');
   list.setAttribute('aria-busy', 'true');
   if (!btn) waitOn(list, 320);
@@ -598,7 +622,7 @@ async function request(port, arg, sayWhat, into) {
      has already asked for something else must not paint — two requests in
      flight is the ordinary case, not the exceptional one. */
   if (stale('list', token)) return;
-  if (res.ok) { render(res.data, Boolean(btn)); return res.data; }
+  if (res.ok) { render(res.data, mode || (btn ? 'append' : 'replace')); return res.data; }
   /* A PAGE THAT DID NOT LOAD DOES NOT REPLACE THE PAGE THAT DID. The failure
      for an extending request is announced and offered in the foot; writing the
      fail block into #setList would throw away the rows that are still good to
@@ -727,11 +751,15 @@ async function reorderTo(anchors, label) {
   const rows = new Map([...list.querySelectorAll('.set-row')]
     .map(el => [el.getAttribute('data-id'), el]));
   /* only the ids we actually hold: the engine orders the whole set and the
-     client is holding one page of it. */
-  (res.data.order || []).forEach(id => {
-    const el = rows.get(id);
-    if (el) list.append(el);
-  });
+     client is holding one page of it. THE SAME NODES MOVE, so flip() plays
+     each from where it stood — the founder watches the nearest patents rise
+     rather than reading a list that was silently replaced. */
+  flip(list, '.set-row', el => el.getAttribute('data-id'), () => {
+    (res.data.order || []).forEach(id => {
+      const el = rows.get(id);
+      if (el) list.append(el);
+    });
+  }, list.closest('.set-listcol'));
   settled(true, 'Nearest to ' + label);
   say('list', 'Ordered by nearness to ' + label + '.');
 }
@@ -768,7 +796,7 @@ export function init(ctx) {
   ctx.onRoute(view => {
     if (view !== 'work' || loaded) return;
     loaded = true;
-    request('patents', undefined, 'The list did not load.');
+    request('patents', undefined, 'The list did not load.', null, 'arrive');
   });
 
   onActivate(document, '#setMore', () =>
@@ -834,8 +862,10 @@ export function init(ctx) {
 
   onActivate(document, '#setRestore', () => {
     settled(false, '');
+    /* THE WAIT GOES ON SORT, not on Restore: Restore has just hidden itself,
+       and Sort is the control that names the order being returned to. */
     request('sort', { sort: 'relevance' },
-      'The original order could not be restored.');
+      'The original order could not be restored.', '#sortBtn', 'reorder');
   });
 
   lmMenu('sortWrap', 'sortBtn', 'sortMenu');
@@ -854,7 +884,12 @@ export function init(ctx) {
     check($('#sortMenu'), el);
     const label = $('#sortLabel');
     if (label) label.textContent = el.querySelector('span:last-child').textContent;
-    request('sort', { sort: val }, 'The list could not be re-sorted. It is unchanged.');
+    /* A SORT LEAVES THE ROWS STANDING, design-language.md §6 "What a wait
+       looks like": the patents on screen are still the result, only their
+       order is coming. It used to empty the list to a loader, which said the
+       set was being re-fetched when it was not. */
+    request('sort', { sort: val }, 'The list could not be re-sorted. It is unchanged.',
+      '#sortBtn', 'reorder');
   });
 
   /* `all` CLEARS THE FACET rather than sending one. A filter whose only way off

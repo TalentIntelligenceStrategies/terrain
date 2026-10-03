@@ -25,6 +25,8 @@ import { say } from '../core/live-region.mjs';
 import { statusHTML, statusWord } from '../core/primitives.mjs';
 import { esc } from '../core/dom.mjs';
 import * as Starred from '../core/starred.mjs';
+import { reduced, flip, DUR2 } from '../core/motion.mjs';
+import { wait as pause } from '../core/timers.mjs';
 /* THE ONE CROSS-SURFACE IMPORT IN THIS FILE, and it is the right direction:
    this surface is what the list's rows leave through. See rowFor()'s note. */
 import { rowFor } from './list.mjs';
@@ -243,7 +245,7 @@ function groupHTML(rows) {
        heading truncated to one character. Measured: "a folding drone arm…"
        rendered as "a…". A block-level child of the cell measures against the
        cell's resolved width, which is the whole table. */
-    + '<tr class="star-grp-head"><th scope="colgroup" colspan="9">'
+    + '<tr class="star-grp-head" data-q="' + esc(q) + '"><th scope="colgroup" colspan="9">'
     + '<div class="star-grp-in">'
     + (q
         ? '<span class="star-grp-q">' + esc(q) + '</span>'
@@ -297,9 +299,39 @@ export function init(ctx) {
 
   Starred.onChange(paint);
 
-  onActivate(document, '#starList [data-unstar]', el => {
+  /* ══ A ROW LEAVES, AND THE ROWS BELOW CLOSE THE GAP · §6 ══════════════
+     It used to vanish in the same frame as the press and every row under it
+     jumped up one, so the founder lost the row they were about to read next
+     and focus fell to <body> with the button that held it. Now the row fades
+     out on --dur-2, the set changes, and flip() plays the rows below — and the
+     group headings, keyed by their search — up into the space.
+
+     FOCUS GOES TO THE NEXT ROW'S REMOVE BUTTON, or the previous one at the
+     end of the table, or the heading once the set is empty: the place a
+     founder clearing several rows in a row expects to press next.
+
+     A row already leaving ignores a second press — two presses is one
+     intention, and the second would toggle the patent back in. */
+  const key = el => el.getAttribute('data-id') || 'q:' + el.getAttribute('data-q');
+  onActivate(document, '#starList [data-unstar]', async el => {
     const id = el.getAttribute('data-unstar');
-    Starred.toggle(id);
+    const row = el.closest('.starrow');
+    if (row && row.hasAttribute('data-leaving')) return;
+    const rows = [...document.querySelectorAll('#starList .starrow')];
+    const at = rows.indexOf(row);
+    const near = rows[at + 1] || rows[at - 1];
+    const nextId = near && near !== row ? near.getAttribute('data-id') : null;
+    if (row && !reduced()) {
+      row.setAttribute('data-leaving', '');
+      await pause(DUR2);
+    }
+    const list = $('#starList');
+    flip(list, '.starrow, .star-grp-head', key, () => Starred.toggle(id),
+      list && list.parentElement);
+    const target = (nextId && list
+      && list.querySelector('[data-unstar="' + CSS.escape(nextId) + '"]'))
+      || $('#starTitle');
+    if (target) target.focus({ preventScroll: true });
     say('destination', 'Removed. ' + (Starred.size()
       ? Starred.size() + (Starred.size() === 1 ? ' patent' : ' patents') + ' left.'
       : 'Nothing starred.'));

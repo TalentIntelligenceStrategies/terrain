@@ -86,8 +86,21 @@
    head has nothing to pin low against. */
 .rec{display:flex;flex-direction:column;flex:1;min-height:0;
      background:var(--surface);border:1px solid var(--border);
-     border-radius:var(--r-shell);overflow:clip}
+     border-radius:var(--r-shell);overflow:clip;
+     opacity:0;transform:translateY(6px);
+     transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease)}
 .rec[hidden]{display:none}
+/* ── THE FIRST OPEN ARRIVES; NOTHING ELSE DOES · design-language.md §6 ────
+   The view swap's entrance — opacity and 6px of rise, --dur-3, --ease — on
+   the open that brings the panel into the column, and the exit on --dur-2
+   when it closes. A slide is still refused, on the argument below: the
+   record is the column, not a drawer over it, and a slide would report a
+   place it came from. Opening a second patent or stepping finds the panel
+   in place and crossfades only the body (.rec-body, motion.mjs enter()).
+   record.mjs holds the content until the panel has landed. */
+.rec-open .rec{opacity:1;transform:none;transition-duration:var(--dur-3)}
+.rec-body{transition:opacity var(--dur-1) var(--ease)}
+.rec-body[data-enter]{opacity:0;transition:none}
 /* ══ THE RECORD HIDES NOTHING THE FOUNDER WAS USING ═══════════════════════
    It hid the LIST until 2026-09-24 — it was a sibling of .listcol-scroll and
    took the left column, so opening a patent cost the founder the set they
@@ -100,7 +113,11 @@
    this column. The drawing is a lightbox over the viewport now (§4.5), so
    there is no second column waiting to be filled and no sentence to write in
    it. One idle state, and the record replaces it. */
-.rec-open .pane-idle{display:none}
+/* KEYED TO THE PANEL BEING SHOWN, NOT TO .rec-open. .rec-open comes off at
+   the START of the record's exit and the panel is hidden at the end of it, so
+   a rule on the class put the idle sentence back under a record still fading
+   out — two panels stacked in one column for the length of the exit. */
+.panecol:has(.rec:not([hidden])) .pane-idle{display:none}
 /* IT PINNED FOR FREE UNTIL THE COLUMN BECAME THE SCROLLER. A non-flexing item
    above a scrolling sibling stays put without saying so; it has to say so now.
    THE BACKGROUND IS ITS OWN because it was transparent over .rec's fill, and
@@ -401,8 +418,9 @@
    has just printed all eleven is the repetition the Classes rule refuses, and
    its stated purpose is the founder taking it to counsel — something that
    leaves rather than something read twice.                                */
-/* NO ENTRANCE OF ITS OWN, and its removal is the fix for the second half of
-   the jump. .pn used to carry `animation:pn-in var(--dur-2) var(--ease) both`
+/* NO KEYFRAME ENTRANCE OF ITS OWN, and its removal is the fix for the second
+   half of the jump. (The body's crossfade above is a transition on .rec-body,
+   which starts only once the panel has stopped.) .pn used to carry `animation:pn-in var(--dur-2) var(--ease) both`
    — 200ms, 4px of Y, on --ease — INSIDE a container travelling 320ms on the
    drawer's own curve. Two curves, two durations, one object: at a tenth speed the
    text visibly settles inside a box that is still moving. A drawer's contents

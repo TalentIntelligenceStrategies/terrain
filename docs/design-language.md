@@ -569,7 +569,7 @@ Each is greppable.
 - **Contents do not move while their container is moving.** Transitions on separate objects may begin
   after the container stops; nothing fades in while an overlay is still opening.
 - **A container already in place does not move to say its contents changed.** Opening a second record
-  without closing the first crossfades the body on `--dur-1`; re-running the slide would be motion
+  without closing the first crossfades the body on `--dur-1`; re-running the entrance would be motion
   claiming something arrived when nothing did.
 - **Three keyframes, and the bar for a fourth is high.** `sweep`, `sweepx` and the loader's ripple.
   Each does something a transition cannot: constant, indeterminate motion with **no end state to
@@ -589,6 +589,35 @@ Both were real, both were invisible in review, and neither would have failed a s
    class lands never runs it. Wait a frame.
 
 Fixing either alone leaves the other.
+
+### Lists and records
+
+**Motion says what a request did to the rows, and the request decides it — never the control that
+was pressed.** Four cases, and each has one motion:
+
+| The request | What the rows do |
+| --- | --- |
+| **The surface's first list** | Land with the view. The view is still arriving, so the rows do not stagger on top of it. |
+| **A new set** — a search, a filter, the grouping | Arrive in a stagger: opacity and 6px of rise on `--dur-3`, 30ms apart, **the first eight only**. The ninth row is below the fold on every supported window, and a stagger that kept counting would make the last visible row wait on rows nobody can see. |
+| **More of the same set** — *Show more* | The rows above are untouched; the new tail arrives with the same stagger under them. |
+| **The same set in another order** — a sort, *Restore*, *Find similar* | Each row moves from where it stood to where it is (FLIP, on `transform`, `--dur-3`). Only rows whose old or new place is inside the scrollport move; a row travelling from off-screen to off-screen is a blur, so it lands. A sort keeps the rows standing while the engine answers and puts the loader on *Sort*. |
+
+**A row leaving fades on `--dur-2`, and the rows below then move up into its place.** On the starred
+page that is the removal; focus goes to the next row's remove button, or the previous row's at the
+end, or the heading once the set is empty.
+
+**The record arrives once.** The open that brings it into the column takes the view swap's entrance —
+opacity and 6px of rise on `--dur-3` — and its exit on `--dur-2`. It never slides: the record is the
+column, not a drawer over it, and a slide reports a place it came from. **Its text waits for it to
+land**, so a fast answer is held to the end of the entrance rather than fading in inside a panel still
+rising. Opening another patent or stepping finds the panel in place, and only the body crossfades, on
+`--dur-1`.
+
+**The stagger is a delay set from JavaScript on a transition, not a keyframe.** It has a start state
+and an end state, so §6's keyframe test answers it. The start state is committed with transitions off
+and released on the next frame, and the delay is cleared once it has run so the row's later
+transitions do not inherit it. `motion.mjs` holds `enter()` and `flip()`; both do nothing under reduced
+motion.
 
 ### Reduced motion
 

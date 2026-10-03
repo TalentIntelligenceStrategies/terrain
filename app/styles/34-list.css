@@ -465,7 +465,17 @@
 .set-row{position:relative;display:grid;grid-template-columns:auto 1fr;
   align-items:start;gap:var(--s-16);
   padding-block:var(--s-20);padding-inline:var(--s-10) var(--s-16);
-  border-bottom:1px solid var(--border)}
+  border-bottom:1px solid var(--border);
+  transition:opacity var(--dur-3) var(--ease),transform var(--dur-3) var(--ease),
+             background var(--dur-1) var(--ease)}
+/* ── a row arriving · design-language.md §6 "Lists and records" ──────────
+   motion.mjs's enter() sets this, commits it, and releases it a frame later
+   with the row's stagger delay; flip() uses the same transform transition to
+   play a row from where it stood. The view swap's own numbers — 6px, --dur-3,
+   --ease — so a row arriving and a surface arriving read as one motion.
+   transition:none is the commit: the start state lands without travelling
+   towards it. Reduced motion never sets the attribute. */
+.set-row[data-enter]{opacity:0;transform:translateY(6px);transition:none}
 .set-row:last-child{border-bottom:0}
 /* THE ANCHOR RAIL — what the founder starred, while the list is flat.
    It hands off to the band: present only when .is-ranked is absent, because
@@ -643,3 +653,13 @@
 @media (max-width:640px){
   .drill-meta{grid-template-columns:minmax(0,1fr)}
 }
+
+/* ── Sort waits on itself · design-language.md §6 ─────────────────────────
+   A sort leaves the rows standing and puts the loader on the control that was
+   pressed. .lm-btn is not a .btn, so 05-wait-fail.css's label-hiding rule does
+   not reach it: the label and chevron go invisible rather than absent, which
+   keeps the trigger's box (btnWait also reserves its width), and the loader
+   sits centred over the space they held. */
+.lm-btn[data-waiting]{position:relative;cursor:default}
+.lm-btn[data-waiting]>*:not(.btn-wait){visibility:hidden}
+.lm-btn>.btn-wait{position:absolute;inset:0;height:auto;display:grid;place-items:center}

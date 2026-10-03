@@ -28,7 +28,7 @@ import { focusQuietly, captureFocus } from '../core/focus.mjs';
 import { wait as pause } from '../core/timers.mjs';
 import { bar, bars, statusHTML, statusWord, langAttr } from '../core/primitives.mjs';
 import { bump, stale } from '../core/generation.mjs';
-import { reduced, DUR2 } from '../core/motion.mjs';
+import { reduced, DUR2, DUR3, enter } from '../core/motion.mjs';
 import * as Starred from '../core/starred.mjs';
 import * as Viewer from '../core/figure-viewer.mjs';
 /* THE SCORE IS THE ROW'S, NOT THE RECORD'S, and this import is what says so.
@@ -354,14 +354,14 @@ function paneHTML(rec, id) {
 }
 
 /* ── THE PANE IS DRIVEN BY A CLASS ON #app, NOT BY `hidden` ALONE ──────────
-   `.rec` is `visibility:hidden` and translated off until `.rec-open` lands on
-   an ancestor, so unhiding the element alone leaves it invisible and the
-   surface looks as if the row did nothing. `hidden` still does the a11y work —
+   `.rec` is at opacity 0, 6px low, until `.rec-open` lands on an ancestor, so
+   unhiding the element alone leaves it invisible and the surface looks as if
+   the row did nothing. `hidden` still does the a11y work —
    it is what keeps the pane out of the tab order while it is away — so both are
    needed and they are not redundant.
 
    ON CLOSE THE HIDE WAITS FOR THE TRANSITION. Hiding on the same frame as the
-   class comes off removes the element mid-slide and the record vanishes rather
+   class comes off removes the element mid-exit and the record vanishes rather
    than leaving. */
 function close() {
   OPEN_ID = null;
@@ -478,13 +478,19 @@ async function open(id, trigger, stepping, opts = {}) {
   if (!stepping) restore = captureFocus(trigger);
   markOpen(id);
   syncSteps();
+  /* ENTERING IS THE FIRST OPEN, and only the first. A second row pressed
+     while a record is showing, or a step, finds the panel already in place —
+     and §6 says a container in place does not move to say its contents
+     changed. Those crossfade the body instead, below. */
+  const entering = !!app && !app.classList.contains('rec-open');
   pane.hidden = false;
-  /* ONE FRAME, so `hidden=false` has been painted before the class lands.
-     `.rec-instant` used to be toggled here for reduced motion and NOTHING
-     EVER STYLED IT — it was the partner of a slide-over that became a
-     display swap, and a class no stylesheet matches is a class the next
-     reader has to disprove. The record does not animate in; there is
-     nothing for reduced motion to shorten. */
+  /* THE START STATE IS COMMITTED, THEN RELEASED ON THE NEXT FRAME — §6's two
+     traps together. A panel that was display:none has no style to transition
+     from, and adding the class in the same style pass as un-hiding it lands
+     it with no entrance at all; the forced read commits opacity 0, and the
+     frame is the release. The entrance is the view swap's: opacity and 6px
+     of rise over --dur-3, never a slide. */
+  if (entering) void pane.offsetWidth;
   if (app) requestAnimationFrame(() => app.classList.add('rec-open'));
   push('record', close);
 
@@ -517,7 +523,14 @@ async function open(id, trigger, stepping, opts = {}) {
 
   const token = bump('record');
   waitOn(body, 360);
-  const [res] = await Promise.all([ENGINE.record({ id }), pause(FLOOR)]);
+  /* THE CONTENT WAITS FOR THE PANEL TO LAND. FLOOR is 240ms and the entrance
+     is 320, so a fast answer would fade its text in while the panel carrying
+     it was still rising — §6, contents do not move while their container
+     does. Only on the entering open, and not under reduced motion, where
+     there is no entrance to wait out; a beat is never lengthened for a
+     movement that is not happening. */
+  const floor = entering && !reduced() ? Math.max(FLOOR, DUR3) : FLOOR;
+  const [res] = await Promise.all([ENGINE.record({ id }), pause(floor)]);
   if (stale('record', token)) return;
 
   if (!res.ok) {
@@ -531,6 +544,10 @@ async function open(id, trigger, stepping, opts = {}) {
   FIGURES = Array.isArray(res.data.figures) ? res.data.figures : [];
   REC = res.data;
   landIn(body, paneHTML(res.data, id));
+  /* the body crossfades in on --dur-1 — on a step, a second row, and the
+     first open alike, because in all three the panel is standing still by
+     the time the text arrives. */
+  enter([body]);
   setActs(true, id);
   if (end) {
     const out = $('#recOut'), cite = $('#recCite');

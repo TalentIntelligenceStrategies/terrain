@@ -205,6 +205,15 @@
   .star-c-h{width:auto}
 }
 
+/* ── a row leaving · design-language.md §6 "Lists and records" ───────────
+   It fades on --dur-2 and is removed; the rows under it and the group
+   headings then FLIP up into the space on --dur-3 (starred.mjs). Opacity and
+   transform only — a <tr> has no height to transition, and §6 would refuse
+   one if it did. */
+.starrow,.star-grp-head{transition:opacity var(--dur-2) var(--ease),
+                                   transform var(--dur-3) var(--ease)}
+.starrow[data-leaving]{opacity:0}
+
 /* ── hover, gated ── the second block, and it names :hover like the first ── */
 @media (hover:hover) and (pointer:fine){
   .starrow:hover td{background:var(--surface-sunken)}
