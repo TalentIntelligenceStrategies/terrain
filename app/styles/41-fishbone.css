@@ -89,7 +89,11 @@
 /* THEY LIVE WITH THE RESULTS, NOT WITH THE PANEL. The panel can be hidden and
    the filter it applied cannot be, or the founder reads a shortened list with
    nothing on screen saying why it is short. */
-.fb-chips{display:flex;flex-wrap:wrap;gap:var(--s-6);margin-bottom:var(--s-12)}
+/* THE PANEL'S INSET, NOT ITS OWN. .set-bar above and .set-more below both
+   sit --s-20 in from the panel edge; a chip row with none ran flush against
+   the edge and under the bar's rule, the only thing in the panel that did. */
+.fb-chips{display:flex;flex-wrap:wrap;gap:var(--s-6);
+  padding:var(--s-12) var(--s-20) 0;margin-bottom:var(--s-12)}
 .fb-chips[hidden]{display:none}
 
 .fb-chip{display:inline-flex;align-items:center;gap:var(--s-6);
