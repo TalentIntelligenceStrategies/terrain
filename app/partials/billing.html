@@ -25,20 +25,12 @@
           </div>
           <div class="card-body">
             <span class="sk sk-h-title w-lg" style="margin-bottom:var(--s-12)"></span>
-            <!-- THESE TWO ARE WRITTEN BY renderBilling() ON EVERY OPEN, and the
-                 markup carries what it will write rather than something else.
-                 It shipped `6,000` and `$600` until 2026-09-12 — a comma the
-                 renderer does not use, and a price that had been rejected —
-                 and neither was ever seen on screen, because the renderer
-                 overwrote both before the view became visible.
-
-                 THAT IS THE FAULT, NOT A TIDY-UP: the published branch is
-                 HTML, and view-source on a public URL shows the markup and
-                 not the render. A number nobody agreed to does not stop being
-                 published by being invisible. The prototype has hit the
-                 two-places-one-renders trap once before, on the confirm
-                 card's lede and gate, and that one at least showed the wrong
-                 words to a reader. -->
+            <!-- THE ALLOWANCE IS STATIC MARKUP, and the points page reads the
+                 same number from the `points` port. One source should feed
+                 both — design/components.md §4 question 12. Until it does,
+                 the markup carries the agreed figure: the published branch is
+                 HTML, and view-source on a public URL shows the markup, so a
+                 number nobody agreed to is published even when invisible. -->
             <div class="plan-fig">
               <span class="fig fig-l" id="billAllow">6000</span>
               <span class="t-body" style="color:var(--text-2)">points a quarter</span>

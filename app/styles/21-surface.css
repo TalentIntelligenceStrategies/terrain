@@ -36,25 +36,18 @@
 .view-work.is-active{display:flex;flex-direction:column}
 .work-split{display:flex;flex:1;min-height:0}
 
-/* ══ 44 / 56, AND THE RECORD TAKES THE LARGER HALF ═══════════════════════
-   It was fifty-fifty, on the argument that the list is the primary content
-   and had been getting 29% of the width. That was right while the right
-   column held one drawing — a drawing is legible at any size and the list
-   was the thing being read.
-
-   THE RECORD IS OVER THERE NOW, and it carries eleven identifiers, an
-   abstract, the claims and the drawings. The list carries three bands a row
-   and a clamped abstract.
-   Equal halves would give the denser column the same room as the sparser
-   one, and the head arithmetic above says what that costs: the field list
-   collapses to one column below ~1203px at 50/50 against ~1203 at 56% —
-   which is the whole reason to spend the twelve points.
+/* ══ 50 / 50, AND THE LIST IS THE PRODUCT ═══════════════════════════════
+   design-language.md §7 carries the argument. The list is where the whole
+   flow happens — search, find similar, star, export — so it may not be the
+   smaller half, and on arrival the other half holds a single sentence. The
+   record is the denser column and adapts itself (its field list reflows by
+   container query) rather than being held up by the split.
 
    THE LIST IS FLOORED RATHER THAN FIXED. 340px is design-language.md §7's
    measured minimum for a readable result row; below that the split has
    already stacked.
 
-   AND IT IS A PERCENTAGE BASIS WITH `flex:0 1`, not `width:44%`. A width
+   AND IT IS A PERCENTAGE BASIS WITH `flex:0 1`, not `width:50%`. A width
    would be measured before the border between them and leave the two columns
    a hairline apart; a shrinkable basis divides what is actually left after
    the border, so the ratio holds on the screen rather than on paper. */

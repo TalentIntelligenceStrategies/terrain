@@ -23,7 +23,7 @@ inside it, `Home` and `End` reach its ends — because twenty rows at twelve dra
 whole viewport**, with zoom, rotation, pan and a thumbnail strip; from a row it opens the record
 underneath it at the same time, so Escape closes the drawing and leaves you in the record. *Drawings only* in the search bar strips the
 **list** to its pictures; the record is unaffected. The grouping control opens a **popover**, and the
-branches you pick stay as chips above the list after it closes. Star two rows and *Find similar*
+branches you pick stay as chips above the list after it closes. Star a row and *Find similar*
 appears; the count beside the results leads to the starred set, which is where the export lives.
 
 *Open in IPtech* at the record's **foot** — `platform.md` §6.3's *the way out is at the end of the
@@ -259,6 +259,18 @@ through different paths on purpose.
 surface has to say *this did not run* rather than throw. It is also the check that no component
 secretly needs data to draw its own chrome — a surface that cannot render against it cannot render
 its own failure state either.
+
+### What the backend team holds
+
+**The engine is built by a separate team, and everything on this side of `ports.mjs` is ours.** They
+hold a package built from the annotated tag **`handoff-2026-10-03`**: this tree's `app/`, `demo/` and
+tracked `brand/` files, the four documents, a visual guide captured from the running app with
+measured dimensions per state, and an OpenAPI description with a JSON Schema and a captured example
+for each of the 19 ports. **The contract in it is `design/components.md` at that tag.**
+
+**A change to a port's shape after the tag is a change they do not have.** `git diff
+handoff-2026-10-03 -- app/js/ports.mjs design/components.md` is what has moved since, and a new
+package with a new tag is how it reaches them. The tag is the record; nothing else here tracks it.
 
 ---
 
