@@ -175,9 +175,9 @@ passes.
 | `--dmx-path` | the loader, per dot | `var(--dmx-path,0)` | position along the ripple path |
 | `--dmx-opacity-base` | the loader | on `.dmx-root` | trough of the pulse |
 | `--dmx-opacity-mid` | the loader | on `.dmx-root` | midpoint of the pulse |
-| `--fig-scale` | the figure viewer | `var(--fig-scale,1)` | zoom, as a step off a fixed ladder rather than a free multiplier |
+| `--fig-scale` | the figure viewer | `var(--fig-scale,1)` | zoom, between 0.5 and 4: the buttons land on the ladder's stops, a gesture anywhere between them |
 | `--fig-rot` | the figure viewer | `var(--fig-rot,0deg)` | rotation, a quarter turn at a time |
-| `--fig-x` `--fig-y` | the figure viewer, while panning | `var(--fig-x,0px)` | pan offset. **All four compose into ONE transform, and the CSS decides the order** — a JS-built transform string is three call sites that can disagree about whether rotation happens before scale |
+| `--fig-x` `--fig-y` | the figure viewer, panning and zooming about a point | `var(--fig-x,0px)` | pan offset. **All four compose into ONE transform, and the CSS decides the order** — a JS-built transform string is three call sites that can disagree about whether rotation happens before scale |
 
 *`--mx-n`, `--mx-min`, `--mx-head` and `--xr-n` left with the analysis layer.*
 

@@ -628,6 +628,17 @@
                  fill the viewport and sit inset from it. -->
             <div class="figview-panel">
               <div class="figview-head">
+                <!-- WHICH PATENT, BESIDE WHICH FIGURE. The head said only
+                     "Figure 1 of 347", which is a position in nothing once the
+                     record behind the scrim is dimmed out of reading. The
+                     number and title are the record's own, printed as the
+                     record prints them; they are not live, because they do
+                     not change while the viewer is open — #figCap does, and
+                     it stays the one live region here. -->
+                <span class="figview-pn" id="figPn">
+                  <span class="figview-no fig fig-s" id="figNo"></span>
+                  <span class="figview-title" id="figTitle"></span>
+                </span>
                 <span class="figview-cap t-micro" id="figCap" role="status" aria-live="polite"></span>
                 <!-- THE X IS AT THE TRAILING EDGE, like the record's. One glyph,
                      one act, in one place across the surface. -->
@@ -639,6 +650,11 @@
 
               <div class="figview-stage" id="figStage">
                 <img class="figview-img" id="figImg" alt="" decoding="async">
+                <!-- THE STAGE'S OWN WAIT AND FAILURE. The loader appears only
+                     if a drawing is slow (figure-viewer.mjs), and a drawing
+                     that does not load says so here rather than leaving a
+                     white stage that looks like a blank plate. -->
+                <div class="figview-msg" id="figMsg" hidden></div>
 
                 <!-- PAGING SITS ON THE STAGE, at the two edges it points at. It
                      is the one pair of controls whose position IS its meaning. -->
@@ -669,6 +685,12 @@
                   <button class="figbar-btn" id="figOut" type="button" aria-label="Zoom out">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/><line x1="8" x2="14" y1="11" y2="11"/></svg>
                   </button>
+                  <!-- THE LEVEL, EXACTLY. Wheel and pinch zoom freely between
+                       the ladder's ends, so the founder needs a number to get
+                       back to; the buttons still land on the ladder's stops.
+                       aria-hidden because the zoom buttons announce nothing
+                       either — the level is a visual aid to a visual act. -->
+                  <span class="figbar-zoom fig fig-s" id="figZoom" aria-hidden="true">100%</span>
                   <button class="figbar-btn" id="figIn" type="button" aria-label="Zoom in">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/><line x1="11" x2="11" y1="8" y2="14"/><line x1="8" x2="14" y1="11" y2="11"/></svg>
                   </button>

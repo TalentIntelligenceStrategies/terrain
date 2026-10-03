@@ -448,6 +448,13 @@ function syncSteps() {
   set('#recNext', +1, 'Next');
 }
 
+/* WHAT THE VIEWER'S HEAD NAMES: the open record's number and title, as this
+   pane prints them. A withheld value is null and the viewer prints nothing
+   for it — the record behind the scrim already carries its bar. */
+function viewerContext() {
+  return REC ? { number: REC.number ?? null, title: REC.title ?? REC.skim ?? null } : null;
+}
+
 /* Stepping keeps focus where it is. The founder pressed Next and is still
    pressing Next; moving focus to the heading on every step would make the
    second press land on something else. */
@@ -604,7 +611,7 @@ async function open(id, trigger, stepping, opts = {}) {
        its own close button and marks #app inert; focusing #recTitle after that
        puts the keyboard inside an inert subtree, which silently drops it on
        <body>. The viewer owns focus from here. */
-    Viewer.open(FIGURES, at, trigger);
+    Viewer.open(FIGURES, at, trigger, viewerContext());
     return;
   }
   /* NO FALLBACK TO ZERO. A row thumbnail whose number is in none of the
@@ -640,7 +647,7 @@ export function init(ctx) {
       say('list', 'This drawing is not shown.');
       return;
     }
-    Viewer.open(FIGURES, Number(el.getAttribute('data-fig')) || 0, el);
+    Viewer.open(FIGURES, Number(el.getAttribute('data-fig')) || 0, el, viewerContext());
   });
   /* THE CONTROL UNHIDES RATHER THAN RE-RENDERS, so the thumbnails already
      fetched are not fetched again and the founder's scroll position holds.

@@ -53,20 +53,33 @@ import { push, drop } from './esc-stack.mjs';
 import { focusQuietly, captureFocus, setInert, focusables } from './focus.mjs';
 import { say } from './live-region.mjs';
 import { reduced, DUR1 } from './motion.mjs';
+import { loader } from './loader.mjs';
+import { failHTML } from './wait.mjs';
 
-/* THE LADDER IS DISCRETE, not a continuous multiplier. A founder pressing zoom
-   four times should land somewhere they can predict and get back from, and a
-   `scale *= 1.25` loop lands on 2.4414… with no way to return to 1 except a
-   reset button. Six stops, 1 among them. */
+/* ══ THE LADDER, AND WHAT IS ALLOWED BETWEEN ITS RUNGS ═════════════════════
+   platform.md §4.5. The BUTTONS and the + − 0 keys step a fixed ladder: a
+   founder pressing zoom four times should land somewhere they can predict and
+   get back from, and a `scale *= 1.25` loop lands on 2.4414… with no way back
+   to 1 but a reset. Seven stops, 1 among them.
+
+   A GESTURE IS CONTINUOUS WITHIN THE SAME ENDS. A wheel notch, a trackpad
+   pinch and two fingers on glass all say "this much, here", and snapping them
+   to the ladder throws away both the amount and the place. So `scale` is a
+   number between the ladder's first and last stop, the next button press
+   lands on the next stop above or below it, and the readout on the bar prints
+   the exact level so it can be returned to. */
 const STOPS = [0.5, 0.75, 1, 1.5, 2, 3, 4];
+const MIN = STOPS[0], MAX = STOPS[STOPS.length - 1];
 
 let FIGS = [];
+let CONTEXT = null;
 let at = 0;
-let zoom = 2;      /* index into STOPS; 2 === 1x */
+let scale = 1;
 let rot = 0;
 let panX = 0, panY = 0;
 let restoreFocus = null;
-let dragging = null;
+let gestureEnd = 0;
+let loadToken = 0;
 
 const el = {};
 
@@ -78,6 +91,8 @@ function q() {
   el.strip = $('#figStrip');
   el.out = $('#figOut');
   el.in = $('#figIn');
+  el.zoom = $('#figZoom');
+  el.msg = $('#figMsg');
   return Boolean(el.root && el.img);
 }
 
@@ -86,21 +101,129 @@ function q() {
    and the CSS owns the order, reading them in a single transform. */
 function apply() {
   if (!el.img) return;
-  const s = STOPS[zoom];
-  el.img.style.setProperty('--fig-scale', String(s));
+  clampPan();
+  el.img.style.setProperty('--fig-scale', String(scale));
   el.img.style.setProperty('--fig-rot', rot + 'deg');
   el.img.style.setProperty('--fig-x', panX + 'px');
   el.img.style.setProperty('--fig-y', panY + 'px');
   /* PANNING IS ONLY OFFERED WHEN THERE IS SOMEWHERE TO PAN. A grab cursor over
      an image that fills less than its frame promises a drag that does nothing. */
-  el.stage.classList.toggle('can-pan', s > 1);
-  if (el.out) el.out.disabled = zoom === 0;
-  if (el.in) el.in.disabled = zoom === STOPS.length - 1;
+  el.stage.classList.toggle('can-pan', scale > 1);
+  if (el.out) el.out.disabled = scale <= MIN + 0.001;
+  if (el.in) el.in.disabled = scale >= MAX - 0.001;
+  if (el.zoom) el.zoom.textContent = Math.round(scale * 100) + '%';
+}
+
+/* ══ THE DRAWING STAYS ON THE STAGE ═══════════════════════════════════════
+   Pan was unbounded, so a drag at 4x could throw the drawing off the stage
+   entirely and leave the founder looking at white paper with no way to find
+   it but Reset. The bound is the FITTED drawing at this scale — its edge may
+   come in as far as the stage's edge plus the 24px gutter, and no further.
+   A quarter turn swaps which side is which. Below 1x there is nothing to
+   pan, so the drawing is held at the centre. */
+function clampPan() {
+  if (scale <= 1 || !el.img.naturalWidth) { panX = 0; panY = 0; return; }
+  const sw = el.stage.clientWidth, sh = el.stage.clientHeight;
+  const nw = el.img.naturalWidth, nh = el.img.naturalHeight;
+  const fit = Math.min((sw - 48) / nw, (sh - 80) / nh);
+  let w = nw * fit * scale, h = nh * fit * scale;
+  if (rot % 180) [w, h] = [h, w];
+  const mx = Math.max(0, (w - sw) / 2 + 24), my = Math.max(0, (h - sh) / 2 + 24);
+  panX = Math.max(-mx, Math.min(mx, panX));
+  panY = Math.max(-my, Math.min(my, panY));
+}
+
+/* ZOOM ABOUT A POINT. The point under the cursor (or between two fingers)
+   stays under it: with m its offset from the stage centre and k the change in
+   scale, the pan becomes m − k(m − p). Rotation cancels out of it, because the
+   CSS applies translate, then rotate, then scale — the pan is in screen space
+   and the scale is about the image's own centre. */
+function zoomTo(next, cx, cy) {
+  const to = Math.max(MIN, Math.min(MAX, next));
+  if (to === scale) return;
+  const r = el.stage.getBoundingClientRect();
+  const mx = cx == null ? 0 : cx - (r.left + r.width / 2);
+  const my = cy == null ? 0 : cy - (r.top + r.height / 2);
+  const k = to / scale;
+  panX = mx - k * (mx - panX);
+  panY = my - k * (my - panY);
+  scale = to;
+  apply();
+}
+
+const stepUp = () => STOPS.find(v => v > scale + 0.001) || MAX;
+const stepDown = () => [...STOPS].reverse().find(v => v < scale - 0.001) || MIN;
+
+/* A GESTURE TURNS THE TRANSITION OFF FOR ITS LENGTH. A 200ms ease behind a
+   finger or a wheel makes the drawing lag the hand, which reads as the
+   interface being slow rather than as smoothing. The wheel has no end event,
+   so the state lifts 160ms after the last notch. */
+function gesture(on) {
+  el.stage.classList.toggle('is-gesture', on);
+}
+function wheelGesture() {
+  gesture(true);
+  clearTimeout(gestureEnd);
+  gestureEnd = setTimeout(() => gesture(false), 160);
+}
+
+/* ══ ONE DRAWING TO THE NEXT ══════════════════════════════════════════════
+   The src used to swap in place: the old drawing vanished, the stage sat
+   white for as long as the next took to arrive, and it popped in. Now the
+   outgoing drawing is cloned over the stage and fades on --dur-1 while the
+   incoming one fades up once it has loaded, and the two neighbours are
+   fetched ahead so paging is usually a crossfade between two images already
+   in memory. A drawing that is slow shows the loader after 160ms — sooner
+   is a flash on every cached page — and one that fails says so on the
+   stage. */
+function crossfadeOut() {
+  if (reduced() || el.img.hidden || !el.img.complete || !el.img.naturalWidth) return;
+  const ghost = el.img.cloneNode();
+  ghost.removeAttribute('id');
+  ghost.classList.add('figview-ghost');
+  ghost.setAttribute('aria-hidden', 'true');
+  el.img.after(ghost);
+  void ghost.offsetWidth;
+  requestAnimationFrame(() => ghost.classList.add('is-gone'));
+  setTimeout(() => ghost.remove(), DUR1 + 40);
+}
+
+function preload(i) {
+  const f = FIGS[(i + FIGS.length) % FIGS.length];
+  if (f && f.src != null) { const im = new Image(); im.decoding = 'async'; im.src = f.src; }
+}
+
+function showSrc(src) {
+  const token = ++loadToken;
+  const msg = el.msg;
+  if (msg) { msg.hidden = true; msg.innerHTML = ''; }
+  el.img.setAttribute('data-loading', '');
+  const slow = setTimeout(() => {
+    if (token !== loadToken || !msg) return;
+    msg.innerHTML = '';
+    msg.append(loader());
+    msg.hidden = false;
+  }, 160);
+  el.img.onload = () => {
+    if (token !== loadToken) return;
+    clearTimeout(slow);
+    if (msg) { msg.hidden = true; msg.innerHTML = ''; }
+    el.img.removeAttribute('data-loading');
+    apply();
+  };
+  el.img.onerror = () => {
+    if (token !== loadToken) return;
+    clearTimeout(slow);
+    if (msg) { msg.innerHTML = failHTML('This drawing did not load.'); msg.hidden = false; }
+  };
+  el.img.src = src;
 }
 
 function setFig(i, announce) {
   if (!FIGS.length) return;
-  at = (i + FIGS.length) % FIGS.length;
+  const next = (i + FIGS.length) % FIGS.length;
+  if (el.root.classList.contains('is-open') && next !== at) crossfadeOut();
+  at = next;
   const f = FIGS[at];
   /* A WITHHELD DRAWING STILL OPENS. The viewer's job here is to show that the
      chrome works — paging, the bar, the strip — on a record whose images
@@ -109,8 +232,13 @@ function setFig(i, announce) {
   const withheld = f.src == null;
   el.stage.classList.toggle('is-withheld', withheld);
   el.img.hidden = withheld;
-  if (!withheld) el.img.src = f.src;
-  else el.img.removeAttribute('src');
+  if (!withheld) showSrc(f.src);
+  else {
+    ++loadToken;
+    el.img.removeAttribute('src');
+    el.img.removeAttribute('data-loading');
+    if (el.msg) { el.msg.hidden = true; el.msg.innerHTML = ''; }
+  }
   /* THE ALT IS THE FIGURE NUMBER AND NOTHING ELSE. Nothing in this product can
      describe what a technical drawing shows, and an invented description would
      be a reading of the record — which §6.6 keeps out. The number is a fact. */
@@ -119,8 +247,10 @@ function setFig(i, announce) {
   /* A NEW FIGURE RESETS THE VIEW. Carrying a 4x zoom and a 90° rotation onto
      the next drawing shows the founder a corner of something they have not
      seen whole yet. */
-  zoom = 2; rot = 0; panX = 0; panY = 0;
+  scale = 1; rot = 0; panX = 0; panY = 0;
   apply();
+  preload(at + 1);
+  preload(at - 1);
   if (el.strip) {
     [...el.strip.querySelectorAll('[data-go-fig]')].forEach((b, k) =>
       b.setAttribute('aria-current', String(k === at)));
@@ -152,10 +282,19 @@ export function isOpen() {
   return Boolean(el.root && el.root.classList.contains('is-open'));
 }
 
-export function open(figures, index, trigger) {
+/* `context` IS THE PATENT THE DRAWINGS BELONG TO — { number, title }, as the
+   record printed them. Either may be null, and a null prints nothing rather
+   than a bar: the record behind the scrim already carries the skeleton for a
+   withheld identity, and the head is a caption, not a second record. */
+export function open(figures, index, trigger, context) {
   if (!q() || !Array.isArray(figures) || !figures.length) return;
   FIGS = figures;
+  CONTEXT = context || null;
   restoreFocus = captureFocus(trigger);
+  const no = $('#figNo'), title = $('#figTitle'), pn = $('#figPn');
+  if (no) no.textContent = (CONTEXT && CONTEXT.number) || '';
+  if (title) title.textContent = (CONTEXT && CONTEXT.title) || '';
+  if (pn) pn.hidden = !(CONTEXT && (CONTEXT.number || CONTEXT.title));
 
   if (el.strip) el.strip.innerHTML = stripHTML();
   el.root.hidden = false;
@@ -242,10 +381,23 @@ export function init() {
   };
 
   on('#figClose', close);
-  on('#figIn', () => { zoom = Math.min(zoom + 1, STOPS.length - 1); apply(); });
-  on('#figOut', () => { zoom = Math.max(zoom - 1, 0); apply(); });
+  on('#figIn', () => zoomTo(stepUp()));
+  on('#figOut', () => zoomTo(stepDown()));
   on('#figRot', () => { rot = (rot + 90) % 360; panX = panY = 0; apply(); });
-  on('#figReset', () => { zoom = 2; rot = 0; panX = panY = 0; apply(); });
+  on('#figReset', () => { scale = 1; rot = 0; panX = panY = 0; apply(); });
+
+  /* ══ THE SCRIM CLOSES IT ═════════════════════════════════════════════════
+     A press on the dimmed page around the panel is the most common way out of
+     any lightbox, and here it did nothing. BOTH ENDS OF THE PRESS must land on
+     the cover itself: a pan that starts on the drawing and is released past
+     the panel's edge is a drag, not a request to leave, and closing on it
+     would throw away the founder's zoom. */
+  let downOnCover = false;
+  el.root.addEventListener('pointerdown', e => { downOnCover = e.target === el.root; });
+  el.root.addEventListener('click', e => {
+    if (downOnCover && e.target === el.root) close();
+    downOnCover = false;
+  });
   on('#figPrev', () => setFig(at - 1, true));
   on('#figNext', () => setFig(at + 1, true));
 
@@ -285,32 +437,93 @@ export function init() {
     });
   }
 
-  /* ── panning ──────────────────────────────────────────────────────────
-     POINTER EVENTS AND POINTER CAPTURE, not mouse events. Capture is what
-     keeps a drag alive when the pointer leaves the stage, which at 4x is most
-     of the time; without it the drawing sticks to the edge mid-gesture. It
-     also gives touch and pen for free. */
+  /* ══ THE STAGE'S GESTURES ═════════════════════════════════════════════
+     POINTER EVENTS AND POINTER CAPTURE, not mouse or touch events. Capture is
+     what keeps a drag alive when the pointer leaves the stage, which at 4x is
+     most of the time, and one model covers mouse, pen and finger:
+
+       · one pointer above 1x pans;
+       · one finger at 1x or below swipes to the next or previous drawing —
+         a horizontal travel of 48px, more across than down;
+       · two fingers pinch, zooming about the point between them and panning
+         with it;
+       · a double click, or two taps within 300ms, toggles 1x and 2x about the
+         point pressed;
+       · the wheel zooms about the cursor — a trackpad pinch arrives as a
+         wheel with ctrlKey and a finer delta, so it gets a finer rate.
+
+     touch-action:none on the stage (40-figure.css) is what stops the browser
+     taking the same fingers for its own page zoom. */
   if (el.stage) {
+    const pts = new Map();
+    let pan = null, pinch = null, swipe = null, lastTap = null;
+    const mid = () => { const [a, b] = [...pts.values()];
+      return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.hypot(a.x - b.x, a.y - b.y) }; };
+
     el.stage.addEventListener('pointerdown', e => {
-      if (STOPS[zoom] <= 1 || e.button !== 0) return;
-      dragging = { id: e.pointerId, x: e.clientX - panX, y: e.clientY - panY };
+      if (e.button !== 0 || e.target.closest('button')) return;
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
       el.stage.setPointerCapture(e.pointerId);
-      el.stage.classList.add('is-panning');
+      if (pts.size === 2) {
+        const m = mid();
+        pinch = { d: m.d || 1, s: scale, x: m.x, y: m.y };
+        pan = swipe = null;
+        gesture(true);
+      } else if (pts.size === 1) {
+        if (scale > 1) { pan = { x: e.clientX - panX, y: e.clientY - panY }; gesture(true); }
+        else if (e.pointerType !== 'mouse') swipe = { x: e.clientX, y: e.clientY };
+      }
       e.preventDefault();
     });
     el.stage.addEventListener('pointermove', e => {
-      if (!dragging || e.pointerId !== dragging.id) return;
-      panX = e.clientX - dragging.x;
-      panY = e.clientY - dragging.y;
-      apply();
+      if (!pts.has(e.pointerId)) return;
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pinch && pts.size === 2) {
+        const m = mid();
+        panX += m.x - pinch.x; panY += m.y - pinch.y;
+        pinch.x = m.x; pinch.y = m.y;
+        zoomTo(pinch.s * (m.d / pinch.d), m.x, m.y);
+        apply();
+      } else if (pan) {
+        panX = e.clientX - pan.x;
+        panY = e.clientY - pan.y;
+        apply();
+      }
     });
     const end = e => {
-      if (!dragging || e.pointerId !== dragging.id) return;
-      dragging = null;
-      el.stage.classList.remove('is-panning');
+      if (!pts.has(e.pointerId)) return;
+      pts.delete(e.pointerId);
+      if (swipe && e.type === 'pointerup') {
+        const dx = e.clientX - swipe.x, dy = e.clientY - swipe.y;
+        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+          setFig(at + (dx < 0 ? 1 : -1), true);
+          lastTap = null;
+        } else if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+          /* TWO TAPS ARE A DOUBLE TAP. dblclick does not fire for touch once
+             touch-action is none, so the stage counts its own. */
+          const now = e.timeStamp;
+          if (lastTap && now - lastTap.t < 300 && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 30) {
+            zoomTo(scale > 1.001 ? 1 : 2, e.clientX, e.clientY);
+            lastTap = null;
+          } else lastTap = { t: now, x: e.clientX, y: e.clientY };
+        }
+      }
+      if (pts.size < 2) pinch = null;
+      if (pts.size === 0) { pan = null; swipe = null; gesture(false); }
     };
     el.stage.addEventListener('pointerup', end);
     el.stage.addEventListener('pointercancel', end);
+    el.stage.addEventListener('dblclick', e => {
+      if (e.target.closest('button')) return;
+      zoomTo(scale > 1.001 ? 1 : 2, e.clientX, e.clientY);
+    });
+    el.stage.addEventListener('wheel', e => {
+      e.preventDefault();
+      wheelGesture();
+      const rate = e.ctrlKey ? 0.01 : 0.002;
+      const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+      zoomTo(scale * Math.exp(-dy * rate), e.clientX, e.clientY);
+    }, { passive: false });
   }
 
   /* ARROW KEYS PAGE THE FIGURES, and only while the viewer is open. It is not
@@ -320,6 +533,17 @@ export function init() {
     if (!isOpen() || e.defaultPrevented) return;
     if (e.key === 'ArrowRight') { setFig(at + 1, true); e.preventDefault(); }
     else if (e.key === 'ArrowLeft') { setFig(at - 1, true); e.preventDefault(); }
+    /* + − 0 STEP THE LADDER AND RESET, the buttons' acts offered to a
+       keyboard. `=` beside `+` because + is a shifted key on most layouts and
+       nobody presses shift to zoom; modifiers are left alone so the browser's
+       own Cmd/Ctrl zoom still works. */
+    else if (!e.metaKey && !e.ctrlKey && !e.altKey && (e.key === '+' || e.key === '=')) {
+      zoomTo(stepUp()); e.preventDefault();
+    } else if (!e.metaKey && !e.ctrlKey && !e.altKey && (e.key === '-' || e.key === '_')) {
+      zoomTo(stepDown()); e.preventDefault();
+    } else if (!e.metaKey && !e.ctrlKey && !e.altKey && e.key === '0') {
+      scale = 1; rot = 0; panX = panY = 0; apply(); e.preventDefault();
+    }
     /* ══ THE TRAP, AND IT IS SIX LINES BECAUSE inert DID THE REST ══════════
        Everything outside this node is already unreachable — `#app` carries
        `inert` for the length of the open. What is left is the two ENDS: Tab
@@ -327,10 +551,10 @@ export function init() {
        browser's own chrome, and the founder comes back to a page where
        nothing is focused.
 
-       focusables() FILTERS BY offsetParent, so the thumbnail strip at a
-       narrow width — display:none under 640px — is not in the cycle. A trap
-       that cycles through controls nobody can see is a trap that reads as
-       broken. */
+       focusables() FILTERS BY offsetParent, so a control that is not drawn
+       — the patent caption's empty spans, a hidden stage message — is not in
+       the cycle. A trap that cycles through controls nobody can see is a trap
+       that reads as broken. */
     else if (e.key === 'Tab') {
       const stops = focusables(el.root);
       if (!stops.length) return;

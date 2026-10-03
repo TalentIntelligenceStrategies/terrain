@@ -218,7 +218,18 @@
 .figview-head{display:flex;align-items:center;gap:var(--s-12);flex:0 0 auto;
               padding:var(--s-12) var(--s-16);
               border-bottom:1px solid var(--border)}
-.figview-cap{flex:1;min-width:0;color:var(--text-3)}
+/* THE PATENT, THEN THE FIGURE. The number in figures at --text-2 and the
+   title at --text-1 take the row's slack and give way by ellipsis; the
+   figure count holds its width at the trailing end beside the close. When
+   the record carries neither, the pair is hidden and the count takes the
+   slack as it used to. */
+.figview-pn{flex:1;min-width:0;display:flex;align-items:baseline;gap:var(--s-10)}
+.figview-pn[hidden]{display:none}
+.figview-pn[hidden] + .figview-cap{flex:1}
+.figview-no{flex:0 0 auto;color:var(--text-2)}
+.figview-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+               font-size:14px;font-weight:500;color:var(--text-1)}
+.figview-cap{flex:0 0 auto;min-width:0;color:var(--text-3)}
 
 /* ── the stage ──────────────────────────────────────────────────────────
    WHITE, AND FOR THE SAME REASON THE THUMBNAILS ARE. Black line-work on a
@@ -234,8 +245,9 @@
 .figview-stage{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;
                background:var(--figure-ground);
                display:grid;grid-template-rows:minmax(0,1fr);place-items:center}
+.figview-stage{touch-action:none}
 .figview-stage.can-pan{cursor:grab}
-.figview-stage.can-pan.is-panning{cursor:grabbing}
+.figview-stage.can-pan.is-gesture{cursor:grabbing}
 
 /* ONE TRANSFORM, COMPOSED HERE. The module sets three custom properties and
    this decides the order they apply in, so there is one answer to whether
@@ -260,12 +272,27 @@
                        rotate(var(--fig-rot,0deg))
                        scale(var(--fig-scale,1));
              transform-origin:center;
-             transition:transform var(--dur-2) var(--ease);
+             transition:transform var(--dur-2) var(--ease),
+                        opacity var(--dur-1) var(--ease);
              will-change:transform}
-/* WHILE DRAGGING, NO TRANSITION. A 200ms ease on a pointer-driven translate
-   makes the drawing lag the cursor by a fifth of a second, which reads as the
-   interface being slow rather than as smoothing. */
-.figview-stage.is-panning .figview-img{transition:none}
+/* DURING ANY GESTURE, NO TRANSFORM TRANSITION — a drag, a pinch, a run of
+   wheel notches. A 200ms ease behind the hand makes the drawing lag it by a
+   fifth of a second, which reads as the interface being slow rather than as
+   smoothing. The opacity transition stays, so a page mid-gesture still
+   crossfades. */
+.figview-stage.is-gesture .figview-img{transition:opacity var(--dur-1) var(--ease)}
+/* ── one drawing to the next ─────────────────────────────────────────────
+   The incoming drawing waits at opacity 0 until it has loaded; the outgoing
+   one is a clone laid exactly over it, carrying its transform, that fades on
+   --dur-1 and is removed (figure-viewer.mjs). Both occupy the stage's one
+   grid cell, so the clone sits on the drawing rather than beside it. */
+.figview-img[data-loading]{opacity:0}
+.figview-stage>.figview-img,.figview-stage>.figview-msg{grid-area:1/1}
+.figview-ghost{pointer-events:none;transition:opacity var(--dur-1) var(--ease)}
+.figview-ghost.is-gone{opacity:0}
+.figview-msg{grid-area:1/1;display:grid;place-items:center;z-index:1;
+             padding-block-end:var(--s-56)}
+.figview-msg[hidden]{display:none}
 
 /* ── paging, on the stage edges ─────────────────────────────────────────── */
 .figview-step{position:absolute;top:50%;transform:translateY(-50%);
@@ -324,6 +351,11 @@
    to say what .45 says. --text-disabled was the bug: it swaps, so in dark it
    landed at #5A5A5A and made the dead control the strongest glyph on the bar. */
 .figbar-btn:disabled{color:var(--figure-ink);opacity:.45;cursor:default}
+/* THE LEVEL, between the two buttons that change it. A figure on the paper,
+   so it takes the paper's ink; 4ch is "400%" without the bar changing width
+   as the number does. */
+.figbar-zoom{min-width:4ch;padding-inline:var(--s-4);text-align:center;
+             color:var(--figure-ink)}
 /* AND THE SEPARATOR TOO, which is the site nobody had named. A 1px x 18px
    --border tick INSIDE the white pill read as a black mark between the
    buttons in dark, for the same reason the pill's own edge did. */
@@ -411,10 +443,18 @@
    ~590. 640 is the nearest step this file's neighbours already break at
    (38-home.css, 39-starred.css), and using a fourth number here would be a
    breakpoint invented to be precise about an estimate. */
+/* ON A PHONE THE STRIP SHRINKS RATHER THAN GOING. It used to be the first
+   thing dropped, on the argument that the stage is the whole value at this
+   width — and it left a founder holding a 347-drawing patent with one way to
+   reach drawing 200, which was 199 swipes. 44px thumbnails in a tighter band
+   cost about 70px of stage and keep the strip what it is for: a way to jump. */
 @media (max-width:640px){
-  /* the strip goes first: at a narrow panel the stage is the whole value and
-     a row of 64px thumbnails under it is the part that can be paged to. */
-  .figstrip{display:none}
+  .figstrip{gap:var(--s-6);padding:var(--s-8) var(--s-12)}
+  .figstrip-btn{width:44px}
+  .figstrip-n{display:none}
+  /* the number stays and the title goes: at 358px the title would be three
+     words and an ellipsis, and the number is what identifies the patent. */
+  .figview-title{display:none}
 }
 /* the gutter closes on a phone, where 24px a side is 15% of the window */
 @media (max-width:520px){

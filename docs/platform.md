@@ -513,14 +513,36 @@ those rules is narrowed rather than repealed —
 [`design-language.md`](design-language.md) §3.2 anticipated exactly this, closing with *a dimming
 layer would arrive with whatever first needs one*. The page behind goes `inert` for the length of
 it: a cover the pointer cannot reach and the tab key can is an interface lying about what is
-reachable. Escape closes the drawing and leaves the record open.
+reachable. Escape closes the drawing and leaves the record open, and **so does a press on the scrim**
+— both ends of it on the scrim, so a pan released past the panel's edge is not taken for a request to
+leave.
+
+**The head names the patent as well as the figure.** The record's number and title sit beside
+*Figure N of M*, because once the scrim dims the record, a figure count is a position in nothing. On
+a phone the title goes and the number stays.
 
 **Every figure keeps its published number.** That number is what the claims refer to, and a
 renumbered figure is a different document. The number is rendered at rest and raised on hover — a
 caption that exists only under a pointer does not exist on a touch screen or to a keyboard.
 
-**Zoom is a ladder, not a slider.** Seven stops, because a founder comparing two figures needs to
-return to the same magnification and a continuous zoom cannot be returned to.
+**The buttons climb a ladder; the hands zoom freely between its ends.** The zoom buttons and the
+`+` `−` `0` keys step seven stops from 50% to 400%, because a founder comparing two figures needs to
+land on the same magnification twice. A wheel notch, a trackpad pinch, two fingers and a double press
+all say *this much, here*, and snapping them to the ladder throws away both the amount and the place —
+so they zoom continuously within the same ends, **about the point under the cursor or between the
+fingers**, and the bar prints the exact level so it can be returned to. The next button press lands
+on the next stop.
+
+**The drawing cannot be lost off the stage.** Pan is bounded by the drawing's own edge at the current
+scale; below 100% it is held at the centre. On touch, one finger at 100% or less swipes to the
+neighbouring drawing, and two taps toggle 100% and 200%.
+
+**Paging crossfades, and the neighbours are already fetched.** The outgoing drawing fades while the
+incoming one arrives; a slow one shows the loader after a beat, and one that fails says so on the
+stage rather than leaving white paper that reads as a blank plate.
+
+**The strip survives a phone.** It shrinks to 44px thumbnails rather than going: a 347-drawing patent
+with no strip is 199 swipes to drawing 200.
 
 **Two absences, and the interface must not confuse them.** A record with no drawings says so in a
 sentence. A record whose drawings Terrain declines to print renders numbered frames —
