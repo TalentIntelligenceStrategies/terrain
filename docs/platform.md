@@ -315,6 +315,13 @@ buys the slot.
 **Rows** — each carries the patent's identity, a status chip, and the engine's relevance score on
 the right. Twenty rows, then a foot that says how many are left and offers `Show more`.
 
+**The reading loop is one hand.** With focus in either column, `j` and `k` open the next and previous
+patent — focus moves to its row and stays on the list, so the next press is one key away — the arrow
+keys move between rows without opening them, `]` and `[` step the open record, and `s` stars the
+patent under focus, or the open record's. **They are scoped**, because a single-character shortcut
+that fires anywhere fires into speech input and into a founder who never knew it existed: never in a
+text field, never with a modifier, never over a menu, a popover or a drawing. Help lists them, §6.4.
+
 **A score the engine did not return is omitted, not barred**, and it is the one field on the row
 where `null` does not mean the skeleton. A bar says *this value exists and we decline to print it*;
 the engine produced no score at all, so a bar would claim something untrue about it, and a label over
@@ -726,8 +733,9 @@ yet; a bar would mean a real value exists and is not ours to print. The two must
 field, and a sent state that *replaces* the form rather than sitting under it — a composer left on
 screen beneath a confirmation invites a second send of the same message.
 
-Then **Common questions**, in three groups — your search and your results, points and your plan,
-your starred set. **Every answer says something no other surface states.** A Help page that hoovered
+Then **Common questions**, in four groups — your search and your results, points and your plan,
+working by keyboard, your starred set. The keyboard group is the one place the shortcuts are written
+down, and it says where they work as well as what they do. **Every answer says something no other surface states.** A Help page that hoovered
 up labels would be restating the interface.
 
 **The one that matters most is the one that says what a search is and is not.** A founder who reads

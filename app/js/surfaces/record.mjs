@@ -23,7 +23,7 @@ import { $, esc } from '../core/dom.mjs';
 import { waitOn, landIn, failWith } from '../core/wait.mjs';
 import { say } from '../core/live-region.mjs';
 import { onActivate } from '../core/delegate.mjs';
-import { push, drop } from '../core/esc-stack.mjs';
+import { push, drop, top } from '../core/esc-stack.mjs';
 import { focusQuietly, captureFocus } from '../core/focus.mjs';
 import { wait as pause } from '../core/timers.mjs';
 import { bar, bars, statusHTML, statusWord, langAttr } from '../core/primitives.mjs';
@@ -621,7 +621,7 @@ async function open(id, trigger, stepping, opts = {}) {
   /* focus moves to the heading, quietly — preventScroll is the fix for the
      record jumping the pane it opened over. NOT ON A STEP: the founder's hand
      is on the Next button and moving focus off it breaks the second press. */
-  if (!stepping) focusQuietly($('#recTitle'));
+  if (!stepping && !opts.keep) focusQuietly($('#recTitle'));
   else say('list', 'Patent ' + (rowIds().indexOf(id) + 1) + ' of ' + rowIds().length + '.');
 }
 
@@ -681,6 +681,67 @@ export function init(ctx) {
     open(id, el, false, { figure: Number(el.getAttribute('data-fig-n')) });
   });
   onActivate(document, '#recClose', close);
+
+  /* ══ THE KEYBOARD · platform.md §4.3 ═════════════════════════════════════
+     The flow is search → read → star, and every step of it was a Tab walk:
+     three stops a row, twenty rows, and the record's stepping pair at the far
+     side of the split. Five keys make the reading loop one hand:
+
+       j / k        next / previous patent — focus moves to its row and the
+                    record opens beside it, focus staying on the list so the
+                    next j is one press away;
+       ↓ / ↑        move between rows without opening anything;
+       ] / [        step the open record, the stepping pair's own act;
+       s            star the open patent, or the focused row's.
+
+     SCOPED, AND THAT IS WCAG 2.1.4 RATHER THAN TASTE. A single-character
+     shortcut that fires anywhere fires into speech input and into a founder
+     who did not know it existed, so these work only while focus is inside the
+     two columns, never in a text field, never with a modifier (the browser's
+     and the OS's own shortcuts stay theirs), and never over an open menu,
+     popover or drawing — the Escape stack's top has to be the record or
+     nothing. The help page lists them. */
+  const rowBtns = () => [...document.querySelectorAll('#setList .drill-toggle')];
+  const rowIndex = list => {
+    const here = document.activeElement && document.activeElement.closest('.set-row');
+    const row = here || document.querySelector('#setList .set-row[data-open]');
+    return row ? list.findIndex(b => b.closest('.set-row') === row) : -1;
+  };
+  document.addEventListener('keydown', e => {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || Viewer.isOpen()) return;
+    const t = e.target instanceof Element ? e.target : null;
+    const split = $('#workSplit');
+    if (!t || !split || !split.contains(t)) return;
+    if (t.closest('input, textarea, select, [contenteditable="true"]')) return;
+    const onTop = top();
+    if (onTop && onTop !== 'record') return;
+    const k = e.key;
+    if (k === 'j' || k === 'k' || ((k === 'ArrowDown' || k === 'ArrowUp') && t.closest('.drill-toggle'))) {
+      const list = rowBtns();
+      if (!list.length) return;
+      const i = rowIndex(list);
+      const fwd = k === 'j' || k === 'ArrowDown';
+      const to = i < 0 ? 0 : Math.max(0, Math.min(list.length - 1, i + (fwd ? 1 : -1)));
+      e.preventDefault();
+      const btn = list[to];
+      btn.focus({ preventScroll: true });
+      btn.closest('.set-row').scrollIntoView({ block: 'nearest',
+        behavior: reduced() ? 'auto' : 'smooth' });
+      if ((k === 'j' || k === 'k') && to !== i) open(btn.getAttribute('data-pn'), btn, false, { keep: true });
+    } else if ((k === ']' || k === '[') && OPEN_ID) {
+      e.preventDefault();
+      step(k === ']' ? +1 : -1);
+    } else if (k === 's') {
+      const recStar = $('#recStar');
+      const rowStar = t.closest('.set-row') && t.closest('.set-row').querySelector('.set-star[data-star]');
+      /* the row under focus first — it is the patent the founder is
+         pointing at — and the open record's when focus is in the record. */
+      const target = rowStar || (OPEN_ID && recStar && !recStar.hidden ? recStar : null);
+      if (!target) return;
+      e.preventDefault();
+      target.click();
+    }
+  });
   onActivate(document, '#recPrev', b =>
     b.getAttribute('aria-disabled') === 'true' || step(-1));
   onActivate(document, '#recNext', b =>
