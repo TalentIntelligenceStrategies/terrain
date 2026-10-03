@@ -26,6 +26,7 @@ import { statusHTML, statusWord } from '../core/primitives.mjs';
 import { esc } from '../core/dom.mjs';
 import * as Starred from '../core/starred.mjs';
 import { reduced, flip, DUR2 } from '../core/motion.mjs';
+import { btnDone } from '../core/button-wait.mjs';
 import { wait as pause } from '../core/timers.mjs';
 /* THE ONE CROSS-SURFACE IMPORT IN THIS FILE, and it is the right direction:
    this surface is what the list's rows leave through. See rowFor()'s note. */
@@ -264,6 +265,8 @@ function paint(rows) {
   const n = rows.length;
   body.hidden = n === 0;
   empty.hidden = n !== 0;
+  const bar = $('#starBar');
+  if (bar) bar.hidden = n === 0;
   if (count) {
     count.hidden = n === 0;
     /* the count is a figure — see list.mjs's setTitle */
@@ -362,12 +365,14 @@ export function init(ctx) {
   onActivate(document, '#starCsv', take('csv', 'text/csv;charset=utf-8',
     (rows) => {
       download(filename('csv'), 'text/csv;charset=utf-8', toCSV(rows));
-      say('destination', rows.length + ' patents downloaded as a spreadsheet.');
+      btnDone($('#starCsv'), 'Downloaded');
+      say('destination', rows.length + ' patents downloaded as a CSV file.');
     }));
 
   onActivate(document, '#starMd', take('md', 'text/markdown;charset=utf-8',
     (rows, query) => {
       download(filename('md'), 'text/markdown;charset=utf-8', toMarkdown(rows, query));
+      btnDone($('#starMd'), 'Downloaded');
       say('destination', rows.length + ' patents downloaded as a Markdown list.');
     }));
 
@@ -396,9 +401,12 @@ export function init(ctx) {
       ? { ...base, ...(Starred.list().find(r => r.id === base.id) || {}) }
       : { ...base, starredUnder: Starred.search() };
     const ext = el.getAttribute('data-rec-export');
+    /* the menu item closes with its menu, so the confirmation goes on the
+       trigger the founder can still see. */
+    btnDone($('#recExpBtn'), 'Downloaded');
     if (ext === 'csv') {
       download(filename('csv'), 'text/csv;charset=utf-8', toCSV([row]));
-      say('destination', 'This record downloaded as a spreadsheet.');
+      say('destination', 'This record downloaded as a CSV file.');
     } else {
       download(filename('md'), 'text/markdown;charset=utf-8',
         toMarkdown([row], Starred.search()));

@@ -646,6 +646,13 @@ to disagree about the order of the founder's own work. `brief.md` §1 is the rul
 question: **does the file state anything the interface did not?** If it does, Terrain has written a
 report.
 
+**The two buttons sit in the page's head and name the format** — *Download CSV* and *Download
+Markdown*, both secondary, at the trailing end of the title's line. They act on the whole set, so
+they belong to the heading that names it rather than to a row of their own above the table. **The
+pressed button says *Downloaded* for a moment**, keeping its accessible name: a download has no
+screen of its own, and the page it was pressed on otherwise looks exactly as it did. The live region
+says it once.
+
 **One record can leave on its own, through the same two builders.** The record's closing block offers
 the same CSV and Markdown for the patent being read, and it reads the **row** rather than the record
 — which is why the row carries `number` and `where` it does not draw. One record must not grow a

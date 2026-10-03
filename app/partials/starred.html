@@ -26,6 +26,42 @@
             <span class="chip" id="starCount" hidden></span>
           </div>
         </div>
+        <!-- ══ what leaves, and in what shape ══════════════════════════════
+             TWO FORMATS AND NO THIRD. A CSV opens in the spreadsheet the
+             founder already works in; a Markdown list pastes into the document
+             they are already writing.
+
+             brief.md §1 draws the line at what a file may SAY rather than at
+             whether a file exists. Neither of these carries a cover page, a
+             summary or a conclusion, and both carry exactly the fields already
+             on screen. A PDF would cross that line and is not offered — and
+             neither is primary, because §3.8 allows one filled button per
+             surface and taking the set out is two equal ways of doing one
+             thing rather than a recommended one and an alternative. -->
+        <!-- THE LABEL LEADS WITH THE VERB AND NAMES THE FORMAT. "Download"
+             because on the surface whose whole purpose is that the set LEAVES,
+             that is the word that has to be there; "CSV" and not
+             "spreadsheet" because the file is a CSV, the docs call it one, and
+             the founder choosing between two formats is choosing a format.
+             Both stay .btn-secondary, so §3.8's one-filled-button rule is
+             untouched and neither is recommended over the other.
+
+             IN THE PAGE'S HEAD, BESIDE THE TITLE IT ACTS ON. The bar sat on a
+             row of its own between the lede and the table, right-aligned
+             against nothing, so the page's two actions floated 150px from the
+             heading that names what they take out. The head is a flex row
+             aligned to its foot, so the bar lands at the trailing end of the
+             title's own line. Hidden with the table when the set is empty. -->
+        <div class="star-bar" id="starBar" hidden>
+          <button class="btn btn-secondary" id="starCsv" type="button">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
+            <span>Download CSV</span>
+          </button>
+          <button class="btn btn-secondary" id="starMd" type="button">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
+            <span>Download Markdown</span>
+          </button>
+        </div>
       </header>
 
       <!-- THE LEDE HAS TO SURVIVE THE FOUNDER ARRIVING BY ACCIDENT. Starring
@@ -50,37 +86,6 @@
       </div>
 
       <div id="starBody" hidden>
-        <!-- ══ what leaves, and in what shape ══════════════════════════════
-             TWO FORMATS AND NO THIRD. A spreadsheet opens in the tool the
-             founder already works in; a Markdown list pastes into the document
-             they are already writing.
-
-             brief.md §1 draws the line at what a file may SAY rather than at
-             whether a file exists. Neither of these carries a cover page, a
-             summary or a conclusion, and both carry exactly the fields already
-             on screen. A PDF would cross that line and is not offered — and
-             neither is primary, because §3.8 allows one filled button per
-             surface and taking the set out is two equal ways of doing one
-             thing rather than a recommended one and an alternative. -->
-        <!-- THE LABEL LEADS WITH THE VERB. These read "Spreadsheet" and
-             "Markdown" — a format with the action left to an arrow glyph, so
-             the one thing a founder could not tell from the label was whether
-             pressing it downloads a file or opens a preview. On the surface
-             whose whole purpose is that the set LEAVES, that is the word that
-             has to be there. Both stay .btn-secondary, so §3.8's one-filled-
-             button rule is untouched and neither is recommended over the
-             other. -->
-        <div class="star-bar">
-          <span class="spacer"></span>
-          <button class="btn btn-secondary" id="starCsv" type="button">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
-            <span>Download spreadsheet</span>
-          </button>
-          <button class="btn btn-secondary" id="starMd" type="button">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
-            <span>Download Markdown</span>
-          </button>
-        </div>
 
         <!-- THE ORDER IS THE ORDER THEY STARRED IN, and the page says so
              because the file reproduces it. core/starred.mjs is a Map for this

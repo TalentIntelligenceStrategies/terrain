@@ -45,12 +45,13 @@
 .star-lede{margin:0 0 var(--s-20);color:var(--text-2);max-width:68ch;
            text-wrap:pretty}
 
-/* THE BAR IS THE FOOT OF THE HEAD, not a toolbar over the list. Both controls
-   in it act on the whole set rather than on a row, so they sit above the
-   hairline the list starts with and not inside it. */
-.star-bar{display:flex;align-items:center;gap:var(--s-8);
-          margin-bottom:var(--s-12)}
-.star-bar .spacer{flex:1 1 auto}
+/* THE BAR IS IN THE HEAD, at the trailing end of the title's line. Both
+   controls act on the whole set rather than on a row, so they belong to the
+   page's heading and not to a toolbar over the list. It wraps under the
+   title on a narrow window, as the head's flex-wrap allows. */
+.star-bar{display:flex;align-items:center;gap:var(--s-8);flex:0 0 auto}
+.star-bar[hidden]{display:none}
+.view-starred .page-head{flex-wrap:wrap}
 
 /* ══ THE SET IS A TABLE · 2026-09-26 ════════════════════════════════════
    IT WAS A LIST OF TITLE-LED ROWS with a meta line that flowed — holder,
