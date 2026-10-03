@@ -878,7 +878,7 @@ out-shouts the primary action on the same screen. One `--text-1` hairline says t
 right volume: `--border` is 1.27:1 and reads as furniture, `--text-1` is 15.3:1 and reads as a
 statement.
 
-**A failed region silences every count it was about to state.** The list head reads *162 patents
+**A failed region silences every count it was about to state.** The list head reads *162
 matched · 50 shown*, and both numbers come from the response that did not arrive. Left standing they
 are the interface making a claim about data it does not have, directly above a block saying it does
 not have it. The same holds for a grouping's branch counts and a record's figure count.
