@@ -36,7 +36,7 @@ function treeHTML(tree) {
   if (!tree.spines || !tree.spines.length) {
     return '<p class="fb-thin t-body">There are too few results to group.</p>';
   }
-  /* NO HEADING HERE. There was one — "Grouped by approach" — and it earned
+  /* NO HEADING HERE. There was one — "Grouped by classification" — and it earned
      its place above a column that would otherwise have started with a bare
      list. The panel names itself in .pop-title now, and two headings 40px
      apart in a 380px panel is the same fact twice. The words moved up rather
@@ -94,7 +94,7 @@ function paintChips(labels) {
     + ' aria-label="Stop showing only ' + esc(labels.get(id) || 'this branch') + '">'
     + '<span>' + esc(labels.get(id) || 'Branch') + '</span>'
     + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
-    + ' stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>'
+    + ' stroke-width="1.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>'
     + '</button>').join('');
 }
 

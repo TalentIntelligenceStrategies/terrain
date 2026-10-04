@@ -25,8 +25,91 @@ import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
 import { read as readSettings } from './settings.mjs';
 import { popover, infoPopovers } from '../core/popover.mjs';
+import * as STARRED from '../core/starred.mjs';
+import { push, drop } from '../core/esc-stack.mjs';
+import { setInert } from '../core/focus.mjs';
 
 let ENGINE = null;
+
+/* ══ THE FOLD · platform.md §4.2 ═══════════════════════════════════════════
+   The bar folds to one line once a search has run and opens again when the
+   founder presses the sentence. RAN is the sentence that produced the list on
+   screen; it is what decides whether leaving the composer folds it, and what
+   Escape puts back.
+
+   data-compact AND NOT aria-expanded. There is no disclosure control whose
+   state this is — the line that opens the field disappears when it does — and
+   check-app.py refuses a styled ARIA attribute nothing writes as surely as it
+   refuses a class mirroring one. The attribute is styling state and says so. */
+let RAN = '';
+
+function setLine(text) {
+  const t = $('#resLineT'), line = $('#resLine');
+  if (t) t.textContent = text;
+  if (line) line.setAttribute('aria-label', 'Edit your search: ' + text);
+}
+
+function fold(on) {
+  const cmp = $('#resCmp'), track = $('#resTrack');
+  if (!cmp || !track) return;
+  /* NOTHING TO FOLD TO. An empty bar folded is a line with no sentence on
+     it — a control that says nothing about what it opens. */
+  if (on && !RAN) on = false;
+  cmp.toggleAttribute('data-compact', on);
+  setInert(track, on);
+  if (on) drop('composer');
+  else pushFold();
+}
+
+/* ON THE STACK WHENEVER THE FOUNDER IS IN IT. The stack is last-opened-first,
+   and a record opened after the composer sat above it: Escape in the
+   composer's own field closed the record across the split and left the edit
+   standing. Focus coming back into the open composer moves it to the top
+   again, which is what "the thing you are in closes first" means. */
+function pushFold() {
+  push('composer', () => {
+    /* ESCAPE IS CANCEL. The edit is put back to what ran, because a folded
+       line showing words that did not produce the list underneath is the
+       bar asserting a search that never happened. */
+    const field = $('#resQuery');
+    if (field) field.value = RAN;
+    fold(true);
+    const line = $('#resLine');
+    if (line) line.focus({ preventScroll: true });
+  });
+}
+
+function openField() {
+  fold(false);
+  const field = $('#resQuery');
+  if (!field) return;
+  /* inert comes off on the line above, and a node leaving inert is focusable
+     in the same task; the caret goes to the end because the founder is
+     refining a sentence, not replacing it. */
+  field.focus({ preventScroll: true });
+  const n = field.value.length;
+  field.setSelectionRange(n, n);
+}
+
+/* THE ONE WRITER FOR WHAT THE BAR SAYS AFTER A RUN. It was two — home.mjs
+   wrote the meta with figure spans and the re-search here wrote it as plain
+   text, so the count changed face depending on which composer the founder
+   had used. Both call this now. */
+export function landQuery(text, data) {
+  RAN = text;
+  const field = $('#resQuery');
+  if (field) field.value = text;
+  setLine(text);
+  const meta = $('#resMeta');
+  if (meta && data && data.matched != null) {
+    /* a count and a duration, both figures — see list.mjs's setTitle */
+    const fig = v => '<span class="fig fig-s">' + v + '</span>';
+    meta.innerHTML = fig(data.matched) + ' results'
+      + (data.elapsedMs != null
+          ? ' \u00b7 ' + fig((data.elapsedMs / 1000).toFixed(2)) + ' s' : '');
+  }
+  fold(true);
+}
 
 /* ── the toggles ──────────────────────────────────────────────────────────
    THE FISHBONE IS NOT A VIEW MODE, and that is the one structural fact worth
@@ -132,22 +215,54 @@ export function init(ctx) {
       btn.click();
     });
   }
+  /* THE FOLD'S THREE WAYS IN AND OUT. Pressing the line opens it. Leaving
+     the composer folds it again if the sentence is still the one that ran —
+     an edit in progress is never folded away under the founder, it waits for
+     Search or Escape. relatedTarget is null when focus goes to nothing, a
+     click on the page's ground, and that is leaving too. */
+  onActivate(document, '#resLine', openField);
+  const cmp = $('#resCmp');
+  /* THE FIELD ONLY, NOT THE WHOLE COMPOSER: settings and the grouping open
+     popovers from this toolbar, and focus moving into one of them must not
+     lift the composer over the popover it just opened. */
+  if (cmp && field) field.addEventListener('focus', () => {
+    if (!cmp.hasAttribute('data-compact')) pushFold();
+  });
+  if (cmp) cmp.addEventListener('focusout', e => {
+    if (cmp.hasAttribute('data-compact')) return;
+    if (e.relatedTarget && cmp.contains(e.relatedTarget)) return;
+    if (field && field.value.trim() === RAN) fold(true);
+  });
+
   onActivate(document, '#resSearch', async b => {
     const text = field && field.value.trim();
     if (!text) return;
     btnWait(b, true);
     const res = await ENGINE.search({ query: text, settings: readSettings() });
     btnRest(b);
+    /* THE FAILURE IS ON SCREEN, NOT ONLY SPOKEN. It used to go to the live
+       region alone, so a sighted founder pressed Search, watched the button
+       come back, and was looking at the old list with nothing saying the new
+       search had not run. #resStatus sits under the bar the way #cmpStatus
+       sits under the home composer; it is not itself live, because say()
+       already announces it once. */
+    const status = $('#resStatus');
     if (!res.ok) {
-      say('work', 'The search did not run. Nothing was charged.');
+      const why = res.code === 'INSUFFICIENT'
+        ? 'There are not enough points for this search. Nothing was charged. Points renew at the start of each quarter.'
+        : 'The search did not run. Nothing was charged. The results below are from your last search.';
+      if (status) status.textContent = why;
+      say('work', why);
       return;
     }
-    const meta = $('#resMeta');
-    if (meta && res.data.matched != null) {
-      meta.textContent = res.data.matched + ' results'
-        + (res.data.elapsedMs != null
-            ? ' \u00b7 ' + (res.data.elapsedMs / 1000).toFixed(2) + ' s' : '');
-    }
+    if (status) status.textContent = '';
+    /* THE SET IS NOW FILED UNDER THE SEARCH THAT PRODUCED IT. Told after the
+       engine answered, not before it was asked: a query that failed produced
+       no rows to star, and stamping it would file the next star under a
+       search that returned nothing. core/starred.mjs carries the argument for
+       the store holding this rather than the caller passing it. */
+    STARRED.setSearch(text);
+    landQuery(text, res.data);
     /* the list owns its own rendering; tell it to reload rather than reaching
        across into its DOM from here. */
     window.dispatchEvent(new CustomEvent('terrain:searched'));

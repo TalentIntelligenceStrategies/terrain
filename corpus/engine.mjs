@@ -448,10 +448,8 @@ export const CorpusEngine = {
     balance: 140, allowance: 400,
     runTypes: [
       { id: 'search',  label: 'New search', cost: 40 },
-      { id: 'rebuild', label: 'Rebuild after a scope change', cost: 25 },
       { id: 'rerank',  label: 'Find similar', cost: 4 },
       { id: 'export',  label: 'Export', cost: 8 },
-      { id: 'watch',   label: 'Watch', cost: 12 },
     ],
     daily: D.FILINGS,
   }),

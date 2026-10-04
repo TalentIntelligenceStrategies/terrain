@@ -48,8 +48,38 @@ const LISTENERS = [];
 const KEY = 'terrain:starred';
 /* BUMP THIS WHEN THE ROW SHAPE CHANGES. components.md §1 names the fields a
    row carries; a stored row from before a rename is a row the list cannot
-   draw. */
-const VERSION = 1;
+   draw.
+
+   2 SINCE 2026-09-26: a stored row now carries which search it was starred
+   under. A v1 row has no answer to that, and the starred surface groups by
+   it — so a v1 set would render as one nameless group claiming to be a
+   search. Dropping it is the honest read of a payload that cannot say what
+   the surface now asks. */
+const VERSION = 2;
+
+/* ══ WHICH SEARCH IS RUNNING, AND WHY THE STORE HOLDS IT ══════════════════
+   The starred surface groups the set by the search each patent was starred
+   under, so a star has to be stamped at the moment it happens — afterwards
+   there is nothing left that knows.
+
+   IT IS HERE RATHER THAN PASSED IN BY THE CALLER, because the caller is
+   list.mjs and the fact belongs to work.mjs, which is the module that runs
+   the search. A surface importing another surface is the direction this
+   file's header refuses; a surface writing to a core module both of them
+   already import is not.
+
+   IT IS THE RAN QUERY, NOT THE FIELD'S CONTENTS. #resQuery still holds the
+   founder's sentence after the search and they may edit it without pressing
+   Search again — so reading the textarea at star time would file a patent
+   under a search that never ran. work.mjs sets this from the text it actually
+   sent to the engine. */
+let SEARCH = '';
+
+/** work.mjs calls this with the query it just sent to the engine. */
+export function setSearch(q) { SEARCH = typeof q === 'string' ? q.trim() : ''; }
+
+/** what a star would be filed under right now. */
+export function search() { return SEARCH; }
 
 function read() {
   try {
@@ -104,7 +134,14 @@ export function has(id) { return ROWS.has(id); }
  */
 export function toggle(id, row) {
   const on = !ROWS.has(id);
-  if (on) ROWS.set(id, { ...row, id });
+  /* THE PROVENANCE FIELDS ARE NAMESPACED AND THE ENGINE'S ARE NOT.
+     components.md §1 owns the row's shape and neither of these is in it —
+     they are what the STORE knows about a row, not what the port returned —
+     so they read as ours at every call site that spreads a row into a file or
+     a renderer. `starredAt` is not shown anywhere yet; it is stored because
+     insertion order is the only ordering the set has and a Map's order does
+     not survive a future move off localStorage. */
+  if (on) ROWS.set(id, { ...row, id, starredUnder: SEARCH, starredAt: Date.now() });
   else ROWS.delete(id);
   write();
   announce();

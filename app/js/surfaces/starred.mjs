@@ -25,6 +25,9 @@ import { say } from '../core/live-region.mjs';
 import { statusHTML, statusWord } from '../core/primitives.mjs';
 import { esc } from '../core/dom.mjs';
 import * as Starred from '../core/starred.mjs';
+import { reduced, flip, DUR2 } from '../core/motion.mjs';
+import { btnDone } from '../core/button-wait.mjs';
+import { wait as pause } from '../core/timers.mjs';
 /* THE ONE CROSS-SURFACE IMPORT IN THIS FILE, and it is the right direction:
    this surface is what the list's rows leave through. See rowFor()'s note. */
 import { rowFor } from './list.mjs';
@@ -45,6 +48,13 @@ const COLUMNS = [
   { key: 'status', head: 'Status',  get: r => statusWord(r.status) || null },
   { key: 'year',   head: 'Year',    get: r => r.year },
   { key: 'score',  head: 'Score',   get: r => r.score == null ? null : r.score.toFixed(4) },
+  /* THE SEARCH IT WAS STARRED UNDER, added 2026-09-26 with the grouping.
+     The page now shows which search each patent came from, and a file that
+     dropped it would lose the one piece of structure the founder can see on
+     screen — brief.md §1's test is about a file saying MORE than the
+     interface, never less. It is the founder's own sentence printed back,
+     which is the safest thing a file here can carry. */
+  { key: 'starredUnder', head: 'Search', get: r => r.starredUnder || null },
 ];
 
 /* A WITHHELD VALUE IS AN EMPTY CELL. `null` means "this exists and we decline
@@ -70,16 +80,43 @@ function toCSV(rows) {
 
 /* ── the Markdown list ──────────────────────────────────────────────────────
    A LIST, NOT A TABLE. The founder is pasting this into something they are
-   already writing, and a seven-column pipe table is unreadable in a source
+   already writing, and an eight-column pipe table is unreadable in a source
    file and wraps badly in every editor. One patent per bullet, its number
    bolded because that is the field they will search their own document for.
 
    THE HEADING IS THE QUERY, NOT A TITLE WE WROTE. "Patents I starred" would be
-   Terrain narrating; the sentence the founder typed is theirs. */
+   Terrain narrating; the sentence the founder typed is theirs.
+
+   AND IT IS GROUPED THE WAY THE PAGE IS · 2026-09-26. The CSV carries the
+   search as a column; a Markdown list has no columns, so it carries it as the
+   structure — a heading per search, in the same order the page shows them,
+   which is also what makes the two files say the same things. A flat list
+   would have been the third shape this set is read in, and .star-note
+   promises the founder there are two.
+
+   ONE SEARCH, ONE HEADING, AND NO SUBHEADINGS WHEN THERE IS ONLY ONE. A
+   founder who has starred from a single search gets what they got before:
+   their sentence at the top and a list under it. */
 function toMarkdown(rows, query) {
   const lines = [];
-  lines.push('# ' + (query || 'Starred patents'));
+  const groups = groupBySearch(rows);
+  if (groups.length > 1) {
+    lines.push('# Starred patents');
+    lines.push('');
+    groups.forEach(([q, rs]) => {
+      lines.push('## ' + (q || 'Starred without a search'));
+      lines.push('');
+      bullets(rs, lines);
+    });
+    return lines.join('\n');
+  }
+  lines.push('# ' + ((groups.length && groups[0][0]) || query || 'Starred patents'));
   lines.push('');
+  bullets(rows, lines);
+  return lines.join('\n');
+}
+
+function bullets(rows, lines) {
   rows.forEach(r => {
     const bits = [];
     if (r.holder != null) bits.push(r.holder);
@@ -99,7 +136,6 @@ function toMarkdown(rows, query) {
     if (bits.length) lines.push('  ' + bits.join(' · '));
   });
   lines.push('');
-  return lines.join('\n');
 }
 
 /* ── handing the file over ──────────────────────────────────────────────────
@@ -131,56 +167,95 @@ function filename(ext) {
 
 let ENGINE = null;
 
-function rowHTML(r) {
+function rowHTML(r, n) {
   /* THE SAME SKELETON RULE AS THE LIST. `null` means render the bar and it is
      the only thing that means that; a collection that printed real names where
-     the list it came from prints bars would be two contracts on one value. */
-  const title = r.skim != null
-    ? '<span class="starrow-name">' + esc(r.skim) + '</span>'
-    : '<span class="sk sk-h-body w-full"></span>';
-  const holder = r.holder != null
-    ? '<span class="starrow-holder">' + esc(r.holder) + '</span>'
-    : '<span class="sk sk-h-micro w-md"></span>';
-  return '<li class="starrow" data-id="' + esc(r.id) + '">'
-    + '<div class="starrow-main">'
-    + (r.number != null
-        ? '<span class="fig fig-s starrow-id">' + esc(r.number) + '</span>'
-        : '<span class="sk sk-h-micro w-sm"></span>')
-    + title
-    + '</div>'
-    /* EVERY COLUMN THE FILE CARRIES IS ON THE ROW, and that is a correctness
-       rule rather than a completeness one. .star-note tells the founder the
-       files carry "the same fields as the rows above" and then names seven;
-       the row drew five. `where` and `score` left in the file without ever
-       appearing on screen, which is the one thing brief.md §1's test is about
-       — a file that states something the interface did not. Either the row
-       shows them or the file stops carrying them, and the row is the cheaper
-       half of that pair to fix.
+     the list it came from prints bars would be two contracts on one value.
+     In a table the bar sits inside its own cell, so a withheld value keeps
+     the column's edge instead of collapsing it. */
+  const cellOr = (v, cls, sk) => v != null
+    ? '<td class="' + cls + '">' + esc(String(v)) + '</td>'
+    : '<td class="' + cls + '"><span class="sk sk-h-micro ' + sk + '"></span></td>';
 
-       THE SCORE OBEYS THE SAME OMISSION RULE AS THE LIST'S. null means the
-       engine returned none, so the whole block goes rather than printing a
+  return '<tr class="starrow" data-id="' + esc(r.id) + '">'
+    /* THE RANK IS THE FOUNDER'S OWN ORDER WITHIN THIS SEARCH, not a score
+       position. It restarts at 1 in each group because the group is what it
+       counts through, and #starOrder above says which order that is. */
+    + '<td class="star-c-n fig fig-s">' + n + '</td>'
+    + cellOr(r.number, 'star-c-num fig fig-s', 'w-sm')
+    + cellOr(r.skim, 'star-c-t', 'w-full')
+    + cellOr(r.holder, 'star-c-h', 'w-md')
+    + cellOr(r.where, 'star-c-w', 'w-sm')
+    + '<td class="star-c-st">' + (r.status ? statusHTML(r.status) : '') + '</td>'
+    + '<td class="star-c-y fig fig-s">' + (r.year == null ? '' : r.year) + '</td>'
+    /* THE SCORE OBEYS THE SAME OMISSION RULE AS THE LIST'S: null means the
+       engine returned none, so the cell is empty rather than carrying a
        label over a gap — and the CSV writes an empty cell for the same
        reason. Against corpus/ that is every row. */
-    + '<div class="starrow-meta">'
-    + (r.status ? statusHTML(r.status) : '')
-    + holder
-    + (r.where != null ? '<span class="starrow-where">' + esc(r.where) + '</span>' : '')
-    + '<span class="fig fig-s">' + (r.year == null ? '' : r.year) + '</span>'
-    + (r.score == null ? ''
-       : '<span class="starrow-score">'
-         + '<span class="t-micro starrow-score-k">Score</span>'
-         + '<span class="fig fig-s">' + r.score.toFixed(4) + '</span></span>')
-    + '</div>'
+    + '<td class="star-c-sc fig fig-s">' + (r.score == null ? '' : r.score.toFixed(4)) + '</td>'
     /* UNSTARRING IS AVAILABLE WHERE THE SET IS READ. A collection you can only
        add to from somewhere else is a collection that only grows. */
+    + '<td class="star-c-x">'
     + '<button class="set-ctl set-star" type="button" aria-pressed="true"'
     + ' data-unstar="' + esc(r.id) + '"'
     + ' aria-label="Remove this patent from your starred set">'
     + '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
     + ' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'
-    + '<path d="M12 2.5l2.9 5.88 6.5.95-4.7 4.58 1.11 6.47L12 17.33l-5.81 3.05'
-    + ' 1.11-6.47-4.7-4.58 6.5-.95z"/></svg></button>'
-    + '</li>';
+    + '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg></button></td>'
+    + '</tr>';
+}
+
+/* ══ ONE GROUP PER SEARCH · platform.md §5.2 ═══════════════════════════════
+   THE SET IS ONE THING WITH AN INTERNAL ORDER, so this is one <table> with a
+   <tbody> per search rather than a table each: separate tables would say the
+   groups are unrelated sets and would give each its own column widths, which
+   is the opposite of the alignment the table was built for.
+
+   MOST RECENT SEARCH FIRST, and the rows inside it oldest first. The set's
+   own order is insertion — core/starred.mjs is a Map for exactly that — so
+   reversing the GROUPS while keeping the rows in sequence is what puts the
+   work the founder is doing now at the top without reordering the work
+   itself. Ties are impossible: a group's position is its first star.
+
+   A ROW STARRED BEFORE THE STORE KNEW ABOUT SEARCHES cannot happen — the
+   version bump dropped those — but a row starred before any search ran can,
+   through a link straight to a record. Those group under one heading that
+   says so rather than under an empty sentence pretending to be a query. */
+/* ONE GROUPING, READ BY THE PAGE AND BY THE MARKDOWN. Two implementations of
+   "most recent search first" is two chances for the file and the screen to
+   disagree about the order of the founder's own work — the same argument
+   COLUMNS makes about the fields. */
+function groupBySearch(rows) {
+  const groups = new Map();
+  rows.forEach(r => {
+    const k = r.starredUnder || '';
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(r);
+  });
+  return [...groups.entries()].reverse();
+}
+
+function groupHTML(rows) {
+  return groupBySearch(rows).map(([q, rs]) =>
+    '<tbody class="star-grp">'
+    /* THE FLEX ROW IS A DIV INSIDE THE CELL, NOT THE CELL. A spanning <th>
+       in a table-layout:fixed table has no width of its own to resolve
+       against — the fixed algorithm sizes columns from the first row and a
+       colspan cell is laid out into whatever that came to — so
+       `display:flex` on the <th> gave its children a zero basis and the
+       heading truncated to one character. Measured: "a folding drone arm…"
+       rendered as "a…". A block-level child of the cell measures against the
+       cell's resolved width, which is the whole table. */
+    + '<tr class="star-grp-head" data-q="' + esc(q) + '"><th scope="colgroup" colspan="9">'
+    + '<div class="star-grp-in">'
+    + (q
+        ? '<span class="star-grp-q">' + esc(q) + '</span>'
+        : '<span class="star-grp-q star-grp-none">Starred without a search</span>')
+    + '<span class="star-grp-n t-micro"><span class="fig fig-s">' + rs.length + '</span>'
+    + (rs.length === 1 ? ' patent' : ' patents') + '</span>'
+    + '</div></th></tr>'
+    + rs.map((r, i) => rowHTML(r, i + 1)).join('')
+    + '</tbody>').join('');
 }
 
 function paint(rows) {
@@ -190,11 +265,42 @@ function paint(rows) {
   const n = rows.length;
   body.hidden = n === 0;
   empty.hidden = n !== 0;
+  const bar = $('#starBar');
+  if (bar) bar.hidden = n === 0;
+  /* THE LEDE DESCRIBES A SET, SO IT GOES WHEN THERE IS NONE. "These are the
+     patents you marked" over "Nothing starred yet" was two sentences
+     disagreeing about whether there was anything here; the empty note
+     already says what the page is for. */
+  const lede = $('.star-lede');
+  if (lede) lede.hidden = n === 0;
   if (count) {
     count.hidden = n === 0;
-    count.textContent = n + (n === 1 ? ' patent' : ' patents');
+    /* the count is a figure — see list.mjs's setTitle */
+    count.innerHTML = '<span class="fig fig-s">' + n + '</span>'
+      + (n === 1 ? ' patent' : ' patents');
   }
-  list.innerHTML = rows.map(rowHTML).join('');
+  /* THE HEADER ROW IS MARKUP AND THE BODY IS RENDERED, so the write targets
+     the groups rather than the table: innerHTML on #starList would take
+     <thead> with it and the columns would lose their names on the first
+     star. */
+  list.querySelectorAll('tbody').forEach(t => t.remove());
+  list.insertAdjacentHTML('beforeend', groupHTML(rows));
+
+  /* A SCROLL PORT HAS TO BE REACHABLE BY KEYBOARD, and only the DOM knows
+     whether this one is scrolling. Below 860px the table keeps its columns
+     and the wrapper scrolls sideways instead (39-starred.css); a region that
+     scrolls but has no tab stop is content a keyboard cannot reach at all,
+     and the attribute is wrong to ship unconditionally — a tab stop on an
+     element with nothing to scroll is a stop that does nothing.
+
+     Measured after the write, because the answer depends on what was just
+     rendered. */
+  const wrap = list.parentElement;
+  if (wrap) {
+    const scrolls = wrap.scrollWidth > wrap.clientWidth;
+    if (scrolls) wrap.setAttribute('tabindex', '0');
+    else wrap.removeAttribute('tabindex');
+  }
 }
 
 export function init(ctx) {
@@ -202,9 +308,39 @@ export function init(ctx) {
 
   Starred.onChange(paint);
 
-  onActivate(document, '#starList [data-unstar]', el => {
+  /* ══ A ROW LEAVES, AND THE ROWS BELOW CLOSE THE GAP · §6 ══════════════
+     It used to vanish in the same frame as the press and every row under it
+     jumped up one, so the founder lost the row they were about to read next
+     and focus fell to <body> with the button that held it. Now the row fades
+     out on --dur-2, the set changes, and flip() plays the rows below — and the
+     group headings, keyed by their search — up into the space.
+
+     FOCUS GOES TO THE NEXT ROW'S REMOVE BUTTON, or the previous one at the
+     end of the table, or the heading once the set is empty: the place a
+     founder clearing several rows in a row expects to press next.
+
+     A row already leaving ignores a second press — two presses is one
+     intention, and the second would toggle the patent back in. */
+  const key = el => el.getAttribute('data-id') || 'q:' + el.getAttribute('data-q');
+  onActivate(document, '#starList [data-unstar]', async el => {
     const id = el.getAttribute('data-unstar');
-    Starred.toggle(id);
+    const row = el.closest('.starrow');
+    if (row && row.hasAttribute('data-leaving')) return;
+    const rows = [...document.querySelectorAll('#starList .starrow')];
+    const at = rows.indexOf(row);
+    const near = rows[at + 1] || rows[at - 1];
+    const nextId = near && near !== row ? near.getAttribute('data-id') : null;
+    if (row && !reduced()) {
+      row.setAttribute('data-leaving', '');
+      await pause(DUR2);
+    }
+    const list = $('#starList');
+    flip(list, '.starrow, .star-grp-head', key, () => Starred.toggle(id),
+      list && list.parentElement);
+    const target = (nextId && list
+      && list.querySelector('[data-unstar="' + CSS.escape(nextId) + '"]'))
+      || $('#starTitle');
+    if (target) target.focus({ preventScroll: true });
     say('destination', 'Removed. ' + (Starred.size()
       ? Starred.size() + (Starred.size() === 1 ? ' patent' : ' patents') + ' left.'
       : 'Nothing starred.'));
@@ -218,8 +354,12 @@ export function init(ctx) {
        ledger call must not cost the founder their download, so the file is
        handed over either way and the balance is only updated if the engine
        answered. */
-    const q = $('#resQuery');
-    build(rows, q && q.value.trim());
+    /* THE HEADING IS THE SEARCH THAT RAN, NOT THE FIELD'S CONTENTS. This
+       read #resQuery directly, which is the sentence CURRENTLY in the box —
+       and the founder can edit it without pressing Search, so a file could be
+       headed by a query that never ran against the set inside it. The store
+       holds the ran query for exactly this reason (core/starred.mjs). */
+    build(rows, Starred.search());
     let res = null;
     try { res = await ENGINE.export({ ids: Starred.ids(), format: ext }); } catch (e) { res = null; }
     if (res && res.ok && res.data && res.data.balance != null) {
@@ -231,12 +371,14 @@ export function init(ctx) {
   onActivate(document, '#starCsv', take('csv', 'text/csv;charset=utf-8',
     (rows) => {
       download(filename('csv'), 'text/csv;charset=utf-8', toCSV(rows));
-      say('destination', rows.length + ' patents downloaded as a spreadsheet.');
+      btnDone($('#starCsv'), 'Downloaded');
+      say('destination', rows.length + ' patents downloaded as a CSV file.');
     }));
 
   onActivate(document, '#starMd', take('md', 'text/markdown;charset=utf-8',
     (rows, query) => {
       download(filename('md'), 'text/markdown;charset=utf-8', toMarkdown(rows, query));
+      btnDone($('#starMd'), 'Downloaded');
       say('destination', rows.length + ' patents downloaded as a Markdown list.');
     }));
 
@@ -254,16 +396,26 @@ export function init(ctx) {
   onActivate(document, '[data-rec-export]', async el => {
     const end = el.closest('.rec-end');
     const id = end && end.getAttribute('data-pn');
-    const row = id && rowFor(id);
-    if (!row) return;
+    const base = id && rowFor(id);
+    if (!base) return;
+    /* A RECORD EXPORTED WITHOUT BEING STARRED HAS NO STAMP, because only
+       toggle() writes one. The Search column would be an empty cell for a
+       file the founder is downloading from inside the very search that found
+       it — so the running search fills it here, and a row that IS starred
+       keeps the search it was starred under rather than the current one. */
+    const row = Starred.has(base.id)
+      ? { ...base, ...(Starred.list().find(r => r.id === base.id) || {}) }
+      : { ...base, starredUnder: Starred.search() };
     const ext = el.getAttribute('data-rec-export');
-    const q = $('#resQuery');
+    /* the menu item closes with its menu, so the confirmation goes on the
+       trigger the founder can still see. */
+    btnDone($('#recExpBtn'), 'Downloaded');
     if (ext === 'csv') {
       download(filename('csv'), 'text/csv;charset=utf-8', toCSV([row]));
-      say('destination', 'This record downloaded as a spreadsheet.');
+      say('destination', 'This record downloaded as a CSV file.');
     } else {
       download(filename('md'), 'text/markdown;charset=utf-8',
-        toMarkdown([row], q && q.value.trim()));
+        toMarkdown([row], Starred.search()));
       say('destination', 'This record downloaded as a Markdown list.');
     }
     let res = null;

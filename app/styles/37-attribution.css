@@ -43,6 +43,23 @@
    two surfaces. */
 .foot{display:flex;align-items:baseline;justify-content:center;gap:var(--s-6);margin:0;
       padding:0 var(--s-16) var(--s-32);font-size:14px;color:var(--text-3)}
+/* ══ IT IS THE LAST THING IN THE SCROLL, ON EVERY SURFACE ════════════════
+   A CREDIT IS NOT CHROME. It was a fixed strip under both columns on the
+   working surface — always on screen, never scrolled to — and on the
+   destination pages it was the last child of a flex column with nothing
+   pushing it down, so on a short page it floated mid-window with 420px of
+   empty page beneath it. Two different wrongs from the same missing rule.
+
+   margin-block-start:auto ANSWERS BOTH. In a flex column an auto start
+   margin absorbs whatever is left, so a short page pins the credit to the
+   bottom and a long one pushes it past the fold. It is read when the founder
+   reaches the end of the page, which is what a foot is, and it is never
+   spending a strip of every screen to say the same thing.
+
+   THE WORKING SURFACE HAS NO PAGE SCROLL, so its credit is the last thing in
+   the LIST — see surface.html. The 16px bottom gutter the strip used to hold
+   comes from the columns' own padding and survives without it; measured. */
+.main>.foot{margin-block-start:auto}
 .foot em,.conv-foot em{font-style:italic}
 /* Their primary in light, their own white mark in dark — both are Innovue's
    own files, identical viewBox 0 32 300 41, so the swap is pixel-stable and

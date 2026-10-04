@@ -98,8 +98,18 @@ function accountFill(d) {
 
 /* ── billing · platform.md §6.3 ─────────────────────────────────────────── */
 function billingFill(d, invoices) {
-  const price = $('#billPrice');
-  if (price) price.textContent = d.price;      /* 'XXX', not a bar */
+  /* 'XXX' IS A SENTINEL, NOT A STRING TO PRINT. ports.mjs holds it distinct
+     from null deliberately, and that distinction is worth keeping — but the
+     token is for the contract, not for the customer. Unset, the figure becomes
+     a sentence and the "/ quarter" beside it goes with it, because a period
+     qualifies a price and there is no price to qualify. */
+  const price = $('#billPrice'), per = $('#billPer');
+  if (price) {
+    const unset = d.price === 'XXX';
+    price.textContent = unset ? 'Not set yet' : d.price;
+    price.className = unset ? 't-body' : 'fig fig-l';
+    if (per) per.hidden = unset;
+  }
   const inv = $('#billInv');
   if (!inv) return;
   if (!invoices || !invoices.length) {
@@ -190,6 +200,19 @@ export function init(ctx) {
   });
 
   ctx.onRoute(async view => {
+    /* THE BALANCE ON THE PLAN PAGE IS READ EVERY VISIT, above the once-only
+       guard. It shipped as a literal 0 in the markup and nothing ever wrote
+       it, so the plan page said "0 points left" beside a masthead saying 140
+       — two answers to the one question a founder opens that page to ask.
+       It reads the same `points` port the points page and the masthead read,
+       and it is re-read because searching spends points between visits. A
+       failed read leaves the bar standing rather than inventing a number. */
+    if (view === 'billing') {
+      const left = $('#billLeft');
+      const pts = left && await ENGINE.points();
+      if (left && pts && pts.ok && pts.data.balance != null)
+        left.textContent = String(pts.data.balance);
+    }
     if (done.has(view)) return;
 
     if (view === 'usage') {

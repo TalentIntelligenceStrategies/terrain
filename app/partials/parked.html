@@ -67,11 +67,15 @@
       <div class="pop-sec">
         <div class="t-micro pop-lbl" id="popCountLbl">How many to bring back</div>
         <div class="seg pop-seg" role="group" aria-labelledby="popCountLbl">
-          <button class="seg-btn" type="button" aria-pressed="false" data-count="10">10</button>
-          <button class="seg-btn" type="button" aria-pressed="false" data-count="20">20</button>
-          <button class="seg-btn" type="button" aria-pressed="true"  data-count="50">50</button>
-          <button class="seg-btn" type="button" aria-pressed="false" data-count="100">100</button>
-          <button class="seg-btn" type="button" aria-pressed="false" data-count="500">500</button>
+          <!-- fig AND NOT fig-s: the label IS a count, so §4 gives it the figure
+               face, but .seg-btn already sets this control's 12.5px/500 and a
+               size role on top of it would be two rules for one metric. .fig
+               alone carries the family and tabular-nums. -->
+          <button class="seg-btn fig" type="button" aria-pressed="false" data-count="10">10</button>
+          <button class="seg-btn fig" type="button" aria-pressed="false" data-count="20">20</button>
+          <button class="seg-btn fig" type="button" aria-pressed="true"  data-count="50">50</button>
+          <button class="seg-btn fig" type="button" aria-pressed="false" data-count="100">100</button>
+          <button class="seg-btn fig" type="button" aria-pressed="false" data-count="500">500</button>
         </div>
       </div>
 
@@ -104,7 +108,7 @@
            screen and make the smaller one look like the way forward. -->
       <div class="pop-foot">
         <button class="btn btn-ghost pop-reset" id="popReset" type="button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
           <span>Reset</span>
         </button>
         <span class="spacer"></span>

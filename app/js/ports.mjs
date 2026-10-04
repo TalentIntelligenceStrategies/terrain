@@ -91,7 +91,7 @@ export const CODE = {
 
 /** The list · FOUR FIELDS PER ROW AND NO MORE — that rule is about what the row
  *  DRAWS, and the row still draws four. `number` and `where` are carried and not
- *  drawn, because the starred set leaves as a seven-column file and the export
+ *  drawn, because the starred set leaves as an eight-column file and the export
  *  cannot reach the record port: fifty starred patents would be fifty calls to
  *  fill in two columns the list already had.
  *

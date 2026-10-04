@@ -16,6 +16,8 @@ import { say } from '../core/live-region.mjs';
 import { read as readSettings } from './settings.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { bar } from '../core/primitives.mjs';
+import * as STARRED from '../core/starred.mjs';
+import { landQuery } from './work.mjs';
 
 let ENGINE = null;
 let FIELD = null;          // the chosen technology field
@@ -23,11 +25,11 @@ let FIELD = null;          // the chosen technology field
 const G = 'fill="none" stroke="currentColor" stroke-width="1.5" '
         + 'stroke-linecap="round" stroke-linejoin="round"';
 const ICON = {
-  cpu:     '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/>',
-  network: '<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3M12 12V8"/>',
-  monitor: '<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/>',
-  battery: '<path d="M15 7h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><path d="M6 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1"/><path d="m11 7-3 5h4l-3 5"/><path d="M22 11v2"/>',
-  stetho:  '<path d="M11 2v2M5 2v2M5 4v7a6 6 0 0 0 12 0V4"/><circle cx="20" cy="10" r="2"/><path d="M20 12v3a6 6 0 0 1-12 0v-1"/>',
+  cpu:     '<path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/>',
+  network: '<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/>',
+  monitor: '<rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>',
+  battery: '<path d="m11 7-3 5h4l-3 5"/><path d="M14.856 6H16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.935"/><path d="M22 14v-4"/><path d="M5.14 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2.936"/>',
+  stetho:  '<path d="M11 2v2"/><path d="M5 2v2"/><path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/>',
 };
 
 const svg = (p, n) => '<svg width="' + n + '" height="' + n + '" viewBox="0 0 24 24" '
@@ -41,8 +43,16 @@ function fieldHTML(f) {
   return '<button class="field" type="button" data-field="' + esc(f.id) + '"'
     + (ready ? ' aria-pressed="false"' : ' aria-disabled="true"') + '>'
     + '<span class="field-icon">' + svg(ICON[f.icon] || ICON.cpu, 24) + '</span>'
+    /* THE NAME AND ITS BADGE ARE ONE GROUP, so they are one element. The badge
+       used to be a third flex item pulled up under the name by a negative
+       margin, which put it 4px from the name it qualifies and read as part of
+       the field's title. A wrapper with its own gap is what §5's "inner gap
+       at most half the outer" looks like when it is built rather than
+       subtracted. */
+    + '<span class="field-text">'
     + '<span class="field-name">' + (f.label == null ? bar('w-md', 'body') : esc(f.label)) + '</span>'
     + (ready ? '' : '<span class="field-soon">Coming soon</span>')
+    + '</span>'
     + '</button>';
 }
 
@@ -142,14 +152,22 @@ export function init(ctx) {
     const res = await ENGINE.search({ query: text, field: FIELD, settings: readSettings() });
     btnRest(btn);
 
+    /* THE SEARCH THE SET IS FILED UNDER, and this is where it is first known.
+       Told after the engine answered rather than before it was asked: a query
+       that failed produced no rows to star. work.mjs does the same at the
+       re-search, and core/starred.mjs carries why the store holds this rather
+       than the caller passing it in. */
+    if (res.ok) STARRED.setSearch(text);
+
     if (!res.ok) {
       const status = $('#cmpStatus');
       if (status) {
+        /* EACH SAYS WHAT TO DO NEXT, not only what happened. */
         status.textContent = res.code === 'INSUFFICIENT'
-          ? 'There are not enough points for this search. Nothing was charged.'
-          : 'The search did not run. Nothing was charged.';
+          ? 'There are not enough points for this search. Nothing was charged. Points renew at the start of each quarter.'
+          : 'The search did not run. Nothing was charged. Press Search to try again.';
       }
-      say('home', 'The search did not run. Nothing was charged.');
+      say('home', status ? status.textContent : 'The search did not run. Nothing was charged.');
       return;
     }
     const meter = $('#meterN');
@@ -158,14 +176,10 @@ export function init(ctx) {
     /* THE RESULTS BAR KEEPS THE SENTENCE. Both partials are in the DOM from
        boot, so this is a write rather than a handoff — and the founder arriving
        at the results finds the words they searched with still in the field,
-       which is what makes it the way to run the next one. */
-    const resQ = $('#resQuery');
-    if (resQ) resQ.value = text;
-    const resMeta = $('#resMeta');
-    if (resMeta && res.data.matched != null) {
-      resMeta.textContent = res.data.matched + ' results'
-        + (res.data.elapsedMs != null ? ' \u00b7 ' + (res.data.elapsedMs / 1000).toFixed(2) + ' s' : '');
-    }
+       which is what makes it the way to run the next one. work.mjs's
+       landQuery writes the field, the folded line and the meta, and folds
+       the bar. */
+    landQuery(text, res.data);
     location.hash = '#set';
   });
 }

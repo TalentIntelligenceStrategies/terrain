@@ -106,6 +106,21 @@
   <p class="sr-only" id="sayWork"          role="status" aria-live="polite"></p>
   <p class="sr-only" id="sayDestination"   role="status" aria-live="polite"></p>
 
+  <!-- THE FIRST FOCUSABLE THING IN THE DOCUMENT, and it has to be, which is
+       why it is here rather than in the masthead partial: the partials are
+       awaited and injected, so anything inside one is first only by luck of
+       resolution order. Eight masthead stops precede the stage on every
+       surface, and on the results surface reaching the record pane or
+       `Show more` from the top costs sixty-odd — twenty rows of a star, a
+       row toggle and a thumbnail strip. Opening a row moves focus to the
+       record itself, which is the mitigation that already existed; this is
+       the path for everything the founder has not opened yet.
+
+       "content" AND NOT "results", because the same link sits above the home,
+       account, billing and help surfaces, and on four of the seven there are
+       no results to skip to. -->
+  <a class="skip" href="#stage">Skip to content</a>
+
   <!-- ══ THE REGIONS ══ One empty host per partial. main.mjs awaits all of
        them before calling any init(), which is the ordering contract that
        replaces 55 scattered parse-time element captures: every surface module
@@ -117,7 +132,7 @@
        router's primitive, and every view below is a child of it — a stage
        injected by one partial and populated by four others would make the
        order they resolve in load-bearing. -->
-  <div class="stage" id="stage">
+  <div class="stage" id="stage" tabindex="-1">
     <div data-partial="home"></div>
     <div data-partial="surface"></div>
     <div data-partial="starred"></div>

@@ -1,8 +1,8 @@
 /* ══ 10 · BUTTON ══════════════════════════════════════════════════════════
    THE PRIMARY ACTION READS --accent, NOT --text-1 (design-language.md §3.8,
-   site 1 of 3). They resolve to the same near-black today, which is what makes
-   the repaint reviewable by a screenshot that must be identical -- and they
-   will not resolve to the same thing for long.
+   site 1 of 3). They resolve to the same near-black, because the accent is
+   achromatic -- but they answer different questions, and the token is what
+   lets §3.8 name its three sites.
 
    EVERY :hover IS IN THE GATED BLOCK AT THE FOOT OF THIS FILE, and every
    declaration outside it describes the control rather than hovering it. Both
@@ -17,10 +17,10 @@
      border-radius:var(--r-control);font-size:13px;font-weight:500;padding:0 var(--s-14);
      height:36px;white-space:nowrap;
      transition:background var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
-/* §3.8 SITE 1 OF 3 — THE PRIMARY ACTION. Reads the accent slot rather than
-   --text-1, so the repaint is a token edit and not a hunt. The alias resolves
-   to the same near-black today, which is what makes this change reviewable by
-   a screenshot that must be identical. One filled button per surface. */
+/* §3.8 SITE 1 OF 3 — THE PRIMARY ACTION. Reads the accent rather than
+   --text-1: the values agree because the accent is the ink pair, and the
+   role is what keeps the three sites countable. One filled button per
+   surface. */
 .btn-primary{background:var(--accent);color:var(--accent-ink)}
 .btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text-1)}
 .btn-ghost{color:var(--text-2)}
@@ -33,10 +33,17 @@
    IT IS IN THIS FILE BECAUSE 05 LOADS BEFORE 10. Written there it lost to
    .btn-primary on source order at equal specificity and silently did nothing.
 
-   --text-2 RESTATES THE INK. currentColor drives the loader, and both
-   --accent-ink and .btn-secondary's --text-1 were chosen against a fill that
-   is no longer there. */
-.btn[data-waiting]{background:none;border-color:transparent;color:var(--text-2)}
+   --text-1 AND NOT --text-2, WHICH IS THE INDICATOR'S WEIGHT AND NOT A
+   LABEL'S. currentColor drives the loader, and both --accent-ink and
+   .btn-secondary's --text-1 were chosen against a fill that is no longer
+   there -- but --text-2 was the wrong replacement. Pressing Search removes
+   the fill, the border AND the word, and what is left is nine 6px dots whose
+   ripple spends most of its cycle at .16 opacity: measured over a full beat,
+   mean opacity .147, which composites to 1.24:1 in light and 1.40:1 in dark.
+   The product's one primary action signalled its state by motion alone.
+   05-wait-fail.css made exactly this argument and scoped the fix to #setMore;
+   this is the same fix at the base, and that override is gone now. */
+.btn[data-waiting]{background:none;border-color:transparent;color:var(--text-1)}
 .btn:active{transform:scale(.97)}
 /* THE PRIMARY ACTION IS GATED WHILE THE SENTENCE IS BEING EDITED, so .btn needs
    a disabled state for the first time. Disabled rather than hidden: the dock is
@@ -104,9 +111,21 @@
    .btn, smaller target and chip radius, and it lives here rather than with the
    chip it sits beside in the markup: a component file is a family, not a
    neighbourhood. */
-.icon-btn{color:var(--text-3);padding:var(--s-6);border-radius:var(--r-chip);display:flex;
+/* AND IT CENTRES ITS GLYPH, which it did not · 2026-09-26. `display:flex`
+   with no alignment leaves the icon at flex-start, so a 16px glyph in a 32px
+   box sat with 6px of gap on the leading and top edges against 10 on the
+   trailing and bottom ones — measured 4px off on both axes, on all seven of
+   these in the tree. It is invisible until the control takes a background,
+   and then the fill is plainly not square around the mark.
+
+   THE SVG IS A BLOCK, because an inline glyph sits on a text baseline and a
+   button with no text has no line to sit on — that is the same fix
+   .theme-seg made for itself and the reason it is at the base here. */
+.icon-btn{color:var(--text-3);padding:var(--s-6);border-radius:var(--r-chip);
+          display:flex;align-items:center;justify-content:center;
           transition:color var(--dur-1) var(--ease),background var(--dur-1) var(--ease),
                      transform var(--dur-1) var(--ease)}
+.icon-btn svg{display:block}
 .icon-btn:active{transform:scale(.94)}
 
 /* THE AUTHOR-VERSUS-UA TRAP, third instance. .btn's display is an AUTHOR

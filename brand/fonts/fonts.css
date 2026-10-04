@@ -3,7 +3,16 @@
    file so every page here can link it with no server and no build step.
 
    Urbanist      400/500/600/700  — text and display
-   Inconsolata   400/500/600      — numerals, figures, monospace
+   Inconsolata   400/500          — numerals, figures, monospace
+
+   INCONSOLATA 600 WAS HERE AND NOTHING EVER ASKED FOR IT. Every .fig role is
+   weight 500 and every 600 in the tree is a Urbanist role — .t-title, a <b>,
+   a selected field name. Measured across all seven surfaces with a record and
+   the figure viewer open, document.fonts reported it the one `unloaded` face
+   of the eight, and no element computed Inconsolata above 500. It cost no
+   bandwidth, because font-display never fetched it; it cost an inventory that
+   did not match the product. A bold figure would need it back — and would
+   need it chosen rather than assumed, which is the same reason it went.
 
    Both are licensed under the SIL Open Font License 1.1, and the licence travels with
    the files as OFL requires: OFL-Urbanist.txt and OFL-Inconsolata.txt beside this one.
@@ -59,11 +68,4 @@
   font-weight: 500;
   font-display: swap;
   src: url('./Inconsolata-500.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Inconsolata';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('./Inconsolata-600.woff2') format('woff2');
 }

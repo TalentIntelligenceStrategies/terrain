@@ -146,12 +146,15 @@
    the two inner hairlines, which would otherwise hang in the air with no
    card edge to meet.
 
-   Scoped to the list card by its waiting child rather than to `.card`: a
-   card with a HEAD is still framing its title while its body waits, and that
-   border is doing its job. This one has no head. */
-.card:has(>.set-listcol>#setList.is-wait){background:none;border-color:transparent}
-.card:has(>.set-listcol>#setList.is-wait)>.set-bar{border-bottom-color:transparent}
-.card:has(>.set-listcol>#setList.is-wait) .set-more{border-top-color:transparent}
+   THE LIST CARD IS NOT AN EXCEPTION ANY MORE, and it goes by its own rule.
+   Three rules stripped this one card's frame while its rows waited, scoped by
+   the argument stated above: "a card with a HEAD is still framing its title
+   while its body waits, and that border is doing its job. This one has no
+   head." It has one since 2026-09-26 — the count, the star chip and the
+   Sort/Filter controls are the panel's head now, and dissolving the frame
+   around a head that is still drawing its title is the opposite of what that
+   sentence asks for. The exception is removed rather than rescoped, because
+   the condition it named stopped being true. */
 /* the foot's button, mid-request. Sized to the label it replaces so the bar
    does not change width while it waits — the same reserve .cmp-status makes
    for a line it does not have yet. */
@@ -215,15 +218,12 @@
    filled pill around an indicator reads as a button you could press again,
    which is the one thing it is not for the length of the wait. The chrome
    goes, the loader stays, and the hit target is unchanged underneath. */
-#setMore[data-waiting]{background:none;padding:0;margin-inline-end:0;cursor:default;
-/* AND THE DOTS GET THE DARKER INK. The button rests at --text-2, which is the
-   right weight for a label and the wrong one for nine 6px dots whose ripple
-   spends most of its cycle at .16 opacity -- on #1A1A1A that is a smudge you
-   have to look for to find. --text-1 puts the peak of the beat where the
-   label used to be. The same value the .btn rule above lands on from the
-   other direction, for the same reason: the ink now has to carry the
-   indicator rather than sit behind it. */
-                       color:var(--text-1)}
+/* THE DARKER INK LEFT THIS RULE AND BECAME THE BASE. The argument was right
+   and the scope was wrong: every .btn that waits has the same nine 6px dots
+   at the same .16 opacity, not just this one. 10-button.css:39 carries it for
+   all of them now, so repeating it here would be a second source for one
+   decision. What is left is the chrome this button alone sheds. */
+#setMore[data-waiting]{background:none;padding:0;margin-inline-end:0;cursor:default}
 
 /* ── the failed region · design-language.md §7, platform.md §7 ─────────────
    THE SAME REGION, THE OTHER ENDING. `.is-fail` replaces `.is-wait` on the

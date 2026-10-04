@@ -22,6 +22,7 @@ import { assertEngine, NullEngine } from './ports.mjs';
 import { bindEscape } from './core/esc-stack.mjs';
 import { disarmAll } from './core/armed.mjs';
 import { sayNothing } from './core/live-region.mjs';
+import { DUR2 } from './core/motion.mjs';
 
 /* ══════════════════════════════════════════════════════════════════════════
    THE DEMO SEAM · one import, and app/js/** holds no data by construction.
@@ -173,7 +174,7 @@ export function go(view) {
   if (prev) {
     prev.classList.remove('is-active');
     prev.classList.add('is-leaving');
-    setTimeout(() => prev.classList.remove('is-leaving'), 240);
+    setTimeout(() => prev.classList.remove('is-leaving'), DUR2 + 20);
   }
   next.classList.add('is-active');
   current = view;
@@ -234,11 +235,30 @@ async function boot() {
   document.documentElement.setAttribute('data-booted', '1');
 }
 
+/* ── the boot banner · design-language.md §7 ──────────────────────────────
+   NO HUE, WHICH IS THE RULE AND WAS BEING BROKEN BY THE ONE THING NOBODY
+   STYLES. This carried three raw Tailwind reds -- #7f1d1d on #fef2f2 over a
+   4px #b91c1c edge -- and every part of that was wrong twice over: §7 says a
+   failure takes no hue precisely because red is *expired*, amber is *pending*
+   and green is *live* in this product, so a pale-pink slab says the boot
+   failed AND says something about a patent; the values were raw hex with no
+   dark counterpart, so the slab stayed pale pink at night; and 4px is not a
+   border width on §5's scale.
+
+   IT READS TOKENS, AND THAT IS SAFE HERE even though this is the path where
+   boot failed. tokens.css is a <link> in index.html, resolved by the parser
+   independently of this module -- if the stylesheet did not arrive either,
+   var() falls back to nothing and the banner degrades to unstyled text, which
+   is still the message.
+
+   THE TREATMENT IS 05-wait-fail.css's, reused rather than reinvented: a
+   --surface-sunken fill, a 1px --text-1 edge and --text-1 copy. */
 boot().catch(err => {
   console.error(err);
   document.body.insertAdjacentHTML('afterbegin',
-    `<pre style="margin:0;padding:24px;font:13px/1.6 ui-monospace,monospace;
-      color:#7f1d1d;background:#fef2f2;border-bottom:4px solid #b91c1c;white-space:pre-wrap">` +
+    `<pre style="margin:0;padding:var(--s-24);font:13px/1.6 'Inconsolata',ui-monospace,monospace;
+      color:var(--text-1);background:var(--surface-sunken);
+      border-block-end:1px solid var(--text-1);white-space:pre-wrap">` +
     `app/ did not boot.\n\n${err && err.message}\n\n` +
     `Serve the repository root over http and open /app/ — a module script is ` +
     `CORS-fetched and a file:// origin is opaque, so opening index.html from ` +

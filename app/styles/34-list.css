@@ -3,8 +3,7 @@
 .drill-row:last-child{border-bottom:0}
 /* THE HOLDER TRUNCATES, AND THE REASON IS UNCHANGED FROM WHEN THIS WAS A FLEX
    ROW. Against real data a long assignee is not an edge case: the longest in
-   the stress corpus is 81 characters — "Shanghai Motor System Energy Saving
-   Engineering Technology Research Center Co Ltd" — which used to push the year
+   the stress corpus is 81 characters, which used to push the year
    and the chevron onto a third line. The row is a scanning surface and the
    record is where the full name lives.
 
@@ -22,8 +21,7 @@
 
 /* ── one meta cell · glyph, then value ───────────────────────────────────
    A 2x2 GRID AND NOT A ROW, and the reason is the holder. The longest
-   assignee in the stress corpus is 81 characters — "Shanghai Motor System
-   Energy Saving Engineering Technology Research Center Co Ltd" — and four
+   assignee in the stress corpus is 81 characters, and four
    values on one line gave it about a fifth of the column. Two columns give it
    half, which is where it starts truncating at a word rather than at a
    syllable. The grid also fixes the cells' x positions, so the same fact is
@@ -45,9 +43,32 @@
    400 here — `label`'s metrics carrying `body`'s weight, a role invented in
    the gap between two real ones. What is left is what belongs to the
    component: the grid floor, the truncation and the colour. */
+/* text-overflow DOES NOT APPLY TO A FLEX CONTAINER, and it sat here for the
+   whole life of this rule doing nothing. .dm-v is display:flex, so the
+   declaration was inert and the cell simply CLIPPED: measured at 390px,
+   a 28-character corpus holder needs 174px, gets 113, and rendered its
+   first 18 characters — cut mid-word with no ellipsis to say it had been.
+   Four values on every row, on every width below about 1080.
+
+   THE ELLIPSIS BELONGS TO THE VALUE, NOT THE ROW. Each cell is a flex row of
+   a value and the small fixed things that qualify it — "+1" more inventors,
+   an IPC symbol, a date — and those must never be the part that disappears.
+   So the row clips, .dm-t is the only item allowed to give way, and everything
+   else holds its width. The value used to be a bare TEXT NODE in three of the
+   four cells, which is the other half of why this could not be fixed in CSS
+   alone: an anonymous flex item takes no class and no min-width. list.mjs
+   wraps it now. */
 .dm-v{min-width:0;display:flex;align-items:center;gap:var(--s-6);
-      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-      color:var(--text-1)}
+      overflow:hidden;white-space:nowrap;
+      font-size:12.5px;line-height:1.4;font-weight:400;color:var(--text-2)}
+/* THE HOLDER LEADS. Of the four facts under a title, who owns the patent is
+   the one a founder reads first and the one they sort the set by in their own
+   spreadsheet afterwards, so it keeps --text-1 while its neighbours step
+   back. Colour and not weight: §4 gives a meta line 400, and a 500 holder
+   would be one fact in two weights between this row and the starred table. */
+.dm-firm .dm-v{color:var(--text-1)}
+.dm-v>*{flex:0 0 auto}
+.dm-t{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
 /* the inventors this row is not naming. It is a count, so it is a figure —
    and until 2026-09-24 that was true only in this comment: the markup carried
    no figure role, so every "+5" rendered in Urbanist. list.mjs carries fig-s
@@ -59,7 +80,8 @@
    the whole tag row read as machine output, against a calendar row directly
    above that says `Published` in Urbanist and only the date in figures — two
    meta rows of the same kind, set two different ways. It takes the row's body
-   role from .dm-v like every other prose value; this carries only the colour.
+   size from .dm-v like every other value in the grid; this carries only the
+   colour.
 
    THE IPC SYMBOL BESIDE IT KEEPS fig-s, and that is the distinction rather
    than an inconsistency: a classification symbol is a code and a country is
@@ -191,18 +213,28 @@
    is what clears the boilerplate preamble most patent abstracts open with and
    reaches the clause that separates this one from the next.
 
-   NO MEASURE CAP HERE, DELIBERATELY. §4 caps body prose at 68ch and this is
-   narrower than 68ch at every supported width — the column is ~374px of
-   content at the 1024 floor and ~560 at 1440, which is about 46ch to 68ch at
-   13px. A cap would bind at exactly one window size and do nothing at the
-   rest, which is a rule that looks enforced and is not.
+   THE MEASURE CAP IS §4's, AND THIS RULE USED TO ARGUE AGAINST HAVING ONE.
+   The argument was that the column is narrower than 68ch at every supported
+   width — "~374px at the 1024 floor and ~560 at 1440" — so a cap would bind
+   at one window size and do nothing at the rest. That was true of a column
+   taking 44% of the split. It is not true now: the split is even (21-surface
+   .css), and measured, this line runs 83 characters at 1440, 99 at 1680, 115
+   at 1920 and 159 at 2560 — against the record's own abstract, the SAME TEXT,
+   held at 77 by .pn-prose. The widest measure in the product belonged to the
+   line that is read twenty times per screen while scanning.
+
+   68ch RATHER THAN A NEW NUMBER, because the record's prose already uses it
+   and this is the same sentence one surface over. It resolves to 77 rendered
+   characters here, not 68 — `ch` is the advance of `0` and Urbanist's zero is
+   narrow — which is a fact about the unit that §4 owns, not something for a
+   component to correct on its own.
 
    -webkit-line-clamp IS NOT A PREFIX HERE. It is the only interoperable
    spelling of this — every engine ships it unprefixed-in-effect and the
    unprefixed `line-clamp` is not yet safe alone — so it is written with its
    own display and orientation rather than as a vendor fallback. */
 .drill-abs{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
-           overflow:hidden;margin-block-start:var(--s-16);
+           overflow:hidden;margin-block-start:var(--s-16);max-width:68ch;
            color:var(--text-2);text-wrap:pretty}
 /* A BARRED ABSTRACT IS THREE BARS AND NOT A CLAMPED BOX. -webkit-box lays its
    children out as inline boxes, so three block bars inside one collapse onto a
@@ -433,7 +465,17 @@
 .set-row{position:relative;display:grid;grid-template-columns:auto 1fr;
   align-items:start;gap:var(--s-16);
   padding-block:var(--s-20);padding-inline:var(--s-10) var(--s-16);
-  border-bottom:1px solid var(--border)}
+  border-bottom:1px solid var(--border);
+  transition:opacity var(--dur-3) var(--ease),transform var(--dur-3) var(--ease),
+             background var(--dur-1) var(--ease)}
+/* ── a row arriving · design-language.md §6 "Lists and records" ──────────
+   motion.mjs's enter() sets this, commits it, and releases it a frame later
+   with the row's stagger delay; flip() uses the same transform transition to
+   play a row from where it stood. The view swap's own numbers — 6px, --dur-3,
+   --ease — so a row arriving and a surface arriving read as one motion.
+   transition:none is the commit: the start state lands without travelling
+   towards it. Reduced motion never sets the attribute. */
+.set-row[data-enter]{opacity:0;transform:translateY(6px);transition:none}
 .set-row:last-child{border-bottom:0}
 /* THE ANCHOR RAIL — what the founder starred, while the list is flat.
    It hands off to the band: present only when .is-ranked is absent, because
@@ -602,3 +644,22 @@
     box-shadow:var(--shadow-raise)}
   .set-thumb-more:hover{background:var(--surface);color:var(--text-1)}
 }
+
+/* ── ONE COLUMN OF META ON A PHONE ────────────────────────────────────────
+   Two columns of ~150px cut "Published" to "Publis…" and the jurisdiction to
+   "Unit…" — the ellipsis landed on the word that says what the date is, and
+   34-list.css's own rule is that the value, never its qualifier, gives way.
+   One column gives each fact the row's width back. */
+@media (max-width:640px){
+  .drill-meta{grid-template-columns:minmax(0,1fr)}
+}
+
+/* ── Sort waits on itself · design-language.md §6 ─────────────────────────
+   A sort leaves the rows standing and puts the loader on the control that was
+   pressed. .lm-btn is not a .btn, so 05-wait-fail.css's label-hiding rule does
+   not reach it: the label and chevron go invisible rather than absent, which
+   keeps the trigger's box (btnWait also reserves its width), and the loader
+   sits centred over the space they held. */
+.lm-btn[data-waiting]{position:relative;cursor:default}
+.lm-btn[data-waiting]>*:not(.btn-wait){visibility:hidden}
+.lm-btn>.btn-wait{position:absolute;inset:0;height:auto;display:grid;place-items:center}

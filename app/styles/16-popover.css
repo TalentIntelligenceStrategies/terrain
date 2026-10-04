@@ -20,7 +20,16 @@
    they are anchored 300px apart and neither closes the other — and a settings
    panel that opened beneath the sort menu would be a panel the founder cannot
    read. 50 stays burned: both deleted scrims sat there. */
-.pop{position:absolute;z-index:36;min-width:320px;max-width:min(420px,calc(100vw - var(--s-32)));
+.pop{position:absolute;z-index:36;
+     /* THE FLOOR IS CAPPED BY THE SAME EXPRESSION AS THE CEILING, and a bare
+        min-width is why it had to be. min-width beats max-width in the cascade
+        of used values, so `min-width:320px` next to a 100vw ceiling meant the
+        ceiling never applied and the panel simply ran off the screen — 41px
+        past the edge at 320px, and .view-work's overflow:hidden meant no
+        scrollbar appeared to say so. Both bounds now collapse onto the same
+        value in a narrow window. */
+     min-width:min(320px,calc(100vw - var(--s-32)));
+     max-width:min(420px,calc(100vw - var(--s-32)));
      background:var(--surface);border:1px solid var(--border);
      border-radius:var(--r-inner);box-shadow:var(--shadow-float);
      padding:var(--s-16);transform-origin:top left;
@@ -105,7 +114,7 @@
    panel arriving, and this is it: the selected state of a segmented control
    takes the accent, one at a time, on a control rather than on data. */
 .pop-seg{align-self:flex-start;max-width:100%;flex-wrap:wrap}
-.pop-seg .seg-btn[aria-pressed="true"]{background:var(--surface);color:var(--accent)}
+.pop-seg .seg-btn[aria-pressed="true"]{background:var(--surface);color:var(--accent-on-surface)}
 
 /* ── the year range ─────────────────────────────────────────────────────
    Inconsolata, because they are figures and §4 says figures are Inconsolata.

@@ -12,7 +12,13 @@
 .fields-lbl{margin:0 0 var(--s-10);color:var(--text-3)}
 /* the tiles choose what the search runs against, so they sit with the
    composer rather than floating above it as a banner. */
-.conv-body > .conv-col:has(.fields){margin-bottom:var(--s-14)}
+/* THE PAGE'S RHYTHM IS 10 · 20 · 40. Label to tiles 10, tiles to composer 20,
+   and 40 either side of that pair — intro above it (30-composer.css) and the
+   coverage card below it. The tiles and the composer are one decision, which
+   field and what to search in it, so they are the closest pair of blocks on
+   the page; it was 32 / 14 / 24, which put the one primary action 14px under
+   a row of tiles and further from nothing than from them. */
+.conv-body > .conv-col:has(.fields){margin-bottom:var(--s-20)}
 
 /* THE DOCK'S BOTTOM PADDING AND THE STATUS LINE'S RESERVED HEIGHT BOTH EXIST
    FOR A SURFACE THIS NO LONGER IS. The dock used to be the sticky foot of a
@@ -41,10 +47,16 @@
    So the ruler disagreed with every rule in this file, and the rules were all
    correct. Any grid or flex cell that IS a button needs this line.
 
+   AND height:100% FOR THE SAME REASON ON THE OTHER AXIS. While every tile fit
+   inside min-height the row looked stretched; once the badge took its own gap
+   the four badged tiles grew past 120 and the covered one, with no badge,
+   stayed 120 and sat centred in a taller track — 5px low, its icon off the
+   line the other four share.
+
    min-width:0 stays because the other trap is real too: `1fr` is
    minmax(auto,1fr), whose auto floor is min-content, so a long word can push a
    column wider. It is not what happened here. */
-.field{position:relative;width:100%;min-width:0}
+.field{position:relative;width:100%;height:100%;min-width:0}
 .field-name{overflow-wrap:break-word}
 
 /* THE TILE IS THE ONE PLACE A GLYPH IS NOT 16 OR 18px. §9 sizes icons for
@@ -64,7 +76,7 @@
    line of a wrapped name, which is the failure the corner placement existed to
    avoid and is not worth reintroducing lower down. */
 .field{display:flex;flex-direction:column;align-items:center;
-       justify-content:flex-start;gap:var(--s-10);min-height:120px;
+       justify-content:flex-start;gap:var(--s-16);min-height:120px;
        padding:var(--s-20) var(--s-14);text-align:center;
        background:var(--surface);border:1px solid var(--border);
        border-radius:var(--r-widget);cursor:pointer;color:var(--text-2);
@@ -75,13 +87,14 @@
 .field-icon{display:flex;color:var(--text-3);
             transition:color var(--dur-1) var(--ease)}
 .field-name{font-weight:500}
+.field-text{display:flex;flex-direction:column;align-items:center;gap:var(--s-8)}
 
 /* §3.8 SITE 3 OF 3 — the selected state of a control. The LABEL and the glyph
    take the accent; the tile stays --surface, because a filled accent tile here
    would be a second primary action on a surface that already has Search. */
 .field[aria-pressed="true"]{border-color:var(--border-strong);color:var(--text-1)}
-.field[aria-pressed="true"] .field-name{color:var(--accent);font-weight:600}
-.field[aria-pressed="true"] .field-icon{color:var(--accent)}
+.field[aria-pressed="true"] .field-name{color:var(--accent-on-surface);font-weight:600}
+.field[aria-pressed="true"] .field-icon{color:var(--accent-on-surface)}
 
 /* not yet covered. aria-disabled, so it keeps its tab stop and can say why. */
 .field[aria-disabled="true"]{background:var(--surface-sunken);color:var(--text-3);
@@ -93,16 +106,14 @@
    the same relation a status chip has to a row; an unbordered third line of
    the name is not.
 
-   NEGATIVE MARGIN AGAINST THE FLEX GAP, and it is grouping rather than nudging.
-   The tile's gap is s-10 and §5 wants a group's inner gap at no more than half
-   its outer one, so the name and its badge close to s-4 while the icon stays a
-   full s-10 away. Both values are on the scale; the subtraction is not a third
-   value, it is the one the gap already committed to being cancelled.
+   8px UNDER THE NAME, 16 FROM THE ICON. The name and its badge are one group
+   in .field-text and the icon is the next thing out, so the inner gap is half
+   the outer one, which is §5's ratio exactly. At 4px the chip touched the
+   descenders of the name above it and read as its second line.
 
    No bolt. §9 is one glyph, one act — that one named no act, it decorated a
    state a word already states. */
-.field-soon{margin-top:calc(var(--s-4) - var(--s-10));
-            padding:2px var(--s-6);border-radius:var(--r-chip);
+.field-soon{padding:2px var(--s-6);border-radius:var(--r-chip);
             background:var(--surface);border:1px solid var(--border);
             font-size:10.5px;line-height:1.5;letter-spacing:.02em;
             font-weight:500;color:var(--text-3);white-space:nowrap}
@@ -122,7 +133,7 @@
 
 /* ══ the coverage block ══════════════════════════════════════════════════ */
 
-.cover{margin-top:var(--s-24)}
+.cover{margin-top:var(--s-40)}
 
 /* 86ch, NOT §5's 68ch, and the difference is what this sentence is. The measure
    cap is for body prose — several lines the eye has to track back across. This
@@ -138,10 +149,36 @@
 .cover-tbl{width:100%}
 .cover-tbl td:last-child,.cover-tbl th:last-child{text-align:right;
            font-variant-numeric:tabular-nums}
+/* a date is one token; at 320 it broke after the second hyphen. */
+.cover-tbl td:last-child{white-space:nowrap}
 
+/* ── ON A PHONE THE TILES ARE ONE ROW THAT SCROLLS · platform.md §3.1 ─────
+   Five 120px tiles stacked two-across are three rows and 400px of a 844px
+   screen, and they put the composer — the one thing the founder came to use —
+   below the fold. One horizontal row of compact tiles is 64px: icon beside
+   the name, badge under the name, the same three facts in a third of the
+   height. The order on screen is still the order in the DOM, which is why
+   the composer is not lifted above the tiles with `order` — focus would walk
+   up the page.
+
+   NO SCROLL SNAP, for the drawing strip's reason: a snap fights the trackpad
+   and the tile that half-shows at the edge is what says the row continues.
+   The row bleeds into the page gutter so that half-tile reaches the screen's
+   edge rather than stopping short of it. */
 @media (max-width:640px){
-  .fields{grid-template-columns:repeat(auto-fit,minmax(132px,1fr))}
-  .field{padding:var(--s-14) var(--s-8)}
+  .conv{padding-inline:var(--s-16)}
+  .conv-body > .conv-col:has(.fields){margin-bottom:var(--s-16)}
+  .conv-intro{margin-bottom:var(--s-32)}
+  .cover{margin-top:var(--s-32)}
+  .fields{display:flex;gap:var(--s-8);overflow-x:auto;overscroll-behavior-x:contain;
+          margin-inline:calc(-1 * var(--s-16));padding:var(--s-2) var(--s-16);
+          scrollbar-width:none}
+  .fields::-webkit-scrollbar{display:none}
+  .field{flex:0 0 auto;width:auto;height:auto;min-width:168px;min-height:64px;
+         flex-direction:row;align-items:center;gap:var(--s-12);
+         padding:var(--s-10) var(--s-14);text-align:start}
+  .field-text{align-items:flex-start;gap:var(--s-6)}
+  .field-name{white-space:nowrap}
 }
 
 /* ══ the results surface's search bar ════════════════════════════════════
@@ -149,8 +186,114 @@
    It does not scroll away, which is why there is no pin control: theirs exists
    because their box scrolls, and a toggle that cannot change anything is worse
    than a missing one. */
-.res-search{padding:var(--s-16) var(--s-16) var(--s-12);flex:0 0 auto}
+/* THE PADDING IS 16 ON ALL FOUR SIDES, and the bottom is the half that
+   changed. It was 12, so the gap to the panels below was 28 against the 32
+   between the two columns — near enough to read as the same value and not be
+   it. 16 here plus 16 on each column is 32, which is the surface's one rule:
+   16 to the window, doubled between panels. */
+.res-search{padding:var(--s-16);flex:0 0 auto}
+/* --r-shell AND NOT --r-widget, on the results surface only. The composer is
+   the third panel on this screen, over two at --r-shell, and 21-surface.css
+   already argues this exact mismatch about the other pair: "two panels of
+   equal standing rounded four pixels apart is the kind of mismatch that reads
+   as an accident rather than a distinction." On the home surface the composer
+   sits among .field widgets rather than over shell-radius panels, so it keeps
+   the widget radius and this is scoped to .res-cmp. */
+.res-cmp .cmp-inner{border-radius:var(--r-shell)}
 .res-cmp .cmp-field textarea{min-height:44px}
+
+/* ══ THE FOLD · platform.md §4.2 ═════════════════════════════════════════
+   TWO STATES, ONE COMPONENT. Open is the home composer's grammar — a field
+   over a hairline over a toolbar. Folded is the toolbar alone with the
+   sentence on it, 58px against ~150. design-language.md §7 carries the rule
+   and work.mjs carries when each state applies.
+
+   THE PADDING IS EVEN, 10 ALL ROUND, AND THE FIELD'S SPACE IS INSIDE THE
+   TRACK. Padding cannot be transitioned (§6), so everything that has to
+   vanish with the field — the 4px over it, the hairline under it, the 8px
+   under the hairline — sits in .cmp-track-in, under the clip. The row
+   carries no border or margin of its own here, which is the difference
+   from the home composer. Margin and not padding for the last 8px, because
+   a padding on the clipped item is a floor the 0fr row cannot go under;
+   overflow:hidden makes the item a formatting context, so the child's margin
+   stays inside it rather than collapsing through.
+
+   OPEN TAKES --dur-3 AND FOLDING TAKES --dur-2, the .dc pattern: §6 names
+   the composer's expansion as a --dur-3 thing, and exit is faster than
+   enter. */
+.res-cmp .cmp-inner{padding:var(--s-10) var(--s-16)}
+.cmp-track{display:grid;grid-template-rows:1fr;
+           transition:grid-template-rows var(--dur-3) var(--ease)}
+.cmp-track-in{min-height:0;overflow:hidden}
+.res-cmp .cmp-field{padding-top:var(--s-4);padding-bottom:var(--s-8);
+                    border-bottom:1px solid var(--border);margin-bottom:var(--s-8)}
+.res-cmp .cmp-row{border-top:0;margin-top:0;padding-top:0}
+.res-cmp[data-compact] .cmp-track{grid-template-rows:0fr;transition-duration:var(--dur-2)}
+
+/* THE SENTENCE, FOLDED. It reads as the field it stands in for — 14px,
+   --text-1, the caret cursor — and presses like a control: a sunken ground
+   under a fine pointer, the focus ring from the reset. flex:1 in BOTH states,
+   so it is the one thing that takes the row's slack whether it is visible or
+   not, and the meta and Search hold their x through the fold.
+
+   IT LEAVES AT ONCE AND ARRIVES LATE. Opening, it fades on --dur-1 before
+   the track has moved far; folding, it waits out the track's --dur-2 before
+   it fades in — §6's "nothing fades in while its container is still
+   moving". visibility rides with opacity, flipping at the end of the exit
+   and at the start of the entrance, so it is never a tab stop nobody can
+   see. */
+.cmp-line{flex:1 1 auto;min-width:0;display:flex;align-items:center;height:32px;
+          margin-inline-start:var(--s-4);padding:0 var(--s-10);
+          border:0;border-radius:var(--r-control);background:none;
+          font:inherit;font-size:14px;line-height:1.55;color:var(--text-1);
+          text-align:start;cursor:text;
+          opacity:0;visibility:hidden;
+          transition:opacity var(--dur-1) var(--ease),
+                     visibility 0s linear var(--dur-1),
+                     background var(--dur-1) var(--ease)}
+.cmp-line-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res-cmp[data-compact] .cmp-line{opacity:1;visibility:visible;
+          transition:opacity var(--dur-1) var(--ease) var(--dur-2),
+                     visibility 0s linear 0s,
+                     background var(--dur-1) var(--ease)}
+.cmp-line:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media (hover:hover) and (pointer:fine){
+  .cmp-line:hover{background:var(--surface-sunken)}
+}
+/* the meta stops sharing the slack, or the line and it would split the row
+   between them and the sentence would truncate at half the width it has. */
+.res-cmp .res-meta{flex:0 0 auto}
+/* the re-search's failure line, under the bar. It reserves nothing while
+   empty — the home composer's reservation exists for a page that cannot move,
+   and this bar sits over a list that is about to stay put anyway. */
+.res-status{margin:var(--s-8) var(--s-4) 0;color:var(--text-2)}
+.res-status:empty{display:none}
+
+/* ── ON A PHONE THE FOLDED BAR IS THE SENTENCE AND SEARCH ─────────────────
+   At 390 the toolbar is ~170px of a 358px row, and with the meta and a
+   labelled Search beside it the folded sentence got about 60px — three words
+   and an ellipsis, which is not the sentence. So the phone folds further:
+   the toolbar and the meta are part of what folds, and come back when the
+   sentence is pressed. Search drops to its glyph at every state, keeping its
+   word as the accessible name.
+
+   THE META DOES NOT SHOW ON A PHONE AT ALL. Open, the toolbar and Search
+   already fill the 332px row, and the meta pushed Search off its edge. The
+   count is the list heading's, restated directly below; the elapsed time is
+   the one fact the phone gives up. The invisible line goes from the open
+   row for the same reason — on a phone nothing beside it needs holding. */
+@media (max-width:640px){
+  .res-search{padding:var(--s-12)}
+  .res-cmp[data-compact] .res-tools,
+  .res-cmp .res-meta{display:none}
+  .res-cmp:not([data-compact]) .cmp-line{display:none}
+  .res-cmp:not([data-compact]) .res-tools{flex:1 1 auto}
+  .res-cmp[data-compact] .cmp-line{margin-inline-start:calc(-1 * var(--s-10))}
+  .res-cmp .cmp-search{padding:0 var(--s-10)}
+  .res-cmp .cmp-search span{position:absolute;width:1px;height:1px;padding:0;
+                  margin:-1px;overflow:hidden;clip-path:inset(50%);
+                  white-space:nowrap;border:0}
+}
 
 .res-tools{display:flex;align-items:center;gap:var(--s-6);flex:0 0 auto}
 .res-tools-sep{width:1px;height:18px;background:var(--border);flex:0 0 auto;
@@ -163,18 +306,29 @@
 .res-meta{text-align:right;font-variant-numeric:tabular-nums}
 
 /* ══ the right column ════════════════════════════════════════════════════
-   .panescroll's PADDING IS 21-surface.css's, 2026-09-24. A second declaration
-   of it stood here and won on load order, which is the same fork .drill-head
-   had in this pass: 21 deliberately set the bottom to 0 because the
-   attribution supplied --s-32 under it, and this put 16 back without knowing
-   why the 0 was there. It also defeated the change that made the record's
-   head sticky — the head pinned at the CONTENT edge, 16px below the
-   scrollport, with the record sliding through the gap above it.
-   21-surface.css owns the column. This file owns the home surface. */
+   THE COLUMN'S BOX IS 21-surface.css's, NOT THIS FILE'S. A second declaration
+   of the pane scroller's padding stood here and won on load order, which is
+   the same fork .drill-head had in that pass. 21-surface.css owns the column
+   and the two panels in it. This file owns the home surface, and the two
+   rules below are here because .pane-idle is the home-shaped state of the
+   right column — nothing chosen yet — rather than part of its frame. */
 /* nothing chosen yet. Not a skeleton: a skeleton says a value is coming, and
-   nothing is coming until the founder picks a row. §8. */
-.pane-idle{flex:1;display:flex;align-items:center;justify-content:center;
-           padding:var(--s-40) var(--s-24);text-align:center}
+   nothing is coming until the founder picks a row. §8.
+
+   IT IS THE PANEL, EMPTY, AND NOT GROUND · 2026-09-26. It was a centred
+   sentence on the column's ground, so on arrival — which is the first thing
+   anybody sees — the left column was a framed panel and the right was nothing
+   at all, and the region then GAINED a frame when a row was picked. One region
+   meaning two kinds of thing by state is what platform.md §4.3 rules out, and
+   the empty state is the half of the surface a founder looks at longest.
+
+   IT TAKES .rec's OWN THREE VALUES rather than sharing a class with it,
+   because it is not a record and has no head: the frame is the column saying
+   the region exists, and the record replaces what is inside it. */
+.pane-idle{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
+           padding:var(--s-40) var(--s-24);text-align:center;
+           background:var(--surface);border:1px solid var(--border);
+           border-radius:var(--r-shell)}
 /* AND IT HAS TO BEAT ITS OWN display:flex. `[hidden]` is a UA rule at the same
    specificity as this class, so an author `display:flex` wins and the element
    stays on screen while its `hidden` property reads true. work.mjs has set
@@ -184,7 +338,6 @@
    record has one, and this is the other. */
 .pane-idle[hidden]{display:none}
 .pane-idle p{margin:0;color:var(--text-3);max-width:34ch}
-.panecol .foot{flex:0 0 auto;padding:var(--s-12) var(--s-16) var(--s-16)}
 
 /* ── review fixes · 2026-09-23 ─────────────────────────────────────────────
    THE TOOLBAR WAS CRAMPED AT 6px BETWEEN 28px TARGETS. better-layout starts

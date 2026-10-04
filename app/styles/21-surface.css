@@ -6,53 +6,48 @@
  * panes and not of the document. */
 
 /* ── the working surface · platform.md §4.3, §4.5 ──────────────────────────
-   THE ARITHMETIC THAT USED TO SIT HERE MEASURED THE MATRIX, and the matrix
-   went with the analysis layer. It is re-derived against the thing that is
-   actually width-critical now, which is the RECORD's field list.
+   THE SPLIT IS EVEN, and it is even because the list is the product. One flow
+   runs through this surface — search, find similar, star, export — and every
+   step of it happens in the LEFT column; the record is where a single row is
+   read. The columns were 44/56 against the list, so the half of the screen
+   the founder works in was the smaller half, and on arrival, before any row
+   is open, the larger half held one sentence.
 
-   Four insets sit between the window and the eleven identifiers. At 1440:
+   WHAT 56% WAS PROTECTING, AND WHY IT NO LONGER HAS TO. The old share was
+   derived from the record's field list: four insets sit between the window
+   and the eleven identifiers, .hf's two-column form breaks under about 600px
+   (design-language.md §7), and 0.56W − 74 = 600 put the crossing point at a
+   1203px window. The arithmetic was right and the MECHANISM WAS DEAD — the
+   container query enforcing that 600px floor sat above .hf's base rule and
+   lost to it on order, so the field list had never collapsed at any width
+   (measured two-column down to a 316px container). 35-record.css carries the
+   repair and the note. With the floor actually enforced, the split no longer
+   has to hold the record above it: the record adapts itself.
 
-       1440 × 0.56 (.panecol)              = 806
-            −  32 (.panescroll, --s-16 × 2) =  774
-            −   2 (.rec border)             =  772
-            −  40 (.rec-body, --s-20 × 2)   =  732   what .hf gets
-
-   design-language.md §7 measures .hf's two-column form as breaking under
-   about 600px — the longest values wrap under their own labels and the shared
-   leading edge that makes eleven rows scannable stops existing. 732 clears it
-   at 1440, and the crossing point is a window of ~1203px:
-
-       0.56W − 74 = 600  →  W ≈ 1203
-
-   Between 1203 and the 1079 stack the field list goes single-column, which is
-   a container query in 35-record.css rather than a viewport one — the record
-   is 56% of a split above 1079 and the FULL width below it, so a viewport
-   query would fire at the wrong moment in both directions.
+   WHAT THE CHANGE COSTS, MEASURED. The crossing point moves with the share —
+   0.50W − 74 = 600 → W ≈ 1348 — so between about 1200 and 1350 the field list
+   now goes single-column where it used to stay in two. That is a 1280px
+   laptop reading eleven identifiers in one column instead of two. It is the
+   graceful end of the behaviour rather than the broken one, which is the
+   whole reason the container query was fixed before this line was touched.
 
    Below 1080 the columns stack and none of this applies. */
 .view-work{overflow:hidden}
 .view-work.is-active{display:flex;flex-direction:column}
 .work-split{display:flex;flex:1;min-height:0}
 
-/* ══ 44 / 56, AND THE RECORD TAKES THE LARGER HALF ═══════════════════════
-   It was fifty-fifty, on the argument that the list is the primary content
-   and had been getting 29% of the width. That was right while the right
-   column held one drawing — a drawing is legible at any size and the list
-   was the thing being read.
-
-   THE RECORD IS OVER THERE NOW, and it carries eleven identifiers, an
-   abstract, the claims and the drawings. The list carries three bands a row
-   and a clamped abstract.
-   Equal halves would give the denser column the same room as the sparser
-   one, and the head arithmetic above says what that costs: the field list
-   collapses to one column below ~1203px at 50/50 against ~1203 at 56% —
-   which is the whole reason to spend the twelve points.
+/* ══ 50 / 50, AND THE LIST IS THE PRODUCT ═══════════════════════════════
+   design-language.md §7 carries the argument. The list is where the whole
+   flow happens — search, find similar, star, export — so it may not be the
+   smaller half, and on arrival the other half holds a single sentence. The
+   record is the denser column and adapts itself (its field list reflows by
+   container query) rather than being held up by the split.
 
    THE LIST IS FLOORED RATHER THAN FIXED. 340px is design-language.md §7's
    measured minimum for a readable result row; below that the split has
    already stacked.
 
-   AND IT IS A PERCENTAGE BASIS WITH `flex:0 1`, not `width:44%`. A width
+   AND IT IS A PERCENTAGE BASIS WITH `flex:0 1`, not `width:50%`. A width
    would be measured before the border between them and leave the two columns
    a hairline apart; a shrinkable basis divides what is actually left after
    the border, so the ratio holds on the screen rather than on paper. */
@@ -64,8 +59,20 @@
    did. Both columns are ground now, each carrying one panel, and the hairline
    goes with the background: two panels 32px apart separate themselves, and a
    rule between them would be a third edge in a gap that already has two. */
-.listcol{position:relative;flex:0 1 44%;min-width:340px;
-         display:flex;flex-direction:column;overflow:hidden}
+/* ══ ONE FRAME VALUE, DOUBLED BETWEEN PANELS · 2026-09-26 ════════════════
+   16px to the window on all four sides, 32 between any two panels. The
+   surface had 16 / 16 / 16 / ZERO — the two columns ran flush to the bottom
+   of the viewport, so both panels' 20px corners were cut square by the window
+   edge while the other three sides sat inside a gutter. The foot supplies the
+   fourth side now (37-attribution.css has the argument).
+
+   IT IS ON THE COLUMNS, not on .work-split, and that is what makes the
+   inter-column gap fall out rather than be declared: 16 on each facing edge
+   is the 32 between them, and one value produces both numbers. The composer
+   pays the other half of its own 32 from .res-search's padding. */
+.listcol{position:relative;flex:0 1 50%;min-width:340px;min-height:0;
+         display:flex;flex-direction:column;overflow:hidden;
+         padding:var(--s-16)}
 
 /* ── the left column's density · one step up, 2026-09-10 ────────────────
    The whole column read tight, and one value in it was a defect rather than
@@ -84,31 +91,39 @@
    scale. It is ~340px now and design-language.md §7 is where that number is
    argued — a second copy of it here is a second place for it to drift. This
    note is about the PADDING it changed, which is unchanged. */
-.listcol-scroll{flex:1;min-height:0;overflow-y:auto;
-  padding:var(--s-20) var(--s-16) var(--s-24);scrollbar-gutter:stable}
-.listhead{display:flex;flex-direction:column;gap:var(--s-10);margin-bottom:var(--s-16)}
-.listhead-top{display:flex;align-items:center;gap:var(--s-8)}
-/* THE INFO BUTTON TAKES THE TRAILING EDGE, and this is a bug fix rather than
-   a preference. .info-pop is anchored to its trailing edge with no flip or
-   clamp anywhere in this file, so a button sitting mid-row put a 300px
-   popover at x = -72 — off the column, and clipped by .listcol's own
-   overflow:hidden. Every card header already solves it this way. */
-/* THE AUTO MARGIN IS ON THE HEADING, and it has to be. On a chip it works
-   only while that chip is the first thing after the title, and breaks the
-   moment anything joins the row ahead of it — `N starred` would be stranded
-   beside the heading with the gap opening between two chips that belong
-   together. Pushing from the TITLE'S trailing edge packs the
-   whole trailing group right regardless of which of them are rendered, which
-   is what a row with two conditionally-present chips needs. */
-.listhead-top #setTitle{margin-inline-end:auto}
-/* THE WRAPPER IS GONE AND THE ROW NOW GENUINELY COLLAPSES. `:empty` was the
-   rule here and it never matched once: a div holding a hidden span holds an
-   element child and two whitespace text nodes, so the flex column kept paying
-   its 10px gap for a row that drew nothing. The chip is a direct child now,
-   .chip[hidden] takes it out of the flow for real, and there is no wrapper
-   left to be wrong about. align-self is what stops a 24px pill stretching to
-   the column's full width in a flex-direction:column parent. */
-.listhead>.chip{align-self:flex-start}
+/* ══ THE PANEL IS FROZEN TO THE COLUMN · 2026-09-26 ══════════════════════
+   .listcol-scroll WAS THE SCROLLER and everything rode in it: 20px of ground,
+   then the heading on that ground, then the panel. Measured at 600px of
+   scroll, the heading sat at y=-314 and the panel's top edge with it, while
+   the record across the split kept its head pinned at y=199. One column was a
+   component and the other was a stream, and the stream was the one the whole
+   flow runs through — so the founder lost "100 patents matched · 20 shown"
+   AND every control that changes what the list shows, to the same gesture.
+
+   THE COLUMN NO LONGER SCROLLS. It holds one panel that fills it exactly; the
+   panel's head is pinned by flex — a non-flexing item above a scrolling
+   sibling stays put without saying so — and .set-listcol is what moves. Both
+   of the panel's rounded ends stay on screen at every scroll position, which
+   is the whole of what "it is a component" means here.
+
+   IT COSTS NOTHING IN ROW AREA, which is the number that decided it: 568px of
+   visible rows before, 571 after, because the head replaces chrome that was
+   already standing in that space on arrival. */
+.set-wrap{display:flex;flex-direction:column;flex:1;min-height:0}
+.set-wrap>.card{flex:1;min-height:0}
+.set-listcol{flex:1;min-height:0;overflow-y:auto;scrollbar-gutter:stable}
+/* THE INFO BUTTON STILL TAKES THE TRAILING EDGE OF THE LEADING GROUP, and the
+   reason survived the merge that took .listhead's own rules with it: .info-pop
+   is anchored to its trailing edge with no flip or clamp anywhere in this
+   file, so a button sitting mid-row put a 300px popover at x = -72 — off the
+   column, and clipped by .listcol's own overflow:hidden. It is the last item
+   before the spacer now, which is the same edge by a different mechanism.
+
+   THE AUTO MARGIN WENT WITH THEM AND A SPACER DOES THE WORK. An auto margin
+   on the heading packed the trailing group whatever was rendered, which is
+   what a row with two conditionally-present chips needs; .set-bar already had
+   a `.spacer` for exactly that, doing nothing at the end of the row. One
+   mechanism, in the file that owns the bar. */
 
 /* ── scrollbars · added 2026-09-10 ──────────────────────────────────────
    There was no scrollbar rule in this file at all — every scroller was the
@@ -124,18 +139,18 @@
    scrollbar-gutter:stable is what stops the list jumping sideways by 8px the
    first time it grows past one screen — the same class of shift the FLIP
    work elsewhere in this file exists to prevent. */
-.listcol-scroll,.panescroll{scrollbar-width:thin;
+.set-listcol,.rec-scroll{scrollbar-width:thin;
   scrollbar-color:var(--border-strong) transparent}
-.listcol-scroll::-webkit-scrollbar,.panescroll::-webkit-scrollbar{width:8px;height:8px}
-.listcol-scroll::-webkit-scrollbar-track,.panescroll::-webkit-scrollbar-track{background:transparent}
+.set-listcol::-webkit-scrollbar,.rec-scroll::-webkit-scrollbar{width:8px;height:8px}
+.set-listcol::-webkit-scrollbar-track,.rec-scroll::-webkit-scrollbar-track{background:transparent}
 /* the 2px transparent border plus background-clip is what makes an 8px track
    carry a 4px thumb without a second element to style. */
-.listcol-scroll::-webkit-scrollbar-thumb,.panescroll::-webkit-scrollbar-thumb{
+.set-listcol::-webkit-scrollbar-thumb,.rec-scroll::-webkit-scrollbar-thumb{
   background:var(--border-strong);border-radius:var(--r-pill);
   border:2px solid transparent;background-clip:content-box}
 @media (hover:hover){
-  .listcol-scroll::-webkit-scrollbar-thumb:hover,
-  .panescroll::-webkit-scrollbar-thumb:hover{background:var(--text-3);background-clip:content-box}
+  .set-listcol::-webkit-scrollbar-thumb:hover,
+  .rec-scroll::-webkit-scrollbar-thumb:hover{background:var(--text-3);background-clip:content-box}
 }
 
 /* THE READING COLUMN. The scroller takes the height that is left and the
@@ -146,53 +161,112 @@
    column that anything inside may ever anchor to wants a containing block,
    and removing it is a one-line change somebody would then have to rediscover
    the need for. */
-.panecol{position:relative;flex:1 1 56%;min-width:0;overflow:hidden;
-         display:flex;flex-direction:column}
-
 /* ── the pane's inset · matched to the left column, 2026-09-11 ──────────
    The cards sat 56px in from the pane edge — 24 of scroller plus 32 of grid
    — against the left column's 16, and with the toggle's band gone from the
    top of the pane that mismatch was the loudest thing left on the surface.
-   ONE RULE FOR BOTH COLUMNS at 16px.
+   ONE RULE FOR BOTH COLUMNS at 16px, and it is the same padding shorthand on
+   both columns now rather than the same number written twice.
 
    IT IS ALSO THE FIRST TERM OF THE RECORD'S ARITHMETIC at the top of this
    file — 16px a side is the 32 that comes off .panecol before the record's
-   own border and padding. Changing it moves the ~1203px crossing point. */
-/* ══ THE COLUMN SCROLLS AS ONE · 2026-09-24 ══════════════════════════════
-   THIS SCROLLER WAS INERT AND THE RECORD'S BODY DID THE WORK. .rec was
-   `flex:1` — that is `flex:1 1 0%` — so the card was forced to exactly this
-   box's height and there was never any overflow here to scroll. All 1485px of
-   a real record overflowed one level further down, inside a rounded card,
-   against a scrollbar 1px from its own border. Two scrollers in one column,
-   and the attribution pinned outside both of them.
+   own border and padding. Changing it moves the ~1348px crossing point. */
+.panecol{position:relative;flex:1 1 50%;min-width:0;min-height:0;overflow:hidden;
+         display:flex;flex-direction:column;
+         padding:var(--s-16)}
 
-   ONE SCROLLER NOW, at the column's edge, the same as the list's. .rec takes
-   `flex:1 0 auto`, so a short record still fills the column and a long one is
-   allowed to be long.
+/* ══ THE PANEL IS FROZEN AND ITS BODY SCROLLS · 2026-09-26 ═══════════════
+   THE COLUMN WAS THE SCROLLER from 2026-09-24, and that change was right
+   about what it was fixing and wrong about where it put the scrollbar. What
+   it fixed was real: .rec was `flex:1` — that is `flex:1 1 0%` — so the card
+   was forced to this box's height, this scroller had nothing to scroll, and
+   all 1485px of a real record overflowed one level further down inside a
+   rounded card. Two scrollers in one column.
 
-   THE TOP PADDING IS A MARGIN ON .rec INSTEAD. As padding it belonged to this
-   box, so a sticky .rec-head pinned at the CONTENT edge — 16px down — and
-   the record slid visibly through the gap above it. As a margin it scrolls
-   away with the record and the head pins flush. Measured: delta 0.
+   WHAT IT COST was the panel's edges. With the card growing to its content,
+   the record's rounded top and bottom left the frame the moment anything
+   moved, and the head held the column's top corner on its own — against a
+   left column that was not a panel at all. The surface read as one bounded
+   thing beside one unbounded one, and no amount of matching the two columns'
+   insets could say otherwise while that was true.
 
-   scroll-padding SO scrollIntoView DOES NOT PARK A THUMBNAIL UNDER THE HEAD.
-   The head measures ~53px; 56 is the next step on §5's scale and there is
-   no 54. */
-.panescroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
-            display:flex;flex-direction:column;
-            padding:0 var(--s-16);scrollbar-gutter:stable;
-            scroll-padding-block-start:var(--s-56)}
-/* THE ATTRIBUTION IS IN THE FLOW NOW, so it needs the gap the flex column no
-   longer gives it from outside. --s-24 is .pn-body's own section rhythm: the
-   credit is one more step in the record's reading, not a line stuck to the
-   bottom of the window. It is here rather than in 37 because 37 owns the MARK
-   and this owns the column. */
-.panescroll>.foot{margin-block-start:var(--s-24)}
+   ONE SCROLLER STILL, and it is .rec-scroll: the card fills the column, the
+   head is pinned by flex, and the body is what moves. The old complaint about
+   a scrollbar 1px from the card's border is answered by WHERE the scroller
+   is rather than by moving it back out — below the head, inside the padding,
+   starting under the hairline instead of running the card's full height.
 
+   THE TOP MARGIN ON .rec GOES. It existed because this box's padding made a
+   sticky head pin 16px low with the record sliding through the gap above it;
+   the head is not sticky against this box any more, so the column's own
+   padding is what holds the panel off the edge, the same as the left.
+
+   scroll-padding GOES WITH IT. It kept scrollIntoView from parking a
+   thumbnail under the sticky head; the head is outside the scroller now and
+   there is nothing to park under. */
+.rec-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+            scrollbar-gutter:stable}
+
+/* ── stacked, below 1080 ───────────────────────────────────────────────────
+   THE SURFACE SCROLLS AGAIN HERE, and line 33 is what it is undoing. .view
+   already scrolls for every other view in the product (20-shell.css:20);
+   .view-work opts out so its two columns can each own a scroller, which is
+   right side by side and wrong stacked. Stacked, the opt-out put the record
+   BELOW THE FOLD WITH NOTHING TO SCROLL: measured at 640x400 — a 1280x800
+   laptop at 200% zoom — the masthead and the search bar take 235px, the
+   capped list takes 184 and the record pane starts at y=419 in a 400px
+   window, with 19px of scroll available to reach it. It was not hard to
+   reach; it was gone.
+
+   THE 46vh CAP IS THE RIGHT DESIGN AND IS KEPT: it holds a scrollable list
+   preview with the record directly under it, so picking a row does not send
+   the founder past twenty rows to read one. It only stops meaning anything
+   once it is shorter than the thing it is previewing. One .set-row is 379px
+   and the sort/filter bar above it is another 60, so the cap earns its keep
+   at roughly 950px of window and not below — measured 0 rows fully visible at
+   every stacked size. Under 700px of height it is doing nothing but hiding,
+   so it goes and the page scrolls instead. */
+/* ONLY THE RECORD UNFREEZES, AND THE LIST KEEPS ITS PANEL. The cap is what
+   makes that the right split: a capped column is already a box of a fixed
+   height, so the panel inside it fills that box and the rows scroll within —
+   which is exactly the "scrollable list preview" the cap exists to produce,
+   now with its head and its Sort/Filter still on screen. The record has no
+   cap and no reason for one: it is the last thing on the page, so it grows
+   and the page scrolls past it. */
 @media (max-width:1079px){
-  .work-split{flex-direction:column}
+  /* AND THE SPLIT STOPS FLEXING, which is what the foot exposed. .work-split
+     is `flex:1` — `flex:1 1 0%` — so stacked it took the port's height and
+     no more, the record overflowed OUT of it, and the attribution after it
+     was laid out at y=846 of a 900px window with 1,700px of claims painting
+     straight over it. Side by side that basis is right: the two columns
+     divide the height they are given. Stacked, the split IS the content and
+     has to be as tall as it. */
+  .work-split{flex-direction:column;flex:0 0 auto}
   .listcol{flex:0 0 auto;width:auto;min-width:0;max-height:46vh}
+  .view-work{overflow-y:auto;overflow-x:hidden}
+  .panecol{flex:0 0 auto;overflow:visible}
+  .rec{flex:0 0 auto}
+  .rec-scroll{overflow:visible}
 }
+@media (max-width:1079px) and (max-height:699px){
+  .listcol{max-height:none}
+  .set-wrap>.card{flex:0 0 auto}
+  .set-listcol{overflow:visible}
+  /* AND THE PANE HAS TO STOP FLEXING, which is the half of this that is not
+     obvious. .panecol took what the capped list left, which is the right
+     behaviour while there IS a cap. With the cap gone the list is 8077px in a
+     316px box and the pane's share of the remainder is nothing: measured
+     height 0, scrollHeight 0. The record was not below the fold, it had no
+     box. Both columns size to their content here and the surface scrolls
+     past them. The .panecol rule moved up into the block above, because it
+     is true at every stacked height and was only ever written here. */
+}
+/* NO SHORT-VIEWPORT ESCAPE AT TWO COLUMNS, and that is measured rather than
+   assumed. At 1440x600 the frozen panel gives 258px of body against the old
+   scroller's ~200, and at 1080x500 it gives 158 against 247 with the head
+   already gone — worse in neither case, better in most. Unfreezing here would
+   put an 8000px list and a 2000px record on one page scroll, which is the
+   trade the 46vh cap below 1080 exists to refuse. */
 
 /* ── the Market / Technology toggle, in the surface's head ──────────────
    IT HAD A BAND OF ITS OWN inside the right pane until 2026-09-11 — a
@@ -217,10 +291,34 @@
 /* ── segmented control ──────────────────────────────────── */
 .seg{display:inline-flex;gap:2px;padding:2px;border-radius:var(--r-control);
      background:var(--surface-sunken);flex:0 0 auto}
+/* THE TRANSPARENT BORDER IS LOAD-BEARING and is here rather than on the
+   selected state so the box never changes size. box-sizing is border-box, so
+   1px costs the button nothing at either end; declared only on [aria-pressed]
+   it would still cost nothing, but the three variant rules would each have to
+   know that. */
+/* IT CENTRES WHAT IS IN IT, AND THAT WAS ONE HOST'S RULE · 2026-09-26.
+   20-shell.css declared these three lines under .theme-seg and nowhere else,
+   so the appearance switch's glyphs were centred and the search bar's mode
+   pair were not: a 15px icon on a text baseline in a 24px box, measured
+   5.38px high, which is exactly where the pressed fill stops looking square.
+   A centring rule that one of three hosts carries is not a variant, it is the
+   base rule in the wrong file. */
 .seg-btn{font-size:12.5px;font-weight:500;color:var(--text-3);height:24px;padding:0 var(--s-8);
+         display:flex;align-items:center;justify-content:center;
+         border:1px solid transparent;
          border-radius:var(--r-seg);white-space:nowrap;
          transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease),
+                    border-color var(--dur-1) var(--ease),
                     transform var(--dur-1) var(--ease)}
+/* THE SELECTED PILL NEEDS AN EDGE IN DARK, and §10.2 already says why: "the
+   ground<->surface step is 1.06 here against 1.08 in light ... --border carries
+   the separation the step carries in light." Three rules set the pill to
+   --surface on a --surface-sunken track and none of them carried a border, so
+   the step was all it had: measured 1.14:1 in light and 1.06:1 in DARK, where
+   the selected pill of the appearance switch stopped existing as a shape and
+   only the label's colour survived. One rule for all three, beside the base
+   they share, rather than the same line copied into each. */
+.seg-btn[aria-pressed="true"]{border-color:var(--border)}
 /* §3.8 SITE 3 OF 3 — THE SELECTED STATE of a segmented control — IS CURRENTLY
    UNOCCUPIED. The Market/Technology tablist was the only aria-selected control
    in the tree and it left with the analysis surfaces on 2026-09-23. The theme
@@ -230,6 +328,7 @@
    The rule is removed rather than kept warm, because check-app.py refuses a
    selector nothing sets and it is right to. The site comes back with the
    search settings' own segmented controls, and §3.8 still reserves it. */
+.seg-btn svg{display:block}
 .seg-btn:active{transform:scale(.96)}
 /* the page toggle is the same control at reading size: it selects one of two
    PAGES rather than a sort inside a card, so it gets the body-adjacent 12.5px
@@ -260,9 +359,99 @@
    IT IS SCOPED HERE RATHER THAN CHANGED IN 31-card.css, because every other
    surface's cards are cards and should stay at 16. */
 .set-wrap>.card{border-radius:var(--r-shell)}
-.set-bar{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap;
+/* ══ THE BAR IS THE PANEL'S HEAD · 2026-09-26 ════════════════════════════
+   It held Sort, Filter and Find similar; the heading and the counts sat
+   OUTSIDE the panel on ground above it, and both left on the first scroll.
+   The head is the whole row now, in .rec-head's grammar across the split:
+   what is true at the leading edge, what you can do at the trailing one, one
+   hairline under both. flex:0 0 auto is what pins it — the card is a flex
+   column whose other child scrolls, so a non-flexing item above a scrolling
+   sibling stays put without saying so.
+
+   IT KEEPS flex-wrap, and now it needs it. At rest the row is 497px of a
+   646px track; Find similar and Restore the original order are conditional
+   and push it to a second line, which is a head that grows with its state
+   rather than a row that breaks. .rec-head does the same thing with the same
+   controls appearing and leaving. */
+.set-bar{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap;flex:0 0 auto;
   padding:var(--s-14) var(--s-20);border-bottom:1px solid var(--border)}
+/* THE SPACER IS BETWEEN THE GROUPS, not at the end of the row. It was the
+   last child and pushed against nothing; one move makes it the thing that
+   separates a statement from the controls that change it, and it is the same
+   element doing the job an auto margin on the heading used to do in .listhead
+   — see the note above .set-listcol. */
 .set-bar .spacer{flex:1 1 auto}
+/* THE HEADING'S MARGIN GOES, the same as .rec-head h2's. An h2 carries
+   14.11px above and below from the type scale, which was right while it stood
+   on ground in a flex column and is 28px of head height here — measured 79px
+   against the record's 57 for one row of identical controls. min-width:0 is
+   what lets the box reach zero so the text truncates instead of pushing the
+   controls off the row; the heading is a count and does not wrap. */
+.set-bar h2{margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* ── the same floor the record's head takes, in the same band ────────────
+   Between 1080 and 1240 the head is competing for ~466px and needs 501:
+   measured, it wrapped to two rows at rest — 99px against .rec-head's 53 in
+   the same band, which is the mismatch this whole pass exists to remove.
+   35-record.css clips .rec-act's labels here for the identical reason and
+   this is the identical treatment, down to using sr-only's clip rather than
+   display:none so the accessible name survives and the button stays "Filter"
+   to a screen reader at every width.
+
+   FILTER'S LABEL AND NOT SORT'S, which is the only judgement in it. Sort's
+   label is its current VALUE — "Relevance" — so clipping it would hide what
+   the list is ordered by. Filter's is a static noun beside its own icon, and
+   the count chip that says whether it is doing anything is not part of the
+   clip. */
+/* AND ONE DENSITY STEP WITH IT, because the clip alone does not close the
+   band. Measured at 1080: 466px of track against 479 of content with Filter
+   already clipped — thirteen short, so the row still broke. 10 -> 8 on four
+   gaps and 20 -> 16 on the bar's own inline padding buys 16, which lands it
+   at 471 in 474. Three pixels is thin and is written down rather than
+   rounded away: the only thing that can spend them is a longer count string,
+   and the failure is flex-wrap doing exactly what it does above — a second
+   row, not a broken one. Both values are steps on §5's scale. */
+@media (max-width:1240px) and (min-width:1080px){
+  .set-bar{gap:var(--s-8);padding-inline:var(--s-16)}
+}
+/* ── FIND SIMILAR HOLDS ITS SLOT · platform.md §4.3 "Bar" ─────────────────
+   The founder's first star brought two things into this row at once — the
+   `N starred` chip and Find similar — and the row broke to a second line on
+   the commonest action on the surface: the whole list jumped 40px under the
+   pointer that had just pressed a star. The button now keeps its box while
+   nothing is starred. visibility:hidden, not opacity, because it also takes
+   the button out of the tab order and the accessibility tree, which is what
+   [hidden] was doing for it; the attribute stays the one switch and
+   list.mjs's syncStarUI is unchanged.
+
+   THE NUMBERS. At 1440 the bar is 686px; heading, chip, info, Sort, Filter
+   and the full Find similar come to 667 with gaps and padding. Below 1400
+   that stops fitting, so Filter's label clips to its icon, which holds the
+   full Find similar to 1340 — a 1366 laptop keeps the word on the one filled
+   control. Below 1340 Find similar's label clips too. Both use sr-only's
+   clip rather than display:none, so the accessible names survive. From 1240
+   the gap and padding step down as well, which holds the row to about 1160
+   (measured: one row at 1280, two at 1150). Between 1080 and 1160 the first
+   star still wraps it — up to 41px short with nothing left to clip but the
+   heading's own counts — and a second row is what flex-wrap does rather than
+   a break.
+   Restore the original order is the other known wrap — it is a sentence,
+   and it only appears after the founder has pressed Find similar. */
+/* FROM 1080 ONLY. Below it the columns stack, the bar is the window's width
+   and wraps to two rows at rest anyway, and a held slot is an empty third
+   row under Sort and Filter. */
+@media (min-width:1080px){
+  .set-bar #setRebase[hidden]{display:inline-flex;visibility:hidden}
+}
+@media (max-width:1400px) and (min-width:1080px){
+  .set-bar #filtBtn>span:not(.lm-count){position:absolute;width:1px;height:1px;
+                          padding:0;margin:-1px;overflow:hidden;
+                          clip-path:inset(50%);white-space:nowrap;border:0}
+}
+@media (max-width:1340px) and (min-width:1080px){
+  .set-bar #setRebase>span{position:absolute;width:1px;height:1px;
+                          padding:0;margin:-1px;overflow:hidden;
+                          clip-path:inset(50%);white-space:nowrap;border:0}
+}
 
 /* ── the re-rank control, in the bar · 2026-09-11 ────────────────────────
    .btn IS 36px AND THIS ROW IS 30px. Everything else in the bar is an .lm-btn,

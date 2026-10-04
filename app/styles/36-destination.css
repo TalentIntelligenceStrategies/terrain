@@ -5,8 +5,8 @@
  * primitives at 12 and 13 and are not repeated here. */
 
 /* ── the points page's margins · 2026-09-11 ──────────────────────────────
-   .grid CARRIES NO INLINE PADDING because on the working screen .panescroll
-   supplies it (--s-16 both sides). The points page puts .grid straight inside
+   .grid CARRIES NO INLINE PADDING because on the working screen the column
+   supplies it (--s-16 both sides, on .panecol). The points page puts .grid inside
    .main, which is inset:0 with no padding, so nothing supplied it and the
    cards ran EDGE TO EDGE at 1440 — while the "Points" title above them sat
    32px in. Not merely tight: two edges 32px apart on one page, which is the
@@ -15,7 +15,7 @@
    Both are --s-16 now, the step the right pane already uses, so the title and
    the cards share one edge and this page reads at the same rhythm as the
    surface it is reached from. Scoped to .view-page rather than added to .grid,
-   because .grid inside .panescroll would then be padded twice.
+   because .grid inside the working screen's right column would be padded twice.
 
    NOT CAPPED, and that was checked rather than assumed. A max-width would
    have been the obvious tidy: at 1440 these cards are ~1376px against ~988px
@@ -149,7 +149,11 @@
 .hlp-grp + .hlp-grp{margin-block-start:var(--s-32)}
 .hlp-grp-h{margin:0 0 var(--s-12);color:var(--text-2)}
 .hlp-qa dt{color:var(--text-1);font-size:13px;line-height:1.4;font-weight:500}
-.hlp-qa dd{margin:var(--s-4) 0 0;font-size:13px;line-height:1.6;
+/* THE ANSWER IS BODY AND THE QUESTION IS LABEL, which is the pair §4 has. The
+   answer was 13/1.6 -- label's size on a third leading -- so every Help answer
+   rendered one step smaller than every other sentence in the product, and sat
+   1px under the size of its own one-line question. t-body is on the markup. */
+.hlp-qa dd{margin:var(--s-4) 0 0;
     color:var(--text-2);max-width:68ch;text-wrap:pretty}
 
 /* ── the three pages take a measure, and the points page does not ────────
@@ -169,6 +173,13 @@
    the column. Centred, so the page reads as one column rather than as a
    narrow thing pinned to the left of a wide one.                        */
 .view-acct .page-head,.view-acct .grid{max-width:820px;margin-inline:auto;width:100%}
+/* THE NOT-READY NOTE IS IN THE COLUMN TOO. It had no rule at all, so on the
+   account and plan pages it rendered at the window's left edge, full width,
+   under a centred 820px column — the one sentence explaining why two
+   controls do nothing, set where nobody reading the column looks. It sits
+   under the cards on the column's own edges, in --text-2 as a note. */
+.view-acct .inert-note{max-width:820px;width:100%;margin:var(--s-16) auto 0;
+                       padding-inline:var(--s-16);color:var(--text-2)}
 
 /* ── the Back control on all four destination pages ──────────────────────
    THIS HAD NO BASE RULE at all — only the hover. It inherited the bare

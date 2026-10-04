@@ -47,6 +47,60 @@ const FIRST =
  * `host` is what carries `openClass` — the panel's parent by default, `#app`
  * for the masthead pair, because their CSS is written against an ancestor.
  */
+/* ══ KEEPING THE PANEL ON SCREEN, AND WHY IT IS HERE AND NOT IN CSS ════════
+ * Every panel in the product is positioned by CSS from its own trigger —
+ * `.pop-down{top:calc(100% + var(--s-8))}` and a `left:0` or `right:0` — and
+ * that is right until the trigger is close enough to an edge that the panel
+ * hangs off it. Measured before this existed: the grouping panel ran 139px
+ * past the right edge at 320px, and the account menu 52px past the LEADING
+ * edge at 768px, where the masthead wraps and the profile button starts a new
+ * row. `.view-work{overflow:hidden}` and `.app{overflow:hidden}` mean no
+ * scrollbar appears to say so — the content is simply gone.
+ *
+ * NO MEDIA QUERY CAN DO THIS. The breakpoint would have to encode where each
+ * trigger happens to sit, and the masthead's wrap moves three of them; the
+ * clipping measured at 640, 700, 719, 740, 768, 820 and 860 but NOT at 480,
+ * 560 or 390, because which row the button lands on decides it. A width cap
+ * is necessary and was applied to `.pop` — it is the POSITION that is left.
+ *
+ * IT MEASURES LAYOUT, NOT THE TRANSFORM. The open animation starts at
+ * `translateY(-4px) scale(.97)`, so getBoundingClientRect() on the panel
+ * during the first frame returns a box 3% narrow and mid-flight.
+ * offsetLeft/offsetWidth are layout values and ignore transforms; the
+ * offsetParent's own rect turns them back into viewport coordinates.
+ *
+ * PHYSICAL left/right AND NOT THE LOGICAL PAIR, deliberately: a viewport edge
+ * is physical, and so is the overflow being corrected. */
+const EDGE = 12;
+
+/* EXPORTED, because two panels in the product do not come through popover().
+   masthead.mjs's menu() and list.mjs's lmMenu() are the two independent copies
+   this module's header says it was written to replace, and that consolidation
+   was never finished — they are the two that measured worst. Sharing the
+   clamp is not the migration; it is the one line of it that could not wait. */
+export function clampIntoView(panel) {
+  panel.style.left = '';
+  panel.style.right = '';
+  const parent = panel.offsetParent;
+  if (!parent) return;
+
+  const base = parent.getBoundingClientRect().left + panel.offsetLeft;
+  const width = panel.offsetWidth;
+  const room = document.documentElement.clientWidth;
+
+  let shift = 0;
+  if (base + width > room - EDGE) shift = (room - EDGE) - (base + width);
+  /* the leading edge wins a fight with the trailing one: a panel too wide for
+     the window is read from its start, not from its end. */
+  if (base + shift < EDGE) shift = EDGE - base;
+  if (!shift) return;
+
+  const used = parseFloat(getComputedStyle(panel).left);
+  if (Number.isNaN(used)) return;
+  panel.style.left = (used + shift) + 'px';
+  panel.style.right = 'auto';
+}
+
 export function popover(opts) {
   const { btn, panel, key } = opts || {};
   if (!btn || !panel || !key) return null;
@@ -64,6 +118,10 @@ export function popover(opts) {
     if (!isOpen()) return false;
     host.classList.remove(openClass);
     btn.setAttribute('aria-expanded', 'false');
+    /* cleared rather than kept: the window may be a different size next time,
+       and a stale inline left would survive the resize that invalidated it. */
+    panel.style.left = '';
+    panel.style.right = '';
     drop(key);
     if (typeof opts.onClose === 'function') opts.onClose();
     return true;
@@ -79,6 +137,10 @@ export function popover(opts) {
     btn.setAttribute('aria-expanded', 'true');
     push(key, close);
     if (typeof opts.onOpen === 'function') opts.onOpen();
+    /* AFTER onOpen, not before: the grouping panel builds its branch list in
+       that callback, and a panel measured while empty is a panel measured at
+       the wrong width. */
+    clampIntoView(panel);
     const el = panel.querySelector(firstFocus);
     if (el) focusQuietly(el);
   };

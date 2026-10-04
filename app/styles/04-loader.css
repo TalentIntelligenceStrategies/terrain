@@ -37,8 +37,15 @@
   opacity:calc(0.5 * (var(--dmx-opacity-base) + var(--dmx-opacity-mid)));
   will-change:opacity}
 .dmx-path-3{
+  /* linear, AND §6 NAMES THIS CASE: "Constant motion — the loader, the
+     skeleton shimmer | linear, no token." The curve that sat here was an
+     ease-in-out, whose defining property is that it is flat at the start —
+     the shape §6 confines to system-driven movement with a beginning and an
+     end. A ripple that never stops has neither. The amendment above admits
+     the upstream library's CYCLE, which is a duration; it was never an
+     argument for its curve. */
   animation:dmx-ripple-3 calc(0.68 * var(--dmx-cycle) * var(--dmx-speed,1))
-            cubic-bezier(0.42,0,0.58,1) infinite;
+            linear infinite;
   animation-delay:calc(var(--dmx-path,0) * 0.19 * var(--dmx-cycle) * var(--dmx-speed,1))}
 @keyframes dmx-ripple-3{
   0%,100%{opacity:var(--dmx-opacity-base)}

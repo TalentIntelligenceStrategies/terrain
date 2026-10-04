@@ -32,12 +32,14 @@
  */
 import { $, esc } from '../core/dom.mjs';
 import { waitOn, landIn, failWith } from '../core/wait.mjs';
+import { enter, flip } from '../core/motion.mjs';
 import { say } from '../core/live-region.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { wait as pause } from '../core/timers.mjs';
-import { bar, statusHTML, statusWord } from '../core/primitives.mjs';
+import { bar, statusHTML, statusWord, langAttr } from '../core/primitives.mjs';
 import { bump, stale } from '../core/generation.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
+import { clampIntoView } from '../core/popover.mjs';
 import { focusQuietly } from '../core/focus.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import * as Starred from '../core/starred.mjs';
@@ -82,7 +84,8 @@ function syncStarUI() {
   }
   /* HIDDEN, NOT DISABLED, exactly as the markup's own note says: a disabled
      button loitering in a 345px bar is clutter, and [hidden] takes it out of
-     the tab order too. */
+     the tab order too. 21-surface.css holds its slot while it is hidden, so
+     the first star does not push the bar to a second row. */
   const rebase = $('#setRebase');
   if (rebase) rebase.hidden = STARRED.size() === 0;
 }
@@ -157,12 +160,15 @@ const THUMBS = 12;
    same fact on the next row without reading it. */
 const ICON = {
   who:  '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
-  firm: '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/>'
-      + '<path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/>'
-      + '<path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/>'
-      + '<path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>',
-  when: '<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/>'
-      + '<path d="M3 10h18"/>',
+  firm: '<path d="M10 12h4"/>'
+      + '<path d="M10 8h4"/>'
+      + '<path d="M14 21v-3a2 2 0 0 0-4 0v3"/>'
+      + '<path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/>'
+      + '<path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>',
+  when: '<path d="M8 2v3"/>'
+      + '<path d="M16 2v3"/>'
+      + '<rect x="3" y="3" width="18" height="18" rx="2"/>'
+      + '<path d="M3 9h18"/>',
   what: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414'
       + 'l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/>'
       + '<circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>',
@@ -175,11 +181,14 @@ function glyph(k) {
 /* one cell of the meta grid. `inner` is already-escaped HTML, because half the
    callers pass a bar and half pass text. */
 function cell(k, inner) {
-  /* t-body ON THE VALUE. It was 13/1.4 at weight 400 in 34-list.css — `label`'s
-     metrics carrying `body`'s weight, which is a sixth role invented in a gap
-     rather than a role from §4's table. */
-  return '<span class="dm">' + glyph(k)
-    + '<span class="dm-v t-body">' + inner + '</span></span>';
+  /* NO ROLE CLASS ON THE VALUE: it is a meta line, 12.5/400, and 34-list.css
+     spells that size the way §4 says a meta line does. It carried t-body, and
+     at 14px in --text-1 the four facts under the title outweighed the
+     abstract beneath them — the row read title, meta, prose in the wrong
+     order. The cell names its kind so the holder can lead its three
+     neighbours by colour alone. */
+  return '<span class="dm dm-' + k + '">' + glyph(k)
+    + '<span class="dm-v">' + inner + '</span></span>';
 }
 
 /* THE INVENTOR LINE PRINTS ONE NAME AND COUNTS THE REST. A patent with six
@@ -195,7 +204,7 @@ function inventorHTML(list) {
      the exact split-role failure 02-type.css's header was written to close.
      THE LITERAL LEADING SPACE WENT TOO: .dm-v is a flex row with gap --s-6,
      so the space and the gap were a double gap you could see. */
-  return esc(list[0]) + (rest > 0
+  return '<span class="dm-t">' + esc(list[0]) + '</span>' + (rest > 0
     ? '<span class="dm-more fig fig-s">+' + rest + '</span>' : '');
 }
 
@@ -226,8 +235,7 @@ function rowHTML(rec, i) {
     + ' aria-label="Star this patent as the one closest to your idea">'
     + '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
     + ' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'
-    + '<path d="M12 2.5l2.9 5.88 6.5.95-4.7 4.58 1.11 6.47L12 17.33l-5.81 3.05'
-    + ' 1.11-6.47-4.7-4.58 6.5-.95z"/></svg></button>'
+    + '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg></button>'
     + '<div class="drill-row">'
     /* THE ROW'S OWN NAME, because the one it composed from its children was
        "Score0.6620Live2020" — every span concatenated with no separators, and
@@ -322,7 +330,7 @@ function rowHTML(rec, i) {
            it. `title` is not the accessible name — rowName already carries the
            holder in full — it is for the pointer user who can see the name is
            cut and wants the rest without opening the record. */
-        ? '<span title="' + esc(rec.holder) + '">' + esc(rec.holder) + '</span>'
+        ? '<span class="dm-t" title="' + esc(rec.holder) + '">' + esc(rec.holder) + '</span>'
         : bar('w-md', 'micro'))
     /* "Published" AND NOT "Pub.". The record's own field list has said
        Published since it was written (record.mjs FIELDS), so the row was the
@@ -330,16 +338,16 @@ function rowHTML(rec, i) {
        character, PI-VuePat's own pubDateLabel. The column is 2x1fr and the
        word fits. */
     + cell('when', rec.published != null
-        ? 'Published <span class="fig fig-s">' + esc(rec.published) + '</span>'
+        ? '<span class="dm-t">Published</span><span class="fig fig-s">' + esc(rec.published) + '</span>'
         : (rec.year != null
-            ? 'Published <span class="fig fig-s">' + rec.year + '</span>'
+            ? '<span class="dm-t">Published</span><span class="fig fig-s">' + rec.year + '</span>'
             : bar('w-sm', 'micro')))
     /* THE STATUS CHIP LEFT THIS CELL FOR THE EYEBROW. What is left is the
        jurisdiction and the main classification, which are both CODES — §4
        says Inconsolata for every code without exception, and `US` / `EP` /
        `WO` had been inheriting .dm-v and rendering in Urbanist. */
     + cell('what', (rec.where != null
-            ? '<span class="dm-where">' + esc(rec.where) + '</span>' : '')
+            ? '<span class="dm-where dm-t">' + esc(rec.where) + '</span>' : '')
         + (rec.ipcMain != null
             ? '<span class="fig fig-s">' + esc(rec.ipcMain) + '</span>' : ''))
     + '</span>'
@@ -358,7 +366,8 @@ function rowHTML(rec, i) {
         /* t-body. It was 13/1.55 — `label`'s SIZE on `body`'s LEADING, the
            same invented role from the other direction. The substance of the
            row was rendering a pixel smaller than nothing in §4's table. */
-        ? '<span class="drill-abs t-body">' + esc(rec.abstract) + '</span>'
+        ? '<span class="drill-abs t-body"' + langAttr(rec.abstract, rec.number) + '>'
+        + esc(rec.abstract) + '</span>'
         : '<span class="drill-abs t-body drill-abs-sk">'
           + bar('w-full') + bar('w-full') + bar('w-md') + '</span>')
     + '</button>'
@@ -502,12 +511,25 @@ function thumbsHTML(rec, i) {
    So paging renders only the tail and leaves what is above it alone. `landIn`
    with a null body is doing the half of its job that still applies: clear
    `is-wait`/`is-fail` and the inline min-height, touch no content. */
-function render(data, append) {
+/* `mode` SAYS WHAT THE REQUEST DID TO THE ROWS, and the motion follows from
+   it rather than from which button was pressed — design-language.md §6
+   "Lists and records":
+
+     'arrive'  — the surface's first list. The view itself is still moving
+                 in, so the rows land with it and do not stagger on top of it.
+     'replace' — a new set: a search, a filter, the grouping. The region
+                 emptied to a loader, and the rows arrive in a short stagger.
+     'append'  — Show more. The rows above are untouched; the new tail fades
+                 up under them.
+     'reorder' — a sort or a restore: the same patents in another order. The
+                 rows stood while the engine answered, and each moves from
+                 where it was to where it is. */
+function render(data, mode = 'replace') {
   const list = $('#setList');
   if (!list) return;
   MATCHED = data.matched;
   data.patents.forEach(r => ROW_BY_ID.set(r.id, r));
-  if (append) {
+  if (mode === 'append') {
     const have = list.querySelectorAll('.set-row').length;
     landIn(list, null);
     /* the offset keeps data-i and the "Patent N" fallback name global rather
@@ -515,9 +537,17 @@ function render(data, append) {
        the same thing to a screen reader. */
     const fresh = data.patents.slice(have)
       .map((rec, k) => rowHTML(rec, have + k)).join('');
-    if (fresh) list.insertAdjacentHTML('beforeend', fresh);
+    if (fresh) {
+      list.insertAdjacentHTML('beforeend', fresh);
+      enter([...list.querySelectorAll('.set-row')].slice(have));
+    }
+  } else if (mode === 'reorder') {
+    flip(list, '.set-row', el => el.getAttribute('data-id'),
+      () => landIn(list, data.patents.map(rowHTML).join('')),
+      list.closest('.set-listcol'));
   } else {
     landIn(list, data.patents.map(rowHTML).join(''));
+    if (mode === 'replace') enter(list.querySelectorAll('.set-row'));
   }
   list.setAttribute('aria-busy', 'false');
 
@@ -534,12 +564,31 @@ function render(data, append) {
      ONE TEMPLATED STRING PER PLURAL FORM, not a sentence assembled around two
      numbers. Word order moves between languages and "1 patents matched" is
      what fragment concatenation ships. It is also shorter now, because the
-     old form wrapped to three lines in this column. */
+     old form wrapped to three lines in this column.
+
+     THE TWO-COUNT FORM DROPS ITS NOUN. "100 matched · 20 shown" is 70px
+     narrower than the form with "patents" in it, and those 70px are what let
+     the bar hold Find similar's slot at rest without breaking to a second
+     row — the noun is already the subject of every row underneath. The
+     one-count forms keep it, because they have the room. */
   if (title) {
     const m = data.matched, n = data.patents.length;
-    title.textContent = m === 1
-      ? '1 patent matched'
-      : (m === n ? `${m} patents matched` : `${m} patents matched · ${n} shown`);
+    /* THE COUNTS ARE FIGURES AND THE WORDS ARE NOT. Whole-string textContent
+       is what put them in Urbanist: §4 gives every count the figure face, and
+       a heading that reads "100 patents matched · 20 shown" is two counts and
+       three words. innerHTML rather than textContent is safe here because
+       both values are numbers this module computed.
+
+       .fig ALONE, WITHOUT A SIZE ROLE. fig-s is 12.5px and this heading is 17,
+       so the pair rendered the numbers visibly smaller than the words around
+       them — a size role inside a line that already has one. .fig carries the
+       family, tabular-nums and the figure weight and inherits the size, which
+       is what an inline numeral in running text wants. */
+    const fig = v => '<span class="fig">' + v + '</span>';
+    title.innerHTML = m === 1
+      ? fig(1) + ' patent matched'
+      : (m === n ? fig(m) + ' patents matched'
+                 : fig(m) + ' matched · ' + fig(n) + ' shown');
   }
 }
 
@@ -555,13 +604,15 @@ function render(data, append) {
    was written for #setMore before anything set the attribute: 05-wait-fail.css
    styles `#setMore[data-waiting]` by name, strips the button's ground and
    hides its label and chevron together. It has been unreachable since. */
-async function request(port, arg, sayWhat, into) {
+async function request(port, arg, sayWhat, into, mode) {
   const list = $('#setList');
   if (!list) return;
   const btn = into && $(into);
   /* btnWait returns false when the button is already waiting, which is the
-     re-press guard: two presses of Show more is one intention. */
-  if (btn && !btnWait(btn)) return null;
+     re-press guard: two presses of Show more is one intention. A reorder
+     reserves the trigger's width, because Sort sits in a row of controls and
+     a trigger shrinking to its loader slides Filter under the pointer. */
+  if (btn && !btnWait(btn, mode === 'reorder')) return null;
   const token = bump('list');
   list.setAttribute('aria-busy', 'true');
   if (!btn) waitOn(list, 320);
@@ -571,7 +622,7 @@ async function request(port, arg, sayWhat, into) {
      has already asked for something else must not paint — two requests in
      flight is the ordinary case, not the exceptional one. */
   if (stale('list', token)) return;
-  if (res.ok) { render(res.data, Boolean(btn)); return res.data; }
+  if (res.ok) { render(res.data, mode || (btn ? 'append' : 'replace')); return res.data; }
   /* A PAGE THAT DID NOT LOAD DOES NOT REPLACE THE PAGE THAT DID. The failure
      for an extending request is announced and offered in the foot; writing the
      fail block into #setList would throw away the rows that are still good to
@@ -605,12 +656,17 @@ function lmMenu(wrapId, btnId, panelId) {
     if (!wrap.classList.contains('is-open')) return;
     wrap.classList.remove('is-open');
     btn.setAttribute('aria-expanded', 'false');
+    panel.style.left = '';
+    panel.style.right = '';
     drop(panelId);
   };
   const open = () => {
     wrap.classList.add('is-open');
     btn.setAttribute('aria-expanded', 'true');
     push(panelId, close);
+    /* the Filter menu sits far enough along .set-bar that its left:0 ran it
+       36px off the right edge at 320. */
+    clampIntoView(panel);
     const first = panel.querySelector('[role="menuitemradio"]');
     if (first) focusQuietly(first);
   };
@@ -695,18 +751,22 @@ async function reorderTo(anchors, label) {
   const rows = new Map([...list.querySelectorAll('.set-row')]
     .map(el => [el.getAttribute('data-id'), el]));
   /* only the ids we actually hold: the engine orders the whole set and the
-     client is holding one page of it. */
-  (res.data.order || []).forEach(id => {
-    const el = rows.get(id);
-    if (el) list.append(el);
-  });
+     client is holding one page of it. THE SAME NODES MOVE, so flip() plays
+     each from where it stood — the founder watches the nearest patents rise
+     rather than reading a list that was silently replaced. */
+  flip(list, '.set-row', el => el.getAttribute('data-id'), () => {
+    (res.data.order || []).forEach(id => {
+      const el = rows.get(id);
+      if (el) list.append(el);
+    });
+  }, list.closest('.set-listcol'));
   settled(true, 'Nearest to ' + label);
   say('list', 'Ordered by nearness to ' + label + '.');
 }
 
 /* THE ROW BEHIND AN ID, for the one reader outside this file that needs it.
    components.md §1 says the row carries `number` and `where` it does not draw
-   "because the starred set leaves as a seven-column file and the export reads
+   "because the starred set leaves as an eight-column file and the export reads
    the row rather than the record" — so a single record leaving has to leave
    through a row too, or one file carries different fields from the set it
    came out of. The list is what holds rows; it hands one over rather than
@@ -736,7 +796,7 @@ export function init(ctx) {
   ctx.onRoute(view => {
     if (view !== 'work' || loaded) return;
     loaded = true;
-    request('patents', undefined, 'The list did not load.');
+    request('patents', undefined, 'The list did not load.', null, 'arrive');
   });
 
   onActivate(document, '#setMore', () =>
@@ -768,7 +828,12 @@ export function init(ctx) {
     render(e.detail);
   });
 
-  onActivate(document, '.set-star', el =>
+  /* [data-star] IN THE SELECTOR, NOT JUST THE CLASS. The starred page's
+     remove buttons wear .set-star for its look and carry data-unstar, not
+     data-star; matched on the class alone, every removal there also ran this
+     handler with a null id, and the store filed a phantom row under "null"
+     — a row with no patent that then rode out in the CSV. */
+  onActivate(document, '.set-star[data-star]', el =>
     toggleStar(el.getAttribute('data-star'), el));
 
   /* FIND SIMILAR IS THE ONLY FILLED CONTROL ON THIS SURFACE and it sends the
@@ -797,8 +862,10 @@ export function init(ctx) {
 
   onActivate(document, '#setRestore', () => {
     settled(false, '');
+    /* THE WAIT GOES ON SORT, not on Restore: Restore has just hidden itself,
+       and Sort is the control that names the order being returned to. */
     request('sort', { sort: 'relevance' },
-      'The original order could not be restored.');
+      'The original order could not be restored.', '#sortBtn', 'reorder');
   });
 
   lmMenu('sortWrap', 'sortBtn', 'sortMenu');
@@ -817,7 +884,12 @@ export function init(ctx) {
     check($('#sortMenu'), el);
     const label = $('#sortLabel');
     if (label) label.textContent = el.querySelector('span:last-child').textContent;
-    request('sort', { sort: val }, 'The list could not be re-sorted. It is unchanged.');
+    /* A SORT LEAVES THE ROWS STANDING, design-language.md §6 "What a wait
+       looks like": the patents on screen are still the result, only their
+       order is coming. It used to empty the list to a loader, which said the
+       set was being re-fetched when it was not. */
+    request('sort', { sort: val }, 'The list could not be re-sorted. It is unchanged.',
+      '#sortBtn', 'reorder');
   });
 
   /* `all` CLEARS THE FACET rather than sending one. A filter whose only way off

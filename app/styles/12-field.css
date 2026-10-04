@@ -7,9 +7,8 @@
 
    THE SWITCH'S ON STATE IS --text-1 AND DELIBERATELY NOT THE ACCENT. §2
    settled that VALUE is how this system says "this one is on", and a switch is
-   a STATE rather than an ACTION. An accent means act on this. A switch that
-   went green with the accent would be saying on-means-good, which is the one
-   thing colour may not say here.
+   a STATE rather than an ACTION. An accent means act on this, and a switch
+   that read it would be borrowing a control's role to describe a value.
 
    EVERY NUMBER IS A STEP, and the geometry is CONCENTRIC BY ARITHMETIC rather
    than by exemption: 40x24 track, 16 knob, 4 inset, 16 of travel.
@@ -56,8 +55,12 @@
    --text-2 below is the whole of the hierarchy; §2 has no colour to spend
    here and does not need any. */
 .pref-label{grid-column:1;grid-row:1;min-width:0;color:var(--text-1)}
-.pref-help{grid-column:1;grid-row:2;margin:0;
-      font-size:13px;line-height:1.55;color:var(--text-2);
+/* SIZE AND LEADING ARE .t-body's, ON THE MARKUP -- .empty-note's fix, applied
+   to the second site that had the same defect. This was 13/1.55: `label`'s
+   size carrying a leading that is neither role's, invented in the gap between
+   two real ones. §4: "Prose is `body` wherever it appears." What is left here
+   is what belongs to the component -- its cell, its measure and its colour. */
+.pref-help{grid-column:1;grid-row:2;margin:0;color:var(--text-2);
       max-width:68ch;text-wrap:pretty}
 /* 36px RESERVED IN EVERY STATE, so a switch row and a field row are the
    same height and nothing on the card moves when a value becomes a field.
@@ -174,11 +177,9 @@
    a state rather than an action.
 
    .btn-primary READ --text-1 TOO AND NO LONGER DOES — it is §3.8's primary
-   action and now reads --accent. The two are the same colour today and will
-   not be, so the distinction has to be carried in the token rather than in the
-   value: an accent means ACT ON THIS, a near-black switch means THIS IS ON.
-   A switch that went green with the accent would be saying on-means-good,
-   which is the one thing §2 forbids colour from saying here.
+   action and reads --accent. The two are the same colour because the accent
+   is achromatic, so the distinction is carried in the token rather than in
+   the value: an accent means ACT ON THIS, a near-black switch means THIS IS ON.
 
    EVERY NUMBER IS A STEP. 40x24 track, 16 knob, 4 inset, 16 of travel
    (40 - 4 - 16 - 4). CONCENTRIC BY ARITHMETIC rather than by exemption:

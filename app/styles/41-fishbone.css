@@ -29,8 +29,13 @@
 /* WIDER THAN THE SETTINGS PANEL, because a two-level tree has an indent and
    .pop's 320px floor was measured for a form of chips. 380 holds a branch
    label, its count and the indent without wrapping the labels this corpus
-   actually produces; the max is .pop's own, so a narrow window still wins. */
-.pop-fish{min-width:380px}
+   actually produces; the max is .pop's own, so a narrow window still wins.
+
+   THE FLOOR CARRIES .pop's VIEWPORT CAP TOO. "a narrow window still wins" was
+   the intent and was not true: a bare 380px floor overrode .pop's ceiling the
+   same way .pop's own floor did, and this panel ran 139px off the edge at
+   320px — the widest overflow in the tree, because it is the widest panel. */
+.pop-fish{min-width:min(380px,calc(100vw - var(--s-32)))}
 
 /* THE HEAD IS THE PANEL'S OWN TITLE NOW. .fb-head was a second heading above
    the branches when this filled a column and had to say what the column was;
@@ -84,7 +89,11 @@
 /* THEY LIVE WITH THE RESULTS, NOT WITH THE PANEL. The panel can be hidden and
    the filter it applied cannot be, or the founder reads a shortened list with
    nothing on screen saying why it is short. */
-.fb-chips{display:flex;flex-wrap:wrap;gap:var(--s-6);margin-bottom:var(--s-12)}
+/* THE PANEL'S INSET, NOT ITS OWN. .set-bar above and .set-more below both
+   sit --s-20 in from the panel edge; a chip row with none ran flush against
+   the edge and under the bar's rule, the only thing in the panel that did. */
+.fb-chips{display:flex;flex-wrap:wrap;gap:var(--s-6);
+  padding:var(--s-12) var(--s-20) 0;margin-bottom:var(--s-12)}
 .fb-chips[hidden]{display:none}
 
 .fb-chip{display:inline-flex;align-items:center;gap:var(--s-6);

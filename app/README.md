@@ -23,10 +23,11 @@ inside it, `Home` and `End` reach its ends — because twenty rows at twelve dra
 whole viewport**, with zoom, rotation, pan and a thumbnail strip; from a row it opens the record
 underneath it at the same time, so Escape closes the drawing and leaves you in the record. *Drawings only* in the search bar strips the
 **list** to its pictures; the record is unaffected. The grouping control opens a **popover**, and the
-branches you pick stay as chips above the list after it closes. Star two rows and *Find similar*
+branches you pick stay as chips above the list after it closes. Star a row and *Find similar*
 appears; the count beside the results leads to the starred set, which is where the export lives.
 
-*Open in IPtech* in the record's head **points at a sign-in page and always the same one.** It is a
+*Open in IPtech* at the record's **foot** — `platform.md` §6.3's *the way out is at the end of the
+reading, not the top of it* — **points at a sign-in page and always the same one.** It is a
 stand-in for a per-patent source URL the engine does not return yet — `design/components.md` §4
 question 3 — and it is the only control in the product whose destination the data did not choose.
 
@@ -125,8 +126,9 @@ JavaScript half is `core/wait.mjs`. And `#acctMenu .menu-item:focus-visible` sat
 and belongs to the shell; it moved to `14-menu.css`, which is safe because it wins on **specificity**
 wherever it lands rather than on order.
 
-**`99-reduced-motion.css` must load last because 20 of its 28 rules are same-specificity overrides
-declaring end states.** Same specificity means order decides.
+**`99-reduced-motion.css` must load last because most of its rules are same-specificity overrides
+declaring end states.** Same specificity means order decides. The contract it implements is
+`design-language.md` §6 *Reduced motion*; this paragraph is only where the file sits.
 
 **There is no `@layer`, and the reason is `!important`.** Inside a layer, `!important` *reverses*
 layer order: an important declaration in an earlier layer beats one in a later layer. Three of the
@@ -149,7 +151,7 @@ custom property on `:root`**. `design-language.md` §3.9 is the rule; this is th
 | --- | --- | --- | --- |
 | primitive | 11 | `:root` once | `--n-0`…`--n-10`. No component may read one |
 | scale | 28 | `:root` once | Invariant by construction |
-| semantic | 32 | **all three blocks** | The dark contract |
+| semantic | 33 | **all three blocks** | The dark contract |
 | derived | 3 | `:root` once | Resolves *through* a themed token. **Never in a dark block** |
 | component-scoped | 4 | the component's own class | Never on `:root` |
 
@@ -173,9 +175,9 @@ passes.
 | `--dmx-path` | the loader, per dot | `var(--dmx-path,0)` | position along the ripple path |
 | `--dmx-opacity-base` | the loader | on `.dmx-root` | trough of the pulse |
 | `--dmx-opacity-mid` | the loader | on `.dmx-root` | midpoint of the pulse |
-| `--fig-scale` | the figure viewer | `var(--fig-scale,1)` | zoom, as a step off a fixed ladder rather than a free multiplier |
+| `--fig-scale` | the figure viewer | `var(--fig-scale,1)` | zoom, between 0.5 and 4: the buttons land on the ladder's stops, a gesture anywhere between them |
 | `--fig-rot` | the figure viewer | `var(--fig-rot,0deg)` | rotation, a quarter turn at a time |
-| `--fig-x` `--fig-y` | the figure viewer, while panning | `var(--fig-x,0px)` | pan offset. **All four compose into ONE transform, and the CSS decides the order** — a JS-built transform string is three call sites that can disagree about whether rotation happens before scale |
+| `--fig-x` `--fig-y` | the figure viewer, panning and zooming about a point | `var(--fig-x,0px)` | pan offset. **All four compose into ONE transform, and the CSS decides the order** — a JS-built transform string is three call sites that can disagree about whether rotation happens before scale |
 
 *`--mx-n`, `--mx-min`, `--mx-head` and `--xr-n` left with the analysis layer.*
 
@@ -195,7 +197,7 @@ one of them encodes a rule that reads as an implementation detail and is not:
 | Module | The rule it carries |
 | --- | --- |
 | `dom` | `esc` is used in exactly one place — the exclusion chips. Everywhere else renders typed text with `textContent` |
-| `motion` | `reduced()` is read **live**, never cached. The prototype read it once at parse time, so turning reduced motion on mid-session moved the CSS and left the JS behind |
+| `motion` | `reduced()` is read **live**, never cached. The prototype read it once at parse time, so turning reduced motion on mid-session moved the CSS and left the JS behind. `DUR1`–`DUR4` mirror `--dur-1`–`--dur-4`; a hide waits `DURn + 20`, never a literal |
 | `loader` | One mark, one size, no variants, no region scaling. Third-party motion: permitted in the product, **not** republishable as a standalone component |
 | `wait` | `waitOn` captures `offsetHeight` **before** emptying. `failIn` deliberately does **not** clear `minHeight`. `failHTML`'s retry button is optional **by rule** |
 | `button-wait` | Re-applies the label as `aria-label`, because `display:none` children are excluded from the accessible name. Not `disabled` — that drops focus to `<body>` |
@@ -258,6 +260,19 @@ through different paths on purpose.
 surface has to say *this did not run* rather than throw. It is also the check that no component
 secretly needs data to draw its own chrome — a surface that cannot render against it cannot render
 its own failure state either.
+
+### What the backend team holds
+
+**The engine is built by a separate team, and everything on this side of `ports.mjs` is ours.** They
+hold a package built from the annotated tag **`handoff-2026-10-04`**: this tree's `app/`, `demo/` and
+tracked `brand/` files, the four documents, a visual guide captured from the running app — every
+screen measured, every component in every state it defines, and which contract field prints where —
+and an OpenAPI description with a JSON Schema and a captured example for each of the 19 ports.
+**The contract in it is `design/components.md` at that tag.**
+
+**A change to a port's shape after the tag is a change they do not have.** `git diff
+handoff-2026-10-04 -- app/js/ports.mjs design/components.md` is what has moved since, and a new
+package with a new tag is how it reaches them. The tag is the record; nothing else here tracks it.
 
 ---
 

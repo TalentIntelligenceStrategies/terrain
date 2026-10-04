@@ -67,3 +67,35 @@ export function btnRest(btn) {
   const slot = $('.btn-wait', btn);
   if (slot) slot.remove();
 }
+
+/* ══ DONE · the button that was pressed says it worked ═══════════════════
+ * A download has no screen of its own: the file goes to the browser's tray
+ * and the page the founder pressed it on looks exactly as it did. The live
+ * region said so, and only to a screen reader. So the button's label reads
+ * `text` for 1.6s and comes back.
+ *
+ * THE ACCESSIBLE NAME DOES NOT CHANGE, for btnWait's reason in reverse: the
+ * live region announces the outcome once, and a name that flipped to
+ * "Downloaded" would announce it a second time on any focus move. The width
+ * is held so the shorter word does not slide the button beside it. */
+export function btnDone(btn, text, ms = 1600) {
+  const label = btn && btn.querySelector('span');
+  if (!label || btn.hasAttribute('data-done')) return;
+  const was = label.textContent;
+  btn.style.minWidth = btn.offsetWidth + 'px';
+  if (!btn.hasAttribute('aria-label')) {
+    btn.setAttribute('aria-label', was.trim());
+    btn.setAttribute('data-done-named', '');
+  }
+  btn.setAttribute('data-done', '');
+  label.textContent = text;
+  setTimeout(() => {
+    label.textContent = was;
+    btn.removeAttribute('data-done');
+    btn.style.minWidth = '';
+    if (btn.hasAttribute('data-done-named')) {
+      btn.removeAttribute('aria-label');
+      btn.removeAttribute('data-done-named');
+    }
+  }, ms);
+}
