@@ -264,13 +264,14 @@ its own failure state either.
 ### What the backend team holds
 
 **The engine is built by a separate team, and everything on this side of `ports.mjs` is ours.** They
-hold a package built from the annotated tag **`handoff-2026-10-03`**: this tree's `app/`, `demo/` and
-tracked `brand/` files, the four documents, a visual guide captured from the running app with
-measured dimensions per state, and an OpenAPI description with a JSON Schema and a captured example
-for each of the 19 ports. **The contract in it is `design/components.md` at that tag.**
+hold a package built from the annotated tag **`handoff-2026-10-04`**: this tree's `app/`, `demo/` and
+tracked `brand/` files, the four documents, a visual guide captured from the running app — every
+screen measured, every component in every state it defines, and which contract field prints where —
+and an OpenAPI description with a JSON Schema and a captured example for each of the 19 ports.
+**The contract in it is `design/components.md` at that tag.**
 
 **A change to a port's shape after the tag is a change they do not have.** `git diff
-handoff-2026-10-03 -- app/js/ports.mjs design/components.md` is what has moved since, and a new
+handoff-2026-10-04 -- app/js/ports.mjs design/components.md` is what has moved since, and a new
 package with a new tag is how it reaches them. The tag is the record; nothing else here tracks it.
 
 ---
