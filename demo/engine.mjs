@@ -34,6 +34,12 @@ const qs = new URLSearchParams(location.search);
 /* ?fail=search,record  ·  ?fail=all  ·  ?slow=3 */
 const FAILING = new Set((qs.get('fail') || '').split(',').filter(Boolean));
 const FAIL_ALL = FAILING.has('all');
+
+/* `?empty` MAKES EVERY SEARCH COME BACK WITH NOTHING, which is how the empty
+   state is reached against an engine that cannot judge relevance. A real
+   engine returns an empty set when nothing clears its relevance floor
+   (platform.md §13, R1-30); this stands in for that floor. */
+const EMPTY = qs.has('empty');
 const SLOW = Number(qs.get('slow') || 1) || 1;
 
 /* WHICH FAILURES ARE RETRYABLE IS THE ENGINE'S ANSWER, not the client's guess.
@@ -127,7 +133,7 @@ export const DemoEngine = {
   search: async ({ query = '', settings = {}, mode = 'text' } = {}) => {
     LIMIT = Number(settings.count) || PAGE;
     shown = Math.min(LIMIT, ALL.length);
-    ORDER = ALL.map(r => r.id).sort(cmp.relevance);
+    ORDER = EMPTY ? [] : ALL.map(r => r.id).sort(cmp.relevance);
     /* A NUMBER SEARCH LEADS WITH THAT PATENT and orders the rest after it, or
        refuses with NOT_FOUND, not retryable: the number is not in the index,
        and trying again cannot change that. */

@@ -675,3 +675,13 @@
 .lm-btn[data-waiting]{position:relative;cursor:default}
 .lm-btn[data-waiting]>*:not(.btn-wait){visibility:hidden}
 .lm-btn>.btn-wait{position:absolute;inset:0;height:auto;display:grid;place-items:center}
+
+/* ── when nothing came back · platform.md §7.2 ───────────────────────────
+   NOT THE FAILURE BLOCK. A failure takes the sunken fill and a hairline; this
+   is an answer, so it sits on the list's own ground in the list's own type,
+   with the one control that is the way back. */
+.set-empty{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s-10);
+  padding:var(--s-32) var(--s-20);max-width:60ch}
+.set-empty-h{margin:0;color:var(--text-1)}
+.set-empty-p{margin:0;color:var(--text-2);text-wrap:pretty}
+

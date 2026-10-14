@@ -70,6 +70,9 @@ function paint() {
    jurisdiction looks exactly like a search over all six. The dot is a shape on
    the control, not a colour on it — §2. */
 function summarise() {
+  /* every change passes through here, so this is where it is announced: the
+     results bar re-opens a withheld Search when the settings move. */
+  window.dispatchEvent(new CustomEvent('terrain:settings'));
   const changed =
     STATE.sources.length !== DEFAULTS.sources.length ||
     STATE.kinds.length !== DEFAULTS.kinds.length ||

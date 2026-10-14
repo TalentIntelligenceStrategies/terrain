@@ -37,6 +37,7 @@ import { say } from '../core/live-region.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { wait as pause } from '../core/timers.mjs';
 import { bar, langAttr } from '../core/primitives.mjs';
+import { read as readSettings } from './settings.mjs';
 import { bump, stale } from '../core/generation.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
 import { clampIntoView } from '../core/popover.mjs';
@@ -553,6 +554,40 @@ function thumbsHTML(rec, i) {
      'reorder' — a sort or a restore: the same patents in another order. The
                  rows stood while the engine answered, and each moves from
                  where it was to where it is. */
+/* ── when nothing came back · platform.md §7.2 ───────────────────────────
+   NOT A FAILURE AND NOT DRAWN AS ONE. The engine was asked and answered: none
+   of the index cleared its relevance floor for this sentence. The block says
+   WHAT WAS SEARCHED — the sources, the kinds, the dates — and the way back,
+   and it stops. Nothing here may say what the empty set means: no open
+   ground, no whitespace, no how-close-it-came. brief.md §1 is the rule, and a
+   founder who has just been told nothing matched is the reader most likely to
+   read it as nobody being there.
+
+   THE WORDS COME OFF THE SETTINGS PANEL'S OWN CONTROLS, so the sentence and the
+   panel the founder would open to change it cannot disagree. */
+function searchedWhat() {
+  const s = readSettings();
+  const names = sel => [...document.querySelectorAll('#setPop ' + sel)]
+    .filter(b => b.getAttribute('aria-pressed') === 'true').map(b => b.textContent.trim());
+  const join = xs => xs.length < 2 ? (xs[0] || '')
+    : xs.slice(0, -1).join(', ') + ' and ' + xs[xs.length - 1];
+  const where = join(names('[data-src]'));
+  const kinds = join(names('[data-kind]').map(k => k.toLowerCase()));
+  const dates = (s.from || s.to)
+    ? (s.basis === 'filed' ? 'filed ' : 'published ') + (s.from || '…') + '–' + (s.to || '…')
+    : 'any date';
+  return [where, kinds, dates].filter(Boolean).join(' · ');
+}
+
+function emptyHTML() {
+  return '<div class="set-empty">'
+    + '<p class="t-title-s set-empty-h">Nothing in the index you searched came back close to this.</p>'
+    + '<p class="t-body set-empty-p">You searched ' + esc(searchedWhat()) + '. '
+    + 'Change the sentence above or the search settings, then search again.</p>'
+    + '<button class="btn btn-secondary" type="button" data-empty-settings>Open search settings</button>'
+    + '</div>';
+}
+
 function render(data, mode = 'replace') {
   const list = $('#setList');
   if (!list) return;
@@ -614,10 +649,18 @@ function render(data, mode = 'replace') {
        family, tabular-nums and the figure weight and inherits the size, which
        is what an inline numeral in running text wants. */
     const fig = v => '<span class="fig">' + v + '</span>';
-    title.innerHTML = m === 1
-      ? fig(1) + ' patent matched'
+    title.innerHTML = m === 0 ? 'No patents matched'
+      : m === 1 ? fig(1) + ' patent matched'
       : (m === n ? fig(m) + ' patents matched'
                  : fig(m) + ' matched · ' + fig(n) + ' shown');
+  }
+  /* A SEARCH THAT MATCHED NOTHING, and only a search: a grouping branch is
+     cut from a set that had patents, so it can never be empty this way. The
+     results bar is told, because it withholds Search until something
+     changes. */
+  if (data.matched === 0 && mode !== 'append') {
+    landIn(list, emptyHTML());
+    window.dispatchEvent(new CustomEvent('terrain:empty'));
   }
 }
 
@@ -884,6 +927,12 @@ export function init(ctx) {
      — a row with no patent that then rode out in the CSV. */
   onActivate(document, '.set-star[data-star]', el =>
     toggleStar(el.getAttribute('data-star'), el));
+
+  /* THE WAY BACK, from the empty state: the settings it names, opened. */
+  onActivate(document, '[data-empty-settings]', () => {
+    const btn = $('#resSettings');
+    if (btn) btn.click();
+  });
 
   onActivate(document, '.ver-switch [data-ver-kind]', el =>
     setVersion(el.getAttribute('data-ver-of'), el.getAttribute('data-ver-kind')));

@@ -796,7 +796,10 @@ the one that loses the founder's place.
 ### 7.2 · When the search finds nothing
 
 **This is not a failure and may not be drawn as one.** The engine was asked a question and answered
-it. The founder gets an answer, which is that nothing in the index they searched came back close.
+it. **It answers with nothing when nothing clears its relevance floor**, rather than with the fifty
+least distant patents in the index: a nonsense sentence or one from another field would otherwise
+return a full list that looks exactly like a good set, which is the one result a founder cannot
+tell is wrong. The founder gets an answer, which is that nothing in the index they searched came back close.
 
 **It is a result about the search, and the copy says so.** This is the one place in the product where
 `brief.md` §1's test bites hardest: an empty result read as *nobody is here* is the exact claim

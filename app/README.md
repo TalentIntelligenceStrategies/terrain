@@ -34,7 +34,9 @@ question 3 — and it is the only control in the product whose destination the d
 
 `?fail=search,record` arms named ports to refuse and `?fail=all` arms every one, which is how
 `platform.md` §7.1's *a failure is the size of the region that was waiting* gets checked rather than
-asserted. `?slow=3` multiplies every latency. `?theme=light|dark` pins appearance.
+asserted. `?empty` makes every search match nothing, standing in for the engine's relevance floor, so
+§7.2's empty state can be seen. `?slow=3` multiplies every latency. `?theme=light|dark` pins
+appearance.
 
 **`corpus/` is the default when it is there, and `?data=demo` forces the demo.** The flag used to
 run the other way — the corpus lived behind `?data=real` — and the cost of that only became obvious

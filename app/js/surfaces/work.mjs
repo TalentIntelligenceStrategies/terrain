@@ -260,7 +260,31 @@ export function init(ctx) {
     if (field && field.value.trim() === RAN) fold(true);
   });
 
+  /* ── SEARCH IS WITHHELD AFTER A SEARCH THAT MATCHED NOTHING · §7.2 ──────
+     The same sentence under the same settings returns nothing twice, so the
+     button says why it is shut — aria-disabled, so it keeps its tab stop and
+     its reason (10-button.css) — and the two ways to change the search, the
+     sentence and the settings, are the two ways to open it again. */
+  const WHY = 'Change the sentence or the search settings to search again.';
+  const withhold = on => {
+    if (!btn) return;
+    const status = $('#resStatus');
+    if (on) {
+      btn.setAttribute('aria-disabled', 'true');
+      btn.setAttribute('aria-describedby', 'resStatus');
+      if (status) status.textContent = WHY;
+    } else if (btn.getAttribute('aria-disabled') === 'true') {
+      btn.removeAttribute('aria-disabled');
+      btn.removeAttribute('aria-describedby');
+      if (status && status.textContent === WHY) status.textContent = '';
+    }
+  };
+  window.addEventListener('terrain:empty', () => withhold(true));
+  window.addEventListener('terrain:settings', () => withhold(false));
+  if (field) field.addEventListener('input', () => withhold(false));
+
   onActivate(document, '#resSearch', async b => {
+    if (b.getAttribute('aria-disabled') === 'true') return;
     const text = field && field.value.trim();
     if (!text) return;
     btnWait(b, true);
