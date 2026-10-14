@@ -17,14 +17,14 @@
 
 ## 1 · The shape
 
-**Two surfaces on the path, one collection surface, four destinations off the chrome.**
+**Two surfaces on the path, one collection surface, three destinations off the chrome.**
 
 | | |
 | --- | --- |
 | **The home surface** | Where the founder picks a technology field and describes an idea. One composer, one button. |
 | **The results surface** | The patents the search found down the left, with their drawings; whichever one you open on the right, with all of them. |
 | **The starred set** | Everything the founder starred, read as a whole, and where it leaves as a file. |
-| *Destinations* | Points · Account settings · Plan & billing · Help. Reached from the masthead, returned from in place. |
+| *Destinations* | Account settings · Plan & billing · Help. Reached from the masthead, returned from in place. |
 
 A **surface** is somewhere the product happens. A **destination** is somewhere the founder steps off
 to and comes back from. No moment routes through a destination, and nothing opens a new tab or a new
@@ -34,7 +34,7 @@ window anywhere in the product.
 44/56 — 634 for the list, 806 for the record — and neither half survives a 260px rail: the result
 list stops being readable under 340px, and the record's eleven-field list wraps its values onto
 second lines under about 600px, which a 260px rail would put it under at any window below ~1465.
-Everything a rail would have carried is in the 48px bar: the project switcher, the points balance, the
+Everything a rail would have carried is in the 48px bar: the project switcher, the starred count, the
 appearance control, the account menu.
 
 ---
@@ -53,8 +53,7 @@ narrowing questions, the priced gate and the staged build were four ports and ar
 founder who has to approve a paraphrase of their own sentence before anything happens is a founder
 being asked to do the product's job.
 
-**The commitment is pressing Search, and the points are charged there.** Approval used to be the
-commitment; with no approval, the button is it.
+**The commitment is pressing Search.** Nothing is approved before it and nothing is charged by it.
 
 **Moment 4 is a moment and not a destination.** The starred set is where the product ends, so it is
 on the path — reached from the count beside the results, and returned from to exactly the same list.
@@ -97,8 +96,8 @@ founder may do — search, or change what they typed — are one decision, so th
 field and the button share an edge of one panel. Search settings sit at the leading edge of the same
 row.
 
-**The button is labelled `Search`, not an arrow.** It spends points and it is the commitment; a glyph
-that means *send* understates both.
+**The button is labelled `Search`, not an arrow.** It is the commitment; a glyph that means *send*
+understates it.
 
 ### 3.3 · The search settings
 
@@ -169,7 +168,7 @@ change anything is worse than a missing one. **It stays folded**, §4.2: one lin
 2. **New search** — Lucide `zoom-in`, not `plus`. The plus said *new* and said nothing about what a
    new one is.
 3. **The project switcher** — the projects list, most recent first.
-4. **The points balance** — a button, and the link to the points page.
+4. **The starred count** — a button, and the way to the starred set (§5.2).
 5. **The appearance control** — three states: light, dark, system. **It may not be demoted into the
    account menu at any width.** A second control over the same value elsewhere is not a demotion; a
    move is.
@@ -321,7 +320,7 @@ patent — focus moves to its row and stays on the list, so the next press is on
 keys move between rows without opening them, `]` and `[` step the open record, and `s` stars the
 patent under focus, or the open record's. **They are scoped**, because a single-character shortcut
 that fires anywhere fires into speech input and into a founder who never knew it existed: never in a
-text field, never with a modifier, never over a menu, a popover or a drawing. Help lists them, §6.4.
+text field, never with a modifier, never over a menu, a popover or a drawing. Help lists them, §6.3.
 
 **A score the engine did not return is omitted, not barred**, and it is the one field on the row
 where `null` does not mean the skeleton. A bar says *this value exists and we decline to print it*;
@@ -333,7 +332,7 @@ returns no score on any record, so the row prints none; `?data=demo` is where th
 **Arranging the list is a request.** Twenty rows arrive at a time and *Show more* asks the engine for
 the next twenty, so the client never holds the whole result set. A sort re-sequences it at the engine
 and hands back a different first page; a facet asks which patents answer to it. Both wait, both can
-fail, and §7.1 says what the founder sees when they do. Neither spends points — §6.1.
+fail, and §7.1 says what the founder sees when they do.
 
 **Sorting and filtering change what the founder is looking at, never what was searched.** The set is
 fixed by the sentence and the search settings; everything on this bar rearranges it. A founder who
@@ -658,53 +657,17 @@ says it once.
 the same CSV and Markdown for the patent being read, and it reads the **row** rather than the record
 — which is why the row carries `number` and `where` it does not draw. One record must not grow a
 third opinion about what a row contains, and a file of one must not carry different fields from the
-set it came out of. It keeps §7.2's inversion: the bytes are already in the client, so the file is
-handed over first and the ledger is called after.
+set it came out of. Neither file reaches the engine: every byte is already in the client.
 
 ---
 
 ## 6 · The destinations
 
-Four pages behind the chrome. Each has a back control that names **whatever the founder was doing
+Three pages behind the chrome. Each has a back control that names **whatever the founder was doing
 before they stepped off** — not a fixed label, and not a ring of account pages: a destination reached
 from a destination does not become the way out.
 
-### 6.1 · Points
-
-What was spent, never what is paid. A balance ring against the quarter's allowance, a card per run
-type, share bars, a per-day column chart with day / week / month grain, and a list of recent runs.
-
-| Run | Costs |
-| --- | --- |
-| Search | 40 |
-| Find similar | 4 |
-| Export | 8 |
-
-**These three are the run types that exist, and the figures beside them are illustrative.** Pricing is
-unsettled — `brief.md` §6 carries it — and the plan screen prints `XXX` rather than guessing. What
-this table is for is the *shape*: which acts move the meter at all.
-
-**The open question the pivot forces is Export.** A charge on taking your own data out sits awkwardly
-against `brief.md` §1's argument that the file is the founder's data leaving rather than our document
-arriving — and the counter-argument is that an export is a run somebody pays Innovue for. It is
-listed here because it is charged in `app/` today, not because it is settled.
-
-**Changing the grain changes the resolution and never the denominator.** 91 days is 13 whole weeks and
-three months, so all three grains divide it exactly and every one sums to the same total. There is
-nothing to reconcile.
-
-**Retrieving spends points; reading does not.** Opening a record, reading its drawings, sorting,
-filtering, starring and paging are all free, however many times — they rearrange or reveal a set that
-was already paid for. What costs is asking the engine a new question.
-
-**A search is charged when it is submitted, not when it lands**, and returned if it does not land —
-§7.2 carries the rule. The commitment used to be an approval step and the charge sat there; with the
-approval gone, the button is the commitment.
-
-*Find similar is charged, and §12 records that this is the one cost the interface has never agreed
-with itself about.*
-
-### 6.2 · Account settings
+### 6.1 · Account settings
 
 **Your details** — name, email, password. Name and email are inline edits: the bar becomes a field,
 Enter saves, Escape cancels, and the field opens *empty* rather than seeded, because there is no text
@@ -725,29 +688,23 @@ the ghost one. Neither is primary — the primary action of a settings card is n
 from its own surface (§5.2), where the founder can see the rows they are taking. An *Export my data*
 row in settings hands over a file nobody looked at first.
 
-### 6.3 · Plan & billing
+### 6.2 · Plan & billing
 
-What is paid, never what was spent. The plan's allowance and price, the payment method, a receipt
-switch, and a list of invoices. One sentence links to the points page for the other half.
+What is paid. The plan and its price, the payment method, a receipt switch, and a list of invoices.
 
-**The plan name is a bar and the price is `XXX`.** An allowance and a price are *figures*, and every
-figure here is illustrative. A tier *name* is a taxonomy, and inventing Pro / Team / Enterprise would
+**The plan name is a bar and the price is `XXX`.** A price is a *figure*, and every figure here is
+illustrative. A tier *name* is a taxonomy, and inventing Pro / Team / Enterprise would
 put a tier structure nobody has decided into a public artifact. `XXX` means nobody has chosen a price
 yet; a bar would mean a real value exists and is not ours to print. The two must not be conflated.
 
-**The balance in that sentence is read live, every visit, from the same `points` port the masthead and
-the points page read.** Searching spends points between visits, and a plan page that disagreed with
-the masthead beside it would be two answers to the one question the page is opened to ask. Until the
-read lands it is a bar, never a zero.
-
-### 6.4 · Help
+### 6.3 · Help
 
 **Contact-first**, which is honest about a product with no documentation site. A topic menu, a message
 field, and a sent state that *replaces* the form rather than sitting under it — a composer left on
 screen beneath a confirmation invites a second send of the same message.
 
-Then **Common questions**, in four groups — your search and your results, points and your plan,
-working by keyboard, your starred set. The keyboard group is the one place the shortcuts are written
+Then **Common questions**, in three groups — your search and your results, working by keyboard, your
+starred set. The keyboard group is the one place the shortcuts are written
 down, and it says where they work as well as what they do. **Every answer says something no other surface states.** A Help page that hoovered
 up labels would be restating the interface.
 
@@ -755,7 +712,7 @@ up labels would be restating the interface.
 *no patents matched* has to be able to find out, on this page, that they searched an index over a
 vocabulary at a moment — and that this is not the same as nothing existing.
 
-The most important of the twelve is the one that says Terrain **cannot** tell a founder whether they
+The most important of the eleven is the one that says Terrain **cannot** tell a founder whether they
 are free to file. That is a legal question and it is for a patent attorney.
 
 ---
@@ -787,13 +744,12 @@ without it.
 
 | What was waiting | What the founder sees | What survives |
 |---|---|---|
-| The search | The search bar, with the sentence still in it and Search offered again | The sentence, the settings, and the points, which are returned |
+| The search | The search bar, with the sentence still in it and Search offered again | The sentence and the settings |
 | The grouping, while the list stands | The panel alone, naming what did not arrive | The list, the record, everything else |
 | The record | The column, with the row still selected | The list, and the starred set |
 | A drawing | The figure frame, naming the one that did not load | The record, the strip, and the other figures |
 | Find similar, a sort, a filter | The list as it was, and a sentence saying the order did not change | The order that was on screen, and every star |
 | A page of results | The rows already loaded, untouched, and *Show more* offered again | Everything on screen |
-| An export | **The file, which was already written** — see §5.2 | The starred set, and the balance if the ledger refused |
 | A save | The field, still open, still holding the value | What was typed |
 | A message | The form, not the sent state | The message and the topic |
 
@@ -807,44 +763,15 @@ the list below is from the last search, rather than only to the live region.
 moves everything below it twice — once for the wait and once for the failure — and the second jump is
 the one that loses the founder's place.
 
-### 7.2 · Points
-
-**The meter may not retain points for work that did not finish.**
-
-**The charge lands on submit and is returned if the run does not.** Pressing Search is the last point
-the founder could have chosen not to spend, so it is where the commitment belongs, and a balance that
-moved only on success would leave the most expensive act in the product invisible while it ran. The
-refund is what makes charging early honest rather than optimistic.
-
-**Export inverts it, and the inversion is deliberate.** The file is built entirely in the client from
-rows the founder already has, so it is handed over *first* and the ledger is called after. A refused
-ledger call must not cost the founder their download — the bytes were never the engine's to withhold.
-
-**The failure copy says the balance moved back**, because a founder watching a meter drop and a search
-fail will otherwise assume they paid for nothing.
-
-### 7.3 · When there are not enough points
-
-**The arithmetic happens before the button, not after it.** A founder is never invited to run a search
-that cannot be paid for, and the block is stated on the composer rather than discovered by pressing.
-
-**The button is withheld, not hidden.** The sentence stays editable and the reason sits with the
-control that is refusing, in the composer's status line. What it names is the shortfall and when the
-allowance returns.
-
-**The meter carries its own zero.** A balance at nothing is a state, not an absence, and it reads as
-one rather than as a figure that failed to load.
-
-### 7.4 · When the search finds nothing
+### 7.2 · When the search finds nothing
 
 **This is not a failure and may not be drawn as one.** The engine was asked a question and answered
-it. The founder gets the answer they paid for, which is that nothing in the index they searched came
-back close — and a run that finished keeps its charge under §7.2, however unwelcome the answer is.
+it. The founder gets an answer, which is that nothing in the index they searched came back close.
 
 **It is a result about the search, and the copy says so.** This is the one place in the product where
 `brief.md` §1's test bites hardest: an empty result read as *nobody is here* is the exact claim
-Terrain may never make, and a founder who has just spent points is the reader most likely to make it
-for us. So the sentence names **what was searched** — the jurisdictions, the kinds, the date range —
+Terrain may never make, and a founder who has just searched is the reader most likely to make it for
+us. So the sentence names **what was searched** — the jurisdictions, the kinds, the date range —
 offers the way back to the search bar, and stops. No *open ground*, no *whitespace*, no count of how
 close it came.
 
@@ -854,10 +781,9 @@ jurisdiction and got nothing has a next move; one who is told only that nothing 
 **The sentence stays in the bar.** Nothing about a search that returned nothing makes what the founder
 typed wrong, and clearing the field would say it did.
 
-**Search is withheld until something changes.** §7.3 blocks a run that cannot be paid for; this blocks
-one that cannot come back different. The same sentence under the same settings returns nothing twice
-and costs what the first one cost — so the button states why it is shut, and the two ways to change
-the search, the sentence and the settings, are the two ways to open it.
+**Search is withheld until something changes.** The same sentence under the same settings returns
+nothing twice, so the button states why it is shut, and the two ways to change the search, the
+sentence and the settings, are the two ways to open it.
 
 ---
 
@@ -980,11 +906,6 @@ knowing before changing one.*
   destination is a stand-in**, a single IPtech sign-in on every record. That is the one place in the
   product where a control points somewhere the data did not choose, and it is written into §4.5 so
   it cannot be mistaken for a decision.
-- **What *Find similar* costs**, and whether *Export* should cost anything. §6.1 prices both; the
-  interface has never agreed with itself about the first. *Free* follows from *retrieving spends
-  points and reading does not* — it re-sequences a set already paid for and adds no patent to it.
-  *Charged* follows from it being a real engine call, which a sort is not; but it makes the star a
-  metered control, and nothing on the results surface says so.
 - **Pricing.** The allowance, the price, and the tier structure are all open, which is why the plan
   screen prints `XXX` and a bar rather than guessing.
 - **Where does the starred set live when the founder has two machines?** It survives a new search and
@@ -1000,10 +921,9 @@ knowing before changing one.*
 - **Does their engine return legal status at all?** Terrain no longer prints it (§13, item R1-17),
   so this is no longer a display question. It still bears on family merge and name unification, which
   §9 takes as hygiene.
-- **Does Terrain meter by points at all?** The leaning is no: their build ships without points, and
-  §13 records points as dropped (R1-20). What replaces them as the plan's limit, if anything, is the
-  open part. §6.1 and §7.2 describe points as `app/` still has them, and they are rewritten when
-  `app/` removes them.
+- **What limits a plan, if anything?** Terrain does not meter by points (§13, R1-20) and nothing on
+  any surface counts what a search costs. Whether a plan caps searches, seats or nothing at all is
+  open, and it is the same question as pricing.
 
 ---
 

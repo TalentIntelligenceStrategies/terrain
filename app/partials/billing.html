@@ -25,36 +25,18 @@
           </div>
           <div class="card-body">
             <span class="sk sk-h-title w-lg" style="margin-bottom:var(--s-12)"></span>
-            <!-- THE ALLOWANCE IS STATIC MARKUP, and the points page reads the
-                 same number from the `points` port. One source should feed
-                 both — design/components.md §4 question 12. Until it does,
-                 the markup carries the agreed figure: the published branch is
-                 HTML, and view-source on a public URL shows the markup, so a
-                 number nobody agreed to is published even when invisible. -->
-            <div class="plan-fig">
-              <span class="fig fig-l" id="billAllow">6000</span>
-              <span class="t-body" style="color:var(--text-2)">points a quarter</span>
-            </div>
             <!-- THE SHAPE IS THE PRICED ONE and destinations.mjs collapses it when
                  there is no price. ports.mjs keeps 'XXX' distinct from null on
                  purpose -- "nobody has chosen one yet" is a different refusal
                  from "this exists and we decline to print it" -- so the
                  sentinel is right and stays in the contract. What it may not do
                  is reach the founder verbatim: XXX is a developer's token, not
-                 English, and it renders at 26px beside a real 6000. -->
-            <div class="plan-fig" style="margin-top:var(--s-8)">
+                 English, and it renders at 26px. -->
+            <div class="plan-fig">
               <span class="fig fig-l" id="billPrice">$XXX</span>
               <span class="fig fig-l fig-sub" id="billPer">/ quarter</span>
             </div>
             <p class="t-body" style="margin:var(--s-12) 0 0;color:var(--text-2)">Renews <span class="sk sk-h-body w-md" style="display:inline-block;vertical-align:-2px"></span></p>
-            <!-- A SENTENCE WITH A CONTROL AT THE END, not a card and not a
-                 meter. What was spent is the other page's whole subject; a
-                 second reading of it here would be the two screens platform.md §6.1
-                 separated growing back together. -->
-            <p class="plan-spent">
-              <span><span class="fig" id="billLeft"><span class="sk sk-h-body w-xs" style="display:inline-block;vertical-align:-2px"></span></span> points left this quarter.</span>
-              <button class="btn btn-ghost" type="button" data-go="usage">See what you spent</button>
-            </p>
           </div>
         </section>
 

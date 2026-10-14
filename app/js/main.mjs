@@ -67,7 +67,7 @@ async function resolveEngine() {
 }
 /* ════════════════════════════════════════════════════════════════════════ */
 
-const PARTIALS = ['masthead', 'home', 'surface', 'starred', 'points',
+const PARTIALS = ['masthead', 'home', 'surface', 'starred',
                   'account', 'billing', 'help', 'parked'];
 
 /* THE SURFACES. Each is imported for its side-effect-free init(); the order
@@ -117,13 +117,13 @@ async function loadPartials() {
    the arriving one — a leaving view is painted ABOVE the arriving one whenever
    it comes later in the DOM, which the work surface does and the home surface
    does not. */
-/* WHERE `Back` GOES, and it is a memory rather than a constant. The four
+/* WHERE `Back` GOES, and it is a memory rather than a constant. The three
    destinations are stepped off to and come back from (platform.md §6), so
    `Back` has to return to whichever surface the founder was on — the results
    if they have searched, the home surface if they have not. A hard-coded
    target sends a founder who never searched to an empty result list and calls
    it going back. */
-const DESTINATIONS = ['usage', 'account', 'billing'];
+const DESTINATIONS = ['account', 'billing'];
 let lastSurface = 'home';
 
 /* which hash lands on which view. A hash that names a STATE rather than a
@@ -139,7 +139,6 @@ function viewForHash(h) {
      right now that the map is gone. */
   if (h === 'work' || h.startsWith('set')) return 'work';
   if (h.startsWith('starred')) return 'starred';
-  if (h.startsWith('usage')) return 'usage';
   if (h.startsWith('account')) return 'account';
   if (h.startsWith('billing')) return 'billing';
   if (h.startsWith('help')) return 'help';

@@ -328,7 +328,7 @@ export function recordFor(id) {
   };
 }
 
-/* ── projects, points, account, billing ─────────────────────────────────── */
+/* ── projects, account, billing ─────────────────────────────────────────── */
 /* NOTHING IS INVENTED. Every other project is a bar — naming a roster would be
    inventing six projects a founder never made, which is a different act from
    printing the one the surface already shows. */
@@ -336,29 +336,6 @@ export const PROJECTS = [
   { id: 'proj-1', label: DEMO_PROJECT, current: true },
   { id: 'proj-2', label: null }, { id: 'proj-3', label: null },
   { id: 'proj-4', label: null }, { id: 'proj-5', label: null },
-];
-
-export const POINTS = { balance: 180, allowance: 400 };
-
-/* THREE RUN TYPES, BECAUSE THERE ARE THREE. platform.md §6.1 lists what
-   exists; `Rebuild after a scope change` was the gate's re-run and `Watch` is
-   filing alerts, which §10 item 1 says are not built. A price beside a run the
-   product cannot perform is the same defect as a switch for a capability that
-   does not exist — design-language.md §7 — and this one also lands on the page
-   whose whole job is telling the founder what they are paying for.
-
-   THE FIGURES ARE ILLUSTRATIVE and pricing is unsettled; §6.1 says so. */
-export const RUN_TYPES = [
-  { id: 'search', label: 'New search', cost: 40 },
-  { id: 'rerank', label: 'Find similar', cost: 4 },
-  { id: 'export', label: 'Export', cost: 8 },
-];
-
-export const RUNS = [
-  { id: 'r1', kind: 'New search', project: null, when: '2026-09-14', cost: 40 },
-  { id: 'r2', kind: 'Find similar', project: null, when: '2026-09-14', cost: 4 },
-  { id: 'r3', kind: 'Export', project: null, when: '2026-09-12', cost: 8 },
-  { id: 'r4', kind: 'New search', project: null, when: '2026-09-09', cost: 40 },
 ];
 
 /* THE FOUNDER'S OWN NAME AND ADDRESS ARE BARS TOO. §8 does not bend for them:

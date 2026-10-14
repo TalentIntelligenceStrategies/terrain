@@ -53,7 +53,7 @@
    would say something is off without saying what. */
 .btn:disabled{opacity:.45;cursor:default}
 .btn:disabled:active{transform:none}
-/* ── a control that is unavailable FOR A REASON · platform.md §7.3 ─────────
+/* ── a control that is unavailable FOR A REASON · platform.md §7.2 ─────────
    SAME PIXELS, DIFFERENT TREE. `disabled` removes a button from the tab order,
    so a keyboard or screen-reader user can never land on it and never meets the
    sentence explaining why it will not act -- they hear the reason announced

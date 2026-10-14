@@ -1,6 +1,6 @@
 /* surfaces/masthead — the 48px bar. platform.md §4.1.
  *
- * The brand, the project switcher, the points meter, the profile menu. It sits
+ * The brand, the project switcher, the starred count, the profile menu. It sits
  * OUTSIDE the stage and persists across every view swap — platform.md §2:
  * the four moments run over two surfaces on the path, not four screens, and a
  * bar that reloaded between them would say otherwise.
@@ -118,24 +118,6 @@ export function init(ctx) {
     }
   });
 
-  /* ── the meter · what is left ───────────────────────────────────────────
-     A FIGURE AND A WORD, and here it is only the figure. This wrote a
-     --meter-fill percentage that NO STYLESHEET READ, under a comment claiming
-     the meter narrowed as the balance fell. It never narrowed: #meter is a
-     button holding a glyph and a number, with no track and no fill.
-
-     THE WRITE GOES RATHER THAN A READER ARRIVING. Adding one means adding a
-     bar to the masthead, and the points page already draws that length —
-     36-destination.css reasons at the plan-spent line that it is deliberately
-     not a second meter. The number and its unit carry the balance here, which
-     is a figure and a word and never a colour alone. */
-  ENGINE.points().then(res => {
-    if (!res.ok) return;
-    const { balance, allowance } = res.data;
-    const n = $('#meterN');
-    if (n) n.textContent = String(balance);
-  });
-
   /* ── the starred count · what the founder has built ─────────────────────
      onChange FIRES IMMEDIATELY ON SUBSCRIBE, which is the whole reason this is
      one call and not a call plus a paint. The masthead mounts before any
@@ -185,9 +167,9 @@ export function init(ctx) {
 
   /* ── navigation out of the bar ────────────────────────────────────────
      `data-go`, WHICH IS WHAT THE MARKUP SAYS. This listened for `data-goto`
-     and nothing in the tree has ever carried that attribute, so all six
-     navigation controls were inert: Account settings, Plan & billing, Help,
-     the points meter, New search, and billing's link to the points page.
+     and nothing in the tree has ever carried that attribute, so every
+     navigation control was inert: Account settings, Plan & billing, Help and
+     New search among them.
 
      Nothing failed. The delegated listener matched no element, so the click
      fell through to the document and the page sat exactly where it was — which

@@ -1,31 +1,18 @@
 /* 36 · the destinations — platform.md §6
  *
- * EXTRACTED from the prototype. Points, account, plan and billing, help. The
+ * EXTRACTED from the prototype. Account, plan and billing, help. The
  * settings row, the switch and the page furniture; .fld and .dc are already
  * primitives at 12 and 13 and are not repeated here. */
 
-/* ── the points page's margins · 2026-09-11 ──────────────────────────────
+/* ── the destination pages' margins ──────────────────────────────────────
    .grid CARRIES NO INLINE PADDING because on the working screen the column
-   supplies it (--s-16 both sides, on .panecol). The points page puts .grid inside
-   .main, which is inset:0 with no padding, so nothing supplied it and the
-   cards ran EDGE TO EDGE at 1440 — while the "Points" title above them sat
-   32px in. Not merely tight: two edges 32px apart on one page, which is the
-   thing §7 means by aligning to a shared edge.
-
-   Both are --s-16 now, the step the right pane already uses, so the title and
-   the cards share one edge and this page reads at the same rhythm as the
-   surface it is reached from. Scoped to .view-page rather than added to .grid,
-   because .grid inside the working screen's right column would be padded twice.
-
-   NOT CAPPED, and that was checked rather than assumed. A max-width would
-   have been the obvious tidy: at 1440 these cards are ~1376px against ~988px
-   for the same components on the working screen. But the width is carrying
-   content here — "Points over time" is a 91-column chart at ~15px a band,
-   already at the ceiling where a column stops being readable, and "What
-   spent them" is a five-tile KPI row that wraps if the page narrows. The
-   card that DOES look stretched is the balance hero, whose donut sits ~1300px
-   from the figure it describes; that is a layout question inside one card and
-   capping the page is the wrong instrument for it. */
+   supplies it (--s-16 both sides, on .panecol). A destination puts .grid
+   inside .main, which is inset:0 with no padding, so nothing supplied it and
+   the cards ran edge to edge while the title above them sat 32px in: two
+   edges 32px apart on one page, which is the thing §7 means by aligning to a
+   shared edge. Both are --s-16, the step the right pane already uses. Scoped
+   to .view-page rather than added to .grid, because .grid inside the working
+   screen's right column would be padded twice. */
 .view-page .page-head{padding:var(--s-16)}
 .view-page .grid{padding-inline:var(--s-16)}
 .page-head-lines{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-8)}
@@ -36,41 +23,6 @@
    space — 24 + the line + its own 32 comes back to the same 72. */
 .grid{padding:0 0 var(--s-24);display:flex;flex-direction:column;gap:var(--s-16)}
 
-/* ═══ the points page · platform.md §6.1 ═════════════════════════════════
-   The one surface that is account-level rather than project-level, and the
-   only one reached from the chrome instead of from the flow. Restyled from
-   IPtech's account → point usage screen (`32`); the reading of that screen,
-   including the two denominator faults this page exists not to repeat, is in
-   visual-reference/iptech-screenshots-identified/README.md §2.20.
-
-   Every rule below reads a semantic token, so §10's dark set arrives free.  */
-
-/* ── the balance · a meter, not a two-slice pie ──
-   dataviz is explicit that a single ratio against a limit is a METER on a
-   same-ramp track, and that a two-slice pie is an anti-pattern. So the ring is
-   an arc on a track — --surface-sunken behind, --mark-1 in front, one rounded
-   cap — and not two slices of a circle. IPtech's own ring is this shape; what
-   it is not is a pie, and the distinction decides the markup. */
-/* ── the meter's track and fill · MOVED HERE FROM 33-chart.css, 2026-09-23 ──
-   These two rules were written for the share tables and the points meter
-   borrowed them. The share tables are gone with the analysis surfaces and this
-   is now their only caller, so they live beside it rather than in a sheet that
-   no longer exists. A track and a fill are not a chart; they are a length. */
-.bar-t{flex:1;height:8px;border-radius:var(--r-chip);
-       background:var(--surface-sunken);overflow:hidden}
-.bar-f{display:block;height:100%;border-radius:var(--r-chip)}
-/* FOUR EMPTY BLOCKS STOOD HERE. A media query with nothing in it does not
-   fail — it sits in the stylesheet looking like responsive behaviour, which is
-   the shape §7 warns about for a container query whose subject was never
-   built. The reasons they carried are kept where they are still true: nothing
-   on a run row selects anything, so it takes no hover cue. */
-
-/* ── the runs list · the drill-down grammar, §7's "a list, not a page" ──
-   Dense rows on 1px dividers. Every identity is a bar: the date, the project,
-   and a rebuild's change label — that label exists only because of what the
-   founder typed, which is §8's options rule. The run type and the cost are
-   real, because one is Terrain's vocabulary and the other is a figure. */
-/* .ur WAS REPLACED BY .run-row and nothing emits it any more. */
 .info{position:relative;flex:0 0 auto;display:flex}
 .info-btn{color:var(--text-3);display:flex;padding:var(--s-4);border-radius:var(--r-chip);
           transition:color var(--dur-1) var(--ease),background var(--dur-1) var(--ease),
@@ -105,8 +57,8 @@
 
 /* ── the three account destinations · page furniture ─────────────────────
    Everything else on these pages is existing vocabulary: .card, .card-head,
-   .card-body, .grid, .page-head, .pg-back, .foot, .run-row, .status, .chip,
-   .btn, .lm, .seg. These are the four rules that had nowhere to live.   */
+   .card-body, .grid, .page-head, .pg-back, .foot, .chip, .btn, .lm, .seg.
+   These are the rules that had nowhere to live.   */
 /* a card whose body is a row list wants no bottom padding of its own —
    .pref:last-child already ends on the card's own edge. */
 .card-body.pref-body{padding-bottom:var(--s-8)}
@@ -118,12 +70,6 @@
 /* the plan's headline pair: what you get over what you pay, on one line,
    with the denominator receding per §4's secondary-figure rule. */
 .plan-fig{display:flex;align-items:baseline;gap:var(--s-8);flex-wrap:wrap}
-/* the standing line back to the points page. A sentence with a control at
-   the end of it, not a card — what was spent is the other page's subject
-   and this is a pointer to it, deliberately not a second meter. */
-.plan-spent{display:flex;align-items:center;gap:var(--s-8);flex-wrap:wrap;
-    border-top:1px solid var(--border);margin-top:var(--s-16);
-    padding-top:var(--s-14);font-size:13px;color:var(--text-2)}
 /* the help answers. A description list, because each is a question and its
    answer — and no <details>, WHICH IS NOW A NARROWER CLAIM THAN IT WAS. It
    read "three one-line answers that collapse are three controls hiding two
@@ -156,11 +102,7 @@
 .hlp-qa dd{margin:var(--s-4) 0 0;
     color:var(--text-2);max-width:68ch;text-wrap:pretty}
 
-/* ── the three pages take a measure, and the points page does not ────────
-   THE DIFFERENCE IS WHAT IS ON THEM. A points page card holds a chart, and
-   a chart wants every pixel of the column — §4's measure rule is about
-   reading, and nothing on that page is read across its full width.
-
+/* ── the three pages take a measure ───────────────────────────────────────
    These three are label-and-control rows, a form and three paragraphs. At
    1280px an uncapped settings row puts the label at one edge and its switch
    at the other with 1,100px of nothing between them, and the eye has to
@@ -232,35 +174,3 @@
      definition is the darker neutral carried by a selected row. */
   .set-row[data-open] .set-ctl:hover{background:var(--track-pressed)}
 }
-
-/* ── the points page's own three components ───────────────────────────────
-   These had NO CSS AT ALL. The page's markup was rewritten when the analysis
-   layer left and the stylesheet was not: `.bal-*`, `.rt-*`, `.uc-*` and
-   `.ur-*` styled a richer points page that is no longer rendered, and
-   `.us-meter`, `.runs` and `.run-row` are rendered and were styled by nothing.
-   The meter came out as a 70px black block because `.bar-t` is a <span>,
-   inline boxes ignore `height`, and `.bar-f`'s `height:100%` then resolved
-   against auto.
-
-   NOTHING CAUGHT IT. check-app.py gates the CSS a component reads; it has no
-   way to know a component reads none. The only check that finds this is
-   opening the page, which is why platform.md's verification says to. */
-
-.us-meter{display:flex;flex-direction:column;gap:var(--s-12)}
-/* block, so the 8px height in the shared rule applies at all */
-.us-meter .bar-t{display:block;width:100%;flex:none}
-.us-meter p{margin:0;color:var(--text-2)}
-
-.runs{display:flex;flex-direction:column}
-/* THE COST COLUMN IS FIXED AND END-ALIGNED, which is the whole reason this is
-   a grid and not a flex row: a column of run costs the founder is scanning for
-   the expensive one has to line up, and tabular figures in a flex row do not.
-   The project column takes the slack because it is the only one that can be a
-   skeleton bar of unknown width. */
-.run-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto var(--s-40);
-         align-items:center;gap:var(--s-12);
-         padding:var(--s-10) 0;border-top:1px solid var(--border)}
-.run-row:first-child{border-top:0}
-.run-kind{color:var(--text-1)}
-.run-row > .fig{color:var(--text-3)}
-.run-cost{text-align:end;color:var(--text-1)}

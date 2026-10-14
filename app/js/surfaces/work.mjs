@@ -205,8 +205,7 @@ export function init(ctx) {
   onActivate(document, '#modeImages', () => setMode('images'));
 
   /* SEARCHING AGAIN FROM THE RESULTS. The bar is the same component as the
-     home surface's and it charges the same way -- this is a run, not a filter,
-     and platform.md §7.2's refund rule applies to it identically. */
+     home surface's -- this is a run, not a filter. */
   const field = $('#resQuery'), btn = $('#resSearch');
   if (field && btn) {
     field.addEventListener('keydown', e => {
@@ -248,9 +247,7 @@ export function init(ctx) {
        already announces it once. */
     const status = $('#resStatus');
     if (!res.ok) {
-      const why = res.code === 'INSUFFICIENT'
-        ? 'There are not enough points for this search. Nothing was charged. Points renew at the start of each quarter.'
-        : 'The search did not run. Nothing was charged. The results below are from your last search.';
+      const why = 'The search did not run. The results below are from your last search.';
       if (status) status.textContent = why;
       say('work', why);
       return;

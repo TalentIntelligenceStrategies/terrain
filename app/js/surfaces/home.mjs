@@ -2,8 +2,7 @@
  *
  * THE FOUNDER TYPES A SENTENCE AND PRESSES SEARCH, and the set comes back.
  * There is no step between the sentence and the result: no narrowing round,
- * no criteria to approve, no staged build. The commitment is the button, and
- * the points are charged there.
+ * no criteria to approve, no staged build. The commitment is the button.
  *
  * THE GLYPH MAP IS CHROME, NOT DATA. The engine returns an icon KEY per field;
  * which 24px path that key draws is ours, and Lucide's. An engine that sent
@@ -139,10 +138,6 @@ export function init(ctx) {
   onActivate(document, '#fields .field[aria-pressed]', el =>
     selectField(el.getAttribute('data-field')));
 
-  /* THE SEARCH IS THE CHARGE. platform.md §7.2's rule is unchanged and its
-     location is: the approval used to be the commitment and there is no
-     approval now, so the commitment is this button. A run that did not finish
-     is still not a run that was charged. */
   onActivate(document, '#cmpSearch', async btn => {
     const field = $('#cmpMain textarea');
     const text = field && field.value.trim();
@@ -163,15 +158,11 @@ export function init(ctx) {
       const status = $('#cmpStatus');
       if (status) {
         /* EACH SAYS WHAT TO DO NEXT, not only what happened. */
-        status.textContent = res.code === 'INSUFFICIENT'
-          ? 'There are not enough points for this search. Nothing was charged. Points renew at the start of each quarter.'
-          : 'The search did not run. Nothing was charged. Press Search to try again.';
+        status.textContent = 'The search did not run. Press Search to try again.';
       }
-      say('home', status ? status.textContent : 'The search did not run. Nothing was charged.');
+      say('home', status ? status.textContent : 'The search did not run.');
       return;
     }
-    const meter = $('#meterN');
-    if (meter && res.data.balance != null) meter.textContent = String(res.data.balance);
 
     /* THE RESULTS BAR KEEPS THE SENTENCE. Both partials are in the DOM from
        boot, so this is a write rather than a handoff — and the founder arriving

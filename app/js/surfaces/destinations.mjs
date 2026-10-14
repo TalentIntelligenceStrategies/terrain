@@ -1,6 +1,6 @@
-/* surfaces/destinations — points, account, plan & billing, help. platform.md §6.
+/* surfaces/destinations — account, plan & billing, help. platform.md §6.
  *
- * FOUR PAGES, ONE FILE, because they are one KIND of surface: account-level,
+ * THREE PAGES, ONE FILE, because they are one KIND of surface: account-level,
  * reached from the chrome rather than from the flow, each with a Back control
  * that goes where the founder came from rather than to a fixed place.
  *
@@ -19,12 +19,10 @@
  * there would claim a price exists and is being kept from them.
  */
 import { $, esc } from '../core/dom.mjs';
-import { waitOn, landIn, failWith } from '../core/wait.mjs';
+import { failWith } from '../core/wait.mjs';
 import { say } from '../core/live-region.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
-import { wait as pause } from '../core/timers.mjs';
-import { bar, sk, pgCard, numCell } from '../core/primitives.mjs';
 import { popover } from '../core/popover.mjs';
 import { reduced } from '../core/motion.mjs';
 import { focusQuietly } from '../core/focus.mjs';
@@ -32,59 +30,8 @@ import { push, drop } from '../core/esc-stack.mjs';
 
 let ENGINE = null;
 const done = new Set();
-const FLOOR = 240;
 
-async function region(el, port, draw, sayWhat) {
-  if (!el) return;
-  waitOn(el, 280);
-  const [res] = await Promise.all([ENGINE[port](), pause(FLOOR)]);
-  if (res.ok) { landIn(el, draw(res.data)); return res.data; }
-  failWith(el, sayWhat, res.retryable
-    ? () => region(el, port, draw, sayWhat) : null);
-  say('destination', sayWhat);
-  return null;
-}
-
-/* ── points · platform.md §6.1 ────────────────────────────────────────────
-   A METER, NOT A TWO-SLICE PIE. A pie of two values is a bar that takes four
-   times the room and is harder to read; and the question here is "how much is
-   left", which is a length. */
-function pointsHTML(d) {
-  const pct = (d.balance / d.allowance * 100).toFixed(1);
-  return pgCard('What is left', '',
-    '<div class="us-meter"><span class="bar-t"><span class="bar-f" style="width:'
-    + pct + '%;background:var(--text-1)"></span></span>'
-    + '<p class="t-body"><b><span class="fig-l">' + d.balance + '</span></b> of '
-    /* QUARTER, NOT MONTH. This said month while help.html said "at the start of
-     each quarter" and the delete confirm said "points left in this quarter".
-     The payload carries no period, so the word is a copy decision rather than
-     data — and one surface disagreeing with two is the kind of thing nothing
-     checks. platform.md §6.1 says quarter. */
-    + '<span class="fig-m">' + d.allowance + '</span> points left this quarter.</p></div>')
-  + pgCard('What a run costs', '',
-    '<table class="tbl"><thead><tr><th class="t-micro">Run</th>'
-    + '<th class="t-micro num">Points</th></tr></thead><tbody>'
-    + d.runTypes.map(r =>
-        '<tr><td>' + esc(r.label) + '</td>'
-        + '<td class="num"><span class="fig-m">' + r.cost + '</span></td></tr>').join('')
-    + '</tbody></table>');
-}
-
-function runsHTML(d) {
-  if (!d.runs.length) {
-    /* AN EMPTY LIST IS NOT A LIST OF BARS. It says what fills it and offers
-       the act that does. */
-    return '<p class="empty t-body">No runs yet. Your first search will appear here.</p>';
-  }
-  return '<div class="runs">' + d.runs.map(r =>
-    '<div class="run-row"><span class="run-kind">' + esc(r.kind) + '</span>'
-    + (r.project == null ? bar('w-md') : '<span>' + esc(r.project) + '</span>')
-    + '<span class="fig fig-s">' + esc(r.when) + '</span>'
-    + '<span class="fig fig-s run-cost">' + r.cost + '</span></div>').join('')
-    + '</div>';
-}
-
-/* ── account · platform.md §6.2 ─────────────────────────────────────────── */
+/* ── account · platform.md §6.1 ─────────────────────────────────────────── */
 function accountFill(d) {
   const set = (idBar, idSaid, value) => {
     const b = $(idBar), s = $(idSaid);
@@ -96,7 +43,7 @@ function accountFill(d) {
   set('#acctMailBar', '#acctMailSaid', d.email);
 }
 
-/* ── billing · platform.md §6.3 ─────────────────────────────────────────── */
+/* ── billing · platform.md §6.2 ─────────────────────────────────────────── */
 function billingFill(d, invoices) {
   /* 'XXX' IS A SENTINEL, NOT A STRING TO PRINT. ports.mjs holds it distinct
      from null deliberately, and that distinction is worth keeping — but the
@@ -128,7 +75,7 @@ function billingFill(d, invoices) {
     + '</tbody></table>';
 }
 
-/* ── account · the delete disclosure · platform.md §6.2 ────────────────
+/* ── account · the delete disclosure · platform.md §6.1 ────────────────
    THE TOGGLE IS LIVE AND THE ACT IS NOT, and that split is §8's rather than a
    half-measure. What cannot run is deleting an account there is no model of,
    and #acctDelYes carries §8's treatment for exactly that. Opening a panel to
@@ -174,7 +121,7 @@ function delClose() {
 export function init(ctx) {
   ENGINE = ctx.engine;
 
-  /* the delete disclosure · §6.2 */
+  /* the delete disclosure · §6.1 */
   onActivate(document, '#acctDelBtn', () => {
     const el = $('#acctDel');
     if (el && el.hasAttribute('data-open')) delClose(); else delOpen();
@@ -200,31 +147,7 @@ export function init(ctx) {
   });
 
   ctx.onRoute(async view => {
-    /* THE BALANCE ON THE PLAN PAGE IS READ EVERY VISIT, above the once-only
-       guard. It shipped as a literal 0 in the markup and nothing ever wrote
-       it, so the plan page said "0 points left" beside a masthead saying 140
-       — two answers to the one question a founder opens that page to ask.
-       It reads the same `points` port the points page and the masthead read,
-       and it is re-read because searching spends points between visits. A
-       failed read leaves the bar standing rather than inventing a number. */
-    if (view === 'billing') {
-      const left = $('#billLeft');
-      const pts = left && await ENGINE.points();
-      if (left && pts && pts.ok && pts.data.balance != null)
-        left.textContent = String(pts.data.balance);
-    }
     if (done.has(view)) return;
-
-    if (view === 'usage') {
-      done.add(view);
-      const grid = $('#usGrid');
-      await region(grid, 'points', pointsHTML, 'Your points did not load.');
-      const runs = await ENGINE.runs();
-      if (runs.ok && grid) {
-        grid.insertAdjacentHTML('beforeend',
-          pgCard('Recent runs', '', runsHTML(runs.data)));
-      }
-    }
 
     if (view === 'account') {
       done.add(view);
@@ -343,13 +266,12 @@ export function init(ctx) {
     'My results look wrong',
     'A patent record is wrong',
     'Taking my starred patents out',
-    'Points and what things cost',
     'My account or plan',
     'Something else',
   ];
   const tmenu = $('#helpTopicMenu'), tbtn = $('#helpTopicBtn'), tlabel = $('#helpTopicLabel');
   if (tmenu && tbtn) {
-    /* menuitemradio, because it is one of seven rather than seven switches */
+    /* menuitemradio, because it is one of six rather than six switches */
     tmenu.innerHTML = TOPICS.map((t, i) =>
       '<button class="lm-item" type="button" role="menuitemradio" data-topic="' + esc(t) + '"'
       + ' aria-checked="' + (i === 0 ? 'true' : 'false') + '">' + esc(t) + '</button>').join('');

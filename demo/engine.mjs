@@ -52,10 +52,9 @@ const wait = ms => new Promise(r => setTimeout(r, ms * SLOW));
 const DELAY = {
   fields: 180, coverage: 340, search: 900,
   patents: 700, patentsPage: 520, sort: 420, facets: 420, rerank: 1100, cluster: 1400,
-  export: 500,
   record: 600,
   projects: 240,
-  points: 300, runs: 380, account: 300, saveAccount: 800,
+  account: 300, saveAccount: 800,
   billing: 340, invoices: 380, sendSupport: 900,
 };
 
@@ -105,8 +104,7 @@ const cmp = {
 
 export const DemoEngine = {
   /* ── the conversation and the gate ───────────────────────────────────── */
-  /* ONE CALL. The old flow charged at the gate; there is no gate, so this is
-     where the ledger moves. A failed search returns the balance untouched. */
+  /* ONE CALL, from the sentence to the set. */
   /* THE SETTINGS ARE HONOURED, NOT ACKNOWLEDGED. `count` is the one the
      founder can check against what is on screen — they picked 10 and ten rows
      came back — so the fake engine answers it rather than echoing it. The
@@ -121,7 +119,6 @@ export const DemoEngine = {
     return respond('search', {
       ...page(ORDER, shown),
       elapsedMs: 240,
-      balance: D.POINTS.balance - 2,
     });
   },
 
@@ -213,22 +210,10 @@ export const DemoEngine = {
     return respond('record', D.recordFor(id));
   },
 
-  /* THE LEDGER, and nothing else. It is handed the ids so a real engine can
-     record WHAT left, and it answers with the balance. It never returns the
-     rows: the client already has them, and a second copy of the columns here
-     would be a second place the export's shape is decided. */
-  export: async ({ ids = [] } = {}) =>
-    respond('export', { balance: D.POINTS.balance - 8 }),
-
   /* ── projects ────────────────────────────────────────────────────────── */
   projects: async () => respond('projects', { projects: D.PROJECTS }),
 
   /* ── the destinations ────────────────────────────────────────────────── */
-  points: async () => respond('points', {
-    balance: D.POINTS.balance, allowance: D.POINTS.allowance,
-    runTypes: D.RUN_TYPES,
-  }),
-  runs: async () => respond('runs', { runs: D.RUNS }),
   account: async () => respond('account', D.ACCOUNT),
   /* ONE FIELD PER CALL, KEYED BY THE CONTROL THAT EDITED IT — acctName or
      acctMail — and the answer is the account as it now stands. */

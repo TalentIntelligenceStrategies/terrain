@@ -26,7 +26,7 @@ underneath it at the same time, so Escape closes the drawing and leaves you in t
 branches you pick stay as chips above the list after it closes. Star a row and *Find similar*
 appears; the count beside the results leads to the starred set, which is where the export lives.
 
-*Open in IPtech* at the record's **foot** — `platform.md` §6.3's *the way out is at the end of the
+*Open in IPtech* at the record's **foot** — `platform.md` §4.5's *the way out is at the end of the
 reading, not the top of it* — **points at a sign-in page and always the same one.** It is a
 stand-in for a per-patent source URL the engine does not return yet — `design/components.md` §4
 question 3 — and it is the only control in the product whose destination the data did not choose.
@@ -230,7 +230,7 @@ offers no button to tab to.
 
 ## The engine seam
 
-`js/ports.mjs` is `design/components.md` §1 made executable: **19 named ports**, one per
+`js/ports.mjs` is `design/components.md` §1 made executable: **16 named ports**, one per
 data-bearing row, plus a typedef for each shape and a `NullEngine` that implements every port by
 refusing.
 

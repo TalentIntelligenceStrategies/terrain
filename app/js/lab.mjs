@@ -31,16 +31,16 @@ const acts = {
     waitOn(el, 48);
   },
   land1() { landIn($('#h1'), 'Content tall enough to measure.<br>A second line.<br>A third.'); },
-  fail1() { failIn($('#h1'), failHTML('That did not run. Nothing was charged.', { label: 'Try again' })); },
+  fail1() { failIn($('#h1'), failHTML('That did not run.', { label: 'Try again' })); },
   fail2() {
     const el = $('#h2');
     waitOn(el, 48);
-    T.after(500, () => failIn(el, failHTML('That did not run. Nothing was charged.', { label: 'Try again' })));
+    T.after(500, () => failIn(el, failHTML('That did not run.', { label: 'Try again' })));
   },
 
   /* ── 3 · the identical re-announce ── */
   say() {
-    sayFailure('That did not run. Nothing was charged.');
+    sayFailure('That did not run.');
     const n = (+$('#sayN').dataset.n || 0) + 1;
     $('#sayN').dataset.n = n;
     $('#sayN').textContent = `announced ${n} time${n === 1 ? '' : 's'}`;
@@ -100,7 +100,7 @@ $('#h8').append(loader(), loader(), loader());
 
 /* ── 9 · with and without a way forward ── */
 $('#h9').innerHTML =
-  failHTML('That did not run. Nothing was charged.', { label: 'Try again' }) +
+  failHTML('That did not run.', { label: 'Try again' }) +
   failHTML('No corpus can be built from these criteria. Change the scope and search again.');
 
 /* ══ the headless verdicts ══════════════════════════════════════════════════
@@ -146,7 +146,7 @@ const CHECKS = [
 
   async function identicalSecondFailureAnnouncesAgain() {
     const r = $('#alertRegion');
-    const msg = 'That did not run. Nothing was charged.';
+    const msg = 'That did not run.';
     sayFailure(msg);
     const first = r.textContent;
     sayFailure(msg);                       // the same string again

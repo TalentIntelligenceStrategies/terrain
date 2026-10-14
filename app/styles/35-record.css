@@ -300,7 +300,7 @@
    deferred. The pane below supersedes it -- the same five fields are five of
    its eleven, rendered by the same function -- so the row is a single control
    again and the <dl> moved into the pane. Nothing it showed became
-   unreachable; platform.md §6.3's "the row expands in place" is amended with this pass.
+   unreachable; platform.md §4.5's "the row expands in place" is amended with this pass.
 
    IT IS STILL A <dl>, because that is what it is.                        */
 /* ══ TWO PAIRS A ROW, NOT ONE · 2026-09-26 ══════════════════════════════

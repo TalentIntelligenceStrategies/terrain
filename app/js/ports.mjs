@@ -36,10 +36,6 @@
  *   Guessing wrong in either direction wastes the founder's time or hides
  *   their way out.
  *
- *   A RUN THAT DID NOT FINISH IS NOT A RUN THAT WAS CHARGED. The meter returns
- *   to where it was, so the ledger behind these has to distinguish an
- *   attempted run from a completed one.
- *
  * ═══ null MEANS RENDER THE SKELETON BAR ═════════════════════════════════════
  * AND IT IS THE ONLY THING THAT MEANS THAT. components.md already uses this
  * device once, for the map's holders; here it is a system rule. Four things
@@ -79,7 +75,6 @@ export const CODE = {
   NO_CORPUS:     'NO_CORPUS',      // permanent for these criteria. NOT retryable
   NOT_FOUND:     'NOT_FOUND',      // permanent. NOT retryable
   UNSUPPORTED:   'UNSUPPORTED',    // permanent. NOT retryable
-  INSUFFICIENT:  'INSUFFICIENT',   // not enough points. NOT retryable — a different route
 };
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -218,8 +213,7 @@ export const PORTS = [
 
   /* the search. ONE CALL, NO STEP BETWEEN THE SENTENCE AND THE SET — the
      reading, the five questions, the gate and the build stream were four
-     ports and are now none. CHARGED HERE: the approval used to be the
-     commitment, and with no approval the commitment is pressing Search. */
+     ports and are now none. */
   /* `settings` is the search-settings panel's whole state and it travels as
      one object, not as six loose arguments: the panel is the only thing that
      builds it and the engine is the only thing that reads it, so a shape
@@ -233,7 +227,7 @@ export const PORTS = [
 
   /* the list. ALL THREE ARE REQUESTS — twenty rows arrive at a time, so the
      client never holds the whole set and sorting what it has would sort a page
-     rather than a result. Both wait, both can fail, neither spends points. */
+     rather than a result. Each waits and each can fail. */
   'patents',         // → PatentSet
   'patentsPage',     // Show more
   'sort',            // {sort:'relevance'|'newest'|'oldest'} → PatentSet
@@ -256,14 +250,10 @@ export const PORTS = [
      would make the panel offer a retry that cannot help. */
   'cluster',         // → {head, spines:[{label, leaves:[{id,label,n}]}]}
 
-  /* THE EXPORT PORT IS THE LEDGER, NOT THE FILE. Every field that goes into a
-     CSV or a Markdown list is already in the client — core/starred.mjs holds
-     the rows the list port returned — so the bytes are built there and this
-     call exists because a run costs points and the balance has to move. It
-     follows that a refusal here must NOT cost the founder their download:
-     surfaces/starred.mjs hands the file over first and updates the balance
-     only if this answered. */
-  'export',          // {ids:[id], format:'csv'|'md'} → {balance}
+  /* THERE IS NO EXPORT PORT. Every field that goes into a CSV or a Markdown
+     list is already in the client — core/starred.mjs holds the rows the list
+     port returned — so the file is built there and taking the set out never
+     reaches the engine. */
 
   /* the record */
   'record',          // → Record
@@ -272,8 +262,6 @@ export const PORTS = [
   'projects',
 
   /* the destinations */
-  'points',
-  'runs',
   'account',
   'saveAccount',
   'billing',

@@ -16,8 +16,7 @@
  * Every field in it is already in the client — core/starred.mjs holds the rows
  * the port returned. A round trip would add a wait, a failure path and a
  * second place the columns are decided, to produce bytes we are already
- * holding. The `export` port exists for the LEDGER (a run costs points) and
- * not for the content.
+ * holding. Nothing about taking the set out reaches the engine at all.
  */
 import { $ } from '../core/dom.mjs';
 import { onActivate } from '../core/delegate.mjs';
@@ -165,8 +164,6 @@ function filename(ext) {
 
 /* ── the surface ──────────────────────────────────────────────────────────── */
 
-let ENGINE = null;
-
 function rowHTML(r, n) {
   /* THE SAME SKELETON RULE AS THE LIST. `null` means render the bar and it is
      the only thing that means that; a collection that printed real names where
@@ -303,9 +300,7 @@ function paint(rows) {
   }
 }
 
-export function init(ctx) {
-  ENGINE = ctx.engine;
-
+export function init() {
   Starred.onChange(paint);
 
   /* ══ A ROW LEAVES, AND THE ROWS BELOW CLOSE THE GAP · §6 ══════════════
@@ -346,26 +341,15 @@ export function init(ctx) {
       : 'Nothing starred.'));
   });
 
-  const take = (ext, mime, build) => async () => {
+  const take = (ext, mime, build) => () => {
     const rows = Starred.list();
     if (!rows.length) return;
-    /* THE PORT IS TOLD, AND THE FILE DOES NOT WAIT ON IT. Exporting is a run
-       and the ledger has to see it; the bytes are already here. A failed
-       ledger call must not cost the founder their download, so the file is
-       handed over either way and the balance is only updated if the engine
-       answered. */
     /* THE HEADING IS THE SEARCH THAT RAN, NOT THE FIELD'S CONTENTS. This
        read #resQuery directly, which is the sentence CURRENTLY in the box —
        and the founder can edit it without pressing Search, so a file could be
        headed by a query that never ran against the set inside it. The store
        holds the ran query for exactly this reason (core/starred.mjs). */
     build(rows, Starred.search());
-    let res = null;
-    try { res = await ENGINE.export({ ids: Starred.ids(), format: ext }); } catch (e) { res = null; }
-    if (res && res.ok && res.data && res.data.balance != null) {
-      const meter = $('#meterN');
-      if (meter) meter.textContent = String(res.data.balance);
-    }
   };
 
   onActivate(document, '#starCsv', take('csv', 'text/csv;charset=utf-8',
@@ -386,14 +370,8 @@ export function init(ctx) {
      THE RECORD'S CLOSING BLOCK OFFERS THIS AND THIS FILE ANSWERS IT, because
      COLUMNS is declared here and one record must not grow a third opinion
      about what a row contains. It reads the ROW rather than the record, for
-     the reason rowFor() carries.
-
-     THE INVERSION IS THE SET'S. platform.md §7.2: the file is built entirely
-     in the client from a row the founder already has, so it is handed over
-     first and the ledger is called after — a refused ledger call must not cost
-     them their download, because the bytes were never the engine's to
-     withhold. */
-  onActivate(document, '[data-rec-export]', async el => {
+     the reason rowFor() carries. */
+  onActivate(document, '[data-rec-export]', el => {
     const end = el.closest('.rec-end');
     const id = end && end.getAttribute('data-pn');
     const base = id && rowFor(id);
@@ -417,12 +395,6 @@ export function init(ctx) {
       download(filename('md'), 'text/markdown;charset=utf-8',
         toMarkdown([row], Starred.search()));
       say('destination', 'This record downloaded as a Markdown list.');
-    }
-    let res = null;
-    try { res = await ENGINE.export({ ids: [id], format: ext }); } catch (e) { res = null; }
-    if (res && res.ok && res.data && res.data.balance != null) {
-      const meter = $('#meterN');
-      if (meter) meter.textContent = String(res.data.balance);
     }
   });
 }

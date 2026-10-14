@@ -377,7 +377,7 @@
                 justify-content:center;gap:var(--s-2);
                 background:var(--surface-sunken);color:var(--text-2)}
 
-/* ── the list's sort and filter · platform.md §6.3 ──────────────────────
+/* ── the list's sort and filter · platform.md §4.3 ──────────────────────
    MENUS RATHER THAN SEGMENTED CONTROLS, and that is a width decision before
    it is a semantic one. A .seg lays every option out at once and costs their
    full width; three sort options and five facets do not fit a 420px column,

@@ -1,4 +1,4 @@
-/* surfaces/list — the patent list. platform.md §6.3.
+/* surfaces/list — the patent list. platform.md §4.3.
  *
  * ═══ FOUR FIELDS PER ROW AND NO MORE ═══════════════════════════════════════
  * The skim, the holder, the year, the status. The score sits WITH THE TITLE
@@ -58,7 +58,7 @@ let loaded = false;
 const FLOOR = 240;
 
 /* ── the star ─────────────────────────────────────────────────────────────
-   platform.md §6.3. A star is an ANCHOR, not a bookmark: it says "this one is
+   platform.md §5.1. A star is an ANCHOR, not a bookmark: it says "this one is
    close to what I meant", and it does TWO things — platform.md §7.1. It adds
    the patent to the founder's starred set, which is theirs and has a surface of
    its own; and it makes `Find similar` available, which re-orders the whole

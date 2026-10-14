@@ -241,7 +241,7 @@ function setFig(i, announce) {
   }
   /* THE ALT IS THE FIGURE NUMBER AND NOTHING ELSE. Nothing in this product can
      describe what a technical drawing shows, and an invented description would
-     be a reading of the record — which §6.6 keeps out. The number is a fact. */
+     be a reading of the record — which platform.md §4.5 keeps out. The number is a fact. */
   el.img.alt = 'Figure ' + f.n;
   if (el.cap) el.cap.textContent = 'Figure ' + f.n + ' of ' + FIGS.length;
   /* A NEW FIGURE RESETS THE VIEW. Carrying a 4x zoom and a 90° rotation onto

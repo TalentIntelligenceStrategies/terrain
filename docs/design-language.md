@@ -216,10 +216,8 @@ the first already carries would be colour doing a word's job, which §2 puts the
 `--state-up` / `--state-down` are aliases, not new hues. **They apply only to delta pills**, never to
 a series, a score or a status.
 
-*§3.5 was chart layers and is retired. It survived the analysis layer on one claim — that the points
-page still drew a column per day — and the points page draws no chart: it renders a meter bar and a
-table. `--chart-series` went with the section, and §3.5's number is not reused, for the reason §3
-opens with.*
+*§3.5 was chart layers and is retired, and `--chart-series` went with it. Terrain draws no chart, and
+§3.5's number is not reused, for the reason §3 opens with.*
 
 ### 3.6 · Skeleton
 
@@ -688,12 +686,6 @@ code that hides a node after its exit has to know when the exit ends. A hide wai
 
 `app/` is the component reference: every rule below is implemented in `app/styles/`, with the
 reasoning in its own comments. This section carries what a reader cannot get from the CSS.
-
-**The balance bar is neutral, and that is a rule rather than a leftover.** A coloured meter says
-*this direction is the good one*; a neutral one says *this is how much*. The points page is the one
-place an inventor watches a number move, and it is the last place the interface should imply that
-moving is success. It fills with `--text-1` on a `--surface-sunken` track and takes no hue at all.
-*This argument outlived the charts it was written for, which is why it is here rather than in §3.*
 
 **The shell.** TIS submark at the leading edge of a **48px top masthead**, inlined with
 `fill="currentColor"` so it inverts for free. Content on `--ground`, cards on `--surface`, one working

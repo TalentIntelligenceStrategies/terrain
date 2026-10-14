@@ -217,7 +217,7 @@ three by a script that refuses:
 
 **Three permitted places and no more**: discrete states, direction of change, and the accent. No
 gradient, no decorative colour, no tinted background. *Chart layers were a fourth and left with the
-charts entirely. There is no chart token and no chart: the points page draws a meter bar and a table.*
+charts entirely. There is no chart token and no chart.*
 
 **Colour encodes direction, never desirability.** No green-means-good anywhere: a status chip says
 *Live* or *Expired* and neither is good news, because whether a live patent is a problem depends

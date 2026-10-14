@@ -240,7 +240,7 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
   survives is the part that was doing the work — two columns, no sidebar, and nothing floating that
   does not have to. A top masthead, not a sidebar.
 - **The search runs on submit.** No narrowing questions, no criteria to approve, no build stream. The
-  commitment is pressing Search, and the points are charged there.
+  commitment is pressing Search.
 - **Starring is the one thing the founder curates by hand**, and it is per-row. *This is a narrowed
   successor, not a reversal*: the old rule banned per-row selection because checkboxes redrew a
   chart and the set feeding the charts had to stay whole. There are no charts, and the starred set
@@ -338,12 +338,9 @@ uses it. That is the marketing system's accent, recorded upstream; it does not e
 ## 6 · Open
 
 - **The name.** Clearance is outstanding. Nothing is locked until it clears.
-- **Pricing** — the allowance, the price and the tier structure. The plan screen prints `XXX` and a
-  bar rather than guessing, and [`platform.md`](platform.md) §10 item 1 records why this cannot be settled
-  before filing alerts are.
-- **What a search costs, and what an export costs.** [`platform.md`](platform.md) §6.1 lists the run
-  types that exist and prints illustrative figures against them. Pricing is unsettled, and the one
-  question the pivot forces is whether taking your own data out should move the meter at all.
+- **Pricing** — the price, the tier structure, and whether a plan limits anything at all. Terrain
+  does not meter by points. The plan screen prints `XXX` and a bar rather than guessing, and
+  [`platform.md`](platform.md) §10 item 1 records why this cannot be settled before filing alerts are.
 - **Whether Terrain sits on Innovue's semantic search surface or beside it.**
 
 ---
