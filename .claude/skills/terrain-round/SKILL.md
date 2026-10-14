@@ -193,16 +193,37 @@ For every changed component, every state it defines (default, hover, focus, sele
 loading, failed, empty), both themes, and the phone layout where it differs:
 
 ```sh
-node .claude/skills/terrain-round/scripts/measure.mjs --round N --component <name> \
-  --selector '<css>' --state results [--interact hover|focus] [--theme dark] \
-  [--target theirs --overlay <ID>]
+node .claude/skills/terrain-round/scripts/measure.mjs --round N --spec measure/spec-ours.json
+node .claude/skills/terrain-round/scripts/measure.mjs --round N --spec measure/spec-theirs.json
+node .claude/skills/terrain-round/scripts/measure.mjs --round N --render     # tables again, offline
 ```
 
-Measure `app/` items on `--target ours`, and overlay items on `--target theirs --overlay <ID>`.
-A value printed as `(no token)` on an overlay item is a finding: either the overlay should use a
-token, or their build lacks one, and the card should say which.
+1. **Write the specs first**, in `round-N/measure/`: one job per page (target, state, overlay),
+   each listing every component measured on it and the steps that reach each sub-state (a menu
+   open, a chip off, a scroll). The header of `measure.mjs` has the format. A job measures in both
+   themes by switching in place, so **a state on their build costs one search, not one per
+   component per theme**.
+2. **Their build is measured with the combined patch** (`"overlay": "all"`, leaving out the
+   unchosen variant with `"without"`), because that is what ships. Measure each variant of an
+   A/B item in its own job while the user has not picked.
+3. **`app/` is measured on `?data=demo`.** The package leaves the building; the demo's fictional
+   rows keep real titles and holders out of it. Only what the demo cannot draw (drawings) uses the
+   corpus, cropped tight with `"pad"`.
+4. **A step that stands in for a person must act like one.** `fill` skips a control's own key
+   handlers; use `click` then `type` where the control listens for typing. A state that carries
+   into the next theme (text typed, a chip turned off) needs its own job per theme or an `undo`.
+5. **A state that cannot be caught on demand is simulated from their own markup**, read from the
+   DOM dump (a drawing still loading: their shimmer element, the image without `is-loaded`), and
+   its name says `simulated`.
+6. Read `GRID.md`, look at every PNG, and read every `(no token)`. Colours are resolved as a token
+   at an opacity first (`--border at 60%`), so what is left is a raw value: on an overlay item it
+   is a finding against the overlay; on their own markup it is a note for the card.
 
-Checkpoint: the component × state grid, with any state that could not be reached.
+Files are named `<target>-<component>-<state>-<theme>[-<interact>]`, and each table keeps its raw
+values in a `.json` beside it, so a change to how values are named is a `--render`, not a re-run.
+
+Checkpoint: the component × state grid, with any state that could not be reached, and what the
+measuring found that changes an item.
 
 ## Phase 6 · package
 
