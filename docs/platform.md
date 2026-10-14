@@ -1056,7 +1056,7 @@ replaced when the next round opens.
 | R1-37 | Record | The number and title scroll away → a compact sticky header with both once the title leaves view | Overlay; `app/` too |
 | R1-38 | Type scale | Eight sizes between 11 and 18 px, and the record's `H2` lighter than its `H3`s → their sizes merged into fewer steps, each at least 1.25 times the next, heading weight descending with level. **Flags the type scale** (§13.1); `app/` takes the reduced scale | Overlay; `app/` too |
 | R1-39 | Patent-number search | *Patent not found* blames a TW prefix for a US number and drops the frame → the number echoed, the accepted forms named, *Search this as text* offered, both columns and the field control kept | Overlay |
-| R1-40 | Every control | Targets under 24 px: Grant / Application, the patent number link, the version → at least 24 px, a pseudo-element extending the hit area where the visible size stays | Overlay; `app/` too |
+| R1-40 | Every control | Targets under 24 px: Grant / Application, the patent number link, the version → at least 24 px, a pseudo-element extending the hit area where the visible size stays | Overlay |
 | R1-41 | Results, record | No `<h1>` on results, and the record's title is not a heading → one `<h1>` per view, the record title a heading | Markup only |
 | R1-42 | Result card | A single-version record shows one filled *Grant* pill that reads as a pressed segment → plain text when only one version exists | Overlay; `app/` too |
 | R1-44 | Error states | *Make sure the backend API is running.* reaches the founder → removed; the sentence says what the founder can do | Wording |
