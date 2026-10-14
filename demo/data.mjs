@@ -312,7 +312,7 @@ export function recordFor(id, version) {
     ...DEMO_RECORD,
     ...(app ? { number: app.number, kind: 'Application' } : {}),
     title: DEMO_TITLE,
-    filed: '2017', published: app ? '2018' : '2019',
+    filed: '2017', published: app ? app.published : DEMO_VERSIONS[0].published,
     abstract: DEMO_ABSTRACT, claims: DEMO_CLAIMS,
     /* SIX DRAWINGS, EVERY ONE OF THEM WITHHELD — `src: null`, which is what
        null means in every other field here. This is §8's contract, not a fifth

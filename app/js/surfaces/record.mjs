@@ -75,19 +75,33 @@ const WIDE = { inventors: 1, ipc: 1 };
    specified, claimed as built, and never built: 35-record.css said "the
    five-field handoff is now a SUBSET VIEW of this same record through the
    same field function", and FIELDS has exactly one caller rendering all
-   eleven. That renderer was deleted and the comment outlived it.
+   ten. That renderer was deleted and the comment outlived it.
 
-   A PROJECTION, NOT A SECOND FIELD LIST. Printing five of the eleven again at
-   the foot of a record that has just printed all eleven is the repetition the
+   A PROJECTION, NOT A SECOND FIELD LIST. Printing the record's fields again
+   at the foot of a record that has just printed them is the repetition the
    Classes rule already refuses — "a reader who sees it twice looks for the
-   difference". Its stated purpose is "for the founder taking this to
-   counsel", which is something that LEAVES, so it is the clipboard's payload
-   rather than a block on screen.
+   difference". Its purpose is the founder taking this to counsel, which is
+   something that LEAVES, so it is the clipboard's payload rather than a block
+   on screen.
 
-   THE TITLE IS THE SIXTH AND THE CONTROL IS WHY. A citation without a title
-   is a handoff line, not a citation. .rec-end-note names all six where the
-   founder is standing when they press it. */
-const HANDOFF = ['number', 'title', 'holder', 'where', 'ipcMain'];
+   WHAT A CITATION NEEDS, AND IN THE ORDER IT IS READ (platform.md §4.5): the
+   number WITH its kind code, because B2 and A1 are two documents; the title;
+   the holder; the publication date, because a citation without a date does
+   not say which state of the document it means; and the jurisdiction as its
+   two-letter code. The main class left: it is a filing fact, not part of how
+   a patent is cited. .rec-end-note names all five. */
+const HANDOFF = ['number', 'title', 'holder', 'published', 'where'];
+
+/* THE JURISDICTION AS A CODE. The number's own office prefix is the code the
+   document was published under, so it wins; the name is mapped only when the
+   number is withheld. An unknown name is printed as given rather than
+   guessed. */
+const CODES = { 'United States': 'US', China: 'CN', Taiwan: 'TW', Europe: 'EP',
+  Korea: 'KR', Japan: 'JP', Australia: 'AU', WIPO: 'WO' };
+function whereCode(rec) {
+  const m = /^([A-Z]{2})/.exec(String(rec.number || ''));
+  return m ? m[1] : (CODES[rec.where] || rec.where);
+}
 
 const FIELDS = [
   ['number', 'Number'], ['appno', 'Application'], ['kind', 'Kind'],
@@ -130,7 +144,7 @@ function valueHTML(rec, key) {
    separator. Same rule the export's own cell() follows one surface over. */
 function citation(rec) {
   return HANDOFF
-    .map(k => rec[k])
+    .map(k => (k === 'where' ? whereCode(rec) : rec[k]))
     .filter(v => v != null && v !== '')
     .join(' · ');
 }

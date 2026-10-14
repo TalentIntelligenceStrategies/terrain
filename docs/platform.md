@@ -493,10 +493,12 @@ class, the same `data-star`, the same delegated handler, because the thing that 
 every star in the document and never knew where they were.
 
 It renders **the record, not an opinion about the record**: ten identifiers, the abstract, the
-claim set as published, and the drawings. **The four-field handoff — number, holder, where, IPC — is
-the citation's payload rather than a block on screen**, with the title as a fifth because a citation
-without one is a handoff line and not a citation. Printing four of the ten again at the foot of a
-record that has just printed all ten is the repetition the *Classes* rule refuses one
+claim set as published, and the drawings. **The citation is the payload of *Copy citation* rather
+than a block on screen**: the number with its kind code, the title, the holder, the publication date
+and the jurisdiction as its code — `US 12,984,117 B2 · Foldable quadrotor airframe … · ACME Group ·
+2019-05-10 · US`, the demo's fictional patent. The kind code because a grant and its application are two documents, the date because a
+citation without one does not say which state of the document it means. Printing them again at the
+foot of a record that has just printed all ten is the repetition the *Classes* rule refuses one
 paragraph down; its stated purpose is the founder taking this to counsel, which is something that
 **leaves**. The closing block names the fields it copies where the founder is standing when they
 press it — **behind one control rather than standing open**. It was a paragraph under the row, read
