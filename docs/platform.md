@@ -122,8 +122,10 @@ is a set of options.
 
 ### 3.4 · The coverage block
 
-What is in the corpus, and when each source was last taken in. One sentence of scope over a table of
-sources and dates.
+What is in the corpus, and when each source was last taken in. One sentence of scope over a table
+with **one row per source and two dates**: the latest grant and the latest application taken in. An
+index that is not covered prints a dash rather than a bar, because it is absent rather than
+withheld.
 
 **It states what it does not know.** The number of documents per index is not on this surface,
 because the engine does not emit it — and a coverage table that quietly omits its own size is a

@@ -368,17 +368,13 @@ export const COVERAGE_SCOPE =
   'Terrain currently covers semiconductor devices filed in the United States, '
   + 'China, Taiwan, Europe, Korea and Japan.';
 
+/* ONE ROW PER SOURCE: the latest grant and the latest application taken in.
+   Illustrative, like every figure here. */
 export const COVERAGE = [
-  { source: 'United States · granted',      updated: '2026-09-17' },
-  { source: 'United States · applications', updated: '2026-09-17' },
-  { source: 'China · granted',              updated: '2026-09-15' },
-  { source: 'China · applications',         updated: '2026-09-15' },
-  { source: 'Taiwan · granted',             updated: '2026-09-16' },
-  { source: 'Taiwan · applications',        updated: '2026-09-16' },
-  { source: 'Europe · granted',             updated: '2026-09-11' },
-  { source: 'Europe · applications',        updated: '2026-09-11' },
-  { source: 'Korea · granted',              updated: '2026-09-09' },
-  { source: 'Korea · applications',         updated: '2026-09-09' },
-  { source: 'Japan · granted',              updated: '2026-09-18' },
-  { source: 'Japan · applications',         updated: '2026-09-18' },
+  { source: 'United States', grant: '2026-09-15', application: '2026-09-17' },
+  { source: 'China',         grant: '2026-09-15', application: '2026-09-15' },
+  { source: 'Taiwan',        grant: '2026-09-16', application: '2026-09-11' },
+  { source: 'Europe',        grant: '2026-09-09', application: '2026-09-11' },
+  { source: 'Korea',         grant: '2026-04-28', application: '2026-09-09' },
+  { source: 'Japan',         grant: '2026-09-18', application: '2026-09-16' },
 ];

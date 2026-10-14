@@ -94,9 +94,15 @@ async function paintCoverage() {
     return;
   }
   if (scope) scope.textContent = res.data.scope || '';
+  /* ONE ROW PER SOURCE, TWO DATES (platform.md §3.4). A source carried two
+     rows, granted and applications, each with one date; the founder reading
+     "when was this last taken in" read down a column of near-repeats. An
+     index the corpus does not include is an en dash: that is an absence, not
+     a withheld value, so it is not a bar. */
+  const day = d => '<td class="num"><span class="fig-m">' + (d ? esc(d) : '—') + '</span></td>';
   rows.innerHTML = (res.data.sources || []).map(s =>
     '<tr><td>' + (s.source == null ? bar('w-md', 'body') : esc(s.source)) + '</td>'
-    + '<td class="num"><span class="fig-m">' + esc(s.updated || '—') + '</span></td></tr>'
+    + day(s.grant) + day(s.application) + '</tr>'
   ).join('');
 }
 

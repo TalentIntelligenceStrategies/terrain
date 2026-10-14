@@ -205,7 +205,7 @@ export const CODE = {
 export const PORTS = [
   /* the home surface */
   'fields',          // the technology fields, and which are covered yet
-  'coverage',        // what is in the corpus, and when each source was taken in
+  'coverage',        // → {scope, sources:[{source, grant, application}]}, one row per source
 
   /* the search. ONE CALL, NO STEP BETWEEN THE SENTENCE AND THE SET — the
      reading, the five questions, the gate and the build stream were four

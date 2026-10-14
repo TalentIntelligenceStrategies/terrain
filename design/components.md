@@ -92,8 +92,9 @@ a `PatentSet` and each can fail independently. Sorting client-side would sort a 
 result, and the founder would have no way to tell.
 
 **The home surface needs two more**: `fields` → `{ fields: [{ id, label, icon, ready: bool }] }` for the
-technology tiles — `icon` is a key into the client's own icon set (`cpu` `network` `monitor` `battery` `stetho`; an unknown key draws `cpu`), and the first `ready` field is selected on arrival — and `coverage` → `{ scope: string, sources: [{ source, updated }] }` for what is in
-the corpus and when it was taken in. **`coverage` cannot currently state its own size**, which is
+technology tiles — `icon` is a key into the client's own icon set (`cpu` `network` `monitor` `battery` `stetho`; an unknown key draws `cpu`), and the first `ready` field is selected on arrival — and `coverage` → `{ scope: string, sources: [{ source, grant: 'YYYY-MM-DD'\|null, application: 'YYYY-MM-DD'\|null }] }`
+for what is in the corpus: **one row per source** and the latest grant and application taken into
+each, `null` where the index is not covered (it prints a dash, not a bar). **`coverage` cannot currently state its own size**, which is
 question 8.
 
 ---

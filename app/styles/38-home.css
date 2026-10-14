@@ -147,10 +147,10 @@
 /* the dates are figures, so they are Inconsolata and they align on the right;
    the source names are text and stay left. §4. */
 .cover-tbl{width:100%}
-.cover-tbl td:last-child,.cover-tbl th:last-child{text-align:right;
-           font-variant-numeric:tabular-nums}
-/* a date is one token; at 320 it broke after the second hyphen. */
-.cover-tbl td:last-child{white-space:nowrap}
+.cover-tbl .num{text-align:right;font-variant-numeric:tabular-nums}
+/* a date is one token; at 320 it broke after the second hyphen. Both date
+   columns, grants and applications, platform.md §3.4. */
+.cover-tbl td.num{white-space:nowrap}
 
 /* ── ON A PHONE THE TILES ARE ONE ROW THAT SCROLLS · platform.md §3.1 ─────
    Five 120px tiles stacked two-across are three rows and 400px of a 844px
