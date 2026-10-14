@@ -1170,6 +1170,11 @@ the account page is additive: one value, one writer, two places to press.
 
 **It may not be demoted into a menu.** A pass proposing that reverses a recorded decision.
 
+**A switch snaps; it never cross-fades.** Every coloured property carries a transition, so a theme
+change would otherwise animate them all at once and smear the page for a beat. For the frame of the
+switch transitions are off, and that holds when the system flips the theme under *Match your
+system* as well as when the control is pressed.
+
 **The favicon follows the *browser's* colour scheme, not Terrain's control**, and nothing can change
 that — an external favicon cannot inherit `currentColor` the way the inlined submark does.
 

@@ -203,6 +203,19 @@ function applyTheme(next) {
     () => root.classList.remove('theme-switching')));
 }
 
+/* THE SYSTEM CAN SWITCH THE THEME TOO. Under "Match your system" no control
+   runs when the OS flips to dark at sunset, so the same one frame without
+   transitions is taken here — otherwise every coloured property cross-fades
+   at once, which is the smear applyTheme exists to stop (platform.md §13,
+   R1-45). */
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+  const root = document.documentElement;
+  if (root.hasAttribute('data-theme')) return;
+  root.classList.add('theme-switching');
+  requestAnimationFrame(() => requestAnimationFrame(
+    () => root.classList.remove('theme-switching')));
+});
+
 /* ── boot ─────────────────────────────────────────────────────────────────── */
 async function boot() {
   await loadPartials();
