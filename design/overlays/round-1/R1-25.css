@@ -1,0 +1,25 @@
+/* R1-25 · Landing: the field tiles (Part A)
+ *
+ * Current: the selected tile is filled grey with a dark border, the same grey
+ * as the three disabled tiles, so the enabled alternative (white) reads as
+ * the selected one.
+ * Wanted:  selected is the card ground with a 2 px ink border; enabled is the
+ * card ground with the hairline; disabled stays grey with "Coming soon".
+ * The handoff package already specifies these three states.
+ *
+ * Enabled tiles are buttons with aria-pressed; disabled tiles are divs, so
+ * the selectors need no class names. */
+section[aria-label="Patent technology fields"] button[aria-pressed] {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--foreground);
+}
+section[aria-label="Patent technology fields"] button[aria-pressed="true"] {
+  border-color: var(--foreground);
+  box-shadow: inset 0 0 0 1px var(--foreground);   /* 1 px border + 1 px inset = 2 px */
+}
+@media (hover: hover) and (pointer: fine) {
+  section[aria-label="Patent technology fields"] button[aria-pressed="false"]:hover {
+    border-color: color-mix(in oklch, var(--foreground) 40%, var(--border));
+  }
+}
