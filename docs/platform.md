@@ -1079,21 +1079,52 @@ replaced when the next round opens.
 | R1-04 | Search settings | The date range is in their code and not rendered → render it, with its three bases | `app/` |
 | R1-05 | Result list | Every result in one endless scroll → 20, then *Show more*, which also lets drawings arrive sooner | `app/` |
 | R1-06 | Engine · names and titles | The same company in two spellings, names and titles in capitals → titles in sentence case with acronyms kept; holders merged to one form as the company writes itself; inventors in normal case. Design-language §4 *Case* | Their captures |
+| R1-25 | Landing · field tiles | The selected tile shares the disabled tiles' grey, so the other enabled tile reads as selected → selected white with the ink border, enabled white with the hairline, disabled grey with *Coming soon* | Overlay |
+| R1-26 | Every control | Focus shows as a 1 px border change or not at all (the search box, the version), and drops to the page after *Search settings* → a 2 px ring on `:focus-visible` everywhere; *Search* stays focusable (`aria-disabled`) until there is text; a skip link to the results | Overlay; `app/` too |
+| R1-27 | Result list | About 12 tab stops per card and no shortcuts → one stop per card, the drawings reached inside the record, `j` / `k` between results | `app/` |
+| R1-28 | Record · export | *Export this record* produced no file in the audit, and nothing confirms one → the file downloads, and its name is confirmed the way *Citation copied* is | Their captures |
 
 **Part B · changes**: what we ask for that the package did not have.
 
 | ID | Component | Difference → wanted | Shown in |
 | --- | --- | --- | --- |
-| R1-07 | Masthead | Cramped → more room | Overlay |
-| R1-08 | Search bar | Cramped → more room | Overlay |
-| R1-09 | Results surface | The loading line sits flush on the two panels → spaced properly (a), or the pulse runs around the search bar instead (b) | Overlay, a and b |
-| R1-10 | Drawings | The drawing placeholder does not show in dark mode, so drawings below the fold arrive as blank white plates → visible in both themes | Overlay |
-| R1-11 | Masthead | Projects → **search history**: a *History* button that opens past searches (query, field, date), each rerun by a click, deleted singly or cleared. Their code carries this panel unrendered | `app/` |
-| R1-12 | Search bar, masthead | The technology field sits in the nav → a chip at the start of the search bar, which opens the field list; it leaves the nav | `app/` |
+| R1-07 | Masthead, landing | Cramped → more room; at least 40 px above the landing headline; the version label leaves the masthead for the account menu | Overlay |
+| R1-08 | Search bar, results bar | Cramped → more room; the view switch labelled or moved beside the sort; the query wraps to two lines before it truncates | Overlay; `app/` too |
+| R1-09 | Results surface | The loading line sits flush on the two panels → spaced properly (a), or the pulse runs around the search bar instead (b). A running search also says *Searching…* on the button and keeps the old results at full opacity, and one polite status region announces counts, *Citation copied*, regrouping and find similar | Overlay, a and b |
+| R1-10 | Drawings | The drawing placeholder does not show in dark mode, so drawings below the fold arrive as blank white plates → visible in both themes. Every drawing tile is one skeleton while loading, a labelled failed tile with *Retry*, and absent when the patent has none | Overlay |
+| R1-11 | Masthead | Projects → **search history**: a *History* button that opens past searches (query, field, date), each rerun by a click, deleted singly or cleared. Their build already stores history and shows it as a dropdown under the search box on focus; this makes it findable | `app/` |
+| R1-12 | Search bar, masthead | The technology field sits in the nav → a chip at the start of the search bar, which opens the field list; it leaves the nav. The picked-group chip aligns to the card inset and shows its full label; the picked group is marked by a check, not a stripe, and the menu closes once it is picked | `app/` |
 | R1-13 | Every surface | The case and separator rules in design-language §4 *Case*: `micro` the only uppercase, inventors and holders separated by `; `, generated group names in sentence case, jurisdictions as codes | Overlay |
+| R1-29 | Address bar | A search never reaches the URL: Back shows a blank page, reload and forward land on an empty home → the query, field, mode and open record in the URL, so Back, reload and a shared link restore the search | `app/` |
+| R1-30 | Engine · relevance | Nonsense and out-of-field text return 50 results that look like a good set → a relevance floor in the engine, and below it the empty state their build already has. It names what was searched and how to rephrase it, and never says what the set means (brief §1) | `app/` |
+| R1-31 | Result card, record | The card and the record disagree about the holder, and the holder slot sometimes carries the inventors → one holder value from one source in both places; *No assignee listed* when there is none | Their captures |
+| R1-32 | Engine · grouping | Group names change every run over the same set → cached per result set, so an unchanged set gets the same labels | Their captures |
+| R1-33 | Find similar | The score is still called *Relevance*, and the open patent ranks first against itself at 1.0000 → the score reads *Nearness to* the number, and the source card is marked *This patent* | Overlay |
+| R1-34 | Record | *Open in IPtech*, *Copy citation* and *Export this record* sit after the last claim → pinned to the foot of the record panel, always in view | Overlay; `app/` too |
+| R1-35 | Record · citation | The copied citation drops the kind code and every date → number with kind code · title · holder · publication date · jurisdiction code | `app/` |
+| R1-36 | Result card | About 14 data points at near-equal weight → title, holder and one date carry the card; inventors collapse to the first and *+n*; the priority date moves to the record. **Flags the card** (§13.1) | Overlay |
+| R1-37 | Record | The number and title scroll away → a compact sticky header with both once the title leaves view | Overlay; `app/` too |
+| R1-38 | Type scale | Eight sizes between 11 and 18 px, and the record's `H2` lighter than its `H3`s → their sizes merged into fewer steps, each at least 1.25 times the next, heading weight descending with level. **Flags the type scale** (§13.1); `app/` takes the reduced scale | Overlay; `app/` too |
+| R1-39 | Patent-number search | *Patent not found* blames a TW prefix for a US number and drops the frame → the number echoed, the accepted forms named, *Search this as text* offered, both columns and the field control kept | Overlay |
+| R1-40 | Every control | Targets under 24 px: Grant / Application, the patent number link, the version → at least 24 px, a pseudo-element extending the hit area where the visible size stays | Overlay; `app/` too |
+| R1-41 | Results, record | No `<h1>` on results, and the record's title is not a heading → one `<h1>` per view, the record title a heading | Markup only |
+| R1-42 | Result card | A single-version record shows one filled *Grant* pill that reads as a pressed segment → plain text when only one version exists | Overlay; `app/` too |
+| R1-43 | Result card | No hover state under a pointer cursor → a background step on hover, distinct from the selected fill | Overlay |
+| R1-44 | Error states | *Make sure the backend API is running.* reaches the founder → removed; the sentence says what the founder can do | Wording |
+| R1-45 | Theme switch | Every coloured transition fires at once and the page smears → transitions off for one frame during the swap | Overlay (script); `app/` too |
+| R1-46 | Search settings | Chips mark *on* with a filled square and show no *off* → a check when on, nothing when off | Overlay; `app/` too |
+| R1-47 | Drawings viewer | Strip thumbnails past the eighth are blank while the first figure is open → the whole strip loads when the viewer opens | Overlay (script) |
+
+**Questions for Innovue**, each closing the package:
+
+| ID | Question |
+| --- | --- |
+| R1-48 | Which patent-number forms does the lookup accept? `US9000581B2` and `US20130270686A1` are in the index and return *Patent not found*; `EP2214203A2` is found. R1-39's wording waits on the answer |
+| R1-49 | Does the database hold English titles and abstracts for JP and CN records? Their build prints the original language in an English interface |
 
 **Adopted from their build into `app/`**, not in the package. Each section that describes the old
-behaviour is rewritten in the commit that changes `app/`.
+behaviour is rewritten in the commit that changes `app/`, and so is every section a Part A or Part B
+item marked *`app/` too* changes.
 
 | ID | What `app/` takes |
 | --- | --- |
@@ -1109,5 +1140,8 @@ behaviour is rewritten in the commit that changes `app/`.
 | R1-23 | Rotate left and rotate right in the drawings viewer |
 | R1-24 | A search box the founder can drag taller |
 
-**Not raised:** their session recording, and the card's patent number dropping its kind code.
+**Not raised:** their session recording; the card's patent number dropping its kind code; the class
+code in the field label; the cards' double frame; two counts, search timing and four-decimal scores;
+the *Nearest to* chip truncating its number; the abstract's measure; a `max-width` transition; and
+*Granted patents* beside *Application*.
 **Conformant:** the generated grouping, which §9 adopts.
