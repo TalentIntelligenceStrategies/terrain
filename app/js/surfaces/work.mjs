@@ -21,6 +21,7 @@
  */
 import { $ } from '../core/dom.mjs';
 import * as Mode from '../core/search-mode.mjs';
+import * as History from '../core/history.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
@@ -185,17 +186,6 @@ function setMode(which) {
 export function init(ctx) {
   ENGINE = ctx.engine;
 
-  ctx.onRoute(view => {
-    if (view !== 'work') return;
-
-    ENGINE.projects().then(res => {
-      if (!res.ok) return;
-      const cur = (res.data.projects || []).find(p => p.current);
-      const t = $('#dashTitle');
-      if (t && cur && cur.label) t.textContent = cur.label;
-    });
-  });
-
   fishPopover();
   /* THE NOTES ON THIS SURFACE, both of them: the results heading's and the
      record's. They are wired here rather than in list.mjs and record.mjs
@@ -261,6 +251,12 @@ export function init(ctx) {
        search that returned nothing. core/starred.mjs carries the argument for
        the store holding this rather than the caller passing it. */
     STARRED.setSearch(text);
+    /* KEPT IN HISTORY under the field the last search ran in: this bar sends
+       none (components.md §4 question 10), so the engine searches in the
+       field it already holds, and history says which that was. */
+    const last = History.entries()[0];
+    History.add({ query: text, mode: Mode.get(),
+      field: last ? last.field : null, fieldLabel: last ? last.fieldLabel : null });
     landQuery(text, res.data);
     /* the list owns its own rendering; tell it to reload rather than reaching
        across into its DOM from here. */

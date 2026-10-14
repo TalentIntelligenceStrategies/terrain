@@ -69,13 +69,13 @@
   .mast .wordmark{display:none}
   .mast-new span{display:none}
   .mast-new{padding:0 var(--s-8)}
-  .mast-proj{max-width:none;padding:0 var(--s-8)}
-  .mast-proj .mast-chev,.profile .mast-chev{display:none}
-  .mast-proj-name,.meter-unit{position:absolute;width:1px;height:1px;padding:0;
+  .mast-hist{padding:0 var(--s-8)}
+  .mast-hist .mast-chev,.profile .mast-chev{display:none}
+  .mast-hist-label,.meter-unit{position:absolute;width:1px;height:1px;padding:0;
                   margin:-1px;overflow:hidden;clip-path:inset(50%);
                   white-space:nowrap;border:0}
   .meter{padding:var(--s-4) var(--s-6)}
-  #projMenu{width:min(300px,calc(100vw - var(--s-24)))}
+  #histMenu{width:min(340px,calc(100vw - var(--s-24)))}
 }
 /* ── the skip link ────────────────────────────────────────────────────────
    :focus AND NOT :focus-visible, which is the one place in the tree that
@@ -121,20 +121,10 @@
    that fill for a primary action, and starting a new search is navigation
    rather than the act this surface is for. It is a .mast-btn like its
    neighbours now; the class survives only as the hook the <720px rule uses. */
-/* the switcher's label is the open project, and it is a bar like every other
-   project name — §8's contract. It says WHICH project without opening the menu. */
-.mast-proj{max-width:220px}
-/* ONE LINE, ALWAYS. The masthead is 48px and the name is the founder's own
-   sentence, so it is long by construction — "Drone airframe and body structure"
-   wrapped to two lines and pushed the bar out of its own height. Truncation is
-   the right failure here: the full name is the page's h1 directly below, so the
-   ellipsis costs nothing that is not already on screen. */
-.mast-proj-name{flex:1;min-width:60px;white-space:nowrap;overflow:hidden;
-                text-overflow:ellipsis}
 .mast-btn{white-space:nowrap}
 .mast-chev{color:var(--text-3);transition:transform var(--dur-2) var(--ease)}
-.proj-open #projBtn{background:var(--surface-sunken)}
-.proj-open #projBtn .mast-chev,.menu-open .profile .mast-chev{transform:rotate(180deg)}
+.hist-open #histBtn{background:var(--surface-sunken)}
+.hist-open #histBtn .mast-chev,.menu-open .profile .mast-chev{transform:rotate(180deg)}
 
 /* ── the control rail, on the bar ───────────────────────────────────────
    Two account-level facts true on every surface, so they live in the chrome.

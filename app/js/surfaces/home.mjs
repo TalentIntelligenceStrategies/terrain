@@ -10,6 +10,7 @@
  */
 import { $, esc } from '../core/dom.mjs';
 import * as Mode from '../core/search-mode.mjs';
+import * as History from '../core/history.mjs';
 import { waitOn, failWith } from '../core/wait.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
@@ -145,6 +146,22 @@ export function init(ctx) {
   onActivate(document, '#fields .field[aria-pressed]', el =>
     selectField(el.getAttribute('data-field')));
 
+  /* A SEARCH FROM HISTORY RUNS THROUGH THIS COMPOSER, whichever surface the
+     founder is on, so it charges the same path, lands the same way and is
+     kept in history again — at the top, because it is the newest. The input
+     event is what arms Search: a value written by script fires none. */
+  window.addEventListener('terrain:rerun', e => {
+    const h = e.detail || {};
+    const field = $('#cmpMain textarea'), btn = $('#cmpSearch');
+    if (!field || !btn) return;
+    if (h.field && document.querySelector('#fields .field[aria-pressed][data-field="' + CSS.escape(h.field) + '"]'))
+      selectField(h.field);
+    Mode.set(h.mode || 'text');
+    field.value = h.query || '';
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+    btn.click();
+  });
+
   /* BOTH COMPOSERS' TOGGLES, one delegated handler: the value is shared. */
   onActivate(document, '[data-search-mode]', el => Mode.set(el.getAttribute('data-search-mode')));
 
@@ -182,6 +199,11 @@ export function init(ctx) {
        landQuery writes the field, the folded line and the meta, and folds
        the bar. */
     landQuery(text, res.data);
+    /* KEPT IN HISTORY ONCE IT HAS RUN, not when it was asked: a search that
+       failed produced nothing to go back to. */
+    const tile = document.querySelector('#fields .field[data-field="' + CSS.escape(FIELD || '') + '"]');
+    History.add({ query: text, field: FIELD, mode: Mode.get(),
+      fieldLabel: tile ? tile.textContent.trim() : null });
     /* THE LIST IS TOLD, EVERY TIME. It loaded itself on its first route and
        never again, so a second search from here showed the first search's
        rows under the second search's sentence. The same event the results

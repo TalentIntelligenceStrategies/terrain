@@ -502,7 +502,7 @@
   position:absolute;inset-block:var(--s-20);inset-inline-start:0;width:2px;
   border-radius:1px;background:var(--text-1)}
 /* THE OPEN ROW — what is showing in the record. A surface rather than a mark,
-   which is not an invention here: .proj[aria-current] and .meter[aria-current]
+   which is not an invention here: .meter[aria-current]
    in the masthead menus already say "this is the current item in a list" with
    exactly this token, and .rival-row[data-filtered] says it on the pane. No
    hue, no new token, and it survives the re-rank because being open is

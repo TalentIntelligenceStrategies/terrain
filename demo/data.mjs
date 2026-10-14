@@ -109,7 +109,6 @@ export const DEMO_VERSIONS = [
   { kind: 'application', number: 'US 2018/9912345 A1', published: '2018-02-15' },
 ];
 
-export const DEMO_PROJECT = 'Drone airframe and body structure';
 export const DEMO_IDEA = 'drone';
 
 /* ── the list ────────────────────────────────────────────────────────────────
@@ -334,16 +333,7 @@ export function recordFor(id, version) {
   };
 }
 
-/* ── projects, account, billing ─────────────────────────────────────────── */
-/* NOTHING IS INVENTED. Every other project is a bar — naming a roster would be
-   inventing six projects a founder never made, which is a different act from
-   printing the one the surface already shows. */
-export const PROJECTS = [
-  { id: 'proj-1', label: DEMO_PROJECT, current: true },
-  { id: 'proj-2', label: null }, { id: 'proj-3', label: null },
-  { id: 'proj-4', label: null }, { id: 'proj-5', label: null },
-];
-
+/* ── account, billing ──────────────────────────────────────────────────── */
 /* THE FOUNDER'S OWN NAME AND ADDRESS ARE BARS TOO. §8 does not bend for them:
    a settings page whose whole content is a name and an email is where that
    temptation is strongest. A password renders as a run of dots, which is what a

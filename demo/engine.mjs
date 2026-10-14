@@ -53,7 +53,6 @@ const DELAY = {
   fields: 180, coverage: 340, search: 900,
   patents: 700, patentsPage: 520, sort: 420, facets: 420, rerank: 1100, cluster: 1400,
   record: 600,
-  projects: 240,
   account: 300, saveAccount: 800,
   billing: 340, invoices: 380, sendSupport: 900,
 };
@@ -228,9 +227,6 @@ export const DemoEngine = {
     }
     return respond('record', D.recordFor(id, version));
   },
-
-  /* ── projects ────────────────────────────────────────────────────────── */
-  projects: async () => respond('projects', { projects: D.PROJECTS }),
 
   /* ── the destinations ────────────────────────────────────────────────── */
   account: async () => respond('account', D.ACCOUNT),

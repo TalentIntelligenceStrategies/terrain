@@ -1,7 +1,7 @@
 <!-- EXTRACTED from design/previews/terrain-prototype.html lines 3816-3957.
      PROVENANCE ONLY — the prototype is FROZEN v1 and is not the reference.
      `app/` is what was decided; where this and the prototype disagree, this
-     is right and that file answers about a product that was replaced. The 48px bar: the brand, the project switcher, the rail, the profile menu. -->
+     is right and that file answers about a product that was replaced. The 48px bar: the brand, search history, the rail, the profile menu. -->
   <header class="mast" id="mast">
     <!-- THE LOCKUP IS THE WAY HOME, 2026-09-11, and it used to be a second
          "New search" — the same data-go as the button twelve pixels to its
@@ -44,29 +44,24 @@
       <span>New search</span>
     </button>
 
-    <!-- the project switcher, and it holds one list because it answers one
-         question: which project am I in. -->
-    <div class="mast-menu-wrap" id="projWrap">
-      <!-- THE NAME IS NOT THE LABEL, and it cannot be: the label is a
-           skeleton bar (§8's contract — project names are identities), so a
-           control named by its contents would have no accessible name at
-           all. The aria-label names the CONTROL; the bar shows there is a
-           project open. -->
-      <button class="mast-btn mast-proj" id="projBtn" type="button"
-              aria-label="Projects"
-              aria-haspopup="true" aria-expanded="false" aria-controls="projMenu">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
-        <span class="mast-proj-name sk sk-h-label w-md" id="projName"></span>
-        <svg class="mast-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    <!-- ══ SEARCH HISTORY · platform.md §5 ════════════════════════════════
+         IT REPLACES THE PROJECT SWITCHER. A project was a saved object nothing
+         the founder did ever made; what a founder coming back wants is the
+         search they ran last week, one press from running again. core/
+         history.mjs keeps them in the browser, the way the starred set is kept.
+
+         A GROUP, NOT role="menu". Each entry carries two controls — run it,
+         remove it — and a menu item may not contain a button, so the panel is
+         a labelled group of rows the Tab key walks, with Clear at its foot. -->
+    <div class="mast-menu-wrap" id="histWrap">
+      <button class="mast-btn mast-hist" id="histBtn" type="button"
+              aria-haspopup="true" aria-expanded="false" aria-controls="histMenu">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+        <span class="mast-hist-label">History</span>
+        <svg class="mast-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
       </button>
-      <!-- ONE LIST, MOST RECENT FIRST, AND NO GROUP HEADINGS. A heading needs
-           a renderer that can leave it empty; without one it is a promise the
-           menu cannot keep, and a heading over nothing reads as a list that
-           failed to load rather than as a section with nothing in it. Recency
-           groups earn their headings again when there are enough projects for
-           the split to tell the founder something. -->
-      <div class="mast-menu mast-menu-proj" id="projMenu" role="menu" aria-label="Projects">
-        <div id="projGroupA"></div>
+      <div class="mast-menu mast-menu-hist" id="histMenu" role="group" aria-label="Search history">
+        <div id="histList"></div>
       </div>
     </div>
 

@@ -265,8 +265,8 @@ export const PORTS = [
   /* the record */
   'record',          // {id, version?:'grant'|'application'} → Record
 
-  /* projects */
-  'projects',
+  /* THERE IS NO projects PORT. Search history is the founder's own and is kept
+     in the browser, as the starred set is (core/history.mjs). */
 
   /* the destinations */
   'account',

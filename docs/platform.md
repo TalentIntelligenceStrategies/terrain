@@ -34,7 +34,7 @@ window anywhere in the product.
 44/56 — 634 for the list, 806 for the record — and neither half survives a 260px rail: the result
 list stops being readable under 340px, and the record's ten-field list wraps its values onto
 second lines under about 600px, which a 260px rail would put it under at any window below ~1465.
-Everything a rail would have carried is in the 48px bar: the project switcher, the starred count, the
+Everything a rail would have carried is in the 48px bar: search history, the starred count, the
 appearance control, the account menu.
 
 ---
@@ -175,7 +175,7 @@ change anything is worse than a missing one. **It stays folded**, §4.2: one lin
    by going grey: a lockup that changes appearance by screen stops being a fixed point in the chrome.
 2. **New search** — Lucide `zoom-in`, not `plus`. The plus said *new* and said nothing about what a
    new one is.
-3. **The project switcher** — the projects list, most recent first.
+3. **History** — the searches the founder has run, newest first, §5.
 4. **The starred count** — a button, and the way to the starred set (§5.2).
 5. **The appearance control** — three states: light, dark, system. **It may not be demoted into the
    account menu at any width.** A second control over the same value elsewhere is not a demotion; a
@@ -578,16 +578,25 @@ drawings exist says a patent has none; a frame where none exist claims one is be
 
 ---
 
-## 5 · Projects and the starred set
+## 5 · History and the starred set
 
-A project is the saved object: the sentence, the search settings it ran under, and the set that came
-back. It takes its name from the founder's sentence.
+**History is the searches the founder has run, newest first**, behind the masthead's *History*
+button. Each entry is the sentence, the date, the field it ran in, and *Patent number* when it was a
+number search; pressing one runs it again through the home composer, so it lands exactly as a new
+search does and moves to the top. Each entry can be removed on its own and the whole list cleared.
+Running the same sentence in the same field and mode again moves it up rather than adding a line, and
+the list keeps thirty.
 
-**Returning to a project opens it straight away.** No search step, no rebuild, no progress bar.
+**It replaces projects.** A project was a saved object with a name and a switcher, and nothing the
+founder did ever made one — the switcher listed what the engine returned. What a founder coming back
+wants is the search they ran last week, one press from running again.
 
-**A founder who has never searched has no projects.** The switcher says what fills it rather than
-rendering as a heading over nothing. An empty list that looks like a list which failed to load is the
-same defect as a bar standing in for a value nobody withheld.
+**It is kept in the browser, as the starred set is**, so it survives a reload and asks the engine
+for nothing. That is the same floor and the same limit as §5.1's: one browser on one machine, and §10
+item 2 is what an account adds.
+
+**An empty history says what fills it.** *No searches yet*, and that each one is kept here — never
+rows of bars, because a bar is a value withheld and an empty history has none.
 
 ### 5.1 · Starring, and what it is for
 
@@ -869,19 +878,16 @@ postponed, it says so.
    account buys that a browser cannot: the same set on a second machine, a set that survives cleared
    site data, and a set that is the founder's rather than the browser's. **Starts when:** the founder
    is expected to be the same person on two devices.
-3. **Recent searches.** PI-VuePat keeps thirty in browser storage, capped and clearable. Cheap, and
-   it makes a return visit mean something without an account. **Starts when:** item 2 settles whether
-   this is local or server-side.
-4. **Per-patent link-out** — *open this in the source database*. The source varies by jurisdiction, so
+3. **Per-patent link-out** — *open this in the source database*. The source varies by jurisdiction, so
    the URL and its label have to come from the engine rather than be constructed by the interface.
    **Starts when:** Innovue answers question 3 in `components.md` §4.
-5. **A patent package** — the starred set's drawings and PDFs as a zip. Distinct from the export
+4. **A patent package** — the starred set's drawings and PDFs as a zip. Distinct from the export
    already built, which is rows. **Starts when:** drawing and PDF URLs are available and CORS
    permits a client-side fetch, which is question 4.
-6. **A standing jurisdiction filter** on the result list — *US only*. Mechanical, and it answers the
+5. **A standing jurisdiction filter** on the result list — *US only*. Mechanical, and it answers the
    question a founder asks second. **Starts when:** every row prints its jurisdiction as a code
    (R1-13), so the filter can be checked against what is on screen.
-7. **An attorney handoff file** — the starred set written up as a document somebody could file
+6. **An attorney handoff file** — the starred set written up as a document somebody could file
    against. **Decided against**, not postponed. The starred set leaves as data (§5.2); a written-up
    handoff is the authored narrative `brief.md` §1 draws the line at, and reopening it is an
    amendment to that lock.
@@ -916,7 +922,7 @@ knowing before changing one.*
 - **Where does the starred set live when the founder has two machines?** It survives a new search and
   a reload, the second in browser storage (§5.1). What it does not survive is a different browser,
   cleared site data, or being handed to a colleague — all of which need an account rather than a
-  key. §10 items 2 and 3.
+  key. §10 item 2.
 - **How many results should a search return by default?** The settings ladder offers 10 · 20 · 50 ·
   100 · 500, and whether 500 is an engine ceiling or an interface one is unanswered.
 - **Whether Terrain sits on Innovue's semantic search surface or beside it.**

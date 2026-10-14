@@ -1,6 +1,6 @@
 /* surfaces/masthead — the 48px bar. platform.md §4.1.
  *
- * The brand, the project switcher, the starred count, the profile menu. It sits
+ * The brand, search history, the starred count, the profile menu. It sits
  * OUTSIDE the stage and persists across every view swap — platform.md §2:
  * the four moments run over two surfaces on the path, not four screens, and a
  * bar that reloaded between them would say otherwise.
@@ -9,16 +9,15 @@ import { $, $$, esc } from '../core/dom.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
 import { clampIntoView } from '../core/popover.mjs';
-import { bar } from '../core/primitives.mjs';
 import { focusQuietly } from '../core/focus.mjs';
 import * as Starred from '../core/starred.mjs';
+import * as History from '../core/history.mjs';
 
-let ENGINE = null;
 
 /* ── a menu that closes on Escape, on outside click, and on a second press ──
    IT TOGGLES A CLASS ON #app, NOT [hidden] ON THE PANEL, and that was a real
    defect rather than a style choice. .mast-menu ships opacity:0 and
-   visibility:hidden, and 14-menu.css reveals it through `.proj-open #projMenu`
+   visibility:hidden, and 14-menu.css reveals it through `.hist-open #histMenu`
    and `.menu-open #acctMenu` — an ancestor class. Clearing [hidden] removes
    display:none and leaves both dropdowns invisible, which is exactly what they
    were. The prototype always did it this way; the extraction did not.
@@ -28,7 +27,7 @@ let ENGINE = null;
 
    The stack is what makes that safe: Escape closes the MOST RECENT, not
    whichever remembered to bind a handler. */
-const MENU_CLASS = { projMenu: 'proj-open', acctMenu: 'menu-open' };
+const MENU_CLASS = { histMenu: 'hist-open', acctMenu: 'menu-open' };
 
 function menu(btn, panel, key) {
   if (!btn || !panel) return;
@@ -73,49 +72,65 @@ function menu(btn, panel, key) {
 }
 
 export function init(ctx) {
-  ENGINE = ctx.engine;
 
-  menu($('#projBtn'), $('#projMenu'), 'projMenu');
+  const hist = menu($('#histBtn'), $('#histMenu'), 'histMenu');
   menu($('#profileBtn'), $('#acctMenu'), 'acctMenu');
 
-  /* ── the project switcher ───────────────────────────────────────────────
-     AN EMPTY LIST IS NOT A LIST OF BARS. design-language.md §8: a bar says a
-     value exists and is being withheld; a list with nothing in it has no
-     values to withhold. Three grey rows where a founder has no projects would
-     claim they have three projects whose names we decline to print. */
-  ENGINE.projects().then(res => {
-    const a = $('#projGroupA');
-    if (!a) return;
-    if (!res.ok) {
-      a.innerHTML = '<p class="side-empty t-body">Your projects did not load.</p>';
-      return;
-    }
-    const list = res.data.projects || [];
+  /* ── search history · platform.md §5 ───────────────────────────────────
+     AN EMPTY HISTORY SAYS WHAT FILLS IT, never a list of bars: a bar is a
+     value withheld, and an empty history has no values. Each entry reads as
+     its sentence over its date and field — the date first, because the line
+     truncates and when is what tells two similar sentences apart; a number
+     search says so, because re-running EP2214203A2 as a description would be
+     a different search. */
+  const when = iso => {
+    const d = new Date(iso);
+    return isNaN(d) ? '' : d.toISOString().slice(0, 10);
+  };
+  History.onChange(list => {
+    const host = $('#histList');
+    if (!host) return;
     if (!list.length) {
-      a.innerHTML =
-        '<p class="side-empty t-body">No projects yet. Describe what you are ' +
-        'building and the first one is made for you.</p>';
+      host.innerHTML = '<p class="hist-empty t-body">No searches yet. Each one you run '
+        + 'is kept here, in this browser, so you can run it again.</p>';
       return;
     }
-    a.innerHTML = list.map(p =>
-      '<button class="side-item' + (p.current ? ' is-current' : '') +
-      '" type="button" role="menuitem" data-proj="' + esc(p.id) + '">' +
-      /* null means render the bar, and it is the only thing that means that */
-      (p.label ? '<span>' + esc(p.label) + '</span>' : bar('w-md')) +
-      '</button>').join('');
-
-    /* THE ELEMENT IS THE BAR. `#projName` ships as `sk sk-h-label w-md`, so
-       writing text into it leaves the skeleton's own background painted behind
-       the words and the name reads as struck through. The skeleton classes come
-       OFF when a value arrives — which is what "null means render the bar"
-       means at the DOM level, and the only place in the tree where a renderer
-       has to say so out loud. */
-    const name = $('#projName');
-    const cur = list.find(p => p.current);
-    if (name && cur && cur.label) {
-      name.classList.remove('sk', 'sk-h-label', 'w-md');
-      name.textContent = cur.label;
-    }
+    host.innerHTML = '<ul class="hist-list">' + list.map((e, i) =>
+      '<li class="hist-row">'
+      + '<button class="hist-run" type="button" data-hist-run="' + i + '">'
+      + '<span class="hist-q">' + esc(e.query) + '</span>'
+      + '<span class="hist-meta t-micro">'
+      + ['<span class="fig">' + when(e.at) + '</span>',
+         e.mode === 'number' ? 'Patent number' : '', e.fieldLabel ? esc(e.fieldLabel) : '']
+         .filter(Boolean).join(' · ')
+      + '</span></button>'
+      + '<button class="hist-x" type="button" data-hist-x="' + i + '" aria-label="Remove '
+      + esc(e.query).slice(0, 60) + ' from history">'
+      + '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>'
+      + '</button></li>').join('') + '</ul>'
+      + '<div class="hist-foot"><button class="btn btn-ghost hist-clear" type="button" data-hist-clear>Clear history</button></div>';
+  });
+  /* RUNNING ONE IS A SEARCH, and the home composer is what runs searches: the
+     entry hands it the sentence, the field and the mode. */
+  onActivate(document, '[data-hist-run]', el => {
+    const e = History.entries()[Number(el.getAttribute('data-hist-run'))];
+    if (!e) return;
+    if (hist) hist.close();
+    window.dispatchEvent(new CustomEvent('terrain:rerun', { detail: e }));
+  });
+  /* REMOVING ONE KEEPS THE PANEL OPEN and keeps focus in it, on the entry
+     that moved up into the removed one's place — or Clear, past the end. */
+  onActivate(document, '[data-hist-x]', el => {
+    const i = Number(el.getAttribute('data-hist-x'));
+    History.remove(i);
+    const next = $('#histList [data-hist-run="' + i + '"]')
+      || $('#histList [data-hist-run="' + (i - 1) + '"]') || $('#histBtn');
+    if (next) focusQuietly(next);
+  });
+  onActivate(document, '[data-hist-clear]', () => {
+    History.clear();
+    if (hist) hist.close();
+    focusQuietly($('#histBtn'));
   });
 
   /* ── the starred count · what the founder has built ─────────────────────

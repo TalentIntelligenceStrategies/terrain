@@ -967,7 +967,7 @@ confirmation invites a second send of the same message.
 
 | Real English | Grey bar | Illustrative |
 |---|---|---|
-| Titles, buttons, column headers, empty-state copy, menu rows, field labels | Company names, other project names, the user's own name and address, plan tier, patent and application numbers, IPC symbols, inventors | Counts, relevance scores, filing and publication years |
+| Titles, buttons, column headers, empty-state copy, menu rows, field labels | Company names, the user's own name and address, plan tier, patent and application numbers, IPC symbols, inventors | Counts, relevance scores, filing and publication years |
 
 **`corpus/` is the deliberate exception and it is not in this table**, because it is not illustrative
 data — it is real patents, captured, and its whole job is to strain renderers written against
@@ -986,8 +986,8 @@ being withheld.
 **A jurisdiction is not a party**, so countries are named. Five grey wedges would read as nothing.
 
 **An empty list is not a list of bars.** A bar says a value exists and is being withheld; a list with
-nothing in it has no values to withhold. Three grey rows where a founder has no projects claims they
-have three projects whose names we decline to print. So an empty list says what fills it and offers
+nothing in it has no values to withhold. Three grey rows where a founder has run no searches claims
+they have run three whose sentences we decline to print. So an empty list says what fills it and offers
 the act that does — the same distinction the loader draws against the bar, one component up.
 
 **The screen must read as populated through layout alone.** That is the harder and more useful test.
