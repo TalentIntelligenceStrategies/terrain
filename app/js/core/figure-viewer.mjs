@@ -384,6 +384,7 @@ export function init() {
   on('#figIn', () => zoomTo(stepUp()));
   on('#figOut', () => zoomTo(stepDown()));
   on('#figRot', () => { rot = (rot + 90) % 360; panX = panY = 0; apply(); });
+  on('#figRotL', () => { rot = (rot + 270) % 360; panX = panY = 0; apply(); });
   on('#figReset', () => { scale = 1; rot = 0; panX = panY = 0; apply(); });
 
   /* ══ THE SCRIM CLOSES IT ═════════════════════════════════════════════════

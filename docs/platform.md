@@ -530,6 +530,9 @@ so they zoom continuously within the same ends, **about the point under the curs
 fingers**, and the bar prints the exact level so it can be returned to. The next button press lands
 on the next stop.
 
+**Rotation is a quarter turn either way**, so a drawing published sideways is turned back the short
+way, and *Reset the view* returns rotation, zoom and pan together.
+
 **The drawing cannot be lost off the stage.** Pan is bounded by the drawing's own edge at the current
 scale; below 100% it is held at the centre. On touch, one finger at 100% or less swipes to the
 neighbouring drawing, and two taps toggle 100% and 200%.
