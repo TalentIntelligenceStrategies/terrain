@@ -192,7 +192,7 @@ while every grep for the token found it present and correct.
 
 ## `js/core/` — the behaviour layer, and the part a rewrite gets subtly wrong
 
-Eighteen modules, dependency-free. **This is the deliverable.** Every
+Nineteen modules, dependency-free. **This is the deliverable.** Every
 one of them encodes a rule that reads as an implementation detail and is not:
 
 | Module | The rule it carries |
@@ -214,6 +214,7 @@ one of them encodes a rule that reads as an implementation detail and is not:
 | `popover` | One floating panel, one trigger, four things every one of them must get right. It exists because there were two private copies and a third would have been the one that drifted. `infoPopovers` wires the `.info` notes, which shipped as markup and a stylesheet with **no driver at all** — a disclosure with a hover state, an `:active` scale and a hard-coded `aria-expanded="false"`, which is what made a control that had never once opened hard to see |
 | `starred` | The set holds **rows, not ids**: an id is enough to re-order a list and not enough to render a collection or write a CSV, and the client holds one page at a time. It persists to `localStorage` behind `read()`/`write()` — every access wrapped, because Safari in private mode throws on `setItem` and a throw here loses the starring the founder is doing to protect the starring they had done. The payload is versioned: a stored row in a shape the list no longer emits is bars where there were names |
 | `figure-viewer` | Zoom is `scale()`, rotation is `rotate()`, pan is `translate()`, composed into **one** transform by the CSS. §6 forbids animating a layout property and says there are no exceptions |
+| `search-mode` | **One value for two composers.** The home composer and the results bar each carry the Text / Patent number toggle, and a mode each kept for itself would search one as a description while the other said number |
 
 ### The numbered checks
 

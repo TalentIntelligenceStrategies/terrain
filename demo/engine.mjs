@@ -102,6 +102,19 @@ const cmp = {
   oldest:    (a, b) => byId.get(a).year - byId.get(b).year,
 };
 
+/* A NUMBER, NORMALISED THE WAY A FOUNDER PASTES ONE: case, spaces, commas,
+   slashes and the zero padding between office code and digits all fall away,
+   and the kind code is optional — US9000581 finds US 09000581 B2. The forms a
+   real index accepts are the open question R1-48 in platform.md §13. */
+const normNo = s => String(s || '').toUpperCase().replace(/[^0-9A-Z]/g, '')
+  .replace(/^([A-Z]{2})0+/, '$1');
+const byNumber = (rows, q) => {
+  const want = normNo(q);
+  if (!want) return null;
+  return rows.find(r => r.number && (normNo(r.number) === want
+    || normNo(r.number).replace(/[A-Z]\d?$/, '') === want)) || null;
+};
+
 export const DemoEngine = {
   /* ── the conversation and the gate ───────────────────────────────────── */
   /* ONE CALL, from the sentence to the set. */
@@ -112,10 +125,18 @@ export const DemoEngine = {
      same synthetic shape, so filtering by jurisdiction would return the same
      set with a smaller number on it, which is a lie with a number attached.
      They reach the engine and `corpus/` is where they mean something. */
-  search: async ({ settings = {} } = {}) => {
+  search: async ({ query = '', settings = {}, mode = 'text' } = {}) => {
     LIMIT = Number(settings.count) || PAGE;
     shown = Math.min(LIMIT, ALL.length);
     ORDER = ALL.map(r => r.id).sort(cmp.relevance);
+    /* A NUMBER SEARCH LEADS WITH THAT PATENT and orders the rest after it, or
+       refuses with NOT_FOUND, not retryable: the number is not in the index,
+       and trying again cannot change that. */
+    if (mode === 'number') {
+      const hit = byNumber(ALL, query);
+      if (!hit) { await wait(DELAY.search); return err(CODE.NOT_FOUND, false, 'demo: no patent ' + query); }
+      ORDER = [hit.id, ...ORDER.filter(id => id !== hit.id)];
+    }
     return respond('search', {
       ...page(ORDER, shown),
       elapsedMs: 240,
@@ -135,9 +156,12 @@ export const DemoEngine = {
      right the whole time and simply never ran until somebody opened the menu.
 
      Whatever `cmp.relevance` does IS the default, rather than a copy of it. */
+  /* THE CURRENT SET IN THE SEARCH'S OWN ORDER. It re-sorted by relevance on
+     every call, which threw away the order a number search had set — the
+     engine holds the result set between calls (components.md §1), and this
+     is the first page of it. */
   patents: async () => {
     shown = Math.min(LIMIT, ALL.length);
-    ORDER = ALL.map(r => r.id).sort(cmp.relevance);
     return respond('patents', page(ORDER, shown));
   },
 

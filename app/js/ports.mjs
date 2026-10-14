@@ -218,8 +218,12 @@ export const PORTS = [
        kinds[]   · 'granted' | 'applications', at least one
        count     · 10 | 20 | 50 | 100 | 500
        basis     · 'filed' | 'published' — which date the range applies to
-       from, to  · four-digit years as strings, '' meaning no bound */
-  'search',          // {query, field, settings} → PatentSet
+       from, to  · four-digit years as strings, '' meaning no bound
+     `mode` says what `query` IS: 'text', a description, or 'number', a patent
+     number to look up. A number search returns the set with that patent first,
+     or NOT_FOUND, not retryable, when the index does not hold it — an answer
+     about the number rather than an outage. */
+  'search',          // {query, field, settings, mode:'text'|'number'} → PatentSet
 
   /* the list. ALL THREE ARE REQUESTS — twenty rows arrive at a time, so the
      client never holds the whole set and sorting what it has would sort a page

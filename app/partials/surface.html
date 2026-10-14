@@ -43,6 +43,15 @@
           </div></div>
           <div class="cmp-row">
             <div class="res-tools" role="group" aria-label="How the results are shown">
+              <!-- TEXT OR A NUMBER · platform.md §3.2. One box takes both, and the
+                   toggle says which it is, so the engine is never left to guess
+                   whether "EP2214203" is a description. core/search-mode.mjs keeps
+                   this and the other composer's toggle on one value. -->
+              <div class="seg search-mode" role="group" aria-label="What you are searching with">
+                <button class="seg-btn" type="button" data-search-mode="text" aria-pressed="true">Text</button>
+                <button class="seg-btn" type="button" data-search-mode="number" aria-pressed="false">Patent number</button>
+              </div>
+              <span class="res-tools-sep" aria-hidden="true"></span>
               <div class="pop-wrap" id="resSetWrap">
               <button class="icon-btn" id="resSettings" type="button"
                       aria-label="Search settings" aria-expanded="false">

@@ -9,6 +9,7 @@
  * markup would be choosing our icon set for us.
  */
 import { $, esc } from '../core/dom.mjs';
+import * as Mode from '../core/search-mode.mjs';
 import { waitOn, failWith } from '../core/wait.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
@@ -144,13 +145,16 @@ export function init(ctx) {
   onActivate(document, '#fields .field[aria-pressed]', el =>
     selectField(el.getAttribute('data-field')));
 
+  /* BOTH COMPOSERS' TOGGLES, one delegated handler: the value is shared. */
+  onActivate(document, '[data-search-mode]', el => Mode.set(el.getAttribute('data-search-mode')));
+
   onActivate(document, '#cmpSearch', async btn => {
     const field = $('#cmpMain textarea');
     const text = field && field.value.trim();
     if (!text) return;
 
     btnWait(btn, true);
-    const res = await ENGINE.search({ query: text, field: FIELD, settings: readSettings() });
+    const res = await ENGINE.search({ query: text, field: FIELD, settings: readSettings(), mode: Mode.get() });
     btnRest(btn);
 
     /* THE SEARCH THE SET IS FILED UNDER, and this is where it is first known.
@@ -164,7 +168,8 @@ export function init(ctx) {
       const status = $('#cmpStatus');
       if (status) {
         /* EACH SAYS WHAT TO DO NEXT, not only what happened. */
-        status.textContent = 'The search did not run. Press Search to try again.';
+        status.textContent = Mode.notFound(res, text)
+          || 'The search did not run. Press Search to try again.';
       }
       say('home', status ? status.textContent : 'The search did not run.');
       return;

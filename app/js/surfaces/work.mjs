@@ -20,6 +20,7 @@
  * untouched and currently has no caller.
  */
 import { $ } from '../core/dom.mjs';
+import * as Mode from '../core/search-mode.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
@@ -237,7 +238,7 @@ export function init(ctx) {
     const text = field && field.value.trim();
     if (!text) return;
     btnWait(b, true);
-    const res = await ENGINE.search({ query: text, settings: readSettings() });
+    const res = await ENGINE.search({ query: text, settings: readSettings(), mode: Mode.get() });
     btnRest(b);
     /* THE FAILURE IS ON SCREEN, NOT ONLY SPOKEN. It used to go to the live
        region alone, so a sighted founder pressed Search, watched the button
@@ -247,7 +248,8 @@ export function init(ctx) {
        already announces it once. */
     const status = $('#resStatus');
     if (!res.ok) {
-      const why = 'The search did not run. The results below are from your last search.';
+      const why = Mode.notFound(res, text)
+        || 'The search did not run. The results below are from your last search.';
       if (status) status.textContent = why;
       say('work', why);
       return;
