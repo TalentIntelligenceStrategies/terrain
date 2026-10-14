@@ -177,8 +177,8 @@
    FIVE TIERS, and the rule for each is on its own block:
      1 primitive  11   no component may read one
      2 scale      28   invariant by construction
-     3 semantic   32   declared in all three blocks — this is the dark contract
-     4 derived     3   resolves THROUGH a themed token. Never in a dark block
+     3 semantic   27   declared in all three blocks — this is the dark contract
+     4 derived     1   resolves THROUGH a themed token. Never in a dark block
      5 component   —   not here at all. On the component's own class,
                        design-language.md §3.9
 
@@ -256,16 +256,12 @@ html{color-scheme:light dark;background:var(--ground)}
      Terrain's accent is ACHROMATIC. It is the near-black ink pair, and that is
      the decision rather than a slot waiting on a hue.
 
-     WHY THERE IS NO COLOUR HERE. §2 permits colour in three places: discrete
-     states, direction of change, and the accent. A chromatic accent spends the
-     third on a CONTROL, and then every coloured thing on the screen has to be
-     read twice — a green `Live` chip means "this patent is enforceable", and a
-     green button means "click here", and the founder has to know which kind of
-     green they are looking at before either one tells them anything. Dropping
-     the hue leaves the STATES as the only colour in the system. That is the
-     strongest available form of the rule §2 exists to enforce, and it costs
-     one thing worth naming: a near-black primary action is calmer and less
-     inviting than a coloured one.
+     WHY THERE IS NO COLOUR HERE. §2 permits colour where it carries
+     information and nowhere else, and a control's colour carries none: it
+     says "press here", which its shape and its word already say. A chromatic
+     accent would also be the one hue in a product that has no other, so it
+     would read as data. The cost is worth naming: a near-black primary action
+     is calmer and less inviting than a coloured one.
 
      THE FOUR TOKENS STAY, BECAUSE THE ACCENT IS A ROLE AND NOT A HUE.
      All four hold ink values today, and that is not a reason to fold them into
@@ -298,10 +294,6 @@ html{color-scheme:light dark;background:var(--ground)}
   --ink-hover:var(--n-9);        /* hover on an ink fill — the only ink state */
   --track-pressed:var(--n-4);    /* a bar track under the selected row */
 
-  /* state — the only colour in the system */
-  --state-live:#1B6B45;    --state-live-tint:#E4F1EA;
-  --state-expired:#A32B21; --state-expired-tint:#FAE9E7;
-  --state-pending:#7A5200; --state-pending-tint:#FBF0D9;
 
   /* THE CHART LAYER, SINGULAR — narrowed 2026-09-23. There were three, for a
      dashboard of twelve widgets that no longer exists. --chart-trend and
@@ -442,9 +434,9 @@ html{color-scheme:light dark;background:var(--ground)}
    dark OS would do nothing.
 
    The half that is not mechanical: this is not an inversion. Surfaces stop
-   being fills, and the state hues are picked against this ground rather than
-   lightened from their light values. Every number in the comments below was
-   measured, the same way §3.3 and §3.4 measure the light set.
+   being fills, and every value is picked against this ground rather than
+   lightened from its light counterpart. Every number in the comments below
+   was measured, the same way §10.3 measures the light set.
 
    The list is duplicated on purpose. CSS has no way to share a declaration
    block between two selectors, and the alternative — a third indirection
@@ -470,13 +462,6 @@ html{color-scheme:light dark;background:var(--ground)}
      button becomes a near-white one with no component rule changing. */
   --ink-hover:#FFFFFF; --track-pressed:#2A2A2A;
 
-  /* state — chosen against this ground, never lightened from the light pair.
-     A dusty sage, an oxblood and a dull gold, which is what §10 asks for.
-     live 7.71 on surface / 7.10 on tint · expired 6.59 / 6.32 ·
-     pending 7.42 / 7.04. The light set measures 6.49, 7.18 and 6.92. */
-  --state-live:#84B899;    --state-live-tint:#18241D;
-  --state-expired:#D98B80; --state-expired-tint:#2A1A17;
-  --state-pending:#C9A45C; --state-pending-tint:#251E10;
 
 
   /* the sweep is still the lighter band, so it still reads as a sweep */
@@ -529,13 +514,6 @@ html{color-scheme:light dark;background:var(--ground)}
      button becomes a near-white one with no component rule changing. */
   --ink-hover:#FFFFFF; --track-pressed:#2A2A2A;
 
-  /* state — chosen against this ground, never lightened from the light pair.
-     A dusty sage, an oxblood and a dull gold, which is what §10 asks for.
-     live 7.71 on surface / 7.10 on tint · expired 6.59 / 6.32 ·
-     pending 7.42 / 7.04. The light set measures 6.49, 7.18 and 6.92. */
-  --state-live:#84B899;    --state-live-tint:#18241D;
-  --state-expired:#D98B80; --state-expired-tint:#2A1A17;
-  --state-pending:#C9A45C; --state-pending-tint:#251E10;
 
 
   /* the sweep is still the lighter band, so it still reads as a sweep */
@@ -579,9 +557,6 @@ html{color-scheme:light dark;background:var(--ground)}
    else has to be excepted from it. Position is otherwise irrelevant — custom
    properties resolve by cascade. */
 :root{
-  /* direction of change, which is the one place the state hues are reused for
-     something that is not a legal status. design-language.md §3.3. */
-  --state-up:var(--state-live); --state-down:var(--state-expired);
   /* THE FOCUS RING IS THE ACCENT. §3.8 names three places the accent may
      appear and this is one of them, so it derives rather than being declared
      twice — one edit to --accent moves the primary fill, the selected control

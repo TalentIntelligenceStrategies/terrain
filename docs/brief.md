@@ -302,14 +302,12 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
 **Terrain's accent is achromatic.** It is the near-black ink pair — near-white in dark — and that is
 the decision, not a slot waiting on a hue.
 
-**Why there is no colour in it.** [`design-language.md`](design-language.md) §2 permits colour in
-three places: discrete states, direction of change, and the accent. A chromatic accent spends the third
-on a *control*, and then every coloured thing on the screen has to be read twice — a green *Live* chip
-means *this patent is enforceable*, a green button means *press here*, and the founder has to know
-which kind of green they are looking at before either tells them anything. Without a hue, **the
-states are the only colour in the product.** That is the strongest available form of the rule, and
-it costs one thing worth naming: a near-black primary action is calmer and less inviting than a
-coloured one.
+**Why there is no colour in it.** [`design-language.md`](design-language.md) §2 permits colour where
+it carries information, and a control's colour carries none: it says *press here*, which the control's
+shape and word already say. **Terrain has no hue at all** — the legal-status chip that once held the
+only colour in the product left with legal status — so a chromatic accent would be the one hue on the
+screen and would read as data. It costs one thing worth naming: a near-black primary action is calmer
+and less inviting than a coloured one.
 
 **The accent is still a role, and it keeps its tokens.** The three sites below have to be able to
 *say* they are the accent; a site that read `--text-1` would leave the rule pointing at nothing, and
@@ -323,9 +321,8 @@ it would stop being enforceable the moment a fourth site appeared.
 
 **Where it may not:**
 
-- **In data.** Not a status chip, not a score, not a relevance rank, not a bar. The permitted colour
-  cases in [`design-language.md`](design-language.md) §2 — discrete states and direction of change —
-  are unchanged and the accent is not one of them.
+- **In data.** Not a score, not a relevance rank, not a bar. A hue for data would be an amendment to
+  [`design-language.md`](design-language.md) §2, and the accent would not be it.
 - **As decoration.** No gradient, no wash, no accent border on a card, no tinted background.
 - **Anywhere it could be read as a verdict.**
 

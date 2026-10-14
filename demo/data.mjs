@@ -119,15 +119,6 @@ function seeded(i) {
   const n = Math.abs((i * 37 + 5) | 0) % 997;
   return {
     n,
-    /* ALL FOUR STATUS WORDS APPEAR IN THE DEMO, because a vocabulary the
-       demo never renders is a vocabulary nobody looks at. Real data carries
-       roughly half live, a quarter expired, a tenth pending and a handful
-       abandoned; these proportions are that shape and are illustrative like
-       every other figure here. */
-    status: n % 13 === 4 ? 'pending'
-          : n % 17 === 9 ? 'abandoned'
-          : (n % 7 === 3 || n % 11 === 6) ? 'expired'
-          : 'live',
     /* Innovue's own relevance score, printed rather than re-derived. Four
        decimals, because that is what the engine returns; rounding it would be
        Terrain restating it. No word about quality may sit beside it. */
@@ -154,7 +145,6 @@ export function patentRows(count = SET_CEILING) {
       number: i === 0 ? DEMO_RECORD.number : null,
       where: i === 0 ? DEMO_RECORD.where : null,
       year: s.year,
-      status: s.status,
       /* AND IT SCORES HIGHEST, so relevance order puts it first. The seed gave
          it whatever the formula produced, which left the one row that can
          demonstrate a title, a holder and a record sitting at position 61 —
@@ -296,7 +286,7 @@ export function recordFor(id) {
       number: null, appno: null, kind: 'Invention', ipcMain: null, ipc: null,
       holder: null, inventors: null,
       filed: String(s.year), published: String(s.year + 1), where: null,
-      status: s.status, abstract: null, claims: null,
+      abstract: null, claims: null,
       /* EMPTY, NOT null, AND NOT A BAR. The skeleton contract covers values
          that exist and are being withheld; the demo corpus has no drawings at
          all, and a row of grey rectangles would claim it does. corpus/ is what
@@ -308,7 +298,7 @@ export function recordFor(id) {
     ...DEMO_RECORD,
     title: DEMO_TITLE,
     filed: '2021', published: '2023',
-    status: 'live', abstract: DEMO_ABSTRACT, claims: DEMO_CLAIMS,
+    abstract: DEMO_ABSTRACT, claims: DEMO_CLAIMS,
     /* SIX DRAWINGS, EVERY ONE OF THEM WITHHELD — `src: null`, which is what
        null means in every other field here. This is §8's contract, not a fifth
        exception to it: the record HAS drawings and Terrain declines to print

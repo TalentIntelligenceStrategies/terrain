@@ -86,12 +86,12 @@ export const CODE = {
 
 /** The list · FOUR FIELDS PER ROW AND NO MORE — that rule is about what the row
  *  DRAWS, and the row still draws four. `number` and `where` are carried and not
- *  drawn, because the starred set leaves as an eight-column file and the export
+ *  drawn, because the starred set leaves as a seven-column file and the export
  *  cannot reach the record port: fifty starred patents would be fifty calls to
  *  fill in two columns the list already had.
  *
  *  `thumbs` IS CARRIED FOR THE SAME REASON AND IS NOT A FIFTH FIELD. A field is
- *  a value read OFF the patent — its holder, its year, its status. A drawing is
+ *  a value read OFF the patent — its holder, its year, its class. A drawing is
  *  the patent. The row draws its fields and up to twelve pictures, and the rule
  *  it narrows is the one about how many facts a row asserts.
  *
@@ -117,14 +117,11 @@ export const CODE = {
  *  by patent, and the FLIP, the rail, the focus return and the reversal all resolve
  *  through that key. `matched` and `patents.length` differ by what was binned, and
  *  printing the wrong one beneath the standing chip is a recorded regression. */
-/** `status` HAS FOUR VALUES AND `null`, and the fourth is not decoration.
- *  Real data carries at least Active, Granted, Expired, Abandoned and Pending;
- *  folding the last two into `expired` makes the interface say *Expired* about
- *  an application that was never granted, which is a different fact stated
- *  with full confidence. `null` means we do not know, and renders nothing. */
-/** THE ROW DRAWS TWELVE FIELDS NOW AND IT USED TO DRAW FOUR, and the rule that
+/** THERE IS NO `status`. Legal status is not printed anywhere in Terrain
+ *  (platform.md §13, R1-17), so it is not asked for. */
+/** THE ROW DRAWS MORE THAN THE FOUR FIELDS IT USED TO, and the rule that
  *  changed is not "how many facts may a row assert" but WHICH SURFACE ANSWERS
- *  THE GLANCE. Four fields — title, holder, year, status — could not separate a
+ *  THE GLANCE. Four fields could not separate a
  *  TSMC filing from a university one without opening the record, so the record
  *  was opened on every row and the list was a table of contents rather than a
  *  result. The fields added are the ones that end that trip: who invented it,
@@ -149,7 +146,6 @@ export const CODE = {
  *
  *  @typedef {{id:string, number:string|null, skim:string|null, holder:string|null,
  *             where:string|null, year:number|null, thumbs:Figure[],
- *             status:'live'|'expired'|'abandoned'|'pending'|null,
  *             score:number|null, inventors:string[]|null, abstract:string|null,
  *             ipcMain:string|null, filed:string|null, published:string|null,
  *             kind:string|null, figs:number|null}} PatentRow */
@@ -199,7 +195,7 @@ export const CODE = {
 /** @typedef {{title:string|null, number:string|null, appno:string|null, kind:string|null,
  *             ipcMain:string|null, ipc:string[]|null, holder:string|null,
  *             inventors:string[]|null, filed:string|null, published:string|null,
- *             where:string|null, status:string|null, abstract:string|null,
+ *             where:string|null, abstract:string|null,
  *             claims:string[]|null, figures:Figure[]}} Record */
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -231,7 +227,7 @@ export const PORTS = [
   'patents',         // → PatentSet
   'patentsPage',     // Show more
   'sort',            // {sort:'relevance'|'newest'|'oldest'} → PatentSet
-  'facets',          // {facets:{status,kind}, groups:[leafId]} → PatentSet
+  'facets',          // {groups:[leafId]} → PatentSet, the grouping's branches
   'rerank',          // {anchors:[id]} → {order:[id]} over the SAME set
 
   /* THE GROUPING. It partitions the set the search returned; it does not

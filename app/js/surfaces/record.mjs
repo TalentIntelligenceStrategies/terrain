@@ -26,7 +26,7 @@ import { onActivate } from '../core/delegate.mjs';
 import { push, drop, top } from '../core/esc-stack.mjs';
 import { focusQuietly, captureFocus } from '../core/focus.mjs';
 import { wait as pause } from '../core/timers.mjs';
-import { bar, bars, statusHTML, statusWord, langAttr } from '../core/primitives.mjs';
+import { bar, bars, langAttr } from '../core/primitives.mjs';
 import { bump, stale } from '../core/generation.mjs';
 import { reduced, DUR2, DUR3, enter } from '../core/motion.mjs';
 import * as Starred from '../core/starred.mjs';
@@ -86,18 +86,17 @@ const WIDE = { inventors: 1, ipc: 1 };
    THE TITLE IS THE SIXTH AND THE CONTROL IS WHY. A citation without a title
    is a handoff line, not a citation. .rec-end-note names all six where the
    founder is standing when they press it. */
-const HANDOFF = ['number', 'title', 'holder', 'where', 'status', 'ipcMain'];
+const HANDOFF = ['number', 'title', 'holder', 'where', 'ipcMain'];
 
 const FIELDS = [
   ['number', 'Number'], ['appno', 'Application'], ['kind', 'Kind'],
-  ['status', 'Status'], ['filed', 'Filed'], ['published', 'Published'],
+  ['filed', 'Filed'], ['published', 'Published'],
   ['where', 'Where'], ['holder', 'Holder'], ['inventors', 'Inventors'],
   ['ipcMain', 'Main class'], ['ipc', 'Classes'],
 ];
 
 function valueHTML(rec, key) {
   const v = rec[key];
-  if (key === 'status') return v ? statusHTML(v) : bar('w-sm');
   if (v == null) {
     /* null is "this value exists and we decline to print it". The bar count
        for a list field is a shape, not a claim about how many there are. */
@@ -130,7 +129,7 @@ function valueHTML(rec, key) {
    separator. Same rule the export's own cell() follows one surface over. */
 function citation(rec) {
   return HANDOFF
-    .map(k => (k === 'status' ? statusWord(rec.status) : rec[k]))
+    .map(k => rec[k])
     .filter(v => v != null && v !== '')
     .join(' · ');
 }
@@ -272,15 +271,11 @@ function paneHTML(rec, id) {
   const claimCount = rec.claims ? rec.claims.length : 0;
 
   return '<div class="pn">'
-    /* THE NUMBER LEADS, THE SAME WAY IT LEADS THE ROW. It was under the title
-       beside the status chip, which made the record and the row disagree about
-       what a patent is called first — the founder scans a number on the left,
-       presses, and has to find it again somewhere else on the right. It is the
-       one string they carry out of here into their own documents.
-
-       THE STATUS STAYS UNDER THE TITLE. It is a fact ABOUT the patent rather
-       than its name, and it is the one coloured thing in this head; putting it
-       up on the identifier line would make the first thing read a hue. */
+    /* THE NUMBER LEADS, THE SAME WAY IT LEADS THE ROW. Under the title, the
+       record and the row disagreed about what a patent is called first — the
+       founder scans a number on the left, presses, and has to find it again
+       somewhere else on the right. It is the one string they carry out of here
+       into their own documents. */
     + '<div class="pn-head"><div class="pn-head-lines">'
     + '<div class="pn-no-line">'
     + '<span class="fig fig-s pn-no">' + valueHTML(rec, 'number') + '</span>'
@@ -300,9 +295,8 @@ function paneHTML(rec, id) {
        The record and the list printing one number two ways is the founder
        having to work out that it is the same number. And when the engine
        returned none, the whole block goes: platform.md's "the label goes with
-       the value or neither goes", which is why every corpus record shows a
-       status chip here and nothing beside it. */
-    + '<div class="pn-meta">' + (rec.status ? statusHTML(rec.status) : '')
+       the value or neither goes", which is why no corpus record shows one. */
+    + '<div class="pn-meta">'
     + scoreHTML(id)
     + '</div></div></div>'
     + '<div class="pn-body">'

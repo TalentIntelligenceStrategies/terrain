@@ -215,24 +215,24 @@ three by a script that refuses:
 
 ### Colour carries information, or it is not there
 
-**Three permitted places and no more**: discrete states, direction of change, and the accent. No
-gradient, no decorative colour, no tinted background. *Chart layers were a fourth and left with the
-charts entirely. There is no chart token and no chart.*
+**Terrain has no hue of its own.** One place may take colour, the accent, and the accent is
+achromatic. No gradient, no decorative colour, no tinted background. *Three other places had colour
+and each left with what it coloured: chart layers with the charts, discrete states with the
+legal-status chip (`platform.md` §13, R1-17), direction of change with a delta pill that never
+shipped. Their tokens are gone rather than parked.*
 
-**Colour encodes direction, never desirability.** No green-means-good anywhere: a status chip says
-*Live* or *Expired* and neither is good news, because whether a live patent is a problem depends
-entirely on what the founder is building. Every coloured element also carries a word or a shape;
-never colour alone.
+**A hue is an amendment, not a design task.** It means a semantic token in all three theme blocks,
+measured against both grounds, argued against `design-language.md` §2 — and it would encode
+direction, never desirability, and carry a word or a shape beside it. No green-means-good anywhere.
 
 **The accent is for controls, never for data.** A primary action, a focus ring, a selected control.
-Not a status, not a score, not a relevance rank. `design-language.md` §3.8 is the rule and
-`brief.md` §5 is the decision. **The accent is achromatic**, so the states are the only colour in
-the product; Terrain's green is the website's marketing hue and does not enter the interface.
+Not a score, not a relevance rank. `design-language.md` §3.8 is the rule and `brief.md` §5 is the
+decision. Terrain's green is the website's marketing hue and does not enter the interface.
 
 **Innovue's blue may only ever appear inside the Innovue mark itself.** In a border, a chip or a
 button, it has been misread.
 
-**And the rule describes two palettes.** Dark is a swap of **33 semantic tokens** — `design-language.md`
+**And the rule describes two palettes.** Dark is a swap of **27 semantic tokens** — `design-language.md`
 §10.1 is where that number is argued, and `tools/check-app.py` is what keeps every printed copy of it
 honest — with **two named component exceptions and no others**, the two `.foot-mark-*` selectors on
 the attribution line. **Two semantic tokens do not swap and each says so in its own row**, and both are facts about the

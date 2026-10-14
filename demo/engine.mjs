@@ -151,13 +151,8 @@ export const DemoEngine = {
     return respond('sort', page(ORDER, shown));
   },
 
-  facets: async ({ facets = {}, groups = [] } = {}) => {
-    /* THE FACETS ARE REAL VALUES ONLY. status and kind are English words
-       already printed on the row; jurisdiction was considered and refused,
-       because §8 keeps it a bar and filtering on it would mean inventing a
-       facet the founder cannot check against what they can see. */
-    let ids = ALL.filter(r => !facets.status || r.status === facets.status)
-                 .map(r => r.id);
+  facets: async ({ groups = [] } = {}) => {
+    let ids = ALL.map(r => r.id);
     /* A BRANCH SELECTION IS A FACET, and it lands here rather than in a port
        of its own because it does the same thing: it changes which patents the
        founder is looking at, over the set the search already returned.

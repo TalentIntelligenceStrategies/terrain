@@ -127,7 +127,7 @@ async function load() {
 async function applyGroups() {
   const groups = [...PICKED];
   paintChips(LABELS);
-  const res = await ENGINE.facets({ facets: {}, groups });
+  const res = await ENGINE.facets({ groups });
   if (!res.ok) {
     say('list', 'The results could not be filtered. Nothing changed.');
     return;

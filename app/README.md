@@ -151,8 +151,8 @@ custom property on `:root`**. `design-language.md` §3.9 is the rule; this is th
 | --- | --- | --- | --- |
 | primitive | 11 | `:root` once | `--n-0`…`--n-10`. No component may read one |
 | scale | 28 | `:root` once | Invariant by construction |
-| semantic | 33 | **all three blocks** | The dark contract |
-| derived | 3 | `:root` once | Resolves *through* a themed token. **Never in a dark block** |
+| semantic | 27 | **all three blocks** | The dark contract |
+| derived | 1 | `:root` once | Resolves *through* a themed token. **Never in a dark block** |
 | component-scoped | 4 | the component's own class | Never on `:root` |
 
 **Every other copy of the token block is generated.** `tools/sync-tokens.py --write` writes it into
@@ -310,7 +310,7 @@ no focus trap — and all three are now narrowed to exactly this one node. `desi
 `views` left with the analysis layer.
 
 **`js/charts/` is gone.** The four modules — `primitives`, `share`, `series`, `map` — left
-with the analysis layer; the skeleton bar and the status chip they shared moved to
+with the analysis layer; the skeleton bar they shared moved to
 `core/primitives.mjs`, which is where the surviving renderers read them from.
 
 ### The three zones

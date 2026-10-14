@@ -36,7 +36,7 @@ import { enter, flip } from '../core/motion.mjs';
 import { say } from '../core/live-region.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { wait as pause } from '../core/timers.mjs';
-import { bar, statusHTML, statusWord, langAttr } from '../core/primitives.mjs';
+import { bar, langAttr } from '../core/primitives.mjs';
 import { bump, stale } from '../core/generation.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
 import { clampIntoView } from '../core/popover.mjs';
@@ -121,27 +121,16 @@ function toggleStar(id, btn) {
 
 /* the sentence a screen reader reads for one row.
 
-   IT READS THE SAME MAP THE CHIP DOES, and it did not until 2026-09-24. This
-   line was `rec.status === 'live' ? 'Live' : 'Expired'` — a surviving ternary
-   of exactly the kind primitives.mjs was built to delete — so the chip said
-   *Abandoned* and the accessible name said *Expired* about the same patent.
-   That is the identical false statement the export was fixed for, in the one
-   place nothing on screen can contradict it. One map, three readers now.
-
-   statusWord() RETURNS '' FOR AN UNKNOWN KIND, so the `if` guard stays right
-   and a null status still contributes nothing to the sentence.
-
    THE NAME DOES NOT GROW WITH THE ROW. The row draws eight more fields than it
    did, and putting all of them here would make a screen reader read a
    paragraph per result before reaching the next one. What a name has to carry
-   is what tells this row from the one under it — the title, who holds it, when,
-   and its status. The rest is in the record, one press away, which is the same
+   is what tells this row from the one under it — the title, who holds it and
+   when. The rest is in the record, one press away, which is the same
    place a sighted founder goes for it. */
 function rowName(rec, i) {
   const bits = [rec.skim != null ? rec.skim : 'Patent ' + (i + 1)];
   if (rec.holder != null) bits.push(rec.holder);
   if (rec.year != null) bits.push(String(rec.year));
-  if (rec.status) bits.push(statusWord(rec.status));
   if (rec.score != null) bits.push('score ' + rec.score.toFixed(4));
   return bits.join(', ') + '. Open the record.';
 }
@@ -259,27 +248,18 @@ function rowHTML(rec, i) {
        the full width, 45% do. The title went UP a scale step and wraps LESS,
        and the step itself costs 0.35px of row height.
 
-       THE STATUS LEADS, and it was the fourth cell of a 2x2 grid. It is the
-       single most decision-relevant fact on the row — an expired patent is
-       not a threat, it is free to use — and the leading edge of the first
-       line is what prominence means here. Its size does not have to carry it:
-       it is the only coloured thing on the row and it has a dot as well as a
-       word.
-
        THE RANK AND THE SCORE TRAIL TOGETHER, and the eyebrow reads as two
        clusters rather than three positions. What the patent IS leads — its
-       status and its number, the two facts that are true of the document
-       wherever it was found. What the SEARCH made of it trails — the position
+       number, true of the document wherever it was found. What the SEARCH made of it trails — the position
        and the engine's figure, the two facts that exist only because this
        query ran and that change when the sort does.
 
-       SPLITTING THEM PUT AN ORDINAL BETWEEN A STATUS AND AN IDENTIFIER, which
-       reads as a third fact about the patent. It is not one. Grouped at the
+       SPLITTING THEM PUT AN ORDINAL BESIDE THE IDENTIFIER, which reads as a
+       second fact about the patent. It is not one. Grouped at the
        trailing edge the pair is legible as the search's own margin note, and
        the number regains the leading position it is scanned from. */
     + '<span class="drill-head">'
     + '<span class="drill-eyebrow">'
-    + (rec.status ? statusHTML(rec.status) : '')
     /* w-md AND NOT w-sm/micro. The longest number in this corpus is 15
        characters — US20130146987A1, about 112px at fig-s — and a 52x9 bar is
        a skeleton the wrong size for the thing it withholds. */
@@ -611,7 +591,7 @@ async function request(port, arg, sayWhat, into, mode) {
   /* btnWait returns false when the button is already waiting, which is the
      re-press guard: two presses of Show more is one intention. A reorder
      reserves the trigger's width, because Sort sits in a row of controls and
-     a trigger shrinking to its loader slides Filter under the pointer. */
+     a trigger shrinking to its loader slides its neighbour under the pointer. */
   if (btn && !btnWait(btn, mode === 'reorder')) return null;
   const token = bump('list');
   list.setAttribute('aria-busy', 'true');
@@ -664,8 +644,8 @@ function lmMenu(wrapId, btnId, panelId) {
     wrap.classList.add('is-open');
     btn.setAttribute('aria-expanded', 'true');
     push(panelId, close);
-    /* the Filter menu sits far enough along .set-bar that its left:0 ran it
-       36px off the right edge at 320. */
+    /* a menu far enough along .set-bar ran its left:0 off the right edge at
+       320. */
     clampIntoView(panel);
     const first = panel.querySelector('[role="menuitemradio"]');
     if (first) focusQuietly(first);
@@ -869,7 +849,6 @@ export function init(ctx) {
   });
 
   lmMenu('sortWrap', 'sortBtn', 'sortMenu');
-  lmMenu('filtWrap', 'filtBtn', 'filtMenu');
   /* THE RECORD'S EXPORT MENU IS A .lm, so the file that owns .lm drives it.
      The markup is static in surface.html for exactly this reason — lmMenu
      binds by id at init and is not delegated, so a menu rebuilt on every
@@ -892,16 +871,5 @@ export function init(ctx) {
       '#sortBtn', 'reorder');
   });
 
-  /* `all` CLEARS THE FACET rather than sending one. A filter whose only way off
-     is reloading the page is a trap, and the count badge is what says one is on
-     — hidden at zero, because a badge reading 0 is a filter that looks applied. */
-  onActivate(document, '#filtMenu [data-facet]', el => {
-    const val = el.getAttribute('data-facet');
-    check($('#filtMenu'), el);
-    const count = $('#filtCount');
-    if (count) { count.hidden = val === 'all'; count.textContent = '1'; }
-    request('facets', { facets: val === 'all' ? {} : { status: val } },
-      'The list could not be filtered. It is unchanged.');
-  });
-}
 
+}

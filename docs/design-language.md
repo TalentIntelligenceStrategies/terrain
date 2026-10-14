@@ -31,33 +31,32 @@ Three things follow from that and everything else is downstream of them:
 
 **Colour carries information, or it is not there.**
 
-Three narrow, earned places have colour. Everything else is the neutral ramp, carrying meaning with
-hierarchy, weight and spacing.
+**Terrain has no hue of its own.** Everything is the neutral ramp, carrying meaning with hierarchy,
+weight and spacing, and the one place colour is permitted is achromatic:
 
 | Where | What it encodes |
 | --- | --- |
-| **Discrete states** | live / expired / pending — §3.3 |
-| **Direction of change** | a delta pill rising or falling — §3.3 |
 | **The accent** | the primary action, the focus ring, a selected control — §3.8 |
 
-*A fourth was **chart layers**, and it left with the charts entirely. §3.5 is retired and its number
-is not reused.*
+*Three other places had colour and each left with what it coloured. **Chart layers** went with the
+charts; **discrete states** — the live / expired / pending chip — went with legal status
+(`platform.md` §13, R1-17); **direction of change** was a delta pill that never shipped. §3.3 and
+§3.5 are retired and their numbers are not reused.*
 
-**A new chart is an amendment to [`brief.md`](brief.md) §4, not a design task.** The tokens are gone
-rather than parked, so drawing one means declaring them again, in all three theme blocks, with
-measured contrast — which is the friction this rule is for.
+**A hue is an amendment, not a design task.** The tokens are gone rather than parked, so a hue means
+declaring a semantic token in all three theme blocks, measuring it against both grounds, and arguing
+it against this section — which is the friction this rule is for. **A new chart is an amendment to
+[`brief.md`](brief.md) §4** on the same terms.
 
-**Colour encodes direction, never desirability.** This is the load-bearing half. A patent being live
-is not good or bad for a founder — it is information, and whether it is a problem depends entirely on
-what they are building. Green and red are confined to state chips and delta pills, where direction is
-unambiguous.
+**Colour would encode direction, never desirability.** Whatever earns a hue next — a state, a
+direction — earns it as information. Nothing is green because it is good.
 
-**Nothing means *good* because it is green.** The accent is a control's colour, not a verdict about
-data — it is achromatic precisely so it cannot be read as one — and it may not enter a status, a score
-or a rank.
+**The accent is a control's colour, not a verdict about data** — it is achromatic precisely so it
+cannot be read as one — and it may not enter a score, a rank or a count.
 
-**Never colour alone.** Every coloured element also carries a word or a shape — a dot plus a label,
-an arrow plus a number, a hatch plus a legend entry.
+**Never colour alone.** A coloured element would also carry a word or a shape: a dot plus a label, an
+arrow plus a number. The one hue on any Terrain surface today is a third party's, Innovue's blue
+inside the Innovue mark (§3.8), and it is a logotype rather than a signal.
 
 ---
 
@@ -189,32 +188,10 @@ raw hex        →  0      anything at all
 Comments are excluded because §3.1, §3.2 and §10.3 quote measured hex values as prose, and those are
 the evidence rather than a violation.
 
-### 3.3 · State colours
+### 3.3 · State colours — retired
 
-Each is an ink/tint pair; each renders as **dot + word**.
-
-| Token | Ink | Tint | Ink on surface | Ink on tint | Meaning |
-|---|---|---|---|---|---|
-| `--state-live` | `#1B6B45` | `#E4F1EA` | 6.49 | 5.58 | live patent, active |
-| `--state-expired` | `#A32B21` | `#FAE9E7` | 7.18 | 6.11 | expired patent |
-| `--state-pending` | `#7A5200` | `#FBF0D9` | 6.92 | 6.12 | an application still in examination |
-| `--state-up` | `--state-live` | | | | delta pill, rising |
-| `--state-down` | `--state-expired` | | | | delta pill, falling |
-
-Live-versus-expired is the single most decision-relevant fact a US founder reads off a row — an
-expired patent is not a threat, it is free to use. It earns colour on that ground alone.
-
-**Four status words share three hues, and the fourth word is why.** A patent's status renders as
-**Live**, **Expired**, **Abandoned** or **Pending**; *Abandoned* takes `--state-expired`. The hue
-means **not enforceable**, which is true of both, and the word is what separates them: an expired
-patent was granted and lapsed, an abandoned application was never granted. A fifth token for a fact
-the first already carries would be colour doing a word's job, which §2 puts the other way round.
-
-**A status Terrain does not know renders nothing at all.** Not a bar, and certainly not a guess —
-`null` here is not a withheld value, it is an absent one, and a chip is the wrong shape for either.
-
-`--state-up` / `--state-down` are aliases, not new hues. **They apply only to delta pills**, never to
-a series, a score or a status.
+*It held the live / expired / pending hues and the two direction aliases derived from them. They had
+one reader, the legal-status chip, and left with it (`platform.md` §13, R1-17).*
 
 *§3.5 was chart layers and is retired, and `--chart-series` went with it. Terrain draws no chart, and
 §3.5's number is not reused, for the reason §3 opens with.*
@@ -272,16 +249,15 @@ construction rather than by discipline. §3.9 carries the tier.
 
 **Where it may not appear:**
 
-- **In data.** Not a chart series, not a status chip, not a score, not a relevance rank.
-  §2's three permitted cases are exhaustive and the accent is the control case, not the data case.
+- **In data.** Not a score, not a relevance rank, not a count. §2 permits the accent in controls and
+  nowhere else.
 - **As decoration.** No gradient, no wash, no tinted card background, no accent border.
 - **Anywhere it could be read as a verdict.**
 
-**What being achromatic buys.** The accent cannot be confused with `--state-live` `#1B6B45`, which
-means *this patent is enforceable* on a chip the founder reads as a fact, and it needs no separately
-measured dark value: the ink pair inverts with the theme and §10.3's ink rows already carry its
-contrast. **A future hue would have to answer both** — a value distinct from every state colour, and
-its own measurement against `#1A1A1A` — and §2's one rule is what it would be argued against.
+**What being achromatic buys.** It can never be read as data, and it needs no separately measured
+dark value: the ink pair inverts with the theme and §10.3's ink rows already carry its contrast. **A
+future hue would have to answer both** — a meaning that is not *press here*, and its own measurement
+against `#1A1A1A` — and §2 is what it would be argued against.
 
 **Innovue's blue is not an accent and never becomes one.** `#006CB6` appears inside the Innovue mark
 on the attribution line and nowhere else — a third party's mark reproduced as issued.
@@ -297,8 +273,8 @@ blocks that goes stale. `tools/check-app.py` refuses one declared anywhere else.
 | --- | --- | --- | --- |
 | **primitive** | 11 | `:root`, once | `--n-0`…`--n-10`. **No component may read one.** |
 | **scale** | 28 | `:root`, once | `--s-*` `--r-*` `--dur-*` `--ease*` `--cycle`. Invariant by construction: a step is not a different size at night. |
-| **semantic** | 33 | **all three blocks** | This is the dark contract. §10.1. |
-| **derived** | 3 | `:root`, once | Resolves *through* a themed token, so it inverts for free. **Never add one to a dark block.** |
+| **semantic** | 27 | **all three blocks** | This is the dark contract. §10.1. |
+| **derived** | 1 | `:root`, once | Resolves *through* a themed token, so it inverts for free. **Never add one to a dark block.** |
 | **component-scoped** | 5 | on the component's own class | Never on `:root`, never read outside that component. |
 
 **The file is ordered by theme-variance, not by document section**, so *the three blocks carry the
@@ -306,14 +282,11 @@ same names in the same order* is a one-line assertion and **added to light, forg
 impossible to commit. The cost is that `--shadow-float` sits under §5 here and in the themed half
 there; that mismatch is exactly why the file is not organised by §.
 
-**The derived three** are `--state-up`, `--state-down` and `--focus`. A literal for any of them
-inside a dark block would pin the value to one palette **while reading as perfectly correct CSS** —
-the same failure mode as a component reading a primitive. `--focus` is the clearest case: it
-re-reads `--accent` at use time, so the one accent declaration gives the focus ring both its values.
-
-*This read `the derived five` and named two tokens the file had already deleted. It is the same
-drift §10.1 describes, in the prose rather than the table, which is why the gate added there counts
-the tiers rather than trusting either.*
+**The derived one** is `--focus`. A literal for it inside a dark block would pin the value to one
+palette **while reading as perfectly correct CSS** — the same failure mode as a component reading a
+primitive. It re-reads `--accent` at use time, so the one accent declaration gives the focus ring
+both its values. The tier stays a tier with one member, because the rule it carries — never in a dark
+block — is the one a second derived token would need.
 
 **The component-scoped five** are `--dmx-cycle`, `--dmx-opacity-base`, `--dmx-opacity-mid`,
 `--dmx-opacity-peak` and `--stage-delay`. They are declared on the component's own class because
@@ -917,10 +890,9 @@ a popover to be legible is not legible.
 **A narrow column has room for the list or for prose about the list.** Every sentence that is not the
 list lives behind one control.
 
-**A field states its own trouble in weight, not colour.** §2 would permit a hue here — an error is a
-discrete state — but the hue it would take is `--state-expired`, which in this product means *expired
-patent* and can be on a chip the founder is reading on the same screen. **Two reds meaning two things
-is worse than no red.** So the edge doubles instead: an inset 1px `--text-1` ring over the 1px border,
+**A field states its own trouble in weight, not colour.** An error is a discrete state, and a red would
+be the only hue in a product that has none — it would read as the most important thing on the screen
+rather than as one field needing a fix. So the edge doubles instead: an inset 1px `--text-1` ring over the 1px border,
 two pixels of ink and no layout change. A border-*width* change would move the value one pixel right,
 which is a layout property doing a state's job.
 
@@ -947,9 +919,7 @@ hiding *why* it will not send. Here the why is the empty field directly above th
 
 **A failure is the same argument at the size of a region.** A view, a pane or a list that does not
 arrive takes an icon, a sentence that states the fix, and an action where there is one, on the
-`--surface-sunken` fill any box inside a card takes. No hue, for the reason above, and none of the
-three state colours is available anyway: red is *expired*, amber is *pending*, green is *live* and
-now the accent.
+`--surface-sunken` fill any box inside a card takes. No hue, for the reason above.
 
 **It takes one hairline at full ink, not the field's doubled edge**, and the difference is scale
 rather than principle. A field doubles because it already has a resting border and may not change
@@ -1093,7 +1063,7 @@ The list is **duplicated on purpose.** CSS cannot share a declaration block betw
 a third indirection layer of `--dark-*` primitives buys nothing and hides which value is live.
 Whatever writes one writes both.
 
-**33 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
+**27 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
 here, `CLAUDE.md`, and `app/README.md`'s tier table — and **a gate keeps them equal to the file**
 rather than a sentence asking everyone to keep them equal to each other.
 
@@ -1108,7 +1078,7 @@ it refuse.
 because the comments are longer than the declarations; the gate parses for `--name:` inside the block
 bounds, which is why it is a gate rather than a shell one-liner in a comment.
 
-§3.9 carries the tier it belongs to: the primitives, the scale and the derived three are *not* in it,
+§3.9 carries the tier it belongs to: the primitives, the scale and the derived one are *not* in it,
 and a dark block that redefined one of them would be the bug rather than the contract.
 `check-app.py` also asserts that all three blocks carry the same names in the same order.
 
@@ -1155,14 +1125,6 @@ this section.
 | `--text-inverse` | `#141414` | — | 6.3 |
 | `--ink-hover` | `#FFFFFF` | — | 100 |
 | `--track-pressed` | `#2A2A2A` | — | 17.1 |
-
-**State.** Ink on `--surface`, and ink on its own tint.
-
-| Token | Ink | Tint | On surface | On tint |
-| --- | --- | --- | --- | --- |
-| `--state-live` | `#84B899` | `#18241D` | 7.71 | 7.10 |
-| `--state-expired` | `#D98B80` | `#2A1A17` | 6.59 | 6.32 |
-| `--state-pending` | `#C9A45C` | `#251E10` | 7.42 | 7.04 |
 
 **Skeleton.**
 

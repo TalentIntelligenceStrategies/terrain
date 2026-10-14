@@ -33,11 +33,8 @@ body{background:var(--ground);color:var(--text-1);
                color:var(--text-1)}
 .bench-note{font-family:'Inconsolata',ui-monospace,monospace;font-size:12.5px;color:var(--text-3)}
 .bench-ok{font-family:'Inconsolata',ui-monospace,monospace;font-size:12.5px;color:var(--text-1)}
-/* NOT A HUE. A verdict is a discrete state, which §2 permits colour for --
-   but the accent is for controls and the state hues mean live/expired/pending
-   on a patent. Weight says it instead, which is what the rest of the system
-   does. Every coloured element also carries a word; this one carries only the
-   word, which is the safe end of that rule. */
+/* NOT A HUE. The product has none to spend, and the accent is for controls.
+   Weight says it instead, which is what the rest of the system does. */
 .bench-bad{font-family:'Inconsolata',ui-monospace,monospace;font-size:12.5px;
            color:var(--text-1);font-weight:700}
 
@@ -47,5 +44,5 @@ body{background:var(--ground);color:var(--text-1);
 
 .bench-sub{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
            color:var(--text-3);margin:var(--s-24) 0 var(--s-8)}
-.bench-host>.btn,.bench-host>.chip,.bench-host>.status,.bench-host>.delta{margin:0 var(--s-8) var(--s-8) 0}
+.bench-host>.btn,.bench-host>.chip{margin:0 var(--s-8) var(--s-8) 0}
 .bench-host>.sk{display:block}

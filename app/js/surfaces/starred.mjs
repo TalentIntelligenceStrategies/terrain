@@ -21,7 +21,6 @@
 import { $ } from '../core/dom.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { say } from '../core/live-region.mjs';
-import { statusHTML, statusWord } from '../core/primitives.mjs';
 import { esc } from '../core/dom.mjs';
 import * as Starred from '../core/starred.mjs';
 import { reduced, flip, DUR2 } from '../core/motion.mjs';
@@ -40,11 +39,6 @@ const COLUMNS = [
   { key: 'skim',   head: 'Title',   get: r => r.skim },
   { key: 'holder', head: 'Holder',  get: r => r.holder },
   { key: 'where',  head: 'Where',   get: r => r.where },
-  /* THE WORD COMES FROM core/primitives.mjs, not from a ternary here. This
-     read `live ? Live : expired ? Expired : r.status`, which wrote the raw
-     string `abandoned` into a spreadsheet and could never learn a fifth
-     value. */
-  { key: 'status', head: 'Status',  get: r => statusWord(r.status) || null },
   { key: 'year',   head: 'Year',    get: r => r.year },
   { key: 'score',  head: 'Score',   get: r => r.score == null ? null : r.score.toFixed(4) },
   /* THE SEARCH IT WAS STARRED UNDER, added 2026-09-26 with the grouping.
@@ -79,7 +73,7 @@ function toCSV(rows) {
 
 /* ── the Markdown list ──────────────────────────────────────────────────────
    A LIST, NOT A TABLE. The founder is pasting this into something they are
-   already writing, and an eight-column pipe table is unreadable in a source
+   already writing, and a seven-column pipe table is unreadable in a source
    file and wraps badly in every editor. One patent per bullet, its number
    bolded because that is the field they will search their own document for.
 
@@ -121,7 +115,6 @@ function bullets(rows, lines) {
     if (r.holder != null) bits.push(r.holder);
     if (r.where != null) bits.push(r.where);
     if (r.year != null) bits.push(String(r.year));
-    if (statusWord(r.status)) bits.push(statusWord(r.status));
     if (r.score != null) bits.push('score ' + r.score.toFixed(4));
     /* THE BULLET LEADS WITH WHATEVER IDENTIFIES THE PATENT. A withheld number
        must not leave `- **** —` in the founder's document, so the title takes
@@ -183,7 +176,6 @@ function rowHTML(r, n) {
     + cellOr(r.skim, 'star-c-t', 'w-full')
     + cellOr(r.holder, 'star-c-h', 'w-md')
     + cellOr(r.where, 'star-c-w', 'w-sm')
-    + '<td class="star-c-st">' + (r.status ? statusHTML(r.status) : '') + '</td>'
     + '<td class="star-c-y fig fig-s">' + (r.year == null ? '' : r.year) + '</td>'
     /* THE SCORE OBEYS THE SAME OMISSION RULE AS THE LIST'S: null means the
        engine returned none, so the cell is empty rather than carrying a

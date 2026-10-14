@@ -32,7 +32,7 @@ window anywhere in the product.
 
 **A top masthead, not a sidebar.** Arithmetic, not taste. The two columns split a 1440px laptop
 44/56 — 634 for the list, 806 for the record — and neither half survives a 260px rail: the result
-list stops being readable under 340px, and the record's eleven-field list wraps its values onto
+list stops being readable under 340px, and the record's ten-field list wraps its values onto
 second lines under about 600px, which a 260px rail would put it under at any window below ~1465.
 Everything a rail would have carried is in the 48px bar: the project switcher, the starred count, the
 appearance control, the account menu.
@@ -196,7 +196,7 @@ Four toggles sit on the same row:
 
 1. **Search settings** — the same popover §3.3 describes, anchored here instead.
 2. **Grouping** — opens the branch panel, §4.4, as a popover under this control.
-3. **Details and drawings** — every row as it is: title, status, holder, year, drawings.
+3. **Details and drawings** — every row as it is: title, holder, year, drawings.
 4. **Drawings only** — every row stripped to its drawings, for a set being scanned visually.
 
 **Toggles 3 and 4 govern the list, and that is a correction.** They governed the record, which made
@@ -215,8 +215,8 @@ could read a patent or see the set it came from, never both. Reading one patent 
 one act, and one region that means two things by state is what that cost.
 
 **Three bands a row, then the drawings.** Band one is identity, on two lines: an **eyebrow** carrying
-the status chip and the patent number at its leading edge, the position in the order and the
-engine's score together at its trailing edge — and the **title on its own full width** below it. Band two is a 2×2
+the patent number at its leading edge, the position in the order and the engine's score together at
+its trailing edge — and the **title on its own full width** below it. Band two is a 2×2
 grid of who and when: the first inventor, the holder, the publication date, and a cell carrying the
 jurisdiction and the main classification. Band three is the abstract, clamped to three lines. The
 drawings are not a fourth band: a field is a value read *off* the patent, and a drawing is the
@@ -228,21 +228,16 @@ number's width, declared nowhere and removable by nothing while the two shared a
 full column also bought a size step: measured over 100 corpus titles, one-line titles went from 33%
 to 45% *at the larger size*, so the title reads bigger and wraps less.
 
-**The status chip leads it.** It is the single most decision-relevant fact on the row — an expired
-patent is not a threat, it is free to use — and it had been the fourth cell of the 2×2 grid. The
-leading edge of the first line is what prominence means here; its size does not have to carry it,
-because it is the only coloured thing on the row and it has a dot as well as a word.
-
 **The score is inline at the eyebrow's trailing edge, not stacked above it.** Stacked, a scored row
 stood 10.35px taller than an unscored one, so row height depended on what the engine returned.
 Inline, the eyebrow is one height either way — the same invariant the scrolling drawing strip is
 built on, and the row went from six possible heights to two.
 
-**The position travels with it, and the eyebrow is two clusters rather than four positions.** What
-the document *is* leads — the status and the number, true of the patent wherever it was found. What
-the *query* made of it trails — the position and the score, which exist only because this search ran
-and which change when the sort does. A position sitting between a status chip and an identifier
-reads as a third fact about the patent, and it is not one. They wrap together for the same reason
+**The position travels with it, and the eyebrow is two clusters rather than three positions.** What
+the document *is* leads — the number, true of the patent wherever it was found. What the *query* made
+of it trails — the position and the score, which exist only because this search ran and which change
+when the sort does. A position sitting beside the identifier reads as a second fact about the patent,
+and it is not one. They wrap together for the same reason
 they sit together.
 
 **The position always renders; the score may not.** There is no engine to withhold an ordinal. A
@@ -303,17 +298,16 @@ starred, and one info affordance. The count is printed once: a chip beside the h
 has room for the list or for prose about the list, and every sentence that is not the list lives
 behind that control.
 
-**Bar** — Sort (Relevance · Newest filed · Oldest filed), Filter (status and kind facets, with a
-count), **Find similar** and **Restore the original order**. Find similar is the only filled control
-on the surface and is hidden rather than disabled when nothing is starred — **and it holds its slot
-while hidden**, so the first star does not break the bar onto a second row under the pointer that
-pressed it. Where the column is too narrow to hold the slot at full width, Filter's label and then
-Find similar's clip to their icons, keeping their accessible names. The heading's two-count form is
+**Bar** — Sort (Relevance · Newest filed · Oldest filed), **Find similar** and **Restore the original
+order**. Find similar is the only filled control on the surface and is hidden rather than disabled
+when nothing is starred — **and it holds its slot while hidden**, so the first star does not break the
+bar onto a second row under the pointer that pressed it. Where the column is too narrow to hold the
+slot at full width, Find similar's label clips to its icon, keeping its accessible name. **There is no
+filter**: the one it had was legal status, which Terrain does not print (§13, R1-17). The heading's two-count form is
 `100 matched · 20 shown`: the noun is the subject of every row beneath it, and dropping it is what
 buys the slot.
 
-**Rows** — each carries the patent's identity, a status chip, and the engine's relevance score on
-the right. Twenty rows, then a foot that says how many are left and offers `Show more`.
+**Rows** — each carries the patent's identity and the engine's relevance score on the right. Twenty rows, then a foot that says how many are left and offers `Show more`.
 
 **The reading loop is one hand.** With focus in either column, `j` and `k` open the next and previous
 patent — focus moves to its row and stays on the list, so the next press is one key away — the arrow
@@ -417,7 +411,7 @@ a level under both.
 control for the rest. The count in the heading is what states how many there are, so the control is
 disclosure rather than a claim about the data.
 
-**The two halves are even.** The record's eleven-field list is the width-critical thing on the
+**The two halves are even.** The record's ten-field list is the width-critical thing on the
 surface and the list's four are not, which is what bought the record the wider half — and the
 container query enforcing that width floor had never fired, so the share was protecting a constraint
 that did not exist. With the floor working the record adapts its own field list and the split no
@@ -466,11 +460,11 @@ and everything between them is the document.
 class, the same `data-star`, the same delegated handler, because the thing that paints them writes to
 every star in the document and never knew where they were.
 
-It renders **the record, not an opinion about the record**: eleven identifiers, the abstract, the
-claim set as published, and the drawings. **The five-field handoff — number, holder, where, status,
-IPC — is the citation's payload rather than a block on screen**, with the title as a sixth because a
-citation without one is a handoff line and not a citation. Printing five of the eleven again at the
-foot of a record that has just printed all eleven is the repetition the *Classes* rule refuses one
+It renders **the record, not an opinion about the record**: ten identifiers, the abstract, the
+claim set as published, and the drawings. **The four-field handoff — number, holder, where, IPC — is
+the citation's payload rather than a block on screen**, with the title as a fifth because a citation
+without one is a handoff line and not a citation. Printing four of the ten again at the foot of a
+record that has just printed all ten is the repetition the *Classes* rule refuses one
 paragraph down; its stated purpose is the founder taking this to counsel, which is something that
 **leaves**. The closing block names the fields it copies where the founder is standing when they
 press it — **behind one control rather than standing open**. It was a paragraph under the row, read
@@ -479,7 +473,7 @@ the rule: a narrow column has room for the reading or for prose about the readin
 that is not the reading lives behind one control.
 
 **The record prints the score the row printed.** It is the search's number rather than the patent's,
-so it sits with the status chip on the meta line rather than among the eleven identifiers, and it is
+so it sits on the meta line under the title rather than among the ten identifiers, and it is
 read from the row rather than added to the record contract — the same patent fetched from a different
 query has a different one, and fetched from no query has none.
 
@@ -635,10 +629,10 @@ carries two fields of the store's own beside the engine's, and they are named so
 
 **Every column the file carries is on the row above it.** The page tells the founder the files carry
 the same fields as the rows, so a field that leaves in the file without appearing on screen is the
-one thing `brief.md` §1's test is about. The row shows all eight.
+one thing `brief.md` §1's test is about. The row shows all seven.
 
 **It leaves as a CSV or a Markdown list, and as nothing else.** Both carry the fields already on
-screen — number, title, holder, where, status, date, score, and the search it was starred under —
+screen — number, title, holder, where, date, score, and the search it was starred under —
 and neither carries a cover page, a summary or a conclusion. The CSV carries the search as a column;
 the Markdown has no columns, so it carries it as a heading per search, in the order the page shows
 them. One grouping function feeds both, because two would be two chances for the file and the screen
@@ -732,8 +726,8 @@ apology standing in for an instruction. Where there is nothing the founder can d
 that instead of inventing an action.
 
 **It is drawn in weight, not colour**, and [`design-language.md`](design-language.md) §7 carries the
-treatment. The short reason: the one red this system has means *expired patent*, and it can be on a
-chip the founder is reading on the same screen.
+treatment. The short reason: Terrain has no hue, and a red would be the loudest thing on any screen it
+reached.
 
 ### 7.1 · A failure is the size of the region that was waiting
 
@@ -816,8 +810,7 @@ nothing.
 **Adopted.** The search and classification chain; semantic retrieval from a plain-language sentence;
 the search-settings vocabulary — jurisdiction and document kind as the index cross-product, a result
 count, a date filter with a chosen basis; the generated grouping over a result set; the drawings and
-their viewer. Name unification, family merge and legal-status resolution are taken as **hygiene the
-founder never sees** — they are why the list can say *deduplicated by family* without asking anyone
+their viewer. Name unification and family merge are taken as **hygiene the founder never sees** — they are why the list can say *deduplicated by family* without asking anyone
 to configure it.
 
 **Cut, with reasons.**
@@ -873,9 +866,9 @@ postponed, it says so.
 5. **A patent package** — the starred set's drawings and PDFs as a zip. Distinct from the export
    already built, which is rows. **Starts when:** drawing and PDF URLs are available and CORS
    permits a client-side fetch, which is question 4.
-6. **A standing jurisdiction + status filter** on the result list — *live only*, *US only*. Mechanical,
-   and it answers the question a founder asks second. **Starts when:** the status vocabulary is
-   widened; five real legal statuses currently collapse into two.
+6. **A standing jurisdiction filter** on the result list — *US only*. Mechanical, and it answers the
+   question a founder asks second. **Starts when:** every row prints its jurisdiction as a code
+   (R1-13), so the filter can be checked against what is on screen.
 7. **An attorney handoff file** — the starred set written up as a document somebody could file
    against. **Decided against**, not postponed. The starred set leaves as data (§5.2); a written-up
    handoff is the authored narrative `brief.md` §1 draws the line at, and reopening it is an
