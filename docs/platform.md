@@ -1109,11 +1109,10 @@ replaced when the next round opens.
 | R1-40 | Every control | Targets under 24 px: Grant / Application, the patent number link, the version → at least 24 px, a pseudo-element extending the hit area where the visible size stays | Overlay; `app/` too |
 | R1-41 | Results, record | No `<h1>` on results, and the record's title is not a heading → one `<h1>` per view, the record title a heading | Markup only |
 | R1-42 | Result card | A single-version record shows one filled *Grant* pill that reads as a pressed segment → plain text when only one version exists | Overlay; `app/` too |
-| R1-43 | Result card | No hover state under a pointer cursor → a background step on hover, distinct from the selected fill | Overlay |
 | R1-44 | Error states | *Make sure the backend API is running.* reaches the founder → removed; the sentence says what the founder can do | Wording |
 | R1-45 | Theme switch | Every coloured transition fires at once and the page smears → transitions off for one frame during the swap | Overlay (script); `app/` too |
 | R1-46 | Search settings | Chips mark *on* with a filled square and show no *off* → a check when on, nothing when off | Overlay; `app/` too |
-| R1-47 | Drawings viewer | Strip thumbnails past the eighth are blank while the first figure is open → the whole strip loads when the viewer opens | Overlay (script) |
+| R1-47 | Drawings viewer | The viewer's strip fetches every drawing again and shows placeholders, though the record behind it has already loaded them → the strip reuses the drawings the record holds, so it is full when the viewer opens | Their captures |
 
 **Questions for Innovue**, each closing the package:
 
@@ -1144,4 +1143,4 @@ item marked *`app/` too* changes.
 code in the field label; the cards' double frame; two counts, search timing and four-decimal scores;
 the *Nearest to* chip truncating its number; the abstract's measure; a `max-width` transition; and
 *Granted patents* beside *Application*.
-**Conformant:** the generated grouping, which §9 adopts.
+**Conformant:** the generated grouping, which §9 adopts, and the result card's hover state.
