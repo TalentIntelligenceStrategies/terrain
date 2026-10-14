@@ -145,21 +145,44 @@ Checkpoint: the accepted list, and what goes in Part A vs Part B.
 
 For each item, in the order the user picks:
 
-- **Overlay items.** Write `design/overlays/round-N/<ID>.css` (and `.js` only if CSS cannot do it).
-  Selectors target their markup, so read the DOM first (`page.evaluate` or the captures' log), and
-  prefer attribute and aria selectors over hashed class names. Then:
-  ```sh
-  node .claude/skills/terrain-round/scripts/overlay.mjs --round N --item <ID> --state results
-  ```
-  States: `home results scrolled group record phone`. Show the user before and after, in both
-  themes. Repeat until the user accepts. Offer alternatives side by side when the item asks for
-  them, as separate IDs (`R2-08a`, `R2-08b`).
+- **Overlay items.** Their build is the patch's reader, so an overlay is written for their engineers:
+  1. **Read the markup first.** `dom.mjs --round N --state <state>` writes the rendered document, an
+     outline (tag, aria-label, classes, box) and their CSS variables in both themes to
+     `round-N/dom/`. Their stylesheet goes in `round-N/bundle/entry.css`; read the rule you are
+     changing before overriding it. `type.mjs` writes the type sizes they render, counted.
+  2. **Write `design/overlays/round-N/<ID>.css`**, and `.js` only where CSS cannot do it. Every file
+     opens with a header comment: the ID and component, *Current*, *Wanted*, and anything the patch
+     cannot do that the component must (a hard-coded height, `disabled` → `aria-disabled`). Use
+     **their tokens** (`--background`, `--card`, `--border`, `--muted-foreground`, `--ring` …),
+     attribute and aria selectors before class names, and no `!important`: their utilities are in
+     `@layer`, so an unlayered rule already wins. Key states on what they render (`.progress-bar`,
+     `.sk-shimmer`, `aria-pressed`) rather than inventing one. Scripts handle what is already on
+     the page and watch for what arrives, and are idempotent.
+  3. **Shoot it:**
+     ```sh
+     node .claude/skills/terrain-round/scripts/overlay.mjs --round N --item <ID> --state results
+     ```
+     States: `home settings results scrolled record record-scrolled loading notfound similar
+     lightbox group`, plus `--hover`, `--focus`, `--scroll`, `--clip`, `--tag`. **One search per
+     run**: the before shots are taken in both themes, then the overlay goes into the same page.
+     An item a picture cannot show (a hit area, a transition count) is verified by measuring it
+     on the live page, and the number goes in the header comment.
+  4. **Alternatives** are separate IDs (`R2-08a`, `R2-08b`); files named for the base ID
+     (`R2-08.css`) are shared by both. `--item all --without R2-08b` shoots the combined patch with
+     the unchosen variant left out.
+  5. `review.mjs --round N` writes `round-N/overlay/review.html`, every item's header and shots on
+     one local page. Show the user that, and repeat until they accept.
+
+  An item that an overlay cannot show honestly (their loader, their engine) moves to *their
+  captures* in §13.4, with the reason.
 - **`app/` items.** Build in `app/`. Settle in `docs/` first if it is a new decision. **Any component
   touched takes their type and text layout** (§13.1). Gates must pass:
   `python3 tools/check-app.py && python3 tools/sync-tokens.py --check && bash tools/test-gates.sh`.
   Capture the result with `capture.mjs --target ours`.
 - Before leaving the phase, shoot the combined patch once: `overlay.mjs --item all` for each state
   the overlays touch. Two overlays that look right alone can still collide.
+- **Run the overlay half first and stop at its checkpoint**, then the `app/` half. They answer to
+  different references and the user reviews them differently.
 - Commit overlays and `app/` changes, one item per commit.
 
 Checkpoint: every item done or explicitly deferred.

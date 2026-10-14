@@ -103,15 +103,20 @@ export async function openRecord(page) {
    re-renders on navigation, so a style appended once after load can be dropped
    by the first route change. The init script appends it at DOMContentLoaded and
    a MutationObserver puts it back if it is ever removed. */
-export function readOverlay(round, item) {
+export function readOverlay(round, item, without = []) {
   const dir = path.join(ROOT, 'design', 'overlays', `round-${round}`);
   if (!fs.existsSync(dir)) die(`${path.relative(ROOT, dir)} does not exist`);
   const files = fs.readdirSync(dir)
-    .filter(f => /\.(css|js)$/.test(f) && (item === 'all' || path.parse(f).name === item)).sort();
+    /* A variant (R1-09a) also takes its item's shared files (R1-09.js). */
+    .filter(f => /\.(css|js)$/.test(f) && (item === 'all' || [item, item.replace(/[a-z]$/, '')].includes(path.parse(f).name)))
+    .filter(f => !without.includes(path.parse(f).name)).sort();
   if (!files.length) die(`no ${item}.css or ${item}.js in ${path.relative(ROOT, dir)}`);
-  const read = ext => files.filter(f => f.endsWith(ext))
-    .map(f => `/* ${f} */\n` + fs.readFileSync(path.join(dir, f), 'utf8')).join('\n;\n');
-  return { css: read('.css'), js: read('.js'), files };
+  /* Scripts are joined with a ';' so one file's last statement cannot run
+     into the next. Stylesheets must NOT be: a stray ';' at the top level of
+     CSS swallows the next file's first rule, silently. */
+  const read = (ext, sep) => files.filter(f => f.endsWith(ext))
+    .map(f => `/* ${f} */\n` + fs.readFileSync(path.join(dir, f), 'utf8')).join(sep);
+  return { css: read('.css', '\n'), js: read('.js', '\n;\n'), files };
 }
 
 export async function injectOverlay(ctx, { css, js }) {
@@ -141,4 +146,44 @@ export async function labels(page) {
     .filter(e => e.offsetParent)
     .map(e => (e.getAttribute('aria-label') || e.innerText || '').trim().replace(/\s+/g, ' ').slice(0, 100))
     .filter(Boolean))]);
+}
+
+/* The states the overlay and dom scripts can stop in on THEIR build, reached
+   the same way by both, so a selector read from a dump is a selector the
+   overlay shot exercises. One search per call (none for home and settings). */
+export const THEIRS_STATES = ['home', 'settings', 'results', 'scrolled', 'record', 'record-scrolled',
+  'loading', 'notfound', 'similar', 'lightbox', 'group'];
+
+export async function reachTheirs(page, state, query) {
+  const settle = ms => page.waitForTimeout(ms);
+  async function submit(text, mode) {
+    await page.goto(THEIRS, { waitUntil: 'networkidle', timeout: 60000 });
+    await settle(1200);
+    if (mode) await click(page, new RegExp(`^${mode}$`), 600);
+    await page.locator('textarea:visible').first().fill(text);
+    await Promise.all([
+      page.waitForResponse(r => /\/api\/(Search|Patent)\//.test(r.url()), { timeout: 60000 }).catch(() => null),
+      click(page, /^Search$/, 0),
+    ]);
+    await settle(5000);
+  }
+  if (state === 'home') { await page.goto(THEIRS, { waitUntil: 'networkidle' }); return settle(1500); }
+  if (state === 'settings') {
+    await page.goto(THEIRS, { waitUntil: 'networkidle' }); await settle(1200);
+    return click(page, /^Search settings$/, 1000);
+  }
+  if (state === 'notfound') return submit(query || 'US12-345', 'Patent number');
+  await submit(query || QUERY);
+  if (state === 'scrolled') { await page.mouse.move(360, 600); await page.mouse.wheel(0, 2400); await settle(2500); }
+  if (state === 'record-scrolled') { await page.locator('#results-side-pane').evaluate(e => { e.scrollTop = 1400; }); await settle(800); }
+  if (state === 'similar') await click(page, /^Find similar$/, 6000);
+  if (state === 'lightbox') { await page.locator('button[aria-label^="Open figure 1 "]').first().click(); await settle(2500); }
+  if (state === 'group') await click(page, /^Group the results$/, 20000);
+  if (state === 'loading') {
+    /* Hold the NEXT search so the in-flight state can be shot, with the
+       results already on screen still there: the state R1-09 is about. */
+    await page.route(/\/api\/Search\//, async r => { await new Promise(res => setTimeout(res, 60000)); r.continue().catch(() => {}); });
+    await click(page, /^Expand search box/, 600);
+    await click(page, /^Search$/, 1500);
+  }
 }
