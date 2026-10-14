@@ -1,0 +1,19 @@
+/* R1-36 · Result card: three things carry it (flagged, §13.1)
+ *
+ * Current: about 14 data points at near-equal weight: number, version switch,
+ * rank, score, title, every inventor, holder, publication and priority dates,
+ * jurisdiction, kind, main class, abstract, drawings. Inventors come first
+ * and the holder second, both muted.
+ * Wanted:  the title, the holder and one date carry the card. The holder
+ * leads the meta row in the text colour; inventors follow, muted, as the
+ * first name and "+n" (the full list stays in the record and on hover); the
+ * card shows the publication date only, and the priority date stays in the
+ * record. Nothing is removed from the record.
+ *
+ * Layout here; the text changes are in R1-36.js. */
+main .group.cursor-pointer [title="Applicant"] {
+  order: -1;
+}
+main .group.cursor-pointer [title="Applicant"] .truncate {
+  color: var(--foreground);
+}
