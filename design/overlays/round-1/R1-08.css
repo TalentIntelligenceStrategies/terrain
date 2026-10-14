@@ -1,0 +1,52 @@
+/* R1-08 · Search bar, results bar
+ *
+ * Current: the folded bar is 12 px under the masthead and touches the result
+ * panels (0 px); inside it, 12 px of padding and 12 px between eight
+ * controls; the query is cut to one line.
+ * Wanted:  16 px above the bar and 16 px below its divider, so the bar and the
+ * panels read as two regions; 12 px x 16 px padding inside; 16 px between
+ * control groups; the view switch shows its words; the query wraps to two
+ * lines before it truncates.
+ *
+ * The panel height is computed from the viewport, so the gap below the bar is
+ * padding inside the results section rather than a margin that would push
+ * the panels' foot off screen. */
+
+/* Above and below the folded bar */
+main > div.sticky {
+  padding-block: 4px;               /* 12 + 4 = 16 above the bar, and below it */
+}
+@media (min-width: 1024px) {
+  section.shell-swap {
+    padding-top: 16px;              /* 16 between the divider and the panels */
+  }
+}
+
+/* Inside the bar: the folded row only. The landing composer keeps p-4. */
+main > div.sticky .search-box-morph {
+  padding: 12px 16px;
+}
+main > div.sticky .search-box-morph > div:last-child {
+  gap: 16px;
+}
+
+/* The view switch shows its words: the buttons already carry them as title */
+[role="group"][aria-label="View mode"] button {
+  width: auto;
+  padding-inline: 10px;
+  gap: 6px;
+}
+[role="group"][aria-label="View mode"] button::after {
+  content: attr(title);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* The query wraps to two lines before it truncates */
+button[aria-label^="Expand search box"] {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.4;
+}
