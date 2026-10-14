@@ -1030,7 +1030,7 @@ replaced when the next round opens.
 | R1-05 | Result list | Every result in one endless scroll → 20, then *Show more*, which also lets drawings arrive sooner | `app/` |
 | R1-06 | Engine · names and titles | The same company in two spellings, names and titles in capitals → titles in sentence case with acronyms kept; holders merged to one form as the company writes itself; inventors in normal case. Design-language §4 *Case* | Their captures |
 | R1-25 | Landing · field tiles | The selected tile shares the disabled tiles' grey, so the other enabled tile reads as selected → selected white with the ink border, enabled white with the hairline, disabled grey with *Coming soon* | Overlay |
-| R1-26 | Every control | Focus shows as a 1 px border change or not at all (the search box, the version), and drops to the page after *Search settings* → a 2 px ring on `:focus-visible` everywhere; *Search* stays focusable (`aria-disabled`) until there is text; a skip link to the results | Overlay; `app/` too |
+| R1-26 | Every control | Focus shows as a 1 px border change or not at all (the search box, the version), and drops to the page after *Search settings* → a 2 px ring on `:focus-visible` everywhere, the search box ringed whole; focus never falls to the page; a skip link first | Overlay |
 | R1-27 | Result list | About 12 tab stops per card and no shortcuts → one stop per card, the drawings reached inside the record, `j` / `k` between results | `app/` |
 | R1-28 | Record · export | *Export this record* produced no file in the audit, and nothing confirms one → the file downloads, and its name is confirmed the way *Citation copied* is | Their captures |
 

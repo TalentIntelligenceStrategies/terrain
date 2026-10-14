@@ -8,9 +8,10 @@
  * their --ring token; the search box shows the ring on the whole box; a skip
  * link is the first stop (R1-26 script).
  *
- * Not patchable here, and part of the item: Search stays focusable while
- * empty (aria-disabled instead of disabled), so focus never leaves the page.
- * Controls that already draw a focus-visible ring keep theirs. */
+ * Not patchable here, and part of the item: focus must not fall to the page
+ * after Search settings. In the package, Search is natively disabled until
+ * there is text and Tab moves on to the next control; in this build it lands
+ * on <body>. Controls that already draw a focus-visible ring keep theirs. */
 :where(button, a, summary, [role="combobox"], [tabindex]:not([tabindex="-1"])):focus-visible:not([class*="focus-visible:ring"]) {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
