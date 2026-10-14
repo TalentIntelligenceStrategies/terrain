@@ -1,0 +1,50 @@
+/* R1-07 · Masthead, landing
+ *
+ * Current: 48 px bar with no inline inset beyond the page gutter, 4 px between
+ * the lockup, New search and the field control; the landing headline sits
+ * 13 px under the bar and 40 px above its own text; the build version shares
+ * the bar with the appearance control.
+ * Wanted:  56 px bar, 24 px inline inset, 12 px between controls; at least
+ * 40 px between the bar and the landing headline; the version leaves the bar
+ * (it belongs in the account menu, R1-03, where support can still read it).
+ *
+ * Selectors are attribute and structure based so they survive a rebuild of
+ * the utility classes. Values are spacing only; no colour changes.
+ *
+ * Component change, not patchable cleanly: the results layout sizes the
+ * panels as 100dvh minus --sticky-meta-top, which is computed as a fixed
+ * 49 px for the masthead plus the measured search bar. A 57 px masthead
+ * therefore pushes the panels 8 px past the viewport. The fix is to measure
+ * the masthead the way the bar already is; the last two rules below stand in
+ * for that so the patch can be seen. */
+
+/* The bar */
+header.sticky > div:first-child {
+  height: 56px;
+  padding-inline: 24px;
+  gap: 16px;
+}
+header.sticky > div:first-child > div:first-child,
+header.sticky > div:first-child > div:last-child {
+  gap: 12px;
+}
+
+/* The version leaves the bar */
+header.sticky button.font-mono {
+  display: none;
+}
+
+/* The landing headline */
+main > section:has(> h1) {
+  padding-top: 40px;
+}
+
+/* Stand-in for measuring the masthead (see the note above): 57 - 49 = 8 */
+main > div.sticky {
+  top: 56px;
+}
+@media (min-width: 1024px) {
+  main > div:has(> section.shell-swap) {
+    height: calc(100dvh - var(--sticky-meta-top) - 8px);
+  }
+}
