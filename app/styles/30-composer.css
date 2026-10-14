@@ -73,13 +73,18 @@
 .cmp-field textarea:focus-visible{outline:none}
 .cmp-field{position:relative}
 /* no transition on the height. Typing is the most repeated action in the
-   product, and a transitioning box lags the caret. Also a layout property. */
+   product, and a transitioning box lags the caret. Also a layout property.
+
+   THE FOUNDER CAN DRAG IT TALLER (platform.md §3.2), vertically only and
+   between 60 and 320px. A long description pasted in is otherwise read
+   through a four-line window; a box that grew by itself would move the
+   Search button under the pointer while the founder types. */
 /* no outline:0 in this declaration any more — see .cmp-inner's ring above.
    The suppression it used to carry is scoped to :focus-visible now, so the
    ring moves to the panel instead of disappearing. */
-.cmp-field textarea{width:100%;border:0;resize:none;background:none;font:inherit;
+.cmp-field textarea{width:100%;border:0;resize:vertical;background:none;font:inherit;
       color:var(--text-1);line-height:1.55;padding:0;display:block;
-      min-height:60px;max-height:200px;overflow-y:auto;position:relative;z-index:1}
+      min-height:60px;max-height:320px;overflow-y:auto;position:relative;z-index:1}
 /* the placeholder is VISIBLE again. It was transparent because .ghost drew a
    rotating one over it, and the rotation left with the conversation. */
 .cmp-field textarea::placeholder{color:var(--text-3)}

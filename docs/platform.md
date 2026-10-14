@@ -87,7 +87,9 @@ there at all.
 ### 3.2 · One composer, one button
 
 Below the tiles: one composer, and *Describe what you are building.* The field is inert until
-something is typed. Enter runs the search; Shift+Enter breaks the line; an IME composition is
+something is typed. **The founder can drag it taller**, up to 320px, so a long description is not
+read through a four-line window; it never grows by itself, because a box that grew while the founder
+typed would move Search under the pointer. Enter runs the search; Shift+Enter breaks the line; an IME composition is
 excluded, because a founder composing in any input method presses Enter to commit characters and
 would otherwise search half a word.
 
