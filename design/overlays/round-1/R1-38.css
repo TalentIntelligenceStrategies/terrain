@@ -1,0 +1,69 @@
+/* R1-38 · Type scale: their sizes, reduced (flagged, §13.1)
+ *
+ * Current: eleven sizes between 10.5 and 36 px on two screens (10.5, 11, 12,
+ * 12.5, 13, 14, 15, 16, 18, 26, 36), and the record's section headings
+ * (Drawings, Abstract, Claims: 15/600) sit barely above the reading text
+ * (14/400) and below the list heading (16/500).
+ * Wanted:  six steps, all theirs, each a role:
+ *
+ *   11  micro    uppercase labels, badges, "Coming soon"        500, CAPS where they already are
+ *   13  meta     card meta, controls, chips, numbers, field values
+ *   16  body     reading text: record abstract and claims, the landing line; card titles at 600
+ *   20  heading  record sections, "Data coverage"               600
+ *   26  title    the record's patent title                      700
+ *   36  display  the landing headline                           600
+ *
+ * The ratios are 1.18, 1.23, 1.25, 1.30 and 1.38. The two lower steps sit
+ * under 1.25 on purpose: holding 1.25 there would put inventors and holders
+ * at 11 px or the whole card at 14, and both read worse than 13 beside 16.
+ * The card's abstract becomes meta (13): it is a preview, and R1-36 asks the
+ * title, holder and date to carry the card.
+ *
+ * Their Tailwind size tokens are retuned where they exist; the arbitrary
+ * sizes are set by class. The lockup is brand and is left alone. */
+:root {
+  --text-xs: 13px;          /* 12 -> 13 */
+  --text-sm: 13px;          /* 14 -> 13; reading text is restored to 16 below */
+}
+
+/* 11 micro */
+.record-fields dt,
+.text-\[10\.5px\],
+table thead th {
+  font-size: 11px;
+}
+
+/* 13 meta */
+.text-\[0\.75rem\],
+.text-\[12\.5px\],
+.text-\[12px\],
+.text-\[0\.875rem\],
+.pop-chip,
+.seg-btn,
+.record-fields dd,
+.record-act {
+  font-size: 13px;
+}
+
+/* 16 body */
+.detail-body,
+main > section:has(> h1) > p {
+  font-size: 16px;
+  line-height: 1.55;
+}
+.detail-body .record-fields {
+  font-size: 13px;
+}
+.detail-body ol li > span {
+  font-size: 13px;          /* claim numbers stay meta */
+}
+
+/* 20 heading */
+.detail-body h3,
+.text-\[15px\].font-semibold,
+h2.text-lg,
+section h2.font-semibold:not(.sr-only) {
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 600;
+}
