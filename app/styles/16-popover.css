@@ -98,16 +98,20 @@
    keyed off aria-pressed, so there is one source of truth for "chosen" and no
    way for the mark and the attribute to disagree.
 
-   FILLED OR OUTLINED, not a tick glyph. A tick would be a fourth thing to
-   position against a box whose own size is set here, and the fill/outline pair
-   says the same thing with nothing to align. It also survives being read with
-   hue removed, which is the half of §2's rule that bites on a control where
-   every chip is the same colour. */
-.pop-chip::before{content:"";width:11px;height:11px;flex:0 0 11px;
-                  border-radius:var(--r-chip);border:1px solid var(--border-strong);
-                  transition:background var(--dur-1) var(--ease),
-                             border-color var(--dur-1) var(--ease)}
-.pop-chip[aria-pressed="true"]::before{background:var(--text-1);border-color:var(--text-1)}
+   A TICK WHEN ON, NOTHING WHEN OFF (platform.md §3.3). A filled square read as
+   a stop control, and an outlined one beside it was easy to miss, so "on" was
+   a shape and "off" was nearly nothing anyway. The tick is Lucide's `check`,
+   drawn as a mask on the same 12px box the square used, so nothing new is
+   positioned; it takes currentColor, so the chosen chip's ink and its tick
+   are one value. Off keeps the box's width, so a chip does not change size
+   when it is pressed — the hairline and the label's weight say the rest, and
+   with hue removed the difference is still a shape. */
+.pop-chip::before{content:"";width:12px;height:12px;flex:0 0 12px;
+                  background:currentColor;opacity:0;
+                  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+                          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+                  transition:opacity var(--dur-1) var(--ease)}
+.pop-chip[aria-pressed="true"]::before{opacity:1}
 
 /* ── the segmented controls ─────────────────────────────────────────────
    §3.8 SITE 3 OF 3. 21-surface.css reserved this selector against the settings

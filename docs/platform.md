@@ -120,9 +120,10 @@ the founder produce a search that cannot run.
 only thing that builds it and the engine is the only thing that reads it, so a shape change is a
 change in two places rather than in every call site.
 
-**Selection is on the label and the hairline, never a filled chip.** Eight simultaneously filled
-accent chips read as data, and `design-language.md` §3.8 gives the accent three sites, none of which
-is a set of options.
+**Selection is a tick, the label and the hairline, never a filled chip.** A chosen chip carries a
+tick and an unchosen one carries none — not an empty box — so *on* is a shape and *off* is its
+absence, and a chip keeps its width either way. Eight simultaneously filled accent chips read as data,
+and `design-language.md` §3.8 gives the accent three sites, none of which is a set of options.
 
 ### 3.4 · The coverage block
 
