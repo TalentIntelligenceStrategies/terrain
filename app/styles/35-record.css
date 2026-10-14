@@ -131,7 +131,13 @@
 .rec-head h2{flex:1;min-width:0;margin:0;margin-inline-end:var(--s-4)}
 /* the heading is sr-only now (surface.html), so this is what pushes the
    actions to the trailing edge. */
-.rec-head-fill{flex:1 1 auto}
+.rec-head-fill{flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:var(--s-10);
+               overflow:hidden;opacity:0;transition:opacity var(--dur-1) var(--ease)}
+/* the patent's name, once its title has scrolled away (record.mjs nameInHead) */
+.rec-head-fill[data-on]{opacity:1}
+.rec-head-no{flex:none;color:var(--text-2)}
+.rec-head-title{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+                color:var(--text-1)}
 /* THE GAP IS --s-8 AND IT WAS --s-12, because the row went from three icon
    buttons to two labelled controls, a rule and three icon buttons. At 12 the
    two groups stopped reading as two groups — §5 wants the gap BETWEEN groups

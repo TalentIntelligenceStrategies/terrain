@@ -491,6 +491,11 @@ document, and a fourth heading in the same grammar would claim these belong to i
 same rule the identity block closes with, so the patent is bracketed between two identical hairlines
 and everything between them is the document.
 
+**The patent stays named while it scrolls.** Once the title has scrolled out of the panel, the head
+shows the number and the title on one line, truncated, in the space between its heading and its
+controls — so a founder deep in the claims can see which patent this is, and the head gains no
+height to say so.
+
 **It is one star, not a second one.** The head's star is the row's star with a label on it: the same
 class, the same `data-star`, the same delegated handler, because the thing that paints them writes to
 every star in the document and never knew where they were.

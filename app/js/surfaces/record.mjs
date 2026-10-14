@@ -372,8 +372,37 @@ function paneHTML(rec, id) {
    ON CLOSE THE HIDE WAITS FOR THE TRANSITION. Hiding on the same frame as the
    class comes off removes the element mid-exit and the record vanishes rather
    than leaving. */
+/* ── THE PATENT STAYS NAMED WHILE IT SCROLLS · platform.md §4.5 ───────────
+   The number and the title are the first thing in the scroller, so a founder
+   deep in the claims cannot see which patent this is. Once the title leaves
+   the scroller, the head's spacer shows the number and the title on one line,
+   truncated — the spacer, so the head gains no height. It is aria-hidden: the
+   head's heading already names the pane, and this is the same name drawn
+   again for the eye. */
+let NAME_IO = null;
+function nameInHead(rec) {
+  const slot = $('.rec-head-fill'), scroller = $('#recScroll');
+  const title = $('#recBody .pn-name');
+  if (NAME_IO) { NAME_IO.disconnect(); NAME_IO = null; }
+  if (!slot) return;
+  slot.replaceChildren();
+  slot.removeAttribute('data-on');
+  if (!rec || !title || !scroller || !('IntersectionObserver' in window)) return;
+  const no = document.createElement('span');
+  no.className = 'rec-head-no fig fig-s';
+  no.textContent = rec.number || '';
+  const t = document.createElement('span');
+  t.className = 'rec-head-title t-title-s';
+  t.textContent = rec.title || rec.skim || '';
+  slot.append(no, t);
+  NAME_IO = new IntersectionObserver(([e]) =>
+    slot.toggleAttribute('data-on', !e.isIntersecting), { root: scroller, threshold: 0 });
+  NAME_IO.observe(title);
+}
+
 function close() {
   OPEN_ID = null;
+  nameInHead(null);
   Url.record(null);
   const pane = $('#recPane');
   const app = $('#app');
@@ -571,6 +600,7 @@ async function open(id, trigger, stepping, opts = {}) {
   FIGURES = Array.isArray(res.data.figures) ? res.data.figures : [];
   REC = res.data;
   landIn(body, paneHTML(res.data, id));
+  nameInHead(res.data);
   /* the body crossfades in on --dur-1 — on a step, a second row, and the
      first open alike, because in all three the panel is standing still by
      the time the text arrives. */
