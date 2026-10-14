@@ -23,6 +23,7 @@ import { $ } from '../core/dom.mjs';
 import * as Mode from '../core/search-mode.mjs';
 import * as History from '../core/history.mjs';
 import * as Field from '../core/field.mjs';
+import * as Url from '../core/url.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
@@ -187,6 +188,26 @@ function setMode(which) {
 export function init(ctx) {
   ENGINE = ctx.engine;
 
+  /* ── THE ADDRESS IS A SEARCH · core/url.mjs ────────────────────────────
+     A reload, a shared link, or Back and Forward between two searches all
+     arrive here holding a search this page has not run — so it is run,
+     through the home composer like any other, and the record the address
+     names reopens when the list lands. What already ran is left alone, which
+     is also what keeps this module's own writes from re-running themselves. */
+  const restore = () => {
+    if (!location.hash.startsWith('#set')) return;
+    const s = Url.read();
+    if (!s) return;
+    const r = Url.ran();
+    if (r && r.query === s.query && (r.field || null) === (s.field || null)
+        && (r.mode || 'text') === (s.mode || 'text')) return;
+    Url.pend(s.rec);
+    window.dispatchEvent(new CustomEvent('terrain:rerun',
+      { detail: { query: s.query, field: s.field, mode: s.mode } }));
+  };
+  ctx.onRoute(view => { if (view === 'work') restore(); });
+  window.addEventListener('hashchange', restore);
+
   fishPopover();
 
   /* ── THE FIELD CHIP · platform.md §4.2 ─────────────────────────────────
@@ -269,6 +290,7 @@ export function init(ctx) {
        the store holding this rather than the caller passing it. */
     STARRED.setSearch(text);
     History.add({ query: text, field: Field.get(), mode: Mode.get(), fieldLabel: Field.label() });
+    Url.searched({ query: text, field: Field.get(), mode: Mode.get() });
     landQuery(text, res.data);
     /* the list owns its own rendering; tell it to reload rather than reaching
        across into its DOM from here. */

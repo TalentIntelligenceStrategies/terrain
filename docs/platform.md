@@ -166,6 +166,13 @@ There is no pin control on it, because this surface does not scroll as a whole �
 change anything is worse than a missing one. **It stays folded**, §4.2: one line, so the list starts
 65px higher than it did under the open field.
 
+**The search is in the address.** Every search writes what ran — the sentence, the field and the
+mode — into the URL, and the open record adds itself. A reload, a link sent to a colleague, and Back
+or Forward between two searches all bring the search back by running it again, with its record open;
+a URL that names a record the first page does not hold opens the first result instead. **A search is
+a step and a record is not**: each search is one entry in the browser's history, and reading five
+records in a row rewrites the entry rather than adding five.
+
 ### 4.1 · The masthead
 
 48px, full width, six regions:

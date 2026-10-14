@@ -12,6 +12,7 @@ import { $, esc } from '../core/dom.mjs';
 import * as Mode from '../core/search-mode.mjs';
 import * as History from '../core/history.mjs';
 import * as Field from '../core/field.mjs';
+import * as Url from '../core/url.mjs';
 import { waitOn, failWith } from '../core/wait.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
@@ -75,8 +76,11 @@ async function paintFields() {
   /* the first ready field is chosen on arrival, because a search cannot run
      without one and making the founder pick the only option is a step that
      asks nothing. */
+  /* UNLESS ONE IS ALREADY CHOSEN — a search restored from the address on a
+     reload arrives before this list does, and its field stands. */
+  const chosen = list.find(f => f.id === Field.get() && f.ready === true);
   const first = list.find(f => f.ready === true);
-  if (first) selectField(first.id);
+  if (!chosen && first) selectField(first.id);
 }
 
 /* the chosen field lives in core/field.mjs, which the results bar's chip reads */
@@ -152,8 +156,9 @@ export function init(ctx) {
     const h = e.detail || {};
     const field = $('#cmpMain textarea'), btn = $('#cmpSearch');
     if (!field || !btn) return;
-    if (h.field && document.querySelector('#fields .field[aria-pressed][data-field="' + CSS.escape(h.field) + '"]'))
-      selectField(h.field);
+    /* core/field refuses a field it knows is not ready, and holds one it does
+       not know yet until the list arrives */
+    if (h.field) selectField(h.field);
     Mode.set(h.mode || 'text');
     field.value = h.query || '';
     field.dispatchEvent(new Event('input', { bubbles: true }));
@@ -205,6 +210,9 @@ export function init(ctx) {
        rows under the second search's sentence. The same event the results
        bar sends, sent before the route so the list is already asking. */
     window.dispatchEvent(new CustomEvent('terrain:searched'));
-    location.hash = '#set';
+    /* THE SEARCH GOES INTO THE ADDRESS, which is also the route to the results
+       (core/url.mjs). */
+    Url.searched({ query: text, field: Field.get(), mode: Mode.get() });
+    if (!location.hash.startsWith('#set')) location.hash = '#set';
   });
 }

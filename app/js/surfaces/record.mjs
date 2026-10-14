@@ -19,6 +19,7 @@
  * class goes on the <dd>, so a mono field carries it whether it holds real
  * English or a bar, and there is no second code path to keep in step.
  */
+import * as Url from '../core/url.mjs';
 import { $, esc } from '../core/dom.mjs';
 import { waitOn, landIn, failWith } from '../core/wait.mjs';
 import { say } from '../core/live-region.mjs';
@@ -359,6 +360,7 @@ function paneHTML(rec, id) {
    than leaving. */
 function close() {
   OPEN_ID = null;
+  Url.record(null);
   const pane = $('#recPane');
   const app = $('#app');
   if (!pane || pane.hidden) return;
@@ -472,6 +474,8 @@ async function open(id, trigger, stepping, opts = {}) {
 
   const app = $('#app');
   OPEN_ID = id;
+  /* the address names the open record, so a reload or a link reopens it */
+  Url.record(id);
   /* A STEP DOES NOT RE-CAPTURE THE RETURN POINT. Escape after five Next
      presses must land back on the row the founder actually opened, not on the
      one they stepped to — otherwise closing returns them somewhere they never
@@ -674,8 +678,12 @@ export function init(ctx) {
     if (id && id === OPEN_ID) open(id, null, true, { keep: true });
   });
   window.addEventListener('terrain:open-first', e => {
-    const id = e.detail && e.detail.id;
-    const row = id && document.querySelector('#setList .drill-toggle[data-pn="' + CSS.escape(id) + '"]');
+    /* THE ADDRESS'S RECORD WINS over the first row, when it is on the page:
+       a reload or a link reopens the patent that was open. */
+    const named = Url.pendingRecord() || (Url.read() && Url.read().rec);
+    const pick = sel => document.querySelector('#setList .drill-toggle[data-pn="' + CSS.escape(sel) + '"]');
+    const id = (named && pick(named)) ? named : (e.detail && e.detail.id);
+    const row = id && pick(id);
     if (row) open(id, row, false, { keep: true });
   });
   /* ── a drawing on a ROW ──────────────────────────────────────────────
