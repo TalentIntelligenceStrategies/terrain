@@ -11,6 +11,7 @@
 import { $, esc } from '../core/dom.mjs';
 import * as Mode from '../core/search-mode.mjs';
 import * as History from '../core/history.mjs';
+import * as Field from '../core/field.mjs';
 import { waitOn, failWith } from '../core/wait.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
@@ -21,7 +22,6 @@ import * as STARRED from '../core/starred.mjs';
 import { landQuery } from './work.mjs';
 
 let ENGINE = null;
-let FIELD = null;          // the chosen technology field
 
 const G = 'fill="none" stroke="currentColor" stroke-width="1.5" '
         + 'stroke-linecap="round" stroke-linejoin="round"';
@@ -69,6 +69,7 @@ async function paintFields() {
   }
   const list = res.data.fields || [];
   host.innerHTML = list.map(fieldHTML).join('');
+  Field.setList(list);
   if (typeof done === 'function') done();
 
   /* the first ready field is chosen on arrival, because a search cannot run
@@ -78,11 +79,8 @@ async function paintFields() {
   if (first) selectField(first.id);
 }
 
-function selectField(id) {
-  FIELD = id;
-  document.querySelectorAll('#fields .field[aria-pressed]').forEach(b =>
-    b.setAttribute('aria-pressed', String(b.getAttribute('data-field') === id)));
-}
+/* the chosen field lives in core/field.mjs, which the results bar's chip reads */
+function selectField(id) { Field.set(id); }
 
 /* ── what is in the corpus ───────────────────────────────────────────────── */
 async function paintCoverage() {
@@ -171,7 +169,7 @@ export function init(ctx) {
     if (!text) return;
 
     btnWait(btn, true);
-    const res = await ENGINE.search({ query: text, field: FIELD, settings: readSettings(), mode: Mode.get() });
+    const res = await ENGINE.search({ query: text, field: Field.get(), settings: readSettings(), mode: Mode.get() });
     btnRest(btn);
 
     /* THE SEARCH THE SET IS FILED UNDER, and this is where it is first known.
@@ -201,9 +199,7 @@ export function init(ctx) {
     landQuery(text, res.data);
     /* KEPT IN HISTORY ONCE IT HAS RUN, not when it was asked: a search that
        failed produced nothing to go back to. */
-    const tile = document.querySelector('#fields .field[data-field="' + CSS.escape(FIELD || '') + '"]');
-    History.add({ query: text, field: FIELD, mode: Mode.get(),
-      fieldLabel: tile ? tile.textContent.trim() : null });
+    History.add({ query: text, field: Field.get(), mode: Mode.get(), fieldLabel: Field.label() });
     /* THE LIST IS TOLD, EVERY TIME. It loaded itself on its first route and
        never again, so a second search from here showed the first search's
        rows under the second search's sentence. The same event the results

@@ -117,3 +117,26 @@
    which was the only reason the two boxes looked different. */
 
 /* .set-excl WENT WITH #setExcl. The narrowing it reported does not exist. */
+
+/* ── the field chip · platform.md §4.2 ───────────────────────────────────
+   THE SORT TRIGGER'S SHAPE, because it is the same kind of control: a value
+   shown on a button that opens the list of the others. It is .lm-btn's
+   geometry spelled here rather than borrowed by class, because .lm-btn's
+   open state belongs to .lm and this one opens through popover(). The list
+   is .lm-item rows inside a .pop, so a pick reads the same as a sort does. */
+.field-chip{display:inline-flex;align-items:center;gap:var(--s-6);height:30px;
+  max-width:220px;padding:0 var(--s-10);border-radius:var(--r-control);
+  background:var(--surface);border:1px solid var(--border);
+  font-size:12.5px;font-weight:500;color:var(--text-1);white-space:nowrap;
+  transition:background var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
+.field-chip:active{transform:scale(.97)}
+@media (hover:hover){ .field-chip:hover{background:var(--surface-sunken)} }
+.field-chip>svg{flex:0 0 auto;color:var(--text-3)}
+.field-chip-name{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.is-open>.field-chip .lm-chev{transform:rotate(180deg)}
+.pop-field{top:calc(100% + var(--s-6));left:0;min-width:300px;padding:var(--s-4);gap:0}
+.pop-field .lm-item{white-space:nowrap}
+/* a field that is not ready is listed, says why, and refuses: its tile's rule */
+.pop-field .lm-item[aria-disabled="true"]{color:var(--text-3);cursor:default}
+.lm-soon{margin-inline-start:auto;color:var(--text-3)}
+

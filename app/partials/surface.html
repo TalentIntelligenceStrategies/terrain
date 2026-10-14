@@ -43,6 +43,19 @@
           </div></div>
           <div class="cmp-row">
             <div class="res-tools" role="group" aria-label="How the results are shown">
+              <!-- ══ THE FIELD, AS A CHIP · platform.md §4.2 ═══════════════════
+                   The field the search runs in, at the leading edge of the bar
+                   that runs it, so it is on screen beside what it returned and
+                   changed where it is used. core/field.mjs keeps it on the same
+                   value as the home surface's tiles and fills the list. -->
+              <div class="pop-wrap" id="resFieldWrap">
+                <button class="field-chip" id="resField" type="button" aria-haspopup="menu">
+                  <span class="field-chip-name" id="resFieldName">Field</span>
+                  <svg class="lm-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="pop pop-field" id="resFieldPop" role="menu" aria-label="Technology field"></div>
+              </div>
+              <span class="res-tools-sep" aria-hidden="true"></span>
               <!-- TEXT OR A NUMBER · platform.md §3.2. One box takes both, and the
                    toggle says which it is, so the engine is never left to guess
                    whether "EP2214203" is a description. core/search-mode.mjs keeps

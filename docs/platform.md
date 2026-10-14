@@ -200,7 +200,13 @@ founder; it waits for Search, which runs it and folds, or Escape, which puts the
 folds. Escape closes the thing the founder is in, so focusing the field lifts the composer above an
 open record on the Escape stack, and a popover opened from the toolbar still closes before it.
 
-Four toggles sit on the same row:
+**The technology field leads the row, as a chip.** It names the field the search runs in, so the
+field is on screen beside what it returned, and it opens the list of fields to change it — the
+ready ones chosen with a press, the rest listed and refused as their tiles are. Choosing one does not
+search: the founder may want to change the sentence too, and Search is the commitment. It is the
+same value as the home surface's tiles, and the bar sends it with every search.
+
+Four toggles sit on the same row, after the Text / Patent number toggle (§3.2):
 
 1. **Search settings** — the same popover §3.3 describes, anchored here instead.
 2. **Grouping** — opens the branch panel, §4.4, as a popover under this control.

@@ -22,6 +22,7 @@
 import { $ } from '../core/dom.mjs';
 import * as Mode from '../core/search-mode.mjs';
 import * as History from '../core/history.mjs';
+import * as Field from '../core/field.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
@@ -187,6 +188,20 @@ export function init(ctx) {
   ENGINE = ctx.engine;
 
   fishPopover();
+
+  /* ── THE FIELD CHIP · platform.md §4.2 ─────────────────────────────────
+     The field the next search runs in, at the bar's leading edge. A pick
+     changes the field and closes the list; it does not search, because the
+     founder may want to change the sentence too, and Search is the
+     commitment. A field that is not ready is listed and refused. */
+  const fbtn = $('#resField'), fpop = $('#resFieldPop');
+  if (fbtn && fpop) popover({ btn: fbtn, panel: fpop, key: 'resField', closeOnPick: true,
+    firstFocus: '[aria-checked="true"]' });
+  onActivate(document, '#resFieldPop [data-field-pick]', el => {
+    if (el.getAttribute('aria-disabled') === 'true') return;
+    Field.set(el.getAttribute('data-field-pick'));
+    say('work', 'Field: ' + (Field.label() || 'chosen') + '. It applies to your next search.');
+  });
   /* THE NOTES ON THIS SURFACE, both of them: the results heading's and the
      record's. They are wired here rather than in list.mjs and record.mjs
      because neither is a list row or a record field — they are chrome on the
@@ -228,7 +243,9 @@ export function init(ctx) {
     const text = field && field.value.trim();
     if (!text) return;
     btnWait(b, true);
-    const res = await ENGINE.search({ query: text, settings: readSettings(), mode: Mode.get() });
+    /* THE BAR SENDS ITS FIELD (components.md §4 used to ask whether it should):
+       the chip at its leading edge says which, so the search runs in it. */
+    const res = await ENGINE.search({ query: text, field: Field.get(), settings: readSettings(), mode: Mode.get() });
     btnRest(b);
     /* THE FAILURE IS ON SCREEN, NOT ONLY SPOKEN. It used to go to the live
        region alone, so a sighted founder pressed Search, watched the button
@@ -251,12 +268,7 @@ export function init(ctx) {
        search that returned nothing. core/starred.mjs carries the argument for
        the store holding this rather than the caller passing it. */
     STARRED.setSearch(text);
-    /* KEPT IN HISTORY under the field the last search ran in: this bar sends
-       none (components.md §4 question 10), so the engine searches in the
-       field it already holds, and history says which that was. */
-    const last = History.entries()[0];
-    History.add({ query: text, mode: Mode.get(),
-      field: last ? last.field : null, fieldLabel: last ? last.fieldLabel : null });
+    History.add({ query: text, field: Field.get(), mode: Mode.get(), fieldLabel: Field.label() });
     landQuery(text, res.data);
     /* the list owns its own rendering; tell it to reload rather than reaching
        across into its DOM from here. */
