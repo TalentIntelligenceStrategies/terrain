@@ -45,7 +45,7 @@ appearance control, the account menu.
 | --- | --- | --- |
 | 1 · First run | home | The field tiles, the composer, and the question above it. Nothing else. |
 | 2 · What was found | results | The ranked patents fill the left column, and keep it. Nothing is approved and nothing is waited for beyond the one call. |
-| 3 · Working | results | Sorting, filtering, starring, finding similar, reading a record, opening a drawing. The founder may stay here indefinitely and most of the product's value is spent here. |
+| 3 · Working | results | Sorting, grouping, starring, finding similar, reading a record, opening a drawing. The founder may stay here indefinitely and most of the product's value is spent here. |
 | 4 · Leaving | starred set | The shortlist as a whole, and two buttons that write a file. |
 
 **There is no confirm step and no build stream.** The search runs on submit. The reading, the five
@@ -298,12 +298,10 @@ starred, and one info affordance. The count is printed once: a chip beside the h
 has room for the list or for prose about the list, and every sentence that is not the list lives
 behind that control.
 
-**Bar** — Sort (Relevance · Newest filed · Oldest filed), **Find similar** and **Restore the original
-order**. Find similar is the only filled control on the surface and is hidden rather than disabled
-when nothing is starred — **and it holds its slot while hidden**, so the first star does not break the
-bar onto a second row under the pointer that pressed it. Where the column is too narrow to hold the
-slot at full width, Find similar's label clips to its icon, keeping its accessible name. **There is no
-filter**: the one it had was legal status, which Terrain does not print (§13, R1-17). The heading's two-count form is
+**Bar** — Sort (Relevance · Newest filed · Oldest filed), and after *Find similar* the chip naming
+what the set is ordered by and **Restore the original order**. **There is no filter**: the one it had
+was legal status, which Terrain does not print (§13, R1-17). *Find similar* itself is in the record's
+head, §5.1. The heading's two-count form is
 `100 matched · 20 shown`: the noun is the subject of every row beneath it, and dropping it is what
 buys the slot.
 
@@ -328,16 +326,14 @@ the next twenty, so the client never holds the whole result set. A sort re-seque
 and hands back a different first page; a facet asks which patents answer to it. Both wait, both can
 fail, and §7.1 says what the founder sees when they do.
 
-**Sorting and filtering change what the founder is looking at, never what was searched.** The set is
+**Sorting and grouping change what the founder is looking at, never what was searched.** The set is
 fixed by the sentence and the search settings; everything on this bar rearranges it. A founder who
 wants a different set edits the sentence and searches again, and the bar above says so by staying
 full of what they typed.
 
-**The star does two things and §5.1 is where they are settled.** It adds the patent to the founder's
-starred set, and it makes *Find similar* available — which orders the rest by how close they are to
-what was starred. No patent enters or leaves; only the sequence changes. A chip announces the settled
-state, a second chip counts the starred set and links to it, and *Restore the original order* undoes
-the ordering without unstarring anything.
+**The star collects and does nothing else**, §5.1. A chip beside the heading counts the starred set
+and links to it. *Find similar* belongs to the open record: it orders the rest by how close they are
+to that patent, a chip names the patent the order is by, and *Restore the original order* undoes it.
 
 **The ordering is a ranking, not a verdict.** A patent near the top is close to what the founder
 described. It does not mean it affects them, and it does not mean the ones below it do not. No ranking
@@ -569,29 +565,21 @@ same defect as a bar standing in for a value nobody withheld.
 
 ### 5.1 · Starring, and what it is for
 
-**A star means *this one is close to what I meant*.** It does two things and they are separate acts,
-which is why one of them is a button rather than a consequence:
+**A star means *this one is worth taking out*, and it is a collection.** The starred set is the
+founder's own shortlist and it is the only thing in the product they curate by hand. It **survives a
+new search**, because the set is what they are taking out and clearing it on the next query would
+delete their work to save them a click. **It survives a reload for the same reason**, in browser
+storage: a refresh is not a decision the founder made about their shortlist. That is a floor rather
+than the session model — one browser on one machine, and §10 item 2 is what an account adds. Each
+starred patent remembers the search it was starred under, §5.2.
 
-- **It collects.** The starred set is the founder's own shortlist and it is the only thing in the
-  product they curate by hand. It **survives a new search**, because the set is what they are taking
-  out and clearing it on the next query would delete their work to save them a click. **It survives a
-  reload for the same reason**, in browser storage: a refresh is not a decision the founder made
-  about their shortlist. That is a floor rather than the session model — one browser on one machine,
-  and §10 item 2 is what an account adds.
-- **It finds similar.** With at least one patent starred, *Find similar* re-orders the set by
-  nearness to what was starred. **No patent enters or leaves; only the sequence changes**, and
-  *Restore the original order* puts it back.
-
-**An open record can be the anchor too, and it does not star it.** The closing block's *Find similar
-to this one* sends that one patent as the anchor —
-[`components.md`](../design/components.md) types `rerank`'s anchors as an array, so one of them is
-inside the contract rather than a special case. This is the separation above read from the other end:
-a founder who wants more like *this* has not necessarily decided it belongs in the set they are
-taking out. **The chip says what the order is by**, which is why it carries a phrase rather than a
-count — *Nearest to 2 starred patents* is true of one path and false of the other, and the control
-that anchored the order is what knows which. **The wait and the failure stay in the list**, where the
-change happens: a control in the right column reporting that the left column did not change would
-report it away from the thing that did not change.
+**Find similar is the open record's, and it does not star it.** It sends that one patent as the
+anchor and re-orders the set by nearness to it. **No patent enters or leaves; only the sequence
+changes**, and *Restore the original order* puts it back. A founder who wants more like *this* has
+not necessarily decided it belongs in the set they are taking out, which is why the two are separate
+acts on separate controls. **The chip says what the order is by** — *Nearest to* and the patent's
+number. **The wait is on the button that was pressed and the failure is said from the list**, which
+is where the change would have happened.
 
 **That ordering is a ranking, not a verdict.** A patent near the top is close to what the founder
 described. It does not mean it affects them, and the interface never says it does.
@@ -742,7 +730,7 @@ without it.
 | The grouping, while the list stands | The panel alone, naming what did not arrive | The list, the record, everything else |
 | The record | The column, with the row still selected | The list, and the starred set |
 | A drawing | The figure frame, naming the one that did not load | The record, the strip, and the other figures |
-| Find similar, a sort, a filter | The list as it was, and a sentence saying the order did not change | The order that was on screen, and every star |
+| Find similar, a sort, a grouping branch | The list as it was, and a sentence saying the order did not change | The order that was on screen, and every star |
 | A page of results | The rows already loaded, untouched, and *Show more* offered again | Everything on screen |
 | A save | The field, still open, still holding the value | What was typed |
 | A message | The form, not the sent state | The message and the topic |
@@ -832,11 +820,9 @@ wants you to stay. **A set the founder can leave with is the thing Terrain is fo
 hardest of its features for the incumbent to copy, because copying it cuts against why they built
 the rest.
 
-**The standing risk, and it is the same one it always was.** Nearest-neighbour retrieval is pointed
-at **one patent** on their surface. Terrain's *Find similar* points it at a **starred set**, and that
-capability is not confirmed. It is the first question in
-[`../design/components.md`](../design/components.md) §4 and it is a product risk rather than a
-detail: without it, the star collects and no longer finds.
+**Find similar is the primitive they already ship.** Nearest-neighbour retrieval is pointed at **one
+patent** on their surface, and Terrain's *Find similar* points it at the open record — one patent too.
+The risk this section used to carry, a set as the anchor, left with the star's second job.
 
 ---
 

@@ -58,15 +58,10 @@ let loaded = false;
 const FLOOR = 240;
 
 /* ── the star ─────────────────────────────────────────────────────────────
-   platform.md §5.1. A star is an ANCHOR, not a bookmark: it says "this one is
-   close to what I meant", and it does TWO things — platform.md §7.1. It adds
-   the patent to the founder's starred set, which is theirs and has a surface of
-   its own; and it makes `Find similar` available, which re-orders the whole
-   result set by nearness to what was starred. NO PATENT ENTERS OR LEAVES the
-   set — what changes is which of them the founder is shown first.
-
-   The engine is told the anchors only when the founder presses Find similar,
-   because starring is a thought and re-ordering is a request.
+   platform.md §5.1. A star COLLECTS: it adds the patent to the founder's
+   starred set, which is theirs, has a surface of its own, and is what leaves
+   the product. It does not re-order anything. Find similar is the open
+   record's, and it takes that one patent as its anchor.
 
    THE SET ITSELF LIVES IN core/starred.mjs. It outlives this surface: the
    starred view renders it and the export writes it, and a Set private to the
@@ -82,12 +77,6 @@ function syncStarUI() {
        as though it handled a case it did not. */
     chip.textContent = STARRED.size() + ' starred';
   }
-  /* HIDDEN, NOT DISABLED, exactly as the markup's own note says: a disabled
-     button loitering in a 345px bar is clutter, and [hidden] takes it out of
-     the tab order too. 21-surface.css holds its slot while it is hidden, so
-     the first star does not push the bar to a second row. */
-  const rebase = $('#setRebase');
-  if (rebase) rebase.hidden = STARRED.size() === 0;
 }
 
 /* EVERY CONTROL THAT CARRIES THIS ID, NOT THE ONE THAT WAS PRESSED. The star
@@ -113,7 +102,7 @@ function toggleStar(id, btn) {
      it is, and that it is the thing they can take out. */
   say('list', on
     ? 'Starred. ' + STARRED.size() + (STARRED.size() === 1 ? ' patent' : ' patents')
-      + ' in your starred set. Find similar is available.'
+      + ' in your starred set.'
     : 'Unstarred. ' + (STARRED.size()
         ? STARRED.size() + (STARRED.size() === 1 ? ' patent' : ' patents') + ' left.'
         : 'Nothing starred.'));
@@ -497,7 +486,7 @@ function thumbsHTML(rec, i) {
 
      'arrive'  — the surface's first list. The view itself is still moving
                  in, so the rows land with it and do not stagger on top of it.
-     'replace' — a new set: a search, a filter, the grouping. The region
+     'replace' — a new set: a search or the grouping. The region
                  emptied to a loader, and the rows arrive in a short stagger.
      'append'  — Show more. The rows above are untouched; the new tail fades
                  up under them.
@@ -547,9 +536,9 @@ function render(data, mode = 'replace') {
      old form wrapped to three lines in this column.
 
      THE TWO-COUNT FORM DROPS ITS NOUN. "100 matched · 20 shown" is 70px
-     narrower than the form with "patents" in it, and those 70px are what let
-     the bar hold Find similar's slot at rest without breaking to a second
-     row — the noun is already the subject of every row underneath. The
+     narrower than the form with "patents" in it, and those 70px are what keep
+     the bar to one row when the nearness chip and Restore are out — the noun
+     is already the subject of every row underneath. The
      one-count forms keep it, because they have the room. */
   if (title) {
     const m = data.matched, n = data.patents.length;
@@ -687,10 +676,8 @@ function check(panel, el) {
    patents" and a Restore button offering to undo an order that never changed —
    the interface asserting an outcome the engine had just declined. Everything
    that says "this happened" now happens where it is known to have happened. */
-/* IT TAKES THE SENTENCE NOW, NOT A COUNT. The chip composed "Nearest to N
-   starred patents" from a number, which is false the moment the anchor is a
-   record the founder never starred — and the record's closing block is
-   exactly that case. The caller knows what it anchored on; this does not. */
+/* IT TAKES THE SENTENCE, NOT A COUNT. The caller knows what it anchored on —
+   the open record's number — and this does not. */
 function settled(on, text) {
   const wrap = $('#setWrap');
   if (wrap) wrap.classList.toggle('is-ranked', on);
@@ -703,17 +690,17 @@ function settled(on, text) {
   if (restore) restore.hidden = !on;
 }
 
-/* `label` IS WHAT THE SET IS NOW ORDERED BY, as a noun phrase: "2 starred
-   patents", or a patent number. Both the chip and the announcement read it,
-   so the two cannot disagree about what just happened. */
-async function reorderTo(anchors, label) {
+/* `label` IS WHAT THE SET IS NOW ORDERED BY, as a noun phrase: the anchor's
+   patent number. Both the chip and the announcement read it, so the two
+   cannot disagree about what just happened.
+
+   THE WAIT IS ON THE BUTTON THAT WAS PRESSED, reserved so the record's head
+   does not reflow while the founder is looking at it, and btnWait's refusal
+   is the re-press guard. The list says it is busy and the failure is said
+   from the list, which is where the change would have happened. */
+async function reorderTo(anchors, label, btn) {
   const list = $('#setList');
   if (!list) return;
-  const btn = $('#setRebase');
-  /* RESERVED, because Restore sits beside it in the bar: without the reserve
-     the fill coming off (05-wait-fail.css) shrinks Find similar to 48px and
-     slides the control next to it while the founder is looking at it.
-     #setMore, three functions down, is the opposite case and stays bare. */
   if (btn && !btnWait(btn, true)) return;
   const token = bump('list');
   list.setAttribute('aria-busy', 'true');
@@ -746,7 +733,7 @@ async function reorderTo(anchors, label) {
 
 /* THE ROW BEHIND AN ID, for the one reader outside this file that needs it.
    components.md §1 says the row carries `number` and `where` it does not draw
-   "because the starred set leaves as an eight-column file and the export reads
+   "because the starred set leaves as a seven-column file and the export reads
    the row rather than the record" — so a single record leaving has to leave
    through a row too, or one file carries different fields from the set it
    came out of. The list is what holds rows; it hands one over rather than
@@ -763,7 +750,7 @@ export function init(ctx) {
      list and the bottom, which is not navigation, it is an obstacle — the
      argument roving.mjs opens with, for a group a third the size. rovingIn
      rather than roving because the list rebuilds all twenty strips on every
-     sort, filter, re-rank and page, and an instance per row is twenty
+     sort, grouping, re-rank and page, and an instance per row is twenty
      teardowns a render with nothing watching that they happen.
 
      BOUND ONCE, AT init, AND NEVER TORN DOWN. It is delegated at the document,
@@ -816,28 +803,19 @@ export function init(ctx) {
   onActivate(document, '.set-star[data-star]', el =>
     toggleStar(el.getAttribute('data-star'), el));
 
-  /* FIND SIMILAR IS THE ONLY FILLED CONTROL ON THIS SURFACE and it sends the
-     anchors the founder chose. The response is an ORDER over the same set. */
-  onActivate(document, '#setRebase', () => {
-    if (!STARRED.size()) return;
-    const n = STARRED.size();
-    reorderTo(STARRED.ids(), n + (n === 1 ? ' starred patent' : ' starred patents'));
-  });
-
-  /* THE RECORD'S ANCHOR, AND THE ACT BELONGS HERE RATHER THAN IN record.mjs.
-     Reordering the set is the list's business; the record's closing block only
-     supplies the button. components.md §1 types rerank's anchors as an ARRAY,
-     so one of them is inside the contract rather than a special case — and
-     this does NOT star the patent, which is platform.md §5.1's whole point
-     about the two being separate acts.
-     THE WAIT AND THE FAILURE STAY IN THE LIST, where the change happens. A
-     control in the right column reporting that the left column did not change
-     would report it away from the thing that did not change. */
+  /* FIND SIMILAR IS THE OPEN RECORD'S, AND THE ACT BELONGS HERE rather than
+     in record.mjs. Reordering the set is the list's business; the record's
+     head only supplies the button. The anchor is that one patent, and this
+     does NOT star it: a founder who wants more like this one has not
+     necessarily decided it belongs in the set they are taking out
+     (platform.md §5.1). The response is an ORDER over the same set. */
   onActivate(document, '#recSimilar', el => {
     const id = el.getAttribute('data-pn');
     if (!id) return;
     const row = ROW_BY_ID.get(id);
-    reorderTo([id], (row && row.number) || id);
+    /* THE ID IS NOT THE NUMBER (ports.mjs). A withheld number names the patent
+       by what it is to the founder rather than by the engine's key. */
+    reorderTo([id], (row && row.number) || 'the open patent', el);
   });
 
   onActivate(document, '#setRestore', () => {

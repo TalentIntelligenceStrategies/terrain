@@ -26,7 +26,7 @@ Self-serve software, subscription-priced, English-native, searching the full Inn
 surface that serves none does not belong in the product.
 
 1. **Search.** One sentence, one call. Nothing is asked before it runs.
-2. **Find similar.** Star a patent and the set re-orders by nearness to it. No patent enters or
+2. **Find similar.** Open a patent and the set re-orders by nearness to it. No patent enters or
    leaves — only the sequence changes, and it can be put back.
 3. **Star.** The founder's own shortlist, and the only thing in the product they curate by hand.
 4. **The starred set.** Its own surface, where the shortlist is read as a whole.

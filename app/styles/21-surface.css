@@ -222,7 +222,7 @@
    preview with the record directly under it, so picking a row does not send
    the founder past twenty rows to read one. It only stops meaning anything
    once it is shorter than the thing it is previewing. One .set-row is 379px
-   and the sort/filter bar above it is another 60, so the cap earns its keep
+   and the sort bar above it is another 60, so the cap earns its keep
    at roughly 950px of window and not below — measured 0 rows fully visible at
    every stacked size. Under 700px of height it is doing nothing but hiding,
    so it goes and the page scrolls instead. */
@@ -230,7 +230,7 @@
    makes that the right split: a capped column is already a box of a fixed
    height, so the panel inside it fills that box and the rows scroll within —
    which is exactly the "scrollable list preview" the cap exists to produce,
-   now with its head and its Sort/Filter still on screen. The record has no
+   now with its head and its Sort still on screen. The record has no
    cap and no reason for one: it is the last thing on the page, so it grows
    and the page scrolls past it. */
 @media (max-width:1079px){
@@ -360,19 +360,18 @@
    surface's cards are cards and should stay at 16. */
 .set-wrap>.card{border-radius:var(--r-shell)}
 /* ══ THE BAR IS THE PANEL'S HEAD · 2026-09-26 ════════════════════════════
-   It held Sort, Filter and Find similar; the heading and the counts sat
-   OUTSIDE the panel on ground above it, and both left on the first scroll.
+   The heading and the counts sat OUTSIDE the panel on ground above it, and
+   both left on the first scroll.
    The head is the whole row now, in .rec-head's grammar across the split:
    what is true at the leading edge, what you can do at the trailing one, one
    hairline under both. flex:0 0 auto is what pins it — the card is a flex
    column whose other child scrolls, so a non-flexing item above a scrolling
    sibling stays put without saying so.
 
-   IT KEEPS flex-wrap, and now it needs it. At rest the row is 497px of a
-   646px track; Find similar and Restore the original order are conditional
-   and push it to a second line, which is a head that grows with its state
-   rather than a row that breaks. .rec-head does the same thing with the same
-   controls appearing and leaving. */
+   IT KEEPS flex-wrap, and needs it. The nearness chip and Restore the
+   original order are conditional and can push it to a second line, which is
+   a head that grows with its state rather than a row that breaks. .rec-head
+   does the same thing with controls appearing and leaving. */
 .set-bar{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap;flex:0 0 auto;
   padding:var(--s-14) var(--s-20);border-bottom:1px solid var(--border)}
 /* THE SPACER IS BETWEEN THE GROUPS, not at the end of the row. It was the
@@ -388,77 +387,3 @@
    what lets the box reach zero so the text truncates instead of pushing the
    controls off the row; the heading is a count and does not wrap. */
 .set-bar h2{margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* ── the same floor the record's head takes, in the same band ────────────
-   Between 1080 and 1240 the head is competing for ~466px and needs 501:
-   measured, it wrapped to two rows at rest — 99px against .rec-head's 53 in
-   the same band, which is the mismatch this whole pass exists to remove.
-   35-record.css clips .rec-act's labels here for the identical reason and
-   this is the identical treatment, down to using sr-only's clip rather than
-   display:none so the accessible name survives and the button stays "Filter"
-   to a screen reader at every width.
-
-   FILTER'S LABEL AND NOT SORT'S, which is the only judgement in it. Sort's
-   label is its current VALUE — "Relevance" — so clipping it would hide what
-   the list is ordered by. Filter's is a static noun beside its own icon, and
-   the count chip that says whether it is doing anything is not part of the
-   clip. */
-/* AND ONE DENSITY STEP WITH IT, because the clip alone does not close the
-   band. Measured at 1080: 466px of track against 479 of content with Filter
-   already clipped — thirteen short, so the row still broke. 10 -> 8 on four
-   gaps and 20 -> 16 on the bar's own inline padding buys 16, which lands it
-   at 471 in 474. Three pixels is thin and is written down rather than
-   rounded away: the only thing that can spend them is a longer count string,
-   and the failure is flex-wrap doing exactly what it does above — a second
-   row, not a broken one. Both values are steps on §5's scale. */
-@media (max-width:1240px) and (min-width:1080px){
-  .set-bar{gap:var(--s-8);padding-inline:var(--s-16)}
-}
-/* ── FIND SIMILAR HOLDS ITS SLOT · platform.md §4.3 "Bar" ─────────────────
-   The founder's first star brought two things into this row at once — the
-   `N starred` chip and Find similar — and the row broke to a second line on
-   the commonest action on the surface: the whole list jumped 40px under the
-   pointer that had just pressed a star. The button now keeps its box while
-   nothing is starred. visibility:hidden, not opacity, because it also takes
-   the button out of the tab order and the accessibility tree, which is what
-   [hidden] was doing for it; the attribute stays the one switch and
-   list.mjs's syncStarUI is unchanged.
-
-   THE NUMBERS. At 1440 the bar is 686px; heading, chip, info, Sort, Filter
-   and the full Find similar come to 667 with gaps and padding. Below 1400
-   that stops fitting, so Filter's label clips to its icon, which holds the
-   full Find similar to 1340 — a 1366 laptop keeps the word on the one filled
-   control. Below 1340 Find similar's label clips too. Both use sr-only's
-   clip rather than display:none, so the accessible names survive. From 1240
-   the gap and padding step down as well, which holds the row to about 1160
-   (measured: one row at 1280, two at 1150). Between 1080 and 1160 the first
-   star still wraps it — up to 41px short with nothing left to clip but the
-   heading's own counts — and a second row is what flex-wrap does rather than
-   a break.
-   Restore the original order is the other known wrap — it is a sentence,
-   and it only appears after the founder has pressed Find similar. */
-/* FROM 1080 ONLY. Below it the columns stack, the bar is the window's width
-   and wraps to two rows at rest anyway, and a held slot is an empty third
-   row under Sort and Filter. */
-@media (min-width:1080px){
-  .set-bar #setRebase[hidden]{display:inline-flex;visibility:hidden}
-}
-@media (max-width:1340px) and (min-width:1080px){
-  .set-bar #setRebase>span{position:absolute;width:1px;height:1px;
-                          padding:0;margin:-1px;overflow:hidden;
-                          clip-path:inset(50%);white-space:nowrap;border:0}
-}
-
-/* ── the re-rank control, in the bar · 2026-09-11 ────────────────────────
-   .btn IS 36px AND THIS ROW IS 30px. Everything else in the bar is an .lm-btn,
-   so the primary fill is taken from .btn-primary and the geometry from .lm-btn
-   rather than letting a page-sized button sit six pixels proud of its
-   neighbours. Same --r-control, so the three read as one row of controls that
-   happen to differ in weight — which is exactly the difference being drawn. */
-.set-rank{height:30px;padding:0 var(--s-10);font-size:12.5px;gap:var(--s-6)}
-/* THE ONE UNGATED :hover IN THE FILE, and on a touch screen a hover state
-   applies on tap and STAYS applied until something else is tapped — so
-   Re-rank sat filled with --ink-hover, reading as held down, over a list that
-   had already finished re-ranking. Every other hover in this sheet is inside
-   one of these blocks; this rule was written next to .set-rank rather than
-   into the bar's block below and missed the gate by position. */
-@media (hover:hover){ .set-rank:hover{background:var(--ink-hover)} }

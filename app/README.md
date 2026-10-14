@@ -23,8 +23,9 @@ inside it, `Home` and `End` reach its ends — because twenty rows at twelve dra
 whole viewport**, with zoom, rotation, pan and a thumbnail strip; from a row it opens the record
 underneath it at the same time, so Escape closes the drawing and leaves you in the record. *Drawings only* in the search bar strips the
 **list** to its pictures; the record is unaffected. The grouping control opens a **popover**, and the
-branches you pick stay as chips above the list after it closes. Star a row and *Find similar*
-appears; the count beside the results leads to the starred set, which is where the export lives.
+branches you pick stay as chips above the list after it closes. *Find similar* in the record's
+head re-orders the list by nearness to that patent; star a row and the count beside the results
+leads to the starred set, which is where the export lives.
 
 *Open in IPtech* at the record's **foot** — `platform.md` §4.5's *the way out is at the end of the
 reading, not the top of it* — **points at a sign-in page and always the same one.** It is a

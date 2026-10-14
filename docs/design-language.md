@@ -1032,7 +1032,7 @@ happen to be touched.
 | Size | Where |
 |---|---|
 | 14px | inline with small text — the row's meta glyphs, menu ticks and chevrons, the masthead's theme control and counters |
-| 15px | the results toolbar and the list bar — settings, view mode, sort, filter, *Find similar*, and *Back* |
+| 15px | the results toolbar, the list bar and the record head — settings, view mode, sort, *Find similar*, and *Back* |
 | 16px | standalone controls — buttons, record actions, masthead buttons, the figure viewer's action bar |
 | 17px | the row's star, the one control a row carries beside its toggle |
 | 18px | the head of a destination page, and the figure viewer's previous and next |

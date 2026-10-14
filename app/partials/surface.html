@@ -172,9 +172,9 @@
 
                  ONE ROW, IN THE RECORD'S OWN GRAMMAR. What is true at the
                  leading edge, what you can do at the trailing one, a hairline
-                 under both. It fits: 497px of a 646px row at rest, and it
-                 wraps to a second row only when Find similar and Restore are
-                 out — which is the same variable-control head .rec-head has.
+                 under both. It wraps to a second row only when the nearness
+                 chip and Restore are out — which is the same variable-control
+                 head .rec-head has.
 
                  THE SPACER MOVED with the merge. At the end of the bar it
                  pushed against nothing; between the two groups it is what
@@ -230,9 +230,9 @@
                 search for something else, edit the sentence at the top and search again.
                 <br><br><b>Star a patent that is close to your idea.</b> Your starred patents
                 stay with you while you search, and they are what you can take out of Terrain.
-                Starring also makes <b>Find similar</b> available, which re-orders the set by how
-                near each patent is to what you starred — no patent enters or leaves, only the
-                order changes, and you can put it back.<br><br><b>The figure on the right of each
+                <b>Find similar</b>, on the open record, re-orders the set by how near each
+                patent is to that one — no patent enters or leaves, only the order changes, and
+                you can put it back.<br><br><b>The figure on the right of each
                 row is the engine’s relevance score.</b> It is how close the search put that
                 patent to what you described.<br><br><b>That ordering is a ranking, not a
                 verdict.</b> A patent near the top is close to what you described. It does not
@@ -271,28 +271,6 @@
               <button class="lm-item" type="button" role="menuitemradio" aria-checked="false" data-sort="oldest"><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Oldest first</span></button>
               </div>
             </div>
-            <!-- THE STAR'S CONSEQUENCE, in the bar since 2026-09-11. It was a
-                 button inside a collapsing strip below this one, beside the
-                 sentence "Find patents like the one you starred." The strip is
-                 gone and the sentence is in the heading's popover, which already
-                 carried the same fact in its own words.
-
-                 IT IS THE ONLY FILLED CONTROL ON THIS SURFACE, and that is now
-                 the WHOLE of how it draws the eye — a one-turn ring traced the
-                 button on arrival for one pass and is deleted: §2 leaves no
-                 accent to spend, and
-                 near-black fill is what CLAUDE.md reserves for a primary action.
-                 Against two outlined menu triggers a filled button is the loudest
-                 thing in a 345px bar without a hue existing.
-
-                 HIDDEN, NOT DISABLED. The strip used to collapse away when there
-                 was nothing to rank, so nothing was on screen; a disabled button
-                 loitering in the bar would be new clutter, and [hidden] takes it
-                 out of the tab order the way #setRestore below already does. -->
-            <button class="btn btn-primary set-rank" id="setRebase" type="button" hidden>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5h10"/><path d="M11 12h10"/><path d="M11 19h10"/><path d="M4 4h1v5"/><path d="M4 9h2"/><path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"/></svg>
-              <span>Find similar</span>
-            </button>
             <!-- THE WAY BACK, and it lives here rather than in the panel because this
                  is where the surface's other undo-shaped control already is. Hidden by
                  [hidden] rather than visibility, so it leaves the tab order and the
