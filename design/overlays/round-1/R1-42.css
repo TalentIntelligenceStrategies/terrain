@@ -1,0 +1,15 @@
+/* R1-42 · Result card: one version reads as text, not as a pressed switch
+ *
+ * Current: a patent with only one version shows a single filled pill
+ * ("Grant" or "Application") with a border and the muted ground, which reads
+ * as the pressed half of the Grant / Application switch.
+ * Wanted:  plain text, in the same place and size, when only one version
+ * exists. The switch appears only when there are two.
+ *
+ * Their single-version element is the span beside the switch's slot; the
+ * switch itself is a [role=group]. */
+main .group.cursor-pointer [class*="justify-self-end"] > span.bg-muted {
+  background: none;
+  border-color: transparent;
+  padding-inline: 0;
+}
