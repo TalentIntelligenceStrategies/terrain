@@ -1,0 +1,28 @@
+/* R1-37 · Record: the number and title in the head bar (see R1-37.js) */
+.terrain-rec-name {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity var(--dur-fast) ease-out;
+}
+.terrain-rec-name[data-on] {
+  opacity: 1;
+}
+.terrain-rec-no {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+.terrain-rec-title {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--foreground);
+}
