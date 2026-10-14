@@ -200,7 +200,12 @@
 
    IT IS AN <a> IN ONE CASE, so the underline-free treatment is explicit: the
    product has no other external link and no inherited anchor styling. */
-.rec-end{border-block-start:1px solid var(--border);padding:var(--s-20);
+/* THE FOOT OF THE CARD, AND IT DOES NOT SCROLL (platform.md §4.5). flex:none
+   is what holds it: the card is a flex column whose middle child scrolls, the
+   same arrangement that keeps .rec-head at the top. Its hairline is the one
+   the identity block closes with, so the document still sits between two. */
+.rec-end{flex:none;border-block-start:1px solid var(--border);
+         padding:var(--s-12) var(--s-20);
          display:flex;flex-direction:column;gap:var(--s-12)}
 /* [hidden] has to beat the author display:flex above it, the same as .rec and
    .card and every other element in this file that carries it. */

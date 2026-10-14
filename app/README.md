@@ -27,8 +27,8 @@ branches you pick stay as chips above the list after it closes. *Find similar* i
 head re-orders the list by nearness to that patent; star a row and the count beside the results
 leads to the starred set, which is where the export lives.
 
-*Open in IPtech* at the record's **foot** — `platform.md` §4.5's *the way out is at the end of the
-reading, not the top of it* — **points at a sign-in page and always the same one.** It is a
+*Open in IPtech* in the record's **foot**, which stays in view while the record scrolls
+(`platform.md` §4.5), **points at a sign-in page and always the same one.** It is a
 stand-in for a per-patent source URL the engine does not return yet — `design/components.md` §4
 question 3 — and it is the only control in the product whose destination the data did not choose.
 

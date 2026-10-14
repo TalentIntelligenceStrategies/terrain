@@ -463,28 +463,30 @@ anything to scroll and 1,500px of claims overflowed one level further down, agai
 from its own border. Moving the scroll out to the column's edge fixed that and cost the panel its
 edges: the card grew to its content, so the record's rounded top and bottom left the frame the moment
 anything moved. The scroller sits below the head now — inside the card, under the hairline, within
-the padding. The card fills its column, *previous*, *next* and *close* stay reachable through a long
-claim set because the head does not move, and the three ways out at the end stay inside the scroll
-where the reading leaves them.
+the padding. The card fills its column and it is three parts, the list panel's shape: a head, the scroller, and
+a foot. *Previous*, *next* and *close* stay reachable through a long claim set because the head does
+not move, and the three ways out stay reachable because the foot does not either.
 
-**The way out is at the end of the reading, not the top of it.** *Open in IPtech*, with a label
-rather than a bare glyph, because it has a destination and an arrow alone says only *somewhere else*.
-It sat in the head until the closing block existed to hold it; two controls with one destination in
-one pane is the same mark for the same act, so it **moved** rather than being duplicated. **The
+**The ways out are pinned to the foot of the panel.** They sat after the last claim, which put them
+about 3,000px down a patent with nineteen claims — off screen for nearly all the time a record was
+open, so the founder scrolled to the end to take the patent out. The foot holds them in view at every
+scroll position, under a hairline, and it is still the foot: the head carries what changes the set,
+the foot what leaves with the patent. *Open in IPtech*, with a label rather than a bare glyph,
+because it has a destination and an arrow alone says only *somewhere else*. **The
 destination is a placeholder and is named as one**:
 [`components.md`](../design/components.md) §4 question 3 is the real answer and it is still open —
 the source varies by jurisdiction, so the engine has to return the URL *and* the label per patent.
 Until it does, every record points at the same sign-in, which is honest about being a stand-in in a
-way a constructed per-patent link would not be. *At the foot of the reading a placeholder is cheap;
-pinned in permanent chrome at the top of every record it was a placeholder at maximum prominence.*
+way a constructed per-patent link would not be. *In the foot a placeholder sits at the quiet end of
+the panel; in the head, beside the patent's own title, it was a placeholder at maximum prominence.*
 
 **The record closes with what leaves, and the head carries what changes the set.** Five controls,
 split by where the act lands rather than by how often it is pressed. *Star* and *Find similar* change
 the founder's own set — one adds to the shortlist that leaves the product, the other re-orders the
 column beside this one — so they sit in the head with the stepping pair, the other control here that
 moves through the set rather than reading the record. *Open in IPtech*, *Copy citation* and *Export
-this record* are the end of reading this patent, and they sit where the reading ends. **The foot is
-chrome and not a fourth section of the patent** — Drawings, Abstract and Claims are the published
+this record* take the patent out, and they sit in the foot. **The foot is chrome and not a fourth
+section of the patent** — Drawings, Abstract and Claims are the published
 document, and a fourth heading in the same grammar would claim these belong to it. The divider is the
 same rule the identity block closes with, so the patent is bracketed between two identical hairlines
 and everything between them is the document.
