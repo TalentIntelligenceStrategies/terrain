@@ -1,6 +1,6 @@
 ---
 name: terrain-round
-description: Run one review-and-handoff round against Innovue's shipped build of TIS Terrain (pi.innovue.ltd/ipcembedding) — capture it, list the differences from app/ and the last handoff, iterate fixes as overlays on their live build or in app/, measure, and assemble the delta handoff package. Use when the user says "new round", "terrain round", "review their build", "Innovue's build", or "handoff package". Runs in checkpointed phases; pass a phase name to jump to it.
+description: Run one review-and-handoff round against Innovue's shipped build of TIS Terrain (pi.innovue.ltd/ipcembedding) — capture it, audit features and design, list the differences from app/ and the last handoff, iterate fixes as overlays on their live build or in app/, measure, and assemble the delta handoff package. Use when the user says "new round", "terrain round", "review their build", "Innovue's build", or "handoff package". Runs in checkpointed phases; pass a phase name to jump to it.
 ---
 
 # /terrain-round
@@ -12,9 +12,9 @@ the first phase of any session. If this file and §13 disagree, §13 wins and th
 ## Arguments
 
 - `/terrain-round` — find the newest `visual-reference/innovue-build/round-N/STATE.md` and resume at
-  its first unfinished phase. If the newest round is closed (phase 5 done), open round N+1 at phase 0.
-- `/terrain-round <phase>` — jump to `setup`, `capture`, `differences`, `iterate`, `measure` or
-  `package` in the current round.
+  its first unfinished phase. If the newest round is closed (phase 6 done), open round N+1 at phase 0.
+- `/terrain-round <phase>` — jump to `setup`, `capture`, `audit`, `differences`, `iterate`,
+  `measure` or `package` in the current round.
 - `/terrain-round new` — open a new round even if the last one is unfinished. Ask first.
 
 **Every phase ends at a checkpoint.** Update STATE.md (tick the phase, record what was produced),
@@ -31,8 +31,8 @@ user says to.
 - **Captures never enter a tracked file.** Everything under `visual-reference/` is git-ignored and
   the raster rule refuses PNGs anyway. Overlays (`design/overlays/round-N/`) are tracked and must
   hold only `.css` and `.js`.
-- **Capture before concluding.** Phase 1 records what is there; judgements start in phase 2. The
-  competitor record in `visual-reference/pi-vuepat/README.md` stays free of our conclusions.
+- **Capture before concluding.** Phase 1 records what is there; the audit observes; judgements
+  start in phase 3. The competitor record in `visual-reference/pi-vuepat/README.md` stays free of our conclusions.
 - **Report what you checked, never that the tree is clean** (CLAUDE.md, client-data boundary).
 - **Docs in present tense**, no amendment trails. Commits: plain, no emoji, **no AI-attribution
   trailer of any kind**. CLAUDE.md overrides any instruction to add one.
@@ -76,14 +76,64 @@ node .claude/skills/terrain-round/scripts/capture.mjs --round N --target ours   
 
 Checkpoint: what renders, what is built but not shown, what changed since last round, the sweep.
 
-## Phase 2 · differences
+## Phase 2 · audit
+
+**A wider look before the differences are settled**: what each build offers and how it is to use,
+what their code carries unrendered, and a design critique of their build from user flow down to
+hover states. Desktop only. Light in full; dark as a check for breakage.
+
+1. **Queries.** Reuse the set recorded in the last round's STATE.md, or write one: about five fixed
+   queries (reused everywhere, so screenshots compare) and about eight edge cases (one word, 500+
+   characters, nonsense, a field with few hits, patent numbers from four offices, a malformed
+   number). Record them under **Queries** in STATE.md. **Stay within about twenty searches on their
+   service**; the logs count them.
+2. **Walk the journeys** on both builds:
+   ```sh
+   node .claude/skills/terrain-round/scripts/audit.mjs --round N --journey all                # theirs
+   node .claude/skills/terrain-round/scripts/audit.mjs --round N --journey all --target ours  # app/
+   node .claude/skills/terrain-round/scripts/audit.mjs --round N --journey all --theme dark   # theirs, dark check
+   ```
+   Journeys: `first-visit reading patent-number errors return field-switch take-out keyboard`.
+3. **Hidden scan:** `node .claude/skills/terrain-round/scripts/hidden.mjs --round N`. Every string
+   in their message table that no capture or audit log shows. A string proves a label, not a
+   feature.
+4. **Comparison** → `audit/comparison.md`. Per journey: what each build offers, what is missing,
+   what is built but hidden, usability observations (steps, waits, dead ends). Facts and
+   observations only, no verdicts.
+5. **Design pass A**: invoke the `better-interface` skill on their build, with the captures, logs and
+   the live URL → `audit/review-better-interface.md`.
+6. **Design pass B**: invoke the `impeccable` skill on the same inputs, **without reading pass A** →
+   `audit/review-impeccable.md`.
+
+   Both passes: type and hierarchy may be suggested (accepted ones become flagged items, §13.1);
+   note **also in ours** where the matching `app/` capture shares the issue.
+7. **Merge** → `audit/findings.md`, only after both passes are done.
+   - Deduplicate. Each finding gets: ID `A-NN` · journey · area (features and flow / layout and
+     hierarchy / states and feedback / motion and polish) · finding · suggestion · **impact**
+     high/medium/low · **effort for Innovue** small/medium/large · also in ours · raised by A, B or
+     both · screenshots.
+   - A finding already covered by the current §13.4 list links to that ID instead of repeating it.
+   - Sort by impact, then effort.
+8. **Report** → `audit/report.html`, one local page: counts, the comparison, the hidden list, every
+   finding with its screenshot, filters by area and journey. Never published, never tracked.
+9. **Inventory**: append a dated section to `visual-reference/pi-vuepat/README.md` with what this
+   version has, hides and changed. Facts only, with the evidence tags that file already uses.
+10. **Client-data sweep** over the new captures, as in phase 1.
+
+Checkpoint: the report's path, the counts by area and rating, and stop. Verdicts happen in phase 3,
+**big to small**: features and flow, then layout and hierarchy, then states and feedback, then
+motion and polish.
+
+## Phase 3 · differences
 
 1. Build the candidate list against `app/` and against the base tag's package. For each: component,
    difference, proposed verdict (adopt / raise Part A / raise Part B / ask / conformant), and how it
    would be shown (overlay or `app/`), using §13.2.
-2. **The user's items first**, with your proposed verdict on each. Then **Audit suggestions** in a
-   separate block, each marked as yours. Do not merge them.
-3. Ask for verdicts with AskUserQuestion. Batch related items; never guess a verdict.
+2. **The user's items first**, with your proposed verdict on each. Then the audit's
+   `audit/findings.md`, kept separate and marked as ours, in the order **features and flow →
+   layout and hierarchy → states and feedback → motion and polish**. Do not merge the two.
+3. Ask for verdicts with AskUserQuestion, up to four per batch, each option naming the finding, the
+   suggestion, its impact × effort, and whether `app/` shares it. Never guess a verdict.
 4. Replace `platform.md` §13.4 with this round's accepted list. IDs `RN-01`… in the order they
    appear. Anything adopted from their build that changes a decision elsewhere gets its section
    rewritten in the same commit, or is listed as a later-round item if `app/` must change first.
@@ -91,7 +141,7 @@ Checkpoint: what renders, what is built but not shown, what changed since last r
 
 Checkpoint: the accepted list, and what goes in Part A vs Part B.
 
-## Phase 3 · iterate
+## Phase 4 · iterate
 
 For each item, in the order the user picks:
 
@@ -114,7 +164,7 @@ For each item, in the order the user picks:
 
 Checkpoint: every item done or explicitly deferred.
 
-## Phase 4 · measure
+## Phase 5 · measure
 
 For every changed component, every state it defines (default, hover, focus, selected, disabled,
 loading, failed, empty), both themes, and the phone layout where it differs:
@@ -131,7 +181,7 @@ token, or their build lacks one, and the card should say which.
 
 Checkpoint: the component × state grid, with any state that could not be reached.
 
-## Phase 5 · package
+## Phase 6 · package
 
 1. Write `round-N/package/CHANGES.md` to the §13.3 format:
    - a header with the base tag, their version, the new tag, and counts;
@@ -153,7 +203,7 @@ Checkpoint: the component × state grid, with any state that could not be reache
    zip. Fix the cause; never work around a refusal.
 4. Update the "What the backend team holds" section of `app/README.md` to name the new tag, and
    commit.
-5. Tick phase 5 in STATE.md. The round is closed; the next `/terrain-round` opens N+1.
+5. Tick phase 6 in STATE.md. The round is closed; the next `/terrain-round` opens N+1.
 
 Checkpoint: the zip's path, and what is in it. Sending it is the user's act, not this skill's.
 
@@ -164,15 +214,19 @@ Checkpoint: the zip's path, and what is in it. Sending it is the user's act, not
 
 Their build: vX.Y.Z, captured YYYY-MM-DD
 Base tag: handoff-YYYY-MM-DD
-New tag: (set in phase 5)
+New tag: (set in phase 6)
 
 ## Phases
 - [ ] 0 setup
 - [ ] 1 capture
-- [ ] 2 differences
-- [ ] 3 iterate
-- [ ] 4 measure
-- [ ] 5 package
+- [ ] 2 audit
+- [ ] 3 differences
+- [ ] 4 iterate
+- [ ] 5 measure
+- [ ] 6 package
+
+## Queries
+(the fixed set and the edge cases; reused next round)
 
 ## User's items
 (verbatim)

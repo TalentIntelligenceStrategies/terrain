@@ -29,6 +29,9 @@ async function step(page, tag, fn) {
   n++;
   const file = `${String(n).padStart(2, '0')}-${tag}.png`;
   await page.screenshot({ path: path.join(dir, file) });
+  /* the visible text beside each shot, so hidden.mjs can tell a string that
+     is on screen from one that never is */
+  fs.writeFileSync(path.join(dir, file.replace(/\.png$/, '.txt')), await page.evaluate(() => document.body.innerText).catch(() => ''));
   const open_ = await page.evaluate(() => [...document.querySelectorAll('[role=dialog],[role=menu],[role=listbox],dialog[open],[popover]')]
     .filter(e => e.offsetParent || e.matches(':popover-open'))
     .map(e => e.innerText.trim().replace(/\n+/g, ' ⏎ ').slice(0, 1200)).filter(Boolean));

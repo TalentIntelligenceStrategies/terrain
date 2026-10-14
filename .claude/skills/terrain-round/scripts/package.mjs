@@ -6,7 +6,7 @@
  * --base defaults to the newest handoff-* tag older than --tag.
  *
  * Reads visual-reference/innovue-build/round-N/package/CHANGES.md (written in
- * phase 5) and writes round-N/terrain-handoff-<date>.zip next to it:
+ * phase 6) and writes round-N/terrain-handoff-<date>.zip next to it:
  *
  *   CHANGES.md   as written
  *   images/      every image CHANGES.md links, and only those
@@ -45,7 +45,7 @@ const rdir = path.join(ROOT, 'visual-reference', 'innovue-build', `round-${a.rou
 const pdir = path.join(rdir, 'package');
 const changes = path.join(pdir, 'CHANGES.md');
 const images = [];
-if (!fs.existsSync(changes)) fail.push(`${path.relative(ROOT, changes)} does not exist; phase 5 writes it`);
+if (!fs.existsSync(changes)) fail.push(`${path.relative(ROOT, changes)} does not exist; phase 6 writes it`);
 else {
   const text = fs.readFileSync(changes, 'utf8');
   for (const m of text.matchAll(/!\[[^\]]*\]\(([^)\s]+)\)/g)) {
