@@ -1,0 +1,14 @@
+/* R1-09 · Results surface: what a running search looks like
+ *
+ * Shared by R1-09a and R1-09b, with R1-09.js.
+ * Current: while a search runs, the previous results and the record fade to
+ * 55% opacity (.results-lane.is-refining), and the previous search's timing stays beside the count.
+ * Wanted:  the previous results stay at full opacity until the new ones
+ * replace them (the button and the line carry the signal instead), and the
+ * stale timing is hidden while the next search runs. */
+.results-lane.is-refining {
+  opacity: 1;                       /* theirs: .55 */
+}
+main > div.sticky:has(.progress-bar) span.tabular-nums > span {
+  visibility: hidden;
+}

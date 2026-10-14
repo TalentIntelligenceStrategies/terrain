@@ -1,0 +1,26 @@
+/* R1-09b · Results surface: the pulse runs around the search box
+ *
+ * Current: the 2 px loading line runs on the bar's bottom edge, which is also
+ * the panels' top edge, so it reads as the panels' border.
+ * Wanted:  no line between the bar and the panels; while a search runs the
+ * search box's own border pulses, so the signal sits on the control that
+ * started it. The bar's divider stays a plain hairline.
+ *
+ * Keyed on the presence of their own .progress-bar, so no new state is
+ * needed: the rule applies exactly while they render the line. */
+main > div.sticky .progress-bar {
+  display: none;
+}
+main > div.sticky:has(.progress-bar) .search-box-morph {
+  animation: terrain-search-pulse 1.4s ease-in-out infinite;
+}
+@keyframes terrain-search-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--foreground) 0%, transparent); border-color: var(--border); }
+  50%      { box-shadow: 0 0 0 3px color-mix(in oklch, var(--foreground) 12%, transparent); border-color: color-mix(in oklch, var(--foreground) 45%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  main > div.sticky:has(.progress-bar) .search-box-morph {
+    animation: none;
+    border-color: color-mix(in oklch, var(--foreground) 45%, transparent);
+  }
+}

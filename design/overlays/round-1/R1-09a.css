@@ -1,0 +1,16 @@
+/* R1-09a · Results surface: the loading line, spaced
+ *
+ * Current: the 2 px loading line runs on the bar's bottom edge, which is also
+ * the panels' top edge, so it reads as the panels' border.
+ * Wanted:  the line runs on the bar's own divider, with 16 px of space before
+ * the panels (R1-08 supplies the space).
+ *
+ * Variant a of two; R1-09b moves the pulse onto the search box instead. */
+@media (min-width: 1024px) {
+  section.shell-swap {
+    padding-top: 16px;
+  }
+}
+main > div.sticky .progress-bar {
+  height: 2px;
+}
