@@ -1,0 +1,17 @@
+/* R1-40 · Every control: targets of at least 24 px
+ *
+ * Current: Grant / Application are 47x22 and 75x22, the card's patent number
+ * link is 109x20, the version label 42x16 (removed from the bar by R1-07).
+ * Wanted:  every target at least 24 px high. The visible pill keeps its size
+ * where it should; a transparent ::after extends the hit area instead, so
+ * the layout does not move. WCAG 2.5.8. */
+[role="group"][aria-label="Switch grant/application version"] > button,
+main .group.cursor-pointer a[title^="Open "] {
+  position: relative;
+}
+[role="group"][aria-label="Switch grant/application version"] > button::after,
+main .group.cursor-pointer a[title^="Open "]::after {
+  content: "";
+  position: absolute;
+  inset: -3px 0;                    /* 22 + 3 + 3 = 28; 20 + 6 = 26 */
+}
