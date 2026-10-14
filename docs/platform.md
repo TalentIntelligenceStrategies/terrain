@@ -2,7 +2,8 @@
 
 > **What gets built.** This document describes Terrain as it exists in [`app/`](../app/), which is
 > the reference: where this document and `app/` disagree, the code is what was decided and this
-> document is stale. Run it with `python3 -m http.server 8765` from the repo root, then
+> document is stale. Innovue's shipped build is the reference for type and text layout, and §13 says
+> where that line sits. Run it with `python3 -m http.server 8765` from the repo root, then
 > `http://127.0.0.1:8765/app/`.
 >
 > Positioning — what Terrain is and who it is for — is [`brief.md`](brief.md). How it looks is
@@ -972,9 +973,6 @@ knowing before changing one.*
 
 ## 12 · Open
 
-- **Can nearest-neighbour retrieval be pointed at a result set rather than one patent?** Unconfirmed,
-  and it is a product risk rather than a question — the star collects and finds similar, and without
-  this it only collects. `components.md` §4 question 1.
 - **Can a grouping be generated over a result set we supply?** §4.4 depends on it entirely.
 - **Who supplies the per-patent "open this in the source" URL?** `components.md` §4 question 3. The
   source varies by jurisdiction — Google Patents, WebPat, TIPO — so the interface cannot construct
@@ -999,3 +997,117 @@ knowing before changing one.*
 - **Is the whole flow right?** Search → find similar → star → export has never been watched with a
   founder. The part most likely to be wrong is that the starred set is a place you go rather than
   something that accumulates visibly beside the list.
+- **Does their engine return legal status at all?** Terrain no longer prints it (§13, item R1-17),
+  so this is no longer a display question. It still bears on family merge and name unification, which
+  §9 takes as hygiene.
+- **Does Terrain meter by points at all?** The leaning is no: their build ships without points, and
+  §13 records points as dropped (R1-20). What replaces them as the plan's limit, if anything, is the
+  open part. §6.1 and §7.2 describe points as `app/` still has them, and they are rewritten when
+  `app/` removes them.
+
+---
+
+## 13 · Rounds against Innovue's build
+
+**Innovue builds Terrain from our handoff packages, on their own engine, and ships it at
+`https://pi.innovue.ltd/ipcembedding/`.** A round compares their shipped build with what they were
+given, settles every difference, and sends back only the differences. The procedure is the
+`/terrain-round` skill in `.claude/skills/terrain-round/`. This section is what it decides against.
+
+### 13.1 · Who is the reference for what
+
+**`app/` is the reference for behaviour, flow and the engine contract. Their build is the reference
+for type and text layout**, unless an item in §13.4 flags a component. Without the default, every
+cosmetic difference stays technically open and gets reopened each round. **`app/` ports their type
+and layout as each component is touched for another reason**, so over time the overlay captures and
+`app/` captures compare like for like.
+
+**The scope of a round is a UX and interaction review**: density and spacing, loading, empty and
+failure states, dark mode, paging and scroll, and features that went missing. Font size, hierarchy
+and text layout are out of scope unless the user flags one.
+
+### 13.2 · How an item is shown
+
+- **A problem in their build** (spacing, loading, dark mode) is fixed as an **overlay**: CSS, and
+  script where needed, injected into their live page. Overlays live in `design/overlays/round-N/`
+  and go into the package as the patch, because a rule written against their real markup loses
+  nothing in translation.
+- **A feature `app/` already has** (the star, the starred set, paging) is shown in `app/`. Nothing new
+  is built.
+- **New behaviour** is built in `app/`, settled here first like any other change.
+
+### 13.3 · The package
+
+**A delta, never a repeat.** They hold everything up to the last `handoff-*` tag, so a package
+carries only what moved:
+
+```
+terrain-handoff-YYYY-MM-DD.zip
+  CHANGES.md   the document; everything else hangs off it
+  images/      one redline and every state, per changed component
+  contract/    OpenAPI and JSON Schema for the ports whose shape changed, and only those
+  code/        the app/ files changed since the last tag, and the git diff
+  overlays/    design/overlays/round-N/ as it stands, the patch for every overlay item
+```
+
+**`CHANGES.md` has two parts, kept apart because they ask different things of the reader.**
+**Part A, conformance**, is where their build differs from the package they were given. **Part B,
+changes**, is what we changed since that tag. Both are grouped **by component**. Each component has
+numbered cards (ID · restore / change / new / remove · current → wanted · why in one line · how to
+check · contract change yes or no), one redline of the running surface, a spec table that states
+every value as **the token and the measured pixels**, and **every state the component defines**:
+default, hover, focus, selected, disabled, loading, failed, empty, light, dark, and the phone layout
+where it differs. **Part A is written at the same depth as Part B**, because a feature they never
+built is one the last package did not get across. Questions for Innovue close the document, each
+tied to an item.
+
+**The redlines are taken against the corpus, so the package prints real holder names** and goes to
+Innovue only. It is never published.
+
+### 13.4 · The current round
+
+**Round 1, against their v1.0.21, captured 2026-10-14, from `handoff-2026-10-04`.** The list is
+replaced when the next round opens.
+
+**Part A · conformance**: the package they hold has these, and their build does not.
+
+| ID | Component | Difference → wanted | Shown in |
+| --- | --- | --- | --- |
+| R1-01 | Result card, record | No star → a star on every card and in the record. **The star is a collection**: one starred set, each patent remembering the search it came from | `app/` |
+| R1-02 | Starred set, masthead | No starred set, no starred count → the masthead count, the starred set page grouped by search, and its CSV and Markdown downloads. Without it nothing leaves but one record at a time | `app/` |
+| R1-03 | Masthead | No account menu → the avatar menu: account settings, plan and billing, help, sign out | `app/` |
+| R1-04 | Search settings | The date range is in their code and not rendered → render it, with its three bases | `app/` |
+| R1-05 | Result list | Every result in one endless scroll → 20, then *Show more*, which also lets drawings arrive sooner | `app/` |
+| R1-06 | Engine · names and titles | The same company in two spellings, names and titles in capitals → titles in sentence case with acronyms kept; holders merged to one form as the company writes itself; inventors in normal case. Design-language §4 *Case* | Their captures |
+
+**Part B · changes**: what we ask for that the package did not have.
+
+| ID | Component | Difference → wanted | Shown in |
+| --- | --- | --- | --- |
+| R1-07 | Masthead | Cramped → more room | Overlay |
+| R1-08 | Search bar | Cramped → more room | Overlay |
+| R1-09 | Results surface | The loading line sits flush on the two panels → spaced properly (a), or the pulse runs around the search bar instead (b) | Overlay, a and b |
+| R1-10 | Drawings | The drawing placeholder does not show in dark mode, so drawings below the fold arrive as blank white plates → visible in both themes | Overlay |
+| R1-11 | Masthead | Projects → **search history**: a *History* button that opens past searches (query, field, date), each rerun by a click, deleted singly or cleared. Their code carries this panel unrendered | `app/` |
+| R1-12 | Search bar, masthead | The technology field sits in the nav → a chip at the start of the search bar, which opens the field list; it leaves the nav | `app/` |
+| R1-13 | Every surface | The case and separator rules in design-language §4 *Case*: `micro` the only uppercase, inventors and holders separated by `; `, generated group names in sentence case, jurisdictions as codes | Overlay |
+
+**Adopted from their build into `app/`**, not in the package. Each section that describes the old
+behaviour is rewritten in the commit that changes `app/`.
+
+| ID | What `app/` takes |
+| --- | --- |
+| R1-14 | The Grant / Application switch on each card |
+| R1-15 | The Text / Patent number toggle under the search box |
+| R1-16 | A picked group shown as a removable chip above the list |
+| R1-17 | **No legal status** — the status chip, the status filter and the CSV status column go |
+| R1-18 | **Find similar from the patent open in the record**, not from the starred set |
+| R1-19 | The coverage table with a grant date and an application date per jurisdiction |
+| R1-20 | **No points** — the meter, the points page and run costs go. §12 holds what replaces them |
+| R1-21 | The first result's record opens by itself after a search |
+| R1-22 | The relevance score on every card |
+| R1-23 | Rotate left and rotate right in the drawings viewer |
+| R1-24 | A search box the founder can drag taller |
+
+**Not raised:** their session recording, and the card's patent number dropping its kind code.
+**Conformant:** the generated grouping, which §9 adopts.

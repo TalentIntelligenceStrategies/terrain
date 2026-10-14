@@ -429,6 +429,45 @@ and a 12px gap.
 
 **English only.** No `data-zh`, no bilingual markup, no CJK face.
 
+### Case, and who owns it
+
+**Two kinds of text reach the screen, and their case is owned in two different places.** What we
+write, the interface owns. What the patent offices filed, the engine owns: the same search returns
+titles in capitals, in sentence case and in title case, and the same company in two spellings, because
+the offices store them that way. **No component converts the case of patent data.** A converter would
+print *Tsv* and *Ibm* wherever it guessed wrong, so the engine returns data already cased and the
+interface prints what it gets.
+
+**What we write:**
+
+| Kind | Case | Example |
+| --- | --- | --- |
+| Page and section titles | Sentence case | *What you starred* |
+| Buttons, menu items, tabs, chips | Sentence case, verb first when it acts | *Find similar*, *Download CSV* |
+| Small field and section labels | `micro`, uppercase, three words at most | NUMBER, WHERE TO SEARCH |
+| Subtext, help, empty states | Sentence case, whole sentences | *Pick a patent on the left to read its record.* |
+| Counts | A figure and a word | *50 matched · 20 shown* |
+
+**`micro` is the only uppercase in the product, and it gets there by `text-transform`.** The source
+string stays in sentence case, so a screen reader and a copied label read normally.
+
+**What the engine returns:**
+
+| Kind | Rule | Example |
+| --- | --- | --- |
+| Patent titles | Sentence case, acronyms kept | *Semiconductor package having a heat spreader* |
+| Holders | One form per company, as the company writes itself; variants merged | The company's own spelling, once, not the filing's all-caps form beside it |
+| Inventors | Normal case, as the person writes their name | Given and family name in normal case, never all caps |
+| Generated group names | Sentence case. The group headers are `micro` labels | *Thermal interface layers*, not *Thermal Interface Layers* |
+
+**Lists of people and holders are separated by `; `**, a semicolon and a space. A name can contain a
+comma, so a comma cannot be the separator.
+
+**Jurisdictions are codes** — US, CN, TW, EP, KR, JP. Codes are what patent numbers already carry,
+and one form everywhere is the point; *U.S.* next to *Europe* is two systems on one screen.
+
+**Codes, numbers and dates are Inconsolata and exactly as issued**: *H01L23/36*, *2015-04-07*.
+
 ---
 
 ## 5 · Space, radius, elevation
