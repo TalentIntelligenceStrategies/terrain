@@ -201,8 +201,9 @@ accessible name. At 320px the bar wraps to a second row rather than hiding a reg
 
 The founder's sentence, still editable, with the elapsed time and the match count beside it.
 
-**It folds to one line once a search has run.** The sentence moves onto the toolbar row, ellipsised,
-and pressing it opens the field with the caret at the end. **Leaving the composer folds it again only
+**It folds once a search has run.** The sentence moves onto the toolbar row, **two lines before it
+truncates** — one line cut a long description to its first clause, which is the part descriptions of
+the same kind of thing share — and pressing it opens the field with the caret at the end. **Leaving the composer folds it again only
 if the sentence is still the one that ran** — an edit in progress is never folded away under the
 founder; it waits for Search, which runs it and folds, or Escape, which puts the sentence back and
 folds. Escape closes the thing the founder is in, so focusing the field lifts the composer above an
@@ -214,17 +215,17 @@ ready ones chosen with a press, the rest listed and refused as their tiles are. 
 search: the founder may want to change the sentence too, and Search is the commitment. It is the
 same value as the home surface's tiles, and the bar sends it with every search.
 
-Four toggles sit on the same row, after the Text / Patent number toggle (§3.2):
+Two controls sit on the same row, after the Text / Patent number toggle (§3.2):
 
 1. **Search settings** — the same popover §3.3 describes, anchored here instead.
 2. **Grouping** — opens the branch panel, §4.4, as a popover under this control.
-3. **Details and drawings** — every row as it is: title, holder, year, drawings.
-4. **Drawings only** — every row stripped to its drawings, for a set being scanned visually.
 
-**Toggles 3 and 4 govern the list, and that is a correction.** They governed the record, which made
-a bar-wide control do nothing at all until a patent was open — and the control's own group label
-reads *how much of each patent to show*, which is a claim about the set rather than about one of
-them. The record always shows everything; a drawing worth enlarging has the lightbox.
+**The view switch is the list's, and it sits in the list's head beside Sort** (§4.3): *Details and
+drawings* shows every row as it is, *Drawings only* strips every row to its drawings, for a set being
+scanned visually. Both decide what the column shows and neither changes what was searched, which is
+why they left this row, where they were two more icon-only controls on the bar whose job is the
+search. They govern the list and never the record: the record always shows everything, and a drawing
+worth enlarging has the lightbox.
 
 ***Drawings only* refuses with a spoken reason when nothing in the set has a drawing**, rather than
 emptying the list.
@@ -328,8 +329,8 @@ starred, and one info affordance. The count is printed once: a chip beside the h
 has room for the list or for prose about the list, and every sentence that is not the list lives
 behind that control.
 
-**Bar** — Sort (Relevance · Newest filed · Oldest filed), and after *Find similar* the chip naming
-what the set is ordered by and **Restore the original order**. **There is no filter**: the one it had
+**Bar** — Sort (Relevance · Newest filed · Oldest filed), the view switch (§4.2), and after *Find
+similar* the chip naming what the set is ordered by and **Restore the original order**. **There is no filter**: the one it had
 was legal status, which Terrain does not print (§13, R1-17). *Find similar* itself is in the record's
 head, §5.1. The heading's two-count form is
 `100 matched · 20 shown`: the noun is the subject of every row beneath it, and dropping it is what

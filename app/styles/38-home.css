@@ -242,8 +242,8 @@
    moving". visibility rides with opacity, flipping at the end of the exit
    and at the start of the entrance, so it is never a tab stop nobody can
    see. */
-.cmp-line{flex:1 1 auto;min-width:0;display:flex;align-items:center;height:32px;
-          margin-inline-start:var(--s-4);padding:0 var(--s-10);
+.cmp-line{flex:1 1 auto;min-width:0;display:flex;align-items:center;min-height:32px;
+          margin-inline-start:var(--s-4);padding:var(--s-4) var(--s-10);
           border:0;border-radius:var(--r-control);background:none;
           font:inherit;font-size:14px;line-height:1.55;color:var(--text-1);
           text-align:start;cursor:text;
@@ -251,7 +251,11 @@
           transition:opacity var(--dur-1) var(--ease),
                      visibility 0s linear var(--dur-1),
                      background var(--dur-1) var(--ease)}
-.cmp-line-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* TWO LINES BEFORE IT TRUNCATES (platform.md §4.2). One line cut a long
+   description to its first clause, which is the part every description of a
+   package or a hinge shares; the second line is usually where it differs. */
+.cmp-line-t{min-width:0;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;
+            -webkit-line-clamp:2;line-clamp:2;overflow-wrap:anywhere}
 .res-cmp[data-compact] .cmp-line{opacity:1;visibility:visible;
           transition:opacity var(--dur-1) var(--ease) var(--dur-2),
                      visibility 0s linear 0s,
