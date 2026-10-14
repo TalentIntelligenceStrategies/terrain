@@ -36,6 +36,12 @@ arriving — `docs/brief.md` §1 carries the test, and it is a test rather than 
 **`app/` is what was decided.** The documents describe it. Where a document and `app/` disagree, the
 code wins and the document is stale.
 
+**One carve-out: Innovue's shipped build is the reference for type and text layout**, unless a
+round's difference list flags a component. They build Terrain from our handoff packages on their own
+engine, and their type is fine as it is. `app/` stays the reference for behaviour, flow and the
+engine contract, and takes their type and layout as each component is touched. `docs/brief.md` §4 is
+the decision and `docs/platform.md` §13 is the round; `/terrain-round` runs one.
+
 **Run it:** `python3 -m http.server 8765` from the repo root, then `http://127.0.0.1:8765/app/`.
 `file://` will never work — ES modules are CORS-fetched and a `file://` origin is opaque.
 
@@ -67,6 +73,8 @@ docs/                FOUR FILES. See "Four documents" below.
 
 design/
   components.md      what the ENGINE must return, per component
+  overlays/round-N/  CSS and script injected into Innovue's live build — a round's
+                     fixes, shipped in its package as the patch
   previews/
     terrain-prototype.html    FROZEN v1 — the landscape product. Kept for provenance
                               only: every partial in app/ names it as its source.
@@ -76,6 +84,9 @@ design/
 tools/               everything that can refuse — check-app.py, sync-tokens.py,
                      cssgates.py, test-gates.sh, and publish-pages.py, which
                      refuses before it writes
+.claude/skills/terrain-round/  /terrain-round — one review-and-handoff round against
+                     Innovue's build, in checkpointed phases. Procedure and scripts
+                     only; node_modules and every capture stay untracked
 .github/workflows/   gates.yml — runs the gates on every push to main. It does NOT
                      publish: publishing is a deliberate act, run by hand
 brand/assets/imagery/terrain/  the ONE permitted raster family — see Rules
@@ -93,6 +104,7 @@ corpus/              THE STRESS-TEST SET, and what app/ loads by default. Real
 visual-reference/
   pi-vuepat/         the USERFLOW REFERENCE — Innovue's own search product, inventoried
   iptech-semantic-search/  the only evidence on two questions PI-VuePat does not close
+  innovue-build/round-N/   one /terrain-round: STATE.md, captures, redlines, the zip
 ```
 
 *The IPtech capture sets and the two comparison decks were archived out of this folder with

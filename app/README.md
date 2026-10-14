@@ -274,6 +274,10 @@ and an OpenAPI description with a JSON Schema and a captured example for each of
 handoff-2026-10-04 -- app/js/ports.mjs design/components.md` is what has moved since, and a new
 package with a new tag is how it reaches them. The tag is the record; nothing else here tracks it.
 
+**Every package after that one is a delta**: what their shipped build got wrong against the last
+tag, and what changed here since, in the format [`platform.md` §13](../docs/platform.md) sets out.
+`/terrain-round` builds it.
+
 ---
 
 ## `partials/` and `js/surfaces/` — the rest of the tree

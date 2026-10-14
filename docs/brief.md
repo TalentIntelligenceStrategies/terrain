@@ -251,6 +251,18 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
   preprocessor variable also resolves at build time, which the theme swap cannot survive. `app/` is
   the reference implementation and [`app/README.md`](../app/README.md) is what an engineer reads
   first.
+- **`app/` is the reference for behaviour, flow and the engine contract; Innovue's shipped build is
+  the reference for type and text layout**, unless a round's difference list flags a component.
+  *This is a narrowed successor, not a reversal*: the rule used to read that `app/` was the
+  reference for everything, which stopped being true the day their build shipped with type that is
+  fine as it is. Without a default, every cosmetic difference would be reopened each round.
+  `platform.md` §13 carries the round and the package.
+- **Two directories serve the rounds.** `.claude/skills/terrain-round/` holds the procedure and the
+  scripts it runs. It is not `tools/`: the capture, overlay and measuring scripts refuse nothing, and
+  the packager, which does refuse, belongs to the procedure rather than to the gates the repository
+  runs. `design/overlays/round-N/` holds the overlays written against their
+  build, tracked because they are a deliverable. The captures each round takes stay under
+  `visual-reference/`, untracked, because they print real holder names.
 - **`app/` publishes to GitHub Pages, against the real corpus.** The question that held it back was
   what a stranger sees when the fake engine answers — bars where every holder should be, and no
   drawing at all. They do not see it: the published site carries `corpus/`, so the link shows real
