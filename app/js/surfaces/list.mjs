@@ -1,15 +1,13 @@
 /* surfaces/list — the patent list. platform.md §4.3.
  *
- * ═══ FOUR FIELDS PER ROW AND NO MORE ═══════════════════════════════════════
- * The skim, the holder, the year, the status. The score sits WITH THE TITLE
- * rather than in the field row, and that is not a loophole: it says nothing
- * about the patent, only about where the engine put it.
- *
- * ═══ AND UP TO FOUR DRAWINGS, WHICH ARE NOT A FIFTH FIELD ══════════════════
- * The rule is about how many FACTS a row asserts, and it still asserts four. A
- * field is a value read off the patent — who holds it, when, what status. A
- * drawing is the patent. The left column is the glancing surface and it was
- * the only place in the product with no pictures at all.
+ * ═══ THE ROW ANSWERS THE GLANCE ═════════════════════════════════════════════
+ * Three bands — identity, party and date, what it claims — and the drawings,
+ * which are not a band: a field is a value read off the patent, and a drawing
+ * is the patent. platform.md §4.3 carries why the row holds what it holds.
+ * The score sits WITH THE NUMBER rather than in the field rows, and that is
+ * not a loophole: it says nothing about the patent, only about where the
+ * engine put it. The left column is the glancing surface; the record beside
+ * it is the reading one.
  *
  * THEY ARE CONTROLS, AND THEY SIT OUTSIDE THE ROW'S OWN BUTTON. Each tile
  * opens the record at that drawing, so nesting them inside the row would be
