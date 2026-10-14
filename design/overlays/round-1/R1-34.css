@@ -1,0 +1,24 @@
+/* R1-34 · Record: the actions stay in view
+ *
+ * Current: Open in IPtech, Copy citation and Export this record sit after
+ * the last claim, about 3,000 px down for a patent with 19 claims, so they are
+ * off screen for most of the time the record is open.
+ * Wanted:  the action row is pinned to the foot of the record panel, on the
+ * card ground with a hairline above it, and stays there while the record
+ * scrolls. It is the same row in the same place in the DOM; only its
+ * position changes.
+ *
+ * The record pane is the scroll container (#results-side-pane); the 20 px
+ * padding is on the record inside it, so the foot takes negative margins to
+ * span the pane's full width and to sit flush with its bottom edge. */
+@media (min-width: 1024px) {
+  #results-side-pane .record-foot {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    margin: 20px -20px -20px;
+    padding: 12px 20px;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+  }
+}
