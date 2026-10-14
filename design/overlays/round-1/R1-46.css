@@ -1,0 +1,21 @@
+/* R1-46 · Search settings: a chip says on with a check
+ *
+ * Current: each chip carries an 11 px square; on is a filled ink square, off
+ * an outlined one, so "on" reads as a stop button and "off" is easy to miss.
+ * Wanted:  on shows a check (Lucide "check"; stroke 3 in its 24 box, so 1.5 px at 12 px) with the
+ * ink border it already has; off shows no mark and the hairline, so the
+ * difference is the mark and the border, never colour alone. */
+.pop-chip::before {
+  display: none;
+}
+.pop-chip[aria-pressed="true"]::before {
+  display: block;
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  border: 0;
+  border-radius: 0;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
