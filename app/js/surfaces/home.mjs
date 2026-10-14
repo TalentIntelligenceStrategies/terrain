@@ -171,6 +171,11 @@ export function init(ctx) {
        landQuery writes the field, the folded line and the meta, and folds
        the bar. */
     landQuery(text, res.data);
+    /* THE LIST IS TOLD, EVERY TIME. It loaded itself on its first route and
+       never again, so a second search from here showed the first search's
+       rows under the second search's sentence. The same event the results
+       bar sends, sent before the route so the list is already asking. */
+    window.dispatchEvent(new CustomEvent('terrain:searched'));
     location.hash = '#set';
   });
 }

@@ -13,8 +13,8 @@ first; a second server already bound to `*:8765` on IPv6 will shadow one bound t
 what is in the corpus. Type a sentence and press Search. `#set` opens the results surface: **the list
 on the left, which never goes away**, each row in three bands — its number and title, then who holds
 it and when, then three clamped lines of its abstract — over **a scrolling strip of its own
-drawings**; and the record on the right when you click a row — every identifier, then the drawings,
-then the abstract and the claims. The open row is marked in the list.
+drawings**; and on the right the record of the first result, which opens by itself, or of any row
+you press — every identifier, then the drawings, then the abstract and the claims. The open row is marked in the list.
 
 **The strip holds up to twelve drawings and scrolls sideways**, with a `+N` tile at the end carrying
 however many the cap hid; that tile opens the record. It is **one tab stop per row** — arrows move

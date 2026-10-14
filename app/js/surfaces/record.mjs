@@ -661,6 +661,13 @@ export function init(ctx) {
     say('work', 'All drawings shown.');
   });
   onActivate(document, '.drill-toggle', el => open(el.getAttribute('data-pn'), el));
+  /* the list's first row, after a search. `keep` leaves focus where the
+     founder put it: they pressed Search, not this row. */
+  window.addEventListener('terrain:open-first', e => {
+    const id = e.detail && e.detail.id;
+    const row = id && document.querySelector('#setList .drill-toggle[data-pn="' + CSS.escape(id) + '"]');
+    if (row) open(id, row, false, { keep: true });
+  });
   /* ── a drawing on a ROW ──────────────────────────────────────────────
      It lives here rather than in list.mjs because it needs FIGURES, which is
      the record's, and because the act it performs IS opening a record. The

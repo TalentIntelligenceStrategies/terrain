@@ -382,6 +382,13 @@ its own retry in the panel.
 
 **A patent's record takes the right column.** The left column is the list and stays the list.
 
+**After a search the first result's record opens by itself**, where the columns sit side by side.
+The right column would otherwise say *pick a patent* beside a list that has already ranked one
+first. Focus stays where the founder put it — they pressed Search, not the row — and below 1080px,
+where the columns stack, nothing opens, because a record arriving there would push the list the
+founder asked for below the fold. A sort, a grouping branch or *Show more* opens nothing: those are
+the founder working the set they have.
+
 **The two columns divide by how hard you are looking, and the division is between them rather than
 inside one.** The left is for glancing: three bands a row and up to twelve drawings, with the
 abstract clamped to three lines — enough to decide which patent to open. The right is for reading

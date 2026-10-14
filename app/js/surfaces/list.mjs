@@ -742,6 +742,26 @@ export function rowFor(id) {
   return ROW_BY_ID.get(id) || null;
 }
 
+/* ── the first record opens by itself (platform.md §4.5) ────────────────
+   AFTER A SEARCH, AND ONLY THEN. A sort, a grouping branch or Show more is
+   the founder working the set they have; a search is a new set and the right
+   column would otherwise say "Pick a patent" over a list that already ranked
+   one first. The record is told through an event, as the reload is, because
+   no surface may depend on another having run.
+
+   ONLY WHERE THE COLUMNS SIT SIDE BY SIDE. Below 1080 they stack, and a
+   record opening by itself would push the list the founder just asked for
+   below the fold. Focus stays where it is: the founder pressed Search, not
+   the row. */
+function openFirst(data) {
+  if (!data || !data.patents || !data.patents.length) return;
+  if (!matchMedia('(min-width:1080px)').matches) return;
+  const first = $('#setList .drill-toggle');
+  if (!first) return;
+  window.dispatchEvent(new CustomEvent('terrain:open-first',
+    { detail: { id: first.getAttribute('data-pn') } }));
+}
+
 export function init(ctx) {
   ENGINE = ctx.engine;
 
@@ -763,7 +783,7 @@ export function init(ctx) {
   ctx.onRoute(view => {
     if (view !== 'work' || loaded) return;
     loaded = true;
-    request('patents', undefined, 'The list did not load.', null, 'arrive');
+    request('patents', undefined, 'The list did not load.', null, 'arrive').then(openFirst);
   });
 
   onActivate(document, '#setMore', () =>
@@ -778,9 +798,11 @@ export function init(ctx) {
      `Find similar` ordered the previous result set and this is a different
      one — so the settled state is stood down and the list reloads. */
   window.addEventListener('terrain:searched', () => {
+    /* a search is a load, so the route's first-arrival load stands down */
+    loaded = true;
     settled(false, '');
     syncStarUI();
-    request('patents', undefined, 'The list did not load.');
+    request('patents', undefined, 'The list did not load.').then(openFirst);
   });
 
   /* THE GROUPING HANDS BACK A SET, NOT A DOM INSTRUCTION. fishbone.mjs asked
