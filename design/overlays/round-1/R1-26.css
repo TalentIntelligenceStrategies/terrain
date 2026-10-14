@@ -1,0 +1,39 @@
+/* R1-26 · Every control: visible focus (Part A)
+ *
+ * Current: the search box and the version show no focus at all; tiles,
+ * chips and several buttons show focus only as a 1 px border change; focus
+ * drops to the page after "Search settings", because the Search button is
+ * disabled until there is text.
+ * Wanted:  a 2 px ring on :focus-visible on every control, offset 2 px, in
+ * their --ring token; the search box shows the ring on the whole box; a skip
+ * link is the first stop (R1-26 script).
+ *
+ * Not patchable here, and part of the item: Search stays focusable while
+ * empty (aria-disabled instead of disabled), so focus never leaves the page.
+ * Controls that already draw a focus-visible ring keep theirs. */
+:where(button, a, summary, [role="combobox"], [tabindex]:not([tabindex="-1"])):focus-visible:not([class*="focus-visible:ring"]) {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.search-box-morph:has(textarea:focus-visible) {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.terrain-skip {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 8px 12px;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 13px;
+  font-weight: 500;
+  transform: translateY(-200%);
+}
+.terrain-skip:focus-visible {
+  transform: none;
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
