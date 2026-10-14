@@ -248,6 +248,14 @@ when the sort does. A position sitting beside the identifier reads as a second f
 and it is not one. They wrap together for the same reason
 they sit together.
 
+**A patent is often two documents, and the row shows one.** The application as published and the
+grant carry different numbers and dates, so a patent with both carries a *Grant / Application* switch
+at the eyebrow's trailing edge, and the number and the date beside it are the chosen document's. The
+record opens on the same one, and switching while it is open turns the record over in place. **One
+version is a word, not a switch**: a single filled segment reads as the pressed half of a switch with
+its other half missing, so a patent the index holds once says *Grant* or *Application* in plain text.
+A patent whose versions the engine did not return shows neither.
+
 **The position always renders; the score may not.** There is no engine to withhold an ordinal. A
 score the engine did not return takes its label with it and the cluster is the position alone.
 

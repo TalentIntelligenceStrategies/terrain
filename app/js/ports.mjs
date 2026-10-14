@@ -148,7 +148,14 @@ export const CODE = {
  *             where:string|null, year:number|null, thumbs:Figure[],
  *             score:number|null, inventors:string[]|null, abstract:string|null,
  *             ipcMain:string|null, filed:string|null, published:string|null,
- *             kind:string|null, figs:number|null}} PatentRow */
+ *             kind:string|null, figs:number|null, versions:Version[]|null}} PatentRow */
+/** A PATENT IS OFTEN TWO DOCUMENTS, the application as published and the grant,
+ *  with their own numbers and dates. `versions` lists the ones the index holds,
+ *  the one to show first first; the row shows one at a time and the founder
+ *  switches. One version renders as a word, two as a switch, null as nothing.
+ *  `record` takes the chosen `version` and answers with that document.
+ *  @typedef {{kind:'grant'|'application', number:string|null,
+ *             published:string|null}} Version */
 /** @typedef {{patents:PatentRow[], order:string[], matched:number}} PatentSet */
 
 /** The record · the title, eleven identifiers, the abstract, and the claim set AS
@@ -256,7 +263,7 @@ export const PORTS = [
      reaches the engine. */
 
   /* the record */
-  'record',          // → Record
+  'record',          // {id, version?:'grant'|'application'} → Record
 
   /* projects */
   'projects',

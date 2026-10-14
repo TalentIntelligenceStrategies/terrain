@@ -201,10 +201,36 @@ function inventorHTML(list) {
    rather than a layout one. It scrolls horizontally now, and a drag inside a
    <button> ends in a click — so scrolling the drawings opened a record every
    time. It is a sibling under .drill-row, and each drawing is its own button. */
+/* ── the versions of one patent · platform.md §4.3 ───────────────────────
+   A PATENT IS OFTEN TWO DOCUMENTS, the application as published and the
+   grant, and they carry different numbers and dates. `versions` lists them;
+   the row shows one at a time and the founder chooses which. The choice is
+   client state, per row, and it is written on the row as data-ver so the
+   record opens the same version without reaching into this module.
+
+   TWO VERSIONS ARE A SWITCH; ONE IS A WORD. A single filled segment reads as
+   the pressed half of a switch whose other half is missing, so a patent with
+   one version says which it is in plain text, inside the eyebrow. */
+const VER = new Map();
+const VER_WORD = { grant: 'Grant', application: 'Application' };
+function versionOf(rec) {
+  const vs = Array.isArray(rec.versions) ? rec.versions : [];
+  const want = VER.get(rec.id);
+  return vs.find(v => v.kind === want) || vs[0] || null;
+}
+
 function rowHTML(rec, i) {
   const real = rec.skim != null;
   const pn = esc(rec.id);
+  const vs = Array.isArray(rec.versions) ? rec.versions : [];
+  const v = versionOf(rec);
+  /* the version shown supplies the number and the date; without versions the
+     row's own fields stand */
+  const number = v ? v.number : rec.number;
+  const published = v ? v.published : rec.published;
   return '<div class="set-row" data-i="' + i + '" data-id="' + pn + '"'
+    + (v ? ' data-ver="' + esc(v.kind) + '"' : '')
+    + (vs.length > 1 ? ' data-vers' : '')
     + (STARRED.has(rec.id) ? ' data-starred' : '') + '>'
     /* THE STAR IS THE FIRST GRID COLUMN. .set-row has been
        `grid-template-columns:auto 1fr` since the row was designed. */
@@ -253,7 +279,9 @@ function rowHTML(rec, i) {
        characters — US20130146987A1, about 112px at fig-s — and a 52x9 bar is
        a skeleton the wrong size for the thing it withholds. */
     + '<span class="drill-no fig fig-s">'
-    + (rec.number != null ? esc(rec.number) : bar('w-md')) + '</span>'
+    + (number != null ? esc(number) : bar('w-md')) + '</span>'
+    + (vs.length === 1 && VER_WORD[v.kind]
+        ? '<span class="drill-ver t-micro">' + VER_WORD[v.kind] + '</span>' : '')
     /* THE SEARCH'S OWN CLUSTER. It is one element so that the pair travels
        together when the eyebrow wraps: a rank at the end of one line and a
        score at the start of the next is the split this grouping undoes. */
@@ -306,8 +334,8 @@ function rowHTML(rec, i) {
        only surface abbreviating it — and `Pub. {date}` is, character for
        character, PI-VuePat's own pubDateLabel. The column is 2x1fr and the
        word fits. */
-    + cell('when', rec.published != null
-        ? '<span class="dm-t">Published</span><span class="fig fig-s">' + esc(rec.published) + '</span>'
+    + cell('when', published != null
+        ? '<span class="dm-t">Published</span><span class="fig fig-s">' + esc(published) + '</span>'
         : (rec.year != null
             ? '<span class="dm-t">Published</span><span class="fig fig-s">' + rec.year + '</span>'
             : bar('w-sm', 'micro')))
@@ -340,8 +368,40 @@ function rowHTML(rec, i) {
         : '<span class="drill-abs t-body drill-abs-sk">'
           + bar('w-full') + bar('w-full') + bar('w-md') + '</span>')
     + '</button>'
+    /* THE SWITCH IS THE ROW'S BUTTON'S SIBLING, because a button may not hold
+       a button. 34-list.css lays it over the eyebrow's trailing edge, where
+       the eyebrow has reserved its width. */
+    + (vs.length > 1
+        ? '<div class="seg ver-switch" role="group" aria-label="Which version of this patent">'
+          + vs.map(x => '<button class="seg-btn" type="button" data-ver-of="' + pn + '"'
+            + ' data-ver-kind="' + esc(x.kind) + '" aria-pressed="' + String(x === v) + '">'
+            + esc(VER_WORD[x.kind] || x.kind) + '</button>').join('')
+          + '</div>'
+        : '')
     + thumbsHTML(rec, i)
     + '</div></div>';
+}
+
+/* SWITCHING A VERSION REPAINTS ONLY WHAT IT CHANGES — the number and the date
+   on this row — and tells the record, which reopens on that version if it is
+   the one showing. Re-rendering the row would drop its strip's scroll and the
+   focus the founder is holding on the switch. */
+function setVersion(id, kind) {
+  const rec = ROW_BY_ID.get(id);
+  if (!rec) return;
+  VER.set(id, kind);
+  const v = versionOf(rec);
+  const row = document.querySelector('#setList .set-row[data-id="' + CSS.escape(id) + '"]');
+  if (!row || !v) return;
+  row.setAttribute('data-ver', v.kind);
+  const no = row.querySelector('.drill-no');
+  if (no) no.innerHTML = v.number != null ? esc(v.number) : bar('w-md');
+  const when = row.querySelector('.dm-when .fig');
+  if (when && v.published != null) when.textContent = v.published;
+  row.querySelectorAll('[data-ver-kind]').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.getAttribute('data-ver-kind') === v.kind)));
+  window.dispatchEvent(new CustomEvent('terrain:version', { detail: { id, kind: v.kind } }));
+  say('list', 'Showing the ' + (VER_WORD[v.kind] || v.kind).toLowerCase() + '.');
 }
 
 /* ── the row's drawings ────────────────────────────────────────────────────
@@ -824,6 +884,9 @@ export function init(ctx) {
      — a row with no patent that then rode out in the CSV. */
   onActivate(document, '.set-star[data-star]', el =>
     toggleStar(el.getAttribute('data-star'), el));
+
+  onActivate(document, '.ver-switch [data-ver-kind]', el =>
+    setVersion(el.getAttribute('data-ver-of'), el.getAttribute('data-ver-kind')));
 
   /* FIND SIMILAR IS THE OPEN RECORD'S, AND THE ACT BELONGS HERE rather than
      in record.mjs. Reordering the set is the list's business; the record's

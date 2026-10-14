@@ -102,6 +102,13 @@ export const DEMO_RECORD = {
   where: 'United States',
 };
 
+/* the demonstration patent as two documents: the grant, and the application
+   it issued from. 2018/9912345 is past any number the office has published. */
+export const DEMO_VERSIONS = [
+  { kind: 'grant',       number: DEMO_RECORD.number,    published: '2019-05-10' },
+  { kind: 'application', number: 'US 2018/9912345 A1', published: '2018-02-15' },
+];
+
 export const DEMO_PROJECT = 'Drone airframe and body structure';
 export const DEMO_IDEA = 'drone';
 
@@ -143,6 +150,11 @@ export function patentRows(count = SET_CEILING) {
       skim: i === 0 ? DEMO_TITLE : null,
       holder: i === 0 ? DEMO_HOLDER : null,
       number: i === 0 ? DEMO_RECORD.number : null,
+      /* THE DEMONSTRATION ROW HAS BOTH DOCUMENTS, so the switch can be seen;
+         DEMO_APPLICATION's number is outside the range ever issued, like the
+         grant's. Every other row's number is withheld, and so is which
+         version it is. */
+      versions: i === 0 ? DEMO_VERSIONS : null,
       where: i === 0 ? DEMO_RECORD.where : null,
       year: s.year,
       /* AND IT SCORES HIGHEST, so relevance order puts it first. The seed gave
@@ -274,7 +286,7 @@ export function clusterFor(ids) {
   };
 }
 
-export function recordFor(id) {
+export function recordFor(id, version) {
   const i = Number(String(id).replace(/^p/, '')) || 0;
   const s = seeded(i);
   if (i !== 0) {
@@ -294,10 +306,14 @@ export function recordFor(id) {
       figures: [],
     };
   }
+  /* THE APPLICATION IS THE SAME PATENT AS PUBLISHED BEFORE GRANT: its own
+     number, kind and date, and the same everything else. */
+  const app = version === 'application' && DEMO_VERSIONS[1];
   return {
     ...DEMO_RECORD,
+    ...(app ? { number: app.number, kind: 'Application' } : {}),
     title: DEMO_TITLE,
-    filed: '2021', published: '2023',
+    filed: '2017', published: app ? '2018' : '2019',
     abstract: DEMO_ABSTRACT, claims: DEMO_CLAIMS,
     /* SIX DRAWINGS, EVERY ONE OF THEM WITHHELD — `src: null`, which is what
        null means in every other field here. This is §8's contract, not a fifth

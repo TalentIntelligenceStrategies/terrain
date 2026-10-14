@@ -531,7 +531,11 @@ async function open(id, trigger, stepping, opts = {}) {
      there is no entrance to wait out; a beat is never lengthened for a
      movement that is not happening. */
   const floor = entering && !reduced() ? Math.max(FLOOR, DUR3) : FLOOR;
-  const [res] = await Promise.all([ENGINE.record({ id }), pause(floor)]);
+  /* THE VERSION THE ROW IS SHOWING, read off the row (list.mjs writes
+     data-ver). Absent, the engine returns its default document. */
+  const rowEl = document.querySelector('#setList .set-row[data-id="' + CSS.escape(id) + '"]');
+  const version = rowEl && rowEl.getAttribute('data-ver');
+  const [res] = await Promise.all([ENGINE.record(version ? { id, version } : { id }), pause(floor)]);
   if (stale('record', token)) return;
 
   if (!res.ok) {
@@ -663,6 +667,12 @@ export function init(ctx) {
   onActivate(document, '.drill-toggle', el => open(el.getAttribute('data-pn'), el));
   /* the list's first row, after a search. `keep` leaves focus where the
      founder put it: they pressed Search, not this row. */
+  /* A VERSION SWITCHED ON THE OPEN PATENT'S ROW reopens the record on it, in
+     place: a step rather than an open, so focus and the return point stay. */
+  window.addEventListener('terrain:version', e => {
+    const id = e.detail && e.detail.id;
+    if (id && id === OPEN_ID) open(id, null, true, { keep: true });
+  });
   window.addEventListener('terrain:open-first', e => {
     const id = e.detail && e.detail.id;
     const row = id && document.querySelector('#setList .drill-toggle[data-pn="' + CSS.escape(id) + '"]');

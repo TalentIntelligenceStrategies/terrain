@@ -130,21 +130,33 @@
 .drill-head{display:flex;flex-direction:column;gap:var(--s-6)}
 
 /* WHAT SEPARATES THEM IS SPACE, AND NOTHING ELSE — no middle dot, no rule.
-   The status chip already carries a .dot as its own encoding, and a second
-   mark 8px away from it would mean nothing. Every item is already its own
-   shape: a tinted pill, a number in Inconsolata at --text-2, #N at --text-3,
-   and a labelled figure.
+   Every item is already its own shape: a number in Inconsolata at --text-2,
+   a version word in micro, #N at --text-3, and a labelled figure.
 
    IT WRAPS RATHER THAN QUERYING A CONTAINER. At the split's own floor — a
    1080px window, which leaves .drill-row 368px — the longest corpus number
-   (15 characters), the longest status word and a four-decimal score measure
-   about 339px and fit on one line. Past that the score drops to a second line
+   (15 characters) and a four-decimal score fit on one line. Past that the score drops to a second line
    and its auto margin keeps it at the trailing edge. §7 makes a fourth
    container query argue two things before it may exist; wrapping answers this
    one for free. */
 .drill-eyebrow{display:flex;align-items:center;flex-wrap:wrap;
                gap:var(--s-6) var(--s-8);min-width:0}
 .drill-no{flex:0 0 auto;color:var(--text-2);white-space:nowrap}
+/* ONE VERSION IS A WORD (platform.md §4.3): which document this is, in micro,
+   beside the number it describes. */
+.drill-ver{flex:0 0 auto;color:var(--text-3)}
+/* ── TWO VERSIONS ARE A SWITCH, laid over the eyebrow's trailing edge ─────
+   It cannot sit inside the row's button, so it is the button's sibling, and
+   the eyebrow reserves its width rather than letting the rank and the score
+   run under it. 137px is the switch at the base .seg metrics with both words
+   ("Grant", "Application"), measured, and the gap to the rank is the
+   eyebrow's own 8; a wider word would show as the score wrapping rather than
+   overlapping. The
+   switch is 28px and sits 2px down a 32px eyebrow, so the number and the
+   switch share a centre line. */
+.set-row[data-vers] .drill-row{position:relative}
+.set-row[data-vers] .drill-eyebrow{padding-inline-end:calc(137px + var(--s-8));min-height:var(--s-32)}
+.ver-switch{position:absolute;inset-block-start:var(--s-2);inset-inline-end:0}
 .drill-title{min-width:0}
 /* SIZE, LINE-HEIGHT AND WEIGHT ARE .t-title-s's, ON THE MARKUP. They were
    13.5/1.45/500 — a size that appears nowhere in §4's table, invented in the

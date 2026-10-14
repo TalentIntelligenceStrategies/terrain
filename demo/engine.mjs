@@ -221,12 +221,12 @@ export const DemoEngine = {
 
   /* AN UNKNOWN ID IS NOT_FOUND, never ok(null): the pane offers no retry for
      a record that does not exist, and it can only know that from the code. */
-  record: async ({ id } = {}) => {
+  record: async ({ id, version } = {}) => {
     if (!byId.has(id)) {
       await wait(DELAY.record);
       return err(CODE.NOT_FOUND, false, `demo: no record ${id}`);
     }
-    return respond('record', D.recordFor(id));
+    return respond('record', D.recordFor(id, version));
   },
 
   /* ── projects ────────────────────────────────────────────────────────── */
