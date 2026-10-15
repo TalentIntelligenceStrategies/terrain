@@ -71,8 +71,8 @@ engine did not produce is omitted rather than barred, since a bar would claim a 
 
 ## What this is
 
-**This is the product and the reference.** Where a document and `app/` disagree, the code is what was
-decided.
+**This is the reference Innovue builds Terrain from**, on their own engine; their build is what the
+founder uses. Where a document and `app/` disagree, the code is what was decided.
 
 It was extracted from `design/previews/terrain-prototype.html`, 13,000 lines in one file — one
 `<style>`, one block of markup, one IIFE. That file is **frozen at v1** and describes a
@@ -194,7 +194,7 @@ while every grep for the token found it present and correct.
 
 ## `js/core/` — the behaviour layer, and the part a rewrite gets subtly wrong
 
-Twenty-two modules, dependency-free. **This is the deliverable.** Every
+Twenty-three modules, dependency-free. **This is the deliverable.** Every
 one of them encodes a rule that reads as an implementation detail and is not:
 
 | Module | The rule it carries |
@@ -220,6 +220,8 @@ one of them encodes a rule that reads as an implementation detail and is not:
 | `history` | **The searches the founder ran, in the browser.** starred.mjs's storage for starred.mjs's reasons — wrapped, versioned, one browser on one machine — and the same sentence in the same field and mode moves to the top rather than repeating |
 | `url` | **The search in the address.** A search is a history entry and a record rewrites it; a reload, a link or Back reruns what the address holds, and the record it named is held until that search has landed, because a new search closes the open record first |
 | `search-mode` | **One value for two composers.** The home composer and the results bar each carry the Text / Patent number toggle, and a mode each kept for itself would search one as a description while the other said number |
+| `format` | **Two fields printed one way on every surface.** The jurisdiction is a two-letter code everywhere data is shown, and search settings keep the names. A holder is one of three things — a string, `null` (the bar), or `''` (*No assignee listed*) — and the three never collapse |
+| `primitives` | **The skeleton bar and the page card**, read by every surface. Dependency-free and benched by `lab.html`; nothing in it draws a chart |
 
 ### The numbered checks
 
@@ -291,7 +293,7 @@ out. `/terrain-round` builds it.
 
 ## `partials/` and `js/surfaces/` — the rest of the tree
 
-**Nine partials, and the host list in `index.html` is the manifest.** `main.mjs` fetches
+**Eight partials, and the host list in `index.html` is the manifest.** `main.mjs` fetches
 every one, **replaces** its host with the partial's own nodes, and **awaits all of them
 before calling any `init()`**. That single ordering rule is what replaces 55 scattered
 parse-time element captures: every surface module exports `init(ctx)` and reads the DOM
@@ -354,7 +356,8 @@ An inventory, so that a fifth has to argue for itself.
 No build step. No framework. No preprocessor. No bundler. No `--dark-*` primitive layer — a third
 indirection buys nothing and hides which value is live. **One** scrim token with **one** reader,
 the enlarged drawing, and nothing else in the product dims anything. No `@layer`.
-No `og:image`, and no link-preview meta at all, because this tree is never published.
+No `og:image`, and no link-preview meta at all. The tree is published to GitHub Pages, and an
+`og:image` would have to be a PNG or a JPG, which the raster rule refuses on `main`.
 
 ---
 

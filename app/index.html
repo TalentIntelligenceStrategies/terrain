@@ -141,17 +141,14 @@
     <div data-partial="help"></div>
   </div>
 
-  <!-- THE RECORD IS NOT A HOST OF ITS OWN, and that is a correction to this
-       file rather than an omission. `.rec` is positioned against `.panecol`
-       and leaves a ~200px peek of the views behind it — platform.md §4.5 calls
-       the peek the spec rather than a margin. Hoisted to a sibling host it
-       would position against the viewport and the peek would be whatever the
-       window happened to be. It ships inside surface.html. -->
+  <!-- THE RECORD IS NOT A HOST OF ITS OWN. It is the right column of the
+       results surface (platform.md §4), the list's peer, so it ships inside
+       surface.html beside the list. Hoisted to a sibling host it would size
+       against the viewport rather than its column. -->
 
-  <!-- PARKED COMPONENTS. The gate card and the build block are moved into
-       whichever thread needs them rather than duplicated, so the card on the
-       panel is literally the same node as the one on the home surface — "same
-       component, same gate" in the DOM rather than by resemblance. -->
+  <!-- PARKED COMPONENTS. One tenant: the search settings panel, which
+       settings.mjs moves under whichever composer anchors it, so both
+       composers open literally the same node rather than two copies. -->
   <div data-partial="parked"></div>
 
 </div>
