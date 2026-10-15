@@ -31,9 +31,10 @@ to and comes back from. No moment routes through a destination, and nothing open
 window anywhere in the product.
 
 **A top masthead, not a sidebar.** Arithmetic, not taste. The two columns split a 1440px laptop
-44/56 — 634 for the list, 806 for the record — and neither half survives a 260px rail: the result
-list stops being readable under 340px, and the record's ten-field list wraps its values onto
-second lines under about 600px, which a 260px rail would put it under at any window below ~1465.
+evenly — 688 each, after the 16px window margins and the 32 between them — and neither half survives
+a 260px rail: the result list stops being readable under 340px, and the record's ten-field list
+wraps its values onto second lines under about 600px, which a 260px rail would put it under at any
+window below ~1525.
 Everything a rail would have carried is in the 56px bar: search history, the starred count, the
 appearance control, the account menu.
 
@@ -65,8 +66,10 @@ on the path — reached from the count beside the results, and returned from to 
 
 ### 3.1 · The field tiles
 
-The surface opens on **What are you building?** and a row of technology-field tiles. One is ready;
-the rest carry a *Coming soon* badge **under the name, in flow** — a corner badge on a disabled tile
+The surface opens on **What are you building?** and a row of technology-field tiles. **The list
+comes from the engine** (`fields`), and this document does not count how many are ready — that is the
+engine's to say and it changes without a round. A tile is selected, ready, or not yet covered, and
+one that is not yet covered carries a *Coming soon* badge **under the name, in flow** — a corner badge on a disabled tile
 reads as decoration, and this one has to read as a reason. **The name and its badge are one group,
 8px apart, and the icon sits 16px above them**: at 4px the badge touched the name and read as its
 second line.
@@ -83,6 +86,13 @@ there are more.
 **A tile that is not ready is `aria-disabled`, not `disabled`.** It keeps its tab stop, so a founder
 moving by keyboard finds out the field exists and is not yet covered, rather than finding nothing
 there at all.
+
+**A field is a scope, not only a label.** Innovue's build heads one *H01L · Semiconductor devices* —
+an IPC subclass — and its service is called `ipcembedding`, which reads as each field being an index
+of its own. If it is, a patent classed outside the subclass never comes back however close it is,
+and the field tile is a retrieval boundary the founder chose without being told. The interface
+prints the field's name and not its symbol, which is the vocabulary rule; whether it must also say
+what the scope excludes waits on §12.
 
 ### 3.2 · One composer, one button
 
@@ -291,7 +301,7 @@ contract in the one place on the row where the two are easy to confuse. Three li
 corpus's median nine, because three reaches past the boilerplate a patent abstract opens with and
 into the clause that separates this one from the next.
 
-**Twelve drawings at 72px, and the strip scrolls.** The number is the DOM's now rather than the
+**Twelve drawings at 102px, and the strip scrolls.** The number is the DOM's now rather than the
 column's: twelve a row over twenty rows is 240 images, against a corpus patent that carries 347
 figures. Twelve is also the record's cap, so the row and the record agree about how many drawings is
 enough to judge a patent by. **The last tile is a `+N` control** — the patent's real total less what
@@ -301,9 +311,9 @@ draws no tile at all, because `+0` is a claim and a missing tile is not.
 **A horizontal scroller answers the wrap rather than working around it.** The old four was derived
 from the column's width on the premise that a strip which wraps makes row height depend on the data,
 and that is the one thing a list you *scan* cannot have. Scrolling settles it outright: twelve
-drawings or three, the row is the same height. 72px rather than the record's 104 still says
-subordinate — 80 is where the step stops reading as one — and is enough to tell a circuit diagram
-from a mechanical assembly, which is the whole of what a glance wants.
+drawings or three, the row is the same height. 102px rather than the record's 148 still says
+subordinate, and is enough to tell a circuit diagram from a mechanical assembly, which is the whole
+of what a glance wants. [`design-language.md`](design-language.md) §7 carries the measured step.
 
 **What is off the end is shown by a cut tile**, not a shadow and not a fade. A shadow cannot separate
 two surfaces of the same colour, which white tiles on a white row are; and a fade would be white over
@@ -871,14 +881,15 @@ nothing.
 **Adopted.** The search and classification chain; semantic retrieval from a plain-language sentence;
 the search-settings vocabulary — jurisdiction and document kind as the index cross-product, a result
 count, a date filter with a chosen basis; the generated grouping over a result set; the drawings and
-their viewer. Name unification and family merge are taken as **hygiene the founder never sees** — they are why the list can say *deduplicated by family* without asking anyone
-to configure it.
+their viewer. Name unification and family merge are taken as **hygiene the founder never sees** —
+they are why one holder reads one way and one invention does not fill three rows, without asking
+anyone to configure it.
 
 **Cut, with reasons.**
 
 | Cut | Why |
 | --- | --- |
-| **The entire analysis layer** | 68 destinations of charts, matrices and trend cuts. A founder does not run somebody else's analysis; the accurate set is the product. This is the pivot, and every row below is downstream of it. |
+| **The entire analysis layer** | 68 destinations of charts, matrices and trend cuts, each a reading authored for an analyst. A founder does not run somebody else's analysis; the accurate set is the product. This is the pivot, and every row below is downstream of it. A view that only counts the returned rows (§10 item 6) is not this layer coming back — it says nothing the rows do not. |
 | The authored taxonomy | IPtech wants a taxonomy written before the first search. Terrain generates its grouping from the result set — this is the whole of what makes it operable by a founder. |
 | Valuation (`價值通`) | A verdict on a patent's worth. Terrain does not issue verdicts. |
 | Plain-English decode (`AI閱讀Pro`) | A paraphrase of the record rather than the record. |
@@ -906,9 +917,9 @@ it.** Nothing here is prohibited; it is simply not next. Where an item is *decid
 postponed, it says so.
 
 1. **Filing alerts** — *tell me when someone files near my idea.* This is the strongest recurring-
-   value feature in the engine, and without it v1 launches with no subscription rationale beyond
-   re-running searches: a founder searches, gets an answer, and has no reason to return next month.
-   **Starts when:** pricing is decided, because pricing cannot be decided without it.
+   value feature in the engine: without it a founder searches, gets an answer, and has no reason to
+   return next month. **Starts when:** how Terrain is sold is decided (`brief.md` §6), because every
+   model except a one-off purchase leans on a reason to return.
 2. **Authentication and the session model.** Every *has the founder done X yet* test is a
    page-lifetime flag, so a reload starts the founder over and the real product will not. **The
    starred set no longer waits on this** — it is stored in the browser and survives a reload on its
@@ -925,7 +936,13 @@ postponed, it says so.
 5. **A standing jurisdiction filter** on the result list — *US only*. Mechanical, and it answers the
    question a founder asks second. **Starts when:** every row prints its jurisdiction as a code
    (R1-13), so the filter can be checked against what is on screen.
-6. **An attorney handoff file** — the starred set written up as a document somebody could file
+6. **Views of the set** — the returned rows counted by filing year, holder, office or group, on the
+   results surface or the starred set. `brief.md` §1 admits them as the set redrawn: no caption, no
+   finding, and no hue — a view draws from the neutral ramp, because a hue is an amendment to
+   `design-language.md` §2. The client holds twenty rows of up to five hundred, so a count over the
+   set is the engine's arithmetic or it is a guess. **Starts when:** founders are seen charting the
+   export to answer the same question, or Innovue's engine returns counts over a result set.
+7. **An attorney handoff file** — the starred set written up as a document somebody could file
    against. **Decided against**, not postponed. The starred set leaves as data (§5.2); a written-up
    handoff is the authored narrative `brief.md` §1 draws the line at, and reopening it is an
    amendment to that lock.
@@ -936,7 +953,9 @@ postponed, it says so.
 
 **One survives, and nothing checks it.**
 
-- Every invoice amount is the plan price — a plan that renews at one figure cannot bill four.
+- While the plan screen shows a plan that renews, every invoice amount is the plan price — a plan
+  that renews at one figure cannot bill four. How Terrain is sold is open (§12); a model with no
+  renewing price takes this with it.
 
 *Six others went with the analysis layer: they governed a matrix, per-holder series, origin sums,
 legal splits, jurisdiction sums and a caption's quoted maximum, and none of those exist.
@@ -955,8 +974,14 @@ knowing before changing one.*
   destination is a stand-in**, a single IPtech sign-in on every record. That is the one place in the
   product where a control points somewhere the data did not choose, and it is written into §4.5 so
   it cannot be mistaken for a decision.
-- **Pricing.** The allowance, the price, and the tier structure are all open, which is why the plan
-  screen prints `XXX` and a bar rather than guessing.
+- **How Terrain is sold.** Subscription, a seat sold to an institution, metered use, or otherwise;
+  the price; the tier structure; and whether a plan caps searches, seats or nothing at all. All open
+  (`brief.md` §6), which is why the plan screen prints `XXX` and a bar rather than guessing, and why
+  nothing on any surface counts what a search costs.
+- **The name.** Three are in use and none is decided — `brief.md` §2.
+- **What does `ipcembedding` mean for retrieval?** If a technology field is an IPC-scoped index
+  (§3.1), the field tile decides what can come back, and the empty state in §7.2 may have to name
+  the scope as well as the offices and dates. `components.md` §4 question 11; §13.5.
 - **Where does the starred set live when the founder has two machines?** It survives a new search and
   a reload, the second in browser storage (§5.1). What it does not survive is a different browser,
   cleared site data, or being handed to a colleague — all of which need an account rather than a
@@ -970,16 +995,14 @@ knowing before changing one.*
 - **Does their engine return legal status at all?** Terrain no longer prints it (§13, item R1-17),
   so this is no longer a display question. It still bears on family merge and name unification, which
   §9 takes as hygiene.
-- **What limits a plan, if anything?** Terrain does not meter by points (§13, R1-20) and nothing on
-  any surface counts what a search costs. Whether a plan caps searches, seats or nothing at all is
-  open, and it is the same question as pricing.
 
 ---
 
 ## 13 · Rounds against Innovue's build
 
 **Innovue builds Terrain from our handoff packages, on their own engine, and ships it at
-`https://pi.innovue.ltd/ipcembedding/`.** A round compares their shipped build with what they were
+`https://pi.innovue.ltd/ipcembedding/`.** Their build is what the founder uses; `app/` is the
+reference it is built from. A round compares their shipped build with what they were
 given, settles every difference, and sends back only the differences. The procedure is the
 `/terrain-round` skill in `.claude/skills/terrain-round/`. This section is what it decides against.
 
@@ -1043,8 +1066,8 @@ Innovue only. It is never published.
 
 ### 13.4 · The current round
 
-**Round 1, against their v1.0.21, captured 2026-10-14, from `handoff-2026-10-04`.** The list is
-replaced when the next round opens.
+**Round 1, against their v1.0.21, captured 2026-10-14, from `handoff-2026-10-04`, sent as
+`terrain-handoff-2026-10-14`.** The list is replaced when the next round opens.
 
 **Part A · conformance**: the package they hold has these, and their build does not.
 
@@ -1053,7 +1076,7 @@ replaced when the next round opens.
 | R1-01 | Result card, record | No star → a star on every card and in the record. **The star is a collection**: one starred set, each patent remembering the search it came from | `app/` |
 | R1-02 | Starred set, masthead | No starred set, no starred count → the masthead count, the starred set page grouped by search, and its CSV and Markdown downloads. Without it nothing leaves but one record at a time | `app/` |
 | R1-03 | Masthead | No account menu → the avatar menu: account settings, plan and billing, help, sign out, and the build at its foot | `app/` |
-| R1-04 | Search settings | The date range is in their code and not rendered → render it, with its two bases, filed and published | `app/` |
+| R1-04 | Search settings | The date range is in their settings panel and clipped below its foot, with three bases → in view, with two bases, filed and published | `app/` |
 | R1-05 | Result list | Every result in one endless scroll → 20, then *Show more*, which also lets drawings arrive sooner; *Results* in the settings caps the set rather than sizing the first page | `app/` |
 | R1-06 | Engine · names and titles | The same company in two spellings, names and titles in capitals → titles in sentence case with acronyms kept; holders merged to one form as the company writes itself; inventors in normal case. Design-language §4 *Case* | Their captures |
 | R1-25 | Landing · field tiles | The selected tile shares the disabled tiles' grey, so the other enabled tile reads as selected → selected white with the ink border, enabled white with the hairline, disabled grey with *Coming soon* | Overlay |
@@ -1118,8 +1141,20 @@ item marked *`app/` too* changes.
 | R1-23 | Rotate left and rotate right in the drawings viewer |
 | R1-24 | A search box the founder can drag taller |
 
-**Not raised:** their session recording; the card's patent number dropping its kind code; the class
+**Not raised:** the card's patent number dropping its kind code; the class
 code in the field label; the cards' double frame; two counts, search timing and four-decimal scores;
 the *Nearest to* chip truncating its number; the abstract's measure; a `max-width` transition; and
 *Granted patents* beside *Application*.
-**Conformant:** the generated grouping, which §9 adopts, and the result card's hover state.
+**Conformant:** the generated grouping, which §9 adopts, and the result card's hover state, which
+was R1-43 until the audit found it conformant; the number is not reused.
+
+### 13.5 · Queued for the next round
+
+What has been settled since round 1 was sent, and goes in round 2's package.
+
+| What | Difference → wanted |
+| --- | --- |
+| Session recording | Their build runs PostHog with session recording → usage events only, recording off. `brief.md` §4: the search box holds an idea the founder may not have filed |
+| Question | What does `ipcembedding` mean for retrieval — is each technology field an IPC-scoped index? `components.md` §4 question 11 |
+| Question | What does their analytics record, and where is it sent? `components.md` §4 question 12 |
+| Masthead name | Their masthead reads *TIS Terrain* → raised only once `brief.md` §2 settles the name, so they rename once |
