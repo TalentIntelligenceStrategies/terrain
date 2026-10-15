@@ -48,14 +48,13 @@ function billingFill(d, invoices) {
   /* 'XXX' IS A SENTINEL, NOT A STRING TO PRINT. ports.mjs holds it distinct
      from null deliberately, and that distinction is worth keeping — but the
      token is for the contract, not for the customer. Unset, the figure becomes
-     a sentence and the "/ quarter" beside it goes with it, because a period
-     qualifies a price and there is no price to qualify. */
-  const price = $('#billPrice'), per = $('#billPer');
+     a sentence. No billing period is printed beside it: how Terrain is sold is
+     open (brief.md §6), and a period would decide it. */
+  const price = $('#billPrice');
   if (price) {
     const unset = d.price === 'XXX';
     price.textContent = unset ? 'Not set yet' : d.price;
     price.className = unset ? 't-body' : 'fig fig-l';
-    if (per) per.hidden = unset;
   }
   const inv = $('#billInv');
   if (!inv) return;

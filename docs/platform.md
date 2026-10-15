@@ -695,7 +695,7 @@ the same fields as the rows, so a field that leaves in the file without appearin
 one thing `brief.md` §1's test is about. The row shows all seven.
 
 **It leaves as a CSV or a Markdown list, and as nothing else.** Both carry the fields already on
-screen — number, title, holder, where, date, score, and the search it was starred under —
+screen — number, title, holder, where, year, score, and the search it was starred under —
 and neither carries a cover page, a summary or a conclusion. The CSV carries the search as a column;
 the Markdown has no columns, so it carries it as a heading per search, in the order the page shows
 them. One grouping function feeds both, because two would be two chances for the file and the screen
