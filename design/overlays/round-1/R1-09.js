@@ -3,14 +3,18 @@
  * Current: while a search runs, the previous results fade to half opacity
  * and the Search button greys; no word says a search is running, and nothing
  * is announced to a screen reader (the page has no live region at all).
- * Wanted:  the button reads "Searching…" while the request is in flight; one
- * polite status region, present from load, announces "Searching…" and then
- * the result count. Copy citation, regrouping and find similar should write
- * to the same region (A-25); this patch wires the search only.
+ * Wanted:  the button keeps its name, Search, and says it is working with
+ * aria-busy while the request is in flight; the pulse on the search box
+ * (R1-09.css) is what a sighted founder sees. A label that changes mid-press
+ * moves the button and reads as a different action. One polite status
+ * region, present from load, announces "Searching…" and then the result
+ * count. Copy citation, regrouping and find similar should write to the same
+ * region (A-25); this patch wires the search only.
  *
  * Keyed on their own .progress-bar, which they render exactly while the
  * search runs, so the patch adds no state of its own. In the component this
- * is a computed label and an aria-live element, not an observer. */
+ * is aria-busy bound to the request and an aria-live element, not an
+ * observer. */
 (() => {
   const status = document.createElement('div');
   status.setAttribute('role', 'status');
@@ -19,16 +23,13 @@
   document.body.appendChild(status);
 
   let running = false;
-  const label = () => document.querySelector('button[aria-label="Search"] span');
+  const button = () => document.querySelector('button[aria-label="Search"]');
   const update = () => {
     const now = !!document.querySelector('main > div.sticky .progress-bar');
     if (now === running) return;
     running = now;
-    const l = label();
-    if (l) {
-      if (now) { l.dataset.idle = l.textContent; l.textContent = 'Searching…'; }
-      else if (l.dataset.idle) l.textContent = l.dataset.idle;
-    }
+    const b = button();
+    if (b) b.setAttribute('aria-busy', String(now));
     if (now) status.textContent = 'Searching…';
     else {
       const count = document.querySelector('section.shell-swap h2');
