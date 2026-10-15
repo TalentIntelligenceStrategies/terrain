@@ -155,7 +155,7 @@ const ONLY = [];
   const ITEMS = [
 ${items.join(',\n')}
   ].filter(i => !ONLY.length || ONLY.includes(i.id));
-  const CSS = ITEMS.map(i => i.css).join('\n');
+  const CSS = ITEMS.map(i => i.css).join('\\n');
   const put = () => {
     if (document.getElementById('terrain-round-${a.round}')) return;
     const s = document.createElement('style');
