@@ -94,7 +94,9 @@
       padding-block:var(--s-10);padding-inline:var(--s-8) 0}
 .star-tbl thead th{padding-block:var(--s-8);color:var(--text-3);
       border-bottom:1px solid var(--border-strong)}
-.star-tbl tbody td{border-bottom:1px solid var(--border)}
+/* a cell is a field value, so meta (§4): 13. The group's heading row is a
+   <th> and keeps body, so each search still heads its rows. */
+.star-tbl tbody td{border-bottom:1px solid var(--border);font-size:13px}
 /* THE LEADING AND TRAILING CELLS SIT ON THE COLUMN'S EDGE. Every other cell
    is padded from the one before it; the first has nothing before it and the
    last has nothing after, so an inherited gutter there would indent the table
