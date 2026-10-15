@@ -1,15 +1,15 @@
-/* R1-38 · Type scale: their sizes, reduced (flagged, §13.1)
+/* R1-38 · Type scale: their sizes, reduced to six
  *
  * Current: eleven sizes between 10.5 and 36 px on two screens (10.5, 11, 12,
  * 12.5, 13, 14, 15, 16, 18, 26, 36), and the record's section headings
  * (Drawings, Abstract, Claims: 15/600) sit barely above the reading text
  * (14/400) and below the list heading (16/500).
- * Wanted:  six steps, all theirs, each a role:
+ * Wanted:  six steps, five of them sizes they already use, each a role:
  *
  *   11  micro    uppercase labels, badges, "Coming soon"        500, CAPS where they already are
  *   13  meta     card meta, controls, chips, numbers, field values
  *   16  body     reading text: record abstract and claims, the landing line; card titles at 600
- *   20  heading  record sections, "Data coverage"               600
+ *   20  heading  record sections, "Data coverage", the list heading  600
  *   26  title    the record's patent title                      700
  *   36  display  the landing headline                           600
  *
@@ -61,8 +61,8 @@ main > section:has(> h1) > p {
 /* 20 heading */
 .detail-body h3,
 .text-\[15px\].font-semibold,
-h2.text-lg,
-section h2.font-semibold:not(.sr-only) {
+.coverage-heading h2,
+h2.text-base.font-medium.tabular-nums {
   font-size: 20px;
   line-height: 1.3;
   font-weight: 600;

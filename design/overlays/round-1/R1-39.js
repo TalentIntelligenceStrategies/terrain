@@ -3,13 +3,13 @@
  * Current: "Patent not found" and "Check the patent number (with or without
  * the TW prefix)." for a US number; the field control leaves the bar; nothing
  * on the panel can be clicked.
- * Wanted:  the panel names the number that was tried and the forms that
- * work, and offers one action, "Search this as text", which runs the same
- * words as a text search. The field control and both columns stay (a
- * component change, not patched here).
+ * Wanted:  the panel names the number that was tried and offers one action,
+ * "Search this as text", which runs the same words as a text search. The
+ * sentence is app/'s, word for word. The field control and both columns stay
+ * (a component change, not patched here).
  *
- * The accepted forms are R1-48's question. Until it is answered the line
- * names one form that worked in the audit; the answer replaces it. */
+ * Which forms the lookup accepts is question R1-48; once it is answered, the
+ * sentence can name them. */
 (() => {
   const fix = () => {
     const panel = [...document.querySelectorAll('main p.font-medium')].find(p => p.textContent.trim() === 'Patent not found')?.parentElement;
@@ -17,7 +17,7 @@
     panel.dataset.terrain = '1';
     const tried = (document.querySelector('button[aria-label^="Expand search box:"]')?.getAttribute('aria-label') || '').replace(/^Expand search box:\s*/, '');
     const hint = panel.querySelector('p.text-muted-foreground');
-    if (hint) hint.textContent = `No patent matches ${tried || 'that number'}. Enter it with its office code and kind code, for example EP2214203A2.`;
+    if (hint) hint.textContent = `No patent matches ${tried || 'that number'}. Check the office code and the number, or search it as text.`;
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'terrain-as-text';

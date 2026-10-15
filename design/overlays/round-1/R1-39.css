@@ -1,8 +1,8 @@
 /* R1-39 · Patent-number search: the action on the not-found panel (see R1-39.js) */
 .terrain-as-text {
   margin-top: 4px;
-  height: 32px;
-  padding: 0 12px;
+  height: 28px;
+  padding: 0 10px;
   border: 1px solid var(--border);
   border-radius: calc(var(--radius) - 2px);
   background: var(--card);

@@ -9,7 +9,7 @@
  * moves the button and reads as a different action. One polite status
  * region, present from load, announces "Searching…" and then the result
  * count. Copy citation, regrouping and find similar should write to the same
- * region (A-25); this patch wires the search only.
+ * region; this patch wires the search only.
  *
  * Keyed on their own .progress-bar, which they render exactly while the
  * search runs, so the patch adds no state of its own. In the component this

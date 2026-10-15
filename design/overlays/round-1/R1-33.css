@@ -1,10 +1,10 @@
 /* R1-33 · Find similar: the "This patent" mark (see R1-33.js) */
 .terrain-this {
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 1px 8px;
-  font-size: 12px;
+  font-size: 11px;                  /* micro, R1-38 */
+  line-height: 1.2;
   font-weight: 500;
-  color: var(--foreground);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
   white-space: nowrap;
 }

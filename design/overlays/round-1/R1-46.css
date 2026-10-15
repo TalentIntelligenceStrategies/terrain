@@ -4,12 +4,17 @@
  * an outlined one, so "on" reads as a stop button and "off" is easy to miss.
  * Wanted:  on shows a check (Lucide "check"; stroke 3 in its 24 box, so 1.5 px at 12 px) with the
  * ink border it already has; off shows no mark and the hairline, so the
- * difference is the mark and the border, never colour alone. */
+ * difference is the mark and the border, never colour alone. Off keeps the
+ * mark's 12 px, so a chip does not change width when it is pressed. */
 .pop-chip::before {
-  display: none;
+  display: block;
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  border: 0;
+  background: transparent;
 }
 .pop-chip[aria-pressed="true"]::before {
-  display: block;
   flex: 0 0 12px;
   width: 12px;
   height: 12px;

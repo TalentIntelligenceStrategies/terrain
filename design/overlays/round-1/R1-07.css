@@ -13,8 +13,8 @@
  *
  * Component change, not patchable cleanly: the results layout sizes the
  * panels as 100dvh minus --sticky-meta-top, which is computed as a fixed
- * 49 px for the masthead plus the measured search bar. A 57 px masthead
- * therefore pushes the panels 8 px past the viewport. The fix is to measure
+ * 49 px for the masthead plus the measured search bar. The 56 px bar and its
+ * 1 px border are 57 px, so the panels land 8 px past the viewport. The fix is to measure
  * the masthead the way the bar already is; the last two rules below stand in
  * for that so the patch can be seen. */
 
@@ -22,7 +22,7 @@
 header.sticky > div:first-child {
   height: 56px;
   padding-inline: 24px;
-  gap: 16px;
+  gap: 12px;
 }
 header.sticky > div:first-child > div:first-child,
 header.sticky > div:first-child > div:last-child {
@@ -39,7 +39,8 @@ main > section:has(> h1) {
   padding-top: 40px;
 }
 
-/* Stand-in for measuring the masthead (see the note above): 57 - 49 = 8 */
+/* Stand-in for measuring the masthead (see the note above): 57 - 49 = 8.
+   The search bar sits under the 56 px bar, overlapping its 1 px border. */
 main > div.sticky {
   top: 56px;
 }

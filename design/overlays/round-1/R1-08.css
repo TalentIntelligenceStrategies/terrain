@@ -38,7 +38,7 @@ main > div.sticky .search-box-morph > div:last-child {
 }
 [role="group"][aria-label="View mode"] button::after {
   content: attr(title);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
 }
 

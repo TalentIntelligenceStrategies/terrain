@@ -22,7 +22,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-size: 14px;
+  font-size: 16px;                  /* card title, R1-38 */
   font-weight: 600;
   color: var(--foreground);
 }
