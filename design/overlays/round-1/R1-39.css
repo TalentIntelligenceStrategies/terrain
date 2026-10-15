@@ -17,3 +17,8 @@
   outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
+/* The icon is not the failure colour: a number the index does not hold is an
+   answer, not an error. Your --destructive stays for failures. */
+main svg.lucide-triangle-alert.text-destructive:has(+ p.font-medium) {
+  color: var(--muted-foreground);
+}
