@@ -409,8 +409,9 @@ monorepo from this folder** — record it here and leave it for a deliberate pro
   summaries*, which states more than §1 does — a view of the set is admissible, a summary is not. It
   names the product *Patent Search*, one of the three unsettled names in §2. And its Traditional
   Chinese translation is marketing copy, which §1's language rule does not govern. Its copy also
-  trails the product in five places: it lists a legal-status filter, which Terrain does not have
+  trails the product in four places: it lists a legal-status filter, which Terrain does not have
   (R1-17); it says *Find similar* works from a starred patent, where it works from the open record
-  (R1-18); it says *Semiconductor devices first* where the field list is the engine's; it promises a
-  reply in two business days where Help says one working day; and it says institutions buy access,
-  where how Terrain is sold is open (§6).
+  (R1-18); it says *Semiconductor devices first* where the field list is the engine's; and it
+  promises a reply in two business days where Help says one working day. Its product shots carry
+  invented holders and numbers beside real drawings, which §1's rule on illustrative data refuses;
+  sales material is captured from `app/` against the corpus instead.
