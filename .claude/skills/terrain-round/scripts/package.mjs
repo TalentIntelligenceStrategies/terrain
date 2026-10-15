@@ -8,14 +8,15 @@
  * Reads visual-reference/innovue-build/round-N/package/CHANGES.md (written in
  * phase 6) and writes round-N/terrain-handoff-<date>.zip next to it:
  *
- *   CHANGES.md   as written
+ *   CHANGES.md   as written, and every other .md in package/ beside it
  *   images/      every image CHANGES.md links, and only those
  *   contract/    the diff of ports.mjs and components.md since --base, plus
  *                anything put in round-N/package/contract/ by hand
  *   code/        the app/ and demo/ files changed since --base, at --tag,
  *                with app.diff and demo.diff
  *   docs/        the four documents that changed, at --tag, and docs.diff
- *   overlays/    design/overlays/round-N/ at --tag
+ *   overlays/    design/overlays/round-N/ at --tag, plus all.css, all.js and
+ *                apply.js, the whole patch as one console paste
  *
  * EVERY REFUSAL IS SOMETHING THAT MUST BE TRUE BEFORE INNOVUE OPENS IT, the
  * same shape as tools/publish-pages.py: a dirty tree (the package would not be
@@ -47,14 +48,18 @@ const rdir = path.join(ROOT, 'visual-reference', 'innovue-build', `round-${a.rou
 const pdir = path.join(rdir, 'package');
 const changes = path.join(pdir, 'CHANGES.md');
 const images = [];
+/* EVERY DOCUMENT IN package/ SHIPS: CHANGES.md and whatever it links to
+   (MEASUREMENTS.md, TOKENS.md, CHECKLIST.md). A .src.md is the source a
+   document was built from and stays here. */
+const docsMd = fs.existsSync(pdir) ? fs.readdirSync(pdir).filter(f => f.endsWith('.md') && !f.endsWith('.src.md')) : [];
 if (!fs.existsSync(changes)) fail.push(`${path.relative(ROOT, changes)} does not exist; phase 6 writes it`);
-else {
-  const text = fs.readFileSync(changes, 'utf8');
+for (const doc of docsMd) {
+  const text = fs.readFileSync(path.join(pdir, doc), 'utf8');
   for (const m of text.matchAll(/!\[[^\]]*\]\(([^)\s]+)\)/g)) {
     const p = path.resolve(pdir, m[1]);
-    if (!p.startsWith(rdir + path.sep)) fail.push(`CHANGES.md links ${m[1]}, which is outside the round folder`);
-    else if (!fs.existsSync(p)) fail.push(`CHANGES.md links ${m[1]}, which does not exist`);
-    else images.push({ link: m[1], file: p });
+    if (!p.startsWith(rdir + path.sep)) fail.push(`${doc} links ${m[1]}, which is outside the round folder`);
+    else if (!fs.existsSync(p)) fail.push(`${doc} links ${m[1]}, which does not exist`);
+    else if (!images.some(i => i.link === m[1])) images.push({ link: m[1], file: p });
   }
 }
 const zip = path.join(rdir, `terrain-${a.tag}.zip`);
@@ -69,16 +74,19 @@ const put = (rel, data) => { const f = path.join(stage, rel); fs.mkdirSync(path.
 
 /* images are flattened into images/ and CHANGES.md is rewritten to match, so
    the zip does not carry the shape of our local folders */
-let text = fs.readFileSync(changes, 'utf8');
-const used = new Set();
+const used = new Set(), renamed = {};
 for (const im of images) {
   let name = path.basename(im.file);
   while (used.has(name)) name = '_' + name;
   used.add(name);
   put(`images/${name}`, fs.readFileSync(im.file));
-  text = text.split(`](${im.link})`).join(`](images/${name})`);
+  renamed[im.link] = `images/${name}`;
 }
-put('CHANGES.md', text);
+for (const doc of docsMd) {
+  let text = fs.readFileSync(path.join(pdir, doc), 'utf8');
+  for (const [link, to] of Object.entries(renamed)) text = text.split(`](${link})`).join(`](${to})`);
+  put(doc, text);
+}
 
 put('contract/contract.diff', git('diff', base, a.tag, '--', 'app/js/ports.mjs', 'design/components.md') + '\n');
 const extra = path.join(pdir, 'contract');
@@ -102,9 +110,41 @@ const docs = namesIn(...DOCS);
 for (const f of docs) if (at(f)) put(`docs/${path.basename(f)}`, show(f));
 if (docs.length) put('docs/docs.diff', git('diff', base, a.tag, '--', ...DOCS) + '\n');
 
+/* THE PATCH, AS FILES AND AS ONE PASTE. Each item's file, and then all.css
+   and all.js, the same patch joined (stylesheets by a newline, because a
+   stray ';' at the top level of CSS swallows the next rule; scripts by ';'),
+   and apply.js, which Innovue pastes into the console on their own build:
+   it puts the stylesheet in, keeps it in across their client-side
+   navigation, and runs the scripts once the page has loaded. */
 const odir = `design/overlays/round-${a.round}`;
-for (const f of git('ls-tree', '-r', '--name-only', a.tag, '--', odir).split('\n').filter(Boolean))
-  put(`overlays/${path.basename(f)}`, execFileSync('git', ['show', `${a.tag}:${f}`], { cwd: ROOT }));
+const ofiles = git('ls-tree', '-r', '--name-only', a.tag, '--', odir).split('\n').filter(Boolean).sort();
+for (const f of ofiles) put(`overlays/${path.basename(f)}`, show(f));
+const join = (ext, sep) => ofiles.filter(f => f.endsWith(ext))
+  .map(f => `/* ${path.basename(f)} */\n` + show(f).toString('utf8')).join(sep);
+const allCss = join('.css', '\n'), allJs = join('.js', '\n;\n');
+put('overlays/all.css', allCss);
+put('overlays/all.js', allJs);
+put('overlays/apply.js', `/* The round-${a.round} patch for your live build, as one paste: open the build,
+   paste this into the browser console (or save it as a DevTools snippet and
+   run it), and the round shows as it does in ${a.tag}'s CHANGES.md. Reload to
+   remove it. It is all.css and all.js, unchanged. */
+(() => {
+  const CSS = ${JSON.stringify(allCss)};
+  const put = () => {
+    if (document.getElementById('terrain-round-${a.round}')) return;
+    const s = document.createElement('style');
+    s.id = 'terrain-round-${a.round}';
+    s.textContent = CSS;
+    document.head.appendChild(s);
+  };
+  put();
+  new MutationObserver(put).observe(document.documentElement, { childList: true, subtree: true });
+  const run = () => {
+${allJs.split('\n').map(l => '    ' + l).join('\n')}
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+})();
+`);
 
 execFileSync('zip', ['-qr', zip, '.'], { cwd: stage });
 fs.rmSync(stage, { recursive: true, force: true });
