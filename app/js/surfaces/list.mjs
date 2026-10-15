@@ -317,7 +317,9 @@ function rowHTML(rec, i) {
 
     /* ── band 2 · who and when · a 2x2 grid ── */
     + '<span class="drill-meta">'
-    + cell('who', inventorHTML(rec.inventors))
+    /* THE HOLDER LEADS (platform.md §13.4, R1-36): the title, the holder and
+       one date carry the card, so the holder takes the first cell in the
+       text colour and the inventors follow it, muted. */
     + cell('firm', rec.holder != null
         /* THE FULL NAME IS ON THE ELEMENT even though the row shows one line of
            it. `title` is not the accessible name — rowName already carries the
@@ -327,6 +329,7 @@ function rowHTML(rec, i) {
             ? '<span class="dm-t dm-none">' + esc(holderText(rec.holder)) + '</span>'
             : '<span class="dm-t" title="' + esc(rec.holder) + '">' + esc(rec.holder) + '</span>')
         : bar('w-md', 'micro'))
+    + cell('who', inventorHTML(rec.inventors))
     /* "Published" AND NOT "Pub.". The record's own field list has said
        Published since it was written (record.mjs FIELDS), so the row was the
        only surface abbreviating it — and `Pub. {date}` is, character for

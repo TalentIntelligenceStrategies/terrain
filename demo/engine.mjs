@@ -82,6 +82,10 @@ async function respond(port, data) {
 const ALL = D.patentRows();
 let ORDER = ALL.map(r => r.id);
 const PAGE = 20;
+/* THE SET THE SEARCH RETURNED, capped at `settings.count`. A facet narrows
+   it and a sort re-orders it; neither reaches past it. */
+let SET = [];
+
 
 function page(order, n) {
   const ids = order.slice(0, n);
@@ -94,11 +98,6 @@ let shown = PAGE;
    whole set. Null until the grouping has been asked for. */
 let GROUPS = null;
 
-/* WHAT THE FOUNDER ASKED FOR, held across the reload. `patents` re-runs right
-   after a search — the list reloads itself on terrain:searched — so a limit
-   that lived only in `search` would be honoured for one frame and then reset
-   to twenty by the very next call. */
-let LIMIT = PAGE;
 
 const byId = new Map(ALL.map(r => [r.id, r]));
 const cmp = {
@@ -124,15 +123,14 @@ export const DemoEngine = {
   /* ── the conversation and the gate ───────────────────────────────────── */
   /* ONE CALL, from the sentence to the set. */
   /* THE SETTINGS ARE HONOURED, NOT ACKNOWLEDGED. `count` is the one the
-     founder can check against what is on screen — they picked 10 and ten rows
-     came back — so the fake engine answers it rather than echoing it. The
+     founder can check against what is on screen — they picked 10 and ten
+     matched — so the fake engine answers it rather than echoing it. It caps
+     the SET; the list still arrives twenty at a time (platform.md §5). The
      other four narrow a corpus this demo does not have: every row here is the
      same synthetic shape, so filtering by jurisdiction would return the same
      set with a smaller number on it, which is a lie with a number attached.
      They reach the engine and `corpus/` is where they mean something. */
   search: async ({ query = '', settings = {}, mode = 'text' } = {}) => {
-    LIMIT = Number(settings.count) || PAGE;
-    shown = Math.min(LIMIT, ALL.length);
     ORDER = EMPTY ? [] : ALL.map(r => r.id).sort(cmp.relevance);
     /* A NUMBER SEARCH LEADS WITH THAT PATENT and orders the rest after it, or
        refuses with NOT_FOUND, not retryable: the number is not in the index,
@@ -142,6 +140,9 @@ export const DemoEngine = {
       if (!hit) { await wait(DELAY.search); return err(CODE.NOT_FOUND, false, 'demo: no patent ' + query); }
       ORDER = [hit.id, ...ORDER.filter(id => id !== hit.id)];
     }
+    ORDER = ORDER.slice(0, Number(settings.count) || ORDER.length);
+    SET = ORDER;
+    shown = Math.min(PAGE, ORDER.length);
     return respond('search', {
       ...page(ORDER, shown),
       elapsedMs: 240,
@@ -166,22 +167,22 @@ export const DemoEngine = {
      engine holds the result set between calls (components.md §1), and this
      is the first page of it. */
   patents: async () => {
-    shown = Math.min(LIMIT, ALL.length);
+    shown = Math.min(PAGE, ORDER.length);
     return respond('patents', page(ORDER, shown));
   },
 
   patentsPage: async () => {
-    shown = Math.min(shown + PAGE, ALL.length);
+    shown = Math.min(shown + PAGE, ORDER.length);
     return respond('patentsPage', page(ORDER, shown));
   },
 
   sort: async ({ sort = 'relevance' } = {}) => {
-    ORDER = ALL.map(r => r.id).sort(cmp[sort] || cmp.relevance);
+    ORDER = [...ORDER].sort(cmp[sort] || cmp.relevance);
     return respond('sort', page(ORDER, shown));
   },
 
   facets: async ({ groups = [] } = {}) => {
-    let ids = ALL.map(r => r.id);
+    let ids = [...SET];
     /* A BRANCH SELECTION IS A FACET, and it lands here rather than in a port
        of its own because it does the same thing: it changes which patents the
        founder is looking at, over the set the search already returned.

@@ -242,8 +242,9 @@ one act, and one region that means two things by state is what that cost.
 **Three bands a row, then the drawings.** Band one is identity, on two lines: an **eyebrow** carrying
 the patent number at its leading edge, the position in the order and the engine's score together at
 its trailing edge — and the **title on its own full width** below it. Band two is a 2×2
-grid of who and when: the first inventor, the holder, the publication date, and a cell carrying the
-jurisdiction and the main classification. Band three is the abstract, clamped to three lines. The
+grid of who and when: the holder first and in the text colour, then the first inventor and *+n*,
+muted, then the publication date, and a cell carrying the jurisdiction and the main classification.
+The title, the holder and the date carry the card; the rest is there to be read when it is wanted. Band three is the abstract, clamped to three lines. The
 drawings are not a fourth band: a field is a value read *off* the patent, and a drawing is the
 patent.
 
@@ -338,7 +339,7 @@ head, §5.1. The heading's two-count form is
 `100 matched · 20 shown`: the noun is the subject of every row beneath it, and dropping it is what
 buys the slot.
 
-**Rows** — each carries the patent's identity and the engine's relevance score on the right. Twenty rows, then a foot that says how many are left and offers `Show more`.
+**Rows** — each carries the patent's identity and the engine's relevance score on the right. Twenty rows, then a foot that says how many are left and offers `Show more`. *Results* in the search settings (10 · 20 · 50 · 100 · 500) is how many patents the search returns, the most the founder can page to; the list still opens on twenty, whatever it is set to.
 
 **The reading loop is one hand.** With focus in either column, `j` and `k` open the next and previous
 patent — focus moves to its row and stays on the list, so the next press is one key away — the arrow
