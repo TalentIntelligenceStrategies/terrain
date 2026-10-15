@@ -8,7 +8,7 @@
 
 ## 1 · The product
 
-**Terrain is patent search that returns an accurate set and hands it over cleanly, for founders
+**Terrain is patent search built to return the patents actually near an idea, and to hand them over cleanly, for founders
 working out where their idea sits.**
 
 The user arrives with a concept. Whether they have filed, are mid-filing, or have no intention of
@@ -47,8 +47,10 @@ check. Terrain does not compete on the analysis; it sits upstream of it.
 
 **The gap worth solving is retrieval.** Patent search returns inaccurate, incomplete sets: the right
 patent is missing, or it is on page nine behind forty that are not close at all. A founder cannot
-tell which, because they cannot see what was left out. An accurate set, and a clean way to take it
-out, is the product.
+tell which, because they cannot see what was left out. **An accurate set, and a clean way to take
+it out, is what the product is for** — an aim, not a measured claim. No evaluation of the engine's
+recall or precision exists yet ([`platform.md`](platform.md) §12), so copy says *built to return*
+rather than *returns* until one does.
 
 **That is a claim about retrieval, not about presentation** — so the line is not *is it a chart* but
 *does it say what the set means*.
@@ -80,19 +82,21 @@ about it.
 **Legibility and self-serve.** The same set an IP professional would assemble, operable by the person
 who actually has the question — and handed over in a form they can work in.
 
-A founder cannot run IPtech: it wants a taxonomy authored before the first search is typed, it is
-built in the vocabulary of the profession, and it assumes an analyst on the other side of it. Terrain
-is one sentence and a set — no analyst, no definitions table, and no term of art anywhere on the
-surface.
+**Patent search is built for the profession.** Keyword tools miss patents written in other words;
+analyst platforms want a taxonomy authored before the first search and an analyst on the other side
+of it; a general search engine returns a long list in the vocabulary of patent law. Terrain is one
+sentence and a set — no analyst, no definitions table, and nothing the founder must learn before it
+is useful. Classification and kind codes print on the record as data; none is a control the founder
+has to understand.
 
 **This is a durable claim in a way a feature claim is not.** *We draw X* is beaten the day somebody
 else draws X. *A founder can operate this and cannot operate that* is a claim about who can use the
 thing, and it does not fall to a feature.
 
-**And there is a second one underneath it, which is the harder claim to beat:** the incumbent's only
-way out is one patent at a time, into another of its own products. A set the founder can leave with
-is not a feature the incumbent has declined to build — it is one that cuts against why they built the
-rest.
+**And there is a second one underneath it: the ending is designed, not an afterthought.** The
+founder's shortlist leaves as a file carrying exactly the fields they read on screen, so the work
+continues in the tools they already trust. This is a claim about Terrain's flow, not about what any
+other product lacks.
 
 ### What Terrain may not say about a set
 
@@ -154,7 +158,8 @@ Terrain does not ask for one.
 decision:
 
 - **Terrain** — this repository, `app/`, and every document in it.
-- **Patent Search** — the TIS website, which keeps *Terrain* off its public page.
+- **Patent Search** — the TIS website and sales material, which keep *Terrain* off anything a buyer
+  reads.
 - **TIS Terrain** — the masthead of Innovue's build.
 
 Everything here is written as *Terrain*, because the alternative is writing nothing, and the
@@ -201,7 +206,9 @@ Terrain is built on the capability behind Innovue's IPtech. Innovue is a TIS sha
 co-developer of the SABCD engine. The relationship is **attribution only**:
 
 - *Powered by Innovue* as an attribution line, at the foot of every surface.
-- The patent database cited in body copy where it does credibility work.
+- The patent database cited in body copy where it does credibility work — by Innovue's own
+  published figure, around 180 million patent records. It is cited as theirs (*Innovue's database of
+  around 180 million patent records*), never as a count Terrain measured.
 - **Innovue never appears in the product name or the primary lockup.**
 
 The commercial reasons: a name-level dependency caps pricing against their list, blocks the
@@ -401,4 +408,9 @@ monorepo from this folder** — record it here and leave it for a deliberate pro
   it trail this brief and wait for the propagation pass. Its limits row says *No charts or
   summaries*, which states more than §1 does — a view of the set is admissible, a summary is not. It
   names the product *Patent Search*, one of the three unsettled names in §2. And its Traditional
-  Chinese translation is marketing copy, which §1's language rule does not govern.
+  Chinese translation is marketing copy, which §1's language rule does not govern. Its copy also
+  trails the product in five places: it lists a legal-status filter, which Terrain does not have
+  (R1-17); it says *Find similar* works from a starred patent, where it works from the open record
+  (R1-18); it says *Semiconductor devices first* where the field list is the engine's; it promises a
+  reply in two business days where Help says one working day; and it says institutions buy access,
+  where how Terrain is sold is open (§6).

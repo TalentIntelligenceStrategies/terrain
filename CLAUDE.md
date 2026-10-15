@@ -13,7 +13,7 @@ not an accident — see "Relationship to the TIS monorepo" at the bottom.
 
 ## The product, in one paragraph
 
-Terrain is **patent search that returns an accurate set and hands it over cleanly**, for founders
+Terrain is **patent search built to return the patents actually near an idea, and to hand them over cleanly**, for founders
 working out where their idea sits. You describe what you are building, Terrain returns the patents
 that are actually near it, you star the ones that matter, and you take them out as a file.
 Self-serve software searching the full Innovue patent database. How it is sold is open
@@ -24,7 +24,8 @@ Self-serve software searching the full Innovue patent database. How it is sold i
 **Terrain shows what came back and never says what it means.** Founders do not run somebody else's
 pre-built analysis — they take the data and work it in tools they already trust, because they know
 how the answer came out. The gap worth solving sits upstream of analysis: patent search returns
-inaccurate, incomplete sets, and an accurate one is the product.
+inaccurate, incomplete sets, and an accurate one is what the product is for — an aim, since no
+evaluation exists yet.
 
 **That is a claim about retrieval, not about presentation.** A view of the returned set — counts by
 year, holder, office or group — is admissible, because every number in it can be checked against the

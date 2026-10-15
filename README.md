@@ -1,7 +1,7 @@
 # TIS Terrain
 
-**Patent search that returns an accurate set and hands it over cleanly, for founders working out
-where their idea sits.**
+**Patent search built to return the patents actually near an idea, and to hand them over cleanly,
+for founders working out where their idea sits.**
 
 You describe what you are building, Terrain returns the patents that are actually near it, you star
 the ones that matter, and you take them out as a file. Self-serve software searching the full
@@ -10,7 +10,7 @@ Innovue patent database.
 **Terrain shows what came back and never says what it means.** Founders do not run somebody else's
 pre-built analysis — they take the data and work it in tools they already trust. The gap worth
 solving sits upstream of analysis: patent search returns inaccurate, incomplete sets, and an accurate
-one is the product. A view that counts the returned rows is admissible; a summary, a finding or a
+one is what the product is for. A view that counts the returned rows is admissible; a summary, a finding or a
 verdict is not.
 
 Terrain is a TIS product in the Patent Intelligence pillar, and *Terrain* is its working name.

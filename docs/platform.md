@@ -6,6 +6,9 @@
 > where that line sits. Run it with `python3 -m http.server 8765` from the repo root, then
 > `http://127.0.0.1:8765/app/`.
 >
+> **This is the specified product, and Innovue builds it.** Their build is what founders use; §13.4
+> lists where it differs from this document.
+>
 > Positioning — what Terrain is and who it is for — is [`brief.md`](brief.md). How it looks is
 > [`design-language.md`](design-language.md). What the engine must return, per component, is
 > [`../design/components.md`](../design/components.md).
@@ -872,8 +875,8 @@ control, the topic menu, and the message.
 
 ## 9 · What Terrain takes from IPtech
 
-Innovue's IPtech is a Chinese-language patent landscape platform built for analysts, with 68 analysis
-destinations across two map modules. **Innovue also ships PI-VuePat**, a semantic patent search
+Innovue's IPtech is a patent landscape platform built for analysts — Chinese-first, with an English
+interface — whose analysis runs to dozens of destinations across two map modules. **Innovue also ships PI-VuePat**, a semantic patent search
 surface, and that is the product Terrain's flow is answerable to. Terrain is a tier of neither. This
 section records what is adopted, what is cut, and why — so a later ask to Innovue does not start from
 nothing.
@@ -889,7 +892,7 @@ anyone to configure it.
 
 | Cut | Why |
 | --- | --- |
-| **The entire analysis layer** | 68 destinations of charts, matrices and trend cuts, each a reading authored for an analyst. A founder does not run somebody else's analysis; the accurate set is the product. This is the pivot, and every row below is downstream of it. A view that only counts the returned rows (§10 item 6) is not this layer coming back — it says nothing the rows do not. |
+| **The entire analysis layer** | Dozens of destinations of charts, matrices and trend cuts, each a reading authored for an analyst. A founder does not run somebody else's analysis; the accurate set is the product. This is the pivot, and every row below is downstream of it. A view that only counts the returned rows (§10 item 6) is not this layer coming back — it says nothing the rows do not. |
 | The authored taxonomy | IPtech wants a taxonomy written before the first search. Terrain generates its grouping from the result set — this is the whole of what makes it operable by a founder. |
 | Valuation (`價值通`) | A verdict on a patent's worth. Terrain does not issue verdicts. |
 | Plain-English decode (`AI閱讀Pro`) | A paraphrase of the record rather than the record. |
@@ -897,12 +900,11 @@ anyone to configure it.
 | An attorney handoff file | The starred set leaves as data (§5.2); a written-up handoff is the authored narrative `brief.md` §1 refuses. |
 | The zone names (`地雷區` / `新興區` / `處女地帶`) | Minefield, emerging, virgin territory. They label absence, and a search result cannot carry a claim about what exists. |
 
-**What Terrain adds that neither Innovue product has.** Their own surface has **no export of any
-kind** — no CSV, no copy, no print, no multi-patent selection — and its only egress is one patent at
-a time into another Innovue product. That is not an oversight; it is what a product does when it
-wants you to stay. **A set the founder can leave with is the thing Terrain is for**, and it is the
-hardest of its features for the incumbent to copy, because copying it cuts against why they built
-the rest.
+**What Terrain adds.** PI-VuePat, as inventoried (`visual-reference/pi-vuepat/`), had no
+multi-patent export: its egress was one patent at a time into another Innovue product. **A set the
+founder can leave with is the thing Terrain is for**, and Innovue builds it as part of Terrain
+(§13.4, R1-01 and R1-02). It is the ending the flow is built around, not a claim about what another
+product lacks.
 
 **Find similar is the primitive they already ship.** Nearest-neighbour retrieval is pointed at **one
 patent** on their surface, and Terrain's *Find similar* points it at the open record — one patent too.
@@ -989,6 +991,10 @@ knowing before changing one.*
 - **How many results should a search return by default?** The settings ladder offers 10 · 20 · 50 ·
   100 · 500, and whether 500 is an engine ceiling or an interface one is unanswered.
 - **Whether Terrain sits on Innovue's semantic search surface or beside it.**
+- **How accurate is the set?** No evaluation of the engine's recall or precision exists, which is why
+  copy says *built to return* rather than *returns*. A fixed set of descriptions, each with patents
+  known to be near it, run against Innovue's build would give the number. In round 1, nonsense and
+  out-of-field text each returned fifty results (R1-30).
 - **Is the whole flow right?** Search → find similar → star → export has never been watched with a
   founder. The part most likely to be wrong is that the starred set is a place you go rather than
   something that accumulates visibly beside the list.
