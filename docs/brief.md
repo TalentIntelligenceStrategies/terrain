@@ -413,5 +413,5 @@ monorepo from this folder** — record it here and leave it for a deliberate pro
   (R1-17); it says *Find similar* works from a starred patent, where it works from the open record
   (R1-18); it says *Semiconductor devices first* where the field list is the engine's; and it
   promises a reply in two business days where Help says one working day. Its product shots carry
-  invented holders and numbers beside real drawings, which §1's rule on illustrative data refuses;
+  invented holders and numbers beside real drawings, which §4 records this repository refusing;
   sales material is captured from `app/` against the corpus instead.
