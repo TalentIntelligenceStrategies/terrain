@@ -188,7 +188,7 @@ function inventorHTML(list) {
 
    THE ROW IS THREE BANDS NOW — head, meta, abstract — and it was two. What
    drove it is that four fields could not answer the glance: a founder could not
-   tell a TSMC filing from a university one, or a dither-matrix patent from a
+   tell a foundry's filing from a university's, or a printing patent from a
    motor-control one, without opening the record, so the record was opened on
    every row. The bands are ordered by what settles the question soonest:
    identity, then party and date, then what it actually claims.

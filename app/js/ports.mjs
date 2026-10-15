@@ -122,7 +122,7 @@ export const CODE = {
 /** THE ROW DRAWS MORE THAN THE FOUR FIELDS IT USED TO, and the rule that
  *  changed is not "how many facts may a row assert" but WHICH SURFACE ANSWERS
  *  THE GLANCE. Four fields could not separate a
- *  TSMC filing from a university one without opening the record, so the record
+ *  foundry's filing from a university's without opening the record, so the record
  *  was opened on every row and the list was a table of contents rather than a
  *  result. The fields added are the ones that end that trip: who invented it,
  *  what class it sits in, when it published, and what it actually claims.
