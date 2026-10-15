@@ -156,7 +156,10 @@ export const CODE = {
  *  `record` takes the chosen `version` and answers with that document.
  *  @typedef {{kind:'grant'|'application', number:string|null,
  *             published:string|null}} Version */
-/** @typedef {{patents:PatentRow[], order:string[], matched:number}} PatentSet */
+/** `elapsedMs` is the search's own time, printed beside the count; only
+ *  `search` carries it, and null prints nothing.
+ *  @typedef {{patents:PatentRow[], order:string[], matched:number,
+ *             elapsedMs?:number|null}} PatentSet */
 
 /** The record · the title, eleven identifiers, the abstract, and the claim set AS
  *  PUBLISHED. `claims` is an ARRAY, one entry per claim, never one blob: a patent
