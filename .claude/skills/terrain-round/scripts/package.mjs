@@ -12,7 +12,9 @@
  *   images/      every image CHANGES.md links, and only those
  *   contract/    the diff of ports.mjs and components.md since --base, plus
  *                anything put in round-N/package/contract/ by hand
- *   code/        the app/ files changed since --base, at --tag, and app.diff
+ *   code/        the app/ and demo/ files changed since --base, at --tag,
+ *                with app.diff and demo.diff
+ *   docs/        the four documents that changed, at --tag, and docs.diff
  *   overlays/    design/overlays/round-N/ at --tag
  *
  * EVERY REFUSAL IS SOMETHING THAT MUST BE TRUE BEFORE INNOVUE OPENS IT, the
@@ -83,12 +85,22 @@ const extra = path.join(pdir, 'contract');
 if (fs.existsSync(extra)) for (const f of fs.readdirSync(extra, { recursive: true }))
   if (fs.statSync(path.join(extra, f)).isFile()) put(`contract/${f}`, fs.readFileSync(path.join(extra, f)));
 
-const changed = git('diff', '--name-only', base, a.tag, '--', 'app/').split('\n').filter(Boolean);
-for (const f of changed) {
-  const exists = spawnSync('git', ['cat-file', '-e', `${a.tag}:${f}`], { cwd: ROOT }).status === 0;
-  if (exists) put(`code/${f}`, execFileSync('git', ['show', `${a.tag}:${f}`], { cwd: ROOT }));
-}
+/* THE CODE IS app/ AND demo/, AND THE DOCUMENTS GO WITH IT. demo/ is the
+   working example of the contract, so a port that changed shape changed it
+   too; the four documents are what the first package handed over as the
+   reference, and a delta that leaves them out leaves Innovue reading stale
+   copies. Each changed file at --tag, and one diff per tree. */
+const at = f => spawnSync('git', ['cat-file', '-e', `${a.tag}:${f}`], { cwd: ROOT }).status === 0;
+const show = f => execFileSync('git', ['show', `${a.tag}:${f}`], { cwd: ROOT });
+const namesIn = (...p) => git('diff', '--name-only', base, a.tag, '--', ...p).split('\n').filter(Boolean);
+const changed = namesIn('app/', 'demo/');
+for (const f of changed) if (at(f)) put(`code/${f}`, show(f));
 put('code/app.diff', git('diff', base, a.tag, '--', 'app/') + '\n');
+put('code/demo.diff', git('diff', base, a.tag, '--', 'demo/') + '\n');
+const DOCS = ['docs/brief.md', 'docs/platform.md', 'docs/design-language.md', 'design/components.md'];
+const docs = namesIn(...DOCS);
+for (const f of docs) if (at(f)) put(`docs/${path.basename(f)}`, show(f));
+if (docs.length) put('docs/docs.diff', git('diff', base, a.tag, '--', ...DOCS) + '\n');
 
 const odir = `design/overlays/round-${a.round}`;
 for (const f of git('ls-tree', '-r', '--name-only', a.tag, '--', odir).split('\n').filter(Boolean))
@@ -96,4 +108,4 @@ for (const f of git('ls-tree', '-r', '--name-only', a.tag, '--', odir).split('\n
 
 execFileSync('zip', ['-qr', zip, '.'], { cwd: stage });
 fs.rmSync(stage, { recursive: true, force: true });
-console.log(`wrote ${path.relative(ROOT, zip)}: ${images.length} images, ${changed.length} changed app/ files, base ${base}`);
+console.log(`wrote ${path.relative(ROOT, zip)}: ${images.length} images, ${changed.length} changed app/ and demo/ files, ${docs.length} documents, base ${base}`);
