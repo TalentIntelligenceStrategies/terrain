@@ -4,9 +4,10 @@
 > What gets built is [`platform.md`](platform.md); what Terrain is is [`brief.md`](brief.md); what
 > the engine must return, per component, is [`../design/components.md`](../design/components.md).
 >
-> Every standalone page inlines its own token block. There is no shared token stylesheet and no build step —
-> and there must not be one until three previews independently want the same value. A linked font
-> stylesheet locks nothing; a linked token sheet would.
+> Every standalone page carries its own token block, generated from `app/styles/tokens.css` by
+> `tools/sync-tokens.py` and checked byte for byte, so a page opened from a download works with nothing
+> beside it. `app/index.html` links `tokens.css` instead, because `app/` cannot run from a download
+> under any circumstances. A linked font stylesheet locks nothing; a linked token sheet would.
 
 ---
 
@@ -45,8 +46,10 @@ charts; **discrete states** — the live / expired / pending chip — went with 
 
 **A hue is an amendment, not a design task.** The tokens are gone rather than parked, so a hue means
 declaring a semantic token in all three theme blocks, measuring it against both grounds, and arguing
-it against this section — which is the friction this rule is for. **A new chart is an amendment to
-[`brief.md`](brief.md) §4** on the same terms.
+it against this section — which is the friction this rule is for. **A view of the set is not an
+amendment** — [`brief.md`](brief.md) §1 admits it — **but a hue for one is**, on the same terms. A
+view draws from the neutral ramp, and its series are told apart by position and label, never by
+colour.
 
 **Colour would encode direction, never desirability.** Whatever earns a hue next — a state, a
 direction — earns it as information. Nothing is green because it is good.
@@ -156,10 +159,9 @@ surface under our own chrome*; this one means *the paper this was published on*,
 value. It is a token rather than a literal because §3.2's rule is that every colour is a token — a
 named invariant is checkable where a hex in a component is a judgement call the gate has to allow.
 
-**There is exactly one scrim, and it is the enlarged drawing.** This read *there is no scrim token
-and no scrim*, and closed with *a dimming layer would arrive with whatever first needs one*. That is
-what happened: the figure viewer became a lightbox over the viewport, because it had been capped at
-one column of a two-column split and reference numerals are what a founder enlarges a drawing for.
+**There is exactly one scrim, and it is the enlarged drawing.** The figure viewer is a lightbox over
+the viewport, because capped at one column of a two-column split it is too small for the reference
+numerals a founder enlarges a drawing to read.
 
 **Everything else still dims nothing**, and the list is the rule rather than an anecdote: the record
 opens in its own column, the grouping panel is a popover, the delete confirmation is inline, and
@@ -193,7 +195,8 @@ the evidence rather than a violation.
 *It held the live / expired / pending hues and the two direction aliases derived from them. They had
 one reader, the legal-status chip, and left with it (`platform.md` §13, R1-17).*
 
-*§3.5 was chart layers and is retired, and `--chart-series` went with it. Terrain draws no chart, and
+*§3.5 was chart layers and is retired, and `--chart-series` went with it. Terrain draws no chart; a
+view of the set, when one is built, draws from the neutral ramp and does not bring the token back.
 §3.5's number is not reused, for the reason §3 opens with.*
 
 ### 3.6 · Skeleton
@@ -288,8 +291,8 @@ primitive. It re-reads `--accent` at use time, so the one accent declaration giv
 both its values. The tier stays a tier with one member, because the rule it carries — never in a dark
 block — is the one a second derived token would need.
 
-**The component-scoped five** are `--dmx-cycle`, `--dmx-opacity-base`, `--dmx-opacity-mid`,
-`--dmx-opacity-peak` and `--stage-delay`. They are declared on the component's own class because
+**The component-scoped four** are `--dmx-cycle`, `--dmx-opacity-base`, `--dmx-opacity-mid` and
+`--dmx-opacity-peak`. They are declared on the component's own class because
 that is their scope: a loader's idle opacity is not a fact about the interface, and putting it on
 `:root` would invite a second component to read it.
 
@@ -379,7 +382,7 @@ sentence is meant to occupy: more than one and 68ch holds.
 label inside it render identically unless something separates them. The box title takes `--text-2`
 and a 12px gap.
 
-**English only.** No `data-zh`, no bilingual markup, no CJK face.
+**The product is English only.** No `data-zh`, no bilingual markup, no CJK face.
 
 ### Case, and who owns it
 
@@ -478,12 +481,9 @@ and the figure viewer's panel is `--figure-ground` white against a light scrim �
 **A shadow on an ink fill is invisible.** `.btn` takes neither rung: in dark it disappears, and in
 light it reads as a button from 2010.
 
-*This section read "elevation is a hairline, **not** a shadow" and "a card that reaches for a shadow
-has not earned one" until 2026-09-24. It was right about the second clause and over-general about the
-first — it was written when the only floating thing in the product was a menu, and it was then used to
-argue three drawing tiles into compensating for a refused shadow with a bare 1px translate. The
-refusal was never about the shadow; it was about a card in the layout pretending to float. That is
-one rung now rather than a prohibition.*
+*The refusal is not of the shadow; it is of a card in the layout pretending to float. A floating
+thing takes one rung, a card in the layout takes none, and a drawing tile does not compensate for a
+refused shadow with a bare 1px translate.*
 
 ---
 
@@ -516,8 +516,7 @@ arriving view starts 120ms later at `opacity: 0` / `translateY(6px)` and lands o
 **Exit is faster than enter** — the founder has already decided to leave, and the system should look
 like it is responding rather than deliberating.
 
-**Motion is restrained everywhere except the build, where the assembly is the design.** Nothing
-animates on a return visit.
+**Motion is restrained everywhere.** Nothing animates on a return visit.
 
 ### What a wait looks like
 
@@ -544,9 +543,6 @@ that changes *which* rows exist empties the region and puts the loader inside it
 search, a record. The test is whether what is on screen is still true while the answer is coming.
 Where it is, blanking it claims a re-fetch that is not happening; where it is not, keeping it shows
 the founder data they have just excluded.
-
-**The build bar advances on completed stages, never on elapsed time.** A bar that fills on a timer
-asserts a duration nothing supports, at the most credulous moment the founder has.
 
 ### Standing prohibitions
 
@@ -732,17 +728,17 @@ rather than over shell-radius panels.
 record held the larger half, on the argument that the denser column needs more room. The list is
 where the whole flow happens — search, find similar, star, export — so the half the founder works in
 was the smaller one, and on arrival the larger one held a single sentence. The list carries three
-bands a row and floors at 340px; the record carries eleven identifiers, an abstract, the claims and
+bands a row and floors at 340px; the record carries ten identifiers, an abstract, the claims and
 the drawings, and it adapts itself rather than being held up by the split.
 
 **The record's field list is the width-critical thing on the surface.** It is a grid of label/value
-pairs, **two pairs to a row**, and what makes eleven identifiers scannable is that the values share a
-leading edge. One pair to a row is what it was: eleven rows and 437px deep in a 646px column, the one
-block on the surface spending a whole row on one identifier, beside a list whose rows put four facts
-in a 2×2 grid. Two pairs makes it seven rows and 270px.
+pairs, **two pairs to a row**, and what makes ten identifiers scannable is that the values share a
+leading edge. One pair to a row puts a row under every identifier, the one block on the surface spending a whole
+row on one fact, beside a list whose rows put four facts in a 2×2 grid. Two pairs makes it six rows:
+four of pairs, and *Inventors* and *Classes* on a row each.
 
 **The labels stay words, and that is the line between this and the list's cells.** The list leads
-each cell with an icon, which is right for four facts that recur on every row; eleven identifiers are
+each cell with an icon, which is right for four facts that recur on every row; ten identifiers are
 not four, and there is no glyph that separates *Number* from *Application* from *Main class*. Density
 comes from the second pair, never from deleting a field name.
 
@@ -765,9 +761,8 @@ The chain, at a 1440px window:
 
 **So the crossing point is a window of about 1348px**, from `0.50W − 74 = 600`. Between 1348 and the
 stack the field list is single-column, which is the arrangement working rather than a defect — and
-it is worth saying that this constraint was dead code until 2026-09-25: the container query sat above
-`.hf`'s base rule and lost to it on source order, so the field list had never collapsed at any width.
-The share was protecting a floor nothing enforced.
+the container query has to sit below `.hf`'s base rule: above it, it loses on source order and the
+field list never collapses at any width, while the share appears to protect a floor nothing enforces.
 
 **It is a container query and not a viewport one**, and the reason is that the same element is half of
 a split above the stack and the full width below it — a viewport query would fire at the wrong moment
@@ -804,8 +799,8 @@ closes, a chip is read once. The two that qualify are the two panels on the work
 qualify for the same reason — each fills its column, each scrolls its own body, and each head carries
 the thing the founder is looking at plus the controls that change it. The record's holds *previous*,
 *next* and *close* over a claim set that runs to 1,500px. The list's holds the count and the
-Sort/Filter pair, which were ordinary content in a scroller until 2026-09-26 and left on the first
-gesture, taking the column's identity with them. **A third is evidence this rule has stopped
+Sort control, which as ordinary content in a scroller would leave on the first gesture and take the
+column's identity with them. **A third is evidence this rule has stopped
 holding**, not evidence that pinning turned out to be useful.
 
 **Neither is `position:sticky` at two columns, and that is the mechanism rather than a detail.** A
@@ -854,7 +849,7 @@ the button share one edge of one panel, so search and *change what you typed* ar
 full-width button under the panel would be a second zone with nothing to separate it from the
 first.
 
-**One primary action per surface.** A near-black fill (an accent fill, once §3.8 is applied) is what
+**One primary action per surface.** A near-black fill — the accent, §3.8 — is what
 says *this is the way forward*. Two filled buttons on one screen make the smaller one look like the
 way forward. **The primary action of a settings card is never deletion** — where the act is
 irreversible, the safe path is the affirmed button and the act is the ghost one, with the weight
@@ -867,7 +862,7 @@ not exist.
 
 **There are no widget cards, and no captions.** A caption states a finding, a finding is a reading of
 the data, and `brief.md` §1 puts those outside the product. **The info popover survives and carries
-explanation only** — what a score is, what *deduplicated by family* means. The test is whether a
+explanation only** — what a score is, what *Nearness* measures. The test is whether a
 screenshot with **no popover open** still says what the founder is looking at; an interface that needs
 a popover to be legible is not legible.
 
@@ -892,8 +887,8 @@ sunken fill and keeps its value legible.
 the mechanism rule behind the one above, and the two treatments look identical — what differs is
 whether the control keeps its place in the tab order. A native `disabled` control leaves it, and the
 reason leaves with it, so it is only correct where the founder can already see why: a send button
-under an empty field, a save under an untouched one. Where the reason is a *sentence* — not enough
-points, an edit still open, an act that is not built yet — the control stays focusable and
+under an empty field, a save under an untouched one. Where the reason is a *sentence* — an edit
+still open, an act that is not built yet — the control stays focusable and
 `aria-describedby` carries the reason to it on every visit rather than announcing it once in passing.
 Activation is then blocked in code, because the platform has stopped doing it.
 
@@ -1093,8 +1088,6 @@ this section.
 - **Surfaces stop being fills.** The ground↔surface step is **1.06** here against **1.08** in light —
   close to nothing — and `--border` carries the separation the step carries in light. A surface lifted
   further above a near-black ground reads as muddy grey rather than as a card.
-- **State colours are chosen, not swapped.** A dusty sage, an oxblood and a dull gold, each measured
-  against the dark surface. This is the only part that took judgement rather than arithmetic.
 
 ### 10.3 · The values, measured
 
