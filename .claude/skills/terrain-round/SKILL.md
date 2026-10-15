@@ -237,17 +237,34 @@ measuring found that changes an item.
 
    Link images by path relative to `package/` (e.g. `../measure/star-results-light.png`).
    Write it for Innovue's engineers: plain, specific, no internal argument. Show it to the user
-   before packaging.
-2. Commit, then `git tag -a handoff-YYYY-MM-DD -m "<one line>"`.
-3. Package:
+   before packaging. Beside it, `package/README.md`: where to start, what each folder is, the words
+   used throughout, and that `CHANGES.md` wins over everything else in the zip.
+
+   **A card is buildable first time or it is not finished.** Each one carries every value it needs:
+   copy strings, file names, storage, which keys and when, line heights, what a state looks like. A
+   card with an overlay ends with a `Patch:` line naming its files.
+2. **Audit before tagging, in three independent reads**, each by its own agent, none seeing the
+   others' work:
+   - the contract against the code (every port's request and response against what `app/` sends
+     and reads, the counts, the examples validated);
+   - every card against its overlay, against `app/`, and against §13.4 (values, copy, and every
+     *`app/` does the same*);
+   - a cold read as Innovue's engineer, for what they could not build without asking.
+
+   **An overlay holds its card's values exactly**: a size off the type scale or a wording that
+   differs is a defect in the patch. **A card's claim about `app/` is checked in `app/`**; where it
+   is false, bring `app/` in line or change the claim, and ask the user which. Re-shoot and
+   re-measure what changed.
+3. Commit, then `git tag -a handoff-YYYY-MM-DD -m "<one line>"`.
+4. Package:
    ```sh
    node .claude/skills/terrain-round/scripts/package.mjs --round N --tag handoff-YYYY-MM-DD
    ```
    It refuses on a dirty tree, a missing tag, a failing gate, a broken image link, or an existing
    zip. Fix the cause; never work around a refusal.
-4. Update the "What the backend team holds" section of `app/README.md` to name the new tag, and
+5. Update the "What the backend team holds" section of `app/README.md` to name the new tag, and
    commit.
-5. Tick phase 6 in STATE.md. The round is closed; the next `/terrain-round` opens N+1.
+6. Tick phase 6 in STATE.md. The round is closed; the next `/terrain-round` opens N+1.
 
 Checkpoint: the zip's path, and what is in it. Sending it is the user's act, not this skill's.
 
