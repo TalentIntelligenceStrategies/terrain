@@ -937,7 +937,18 @@ export function init(ctx) {
     loaded = true;
     settled(false, '');
     syncStarUI();
-    request('patents', undefined, 'The list did not load.').then(openFirst);
+    /* THE COUNT IS SAID ONCE THE ROWS ARE THERE (R1-09). The composer said
+       *Searching…* when the search left; this is the answer to it, in the
+       heading's own words, so a founder who cannot see the list hears what
+       the search returned before the first record opens. */
+    request('patents', undefined, 'The list did not load.').then(d => {
+      if (d) {
+        const m = d.matched, n = (d.patents || []).length;
+        say('work', m === 0 ? 'No patents matched.' : m === 1 ? '1 patent matched.'
+          : m === n ? m + ' patents matched.' : m + ' matched, ' + n + ' shown.');
+      }
+      return openFirst(d);
+    });
   });
 
   /* THE GROUPING HANDS BACK A SET, NOT A DOM INSTRUCTION. fishbone.mjs asked

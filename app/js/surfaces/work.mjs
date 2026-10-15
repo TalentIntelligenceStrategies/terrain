@@ -290,6 +290,7 @@ export function init(ctx) {
     const text = field && field.value.trim();
     if (!text) return;
     btnWait(b, true);
+    say('work', 'Searching…');
     /* THE BAR SENDS ITS FIELD (components.md §4 used to ask whether it should):
        the chip at its leading edge says which, so the search runs in it. */
     const res = await ENGINE.search({ query: text, field: Field.get(), settings: readSettings(), mode: Mode.get() });

@@ -177,6 +177,7 @@ export function init(ctx) {
     if (!text) return;
 
     btnWait(btn, true);
+    say('home', 'Searching…');
     const res = await ENGINE.search({ query: text, field: Field.get(), settings: readSettings(), mode: Mode.get() });
     btnRest(btn);
 
