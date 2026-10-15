@@ -18,36 +18,51 @@ near it, and they take the ones that matter with them.
 
 **One question, and the whole product answers it:** *what is already here that is close to this?*
 
-Self-serve software, subscription-priced, English-native, searching the full Innovue patent database.
+Self-serve software, English-native, searching the full Innovue patent database. How it is sold is
+open (§6), and nothing in the product presumes an answer.
+
+**Innovue builds and ships it.** The founder uses Innovue's build, on Innovue's engine. `app/` in this
+repository is the reference that build is made from — behaviour, flow and the engine contract — and
+reaches Innovue as round packages ([`platform.md`](platform.md) §13).
 
 ### The flow, and there is only one
 
 **Search → find similar → star → the starred set → export.** Every surface serves a step of it, and a
 surface that serves none does not belong in the product.
 
-1. **Search.** One sentence, one call. Nothing is asked before it runs.
+1. **Search.** One sentence, one call. Nothing is asked before it runs — the Text / Patent number
+   switch says what kind of thing was typed, and asks nothing about it.
 2. **Find similar.** Open a patent and the set re-orders by nearness to it. No patent enters or
    leaves — only the sequence changes, and it can be put back.
 3. **Star.** The founder's own shortlist, and the only thing in the product they curate by hand.
 4. **The starred set.** Its own surface, where the shortlist is read as a whole.
 5. **Export.** It leaves as a CSV or a Markdown list, and the product is over.
 
-### Terrain does not analyse, and that is the position
+### Terrain shows what came back, and never says what it means
 
 **Founders do not run somebody else's pre-built analysis.** They take the data and work it in tools
-they already trust, because they know how the answer came out — and a chart they did not build,
+they already trust, because they know how the answer came out — and a conclusion they did not reach,
 sitting inside software they are still deciding whether to pay for, is a claim they have no way to
-check. Terrain stopped competing on the analysis and moved upstream of it.
+check. Terrain does not compete on the analysis; it sits upstream of it.
 
 **The gap worth solving is retrieval.** Patent search returns inaccurate, incomplete sets: the right
 patent is missing, or it is on page nine behind forty that are not close at all. A founder cannot
 tell which, because they cannot see what was left out. An accurate set, and a clean way to take it
 out, is the product.
 
-**That is a claim about retrieval, not about presentation** — so anything that reads the set and
-tells the founder what it *means* is out, however small. No map, no charts, no widgets, no generated
-summary, no finding sentence, no verdict. Terrain prints what the engine returned and what the patent
-says.
+**That is a claim about retrieval, not about presentation** — so the line is not *is it a chart* but
+*does it say what the set means*.
+
+- **Admissible: a view of the set.** How many came back per filing year, per holder, per office, per
+  group — the returned rows counted and redrawn. Every number in it can be checked against the rows
+  beneath it, and it says nothing the rows do not.
+- **Out, however small: a reading of the set.** No generated summary, no finding sentence, no
+  verdict, no caption that draws a conclusion, no score of Terrain's own. *Holder A leads this
+  space* is a reading; a bar per holder is a count.
+
+Terrain prints what the engine returned, what the patent says, and counts of both. **A view is
+permitted, not built** — none ships, [`platform.md`](platform.md) §10 says what would start one, and
+[`design-language.md`](design-language.md) §2 says it is drawn without a hue.
 
 **The engine's own relevance score is printed, and that is the line rather than an exception to it.**
 The question is not *is it an opinion* but *is it ours*. Terrain refuses to **generate** a verdict; it
@@ -86,7 +101,7 @@ The engine searched an index, over a vocabulary, at a moment. Copy may describe 
 and may not describe **what exists**:
 
 - Sayable: *Nothing in the Innovue database came back close to this.* *Forty-one patents matched, and
-  these eight are nearest to the one you starred.* *This holder's most recent filing here is 2019.*
+  these eight are nearest to the one you have open.* *This holder's most recent filing here is 2019.*
 - Not sayable: *Here is the gap.* *Open ground.* *Whitespace.* *Nobody is here.* *This is unclaimed.*
 
 **The test:** a sentence is admissible if it would still be true when the whole rest of the world's
@@ -125,15 +140,26 @@ backing them. Institutions are a **channel**, not a second ICP: they change how 
 who the interface is designed for. Do not let an institutional buyer justify an analyst-facing
 feature.
 
-**Language: English only.** The parent TIS surfaces are bilingual; Terrain deliberately is not. No
-Chinese copy, no bilingual markup, no CJK typeface.
+**Language: the product is English only.** The parent TIS surfaces are bilingual, and the TIS
+website's page about Terrain carries a Traditional Chinese translation — marketing copy about the
+product, recorded in §7, which this rule does not govern. Inside the interface: no Chinese copy, no
+bilingual markup, no CJK typeface. Innovue's build carries a zh-TW locale it does not render, and
+Terrain does not ask for one.
 
 ---
 
 ## 2 · The name
 
-**`TIS Terrain`** — the working name. **Not locked.** Everything in this folder is written as though
-it holds, because the alternative is writing nothing, but it is a decision that can still move.
+**Not decided.** Three names are in use, and each is somebody's working choice rather than a
+decision:
+
+- **Terrain** — this repository, `app/`, and every document in it.
+- **Patent Search** — the TIS website, which keeps *Terrain* off its public page.
+- **TIS Terrain** — the masthead of Innovue's build.
+
+Everything here is written as *Terrain*, because the alternative is writing nothing, and the
+masthead is not raised with Innovue until the name is settled. What follows is the case for Terrain;
+it stands until the name is decided against it.
 
 It is positioned as a **TIS-endorsed sub-brand** — not a standalone brand and not a descriptive
 label.
@@ -207,7 +233,7 @@ absence: a Chinese column header sits in an otherwise English table, applicant n
 untranslated, and the vocabulary is non-idiomatic throughout.
 
 It is built for an analyst and it is good at what it does. Terrain is not a tier of it and not a
-translation of it. [`platform.md`](platform.md) §11 records what is adopted and what is cut.
+translation of it. [`platform.md`](platform.md) §9 records what is adopted and what is cut.
 
 ---
 
@@ -216,12 +242,19 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
 - **Innovue as attribution only**, never in the name or the primary lockup.
 - **The endorsed sub-brand architecture** — the TIS mark appears in the lockup.
 - **Two typefaces**: Urbanist (text and display), Inconsolata (numerals and figures).
-- **English only** — no Chinese surface, no bilingual markup.
+- **English only, in the product** — no Chinese surface and no bilingual markup in the interface.
+  Marketing copy about it belongs to the TIS website.
 - **The product definition and ICP** in §1, including what may and may not be said about a set.
-- **Terrain does not analyse.** No map, no charts, no widgets, no generated summary, no finding
-  sentence. Anything that reads the result set and tells the founder what it *means* is out. This is
-  the decision the whole product turned on and it is the one most likely to be reopened by accident,
-  because every individual chart looks small.
+- **Terrain never says what the set means.** A view of the returned set is admissible — counts by
+  year, holder, office or group, the rows redrawn. A generated summary, a finding sentence, a verdict,
+  or a caption that draws a conclusion is not. *The line is the claim, not the form*: a bar per
+  holder says nothing the rows do not, and a one-line caption under a plain table can still say
+  *here is the gap*. This is the decision the whole product turned on, and it is the one most likely
+  to be reopened by accident, because every individual caption looks small.
+- **No session recording.** Usage events may be counted; a session may not be recorded. The search
+  box holds an idea the founder may not have filed, and a recording sends it, keystroke by
+  keystroke, to a third party. Innovue's build records sessions, and [`platform.md`](platform.md)
+  §13.5 raises it.
 - **Software, not a report.**
 - **Terrain renders the record, not an opinion about the record.** A patent's identifiers, abstract
   and claims are the public text of a granted patent and Terrain shows them; every *reading* of that
@@ -243,20 +276,19 @@ translation of it. [`platform.md`](platform.md) §11 records what is adopted and
   commitment is pressing Search.
 - **Starring is the one thing the founder curates by hand**, and it is per-row. *This is a narrowed
   successor, not a reversal*: the old rule banned per-row selection because checkboxes redrew a
-  chart and the set feeding the charts had to stay whole. There are no charts, and the starred set
-  feeds nothing but itself and the export.
+  chart and the set feeding the charts had to stay whole. The starred set feeds nothing but itself
+  and the export.
 - **Application code goes in `app/`, and it is framework-agnostic** — plain CSS files, semantic HTML
   partials, vanilla ES modules. No framework, no preprocessor, no bundler. The team receiving this
   writes CSS, and a custom property is the one interchange format every stack consumes; a
   preprocessor variable also resolves at build time, which the theme swap cannot survive. `app/` is
   the reference implementation and [`app/README.md`](../app/README.md) is what an engineer reads
   first.
-- **`app/` is the reference for behaviour, flow and the engine contract; Innovue's shipped build is
-  the reference for type and text layout**, unless a round's difference list flags a component.
-  *This is a narrowed successor, not a reversal*: the rule used to read that `app/` was the
-  reference for everything, which stopped being true the day their build shipped with type that is
-  fine as it is. Without a default, every cosmetic difference would be reopened each round.
-  `platform.md` §13 carries the round and the package.
+- **Innovue ships Terrain; `app/` is the reference it is built from.** `app/` is the reference for
+  behaviour, flow and the engine contract; Innovue's shipped build is the reference for type and
+  text layout, unless a round's difference list flags a component. Their type is fine as it is, and
+  without a default every cosmetic difference would be reopened each round. `platform.md` §13
+  carries the round and the package.
 - **Two directories serve the rounds.** `.claude/skills/terrain-round/` holds the procedure and the
   scripts it runs. It is not `tools/`: the capture, overlay and measuring scripts refuse nothing, and
   the packager, which does refuse, belongs to the procedure rather than to the gates the repository
@@ -334,10 +366,12 @@ uses it. That is the marketing system's accent, recorded upstream; it does not e
 
 ## 6 · Open
 
-- **The name.** Clearance is outstanding. Nothing is locked until it clears.
-- **Pricing** — the price, the tier structure, and whether a plan limits anything at all. Terrain
-  does not meter by points. The plan screen prints `XXX` and a bar rather than guessing, and
-  [`platform.md`](platform.md) §10 item 1 records why this cannot be settled before filing alerts are.
+- **The name.** Three are in use (§2) and none is decided. Clearance is outstanding on whichever is
+  chosen, and nothing is locked until it clears.
+- **How Terrain is sold** — by subscription, by seat to an institution, by metered use, or otherwise;
+  the price; and whether a plan limits anything at all. Nothing presumes a model: the plan screen
+  prints `XXX` and a bar rather than guessing, and Innovue's build carries no pricing. Taking points
+  out of both builds (R1-20) removed a model nobody had chosen; it did not choose another.
 - **Whether Terrain sits on Innovue's semantic search surface or beside it.**
 
 ---
@@ -362,3 +396,9 @@ monorepo from this folder** — record it here and leave it for a deliberate pro
 - **The browser-tab icon**, `brand/favicon.svg` — the submark with its own `prefers-color-scheme`
   block.
 - Terrain's row copy in the website's Products menu → `website/`.
+- **The website's Patent Search page** (`website/product/search/`, veiled) is a downstream consumer of
+  this repository: its screenshots are captured from it, and its brief points at §1. Three things on
+  it trail this brief and wait for the propagation pass. Its limits row says *No charts or
+  summaries*, which states more than §1 does — a view of the set is admissible, a summary is not. It
+  names the product *Patent Search*, one of the three unsettled names in §2. And its Traditional
+  Chinese translation is marketing copy, which §1's language rule does not govern.
