@@ -228,7 +228,7 @@
 .figview-pn[hidden] + .figview-cap{flex:1}
 .figview-no{flex:0 0 auto;color:var(--text-2)}
 .figview-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-               font-size:14px;font-weight:500;color:var(--text-1)}
+               font-size:13px;font-weight:500;color:var(--text-1)}
 .figview-cap{flex:0 0 auto;min-width:0;color:var(--text-3)}
 
 /* ── the stage ──────────────────────────────────────────────────────────

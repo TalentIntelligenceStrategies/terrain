@@ -30,7 +30,7 @@
    sticky chrome that must clear the home indicator */
 .conv-dock{padding-bottom:max(var(--s-16),env(safe-area-inset-bottom))}
 .conv-foot{padding:var(--s-12) 0 var(--s-24);display:flex;align-items:baseline;
-      justify-content:center;gap:var(--s-6);font-size:14px;color:var(--text-3)}
+      justify-content:center;gap:var(--s-6);font-size:13px;color:var(--text-3)}
 
 /* ── the thread ─────────────────────────────────────────────
    Nothing's visibility depends on a transition having run: .is-in is added on
@@ -91,8 +91,8 @@
 .cmp-field textarea:disabled{color:var(--text-3);cursor:default}
 .cmp-row{display:flex;align-items:center;gap:var(--s-12);padding-top:var(--s-8);
       border-top:1px solid var(--border);margin-top:var(--s-8)}
-.cmp-hint{flex:1;min-width:0;font-size:12.5px;color:var(--text-3)}
-.cmp-status{margin:var(--s-8) 0 0;font-size:12.5px;color:var(--text-3);min-height:17px;
+.cmp-hint{flex:1;min-width:0;font-size:13px;color:var(--text-3)}
+.cmp-status{margin:var(--s-8) 0 0;font-size:13px;color:var(--text-3);min-height:1lh;
       transition:opacity var(--dur-2) var(--ease),filter var(--dur-2) var(--ease)}
 
 /* the sweep · a sweep, not a percentage. currentColor, so it costs no palette,
@@ -127,7 +127,7 @@
 .field-chip{display:inline-flex;align-items:center;gap:var(--s-6);height:30px;
   max-width:220px;padding:0 var(--s-10);border-radius:var(--r-control);
   background:var(--surface);border:1px solid var(--border);
-  font-size:12.5px;font-weight:500;color:var(--text-1);white-space:nowrap;
+  font-size:13px;font-weight:500;color:var(--text-1);white-space:nowrap;
   transition:background var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
 .field-chip:active{transform:scale(.97)}
 @media (hover:hover){ .field-chip:hover{background:var(--surface-sunken)} }

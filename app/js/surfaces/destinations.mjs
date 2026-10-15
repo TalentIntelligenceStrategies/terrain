@@ -70,7 +70,7 @@ function billingFill(d, invoices) {
     + '<th class="t-micro">Status</th></tr></thead><tbody>'
     + invoices.map(i =>
         '<tr><td><span class="fig fig-s">' + esc(i.when) + '</span></td>'
-        + '<td class="num"><span class="fig-m">' + esc(i.amount) + '</span></td>'
+        + '<td class="num"><span class="fig-s">' + esc(i.amount) + '</span></td>'
         + '<td>' + esc(i.status) + '</td></tr>').join('')
     + '</tbody></table>';
 }

@@ -60,7 +60,7 @@
    wraps it now. */
 .dm-v{min-width:0;display:flex;align-items:center;gap:var(--s-6);
       overflow:hidden;white-space:nowrap;
-      font-size:12.5px;line-height:1.4;font-weight:400;color:var(--text-2)}
+      font-size:13px;line-height:1.4;font-weight:400;color:var(--text-2)}
 /* THE HOLDER LEADS. Of the four facts under a title, who owns the patent is
    the one a founder reads first and the one they sort the set by in their own
    spreadsheet afterwards, so it keeps --text-1 while its neighbours step
@@ -158,16 +158,13 @@
 .set-row[data-vers] .drill-eyebrow{padding-inline-end:calc(137px + var(--s-8));min-height:var(--s-32)}
 .ver-switch{position:absolute;inset-block-start:var(--s-2);inset-inline-end:0}
 .drill-title{min-width:0}
-/* SIZE, LINE-HEIGHT AND WEIGHT ARE .t-title-s's, ON THE MARKUP. They were
-   13.5/1.45/500 — a size that appears nowhere in §4's table, invented in the
-   gap between `label` and `title` that four components had each answered
-   differently. What is left here is what belongs to the component. */
+/* SIZE, LINE-HEIGHT AND WEIGHT ARE .t-title-s's, ON THE MARKUP: 16/600, the
+   card title. What is left here is what belongs to the component. */
 /* CLAMPED TO TWO, AND THE REASON IS THE ROW'S HEIGHT RATHER THAN THE TITLE'S
    LENGTH. §7's whole argument for a scrolling drawing strip is that row height
    must not depend on what the patent carries; an unclamped title breaks the
-   same invariant from the other end. Measured over 100 corpus titles at 17px
-   across 518px, two lines hold about 126 characters and cover 97% of them.
-   The three that clip are reachable in the record and in this button's own
+   same invariant from the other end. At 16px across 518px, two lines hold
+   about 134 characters, which covers nearly every corpus title. Those that clip are reachable in the record and in this button's own
    aria-label — the trade the holder already makes one band down. */
 .drill-name{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
             overflow:hidden;color:var(--text-1);text-wrap:pretty}
@@ -246,7 +243,7 @@
    unprefixed `line-clamp` is not yet safe alone — so it is written with its
    own display and orientation rather than as a vendor fallback. */
 .drill-abs{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
-           overflow:hidden;margin-block-start:var(--s-16);max-width:68ch;
+           overflow:hidden;font-size:13px;line-height:1.5;margin-block-start:var(--s-16);max-width:68ch;
            color:var(--text-2);text-wrap:pretty}
 /* A BARRED ABSTRACT IS THREE BARS AND NOT A CLAMPED BOX. -webkit-box lays its
    children out as inline boxes, so three block bars inside one collapse onto a
@@ -407,7 +404,7 @@
 .lm-btn{display:inline-flex;align-items:center;gap:var(--s-6);height:30px;
   padding:0 var(--s-10);border-radius:var(--r-control);
   background:var(--surface);border:1px solid var(--border);
-  font-size:12.5px;font-weight:500;color:var(--text-1);white-space:nowrap;
+  font-size:13px;font-weight:500;color:var(--text-1);white-space:nowrap;
   transition:background var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
 .lm-btn:active{transform:scale(.97)}
 @media (hover:hover){ .lm-btn:hover{background:var(--surface-sunken)} }

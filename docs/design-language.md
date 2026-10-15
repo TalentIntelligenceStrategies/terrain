@@ -166,7 +166,7 @@ opens in its own column, the grouping panel is a popover, the delete confirmatio
 every menu closes on an outside click the document hears for itself. `--scrim` has one reader. **A
 second one is a sign this rule has stopped holding**, not a sign the token turned out to be useful.
 
-`--text-3` is darker than it looks like it should be. It carries the 10.5px micro-labels, which are
+`--text-3` is darker than it looks like it should be. It carries the 11px micro-labels, which are
 small text and need the full 4.5:1 — the obvious mid-grey lands at 3.6 and fails.
 
 #### No component may read a primitive or a raw hex
@@ -309,70 +309,51 @@ in `app/README.md`'s interface table.
 Urbanist for all text. Inconsolata for **every** number, date, year, count and code, without
 exception — mixed numeral rendering across a dense table is immediately visible and cheap to avoid.
 
-| Role | Face | Size / line | Weight | Tracking |
-|---|---|---|---|---|
-| `display-1` | Urbanist | 34 / 1.15 | 700 | -0.02em |
-| `display-2` | Urbanist | 26 / 1.2 | 700 | -0.015em |
-| `title` | Urbanist | 17 / 1.3 | 600 | -0.005em |
-| `title-s` | Urbanist | 15 / 1.45 | 600 | 0 |
-| `body` | Urbanist | 14 / 1.55 | 400 | 0 |
-| `body-strong` | Urbanist | 14 / 1.5 | 500 | 0 |
-| `label` | Urbanist | 13 / 1.4 | 500 | 0 |
-| `label-s` | Urbanist | 12.5 / 1.4 | 500 | 0 |
-| `micro` | Urbanist | 10.5 / 1.2 | 500 | 0.08em, uppercase |
-| `figure-xl` | Inconsolata | 40 / 1.0 | 500 | -0.01em |
-| `figure-l` | Inconsolata | 26 / 1.1 | 500 | 0 |
-| `figure-m` | Inconsolata | 15 / 1.4 | 500 | 0 |
-| `figure-s` | Inconsolata | 12.5 / 1.4 | 500 | 0 |
+**Six sizes, and each is a role: 11 · 13 · 16 · 20 · 26 · 36.** They are Innovue's own sizes,
+merged into the fewest steps that still separate every role their build and `app/` draw, which is
+what the round's carve-out asks for: their type, made tighter (`platform.md` §13.4, R1-38). A size
+that is not one of the six is a role nobody named, and `tools/check-app.py` refuses it. The one
+exception is the wordmark, which is brand and not text.
+
+| Step | Role | Face | Size / line | Weight | Tracking | What carries it |
+|---|---|---|---|---|---|---|
+| 36 | `display-1` | Urbanist | 36 / 1.15 | 600 | -0.02em | the landing headline, and nothing else |
+| 26 | `display-2` | Urbanist | 26 / 1.2 | 700 | -0.015em | the record's patent title, a page's title |
+| 26 | `figure-l` | Inconsolata | 26 / 1.1 | 500 | 0 | a figure at title size |
+| 20 | `title` | Urbanist | 20 / 1.3 | 600 | -0.005em | the record's sections, a card's heading, the list head |
+| 16 | `title-s` | Urbanist | 16 / 1.45 | 600 | 0 | the list row's title, the empty state's heading |
+| 16 | `body` | Urbanist | 16 / 1.55 | 400 | 0 | reading text: the abstract and claims in the record, notes, what is typed into a field |
+| 16 | `body-strong` | Urbanist | 16 / 1.5 | 500 | 0 | emphasis inside body |
+| 13 | `label` | Urbanist | 13 / 1.4 | 500 | 0 | controls: chips, segmented buttons, menus, the record's actions |
+| 13 | meta | Urbanist | 13 / 1.4–1.5 | 400 | 0 | facts: the row's meta grid and abstract preview, field values, table cells, status lines, the credit |
+| 13 | `figure-s` | Inconsolata | 13 / 1.4 | 500 | 0 | every number, date and code at meta size |
+| 11 | `micro` | Urbanist | 11 / 1.2 | 500 | 0.08em, uppercase | field labels, column heads, *Coming soon* |
 
 `font-variant-numeric: tabular-nums` on every Inconsolata run, so columns of numbers align and
 figures do not jitter when they change.
 
-**`label-s` is a step the tree had already invented, and it is for compact controls only.** The gap
-from `label` 13 to `micro` 10.5 is 1.24×, and everything compact in the product fell into it. A sweep
-**by typeface** — 12.5px is `figure-s` in Inconsolata and was nothing in Urbanist — found fifteen
-declarations off this table, and six had independently landed on 12.5. The step was added and the
-stragglers at 11.5 and 12 moved onto it, rather than six components being moved off their own
-agreement.
+**The two lower steps sit under 1.25 apart, and that is the argued exception.** 13 to 16 is 1.23 and
+11 to 13 is 1.18. Holding 1.25 there would put the row's meta at 11, where a holder name is a
+squint, or the whole row at 14, where the title no longer leads it. Every step above is at least
+1.25, and **weight descends with level** from the record's title (700) through its sections (600)
+to its prose (400). The landing headline is the one display and takes 600, because at 36 it leads
+without the extra weight.
 
-**But the six were agreeing on a number, not on a role, and that took a second pass to see.** Five
-were compact controls — the chip, the segmented button, the menu button, the popover chip and
-*Find similar* — which carry weight 500, sit at a fixed height, and never render their leading. Three
-were explanatory prose, at weight 400 and at **three different leadings**: 1.5, 1.55 and 1.6. One role
-described the controls and misdescribed the prose. **Prose is `body` wherever it appears**, so the
-notes went there: the popover's explanation, the starred set's note about what the file contains, the
-signed-out note, and the empty state — which had been `label`'s size on `body`'s leading, the same
-invented role from the other direction. Two notes were already `body` and one of those was carrying
-`t-body` in its markup while its component rule overrode it.
+**A card title is body's size at a title's weight.** The list row's title is 16/600: a step under
+the record's section headings, heavier than anything beside it, and so the row reads title first
+without a size of its own. **The row's abstract is meta, not body**: on the row it is a preview,
+and the title, the holder and the date carry the row; the record is where the abstract is read at
+16.
 
-**12.5 and not 12, because it is `figure-s`'s size.** A meta line mixes Urbanist words with
-Inconsolata numerals — the starred row does it on one line — and words and figures at different sizes
-is the mixed-numeral defect this section opens with, read from the other end.
+**Meta is one size for controls and for facts, and the weight is what separates them.** Controls
+spell 13/500 in their own rule, which is why `label` is the only class at that size; facts are
+13/400, with `figure-s` numerals beside them at the same size so words and figures read as one
+run. In the row's meta grid **the holder alone keeps `--text-1`**: it is the fact a founder reads
+first and sorts by later, and colour is the only lever a meta line has, because its weight is
+fixed.
 
-**`label-s` has no class, the same as `body-strong`.** The five controls spell their own size, which
-is what `.lm-item` and `.rec-act` already do for `label`. A rule defined and carried by no markup is a
-selector nothing references, which is what this repository refuses for a stylesheet.
-
-**A meta line takes the size at 400, and the weight is the only thing it borrows from elsewhere.**
-Four short factual strings sit at 12.5 — the results meta line, the composer's status, the starred
-row's meta and the list row's who-and-when grid — and they are neither controls nor prose. The words
-are 400 and the `figure-s` numerals beside them are 500, at the same size, so the line reads as one
-run. Forcing them to `label-s`'s 500 would render the same holder name at 400 in one place and 500
-in another, which is one fact in two weights — a worse outcome than a role with a stated exception.
-
-**The list row's grid is a meta line and not body.** At 14px in `--text-1` the four facts under a
-title outweighed the abstract under them — prose at the same size in a lighter ink — so the row read
-title, meta, prose with the middle band loudest. The grid is 12.5/400 in `--text-2`, and **the holder
-alone keeps `--text-1`**: it is the fact a founder reads first and sorts by later, and colour is the
-only lever a meta line has, because its weight is fixed.
-
-*Every chip is 500, including the grouping panel's, which inherited 400 and rendered lighter than the
-three chips beside it until this was swept.*
-
-*The attribution line was the fifteenth and is now `body`. It ran at 14.4px — 12 + 20%, asked for and
-recorded — which is the only kind of off-scale value worth having. It still went: 14 is 0.4px away
-and is a real role, and a sweep that re-finds an argued exception every time is a sweep nobody
-finishes.*
+**What a founder types is body.** The composer, the results bar's query and every input are 16,
+which is also the size iOS does not zoom a page to edit.
 
 **A role is one class, never two.** Each `figure-*` carries the family, the numeric setting and the
 weight along with its size, because a role split across a base class and a size class is a role that
@@ -381,7 +362,7 @@ cannot show you: a numeral in the wrong face at the right size is still a numera
 it loses with `tabular-nums` only shows up in a column someone happens to be reading down.* Check it
 by reading the computed style, not the page.
 
-**The secondary-figure treatment.** In any `figure-xl` or `figure-l`, a suffix, denominator or
+**The secondary-figure treatment.** In a `figure-l`, a suffix, denominator or
 decimal drops to weight 400 at 55% opacity: `194` stays full, `/ 381` recedes.
 
 **Measure is capped at `68ch`** for body prose — **and a measure rule only holds where something
@@ -674,7 +655,7 @@ is not there cannot be found.
 
 **A result row is ~370px, and it buys back the trip into the record.** Measured at 1440 it is 371px
 with a one-line title and 393 with two: an eyebrow, a full-width title, the who-and-when grid as a
-12.5px meta line, a three-line abstract and the drawing strip. A row of four fields was ~102px.
+13px meta line, a three-line abstract and the drawing strip. A row of four fields was ~102px.
 That takes a 1000px column from five results to under three. **That is the largest single cost in this document and it is
 spent on one thing:** four fields could not answer the glance, so the record was opened on every row
 and the list was a table of contents rather than a result. A row that settles *not this one* without

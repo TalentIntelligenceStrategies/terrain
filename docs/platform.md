@@ -432,13 +432,13 @@ opened a patent to see what it looks like scrolled past five to forty claims of 
 mostly concluded there were no pictures. Ordering by what a patent is published in lost to ordering
 by what the reader came for.
 
-**The record's title is the largest type in the pane.** It is `display-2`, two steps above the row's
-`title`: the row answers *which of these*, the record answers *this one*, and a row and the document
+**The record's title is the largest type in the pane.** It is `display-2`, 26/700, two steps above the
+row's `title-s`: the row answers *which of these*, the record answers *this one*, and a row and the document
 it opens set at one size is a page with no subject. **The pane is named for assistive technology
 only** — *The patent record* is the head's `<h2>` and the focus target on open, visually hidden,
 because an eyebrow over a 26px title that already says what the pane holds is chrome read first and
-used never. **Drawings, Abstract and Claims are `title-s`**, so the published document's sections
-sit a clear step above its 14px prose and a step below the title, with the field labels in `micro`
+used never. **Drawings, Abstract and Claims are `title`**, 20/600, so the published document's sections
+sit a clear step above its 16px prose and a step below the title, with the field labels in `micro`
 a level under both.
 
 **A long strip is capped.** Real records run to hundreds of figures; the strip shows two rows and a

@@ -14,7 +14,7 @@ html,body{height:100%}
 body{
   margin:0; background:var(--ground); color:var(--text-1);
   font-family:'Urbanist',system-ui,-apple-system,'Segoe UI',sans-serif;
-  font-size:14px; line-height:1.55; font-weight:400;
+  font-size:16px; line-height:1.55; font-weight:400;
   -webkit-font-smoothing:antialiased;
 }
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}

@@ -103,9 +103,9 @@ async function paintCoverage() {
      "when was this last taken in" read down a column of near-repeats. An
      index the corpus does not include is an en dash: that is an absence, not
      a withheld value, so it is not a bar. */
-  const day = d => '<td class="num"><span class="fig-m">' + (d ? esc(d) : '—') + '</span></td>';
+  const day = d => '<td class="num"><span class="fig-s">' + (d ? esc(d) : '—') + '</span></td>';
   rows.innerHTML = (res.data.sources || []).map(s =>
-    '<tr><td>' + (s.source == null ? bar('w-md', 'body') : esc(s.source)) + '</td>'
+    '<tr><td>' + (s.source == null ? bar('w-md', 'label') : esc(s.source)) + '</td>'
     + day(s.grant) + day(s.application) + '</tr>'
   ).join('');
 }

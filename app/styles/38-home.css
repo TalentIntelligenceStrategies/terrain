@@ -22,7 +22,7 @@
 
 /* THE DOCK'S BOTTOM PADDING AND THE STATUS LINE'S RESERVED HEIGHT BOTH EXIST
    FOR A SURFACE THIS NO LONGER IS. The dock used to be the sticky foot of a
-   scrolling thread, and .cmp-status held 17px open so a message arriving under
+   scrolling thread, and .cmp-status held a line open so a message arriving under
    the composer could not shift the page. Nothing scrolls under the composer
    now and the status is empty until a search fails, so the reserved band is
    just a gap before the coverage card.
@@ -115,7 +115,7 @@
    state a word already states. */
 .field-soon{padding:2px var(--s-6);border-radius:var(--r-chip);
             background:var(--surface);border:1px solid var(--border);
-            font-size:10.5px;line-height:1.5;letter-spacing:.02em;
+            font-size:11px;line-height:1.5;letter-spacing:.02em;
             font-weight:500;color:var(--text-3);white-space:nowrap}
 
 @media (hover:hover){
@@ -230,7 +230,7 @@
 .res-cmp .cmp-row{border-top:0;margin-top:0;padding-top:0}
 .res-cmp[data-compact] .cmp-track{grid-template-rows:0fr;transition-duration:var(--dur-2)}
 
-/* THE SENTENCE, FOLDED. It reads as the field it stands in for — 14px,
+/* THE SENTENCE, FOLDED. It reads as the field it stands in for — 16px,
    --text-1, the caret cursor — and presses like a control: a sunken ground
    under a fine pointer, the focus ring from the reset. flex:1 in BOTH states,
    so it is the one thing that takes the row's slack whether it is visible or
@@ -245,7 +245,7 @@
 .cmp-line{flex:1 1 auto;min-width:0;display:flex;align-items:center;min-height:32px;
           margin-inline-start:var(--s-4);padding:var(--s-4) var(--s-10);
           border:0;border-radius:var(--r-control);background:none;
-          font:inherit;font-size:14px;line-height:1.55;color:var(--text-1);
+          font:inherit;font-size:16px;line-height:1.55;color:var(--text-1);
           text-align:start;cursor:text;
           opacity:0;visibility:hidden;
           transition:opacity var(--dur-1) var(--ease),

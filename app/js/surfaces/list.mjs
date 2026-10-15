@@ -158,12 +158,9 @@ function glyph(k) {
 /* one cell of the meta grid. `inner` is already-escaped HTML, because half the
    callers pass a bar and half pass text. */
 function cell(k, inner) {
-  /* NO ROLE CLASS ON THE VALUE: it is a meta line, 12.5/400, and 34-list.css
-     spells that size the way §4 says a meta line does. It carried t-body, and
-     at 14px in --text-1 the four facts under the title outweighed the
-     abstract beneath them — the row read title, meta, prose in the wrong
-     order. The cell names its kind so the holder can lead its three
-     neighbours by colour alone. */
+  /* NO ROLE CLASS ON THE VALUE: it is a meta line, 13/400, and 34-list.css
+     spells that size the way §4 says a meta line does. The cell names its
+     kind so the holder can lead its three neighbours by colour alone. */
   return '<span class="dm dm-' + k + '">' + glyph(k)
     + '<span class="dm-v">' + inner + '</span></span>';
 }
@@ -258,9 +255,8 @@ function rowHTML(rec, i) {
        THE EYEBROW ALSO PAID FOR THE TITLE'S SIZE STEP. Sharing line one with
        the number and the rank left the title ~381px of a ~518px column at
        1440 — about 53 characters, against a corpus whose median title is 66.
-       Measured over 100 corpus titles, 33% fitted on one line. At 17px across
-       the full width, 45% do. The title went UP a scale step and wraps LESS,
-       and the step itself costs 0.35px of row height.
+       Given the full width, the title wraps less at its own size than it did
+       sharing a line at a smaller one.
 
        THE RANK AND THE SCORE TRAIL TOGETHER, and the eyebrow reads as two
        clusters rather than three positions. What the patent IS leads — its
@@ -307,9 +303,9 @@ function rowHTML(rec, i) {
     + '</span>'
     + '<span class="drill-title">'
     + (real
-      ? '<span class="drill-name t-title">' + esc(rec.skim) + '</span>'
-      /* sk-h-title IS 17px, WHICH IS WHAT THE TITLE NOW IS. Two 12px bars
-         stood in for 44.2px of real title; two 17px bars are honest about it.
+      ? '<span class="drill-name t-title-s">' + esc(rec.skim) + '</span>'
+      /* sk-h-title IS 16px, THE CARD TITLE'S SIZE, so two bars stand in for
+         two lines of real title at the height they take.
          The two inline style= attributes went with them — they were the only
          ones on the row, and .drill-title-sk carries the gap and the second
          bar's width instead. */
@@ -359,13 +355,13 @@ function rowHTML(rec, i) {
        decline to print is exactly what a bar means. A patent with no abstract
        at all is one row in this corpus and renders nothing. */
     + (rec.abstract != null
-        /* t-body. It was 13/1.55 — `label`'s SIZE on `body`'s LEADING, the
-           same invented role from the other direction. The substance of the
-           row was rendering a pixel smaller than nothing in §4's table. */
-        ? '<span class="drill-abs t-body"' + langAttr(rec.abstract, rec.number) + '>'
+        /* META, NOT BODY. The abstract on the row is a preview: the title,
+           the holder and the date carry the row (R1-36), and the record is
+           where the abstract is read at body. 34-list.css spells 13/1.5. */
+        ? '<span class="drill-abs"' + langAttr(rec.abstract, rec.number) + '>'
         + esc(rec.abstract) + '</span>'
-        : '<span class="drill-abs t-body drill-abs-sk">'
-          + bar('w-full') + bar('w-full') + bar('w-md') + '</span>')
+        : '<span class="drill-abs drill-abs-sk">'
+          + bar('w-full', 'label') + bar('w-full', 'label') + bar('w-md', 'label') + '</span>')
     + '</button>'
     /* THE SWITCH IS THE ROW'S BUTTON'S SIBLING, because a button may not hold
        a button. 34-list.css lays it over the eyebrow's trailing edge, where
@@ -641,8 +637,8 @@ function render(data, mode = 'replace') {
        three words. innerHTML rather than textContent is safe here because
        both values are numbers this module computed.
 
-       .fig ALONE, WITHOUT A SIZE ROLE. fig-s is 12.5px and this heading is 17,
-       so the pair rendered the numbers visibly smaller than the words around
+       .fig ALONE, WITHOUT A SIZE ROLE. fig-s is 13px and this heading is 20,
+       so the pair would render the numbers visibly smaller than the words around
        them — a size role inside a line that already has one. .fig carries the
        family, tabular-nums and the figure weight and inherits the size, which
        is what an inline numeral in running text wants. */

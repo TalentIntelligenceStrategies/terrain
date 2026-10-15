@@ -180,8 +180,8 @@ function figuresHTML(figures) {
        section inside it is the next level down — these were h4, and a screen
        reader navigating the record by heading level got an outline reporting
        two missing sections between the record and its contents. The SIZE is
-       title-s either way; the level is the outline, not the type. */
-    return '<section class="pn-sec"><h3 class="t-title-s pn-sec-h">Drawings</h3>'
+       `title` either way; the level is the outline, not the type. */
+    return '<section class="pn-sec"><h3 class="t-title pn-sec-h">Drawings</h3>'
       + '<p class="pn-nofig t-body">This record has no drawings.</p></section>';
   }
   /* ══ TWO ROWS, AND THE REST BEHIND A CONTROL ════════════════════════════
@@ -203,7 +203,7 @@ function figuresHTML(figures) {
      hide most of them. */
   const capped = figs.length > CAP;
   return '<section class="pn-sec pn-figs-sec">'
-    + '<h3 class="t-title-s pn-sec-h">Drawings '
+    + '<h3 class="t-title pn-sec-h">Drawings '
     + '<span class="fig pn-sec-n">' + figs.length + '</span></h3>'
     + '<ol class="pn-figs" id="pnFigs"' + (capped ? ' data-capped' : '') + '>'
     + figs.map((f, i) =>
@@ -342,14 +342,14 @@ function paneHTML(rec, id) {
        rather than a fact about it. They follow it, at the section rhythm
        everything else in this pane uses. */
     + figuresHTML(rec.figures)
-    + '<section class="pn-sec"><h3 class="t-title-s pn-sec-h">Abstract</h3>'
+    + '<section class="pn-sec"><h3 class="t-title pn-sec-h">Abstract</h3>'
     + '<div class="pn-lines">'
     + (rec.abstract
       ? '<p class="pn-prose t-body"' + langAttr(rec.abstract, rec.number) + '>'
         + esc(rec.abstract) + '</p>'
       : bars(4, ['w-full', 'w-full', 'w-full', 'w-lg']))
     + '</div></section>'
-    + '<section class="pn-sec"><h3 class="t-title-s pn-sec-h">Claims '
+    + '<section class="pn-sec"><h3 class="t-title pn-sec-h">Claims '
     + '<span class="fig pn-sec-n">' + (claimCount || '') + '</span></h3>'
     + (claimCount
       ? '<ol class="pn-claims">' + claims + '</ol>'

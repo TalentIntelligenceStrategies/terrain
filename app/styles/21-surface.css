@@ -279,9 +279,8 @@
    The auto margin is scoped to .work-head because .head-meta is three
    different rows in this file — this one, the list's, and the points page's.
 
-   AND IT KEEPS THE BASE .seg SIZE. The 12.5px/28px override it carried in
-   the pane is gone: the base .seg-btn is 24px at 11.5px, which is exactly
-   the chip metrics beside it, and the .seg's own 2px padding puts the
+   AND IT KEEPS THE BASE .seg SIZE: the base .seg-btn is 24px at 13px, which
+   is exactly the chip metrics beside it, and the .seg's own 2px padding puts the
    control at 28px against their 24px — distinct without being loud, which
    is the whole requirement for a control in a row of statements. */
 /* .card is display:flex, which outranks [hidden] on its own — the same
@@ -303,7 +302,7 @@
    5.38px high, which is exactly where the pressed fill stops looking square.
    A centring rule that one of three hosts carries is not a variant, it is the
    base rule in the wrong file. */
-.seg-btn{font-size:12.5px;font-weight:500;color:var(--text-3);height:24px;padding:0 var(--s-8);
+.seg-btn{font-size:13px;font-weight:500;color:var(--text-3);height:24px;padding:0 var(--s-8);
          display:flex;align-items:center;justify-content:center;
          border:1px solid transparent;
          border-radius:var(--r-seg);white-space:nowrap;
@@ -331,8 +330,8 @@
 .seg-btn svg{display:block}
 .seg-btn:active{transform:scale(.96)}
 /* the page toggle is the same control at reading size: it selects one of two
-   PAGES rather than a sort inside a card, so it gets the body-adjacent 12.5px
-   and a 28px target instead of the 11.5/24 a widget header uses. */
+   PAGES rather than a sort inside a card, so it gets a 28px target at 13px
+   instead of the 24 a widget header uses. */
 
 /* ── the set surface · platform.md §4.3 ────────────────────
    The row is the drill-down row, unchanged. What is added is ONE control

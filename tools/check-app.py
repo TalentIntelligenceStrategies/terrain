@@ -356,6 +356,28 @@ if iface:
 
 
 
+# ── GATE I · every font-size is a step of the scale ─────────────────────────
+# design-language.md §4: six sizes, each a role. A size off the scale is a
+# role nobody named, and the scale was eleven sizes before anything refused
+# one -- four components had each invented a size in the same gap. The two
+# exceptions are literal: the wordmark is brand, not text, and 98-bench.css
+# styles lab.html's bench chrome, which is a measuring page and not product.
+TYPE_SCALE = {'11px', '13px', '16px', '20px', '26px', '36px'}
+TYPE_EXEMPT_RULES = {'.wordmark'}
+TYPE_EXEMPT_FILES = {'app/styles/98-bench.css'}
+for p in APP_CSS:
+    if p == TOKENS or p in TYPE_EXEMPT_FILES:
+        continue
+    body = strip_comments_css(texts[p])
+    for rule in re.finditer(r'([^{}]+)\{([^{}]*)\}', body):
+        sel = rule.group(1).strip()
+        for m in re.finditer(r'font-size\s*:\s*([^;}]+)', rule.group(2)):
+            v = m.group(1).strip()
+            if v in TYPE_SCALE or v == 'inherit' or sel in TYPE_EXEMPT_RULES:
+                continue
+            fail(f"{p}: {sel} sets font-size {v}, off the type scale -- the steps are "
+                 f"11 13 16 20 26 36 (design-language.md §4)")
+
 # ── the state conventions · three, written down, not unified ──────────────
 # 1 Does ARIA already have a word for it? Then ARIA is the state and CSS styles
 #   the attribute. NO MIRROR CLASS -- a mirror can drift, and the attribute is
