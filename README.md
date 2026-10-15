@@ -4,23 +4,25 @@
 where their idea sits.**
 
 You describe what you are building, Terrain returns the patents that are actually near it, you star
-the ones that matter, and you take them out as a file. Self-serve software on a subscription,
-searching the full Innovue patent database.
+the ones that matter, and you take them out as a file. Self-serve software searching the full
+Innovue patent database.
 
-**Terrain does not analyse.** No map, no charts, no widgets, no generated summary. Founders do not
-run somebody else's pre-built analysis — they take the data and work it in tools they already trust.
-The gap worth solving sits upstream of analysis: patent search returns inaccurate, incomplete sets,
-and an accurate one is the product.
+**Terrain shows what came back and never says what it means.** Founders do not run somebody else's
+pre-built analysis — they take the data and work it in tools they already trust. The gap worth
+solving sits upstream of analysis: patent search returns inaccurate, incomplete sets, and an accurate
+one is the product. A view that counts the returned rows is admissible; a summary, a finding or a
+verdict is not.
 
-Terrain is a TIS product in the Patent Intelligence pillar. This repository holds the product and
+Terrain is a TIS product in the Patent Intelligence pillar, and *Terrain* is its working name.
+Innovue builds and ships it. This repository holds the reference it is built from — `app/` — and
 four documents describing it.
 
 ---
 
 ## The product
 
-**[`app/`](app/) is the product, and it is the reference.** Where a document and `app/` disagree, the
-code is what was decided.
+**[`app/`](app/) is the reference Innovue builds Terrain from.** Where a document and `app/` disagree,
+the code is what was decided.
 
 **Run it:**
 
@@ -73,7 +75,7 @@ scrapers stay local.
 CLAUDE.md            how to work in this folder
 README.md            this file
 
-app/                 THE PRODUCT, and the reference. Needs a server
+app/                 THE REFERENCE Innovue builds from. Needs a server
   README.md          the handoff document — how to run it is its first line
   index.html         the shell; styles/ the numbered stylesheets
 demo/                fake data and the fake engine — deletable, imported once
@@ -197,7 +199,7 @@ as six subset `woff2` plus `fonts.css`, linked by every page:
 the notice travel with the Font Software wherever it is redistributed. This repository is public, so
 that is not theoretical — the licences travel with the files whether or not anything is served.
 
-**Terrain is English-only.** No CJK face, by decision.
+**The product is English-only.** No CJK face, by decision.
 
 ## Attribution
 

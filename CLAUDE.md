@@ -3,8 +3,10 @@
 ## What this folder is
 
 The working directory for **TIS Terrain**, an English-native, self-serve SaaS product in the TIS
-Patent Intelligence pillar. **`app/` is the product** — the frontend, and what gets handed over —
-and four documents describe it.
+Patent Intelligence pillar. **Innovue builds and ships it, and `app/` is the reference it is built
+from** — the frontend that defines behaviour, flow and the engine contract, delivered to them as
+round packages — and four documents describe it. *Terrain* is the working name, not a decided one:
+`docs/brief.md` §2 records the three in use.
 
 This folder is **deliberately outside** the TIS brand monorepo (`~/Desktop/TIS`). That is a decision,
 not an accident — see "Relationship to the TIS monorepo" at the bottom.
@@ -14,18 +16,21 @@ not an accident — see "Relationship to the TIS monorepo" at the bottom.
 Terrain is **patent search that returns an accurate set and hands it over cleanly**, for founders
 working out where their idea sits. You describe what you are building, Terrain returns the patents
 that are actually near it, you star the ones that matter, and you take them out as a file.
-Self-serve software on a subscription, searching the full Innovue patent database.
+Self-serve software searching the full Innovue patent database. How it is sold is open
+(`docs/brief.md` §6), and nothing in `app/` presumes an answer.
 
 **One flow, and every surface serves it:** search → find similar → star → the starred set → export.
 
-**Terrain does not analyse.** No map, no charts, no widgets, no generated summary. Founders do not
-run somebody else's pre-built analysis — they take the data and work it in tools they already trust,
-because they know how the answer came out. The gap worth solving sits upstream of analysis: patent
-search returns inaccurate, incomplete sets, and an accurate one is the product.
+**Terrain shows what came back and never says what it means.** Founders do not run somebody else's
+pre-built analysis — they take the data and work it in tools they already trust, because they know
+how the answer came out. The gap worth solving sits upstream of analysis: patent search returns
+inaccurate, incomplete sets, and an accurate one is the product.
 
-**That is a claim about retrieval, not about presentation.** Anything that reads the result set and
-tells the founder what it *means* is out, however small: a finding sentence, a caption, a verdict, a
-score we computed. Terrain prints what the engine returned and what the patent says.
+**That is a claim about retrieval, not about presentation.** A view of the returned set — counts by
+year, holder, office or group — is admissible, because every number in it can be checked against the
+rows; none is built yet. Anything that reads the set and tells the founder what it *means* is out,
+however small: a summary, a finding sentence, a caption that concludes, a verdict, a score of our
+own. Terrain prints what the engine returned, what the patent says, and counts of both.
 
 **Terrain is software, not a report.** The user logs in and searches; nothing is human-produced to
 order. A file the founder assembles from their own starred set is their data leaving, not our report
@@ -60,7 +65,7 @@ was replaced.
 CLAUDE.md            this file — how to work here
 README.md            what a visitor to the public repo reads first
 
-app/                 THE PRODUCT, and the reference. Run it on a server, not file://
+app/                 THE REFERENCE Innovue builds from. Run it on a server, not file://
   README.md          THE HANDOFF DOCUMENT — how to run it is its first line
   index.html · lab.html · partials/ · styles/ · js/core/ · js/surfaces/
 demo/                fake data and the fake engine. A SIBLING of app/, deletable,
@@ -192,9 +197,13 @@ argument, not the chronology.
 ### Lift a rule by narrowing it
 
 When a rule stops serving, **replace it with a narrower one that can actually be applied.** Deleting
-it outright leaves a vacuum that the next session fills with a guess. **Six rules have been lifted
-this way, and each successor is checkable** — three by a document that says exactly what is permitted,
+it outright leaves a vacuum that the next session fills with a guess. **Seven rules have been lifted
+this way, and each successor is checkable** — four by a document that says exactly what is permitted,
 three by a script that refuses:
+
+- Terrain **may** draw a view of its result set, and **never** says what the set means. The line
+  moved from the form — *no charts* — to the claim: `brief.md` §1 says what a view may count and what
+  no caption may conclude, and `design-language.md` §2 says it is drawn without a hue.
 
 - Terrain **has** an accent, and it is **achromatic** — the ink pair. `design-language.md` §3.8 says
   the three places it may appear and the places it may not.
@@ -219,7 +228,8 @@ three by a script that refuses:
 achromatic. No gradient, no decorative colour, no tinted background. *Three other places had colour
 and each left with what it coloured: chart layers with the charts, discrete states with the
 legal-status chip (`platform.md` §13, R1-17), direction of change with a delta pill that never
-shipped. Their tokens are gone rather than parked.*
+shipped. Their tokens are gone rather than parked. A view of the set, when one is built, does not
+bring a hue back: it draws from the neutral ramp.*
 
 **A hue is an amendment, not a design task.** It means a semantic token in all three theme blocks,
 measured against both grounds, argued against `design-language.md` §2 — and it would encode
@@ -409,9 +419,10 @@ Two, carried over from TIS and locked:
 | Text and display | **Urbanist** |
 | Numerals, figures, monospace | **Inconsolata** |
 
-**Terrain is English-only.** No Chinese surface, so no CJK face is in this folder — a decision, not an
-omission. Don't add one, and don't write bilingual markup or `data-zh` attributes out of habit from
-the parent site.
+**The product is English-only.** No Chinese surface, so no CJK face is in this folder — a decision,
+not an omission. Don't add one, and don't write bilingual markup or `data-zh` attributes out of habit
+from the parent site. The TIS website's page about the product carries a Traditional Chinese
+translation; that is marketing copy in the monorepo, and it does not reach this folder.
 
 `brand/fonts/` holds the 6 self-hosted woff2, `fonts.css`, and the two OFL licences. **The licences
 must stay with them**: these are subsets, which OFL permits, and OFL 1.1 requires the notice travel
@@ -460,13 +471,19 @@ theme control, and nothing can change that.
 
 ## Relationship to the TIS monorepo
 
+**Terrain stays standalone, and the monorepo consumes it.** The TIS website's Patent Search page
+(`website/product/search/`, veiled) is captured from this repository and its brief points at
+`docs/brief.md`. It is downstream, and what it trails is listed in `docs/brief.md` §7.
+
 The monorepo's root `CLAUDE.md` governs any working directory beneath it, and its project memory is
 keyed to that path. Building Terrain inside it would inherit the brand DAG, the snapshot-resync
-obligations, the changelog law, and a PostToolUse brand-sync hook — all correct for a surface
-consuming a settled brand system, all premature for a product whose positioning was still moving. The
-real risk was never a broken build; it was an agent helpfully routing Terrain's components into
-`brand/components.md` and locking the design to existing tokens during the exact phase that needed
-latitude — and the pivot from landscape analysis to search is the proof that the phase was real.
+obligations, the changelog law, and a PostToolUse brand-sync hook — machinery for a surface that
+consumes a settled brand system. Terrain's product is settled enough for a website page to describe
+it; its system is not. The name is open, the accent and the dark palette are Terrain's rather than
+the brand's, and the components are still moving round by round in a build a third party owns. The
+real risk is not a broken build; it is an agent helpfully routing Terrain's components into
+`brand/components.md` and locking them to existing tokens while Innovue's rounds are still moving
+them.
 
 The cost of the split is a propagation step later. **Record upstream-affecting decisions in
 `docs/brief.md` §7 as they are made** so that step stays a merge and not an excavation.
