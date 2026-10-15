@@ -149,12 +149,16 @@ function download(name, mime, text) {
 }
 
 /* a filename the founder can find again. The date is the only thing we add,
-   and it is the one fact that makes two exports of the same set distinct. */
-function filename(ext) {
+   and it is the one fact that makes two exports of the same set distinct.
+   ONE RECORD IS NAMED FOR ITS PATENT, because a folder of five
+   terrain-starred files that each hold one row is five files nobody can tell
+   apart. The number is compacted to what a filename can carry. */
+function filename(ext, stem = 'starred') {
   const d = new Date();
   const p = n => String(n).padStart(2, '0');
-  return `terrain-starred-${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}.${ext}`;
+  return `terrain-${stem}-${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}.${ext}`;
 }
+const patents = n => n + (n === 1 ? ' patent' : ' patents');
 
 /* ── the surface ──────────────────────────────────────────────────────────── */
 
@@ -349,14 +353,14 @@ export function init() {
     (rows) => {
       download(filename('csv'), 'text/csv;charset=utf-8', toCSV(rows));
       btnDone($('#starCsv'), 'Downloaded');
-      say('destination', rows.length + ' patents downloaded as a CSV file.');
+      say('destination', patents(rows.length) + ' downloaded as a CSV file.');
     }));
 
   onActivate(document, '#starMd', take('md', 'text/markdown;charset=utf-8',
     (rows, query) => {
       download(filename('md'), 'text/markdown;charset=utf-8', toMarkdown(rows, query));
       btnDone($('#starMd'), 'Downloaded');
-      say('destination', rows.length + ' patents downloaded as a Markdown list.');
+      say('destination', patents(rows.length) + ' downloaded as a Markdown list.');
     }));
 
   /* ── one record, through the same two builders ───────────────────────────
@@ -381,13 +385,16 @@ export function init() {
     /* the menu item closes with its menu, so the confirmation goes on the
        trigger the founder can still see. */
     btnDone($('#recExpBtn'), 'Downloaded');
+    /* THE CONFIRMATION NAMES THE FILE (R1-28): an export that may or may
+       not have happened is one the founder repeats, and the name is what
+       they look for in their downloads. */
+    const stem = String(row.number || row.id).replace(/[^A-Za-z0-9]+/g, '');
+    const name = filename(ext === 'csv' ? 'csv' : 'md', stem);
     if (ext === 'csv') {
-      download(filename('csv'), 'text/csv;charset=utf-8', toCSV([row]));
-      say('destination', 'This record downloaded as a CSV file.');
+      download(name, 'text/csv;charset=utf-8', toCSV([row]));
     } else {
-      download(filename('md'), 'text/markdown;charset=utf-8',
-        toMarkdown([row], Starred.search()));
-      say('destination', 'This record downloaded as a Markdown list.');
+      download(name, 'text/markdown;charset=utf-8', toMarkdown([row], Starred.search()));
     }
+    say('destination', 'Downloaded ' + name + '.');
   });
 }

@@ -465,7 +465,7 @@
    A skeleton that is the wrong height for its content is the same class of
    defect as a measure nothing declares, so the bars that stand in for it are
    cut to the lines it draws. */
-.pn-name-real{color:var(--text-1);text-wrap:balance}
+.pn-name-real{margin:0;color:var(--text-1);text-wrap:balance}
 .pn-meta{display:flex;align-items:center;gap:var(--s-10);flex-wrap:wrap}
 /* THE SAME TREATMENT AS THE ROW'S .drill-score, and it has to be: the founder
    reads one number in two places and a second styling would read as a second

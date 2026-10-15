@@ -1,4 +1,4 @@
-/* 20 · the shell — a 48px masthead over one working surface
+/* 20 · the shell — a 56px masthead over one working surface
  *
  * EXTRACTED from design/previews/terrain-prototype.html. The prototype is the
  * reference; where this and it disagree, it is right and this is stale.
@@ -34,19 +34,19 @@
   transition-duration:var(--dur-2);transition-delay:0s;
 }
 
-/* ── the shell · a 48px masthead over one working surface ─────────────
+/* ── the shell · a 56px masthead over one working surface ─────────────
    platform.md §4.1. It was a 260px sidebar until 2026-09-10, and the swap
    is arithmetic rather than taste: the map needs 944px of columns and the
    result list stops reading under 340px, which does not fit a 1440px laptop
-   beside a 260px rail. The masthead costs ~48px of HEIGHT where the sidebar
+   beside a 260px rail. The masthead costs ~56px of HEIGHT where the sidebar
    cost 260px of WIDTH, and width is the binding constraint. */
 .app{display:flex;flex-direction:column;height:100%;overflow:hidden}
 
-.mast{display:flex;align-items:center;gap:var(--s-8);flex:0 0 auto;
-      min-height:48px;padding:var(--s-6) var(--s-16);background:var(--surface);
+.mast{display:flex;align-items:center;gap:var(--s-12);flex:0 0 auto;
+      min-height:56px;padding:var(--s-6) var(--s-24);background:var(--surface);
       border-bottom:1px solid var(--border);position:relative;z-index:6;
       flex-wrap:wrap}
-/* SIX REGIONS IN 48px is platform.md §4.1's named hard problem. Nothing is
+/* SIX REGIONS IN 56px is platform.md §4.1's named hard problem. Nothing is
    DROPPED to solve it: the appearance control is protected by name and may
    not be demoted into the account menu at any width, and every other region
    stays a control on the bar.
@@ -65,7 +65,7 @@
    so the narrowest supported window gets a second row, not a missing
    control. */
 @media (max-width:719px){
-  .mast{gap:var(--s-4);padding:var(--s-6) var(--s-12)}
+  .mast{gap:var(--s-4);min-height:48px;padding:var(--s-6) var(--s-12)}
   .mast .wordmark{display:none}
   .mast-new span{display:none}
   .mast-new{padding:0 var(--s-8)}

@@ -115,6 +115,26 @@
 .pn-fig-btn[aria-disabled="true"]:active{transform:none}
 .pn-fig-img{display:block;width:100%;aspect-ratio:4/5;object-fit:contain;
             padding:var(--s-6)}
+/* WAITING, LANDED, FAILED (R1-10). The frame holds the tile's size and shimmers
+   until the drawing lands; the drawing then takes the paper. A failed tile is
+   the frame at rest with what happened and what the press does, so the tile is
+   its own Retry: a second button inside the first would be invalid markup and
+   a second target for the same patent figure. */
+.pn-fig-btn:has(.pn-fig-wait){background:var(--skeleton)}
+.pn-fig-btn:has(.pn-fig-wait) .pn-fig-img{position:absolute;inset:0;height:100%;opacity:0;
+            transition:opacity var(--dur-2) var(--ease)}
+.pn-fig-btn[data-state="loaded"]{background:var(--figure-ground)}
+.pn-fig-btn[data-state="loaded"] .pn-fig-wait{display:none}
+.pn-fig-btn[data-state="loaded"] .pn-fig-img{position:static;opacity:1}
+.pn-fig-fail{display:none}
+.pn-fig-btn[data-state="failed"] .pn-fig-wait::after{display:none}
+.pn-fig-btn[data-state="failed"] .pn-fig-img{display:none}
+.pn-fig-btn:has(.pn-fig-wait):not([data-state="loaded"]) .pn-fig-n{color:var(--text-3)}  /* off the paper, so not its ink */
+.pn-fig-btn[data-state="failed"] .pn-fig-fail{position:absolute;inset:0;display:flex;
+            flex-direction:column;align-items:center;justify-content:center;gap:var(--s-4);
+            font-size:13px;color:var(--text-2);text-align:center}
+.pn-fig-retry{font-weight:500;color:var(--text-1);text-decoration:underline;
+            text-underline-offset:2px}
 
 /* THE NUMBER IS ALWAYS THERE AND HOVER RAISES IT. A caption that exists only
    under a pointer does not exist on a touch screen or to a keyboard, so it

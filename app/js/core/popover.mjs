@@ -27,7 +27,7 @@
 import { push, drop } from './esc-stack.mjs';
 import { focusQuietly } from './focus.mjs';
 
-/* Exclusive groups. Two panels anchored to the same 48px bar overlap whatever
+/* Exclusive groups. Two panels anchored to the same 56px bar overlap whatever
    is in them, so a group name means "only one of us at a time". Panels with no
    group do not close each other — a settings panel on the composer and a sort
    menu in a bar three hundred pixels away are not competing for the same air. */

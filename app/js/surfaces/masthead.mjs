@@ -1,4 +1,4 @@
-/* surfaces/masthead — the 48px bar. platform.md §4.1.
+/* surfaces/masthead — the 56px bar. platform.md §4.1.
  *
  * The brand, search history, the starred count, the profile menu. It sits
  * OUTSIDE the stage and persists across every view swap — platform.md §2:
@@ -23,7 +23,7 @@ import * as History from '../core/history.mjs';
    were. The prototype always did it this way; the extraction did not.
 
    ONLY ONE MAY BE OPEN. 14-menu.css says so, and two dropdowns anchored to the
-   same 48px bar overlap whatever is in them. Opening one closes the other.
+   same 56px bar overlap whatever is in them. Opening one closes the other.
 
    The stack is what makes that safe: Escape closes the MOST RECENT, not
    whichever remembered to bind a handler. */

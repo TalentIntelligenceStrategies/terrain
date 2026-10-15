@@ -15,7 +15,7 @@
    One column, centring the question and the composer. The thread this was
    built for is gone with the conversation: platform.md §3 is one composer and
    one button, and the search runs on submit.                    */
-.conv{min-height:100%;display:flex;flex-direction:column;padding:var(--s-24) var(--s-24) 0;
+.conv{min-height:100%;display:flex;flex-direction:column;padding:var(--s-40) var(--s-24) 0;
       background:var(--ground)}
 .conv-body{flex:1;display:flex;flex-direction:column;justify-content:center}
 /* 680px was a reading measure for a thread of messages. The home surface
@@ -48,6 +48,27 @@
       padding:var(--s-14) var(--s-16) var(--s-10);
       transition:border-color var(--dur-2) var(--ease)}
 .cmp-inner:focus-within{border-color:var(--border-strong)}
+/* A RUNNING SEARCH PULSES THE PANEL'S EDGE (platform.md §13.4, R1-09). The
+   signal sits on the control that started it, and the list below stays at
+   full strength until the answer replaces it. Keyed on the Search button's
+   own data-waiting, so there is no second state to keep in step.
+
+   OPACITY ON TWO LAYERS, NOT A BORDER-COLOUR KEYFRAME, because the edge it
+   pulses to is --focus at 45% and the halo --focus at 12%, and no token holds
+   either: a layer at an opacity is the token in its own role, composited.
+   ::after is the edge, ::before the 3px halo. A fifth keyframe, licensed the
+   way design-language.md §6 licenses the others: the wait has no end state to
+   transition to. Reduced motion holds the edge without the pulse
+   (99-reduced-motion.css). */
+.cmp-inner{position:relative}
+.cmp-inner::before,.cmp-inner::after{content:"";position:absolute;inset:-1px;
+      border-radius:inherit;pointer-events:none;opacity:0}
+.cmp-inner::after{border:1px solid var(--focus)}
+.cmp-inner::before{box-shadow:0 0 0 3px var(--focus)}
+.cmp-inner:has([data-waiting])::after{animation:cmp-run-edge 1.4s ease-in-out infinite}
+.cmp-inner:has([data-waiting])::before{animation:cmp-run-halo 1.4s ease-in-out infinite}
+@keyframes cmp-run-edge{50%{opacity:.45}}
+@keyframes cmp-run-halo{50%{opacity:.12}}
 /* THE RING IS ON THE PANEL, NOT ON THE TEXTAREA, and the reason is what the
    focused thing IS. The composer is one control — a field, a row of toggles
    and the Search button share an edge — so a ring drawn round the textarea

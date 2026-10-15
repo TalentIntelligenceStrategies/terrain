@@ -168,12 +168,12 @@ function claimText(text, n) {
 function figuresHTML(figures) {
   const figs = Array.isArray(figures) ? figures : [];
   if (!figs.length) {
-    /* h3 AND NOT h4. The pane's own heading is the h2 in .rec-head, so a
-       section inside it is the next level down — these were h4, and a screen
-       reader navigating the record by heading level got an outline reporting
-       two missing sections between the record and its contents. The SIZE is
-       `title` either way; the level is the outline, not the type. */
-    return '<section class="pn-sec"><h3 class="t-title pn-sec-h">Drawings</h3>'
+    /* h4, ONE LEVEL UNDER THE PATENT'S TITLE. The pane's own heading is the
+       h2 in .rec-head and the title is the h3 under it, so a section is the
+       level below the title it belongs to — a screen reader navigating by
+       heading hears the patent before its parts, and no level is skipped.
+       The SIZE is `title` either way; the level is the outline, not the type. */
+    return '<section class="pn-sec"><h4 class="t-title pn-sec-h">Drawings</h4>'
       + '<p class="pn-nofig t-body">This record has no drawings.</p></section>';
   }
   /* ══ TWO ROWS, AND THE REST BEHIND A CONTROL ════════════════════════════
@@ -195,8 +195,8 @@ function figuresHTML(figures) {
      hide most of them. */
   const capped = figs.length > CAP;
   return '<section class="pn-sec pn-figs-sec">'
-    + '<h3 class="t-title pn-sec-h">Drawings '
-    + '<span class="fig pn-sec-n">' + figs.length + '</span></h3>'
+    + '<h4 class="t-title pn-sec-h">Drawings '
+    + '<span class="fig pn-sec-n">' + figs.length + '</span></h4>'
     + '<ol class="pn-figs" id="pnFigs"' + (capped ? ' data-capped' : '') + '>'
     + figs.map((f, i) =>
         '<li class="pn-fig">'
@@ -217,10 +217,19 @@ function figuresHTML(figures) {
            means that. An <img> with a null src is a broken-image glyph and a
            console 404 per figure; the frame says the same thing the bar two
            fields up says, in the shape a drawing has. */
+        /* A LIVE DRAWING WAITS ON THE SAME FRAME, AND THE PAPER COMES WITH IT
+           (platform.md §13.4, R1-10). The frame is the skeleton until the
+           drawing lands, so a strip below the fold in dark mode is a row of
+           waiting tiles and not of blank white plates; the white is the paper
+           the drawing was published on, and it arrives with the drawing. A
+           drawing that fails says so on its tile, and the tile retries it. */
         + (f.src == null
           ? '<span class="pn-fig-sk sk" aria-hidden="true"></span>'
-          : '<img class="pn-fig-img" src="' + esc(f.src) + '" alt="" loading="lazy"'
-            + ' decoding="async">')
+          : '<span class="pn-fig-sk sk pn-fig-wait" aria-hidden="true"></span>'
+            + '<img class="pn-fig-img" src="' + esc(f.src) + '" alt="" loading="lazy"'
+            + ' decoding="async">'
+            + '<span class="pn-fig-fail" aria-hidden="true">Did not load'
+            + '<span class="pn-fig-retry">Retry</span></span>')
         + '<span class="pn-fig-n fig fig-s">' + f.n + '</span>'
         + '</button></li>').join('')
     + '</ol>'
@@ -289,7 +298,7 @@ function paneHTML(rec, id) {
     + '</div>'
     + '<div class="pn-name">'
     + (rec.title || rec.skim
-      ? '<span class="pn-name-real t-display-2">' + esc(rec.title || rec.skim) + '</span>'
+      ? '<h3 class="pn-name-real t-display-2">' + esc(rec.title || rec.skim) + '</h3>'
       : bar('w-full', 'display') + bar('w-lg', 'display'))
     + '</div>'
     /* THE SCORE SITS WITH THE STATUS, as a peer on a row that is read across.
@@ -334,15 +343,15 @@ function paneHTML(rec, id) {
        rather than a fact about it. They follow it, at the section rhythm
        everything else in this pane uses. */
     + figuresHTML(rec.figures)
-    + '<section class="pn-sec"><h3 class="t-title pn-sec-h">Abstract</h3>'
+    + '<section class="pn-sec"><h4 class="t-title pn-sec-h">Abstract</h4>'
     + '<div class="pn-lines">'
     + (rec.abstract
       ? '<p class="pn-prose t-body"' + langAttr(rec.abstract, rec.number) + '>'
         + esc(rec.abstract) + '</p>'
       : bars(4, ['w-full', 'w-full', 'w-full', 'w-lg']))
     + '</div></section>'
-    + '<section class="pn-sec"><h3 class="t-title pn-sec-h">Claims '
-    + '<span class="fig pn-sec-n">' + (claimCount || '') + '</span></h3>'
+    + '<section class="pn-sec"><h4 class="t-title pn-sec-h">Claims '
+    + '<span class="fig pn-sec-n">' + (claimCount || '') + '</span></h4>'
     + (claimCount
       ? '<ol class="pn-claims">' + claims + '</ol>'
       : '<ol class="pn-claims">' + Array.from({ length: 6 }, (_, k) =>
@@ -684,9 +693,36 @@ export function init(ctx) {
      founder did not leave in. */
   ctx.onRoute(() => { if (Viewer.isOpen()) Viewer.close(); close(); });
 
+  /* load and error do not bubble, so they are caught on the way down. One
+     listener for every tile the record will ever render. */
+  document.addEventListener('load', e => {
+    const img = e.target;
+    if (img instanceof HTMLImageElement && img.classList.contains('pn-fig-img')) {
+      img.closest('.pn-fig-btn').setAttribute('data-state', 'loaded');
+    }
+  }, true);
+  document.addEventListener('error', e => {
+    const img = e.target;
+    if (!(img instanceof HTMLImageElement) || !img.classList.contains('pn-fig-img')) return;
+    const btn = img.closest('.pn-fig-btn');
+    btn.setAttribute('data-state', 'failed');
+    btn.setAttribute('aria-label', 'Figure ' + btn.querySelector('.pn-fig-n').textContent
+      + ' did not load. Retry');
+  }, true);
+
   onActivate(document, '.pn-fig-btn', el => {
     if (el.getAttribute('aria-disabled') === 'true') {
       say('list', 'This drawing is not shown.');
+      return;
+    }
+    if (el.getAttribute('data-state') === 'failed') {
+      const img = $('.pn-fig-img', el);
+      el.removeAttribute('data-state');
+      el.setAttribute('aria-label', 'Figure ' + $('.pn-fig-n', el).textContent + ', open it larger');
+      say('list', 'Loading the drawing again.');
+      const src = img.getAttribute('src');
+      img.removeAttribute('src');
+      img.setAttribute('src', src);
       return;
     }
     Viewer.open(FIGURES, Number(el.getAttribute('data-fig')) || 0, el, viewerContext());

@@ -14,7 +14,7 @@
    ═══════════════════════════════════════════════════════════════════════ */
 
 /* ── the two masthead menus ─────────────────────────────────────────────
-   ONLY ONE MAY BE OPEN. Two dropdowns anchored to the same 48px bar overlap
+   ONLY ONE MAY BE OPEN. Two dropdowns anchored to the same 56px bar overlap
    whatever is in them, so opening one closes the other. */
 .mast-menu-wrap{position:relative;flex:0 0 auto}
 .mast-menu{position:absolute;top:calc(100% + var(--s-6));min-width:260px;
@@ -32,6 +32,8 @@
    the name-over-address stack is the same label-over-value pair every other
    surface spaces with --s-6. */
 .menu-who{display:flex;flex-direction:column;gap:var(--s-6);padding:var(--s-8)}
+/* the build, for support: quiet, and in the figure face because it is an id */
+.menu-ver{margin:0;padding:var(--s-4) var(--s-12) var(--s-8);color:var(--text-3)}
 
 /* ── MOVED HERE FROM THE RESET SECTION, and it is safe to move because it
    wins on SPECIFICITY wherever it lands rather than on order.
