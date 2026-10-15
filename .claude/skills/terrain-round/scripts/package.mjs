@@ -14,9 +14,12 @@
  *                anything put in round-N/package/contract/ by hand
  *   code/        the app/ and demo/ files changed since --base, at --tag,
  *                with app.diff and demo.diff
- *   docs/        the four documents that changed, at --tag, and docs.diff
+ *   docs/        design-language.md and components.md when they changed, at
+ *                --tag, and docs.diff. brief.md and platform.md are ours and
+ *                do not go (platform.md §13.3)
  *   overlays/    design/overlays/round-N/ at --tag, plus all.css, all.js and
- *                apply.js, the whole patch as one console paste
+ *                apply.js, the whole patch as one console paste, or any items
+ *                of it
  *
  * EVERY REFUSAL IS SOMETHING THAT MUST BE TRUE BEFORE INNOVUE OPENS IT, the
  * same shape as tools/publish-pages.py: a dirty tree (the package would not be
@@ -93,11 +96,14 @@ const extra = path.join(pdir, 'contract');
 if (fs.existsSync(extra)) for (const f of fs.readdirSync(extra, { recursive: true }))
   if (fs.statSync(path.join(extra, f)).isFile()) put(`contract/${f}`, fs.readFileSync(path.join(extra, f)));
 
-/* THE CODE IS app/ AND demo/, AND THE DOCUMENTS GO WITH IT. demo/ is the
-   working example of the contract, so a port that changed shape changed it
-   too; the four documents are what the first package handed over as the
-   reference, and a delta that leaves them out leaves Innovue reading stale
-   copies. Each changed file at --tag, and one diff per tree. */
+/* THE CODE IS app/ AND demo/, AND THE ENGINEERING DOCUMENTS GO WITH IT.
+   demo/ is the working example of the contract, so a port that changed shape
+   changed it too; design-language.md and components.md are what an engineer
+   builds against, and a delta that leaves them out leaves Innovue reading
+   stale copies. brief.md and platform.md stay ours: the first argues the
+   product to us, and the second's round section is our process, and the
+   cards carry what Innovue needs from both. Each changed file at --tag, and
+   one diff per tree. */
 const at = f => spawnSync('git', ['cat-file', '-e', `${a.tag}:${f}`], { cwd: ROOT }).status === 0;
 const show = f => execFileSync('git', ['show', `${a.tag}:${f}`], { cwd: ROOT });
 const namesIn = (...p) => git('diff', '--name-only', base, a.tag, '--', ...p).split('\n').filter(Boolean);
@@ -105,7 +111,7 @@ const changed = namesIn('app/', 'demo/');
 for (const f of changed) if (at(f)) put(`code/${f}`, show(f));
 put('code/app.diff', git('diff', base, a.tag, '--', 'app/') + '\n');
 put('code/demo.diff', git('diff', base, a.tag, '--', 'demo/') + '\n');
-const DOCS = ['docs/brief.md', 'docs/platform.md', 'docs/design-language.md', 'design/components.md'];
+const DOCS = ['docs/design-language.md', 'design/components.md'];
 const docs = namesIn(...DOCS);
 for (const f of docs) if (at(f)) put(`docs/${path.basename(f)}`, show(f));
 if (docs.length) put('docs/docs.diff', git('diff', base, a.tag, '--', ...DOCS) + '\n');
@@ -124,12 +130,32 @@ const join = (ext, sep) => ofiles.filter(f => f.endsWith(ext))
 const allCss = join('.css', '\n'), allJs = join('.js', '\n;\n');
 put('overlays/all.css', allCss);
 put('overlays/all.js', allJs);
-put('overlays/apply.js', `/* The round-${a.round} patch for your live build, as one paste: open the build,
+/* apply.js CARRIES EACH ITEM APART, so one line at its top picks a subset:
+   an engineer comparing one item before and after should not have to read
+   the whole round to find it. A second paste is refused rather than doubled,
+   because the scripts add elements (the skip link, a live region) that a
+   second run would add again. */
+const ids = [...new Set(ofiles.map(f => path.basename(f).replace(/\.(css|js)$/, '')))];
+const items = ids.map(id => {
+  const css = ofiles.find(f => path.basename(f) === id + '.css');
+  const js = ofiles.find(f => path.basename(f) === id + '.js');
+  return `    { id: ${JSON.stringify(id)},\n      css: ${JSON.stringify(css ? show(css).toString('utf8') : '')},\n`
+    + `      js: ${js ? '() => {\n' + show(js).toString('utf8').split('\n').map(l => '        ' + l).join('\n') + '\n      }' : 'null'} }`;
+});
+put('overlays/apply.js', `/* The round-${a.round} patch for your live build (${a.tag}). Open the build,
    paste this into the browser console (or save it as a DevTools snippet and
-   run it), and the round shows as it does in ${a.tag}'s CHANGES.md. Reload to
-   remove it. It is all.css and all.js, unchanged. */
+   run it), and the round shows as CHANGES.md describes it. Reload to remove it.
+
+   To apply only some items, list them on the ONLY line below before pasting,
+   for example ['R1-07', 'R1-38']. Empty applies every item. */
+const ONLY = [];
 (() => {
-  const CSS = ${JSON.stringify(allCss)};
+  if (window.__terrainRound${a.round}) { console.info('The round-${a.round} patch is already applied. Reload to remove it.'); return; }
+  window.__terrainRound${a.round} = true;
+  const ITEMS = [
+${items.join(',\n')}
+  ].filter(i => !ONLY.length || ONLY.includes(i.id));
+  const CSS = ITEMS.map(i => i.css).join('\n');
   const put = () => {
     if (document.getElementById('terrain-round-${a.round}')) return;
     const s = document.createElement('style');
@@ -140,9 +166,10 @@ put('overlays/apply.js', `/* The round-${a.round} patch for your live build, as 
   put();
   new MutationObserver(put).observe(document.documentElement, { childList: true, subtree: true });
   const run = () => {
-${allJs.split('\n').map(l => '    ' + l).join('\n')}
+    for (const i of ITEMS) if (i.js) try { i.js(); } catch (e) { console.warn(i.id, e); }
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  console.info('Applied: ' + ITEMS.map(i => i.id).join(' '));
 })();
 `);
 

@@ -1054,7 +1054,7 @@ replaced when the next round opens.
 | R1-02 | Starred set, masthead | No starred set, no starred count → the masthead count, the starred set page grouped by search, and its CSV and Markdown downloads. Without it nothing leaves but one record at a time | `app/` |
 | R1-03 | Masthead | No account menu → the avatar menu: account settings, plan and billing, help, sign out, and the build at its foot | `app/` |
 | R1-04 | Search settings | The date range is in their code and not rendered → render it, with its two bases, filed and published | `app/` |
-| R1-05 | Result list | Every result in one endless scroll → 20, then *Show more*, which also lets drawings arrive sooner | `app/` |
+| R1-05 | Result list | Every result in one endless scroll → 20, then *Show more*, which also lets drawings arrive sooner; *Results* in the settings caps the set rather than sizing the first page | `app/` |
 | R1-06 | Engine · names and titles | The same company in two spellings, names and titles in capitals → titles in sentence case with acronyms kept; holders merged to one form as the company writes itself; inventors in normal case. Design-language §4 *Case* | Their captures |
 | R1-25 | Landing · field tiles | The selected tile shares the disabled tiles' grey, so the other enabled tile reads as selected → selected white with the ink border, enabled white with the hairline, disabled grey with *Coming soon* | Overlay |
 | R1-26 | Every control | Focus shows as a 1 px border change or not at all (the search box, the version), and drops to the page after *Search settings* → a 2 px ring on `:focus-visible` everywhere, the search box ringed whole; focus never falls to the page; a skip link first | Overlay |
@@ -1097,6 +1097,8 @@ replaced when the next round opens.
 | --- | --- |
 | R1-48 | Which patent-number forms does the lookup accept? `US9000581B2` and `US20130270686A1` are in the index and return *Patent not found*; `EP2214203A2` is found. R1-39's wording waits on the answer |
 | R1-49 | Does the database hold English titles and abstracts for JP and CN records? Their build prints the original language in an English interface |
+| R1-50 | What can R1-30's relevance floor be? Proposed: an absolute score below which a result is not returned, set where nonsense and out-of-field text fall, adjusted from their score distribution |
+| R1-51 | What should R1-32's group names be kept against, when no port identifies a result set? Proposed: a key on what the search was asked (`query`, `field`, `mode`, `settings`) while the index is unchanged, or a `setId` on `PatentSet` as a change on both sides |
 
 **Adopted from their build into `app/`**, not in the package. Each section that describes the old
 behaviour is rewritten in the commit that changes `app/`, and so is every section a Part A or Part B
