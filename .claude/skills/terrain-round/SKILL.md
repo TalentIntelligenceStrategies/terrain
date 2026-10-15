@@ -206,9 +206,9 @@ node .claude/skills/terrain-round/scripts/measure.mjs --round N --render     # t
 2. **Their build is measured with the combined patch** (`"overlay": "all"`, leaving out the
    unchosen variant with `"without"`), because that is what ships. Measure each variant of an
    A/B item in its own job while the user has not picked.
-3. **`app/` is measured on `?data=demo`.** The package leaves the building; the demo's fictional
-   rows keep real titles and holders out of it. Only what the demo cannot draw (drawings) uses the
-   corpus, cropped tight with `"pad"`.
+3. **`app/` is measured on the corpus**, because §13.3 takes redlines against real content: the
+   package goes to Innovue only and is never published. The demo is used only for a state the
+   corpus cannot draw (a record with two versions).
 4. **A step that stands in for a person must act like one.** `fill` skips a control's own key
    handlers; use `click` then `type` where the control listens for typing. A state that carries
    into the next theme (text typed, a chip turned off) needs its own job per theme or an `undo`.

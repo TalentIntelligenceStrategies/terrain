@@ -80,7 +80,8 @@ put('CHANGES.md', text);
 
 put('contract/contract.diff', git('diff', base, a.tag, '--', 'app/js/ports.mjs', 'design/components.md') + '\n');
 const extra = path.join(pdir, 'contract');
-if (fs.existsSync(extra)) for (const f of fs.readdirSync(extra)) put(`contract/${f}`, fs.readFileSync(path.join(extra, f)));
+if (fs.existsSync(extra)) for (const f of fs.readdirSync(extra, { recursive: true }))
+  if (fs.statSync(path.join(extra, f)).isFile()) put(`contract/${f}`, fs.readFileSync(path.join(extra, f)));
 
 const changed = git('diff', '--name-only', base, a.tag, '--', 'app/').split('\n').filter(Boolean);
 for (const f of changed) {
