@@ -1,14 +1,36 @@
-/* R1-09 · Results surface: what a running search looks like
+/* R1-09 · Results surface: what a running search looks like (see R1-09.js)
  *
- * Shared by R1-09a and R1-09b, with R1-09.js.
  * Current: while a search runs, the previous results and the record fade to
- * 55% opacity (.results-lane.is-refining), and the previous search's timing stays beside the count.
+ * 55% opacity (.results-lane.is-refining); the 2 px loading line runs on the
+ * bar's bottom edge, which is also the panels' top edge, so it reads as the
+ * panels' border; and the previous search's timing stays beside the count.
  * Wanted:  the previous results stay at full opacity until the new ones
- * replace them (the button and the line carry the signal instead), and the
- * stale timing is hidden while the next search runs. */
+ * replace them; no line between the bar and the panels, and while a search
+ * runs the search box's own border pulses, so the signal sits on the control
+ * that started it; the stale timing is hidden while the next search runs.
+ *
+ * The pulse uses their border and their focus border (foreground at 45%), so
+ * it adds no colour. Keyed on the presence of their own .progress-bar, so no
+ * new state is needed: the rules apply exactly while they render the line. */
 .results-lane.is-refining {
   opacity: 1;                       /* theirs: .55 */
 }
 main > div.sticky:has(.progress-bar) span.tabular-nums > span {
   visibility: hidden;
+}
+main > div.sticky .progress-bar {
+  display: none;
+}
+main > div.sticky:has(.progress-bar) .search-box-morph {
+  animation: terrain-search-pulse 1.4s ease-in-out infinite;
+}
+@keyframes terrain-search-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--foreground) 0%, transparent); border-color: var(--border); }
+  50%      { box-shadow: 0 0 0 3px color-mix(in oklch, var(--foreground) 12%, transparent); border-color: color-mix(in oklch, var(--foreground) 45%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  main > div.sticky:has(.progress-bar) .search-box-morph {
+    animation: none;
+    border-color: color-mix(in oklch, var(--foreground) 45%, transparent);
+  }
 }
