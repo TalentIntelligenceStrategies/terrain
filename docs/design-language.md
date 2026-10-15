@@ -415,8 +415,10 @@ string stays in sentence case, so a screen reader and a copied label read normal
 **Lists of people and holders are separated by `; `**, a semicolon and a space. A name can contain a
 comma, so a comma cannot be the separator.
 
-**Jurisdictions are codes** — US, CN, TW, EP, KR, JP. Codes are what patent numbers already carry,
-and one form everywhere is the point; *U.S.* next to *Europe* is two systems on one screen.
+**Jurisdictions are codes on every data surface** — US, CN, TW, EP, KR, JP: the row, the record,
+the coverage table, the starred set and both downloads, all through `core/format.mjs`. Codes are what
+patent numbers already carry, and one form everywhere is the point; *U.S.* next to *Europe* is two
+systems on one screen. **Search settings keep the names**, because there they label a choice.
 
 **Codes, numbers and dates are Inconsolata and exactly as issued**: *H01L23/36*, *2015-04-07*.
 
@@ -964,7 +966,13 @@ whole content is a name and an email is where that temptation is strongest. A pa
 run of dots, which is what a password looks like everywhere and is chrome rather than an identity
 being withheld.
 
-**A jurisdiction is not a party**, so countries are named. Five grey wedges would read as nothing.
+**A jurisdiction is not a party**, so it is printed, as its two-letter code on every data surface
+(§4 *Case*). Five grey wedges would read as nothing.
+
+**A patent with no assignee is not a withheld one.** A bar claims a holder exists and is being
+held back; a patent that names none has nothing to hold back. So the contract keeps three holder
+states apart, the way `figures` keeps its two: a string is the holder, `null` is the bar, and `''`
+prints *No assignee listed* in the quiet ink.
 
 **An empty list is not a list of bars.** A bar says a value exists and is being withheld; a list with
 nothing in it has no values to withhold. Three grey rows where a founder has run no searches claims

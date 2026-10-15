@@ -147,7 +147,11 @@ export function patentRows(count = SET_CEILING) {
          which is what null means everywhere else; it is NOT the id wearing a
          different column heading. */
       skim: i === 0 ? DEMO_TITLE : null,
-      holder: i === 0 ? DEMO_HOLDER : null,
+      /* p73 NAMES NO ASSIGNEE: '' and not null, so the first page shows the
+         third holder state (core/format.mjs); it ranks third. It is a fact
+         about a patent, not a name, so it does not break the rule that every
+         other row's identity is withheld. */
+      holder: i === 0 ? DEMO_HOLDER : i === 73 ? '' : null,
       number: i === 0 ? DEMO_RECORD.number : null,
       /* THE DEMONSTRATION ROW HAS BOTH DOCUMENTS, so the switch can be seen;
          DEMO_APPLICATION's number is outside the range ever issued, like the

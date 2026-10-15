@@ -35,6 +35,7 @@ import { say } from '../core/live-region.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { wait as pause } from '../core/timers.mjs';
 import { bar, langAttr } from '../core/primitives.mjs';
+import { where, holderText, noAssignee } from '../core/format.mjs';
 import { read as readSettings } from './settings.mjs';
 import { bump, stale } from '../core/generation.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
@@ -117,7 +118,7 @@ function toggleStar(id, btn) {
    place a sighted founder goes for it. */
 function rowName(rec, i) {
   const bits = [rec.skim != null ? rec.skim : 'Patent ' + (i + 1)];
-  if (rec.holder != null) bits.push(rec.holder);
+  if (rec.holder != null) bits.push(holderText(rec.holder));
   if (rec.year != null) bits.push(String(rec.year));
   if (rec.score != null) bits.push('score ' + rec.score.toFixed(4));
   return bits.join(', ') + '. Open the record.';
@@ -322,7 +323,9 @@ function rowHTML(rec, i) {
            it. `title` is not the accessible name — rowName already carries the
            holder in full — it is for the pointer user who can see the name is
            cut and wants the rest without opening the record. */
-        ? '<span class="dm-t" title="' + esc(rec.holder) + '">' + esc(rec.holder) + '</span>'
+        ? (noAssignee(rec.holder)
+            ? '<span class="dm-t dm-none">' + esc(holderText(rec.holder)) + '</span>'
+            : '<span class="dm-t" title="' + esc(rec.holder) + '">' + esc(rec.holder) + '</span>')
         : bar('w-md', 'micro'))
     /* "Published" AND NOT "Pub.". The record's own field list has said
        Published since it was written (record.mjs FIELDS), so the row was the
@@ -338,8 +341,8 @@ function rowHTML(rec, i) {
        jurisdiction and the main classification, which are both CODES — §4
        says Inconsolata for every code without exception, and `US` / `EP` /
        `WO` had been inheriting .dm-v and rendering in Urbanist. */
-    + cell('what', (rec.where != null
-            ? '<span class="dm-where dm-t">' + esc(rec.where) + '</span>' : '')
+    + cell('what', (where(rec) != null
+            ? '<span class="dm-where dm-t">' + esc(where(rec)) + '</span>' : '')
         + (rec.ipcMain != null
             ? '<span class="fig fig-s">' + esc(rec.ipcMain) + '</span>' : ''))
     + '</span>'
@@ -656,6 +659,9 @@ function render(data, mode = 'replace') {
     landIn(list, emptyHTML());
     window.dispatchEvent(new CustomEvent('terrain:empty'));
   }
+  /* Show more while the set is in nearness order: the new rows take the
+     same labels as the ones above them. */
+  if (mode === 'append') markNearness(list);
 }
 
 /* `into` NAMES WHERE THE WAIT IS SHOWN, and there are only two answers.
@@ -776,6 +782,7 @@ function check(panel, el) {
 /* IT TAKES THE SENTENCE, NOT A COUNT. The caller knows what it anchored on —
    the open record's number — and this does not. */
 function settled(on, text) {
+  if (!on) NEAR = null;
   const wrap = $('#setWrap');
   if (wrap) wrap.classList.toggle('is-ranked', on);
   const chip = $('#setRankChip');
@@ -824,8 +831,39 @@ async function reorderTo(anchors, label, btn) {
       if (el) list.append(el);
     });
   }, list.closest('.set-listcol'));
+  NEAR = { anchor: anchors[0], scores: res.data.nearness || null };
+  markNearness(list);
   settled(true, 'Nearest to ' + label);
   say('list', 'Ordered by nearness to ' + label + '.');
+}
+
+/* ── what the score means while the set is in nearness order (R1-33) ────
+   THE ROWS MOVED, SO THEIR NUMBERS AND THEIR SCORES STOPPED BEING TRUE. The
+   rank is the position in the order on screen, so it is renumbered. The
+   score was the search's relevance, and relevance printed down a list ordered
+   by nearness reads as the reason for the order; so the row prints the
+   engine's `nearness` for it, labelled *Nearness*, and prints no score when
+   the engine returned none. The anchor is the open patent compared with
+   itself, and it is marked *This patent* rather than given a 1.0000 that
+   reads as the best match. Restore re-requests the list, which redraws every
+   row with its relevance again. */
+let NEAR = null;   /* { anchor, scores } while the set is in nearness order */
+function markNearness(list) {
+  if (!NEAR || !list) return;
+  [...list.querySelectorAll('.set-row')].forEach((row, i) => {
+    const id = row.getAttribute('data-id');
+    const rank = row.querySelector('.drill-rank');
+    if (rank) rank.textContent = '#' + (i + 1);
+    const sr = row.querySelector('.drill-sr');
+    if (!sr) return;
+    let sc = sr.querySelector('.drill-score');
+    if (!sc) { sc = document.createElement('span'); sc.className = 'drill-score'; sr.append(sc); }
+    const n = NEAR.scores ? NEAR.scores[id] : null;
+    if (id === NEAR.anchor) sc.innerHTML = '<span class="t-micro drill-this">This patent</span>';
+    else if (n != null) sc.innerHTML = '<span class="t-micro drill-score-k">Nearness</span>'
+      + '<span class="fig fig-s">' + Number(n).toFixed(4) + '</span>';
+    else sc.remove();
+  });
 }
 
 /* THE ROW BEHIND AN ID, for the one reader outside this file that needs it.

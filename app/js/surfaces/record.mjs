@@ -28,6 +28,7 @@ import { push, drop, top } from '../core/esc-stack.mjs';
 import { focusQuietly, captureFocus } from '../core/focus.mjs';
 import { wait as pause } from '../core/timers.mjs';
 import { bar, bars, langAttr } from '../core/primitives.mjs';
+import { where, holderText, noAssignee } from '../core/format.mjs';
 import { bump, stale } from '../core/generation.mjs';
 import { reduced, DUR2, DUR3, enter } from '../core/motion.mjs';
 import * as Starred from '../core/starred.mjs';
@@ -92,17 +93,6 @@ const WIDE = { inventors: 1, ipc: 1 };
    a patent is cited. .rec-end-note names all five. */
 const HANDOFF = ['number', 'title', 'holder', 'published', 'where'];
 
-/* THE JURISDICTION AS A CODE. The number's own office prefix is the code the
-   document was published under, so it wins; the name is mapped only when the
-   number is withheld. An unknown name is printed as given rather than
-   guessed. */
-const CODES = { 'United States': 'US', China: 'CN', Taiwan: 'TW', Europe: 'EP',
-  Korea: 'KR', Japan: 'JP', Australia: 'AU', WIPO: 'WO' };
-function whereCode(rec) {
-  const m = /^([A-Z]{2})/.exec(String(rec.number || ''));
-  return m ? m[1] : (CODES[rec.where] || rec.where);
-}
-
 const FIELDS = [
   ['number', 'Number'], ['appno', 'Application'], ['kind', 'Kind'],
   ['filed', 'Filed'], ['published', 'Published'],
@@ -130,6 +120,8 @@ function valueHTML(rec, key) {
     v.length = 0; v.push(...rest);
   }
   if (Array.isArray(v)) return v.map(x => '<span>' + esc(x) + '</span>').join('');
+  if (key === 'where') return esc(where(rec));
+  if (key === 'holder' && noAssignee(v)) return '<span class="pn-only">' + esc(holderText(v)) + '</span>';
   return esc(v);
 }
 
@@ -144,7 +136,7 @@ function valueHTML(rec, key) {
    separator. Same rule the export's own cell() follows one surface over. */
 function citation(rec) {
   return HANDOFF
-    .map(k => (k === 'where' ? whereCode(rec) : rec[k]))
+    .map(k => (k === 'where' ? where(rec) : k === 'holder' && noAssignee(rec.holder) ? null : rec[k]))
     .filter(v => v != null && v !== '')
     .join(' · ');
 }

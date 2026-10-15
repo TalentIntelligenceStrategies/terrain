@@ -228,6 +228,8 @@ export function init(ctx) {
      because neither is a list row or a record field — they are chrome on the
      work surface, which is what this module owns. */
   infoPopovers($('.view-work'));
+  /* R1-39: a number not in the index offers the same words as a description */
+  onActivate(document, '#resStatus [data-as-text]', el => Mode.asText(el));
   onActivate(document, '#modeText', () => setMode('text'));
   onActivate(document, '#modeImages', () => setMode('images'));
 
@@ -302,7 +304,8 @@ export function init(ctx) {
     if (!res.ok) {
       const why = Mode.notFound(res, text)
         || 'The search did not run. The results below are from your last search.';
-      if (status) status.textContent = why;
+      const html = Mode.notFoundHTML(res, text);
+      if (status) { if (html) status.innerHTML = html; else status.textContent = why; }
       say('work', why);
       return;
     }

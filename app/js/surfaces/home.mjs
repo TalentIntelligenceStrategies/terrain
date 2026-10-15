@@ -19,6 +19,7 @@ import { say } from '../core/live-region.mjs';
 import { read as readSettings } from './settings.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { bar } from '../core/primitives.mjs';
+import { codeOf } from '../core/format.mjs';
 import * as STARRED from '../core/starred.mjs';
 import { landQuery } from './work.mjs';
 
@@ -105,7 +106,7 @@ async function paintCoverage() {
      a withheld value, so it is not a bar. */
   const day = d => '<td class="num"><span class="fig-s">' + (d ? esc(d) : '—') + '</span></td>';
   rows.innerHTML = (res.data.sources || []).map(s =>
-    '<tr><td>' + (s.source == null ? bar('w-md', 'label') : esc(s.source)) + '</td>'
+    '<tr><td>' + (s.source == null ? bar('w-md', 'label') : esc(codeOf(s.source))) + '</td>'
     + day(s.grant) + day(s.application) + '</tr>'
   ).join('');
 }
@@ -135,6 +136,8 @@ function armSearch() {
 }
 
 export function init(ctx) {
+  /* R1-39: a number not in the index offers the same words as a description */
+  onActivate(document, '#cmpStatus [data-as-text]', el => Mode.asText(el));
   ENGINE = ctx.engine;
 
   ctx.onRoute(view => {
@@ -188,10 +191,11 @@ export function init(ctx) {
       const status = $('#cmpStatus');
       if (status) {
         /* EACH SAYS WHAT TO DO NEXT, not only what happened. */
-        status.textContent = Mode.notFound(res, text)
-          || 'The search did not run. Press Search to try again.';
+        const html = Mode.notFoundHTML(res, text);
+        if (html) status.innerHTML = html;
+        else status.textContent = 'The search did not run. Press Search to try again.';
       }
-      say('home', status ? status.textContent : 'The search did not run.');
+      say('home', Mode.notFound(res, text) || 'The search did not run. Press Search to try again.');
       return;
     }
 

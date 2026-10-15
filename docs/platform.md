@@ -91,7 +91,8 @@ something is typed. **A toggle at the toolbar's leading edge says what the box h
 *Patent number*** — and the placeholder and the field's accessible name change with it, so the engine
 is never left to guess whether `EP2214203` is a description. The results bar carries the same toggle
 on the same value. A number search opens on that patent's set with it first; a number the index does
-not hold is answered in a sentence that names the number and the way out (§7.2), not as a failure. **The founder can drag it taller**, up to 320px, so a long description is not
+not hold is answered in a sentence that names the number, with one action, *Search this as text*,
+which runs the same words as a description (§7.2). It is an answer, not a failure. **The founder can drag it taller**, up to 320px, so a long description is not
 read through a four-line window; it never grows by itself, because a box that grew while the founder
 typed would move Search under the pointer. Enter runs the search; Shift+Enter breaks the line; an IME composition is
 excluded, because a founder composing in any input method presses Enter to commit characters and
@@ -637,7 +638,10 @@ anchor and re-orders the set by nearness to it. **No patent enters or leaves; on
 changes**, and *Restore the original order* puts it back. A founder who wants more like *this* has
 not necessarily decided it belongs in the set they are taking out, which is why the two are separate
 acts on separate controls. **The chip says what the order is by** — *Nearest to* and the patent's
-number. **The wait is on the button that was pressed and the failure is said from the list**, which
+number. **So does every row**: its score reads *Nearness*, from the engine's `nearness`, and the
+open patent's row says *This patent* rather than a 1.0000 that reads as the best match. Without
+`nearness` the rows print no score, because relevance down a nearness order reads as its reason.
+The ranks are renumbered to the order on screen. **The wait is on the button that was pressed and the failure is said from the list**, which
 is where the change would have happened.
 
 **That ordering is a ranking, not a verdict.** A patent near the top is close to what the founder
@@ -828,6 +832,11 @@ typed wrong, and clearing the field would say it did.
 **Search is withheld until something changes.** The same sentence under the same settings returns
 nothing twice, so the button states why it is shut, and the two ways to change the search, the
 sentence and the settings, are the two ways to open it.
+
+**A number the index does not hold is the same kind of answer.** `search` returns `NOT_FOUND` for it,
+not a failure, and the status line under the bar names the number in the figure face, says to check
+the office code and the number, and offers one action: *Search this as text*, which switches the
+mode and runs the same words as a description.
 
 ---
 
@@ -1048,22 +1057,22 @@ replaced when the next round opens.
 | --- | --- | --- | --- |
 | R1-07 | Masthead, landing | Cramped → more room; at least 40 px above the landing headline; the version label leaves the masthead for the account menu | Overlay |
 | R1-08 | Search bar, results bar | Cramped → more room; the view switch labelled or moved beside the sort; the query wraps to two lines before it truncates | Overlay; `app/` too |
-| R1-09 | Results surface | The loading line sits flush on the two panels and reads as their border → no line there; the search box's own border pulses while the search runs, in their border and focus-border colours. A running search also says *Searching…* on the button and keeps the old results at full opacity, and one polite status region announces counts, *Citation copied*, regrouping and find similar | Overlay |
+| R1-09 | Results surface | The loading line sits flush on the two panels and reads as their border → no line there; the search box's own border pulses while the search runs, in their border and focus-border colours. A running search keeps the button's name and marks it busy, keeps the old results at full opacity, and one polite status region announces counts, *Citation copied*, regrouping and find similar | Overlay |
 | R1-10 | Drawings | The drawing placeholder does not show in dark mode, so drawings below the fold arrive as blank white plates → visible in both themes. Every drawing tile is one skeleton while loading, a labelled failed tile with *Retry*, and absent when the patent has none | Overlay |
 | R1-11 | Masthead | Projects → **search history**: a *History* button that opens past searches (query, field, date), each rerun by a click, deleted singly or cleared. Their build already stores history and shows it as a dropdown under the search box on focus; this makes it findable | `app/` |
 | R1-12 | Search bar, masthead | The technology field sits in the nav → a chip at the start of the search bar, which opens the field list; it leaves the nav. The picked-group chip aligns to the card inset and shows its full label; the picked group is marked by a check, not a stripe, and the menu closes once it is picked | `app/` |
-| R1-13 | Every surface | The case and separator rules in design-language §4 *Case*: `micro` the only uppercase, inventors and holders separated by `; `, generated group names in sentence case, jurisdictions as codes | Overlay |
+| R1-13 | Every surface | The case and separator rules in design-language §4 *Case*: `micro` the only uppercase, inventors and holders separated by `; `, generated group names in sentence case, jurisdictions as codes | Overlay; `app/` too |
 | R1-29 | Address bar | A search never reaches the URL: Back shows a blank page, reload and forward land on an empty home → the query, field, mode and open record in the URL, so Back, reload and a shared link restore the search | `app/` |
 | R1-30 | Engine · relevance | Nonsense and out-of-field text return 50 results that look like a good set → a relevance floor in the engine, and below it the empty state their build already has. It names what was searched and how to rephrase it, and never says what the set means (brief §1) | `app/` |
-| R1-31 | Result card, record | The card and the record disagree about the holder, and the holder slot sometimes carries the inventors → one holder value from one source in both places; *No assignee listed* when there is none | Their captures |
+| R1-31 | Result card, record | The card and the record disagree about the holder, and the holder slot sometimes carries the inventors → one holder value from one source in both places; *No assignee listed* when there is none | Their captures; `app/` too |
 | R1-32 | Engine · grouping | Group names change every run over the same set → cached per result set, so an unchanged set gets the same labels | Their captures |
-| R1-33 | Find similar | The score is still called *Relevance*, and the open patent ranks first against itself at 1.0000 → the score reads *Nearness to* the number, and the source card is marked *This patent* | Overlay |
+| R1-33 | Find similar | The score is still called *Relevance*, and the open patent ranks first against itself at 1.0000 → the score reads *Nearness*, from the `nearness` that `rerank` returns, and the source card is marked *This patent* | Overlay; `app/` too |
 | R1-34 | Record | *Open in IPtech*, *Copy citation* and *Export this record* sit after the last claim → pinned to the foot of the record panel, always in view | Overlay; `app/` too |
 | R1-35 | Record · citation | The copied citation drops the kind code and every date → number with kind code · title · holder · publication date · jurisdiction code | `app/` |
 | R1-36 | Result card | About 14 data points at near-equal weight → title, holder and one date carry the card; inventors collapse to the first and *+n*; the priority date moves to the record. **Flags the card** (§13.1) | Overlay |
 | R1-37 | Record | The number and title scroll away → a compact sticky header with both once the title leaves view | Overlay; `app/` too |
 | R1-38 | Type scale | Eleven sizes between 10.5 and 36 px, and the record's section headings barely above its reading text → their sizes merged into six steps, 11 · 13 · 16 · 20 · 26 · 36, each a role, heading weight descending with level. The two lower steps sit under 1.25 apart, because holding 1.25 there would put card meta at 11 px or the whole card at 14. **Flags the type scale** (§13.1); `app/` takes the reduced scale | Overlay; `app/` too |
-| R1-39 | Patent-number search | *Patent not found* blames a TW prefix for a US number and drops the frame → the number echoed, the accepted forms named, *Search this as text* offered, both columns and the field control kept | Overlay |
+| R1-39 | Patent-number search | *Patent not found* blames a TW prefix for a US number and drops the frame → the number echoed, the accepted forms named, *Search this as text* offered, both columns and the field control kept | Overlay; `app/` too |
 | R1-40 | Every control | Targets under 24 px: Grant / Application, the patent number link, the version → at least 24 px, a pseudo-element extending the hit area where the visible size stays | Overlay |
 | R1-41 | Results, record | No `<h1>` on results, and the record's title is not a heading → one `<h1>` per view, the record title a heading | Markup only |
 | R1-42 | Result card | A single-version record shows one filled *Grant* pill that reads as a pressed segment → plain text when only one version exists | Overlay; `app/` too |

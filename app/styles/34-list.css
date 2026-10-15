@@ -67,6 +67,9 @@
    back. Colour and not weight: §4 gives a meta line 400, and a 500 holder
    would be one fact in two weights between this row and the starred table. */
 .dm-firm .dm-v{color:var(--text-1)}
+/* a patent that names no assignee says so in the quiet ink: it is a fact,
+   not a holder, and must not lead the row the way a holder does */
+.dm-firm .dm-none{color:var(--text-3)}
 .dm-v>*{flex:0 0 auto}
 .dm-t{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
 /* the inventors this row is not naming. It is a count, so it is a figure —
@@ -214,6 +217,8 @@
 .drill-score{flex:0 0 auto;display:flex;align-items:baseline;gap:var(--s-6);
              color:var(--text-3)}
 .drill-score-k{color:var(--text-3)}
+/* the open patent in nearness order: a label, not a score (R1-33) */
+.drill-this{color:var(--text-2)}
 
 /* ── band 3 · what it claims ─────────────────────────────────────────────
    THREE LINES, AND THE CLAMP IS THE ROW'S RATHER THAN THE ENGINE'S. Corpus

@@ -117,6 +117,10 @@ export const CODE = {
  *  by patent, and the FLIP, the rail, the focus return and the reversal all resolve
  *  through that key. `matched` and `patents.length` differ by what was binned, and
  *  printing the wrong one beneath the standing chip is a recorded regression. */
+/** `holder` HAS THREE STATES, kept apart the way `figures` keeps its two: a
+ *  string is the holder; null is a holder held back, which renders a bar; ''
+ *  means the patent names no assignee, which prints *No assignee listed*
+ *  (core/format.mjs, platform.md §13.4 R1-31). */
 /** THERE IS NO `status`. Legal status is not printed anywhere in Terrain
  *  (platform.md §13, R1-17), so it is not asked for. */
 /** THE ROW DRAWS MORE THAN THE FOUR FIELDS IT USED TO, and the rule that
@@ -242,7 +246,11 @@ export const PORTS = [
   'patentsPage',     // Show more
   'sort',            // {sort:'relevance'|'newest'|'oldest'} → PatentSet
   'facets',          // {groups:[leafId]} → PatentSet, the grouping's branches
-  'rerank',          // {anchors:[id]} → {order:[id]} over the SAME set
+  /* `nearness` is optional: each patent's nearness to the anchor, which the
+     row prints as *Nearness* while the set is in that order. Without it the
+     row prints no score, because relevance down a nearness order reads as the
+     reason for it. The anchor itself is marked *This patent*. */
+  'rerank',          // {anchors:[id]} → {order:[id], nearness?:{[id]:number}} over the SAME set
 
   /* THE GROUPING. It partitions the set the search returned; it does not
      re-query, and it covers the WHOLE set rather than the page.

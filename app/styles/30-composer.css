@@ -94,6 +94,9 @@
 .cmp-hint{flex:1;min-width:0;font-size:13px;color:var(--text-3)}
 .cmp-status{margin:var(--s-8) 0 0;font-size:13px;color:var(--text-3);min-height:1lh;
       transition:opacity var(--dur-2) var(--ease),filter var(--dur-2) var(--ease)}
+/* the way out of a number not in the index (R1-39): one control, after the
+   sentence it answers, at the status line's own size */
+.btn-as-text{margin-inline-start:var(--s-8);height:28px;padding:0 var(--s-10);font-size:13px;vertical-align:middle}
 
 /* the sweep · a sweep, not a percentage. currentColor, so it costs no palette,
    and one shared --cycle so every indicator on the page reads as one system. */

@@ -29,6 +29,7 @@ import { wait as pause } from '../core/timers.mjs';
 /* THE ONE CROSS-SURFACE IMPORT IN THIS FILE, and it is the right direction:
    this surface is what the list's rows leave through. See rowFor()'s note. */
 import { rowFor } from './list.mjs';
+import { where, holderText } from '../core/format.mjs';
 
 /* THE COLUMNS ARE DECLARED ONCE and both formats read them, so a spreadsheet
    and a Markdown list cannot drift into carrying different things. The `get`
@@ -37,8 +38,8 @@ import { rowFor } from './list.mjs';
 const COLUMNS = [
   { key: 'number', head: 'Number',  get: r => r.number },
   { key: 'skim',   head: 'Title',   get: r => r.skim },
-  { key: 'holder', head: 'Holder',  get: r => r.holder },
-  { key: 'where',  head: 'Where',   get: r => r.where },
+  { key: 'holder', head: 'Holder',  get: r => holderText(r.holder) },
+  { key: 'where',  head: 'Where',   get: r => where(r) },
   { key: 'year',   head: 'Year',    get: r => r.year },
   { key: 'score',  head: 'Score',   get: r => r.score == null ? null : r.score.toFixed(4) },
   /* THE SEARCH IT WAS STARRED UNDER, added 2026-09-26 with the grouping.
@@ -112,8 +113,8 @@ function toMarkdown(rows, query) {
 function bullets(rows, lines) {
   rows.forEach(r => {
     const bits = [];
-    if (r.holder != null) bits.push(r.holder);
-    if (r.where != null) bits.push(r.where);
+    if (r.holder != null) bits.push(holderText(r.holder));
+    if (where(r) != null) bits.push(where(r));
     if (r.year != null) bits.push(String(r.year));
     if (r.score != null) bits.push('score ' + r.score.toFixed(4));
     /* THE BULLET LEADS WITH WHATEVER IDENTIFIES THE PATENT. A withheld number
@@ -174,8 +175,8 @@ function rowHTML(r, n) {
     + '<td class="star-c-n fig fig-s">' + n + '</td>'
     + cellOr(r.number, 'star-c-num fig fig-s', 'w-sm')
     + cellOr(r.skim, 'star-c-t', 'w-full')
-    + cellOr(r.holder, 'star-c-h', 'w-md')
-    + cellOr(r.where, 'star-c-w', 'w-sm')
+    + cellOr(holderText(r.holder), 'star-c-h', 'w-md')
+    + cellOr(where(r), 'star-c-w', 'w-sm')
     + '<td class="star-c-y fig fig-s">' + (r.year == null ? '' : r.year) + '</td>'
     /* THE SCORE OBEYS THE SAME OMISSION RULE AS THE LIST'S: null means the
        engine returned none, so the cell is empty rather than carrying a

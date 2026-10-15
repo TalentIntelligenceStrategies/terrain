@@ -209,7 +209,11 @@ export const DemoEngine = {
       return byId.get(b).score - byId.get(a).score;
     });
     ORDER = order;
-    return respond('rerank', { order });
+    /* ILLUSTRATIVE, like every figure here: a nearness that falls with
+       position, and none for the anchor, which is compared with itself. */
+    const nearness = Object.fromEntries(order.filter(id => !anchor.has(id))
+      .map((id, i) => [id, Math.max(0.5, 0.962 - i * 0.0035)]));
+    return respond('rerank', { order, nearness });
   },
 
   /* THE GROUPING PARTITIONS THE SET IT WAS GIVEN, so it is built from ORDER
