@@ -271,19 +271,21 @@ its own failure state either.
 ### What the backend team holds
 
 **The engine is built by a separate team, and everything on this side of `ports.mjs` is ours.** They
-hold a package built from the annotated tag **`handoff-2026-10-04`**: this tree's `app/`, `demo/` and
-tracked `brand/` files, the four documents, a visual guide captured from the running app — every
-screen measured, every component in every state it defines, and which contract field prints where —
-and an OpenAPI description with a JSON Schema and a captured example for each of the 19 ports.
-**The contract in it is `design/components.md` at that tag.**
+hold a full package built from the annotated tag `handoff-2026-10-04`: this tree's `app/`, `demo/`
+and tracked `brand/` files, the four documents, a visual guide captured from the running app, and an
+OpenAPI description with a JSON Schema and a captured example for each of its 19 ports. **On top of it
+they hold the delta built from `handoff-2026-10-14`**, the first round against their shipped build:
+what their build does not yet do, what changed here since, the reduced type scale, a working patch
+for their live build, and the contract for the six ports that changed shape and the four that were
+removed. **The contract they hold is `design/components.md` at `handoff-2026-10-14`**, 15 ports.
 
-**A change to a port's shape after the tag is a change they do not have.** `git diff
-handoff-2026-10-04 -- app/js/ports.mjs design/components.md` is what has moved since, and a new
+**A change to a port's shape after that tag is a change they do not have.** `git diff
+handoff-2026-10-14 -- app/js/ports.mjs design/components.md` is what has moved since, and a new
 package with a new tag is how it reaches them. The tag is the record; nothing else here tracks it.
 
-**Every package after that one is a delta**: what their shipped build got wrong against the last
-tag, and what changed here since, in the format [`platform.md` §13](../docs/platform.md) sets out.
-`/terrain-round` builds it.
+**Every package is a delta** from the newest `handoff-*` tag: what their shipped build got wrong
+against it, and what changed here since, in the format [`platform.md` §13](../docs/platform.md) sets
+out. `/terrain-round` builds it.
 
 ---
 
