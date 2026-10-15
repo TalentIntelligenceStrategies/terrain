@@ -299,7 +299,9 @@ export function recordFor(id, version) {
     return {
       title: null,
       number: null, appno: null, kind: 'Invention', ipcMain: null, ipc: null,
-      holder: null, inventors: null,
+      /* p73's row names no assignee, so its record says the same (R1-31):
+         the row and the record are one holder from one source. */
+      holder: i === 73 ? '' : null, inventors: null,
       filed: String(s.year), published: String(s.year + 1), where: null,
       abstract: null, claims: null,
       /* EMPTY, NOT null, AND NOT A BAR. The skeleton contract covers values

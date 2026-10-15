@@ -564,7 +564,8 @@ Each is greppable.
 - **A container already in place does not move to say its contents changed.** Opening a second record
   without closing the first crossfades the body on `--dur-1`; re-running the entrance would be motion
   claiming something arrived when nothing did.
-- **Three keyframes, and the bar for a fourth is high.** `sweep`, `sweepx` and the loader's ripple.
+- **Five keyframes, and the bar for a sixth is high.** `sweep`, `sweepx`, the loader's ripple, and
+  the pair that pulses the composer's edge while its search runs (`cmp-run-edge`, `cmp-run-halo`).
   Each does something a transition cannot: constant, indeterminate motion with **no end state to
   transition to**. **The test is unchanged — could a transition have done this?** For anything with a
   start state and an end state the answer is yes, and the answer to whether it may be a keyframe is
@@ -643,7 +644,7 @@ code that hides a node after its exit has to know when the exit ends. A hide wai
 `app/` is the component reference: every rule below is implemented in `app/styles/`, with the
 reasoning in its own comments. This section carries what a reader cannot get from the CSS.
 
-**The shell.** TIS submark at the leading edge of a **48px top masthead**, inlined with
+**The shell.** TIS submark at the leading edge of a **56px top masthead**, inlined with
 `fill="currentColor"` so it inverts for free. Content on `--ground`, cards on `--surface`, one working
 surface beneath the bar.
 

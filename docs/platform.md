@@ -34,7 +34,7 @@ window anywhere in the product.
 44/56 — 634 for the list, 806 for the record — and neither half survives a 260px rail: the result
 list stops being readable under 340px, and the record's ten-field list wraps its values onto
 second lines under about 600px, which a 260px rail would put it under at any window below ~1465.
-Everything a rail would have carried is in the 48px bar: search history, the starred count, the
+Everything a rail would have carried is in the 56px bar: search history, the starred count, the
 appearance control, the account menu.
 
 ---
@@ -177,7 +177,7 @@ records in a row rewrites the entry rather than adding five.
 
 ### 4.1 · The masthead
 
-48px, full width, six regions:
+56px, full width, with a 24px inline inset and 12px between regions; six regions:
 
 1. **The lockup** — the way home. It returns the founder to the working screen. It is **inert on the
    home surface**, both times it is reachable, and says so with `aria-disabled` rather than
@@ -189,7 +189,8 @@ records in a row rewrites the entry rather than adding five.
 5. **The appearance control** — three states: light, dark, system. **It may not be demoted into the
    account menu at any width.** A second control over the same value elsewhere is not a demotion; a
    move is.
-6. **The account menu** — Account settings, Plan & billing, Help, and Sign out.
+6. **The account menu** — Account settings, Plan & billing, Help, and Sign out, and the build at its
+   foot, where support can read it without the build taking a region of the bar.
 
 One region is protected by name: the appearance control.
 
@@ -1010,12 +1011,20 @@ carries only what moved:
 
 ```
 terrain-handoff-YYYY-MM-DD.zip
-  CHANGES.md   the document; everything else hangs off it
-  images/      one redline and every state, per changed component
-  contract/    OpenAPI and JSON Schema for the ports whose shape changed, and only those
-  code/        the app/ files changed since the last tag, and the git diff
-  overlays/    design/overlays/round-N/ as it stands, the patch for every overlay item
+  README.md        where to start, and which file wins when two disagree
+  CHANGES.md       the cards; everything else hangs off it
+  CHECKLIST.md     every card's check, in the order of work
+  TOKENS.md        app/'s tokens mapped to theirs
+  MEASUREMENTS.md  every measured state, light and dark, linked from the cards
+  images/          the captures the cards and measurements link
+  contract/        OpenAPI and JSON Schema for the ports whose shape changed, examples, the diff
+  code/            the app/ and demo/ files changed since the last tag, and the diffs
+  docs/            design-language.md and components.md when they changed, and the diff
+  overlays/        design/overlays/round-N/ as it stands, and apply.js, the whole patch
 ```
+
+**The package carries the engineering documents and nothing else.** `brief.md` and `platform.md` are
+ours: the cards carry what Innovue needs from them, in words written for an engineer.
 
 **`CHANGES.md` has two parts, kept apart because they ask different things of the reader.**
 **Part A, conformance**, is where their build differs from the package they were given. **Part B,
@@ -1042,23 +1051,23 @@ replaced when the next round opens.
 | --- | --- | --- | --- |
 | R1-01 | Result card, record | No star → a star on every card and in the record. **The star is a collection**: one starred set, each patent remembering the search it came from | `app/` |
 | R1-02 | Starred set, masthead | No starred set, no starred count → the masthead count, the starred set page grouped by search, and its CSV and Markdown downloads. Without it nothing leaves but one record at a time | `app/` |
-| R1-03 | Masthead | No account menu → the avatar menu: account settings, plan and billing, help, sign out | `app/` |
-| R1-04 | Search settings | The date range is in their code and not rendered → render it, with its three bases | `app/` |
+| R1-03 | Masthead | No account menu → the avatar menu: account settings, plan and billing, help, sign out, and the build at its foot | `app/` |
+| R1-04 | Search settings | The date range is in their code and not rendered → render it, with its two bases, filed and published | `app/` |
 | R1-05 | Result list | Every result in one endless scroll → 20, then *Show more*, which also lets drawings arrive sooner | `app/` |
 | R1-06 | Engine · names and titles | The same company in two spellings, names and titles in capitals → titles in sentence case with acronyms kept; holders merged to one form as the company writes itself; inventors in normal case. Design-language §4 *Case* | Their captures |
 | R1-25 | Landing · field tiles | The selected tile shares the disabled tiles' grey, so the other enabled tile reads as selected → selected white with the ink border, enabled white with the hairline, disabled grey with *Coming soon* | Overlay |
 | R1-26 | Every control | Focus shows as a 1 px border change or not at all (the search box, the version), and drops to the page after *Search settings* → a 2 px ring on `:focus-visible` everywhere, the search box ringed whole; focus never falls to the page; a skip link first | Overlay |
 | R1-27 | Result list | About 12 tab stops per card and no shortcuts → one stop per card, the drawings reached inside the record, `j` / `k` between results | `app/` |
-| R1-28 | Record · export | *Export this record* produced no file in the audit, and nothing confirms one → the file downloads, and its name is confirmed the way *Citation copied* is | Their captures |
+| R1-28 | Record · export | *Export this record* produced no file in the audit, and nothing confirms one → the file downloads, and its name is confirmed the way *Citation copied* is | Their captures; `app/` |
 
 **Part B · changes**: what we ask for that the package did not have.
 
 | ID | Component | Difference → wanted | Shown in |
 | --- | --- | --- | --- |
-| R1-07 | Masthead, landing | Cramped → more room; at least 40 px above the landing headline; the version label leaves the masthead for the account menu | Overlay |
+| R1-07 | Masthead, landing | Cramped → more room; at least 40 px above the landing headline; the version label leaves the masthead for the account menu | Overlay; `app/` too |
 | R1-08 | Search bar, results bar | Cramped → more room; the view switch labelled or moved beside the sort; the query wraps to two lines before it truncates | Overlay; `app/` too |
-| R1-09 | Results surface | The loading line sits flush on the two panels and reads as their border → no line there; the search box's own border pulses while the search runs, in their border and focus-border colours. A running search keeps the button's name and marks it busy, keeps the old results at full opacity, and one polite status region announces counts, *Citation copied*, regrouping and find similar | Overlay |
-| R1-10 | Drawings | The drawing placeholder does not show in dark mode, so drawings below the fold arrive as blank white plates → visible in both themes. Every drawing tile is one skeleton while loading, a labelled failed tile with *Retry*, and absent when the patent has none | Overlay |
+| R1-09 | Results surface | The loading line sits flush on the two panels and reads as their border → no line there; the search box's own border pulses while the search runs, in their border and focus-border colours. A running search keeps the button's name and marks it busy, keeps the old results at full opacity, and one polite status region announces counts, *Citation copied*, regrouping and find similar | Overlay; `app/` too |
+| R1-10 | Drawings | The drawing placeholder does not show in dark mode, so drawings below the fold arrive as blank white plates → visible in both themes. Every drawing tile is one skeleton while loading, a labelled failed tile with *Retry*, and absent when the patent has none | Overlay; `app/` too |
 | R1-11 | Masthead | Projects → **search history**: a *History* button that opens past searches (query, field, date), each rerun by a click, deleted singly or cleared. Their build already stores history and shows it as a dropdown under the search box on focus; this makes it findable | `app/` |
 | R1-12 | Search bar, masthead | The technology field sits in the nav → a chip at the start of the search bar, which opens the field list; it leaves the nav. The picked-group chip aligns to the card inset and shows its full label; the picked group is marked by a check, not a stripe, and the menu closes once it is picked | `app/` |
 | R1-13 | Every surface | The case and separator rules in design-language §4 *Case*: `micro` the only uppercase, inventors and holders separated by `; `, generated group names in sentence case, jurisdictions as codes | Overlay; `app/` too |
@@ -1074,7 +1083,7 @@ replaced when the next round opens.
 | R1-38 | Type scale | Eleven sizes between 10.5 and 36 px, and the record's section headings barely above its reading text → their sizes merged into six steps, 11 · 13 · 16 · 20 · 26 · 36, each a role, heading weight descending with level. The two lower steps sit under 1.25 apart, because holding 1.25 there would put card meta at 11 px or the whole card at 14. **Flags the type scale** (§13.1); `app/` takes the reduced scale | Overlay; `app/` too |
 | R1-39 | Patent-number search | *Patent not found* blames a TW prefix for a US number and drops the frame → the number echoed, the accepted forms named, *Search this as text* offered, both columns and the field control kept | Overlay; `app/` too |
 | R1-40 | Every control | Targets under 24 px: Grant / Application, the patent number link, the version → at least 24 px, a pseudo-element extending the hit area where the visible size stays | Overlay |
-| R1-41 | Results, record | No `<h1>` on results, and the record's title is not a heading → one `<h1>` per view, the record title a heading | Markup only |
+| R1-41 | Results, record | No `<h1>` on results, and the record's title is not a heading → one `<h1>` per view, the record title a heading and its sections the level below | `app/` |
 | R1-42 | Result card | A single-version record shows one filled *Grant* pill that reads as a pressed segment → plain text when only one version exists | Overlay; `app/` too |
 | R1-44 | Error states | *Make sure the backend API is running.* reaches the founder → removed; the sentence says what the founder can do | Wording |
 | R1-45 | Theme switch | Every coloured transition fires at once and the page smears → transitions off for one frame during the swap | Overlay (script); `app/` too |

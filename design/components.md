@@ -67,8 +67,10 @@ Every component below consumes engine data. **The names are the ports** — the 
 `PORTS` in [`app/js/ports.mjs`](../app/js/ports.mjs) — and every one returns the same envelope:
 `{ ok: true, data }` or `{ ok: false, code, retryable, detail? }`. §0.1 is why. `code` is one of
 `UNAVAILABLE` `TIMEOUT` `RATE_LIMITED` (retryable) or `NO_CORPUS` `NOT_FOUND` `UNSUPPORTED` (not); an
-unknown code is treated as `UNAVAILABLE`. **The client branches on `retryable`, never on `code`**:
-the code is for logs, and the sentence is ours.
+unknown code is treated as `UNAVAILABLE`. **The client branches on `retryable`, and on `code` in one
+place only**: a number search answered `NOT_FOUND`, which is an answer about the number rather than a
+failure, and prints its own sentence with a way out (platform.md §13.4, R1-39). Everywhere else the code is for
+logs, and the sentence is ours.
 
 | Component | Tokens it reads | Data shape it needs | Capability that supplies it |
 | --- | --- | --- | --- |
