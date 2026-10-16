@@ -130,6 +130,10 @@ It carries: **data source** (jurisdiction chips, and document kind — granted o
 At least one jurisdiction and one kind must stay selected, and the panel says so rather than letting
 the founder produce a search that cannot run.
 
+**There is no priority-date basis, and that is a decision.** Innovue's build offers one, and the
+priority-date field is often blank in their index, so a range on it cannot be trusted to mean what
+it says. Filed and published are the two bases a range can be trusted on.
+
 **The whole panel travels as one object** to the engine, not as six loose arguments: the panel is the
 only thing that builds it and the engine is the only thing that reads it, so a shape change is a
 change in two places rather than in every call site.
@@ -991,10 +995,24 @@ knowing before changing one.*
 - **How many results should a search return by default?** The settings ladder offers 10 · 20 · 50 ·
   100 · 500, and whether 500 is an engine ceiling or an interface one is unanswered.
 - **Whether Terrain sits on Innovue's semantic search surface or beside it.**
-- **How accurate is the set?** No evaluation of the engine's recall or precision exists, which is why
-  copy says *built to return* rather than *returns*. A fixed set of descriptions, each with patents
-  known to be near it, run against Innovue's build would give the number. In round 1, nonsense and
-  out-of-field text each returned fifty results (R1-30).
+- **How accurate is the set?** One evaluation exists and it does not answer this. It is Innovue's,
+  in one field, it takes the prior art examiners cited as the answer, and it compares the engine
+  with other tools; `brief.md` §3 says what it licenses, and its figures stay local
+  (`visual-reference/innovue-research/`). What would answer it is a fixed set of founders'
+  descriptions, each with patents known to be near it, run against Innovue's build — which is why
+  copy still says *built to return*. In round 1, nonsense and out-of-field text each returned fifty
+  results (R1-30).
+- **Does the score separate near from not near?** Every row prints the engine's score, and
+  Innovue's own evaluation bears on whether it carries any signal at all. Until Innovue says what
+  it measures, it is printed as the engine's ordering and nothing on any surface may read it as
+  confidence. `components.md` §4 question 14.
+- **Which index answers a Terrain search?** Which text fields are indexed, whether the drawings
+  are, and whether a field tile chooses an index or filters one. `components.md` §4 questions 11
+  and 13.
+- **An English query leans toward US documents.** Innovue's evaluation found the query's language
+  shapes which offices the results come from, and Terrain is English only (`brief.md` §1). The
+  founder is US-first, so this fits the user; it bears on any claim about the other offices in the
+  settings.
 - **Is the whole flow right?** Search → find similar → star → export has never been watched with a
   founder. The part most likely to be wrong is that the starred set is a place you go rather than
   something that accumulates visibly beside the list.
@@ -1163,4 +1181,6 @@ What has been settled since round 1 was sent, and goes in round 2's package.
 | Session recording | Their build runs PostHog with session recording → usage events only, recording off. `brief.md` §4: the search box holds an idea the founder may not have filed |
 | Question | What does `ipcembedding` mean for retrieval — is each technology field an IPC-scoped index? `components.md` §4 question 11 |
 | Question | What does their analytics record, and where is it sent? `components.md` §4 question 12 |
+| Question | Which index and route answers a Terrain search; what the score measures; what each field holds; whether queries are kept or trained on, and where it runs. `components.md` §4 questions 13–16 |
+| Clearance | Their engine research and Round 2 evaluation were shared with TIS → which of it, figure by figure, may be quoted in public material. `brief.md` §3 |
 | Masthead name | Their masthead reads *TIS Terrain* → raised only once `brief.md` §2 settles the name, so they rename once |

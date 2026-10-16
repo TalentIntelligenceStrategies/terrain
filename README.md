@@ -4,8 +4,8 @@
 for founders working out where their idea sits.**
 
 You describe what you are building, Terrain returns the patents that are actually near it, you star
-the ones that matter, and you take them out as a file. Self-serve software searching the full
-Innovue patent database.
+the ones that matter, and you take them out as a file. Self-serve software searching
+Innovue's patent database.
 
 **Terrain shows what came back and never says what it means.** Founders do not run somebody else's
 pre-built analysis — they take the data and work it in tools they already trust. The gap worth

@@ -18,7 +18,7 @@ near it, and they take the ones that matter with them.
 
 **One question, and the whole product answers it:** *what is already here that is close to this?*
 
-Self-serve software, English-native, searching the full Innovue patent database. How it is sold is
+Self-serve software, English-native, searching Innovue's patent database. How it is sold is
 open (§6), and nothing in the product presumes an answer.
 
 **Innovue builds and ships it.** The founder uses Innovue's build, on Innovue's engine. `app/` in this
@@ -48,9 +48,11 @@ check. Terrain does not compete on the analysis; it sits upstream of it.
 **The gap worth solving is retrieval.** Patent search returns inaccurate, incomplete sets: the right
 patent is missing, or it is on page nine behind forty that are not close at all. A founder cannot
 tell which, because they cannot see what was left out. **An accurate set, and a clean way to take
-it out, is what the product is for** — an aim, not a measured claim. No evaluation of the engine's
-recall or precision exists yet ([`platform.md`](platform.md) §12), so copy says *built to return*
-rather than *returns* until one does.
+it out, is what the product is for** — an aim, not a measured claim. The one evaluation of the
+engine is Innovue's own, in one field, and it measures the engine *against other tools* rather than
+the set a founder gets ([`platform.md`](platform.md) §12; §3 below says what it licenses). So copy
+says *built to return* rather than *returns*, and the evaluation that would change that is one run
+on founders' own descriptions.
 
 **That is a claim about retrieval, not about presentation** — so the line is not *is it a chart* but
 *does it say what the set means*.
@@ -242,6 +244,54 @@ untranslated, and the vocabulary is non-idiomatic throughout.
 It is built for an analyst and it is good at what it does. Terrain is not a tier of it and not a
 translation of it. [`platform.md`](platform.md) §9 records what is adopted and what is cut.
 
+### The engine, and what may be said about it
+
+**Terrain's search is Innovue's semantic search** — the engine behind PI-VuePat, which Innovue
+serves Terrain from. A founder's sentence is turned into a vector by an embedding model and the
+nearest patents in the index come back, so a patent written in other words than the founder's can
+still be found; nothing is generated, and every row is a patent document that exists. **Which parts
+of a patent the index reads — which text fields, whether the drawings — and which index answers a
+Terrain search is not stated**, and `components.md` §4 asks.
+
+**One evaluation exists, and it is Innovue's own** — granted patents in one field, the prior art
+their examiners cited taken as the answer, and other tools run beside the engine. **Its figures and
+how the engine fared against the others are not stated here**, because this file is public and they
+are not (the last paragraph of this section); the translation is local, in
+`visual-reference/innovue-research/`. What this section fixes is what *kind* of claim it can carry,
+which does not depend on what it found.
+
+**What it licenses, and what it does not:**
+
+- **Sayable, with its source and its scope:** a comparison with the tools it was run against,
+  attributed to Innovue, naming the field and the number of patents. That Terrain retrieves real
+  documents rather than generating text. That a general-purpose embedding model is used because
+  a published benchmark found such models ahead of patent-specific ones at prior-art retrieval —
+  that benchmark is public and needs nobody's clearance.
+- **Not sayable:** *accurate*, *finds all the prior art*, *finds what an examiner would*, *replaces a
+  professional search*, or any figure without its scope. An evaluation of one field on a few dozen
+  patents is a comparison, and it does not become a measure of the set a founder gets. *Confidential*
+  or *private* about a founder's search, while Innovue's build records sessions (§4). *Searches
+  180 million patents*: that figure is Innovue's database, and how much of it a field's index holds
+  is not stated. Anything shaped like legal advice — a freedom-to-operate view, patentability,
+  *open ground* (§1).
+- **The engine's score is printed and not sold.** It is the engine's ordering, not a confidence,
+  and no copy may present it as one; whether it separates near from not near at all is
+  `platform.md` §12's question.
+
+**Innovue's research is cleared for internal use, and only that.** They shared it with TIS; nobody
+has published it. **Its figures and its comparative results — what it measured, and how the engine
+fared against other tools — reach nothing public until Innovue confirms them again, figure by
+figure**: a deck, the website, a published page, or a tracked file on `main`, which a push
+publishes. What a partner shares to inform a decision is not what it has agreed to see quoted. A
+session preparing public material that draws on it says so before the material leaves.
+
+**The rule is narrower than "all of it", on purpose.** A behaviour of the engine that a Terrain
+decision rests on — that a date field is often blank, that a query's language shapes which offices
+come back — may be stated in these documents without a figure and attributed to Innovue, because
+an engineer reading `platform.md` needs the reason for the decision, and a figureless fact about
+how a search behaves is not the result Innovue measured. `sales/answers.md` is the working copy of
+what a buyer will ask, and it is local because its answers carry the figures.
+
 ---
 
 ## 4 · Locked
@@ -333,6 +383,12 @@ translation of it. [`platform.md`](platform.md) §9 records what is adopted and 
   construction — one 46-character holder, three classification codes, nine short claims — so every
   renderer was written against shapes that never strain. The corpus supplies the strain, and the
   findings belong in this repository rather than in it.
+- **`sales/` is the answer bank, and it is excluded from `main` in its entirety.** What a buyer
+  will ask about the technology, answered with a deck line, a backup and a source for each. It
+  sits in this folder because every answer cites a decision here, and it is local because its
+  answers carry Innovue's figures, which §3 keeps off anything public until Innovue confirms them.
+  **The decisions stay in §3, not in it**: `sales/answers.md` may say less than §3 permits and
+  never more, and where the two disagree, §3 wins.
 
 ---
 

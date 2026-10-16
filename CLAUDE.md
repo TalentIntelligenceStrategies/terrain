@@ -16,7 +16,7 @@ not an accident — see "Relationship to the TIS monorepo" at the bottom.
 Terrain is **patent search built to return the patents actually near an idea, and to hand them over cleanly**, for founders
 working out where their idea sits. You describe what you are building, Terrain returns the patents
 that are actually near it, you star the ones that matter, and you take them out as a file.
-Self-serve software searching the full Innovue patent database. How it is sold is open
+Self-serve software searching Innovue's patent database. How it is sold is open
 (`docs/brief.md` §6), and nothing in `app/` presumes an answer.
 
 **One flow, and every surface serves it:** search → find similar → star → the starred set → export.
@@ -24,8 +24,8 @@ Self-serve software searching the full Innovue patent database. How it is sold i
 **Terrain shows what came back and never says what it means.** Founders do not run somebody else's
 pre-built analysis — they take the data and work it in tools they already trust, because they know
 how the answer came out. The gap worth solving sits upstream of analysis: patent search returns
-inaccurate, incomplete sets, and an accurate one is what the product is for — an aim, since no
-evaluation exists yet.
+inaccurate, incomplete sets, and an accurate one is what the product is for — an aim, since the one
+evaluation of the engine is Innovue's, in one field, against other tools.
 
 **That is a claim about retrieval, not about presentation.** A view of the returned set — counts by
 year, holder, office or group — is admissible, because every number in it can be checked against the
@@ -107,10 +107,16 @@ corpus/              THE STRESS-TEST SET, and what app/ loads by default. Real
                      that forces the fake engine instead. Excluded from main
                      because it prints real holder names; four of its paths ARE
                      published to gh-pages — see "What is published" above.
+sales/
+  answers.md         THE ANSWER BANK — what a buyer asks about the technology, a
+                     deck line, a backup and a source per answer. Local because its
+                     answers carry Innovue's figures; see "Innovue's research"
 visual-reference/
   pi-vuepat/         the USERFLOW REFERENCE — Innovue's own search product, inventoried
   iptech-semantic-search/  the only evidence on two questions PI-VuePat does not close
   innovue-build/round-N/   one /terrain-round: STATE.md, captures, redlines, the zip
+  innovue-research/  Innovue's two reports on their engine, translated side by side
+                     zh / en, with a glossary and verify.py, the token-parity check
 ```
 
 *The IPtech capture sets and the two comparison decks were archived out of this folder with
@@ -320,6 +326,23 @@ again.
 **A generator that writes into the tree is admissible only when it also checks.** `sync-tokens.py`
 qualifies because `--check` exists and CI runs it; a `--write` with no `--check` would be a second
 source of truth with a script to spread it.
+
+### Innovue's research
+
+**Innovue shared two reports on their engine with TIS: its architecture, and an evaluation of it
+against other tools.** They are translated in `visual-reference/innovue-research/`, and
+`docs/brief.md` §3 says what they license.
+
+**Their figures and comparative results reach nothing public until Innovue confirms them again,
+figure by figure.** That covers a deck, the website, a published page, and a tracked file on `main`,
+because this repository is public and a push publishes. **Whenever a session prepares public
+material that draws on them, it reminds the user to recheck with Innovue before the material
+leaves**. The user asked for that reminder, so a session does not skip it. A behaviour of the engine
+that a Terrain decision rests on may be stated in `docs/` without a figure; brief §3 draws that line.
+
+**`sales/answers.md` may say less than `brief.md` §3 permits and never more.** It is a working
+copy for a deck, not a fifth document: every answer cites the decision it rests on, and where the
+two disagree, §3 wins.
 
 ### The client-data boundary
 

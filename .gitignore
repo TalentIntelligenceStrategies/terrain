@@ -61,6 +61,15 @@ brand/logos/innovue/*
 # instrument is local; the fact that it exists is not.
 corpus/
 
+# ── The sales answer bank. Local only, and the whole directory. ──────────────
+# What a buyer will ask about the technology, answered from Innovue's own
+# research on their engine (visual-reference/innovue-research/). Innovue shared
+# that research with TIS, and its figures are not published by anyone -- so a
+# tracked copy would publish them on the next push, which is exactly what the
+# recheck rule in docs/brief.md section 3 exists to stop. The decisions it
+# rests on are tracked in brief.md; the figures and the answers stay here.
+sales/
+
 # ── Build output and cruft ───────────────────────────────────────────────────
 .DS_Store
 node_modules/

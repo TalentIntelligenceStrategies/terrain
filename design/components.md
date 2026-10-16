@@ -228,6 +228,29 @@ reading the client against this file, one out of your build:
     events and does not record sessions. Say which events you send, and turn recording off — or, if
     any capture has to stay, mask the search box and the record from it.
 
+**Four more came out of reading your engine research and your Round 2 evaluation**, which you
+shared with us. They are what a buyer asks first, and we cannot answer them from the surface:
+
+13. **Which index and which route answer a Terrain search?** Your research describes more than one
+    way into a patent. Say which a Terrain search runs today — which text fields are embedded,
+    whether the drawings are, and whether more than one is combined — so that what Terrain says
+    about how it searches is true of what it searches.
+
+14. **What does the score measure, and is it calibrated?** Every row prints it, from `score` and,
+    after *Find similar*, from `nearness`. Your evaluation looked at whether it separates the prior
+    art from the rest. Say what the number is — a cosine, a rerank output, normalised or not — and
+    whether a higher one means more likely near, or only earlier in this order. Until we know, no
+    surface treats it as anything but the order.
+
+15. **What does each field hold, and how large is its index?** Questions 8 and 11 from the other
+    side: which classes each field tile covers, and how many patents each index holds, so a buyer
+    who asks *how many patents does it search* gets the index rather than the database.
+
+16. **Is a founder's query kept, and is it used for anything?** Whether queries are logged, for
+    how long, whether they train or tune any model, and where the engine runs. The search box holds
+    an idea that may not be filed, so this is the question a university or an investor asks before
+    buying a seat.
+
 *`Figure.alt` is carried and not yet read* — the viewer labels a drawing *Figure n*. Send it when the
 source has one; it costs nothing and the client will use it.
 
