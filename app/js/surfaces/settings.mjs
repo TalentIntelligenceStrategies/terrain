@@ -44,7 +44,27 @@ function clone(o) {
 
 /** what the composer sends with the search. A copy, so nothing downstream can
  *  reach back into the panel's state by holding onto the object. */
-export function read() { return clone(STATE); }
+export function read() {
+  const out = clone(STATE);
+  out.from = bound(STATE.from);
+  out.to = bound(STATE.to);
+  return out;
+}
+
+/* A BOUND IS A YEAR OR A FULL DATE, and anything between searches as its year.
+   A half-typed date narrowing the search on something the founder did not
+   finish would be worse than the wider search its year gives. A date that is
+   not on the calendar (2013-02-30) is the same unfinished thing. */
+function bound(v) {
+  const d = v.replace(/\D/g, '');
+  if (d.length < 4) return '';
+  if (d.length === 8) {
+    const iso = d.slice(0, 4) + '-' + d.slice(4, 6) + '-' + d.slice(6);
+    const t = new Date(iso + 'T00:00:00Z');
+    if (!isNaN(t) && t.toISOString().slice(0, 10) === iso) return iso;
+  }
+  return d.slice(0, 4);
+}
 
 /* ── the panel's controls, both directions ───────────────────────────────── */
 
@@ -195,15 +215,19 @@ export function init() {
     paint();
   });
 
-  /* FOUR DIGITS OR NOTHING. The field is text with inputmode numeric rather
-     than type=number, because a spinner on a year is a control nobody uses and
-     Safari's number input accepts "1e5". Anything that is not four digits is
-     not a year, and an empty field is a valid answer — it means "no bound". */
+  /* DIGITS, AND THE HYPHENS ARE OURS. The field is text with inputmode numeric
+     rather than type=number, because a spinner on a date is a control nobody
+     uses and Safari's number input accepts "1e5"; type=date would put a
+     calendar between a practitioner and a date they already know. A phone's
+     number pad has no hyphen, so the founder types 20130220 and the field
+     shows 2013-02-20. An empty field is a valid answer — it means "no bound". */
   ['#popFrom', '#popTo'].forEach(sel => {
     const el = $(sel);
     if (!el) return;
     el.addEventListener('input', () => {
-      el.value = el.value.replace(/\D/g, '').slice(0, 4);
+      const d = el.value.replace(/\D/g, '').slice(0, 8);
+      el.value = d.length <= 4 ? d
+        : d.slice(0, 4) + '-' + d.slice(4, 6) + (d.length > 6 ? '-' + d.slice(6) : '');
       STATE[sel === '#popFrom' ? 'from' : 'to'] = el.value;
       summarise();
     });

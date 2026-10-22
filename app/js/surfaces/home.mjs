@@ -186,7 +186,7 @@ export function init(ctx) {
        that failed produced no rows to star. work.mjs does the same at the
        re-search, and core/starred.mjs carries why the store holds this rather
        than the caller passing it in. */
-    if (res.ok) STARRED.setSearch(text);
+    if (res.ok) STARRED.setSearch(text, { field: Field.get(), settings: readSettings(), mode: Mode.get() });
 
     if (!res.ok) {
       const status = $('#cmpStatus');

@@ -1,0 +1,133 @@
+/* ══ 42 · THE REPORT ════════════════════════════════════════════════════════
+   platform.md §5.3, design-language.md §7 "The report is paper". The chrome is
+   the page skeleton every reading surface uses; the sheets are the report's
+   own, and only the sheets print.
+
+   NO HUE, AND NO ACCENT IN DATA. A bar is --text-2, a folded or withheld
+   bucket --border-strong, an incomplete year an outline. The one filled
+   button is Run the Pro report, which is a control (§3.8).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.view-report .main>*{width:100%}
+.rep-head{justify-content:space-between}
+.rep-tools{display:flex;align-items:center;gap:var(--s-12);flex-wrap:wrap}
+.view-report .pg-back{white-space:nowrap}
+@media (max-width:640px){.rep-tools{width:100%}}
+
+/* ── the desk and the sheet ─────────────────────────────── */
+.rep-desk{display:flex;flex-direction:column;align-items:center;gap:var(--s-24);
+          padding:var(--s-8) var(--s-16) var(--s-40)}
+.rep-desk.is-wait,.rep-desk.is-fail{min-height:320px}
+.rep-pro{display:contents}
+.rep-sheet{width:100%;max-width:816px;background:var(--surface);border:1px solid var(--border);
+           box-shadow:var(--shadow-raise);padding:var(--s-40) var(--s-40) var(--s-24);
+           display:flex;flex-direction:column;gap:var(--s-24);color:var(--text-1)}
+@media (max-width:640px){.rep-sheet{padding:var(--s-24) var(--s-16) var(--s-16)}}
+.rep-mast{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s-16);
+          border-bottom:3px solid var(--text-1);padding-bottom:var(--s-8)}
+.rep-brand{font-size:13px;font-weight:700}
+.rep-run,.rep-lbl,.rep-foot{color:var(--text-3);text-transform:uppercase;letter-spacing:.08em}
+.rep-foot{display:flex;justify-content:space-between;gap:var(--s-12);margin-top:auto;
+          border-top:1px solid var(--border);padding-top:var(--s-10)}
+.rep-h1{font-size:26px;line-height:1.2;font-weight:700;letter-spacing:-.015em;margin:0}
+
+/* ── the memo header · To, Re, Date, Basis ─────────────────── */
+.rep-meta{display:grid;grid-template-columns:96px 1fr;margin:0;font-size:13px;line-height:1.5;
+          border-top:2px solid var(--text-1);border-bottom:1px solid var(--text-1)}
+.rep-meta dt,.rep-meta dd{margin:0;padding:var(--s-6) 0;border-bottom:1px solid var(--border)}
+.rep-meta dt{color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;padding-top:var(--s-8)}
+.rep-meta dt:nth-last-child(2),.rep-meta dd:last-child{border-bottom:0}
+.rep-sub{color:var(--text-3)}
+
+/* ── the rail and the first column ─────────────────────────── */
+.rep-body{display:grid;grid-template-columns:200px minmax(0,1fr);gap:var(--s-32)}
+@media (max-width:640px){.rep-body{grid-template-columns:1fr}}
+.rep-rail{border-right:1px solid var(--border);padding-right:var(--s-20)}
+@media (max-width:640px){.rep-rail{border-right:0;padding-right:0;border-bottom:1px solid var(--border);padding-bottom:var(--s-16)}}
+.rep-kf{margin:var(--s-8) 0 0;display:flex;flex-direction:column;gap:var(--s-10)}
+.rep-kf dt{font-size:20px;line-height:1.1}
+.rep-kf dd{margin:0;font-size:13px;line-height:1.35;color:var(--text-2)}
+.rep-col1{display:flex;flex-direction:column;gap:var(--s-24);min-width:0}
+.rep-two{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-32)}
+@media (max-width:640px){.rep-two{grid-template-columns:1fr}}
+
+/* ── an exhibit · label, a title that states a count, body, note, source ─ */
+.rep-ex,.rep-lead,.rep-prosec{display:flex;flex-direction:column;gap:var(--s-10);min-width:0}
+.rep-lbl{margin:0;border-top:1px solid var(--text-1);padding-top:var(--s-8)}
+.rep-lead{border-top:1px solid var(--text-1);padding-top:var(--s-10)}
+.rep-ex-t{font-size:16px;line-height:1.35;font-weight:600;margin:0}
+.rep-note{font-size:13px;line-height:1.5;color:var(--text-2);margin:0}
+.rep-src{color:var(--text-3);margin:0}
+.rep-protag{border:1px solid var(--border-strong);color:var(--text-3);border-radius:var(--r-chip);
+            padding:0 var(--s-6);margin-left:var(--s-6);vertical-align:2px;letter-spacing:.06em}
+.rep-sk{display:block;height:9px}
+.rep-sk+.rep-sk{margin-top:var(--s-8)}
+
+/* ── the charts ─────────────────────────────────────────── */
+.rep-ht{width:100%;border-collapse:collapse;font-size:13px}
+.rep-ht th,.rep-ht td{padding:var(--s-4) 0;text-align:left;vertical-align:middle}
+.rep-ht th{font-weight:500;width:36%;padding-right:var(--s-12);white-space:nowrap;overflow:hidden;
+           text-overflow:ellipsis;max-width:0}
+.rep-bar{display:block;height:10px;background:var(--text-2)}
+.rep-bar.is-dim{background:var(--border-strong)}
+.rep-n{width:48px;text-align:right;padding-left:var(--s-10)}
+.rep-pct{width:48px;text-align:right;color:var(--text-3)}
+.rep-ht .rep-n{padding-left:var(--s-10)}
+.rep-tot th,.rep-tot td{border-top:1px solid var(--text-1);padding-top:var(--s-6);font-weight:600}
+.rep-hb{display:grid;grid-template-columns:minmax(64px,max-content) 1fr 44px;gap:var(--s-6) var(--s-12);
+        align-items:center;font-size:13px}
+.rep-k{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rep-hb .rep-n{width:auto}
+.rep-cols{display:flex;align-items:flex-end;gap:var(--s-6);height:150px;margin-bottom:var(--s-20);
+          border-bottom:1px solid var(--text-1)}
+.rep-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+         height:100%;min-width:0;position:relative}
+.rep-b{width:100%;background:var(--text-2)}
+.rep-col.is-inc .rep-b{background:transparent;border:1.5px dashed var(--text-3);border-bottom:0}
+.rep-v{font-size:11px;color:var(--text-2);margin-bottom:var(--s-2)}
+.rep-y{position:absolute;bottom:-18px;font-size:11px;color:var(--text-3)}
+.rep-split{display:flex;gap:var(--s-2);font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.rep-split span{background:var(--text-2);color:var(--text-inverse);padding:var(--s-6) var(--s-8);
+                white-space:nowrap;overflow:hidden}
+.rep-split .is-dim{background:var(--border-strong);color:var(--text-1)}
+.rep-split .is-none{background:var(--surface-sunken);color:var(--text-2)}
+.rep-gridwrap{overflow-x:auto}
+.rep-grid,.rep-cc{width:100%;border-collapse:collapse;font-size:13px}
+.rep-grid th,.rep-grid td,.rep-cc th,.rep-cc td{padding:var(--s-6) var(--s-8);border-bottom:1px solid var(--border);text-align:right}
+.rep-grid thead th,.rep-cc thead th{font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;
+                                    color:var(--text-3);border-bottom:1px solid var(--text-1)}
+.rep-grid th:first-child,.rep-cc th,.rep-cc td,.rep-apx td,.rep-apx th{text-align:left}
+.rep-grid tbody th,.rep-cc tbody th{font-weight:500}
+.rep-t{font-weight:600}
+.rep-cc tbody th{width:28%}
+.rep-key{color:var(--text-3);margin:0}
+.rep-skl{margin:0;padding-left:var(--s-20);display:flex;flex-direction:column;gap:var(--s-10);
+         color:var(--text-3);font-size:13px}
+.rep-skl .rep-sk{margin-top:var(--s-6)}
+
+/* ── Part 2 · the Pro band, full bleed to the sheet ─────────── */
+.rep-band{background:var(--surface-sunken);border-top:3px solid var(--text-1);
+          margin:0 calc(-1 * var(--s-40));padding:var(--s-20) var(--s-40);
+          display:flex;flex-wrap:wrap;gap:var(--s-12) var(--s-24);align-items:center;justify-content:space-between}
+@media (max-width:640px){.rep-band{margin:0 calc(-1 * var(--s-16));padding:var(--s-16)}}
+.rep-band h2{margin:0}
+.rep-band .rep-note{max-width:46ch}
+.rep-prosec{border-top:1px solid var(--border);padding-top:var(--s-12)}
+.rep-disc{color:var(--text-3);border-top:1px solid var(--border);padding-top:var(--s-10);
+          text-transform:none;letter-spacing:0;line-height:1.5;margin:0}
+
+/* ── print · the PDF is the sheets ────────────────────────────
+   The chrome, every other view and — before Pro has run — the whole Pro part
+   stay off the page. Printing light is report.mjs's job (beforeprint), because
+   tokens follow data-theme and paper does not swap. */
+@media print{
+  .mast,.rep-head,.view:not(.view-report),.view-report .foot{display:none}
+  html,body,.stage,.view-report,.view-report .main{position:static;overflow:visible;height:auto;
+    opacity:1;visibility:visible;transform:none;background:var(--surface)}
+  .rep-desk{padding:0;gap:0}
+  /* A BAR IS A BACKGROUND, and browsers drop backgrounds when printing unless
+     told otherwise — the chart would print as its numbers and nothing else. */
+  .rep-sheet{max-width:none;border:0;box-shadow:none;break-after:page;
+             -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .rep-pro,.rep-lead{display:none}
+}

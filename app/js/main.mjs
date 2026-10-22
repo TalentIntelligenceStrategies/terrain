@@ -67,7 +67,7 @@ async function resolveEngine() {
 }
 /* ════════════════════════════════════════════════════════════════════════ */
 
-const PARTIALS = ['masthead', 'home', 'surface', 'starred',
+const PARTIALS = ['masthead', 'home', 'surface', 'starred', 'report',
                   'account', 'billing', 'help', 'parked'];
 
 /* THE SURFACES. Each is imported for its side-effect-free init(); the order
@@ -90,6 +90,7 @@ const SURFACES = [
   ['fishbone',     () => import('./surfaces/fishbone.mjs')],
   ['record',       () => import('./surfaces/record.mjs')],
   ['starred',      () => import('./surfaces/starred.mjs')],
+  ['report',       () => import('./surfaces/report.mjs')],
   ['destinations', () => import('./surfaces/destinations.mjs')],
 ];
 
@@ -139,6 +140,9 @@ function viewForHash(h) {
      right now that the map is gone. */
   if (h === 'work' || h.startsWith('set')) return 'work';
   if (h.startsWith('starred')) return 'starred';
+  /* `report/founder` and `report/backer` are one surface with two questions;
+     report.mjs reads which from the hash. */
+  if (h.startsWith('report')) return 'report';
   if (h.startsWith('account')) return 'account';
   if (h.startsWith('billing')) return 'billing';
   if (h.startsWith('help')) return 'help';
@@ -157,7 +161,7 @@ export function go(view) {
   /* remembered BEFORE the swap, and `help` is deliberately not in
      DESTINATIONS' opposite: help is stepped off to as well, so returning to it
      would be returning to somewhere the founder was leaving. */
-  if (!DESTINATIONS.includes(view) && view !== 'help' && view !== 'starred') lastSurface = view;
+  if (!DESTINATIONS.includes(view) && view !== 'help' && view !== 'starred' && view !== 'report') lastSurface = view;
   const next = $(`.view[data-view="${view}"]`);
   if (!next) return;
   const prev = current && $(`.view[data-view="${current}"]`);

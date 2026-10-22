@@ -206,6 +206,28 @@ export const CODE = {
 /** @typedef {{label:string, leaves:Leaf[]}} Spine */
 /** @typedef {{head:string, spines:Spine[]}} Cluster */
 
+/** The report's field counts · COUNTS OVER THE FULL RESULTS OF EACH SEARCH
+ *  BEHIND THE STARS, not over the stars and not over a page. A hand-picked set
+ *  says little about a field, so the report counts the field from the searches
+ *  and the detail from the stars (platform.md §5.3). The searches are re-run
+ *  with the settings they were stamped with, and their sets are unioned by id,
+ *  so a patent two searches returned is counted once.
+ *
+ *  `holders` keeps PatentRow's three states: a string is the holder, `null` is
+ *  withheld and renders a bar, `''` is a patent that names no assignee. Every
+ *  array is a count per bucket and every bucket's counts sum to `results` —
+ *  the report prints a total, and a total the rows do not reach is a total
+ *  nobody can check. Year is the FILING year, one year type throughout; a
+ *  patent with no filing date counts under `null`. Class is the four-character
+ *  IPC main group, as the grouping buckets it. Kind is the first version's.
+ *  @typedef {{results:number,
+ *             holders:{name:string|null, n:number}[],
+ *             years:[number|null, number][],
+ *             offices:[string|null, number][],
+ *             classes:[string|null, number][],
+ *             classYears:[string|null, [number|null, number][]][],
+ *             kinds:{grant:number, application:number, unknown:number}}} FieldCounts */
+
 /** @typedef {{title:string|null, number:string|null, appno:string|null, kind:string|null,
  *             ipcMain:string|null, ipc:string[]|null, holder:string|null,
  *             inventors:string[]|null, filed:string|null, published:string|null,
@@ -232,7 +254,9 @@ export const PORTS = [
        kinds[]   · 'granted' | 'applications', at least one
        count     · 10 | 20 | 50 | 100 | 500
        basis     · 'filed' | 'published' — which date the range applies to
-       from, to  · four-digit years as strings, '' meaning no bound
+       from, to  · each a year ('2013') or a full date ('2013-02-20') as a
+                   string, '' meaning no bound. A year as `to` means its last
+                   day and as `from` its first
      `mode` says what `query` IS: 'text', a description, or 'number', a patent
      number to look up. A number search returns the set with that patent first,
      or NOT_FOUND, not retryable, when the index does not hold it — an answer
@@ -273,6 +297,14 @@ export const PORTS = [
      port returned — so the file is built there and taking the set out never
      reaches the engine. */
 
+  /* THE REPORT. Its counted part is the one place the client needs numbers
+     over more rows than it holds, so it asks: each search behind the stars,
+     re-run with its stamped settings, counted whole. It does not touch the
+     current result set — the list the founder left behind is still there when
+     they go back. The Pro part has no port yet: Innovue writes the prompt
+     behind each section, and platform.md §10 item 8 is what starts one. */
+  'fieldCounts',     // {searches:[{query, field, settings, mode}]} → FieldCounts
+
   /* the record */
   'record',          // {id, version?:'grant'|'application'} → Record
 
@@ -286,6 +318,45 @@ export const PORTS = [
   'invoices',
   'sendSupport',
 ];
+
+/**
+ * tallyField — the FieldCounts arithmetic, over rows an engine already holds.
+ *
+ * THE REFERENCE FOR WHAT EACH BUCKET MEANS, not a client-side shortcut: the
+ * client never holds these rows, which is why `fieldCounts` is a port. Both
+ * fake engines call it so they cannot disagree about a bucket, and an engine
+ * that counts server-side owes the same buckets — a filing year, a four-character
+ * class, the first version's kind, and `null` kept apart from `''`.
+ */
+export function tallyField(rows) {
+  const bump = (m, k) => m.set(k, (m.get(k) || 0) + 1);
+  const holders = new Map(), years = new Map(), offices = new Map(), classes = new Map();
+  const classYears = new Map();
+  const kinds = { grant: 0, application: 0, unknown: 0 };
+  for (const r of rows) {
+    const y = r.filed ? Number(String(r.filed).slice(0, 4)) || null : null;
+    const c = r.ipcMain ? String(r.ipcMain).replace(/\s+/g, '').slice(0, 4) : null;
+    bump(holders, r.holder ?? null);
+    bump(years, y);
+    bump(offices, r.where ?? null);
+    bump(classes, c);
+    if (!classYears.has(c)) classYears.set(c, new Map());
+    bump(classYears.get(c), y);
+    const k = r.versions?.[0]?.kind;
+    kinds[k === 'grant' || k === 'application' ? k : 'unknown']++;
+  }
+  const desc = m => [...m].sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0])));
+  const byYear = m => [...m].sort((a, b) => (a[0] ?? 1e9) - (b[0] ?? 1e9));
+  return {
+    results: rows.length,
+    holders: desc(holders).map(([name, n]) => ({ name, n })),
+    years: byYear(years),
+    offices: desc(offices),
+    classes: desc(classes),
+    classYears: desc(classes).map(([c]) => [c, byYear(classYears.get(c))]),
+    kinds,
+  };
+}
 
 /**
  * NullEngine — every port, implemented by refusing.

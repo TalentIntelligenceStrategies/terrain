@@ -316,7 +316,7 @@ export function init(ctx) {
        no rows to star, and stamping it would file the next star under a
        search that returned nothing. core/starred.mjs carries the argument for
        the store holding this rather than the caller passing it. */
-    STARRED.setSearch(text);
+    STARRED.setSearch(text, { field: Field.get(), settings: readSettings(), mode: Mode.get() });
     History.add({ query: text, field: Field.get(), mode: Mode.get(), fieldLabel: Field.label() });
     Url.searched({ query: text, field: Field.get(), mode: Mode.get() });
     landQuery(text, res.data);

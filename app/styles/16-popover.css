@@ -120,12 +120,14 @@
 .pop-seg{align-self:flex-start;max-width:100%;flex-wrap:wrap}
 .pop-seg .seg-btn[aria-pressed="true"]{background:var(--surface);color:var(--accent-on-surface)}
 
-/* ── the year range ─────────────────────────────────────────────────────
+/* ── the date range ─────────────────────────────────────────────────────
    Inconsolata, because they are figures and §4 says figures are Inconsolata.
-   Tabular so 1999 and 2026 are the same width and the dash does not move. */
+   Tabular so every date is the same width and the dash does not move. Wide
+   enough for ten characters, because a bound is a year or a full date. */
 .pop-dates{display:flex;align-items:center;gap:var(--s-8)}
-.pop-year{width:88px;flex:0 0 88px;font-variant-numeric:tabular-nums;
+.pop-date{width:120px;flex:0 0 120px;font-variant-numeric:tabular-nums;
           text-align:center}
+.pop-hint{margin-top:var(--s-8);font-weight:400;color:var(--text-2)}
 .pop-dash{color:var(--text-3);flex:0 0 auto}
 
 /* THE FOOT DOES NOT SCROLL. It is the panel's floor rather than its last
@@ -142,7 +144,7 @@
   .pop-seg .seg-btn:not([aria-pressed="true"]):hover{color:var(--text-1)}
 }
 
-.pop-chip:focus-visible,.pop-year:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.pop-chip:focus-visible,.pop-date:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 
 /* THE ANCHOR. `position:relative` is what the panel positions against, and the
    wrap exists only to provide it: the toolbar rows are flex, so a positioned

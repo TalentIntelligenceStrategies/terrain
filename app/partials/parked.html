@@ -91,12 +91,13 @@
           <button class="seg-btn" type="button" aria-pressed="false" data-basis="published">Published</button>
         </div>
         <div class="pop-dates">
-          <input class="fld pop-year fig" type="text" inputmode="numeric" maxlength="4"
-                 id="popFrom" placeholder="From" aria-label="Earliest year">
+          <input class="fld pop-date fig" type="text" inputmode="numeric" maxlength="10"
+                 id="popFrom" placeholder="From" aria-label="Earliest date" aria-describedby="popDateHint">
           <span class="pop-dash" aria-hidden="true">–</span>
-          <input class="fld pop-year fig" type="text" inputmode="numeric" maxlength="4"
-                 id="popTo" placeholder="To" aria-label="Latest year">
+          <input class="fld pop-date fig" type="text" inputmode="numeric" maxlength="10"
+                 id="popTo" placeholder="To" aria-label="Latest date" aria-describedby="popDateHint">
         </div>
+        <p class="t-label pop-hint" id="popDateHint">A year, or a date such as <span class="fig-s">2013-02-20</span></p>
       </div>
 
       </div>

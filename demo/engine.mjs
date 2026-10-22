@@ -26,7 +26,7 @@
  * and that claim is only checkable if the regions can be made to fail one at a
  * time. `?slow=N` multiplies every delay.
  */
-import { ok, err, CODE, PORTS } from '../app/js/ports.mjs';
+import { ok, err, CODE, PORTS, tallyField } from '../app/js/ports.mjs';
 import * as D from './data.mjs';
 
 const qs = new URLSearchParams(location.search);
@@ -56,7 +56,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms * SLOW));
    own data lands. A grid where every card resolves on the same frame cannot
    demonstrate partial success, which components.md §0.1 calls the normal case. */
 const DELAY = {
-  fields: 180, coverage: 340, search: 900,
+  fields: 180, coverage: 340, search: 900, fieldCounts: 1300,
   patents: 700, patentsPage: 520, sort: 420, facets: 420, rerank: 1100, cluster: 1400,
   record: 600,
   account: 300, saveAccount: 800,
@@ -227,6 +227,27 @@ export const DemoEngine = {
     const { tree, members } = D.clusterFor(ORDER);
     GROUPS = members;
     return respond('cluster', tree);
+  },
+
+  /* THE REPORT'S FIELD COUNTS RE-RUN EACH SEARCH and leave ORDER, SET and
+     `shown` alone: the list the founder left is still theirs when they go back.
+     Each search is ordered and capped exactly as \`search\` does it, the sets
+     are unioned by id so a patent two searches returned counts once, and the
+     arithmetic is ports.mjs's, so this engine cannot bucket differently from
+     the other one. A number search that no longer finds its patent counts as
+     the set without it rather than failing the whole report. */
+  fieldCounts: async ({ searches = [] } = {}) => {
+    const rows = new Map(ALL.map(r => [r.id, r]));
+    const ids = new Set();
+    for (const { query = '', settings = {}, mode = 'text' } of searches) {
+      let order = EMPTY ? [] : ALL.map(r => r.id).sort(cmp.relevance);
+      if (mode === 'number') {
+        const hit = byNumber(ALL, query);
+        if (hit) order = [hit.id, ...order.filter(id => id !== hit.id)];
+      }
+      order.slice(0, Number(settings.count) || order.length).forEach(id => ids.add(id));
+    }
+    return respond('fieldCounts', tallyField([...ids].map(id => rows.get(id))));
   },
 
   /* AN UNKNOWN ID IS NOT_FOUND, never ok(null): the pane offers no retry for

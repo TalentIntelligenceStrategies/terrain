@@ -54,8 +54,13 @@ const KEY = 'terrain:starred';
    under. A v1 row has no answer to that, and the starred surface groups by
    it — so a v1 set would render as one nameless group claiming to be a
    search. Dropping it is the honest read of a payload that cannot say what
-   the surface now asks. */
-const VERSION = 2;
+   the surface now asks.
+
+   3 SINCE 2026-10-22: a stored row also carries the whole search it was
+   starred under — query, field, settings, mode — because the report counts
+   the field by re-running it (platform.md §5.3). A v2 row knows the sentence
+   but not the settings, so its count would be a different search's. */
+const VERSION = 3;
 
 /* ══ WHICH SEARCH IS RUNNING, AND WHY THE STORE HOLDS IT ══════════════════
    The starred surface groups the set by the search each patent was starred
@@ -74,9 +79,17 @@ const VERSION = 2;
    under a search that never ran. work.mjs sets this from the text it actually
    sent to the engine. */
 let SEARCH = '';
+/* AND THE WHOLE REQUEST THAT SENTENCE WENT OUT IN. The report re-runs it to
+   count the field, so the settings are stamped with the star for the same
+   reason the sentence is: by the time anyone asks, the panel may say
+   something else. */
+let SPEC = null;
 
-/** work.mjs calls this with the query it just sent to the engine. */
-export function setSearch(q) { SEARCH = typeof q === 'string' ? q.trim() : ''; }
+/** work.mjs and home.mjs call this with what they just sent to the engine. */
+export function setSearch(q, spec = null) {
+  SEARCH = typeof q === 'string' ? q.trim() : '';
+  SPEC = spec ? { query: SEARCH, field: spec.field ?? null, settings: { ...(spec.settings || {}) }, mode: spec.mode || 'text' } : null;
+}
 
 /** what a star would be filed under right now. */
 export function search() { return SEARCH; }
@@ -141,7 +154,7 @@ export function toggle(id, row) {
      a renderer. `starredAt` is not shown anywhere yet; it is stored because
      insertion order is the only ordering the set has and a Map's order does
      not survive a future move off localStorage. */
-  if (on) ROWS.set(id, { ...row, id, starredUnder: SEARCH, starredAt: Date.now() });
+  if (on) ROWS.set(id, { ...row, id, starredUnder: SEARCH, starredSearch: SPEC, starredAt: Date.now() });
   else ROWS.delete(id);
   write();
   announce();

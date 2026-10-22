@@ -239,7 +239,7 @@ offers no button to tab to.
 
 ## The engine seam
 
-`js/ports.mjs` is `design/components.md` §1 made executable: **15 named ports**, one per
+`js/ports.mjs` is `design/components.md` §1 made executable: **16 named ports**, one per
 data-bearing row, plus a typedef for each shape and a `NullEngine` that implements every port by
 refusing.
 
@@ -293,7 +293,7 @@ out. `/terrain-round` builds it.
 
 ## `partials/` and `js/surfaces/` — the rest of the tree
 
-**Eight partials, and the host list in `index.html` is the manifest.** `main.mjs` fetches
+**Nine partials, and the host list in `index.html` is the manifest.** `main.mjs` fetches
 every one, **replaces** its host with the partial's own nodes, and **awaits all of them
 before calling any `init()`**. That single ordering rule is what replaces 55 scattered
 parse-time element captures: every surface module exports `init(ctx)` and reads the DOM
@@ -316,11 +316,16 @@ where it lives, because its containing block is the viewport either way.
 no focus trap — and all three are now narrowed to exactly this one node. `design-language.md`
 §3.2 carries the successor and `figure-viewer.mjs`'s header carries why the premise changed.
 
-**Nine surfaces**, one per region rather than one per file that happened to get large:
-`masthead`, `settings`, `home`, `work`, `list`, `fishbone`, `record`, `starred`, `destinations`.
-`views` left with the analysis layer.
+**Ten surfaces**, one per region rather than one per file that happened to get large:
+`masthead`, `settings`, `home`, `work`, `list`, `fishbone`, `record`, `starred`, `report`,
+`destinations`. `views` left with the analysis layer.
 
-**`js/charts/` is gone.** The four modules — `primitives`, `share`, `series`, `map` — left
+**`report` draws charts without `js/charts/`.** Its bars, year columns and grids are a few
+lines of markup each, built from the `fieldCounts` response and the starred rows, because the
+report needs four shapes drawn one way and a charting module would be a second place a hue
+could come back from (`design-language.md` §2, §7).
+
+**`js/charts/` is gone, and the report does not bring it back.** The four modules — `primitives`, `share`, `series`, `map` — left
 with the analysis layer; the skeleton bar they shared moved to
 `core/primitives.mjs`, which is where the surviving renderers read them from.
 
