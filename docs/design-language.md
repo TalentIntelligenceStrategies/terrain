@@ -400,7 +400,7 @@ interface prints what it gets.
 | Kind | Case | Example |
 | --- | --- | --- |
 | Page and section titles | Sentence case | *What you starred* |
-| Buttons, menu items, tabs, chips | Sentence case, verb first when it acts | *Find similar*, *Download CSV* |
+| Buttons, menu items, tabs, chips | Sentence case, verb first when it acts | *Find similar*, *Create Founder report* |
 | Small field and section labels | `micro`, uppercase, three words at most | NUMBER, WHERE TO SEARCH |
 | Subtext, help, empty states | Sentence case, whole sentences | *Pick a patent on the left to read its record.* |
 | Counts | A figure and a word | *50 matched · 20 shown* |

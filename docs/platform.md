@@ -1149,9 +1149,10 @@ knowing before changing one.*
   founder is US-first, so this fits the user. It does not wall the other offices off: Innovue's
   deck shows an English claim matched against Japanese and Korean documents in their own language,
   so a claim about the other offices in the settings is sayable as reach, never as even coverage.
-- **Is the whole flow right?** Search → find similar → star → export has never been watched with a
-  founder. The part most likely to be wrong is that the starred set is a place you go rather than
-  something that accumulates visibly beside the list.
+- **Is the whole flow right?** Search → find similar → star → the starred set → a report has never
+  been watched with a founder or a backer. The parts most likely to be wrong are that the starred set
+  is a place you go rather than something that accumulates visibly beside the list, and that the
+  report panel beside it is read as the way forward rather than as an upsell.
 - **Does their engine return legal status at all?** Terrain no longer prints it (§13, item R1-17),
   so this is no longer a display question. It still bears on family merge and name unification, which
   §9 takes as hygiene.

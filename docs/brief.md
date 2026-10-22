@@ -604,4 +604,9 @@ monorepo from this folder** — record it here and leave it for a deliberate pro
   promises a reply in two business days where Help says one working day. Its product shots carry
   invented holders and numbers beside real drawings, which §4 records this repository refusing;
   sales material is captured from `app/` against the corpus instead. Its audience also trails §1,
-  which names founders and the backers behind them.
+  which names founders and the backers behind them. And its shots of the starred set predate the page
+  `platform.md` §5.2 describes: the set as the results card or a table, the record opening over it,
+  and the report panel beside it.
+- **The Pro label** — one solid ink chip marking the paid part of a product without a hue
+  (`design-language.md` §7). If a sibling product sells a part of itself, this is the pattern to
+  reconcile rather than reinvent.
