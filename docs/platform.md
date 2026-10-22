@@ -20,13 +20,14 @@
 
 ## 1 · The shape
 
-**Two surfaces on the path, one collection surface, three destinations off the chrome.**
+**Two surfaces on the path, one collection surface, one report, three destinations off the chrome.**
 
 | | |
 | --- | --- |
 | **The home surface** | Where the founder picks a technology field and describes an idea. One composer, one button. |
 | **The results surface** | The patents the search found down the left, with their drawings; whichever one you open on the right, with all of them. |
-| **The starred set** | Everything the founder starred, read as a whole, and where it leaves as a file. |
+| **The starred set** | Everything the founder starred, read as a whole, and where it leaves as a file or becomes a report. |
+| **The report** | The starred set as a Founder or a Backer report — counts anyone can check, then the Pro part, written when it is run. §5.3. |
 | *Destinations* | Account settings · Plan & billing · Help. Reached from the masthead, returned from in place. |
 
 A **surface** is somewhere the product happens. A **destination** is somewhere the founder steps off
@@ -43,14 +44,15 @@ appearance control, the account menu.
 
 ---
 
-## 2 · The four moments
+## 2 · The five moments
 
 | Moment | Surface | What is on screen |
 | --- | --- | --- |
 | 1 · First run | home | The field tiles, the composer, and the question above it. Nothing else. |
 | 2 · What was found | results | The ranked patents fill the left column, and keep it. Nothing is approved and nothing is waited for beyond the one call. |
 | 3 · Working | results | Sorting, grouping, starring, finding similar, reading a record, opening a drawing. The founder may stay here indefinitely and most of the product's value is spent here. |
-| 4 · Leaving | starred set | The shortlist as a whole, and two buttons that write a file. |
+| 4 · Taking stock | starred set | The shortlist as a whole, two buttons that write a file, and two that open a report. |
+| 5 · The report | report | The starred set read for one question — building it, or backing it. Counts first; the Pro part follows, and runs only when asked. |
 
 **There is no confirm step and no build stream.** The search runs on submit. The reading, the five
 narrowing questions, the priced gate and the staged build were four ports and are now none — a
@@ -58,9 +60,12 @@ founder who has to approve a paraphrase of their own sentence before anything ha
 being asked to do the product's job.
 
 **The commitment is pressing Search.** Nothing is approved before it and nothing is charged by it.
+The one thing in the product that takes minutes and is paid is a report's Pro part, and it is asked
+for there, at the end, never before a search.
 
-**Moment 4 is a moment and not a destination.** The starred set is where the product ends, so it is
-on the path — reached from the count beside the results, and returned from to exactly the same list.
+**Moments 4 and 5 are moments and not destinations.** The starred set and its report are where the
+product ends, so they are on the path — reached from the count beside the results, and returned
+from to exactly the same list.
 
 ---
 
@@ -91,11 +96,13 @@ moving by keyboard finds out the field exists and is not yet covered, rather tha
 there at all.
 
 **A field is a scope, not only a label.** Innovue's build heads one *H01L · Semiconductor devices* —
-an IPC subclass — and its service is called `ipcembedding`, which reads as each field being an index
-of its own. If it is, a patent classed outside the subclass never comes back however close it is,
-and the field tile is a retrieval boundary the founder chose without being told. The interface
-prints the field's name and not its symbol, which is the vocabulary rule; whether it must also say
-what the scope excludes waits on §12.
+an IPC subclass — and its service is called `ipcembedding`, and Innovue's roadshow deck states what
+that suggested: collections are built per technology field, and a patent classified outside the
+chosen field is not searched, however close it is. The field tile is a retrieval boundary the
+founder chooses without being told. The interface prints the field's name and not its symbol, which
+is the vocabulary rule; whether it must also say what the scope excludes waits on §12. Innovue's
+stated direction is one index across all fields, with medical the next field added before it; the
+tiles are built to take a field that becomes ready, and nothing in the interface dates either.
 
 ### 3.2 · One composer, one button
 
@@ -126,9 +133,24 @@ scrim and one focus trap belong to the enlarged drawing (§4.5). A panel that is
 not pretend otherwise by dimming the page.
 
 It carries: **data source** (jurisdiction chips, and document kind — granted or applications),
-**results to return**, and a **date filter** with a basis (filed or published) and an optional range.
+**results to return**, and a **date filter** with a basis (filed or published) and an optional range
+whose bounds are each **a year or a full date**.
 At least one jurisdiction and one kind must stay selected, and the panel says so rather than letting
 the founder produce a search that cannot run.
+
+**A bound is a year or a full date, because a practitioner's cutoff is a day.** Prior art is
+measured against a filing date, so the useful range ends the day before it; a year either lets in
+ten months that cannot be prior art — the patent's own family among them — or drops ten that can.
+The field takes digits only and places the hyphens itself, so a phone keeps its number pad: four
+digits are a year, eight are a date. A year as the upper bound means the end of that year and as
+the lower bound its start. **A half-typed date searches as its year**, which widens the search
+rather than narrowing it on something the founder did not finish.
+
+**The date filter is applied before ranking, not after it.** Innovue states this, and it is what
+makes the filter worth having for a practitioner: with the range ending the day before a filing
+date, nothing filed later takes a place in the list, so the 100 results are 100 candidates rather
+than fewer. Copy says what the filter does — *filed before* a date — and never that what remains
+*is* prior art.
 
 **There is no priority-date basis, and that is a decision.** Innovue's build offers one, and the
 priority-date field is often blank in their index, so a range on it cannot be trusted to mean what
@@ -666,7 +688,7 @@ is where the change would have happened.
 **That ordering is a ranking, not a verdict.** A patent near the top is close to what the founder
 described. It does not mean it affects them, and the interface never says it does.
 
-### 5.2 · The starred set leaves as data
+### 5.2 · The starred set leaves as data, or becomes a report
 
 The starred set has **its own surface**, reached from a standing count in the masthead and from the
 count beside the results. It is where the shortlist is read as a whole rather than one row at a time,
@@ -693,25 +715,28 @@ which question each answer belongs to. Inside a group the order is the order the
 which is the only order the set has.
 
 **That means a star is stamped when it happens.** Nothing afterwards knows which search a row came
-from, so the store records the **query that ran** — not what is in the search box at the moment the
-star is pressed, because the founder can edit that sentence without searching again. The stored row
-carries two fields of the store's own beside the engine's, and they are named so they read as ours.
+from, so the store records the **search that ran** — the query, the field, the settings and the
+mode, not what is in the search box at the moment the star is pressed, because the founder can edit
+that sentence without searching again. The report needs all four: its counts of the field re-run
+each search behind the stars (§5.3). The stored row carries three fields of the store's own beside
+the engine's — the query, the search, and when it was starred — named so they read as ours.
 
 **Every column the file carries is on the row above it.** The page tells the founder the files carry
 the same fields as the rows, so a field that leaves in the file without appearing on screen is the
 one thing `brief.md` §1's test is about. The row shows all seven.
 
-**It leaves as a CSV or a Markdown list, and as nothing else.** Both carry the fields already on
-screen — number, title, holder, where, year, score, and the search it was starred under —
+**It leaves as a CSV or a Markdown list, or it becomes a report.** Both files carry the fields
+already on screen — number, title, holder, where, year, score, and the search it was starred under —
 and neither carries a cover page, a summary or a conclusion. The CSV carries the search as a column;
 the Markdown has no columns, so it carries it as a heading per search, in the order the page shows
 them. One grouping function feeds both, because two would be two chances for the file and the screen
 to disagree about the order of the founder's own work. `brief.md` §1 is the rule and the test is one
-question: **does the file state anything the interface did not?** If it does, Terrain has written a
-report.
+question: **does the file state anything the interface did not?** If it does, it is not the export.
+Reading the set is the report's job, on its own surface, and nothing a reading says leaks into the
+two files.
 
-**The two buttons sit in the page's head and name the format** — *Download CSV* and *Download
-Markdown*, both secondary, at the trailing end of the title's line. They act on the whole set, so
+**Four buttons sit in the page's head, all secondary** — *Founder report* and *Backer report*, then
+*Download CSV* and *Download Markdown*, at the trailing end of the title's line. They act on the whole set, so
 they belong to the heading that names it rather than to a row of their own above the table. **The
 pressed button says *Downloaded* for a moment**, keeping its accessible name: a download has no
 screen of its own, and the page it was pressed on otherwise looks exactly as it did. The live region
@@ -722,6 +747,78 @@ the same CSV and Markdown for the patent being read, and it reads the **row** ra
 — which is why the row carries `number` and `where` it does not draw. One record must not grow a
 third opinion about what a row contains, and a file of one must not carry different fields from the
 set it came out of. Neither file reaches the engine: every byte is already in the client.
+
+### 5.3 · The report
+
+**The starred set read for one question, as paper.** Two reports, one shape. The **Founder report**
+answers *can I build this, and protect it?*; the **Backer report** answers *does this hold up, and who
+else is here?* A backer is an investor, incubator or accelerator behind a startup (`brief.md` §1).
+The page is drawn as a report rather than as an app screen — sheets on the ground, a memo header, a
+key-figures rail, numbered exhibits — because a backer reads it beside the memos they already get.
+`design-language.md` §7 carries how it looks.
+
+**It reads top to bottom in four parts.**
+
+1. **The memo header and how the set was made.** To (the founding team, or the investment
+   committee), about (the description the report reads against), date, and basis: how many searches,
+   across which offices, how many results they returned, how many patents are starred. **It comes
+   before any number**, because the most common failure of a landscape is not saying how its set was
+   made, and because *these counts describe what the searches returned, not every patent that exists*
+   is `brief.md` §1's test applied to a page.
+2. **The counted part.** Exhibits, each titled with a sentence that states a count and nothing more,
+   each with its base and a source line. **Two bases, and every exhibit names its own**: counts of the
+   field run over the **full results of the searches behind the stars** (the `fieldCounts` port,
+   `components.md` §1); counts of status and listing run over the **starred patents**. A hand-picked
+   set says little about a field, which is why the field is counted from the searches.
+3. **The Pro part.** A band with **Run the Pro report** — the surface's one filled button — then each
+   Pro section as its real heading, the question it answers, and skeleton bars. Nothing is generated
+   before it runs, so nothing is hidden behind a blur and no run is wasted. After it runs, each section
+   is marked as AI-written and cites the patents, claims and passages it rests on. A disclaimer closes
+   it.
+4. **The appendix: the starred patents**, one row each — number, holder, office, year filed, status,
+   TIS listing — from the starred rows themselves.
+
+**The sections, in reading order.**
+
+| | Founder | Backer |
+| --- | --- | --- |
+| **Counted** | Who holds them · Filed by year · Where they were filed · Technology classes · Granted and pending · Listed for licence on TIS | Holder concentration · Granted and pending · Filed by year · Where they were filed · Where filings cluster |
+| **Pro** | Bottom line (written last, shown first) · Closest claims · Where the idea may differ · What's already described · Each patent in plain English | The set in a page (written last, shown first) · Closest claims to the company · Other holders in the set · Risk flags · Questions to ask the founders |
+
+**Every count adds up, and every exhibit says what it counted.**
+
+- **Holder tables sum to the total.** Named holders, then *Others* with how many holders it folds,
+  then *Holder not recorded*, then the total. A share read against the named rows only inflates the
+  top holder. A holder the engine withholds (`null`) is a skeleton bar, as everywhere.
+- **The filing-year chart keeps the dip and marks it.** One year type, filing year, said in the note.
+  The last eighteen months are drawn as outlines and the note says why: applications publish about
+  eighteen months after filing. Cutting them hides data.
+- **No growth rate, no share of a share, no composite score.** On a set this size they are false
+  precision, and a score would be a verdict of Terrain's own.
+- **Where filings cluster is a class-by-period grid with the numbers in the cells**, not a map and not
+  shading that carries the meaning.
+
+**The Pro sections are readings, and the rules are `brief.md` §1's.** The claim chart marks each of
+the idea's features against each closest claim as *present*, *unclear* or *absent*, with a word beside
+the symbol and the claim and passage it rests on; a feature no claim reaches is what falls outside.
+*Where the idea may differ* says what *may avoid* a claim, never what is clear. *What's already
+described* is not a novelty opinion, and says the set is not a prior-art search. *Risk flags* carry
+their basis and their patents and no score. *Who else is here* is not a list of acquirers, which needs
+deal data the set does not hold.
+
+**The disclaimer is the whole of the legal hand-off.** The Founder report's reads: *Pro sections are
+written by AI from the patents you starred and your description. They are not legal advice, and not a
+freedom-to-operate, patentability or validity opinion. Patents outside this set may matter.* The
+Backer report's says *legal or investment advice*. Neither routes the reader anywhere.
+
+**Download PDF prints the page.** Before Pro it carries the memo header, the counted part and the
+appendix, and no Pro part at all — a file of empty bars says nothing. After Pro it carries everything.
+It prints light whatever the theme, because it is paper. The file test is §5.2's: the PDF states
+nothing its page did not.
+
+**What the reference cannot do yet, and says.** Run the Pro report waits on Innovue's prompts; in
+`app/` it answers inline that Pro runs once they are connected. The TIS listing is TIS-side data and
+renders as a skeleton bar until it exists. The Founder/Backer switch keeps the same starred set.
 
 ---
 
@@ -896,13 +993,13 @@ anyone to configure it.
 
 | Cut | Why |
 | --- | --- |
-| **The entire analysis layer** | Dozens of destinations of charts, matrices and trend cuts, each a reading authored for an analyst. A founder does not run somebody else's analysis; the accurate set is the product. This is the pivot, and every row below is downstream of it. A view that only counts the returned rows (§10 item 6) is not this layer coming back — it says nothing the rows do not. |
+| **The analysis layer, as a place to work** | Dozens of destinations of charts, matrices and trend cuts, each a reading authored for an analyst to navigate. A founder does not operate an analyst's workbench; the set — real, as published, and built to be near — is what the search returns. What comes back is narrower and has one home: a report on the starred set (§5.3), whose counted part says nothing the rows do not and whose Pro part is marked and cited. Every row below is downstream of that split. |
 | The authored taxonomy | IPtech wants a taxonomy written before the first search. Terrain generates its grouping from the result set — this is the whole of what makes it operable by a founder. |
-| Valuation (`價值通`) | A verdict on a patent's worth. Terrain does not issue verdicts. |
-| Plain-English decode (`AI閱讀Pro`) | A paraphrase of the record rather than the record. |
-| The landscape summary (`AI Insight`) | Same reason, at corpus scale. |
-| An attorney handoff file | The starred set leaves as data (§5.2); a written-up handoff is the authored narrative `brief.md` §1 refuses. |
-| The zone names (`地雷區` / `新興區` / `處女地帶`) | Minefield, emerging, virgin territory. They label absence, and a search result cannot carry a claim about what exists. |
+| Valuation (`價值通`) | A verdict on a patent's worth, as a score. Terrain shows no score of its own. |
+| Plain-English decode (`AI閱讀Pro`), on the record | A paraphrase in place of the record. It returns only as the Founder report's *Each patent in plain English*, marked as AI-written; the record itself stays as published. |
+| The landscape summary (`AI Insight`), at corpus scale | A reading of a whole field nobody chose. It returns only as a Pro section over the starred set — *Bottom line*, *The set in a page* — citing the patents it rests on. |
+| An attorney handoff file | A document somebody could file against. The report is not one: it is a reading for the founder or backer, under a disclaimer, and routes nobody anywhere (§5.3). |
+| The zone names (`地雷區` / `新興區` / `處女地帶`) | Minefield, emerging, virgin territory. They label absence, and a search result cannot carry a claim about what exists. The Backer report's *Where filings cluster* counts what came back and names no zone. |
 
 **What Terrain adds.** PI-VuePat, as inventoried (`visual-reference/pi-vuepat/`), had no
 multi-patent export: its egress was one patent at a time into another Innovue product. **A set the
@@ -942,16 +1039,21 @@ postponed, it says so.
 5. **A standing jurisdiction filter** on the result list — *US only*. Mechanical, and it answers the
    question a founder asks second. **Starts when:** every row prints its jurisdiction as a code
    (R1-13), so the filter can be checked against what is on screen.
-6. **Views of the set** — the returned rows counted by filing year, holder, office or group, on the
-   results surface or the starred set. `brief.md` §1 admits them as the set redrawn: no caption, no
-   finding, and no hue — a view draws from the neutral ramp, because a hue is an amendment to
-   `design-language.md` §2. The client holds twenty rows of up to five hundred, so a count over the
-   set is the engine's arithmetic or it is a guess. **Starts when:** founders are seen charting the
-   export to answer the same question, or Innovue's engine returns counts over a result set.
-7. **An attorney handoff file** — the starred set written up as a document somebody could file
-   against. **Decided against**, not postponed. The starred set leaves as data (§5.2); a written-up
-   handoff is the authored narrative `brief.md` §1 draws the line at, and reopening it is an
-   amendment to that lock.
+6. **Views of the set on the results surface** — the returned rows counted by filing year, holder,
+   office or group, beside the list rather than in a report. The report's counted part (§5.3) already
+   draws them over the searches behind the stars, through the `fieldCounts` port; on the results
+   surface they would be a second place for the same numbers. **Starts when:** founders are seen
+   leaving the results for the report only to read a count.
+7. **An attorney handoff file** — a document somebody could file against. **Decided against**, not
+   postponed. The report is a reading under a disclaimer that routes nobody anywhere (§5.3); a file
+   written for counsel would be a second kind of document, and that is an amendment to `brief.md` §1
+   argued as one.
+8. **Running Pro in the reference.** Run the Pro report answers inline in `app/` until Innovue's
+   prompts are connected. **Starts when:** Innovue writes the prompt behind each Pro section and
+   states what a run returns (`components.md` §1).
+9. **Against its neighbours** — where the company's own filings sit among the starred set, for the
+   Backer report. **Starts when:** the company's own patents are an input, which starring does not
+   guarantee.
 
 ---
 
@@ -985,9 +1087,10 @@ knowing before changing one.*
   (`brief.md` §6), which is why the plan screen prints `XXX` and a bar rather than guessing, and why
   nothing on any surface counts what a search costs.
 - **The name.** Three are in use and none is decided — `brief.md` §2.
-- **What does `ipcembedding` mean for retrieval?** If a technology field is an IPC-scoped index
-  (§3.1), the field tile decides what can come back, and the empty state in §7.2 may have to name
-  the scope as well as the offices and dates. `components.md` §4 question 11; §13.5.
+- **What does `ipcembedding` mean for retrieval?** Innovue states that a field is its own
+  collection (§3.1), so the field tile decides what can come back, and the empty state in §7.2 may
+  have to name the scope as well as the offices and dates. What is still open is the exact boundary
+  — one IPC subclass, or a set of them. `components.md` §4 question 11; §13.5.
 - **Where does the starred set live when the founder has two machines?** It survives a new search and
   a reload, the second in browser storage (§5.1). What it does not survive is a different browser,
   cleared site data, or being handed to a colleague — all of which need an account rather than a
@@ -995,10 +1098,13 @@ knowing before changing one.*
 - **How many results should a search return by default?** The settings ladder offers 10 · 20 · 50 ·
   100 · 500, and whether 500 is an engine ceiling or an interface one is unanswered.
 - **Whether Terrain sits on Innovue's semantic search surface or beside it.**
-- **How accurate is the set?** One evaluation exists and it does not answer this. It is Innovue's,
-  in one field, it takes the prior art examiners cited as the answer, and it compares the engine
-  with other tools; `brief.md` §3 says what it licenses, and its figures stay local
-  (`visual-reference/innovue-research/`). What would answer it is a fixed set of founders'
+- **How accurate is the set?** Innovue's evaluations do not answer this. They are Innovue's, in
+  two fields plus a run on US grants from claim 1 alone, they take the prior art examiners cited as
+  the answer, and they compare the engine with other tools; `brief.md` §3 says what they license,
+  and their figures are kept local with the holders they print
+  (`visual-reference/innovue-research/`). Innovue reports that the same text on the same day
+  returns the same list and that the daily intake moves ranks slightly, so any fixed set has to be
+  re-run on one day to compare like with like. What would answer it is a fixed set of founders'
   descriptions, each with patents known to be near it, run against Innovue's build — which is why
   copy still says *built to return*. In round 1, nonsense and out-of-field text each returned fifty
   results (R1-30).
@@ -1011,8 +1117,9 @@ knowing before changing one.*
   and 13.
 - **An English query leans toward US documents.** Innovue's evaluation found the query's language
   shapes which offices the results come from, and Terrain is English only (`brief.md` §1). The
-  founder is US-first, so this fits the user; it bears on any claim about the other offices in the
-  settings.
+  founder is US-first, so this fits the user. It does not wall the other offices off: Innovue's
+  deck shows an English claim matched against Japanese and Korean documents in their own language,
+  so a claim about the other offices in the settings is sayable as reach, never as even coverage.
 - **Is the whole flow right?** Search → find similar → star → export has never been watched with a
   founder. The part most likely to be wrong is that the starred set is a place you go rather than
   something that accumulates visibly beside the list.
@@ -1183,4 +1290,5 @@ What has been settled since round 1 was sent, and goes in round 2's package.
 | Question | What does their analytics record, and where is it sent? `components.md` §4 question 12 |
 | Question | Which index and route answers a Terrain search; what the score measures; what each field holds; whether queries are kept or trained on, and where it runs. `components.md` §4 questions 13–16 |
 | Clearance | Their engine research and Round 2 evaluation were shared with TIS → which of it, figure by figure, may be quoted in public material. `brief.md` §3 |
+| Date bounds | Their range takes a year only (*Earliest year* / *Latest year*), and a year sent as the upper bound becomes its 31 December → each bound a year or a full date, typed as digits with the hyphens placed for the founder (§3.3). Their engine already accepts a date |
 | Masthead name | Their masthead reads *TIS Terrain* → raised only once `brief.md` §2 settles the name, so they rename once |

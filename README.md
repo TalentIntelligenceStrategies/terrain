@@ -1,17 +1,18 @@
 # TIS Terrain
 
-**Patent search built to return the patents actually near an idea, and to hand them over cleanly,
-for founders working out where their idea sits.**
+**Patent search built to return the patents actually near an idea, and two reports on what they
+mean — for founders, and the people who back them.**
 
 You describe what you are building, Terrain returns the patents that are actually near it, you star
-the ones that matter, and you take them out as a file. Self-serve software searching
-Innovue's patent database.
+the ones that matter, and the starred set becomes a Founder or a Backer report, or leaves as a file.
+Self-serve software searching Innovue's patent database.
 
-**Terrain shows what came back and never says what it means.** Founders do not run somebody else's
-pre-built analysis — they take the data and work it in tools they already trust. The gap worth
-solving sits upstream of analysis: patent search returns inaccurate, incomplete sets, and an accurate
-one is what the product is for. A view that counts the returned rows is admissible; a summary, a finding or a
-verdict is not.
+**The search shows what came back; a report says what it may mean, and shows its sources.** The gap
+worth solving is not finding patent information but finding information a founder can trust:
+generative AI is near and writes what it returns, a keyword index is real and misses what is near.
+Terrain is built to give both — the real patents nearest the idea, exactly as published — and then a
+reading of the starred set that can be checked against it. A count of the set is admissible anywhere;
+a reading only in a report's Pro part, marked as AI-written and citing the patents it rests on.
 
 Terrain is a TIS product in the Patent Intelligence pillar, and *Terrain* is its working name.
 Innovue builds and ships it. This repository holds the reference it is built from — `app/` — and

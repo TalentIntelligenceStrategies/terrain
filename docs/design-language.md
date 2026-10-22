@@ -19,10 +19,10 @@ Three things follow from that and everything else is downstream of them:
 - **Hierarchy comes from weight, size and space, not from colour.** A founder scanning a screen of
   patent data should be able to find the heading, the figure and the caption without a hue telling
   them which is which.
-- **Nothing on screen is a reading of what is on screen.** Terrain prints the engine's answer and the
-  patent's own text. There is no caption stating a finding, because a finding is an analysis and
-  `brief.md` §1 puts those outside the product — this is the rule that used to say the opposite, and
-  it inverted with the product rather than being relaxed.
+- **Nothing on the search surface is a reading of what is on screen.** Terrain prints the engine's
+  answer and the patent's own text. A reading lives in one place — a report's Pro part, marked as
+  AI-written and citing what it rests on (`brief.md` §1) — and a caption anywhere else states a count
+  or nothing.
 - **Nothing pretends to more certainty than it has.** A value we do not hold is a grey bar. A wait is
   a loader, not a fake skeleton. An empty result says what was searched.
 
@@ -46,10 +46,12 @@ charts; **discrete states** — the live / expired / pending chip — went with 
 
 **A hue is an amendment, not a design task.** The tokens are gone rather than parked, so a hue means
 declaring a semantic token in all three theme blocks, measuring it against both grounds, and arguing
-it against this section — which is the friction this rule is for. **A view of the set is not an
-amendment** — [`brief.md`](brief.md) §1 admits it — **but a hue for one is**, on the same terms. A
-view draws from the neutral ramp, and its series are told apart by position and label, never by
-colour.
+it against this section — which is the friction this rule is for. **A report's charts are not an
+amendment** — [`brief.md`](brief.md) §1 admits a view of the set — **but a hue for one is**, on the
+same terms. A chart draws from the neutral ramp: a bar is `--text-2`, a folded or withheld bucket
+`--border-strong`, an incomplete period an outline. Its series are told apart by position and label,
+never by colour, which is why the report uses small tables and one series per chart rather than a
+legend.
 
 **Colour would encode direction, never desirability.** Whatever earns a hue next — a state, a
 direction — earns it as information. Nothing is green because it is good.
@@ -195,9 +197,9 @@ the evidence rather than a violation.
 *It held the live / expired / pending hues and the two direction aliases derived from them. They had
 one reader, the legal-status chip, and left with it (`platform.md` §13, R1-17).*
 
-*§3.5 was chart layers and is retired, and `--chart-series` went with it. Terrain draws no chart; a
-view of the set, when one is built, draws from the neutral ramp and does not bring the token back.
-§3.5's number is not reused, for the reason §3 opens with.*
+*§3.5 was chart layers and is retired, and `--chart-series` went with it. The report's charts draw
+from the neutral ramp (§2) and do not bring the token back. §3.5's number is not reused, for the
+reason §3 opens with.*
 
 ### 3.6 · Skeleton
 
@@ -860,9 +862,10 @@ carried by the sentence above them rather than by a hue.
 marking, and nothing about a toggle says *this is a sketch*. Do not add one for a capability that does
 not exist.
 
-**There are no widget cards, and no captions.** A caption states a finding, a finding is a reading of
-the data, and `brief.md` §1 puts those outside the product. **The info popover survives and carries
-explanation only** — what a score is, what *Nearness* measures. The test is whether a
+**There are no widget cards, and no caption states a finding.** A finding is a reading of the data,
+and `brief.md` §1 puts readings in one place: a report's Pro part. **A report's exhibit title states
+a count** — *Three holders account for 67 of 186 results* — and nothing more; anywhere else, there is
+no caption. **The info popover survives and carries explanation only** — what a score is, what *Nearness* measures. The test is whether a
 screenshot with **no popover open** still says what the founder is looking at; an interface that needs
 a popover to be legible is not legible.
 
@@ -936,6 +939,26 @@ one-of-N.
 **A sent state replaces its form rather than sitting under it.** A composer left on screen beneath a
 confirmation invites a second send of the same message.
 
+**The report is paper.** It is the one surface drawn as a document rather than as an app screen,
+because a backer reads it beside the memos they already get (`platform.md` §5.3). Sheets of
+`--surface` on `--ground`, one column of about 816px, generous margins, a running head and foot on
+each sheet, and *Powered by Innovue* in the foot as on every product surface.
+
+- **A memo header first**: To, Re, Date, Basis, as a two-column definition list between a 2px and a
+  1px `--text-1` rule — the convention an investment committee already reads.
+- **A key-figures rail** beside the first exhibit: five figures in Inconsolata at 20px, each with a
+  13px label. On a phone it stacks above.
+- **Numbered exhibits**: an 11px uppercase label (*Exhibit 2 · Filed by year*), a 16px title that
+  states a count, the chart or table, a 13px note, and an 11px source line naming the base. Two
+  exhibits share a sheet side by side above 640px.
+- **The Pro band** opens Part 2: `--surface-sunken`, full bleed to the sheet's edges, a 3px
+  `--text-1` rule above, the heading, one line on what Pro is, and **Run the Pro report**, the
+  surface's one filled button.
+- **Type stays on the scale**: 11, 13, 16, 20, 26 and 36px, nothing between. Numbers are Inconsolata
+  with tabular figures.
+- **It prints as itself.** `@media print` drops the app's chrome, breaks one sheet per page, and —
+  before Pro — leaves Part 2 out. It prints light in either theme, because paper does not swap.
+
 ---
 
 ## 8 · The skeleton contract
@@ -976,6 +999,12 @@ they have run three whose sentences we decline to print. So an empty list says w
 the act that does — the same distinction the loader draws against the bar, one component up.
 
 **The screen must read as populated through layout alone.** That is the harder and more useful test.
+
+**A report's Pro sections are bars until they are run, and that is the contract read straight.** A
+Pro section's text exists to be written and is being withheld until the founder runs it, so its
+lines are bars under a real heading — never a blur over real text, which would be text generated and
+then hidden, and never lorem ipsum. The heading and the line saying what the section answers are
+chrome, and print in full.
 
 ### The exceptions, and what makes one admissible
 

@@ -35,11 +35,12 @@ export function roundDir(n, ...sub) {
 
 export function die(msg) { console.error(`refused: ${msg}`); process.exit(1); }
 
-export async function open({ width = 1440, height = 900, theme } = {}) {
+/* scale is the device pixel ratio: 1 for rounds, 2 for the deck's captures */
+export async function open({ width = 1440, height = 900, theme, scale = 1 } = {}) {
   const exe = process.env.TERRAIN_CHROME || undefined;
   const browser = await chromium.launch(exe ? { executablePath: exe } : {});
   const ctx = await browser.newContext({
-    viewport: { width, height }, locale: 'en-US', acceptDownloads: true,
+    viewport: { width, height }, deviceScaleFactor: scale, locale: 'en-US', acceptDownloads: true,
     colorScheme: theme === 'dark' ? 'dark' : 'light',
     permissions: ['clipboard-read', 'clipboard-write'],
   });
