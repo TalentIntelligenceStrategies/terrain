@@ -1,92 +1,78 @@
 /* ══ 39 · THE STARRED SET ═══════════════════════════════════════════════════
-   platform.md §5.2. The founder's shortlist read as a whole, and the surface
-   it leaves from.
+   platform.md §5.2. The founder's shortlist read as a whole, the report it
+   becomes, and the surface it leaves from.
 
-   MOST OF THIS SURFACE HAS NO CSS HERE, and that is the point. It renders in
-   `.view-page` / `.main` / `.page-head` / `.pg-back` / `.foot` alongside
-   points, account, billing and help, so everything about the frame is already
-   decided. What is left is the list, the bar above it, and the two sentences.
+   MOST OF THE SET HAS NO CSS HERE, and that is the point. The page frame is
+   `.view-page`'s, the Detail view is the results list's own row (34-list.css)
+   and the record is the results surface's own pane (35-record.css), moved
+   into the drawer below. What is left is the two-column grid, the toolbar,
+   the group heading, the List table, the report panel, the drawer's geometry
+   and the toast.
    ═══════════════════════════════════════════════════════════════════════ */
 
-/* THE COLUMN, and it borrows the account page's measurement rather than
-   inventing a second one. `.view-page` gives `.page-head` and `.grid` their
-   16px inline padding by name, and this surface has neither of those between
-   the head and the list — so it declares the same padding and the same 820px
-   cap that `.view-acct` uses, for the same reason: a list of rows set to
-   1440px is a line the eye loses its place on between the title and the year.
-
-   IT IS THE CHILDREN OF .main, NOT A LIST OF NAMES. This was six selectors
-   enumerated twice, one per element in the page — which meant the column was
-   a property of a list somebody had to remember to join. Adding one sentence
-   to the page put it at x=0, full-bleed across a 1440px window, while every
-   element around it stayed in the column: the rule did not fail, it simply did
-   not apply, which is the failure mode this repository keeps relearning.
-
-   A child selector cannot miss a child. The wrapper #starBody takes the cap
-   and its own contents inherit it, so the bar, the list and the two notes are
-   in the column by being inside the page rather than by being named. */
-/* THE CAP CAME OFF WITH THE TABLE · 2026-09-26. 820px was the account page's
-   measurement and it was the right one for a list of title-led rows — a line
-   of prose set to 1440px is one the eye loses its place on between the title
-   and the year. A table is not prose: its columns are what the eye returns
-   to, they are read DOWN rather than across, and squeezing nine of them into
-   820px was what made this page feel packed. It takes the surface's own 16px
-   gutter now, the same frame the results surface uses.
-
-   THE TWO SENTENCES KEEP A MEASURE, because those ARE prose and the argument
-   for 820 was always about them: .star-lede and .star-note carry 68ch of
-   their own, which is §4's measure rather than this page's cap. */
 .view-starred .main>*{width:100%}
-/* THE HEAD IS THE ONE EXCEPTION, and it is .view-page's rather than ours: it
-   already carries its own inline padding by name, so a second one here would
-   indent the title 32px against a list at 16. */
+/* THE HEAD IS .view-page's, which pads it by name; everything else takes
+   the same 16px gutter the results surface uses. */
 .view-starred .main>*:not(.page-head){padding-inline:var(--s-16)}
-
-.star-lede{margin:0 0 var(--s-20);color:var(--text-2);max-width:68ch;
-           text-wrap:pretty}
-.star-lede[hidden]{display:none}
-/* the empty note's own 12px inset is for a note inside a card; here it sits
-   on the page, and the inset put it 12px off the edge the heading and the
-   back control share. */
+.view-starred .page-head{flex-wrap:wrap}
 #starEmpty .empty-note{padding-inline:0;max-width:68ch}
 
-/* THE BAR IS IN THE HEAD, at the trailing end of the title's line. Both
-   controls act on the whole set rather than on a row, so they belong to the
-   page's heading and not to a toolbar over the list. It wraps under the
-   title on a narrow window, as the head's flex-wrap allows. */
-.star-bar{display:flex;align-items:center;gap:var(--s-8);flex:0 0 auto;flex-wrap:wrap}
-/* ON A PHONE THE BAR TAKES ITS OWN ROW AND THE BUTTONS SHARE IT. Held at its
-   content width it measured 356px against a 288px column at 320 and pushed
-   Download Markdown past the screen edge, where nothing could reach it. The
-   buttons wrap onto a second line before either is cut. */
-@media (max-width:640px){
-  .star-bar{flex:1 1 100%}
-  .star-bar .btn{flex:1 1 auto}
+/* ══ TWO COLUMNS · the set leading, the report trailing ═══════════════════
+   340px is what the panel's longest line — the CTA at 16px with its two
+   glyphs — needs inside its own padding, and the set takes everything else.
+   minmax(0,1fr), not 1fr: a card's strip of drawings is wider than the
+   column at narrow widths, and an `auto` minimum let it push the panel off
+   the page. Below 1080 — the results surface's own stack point — the panel
+   moves ABOVE the set, because it holds the way forward and a founder on a
+   narrow screen would otherwise scroll past twenty cards to find it. */
+.star-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:var(--s-32);
+           align-items:start;padding-block-end:var(--s-24)}
+.star-grid[hidden]{display:none}
+@media (max-width:1080px){
+  .star-grid{grid-template-columns:minmax(0,1fr)}
+  .star-rep{order:-1;position:static}
 }
-.star-bar[hidden]{display:none}
-.view-starred .page-head{flex-wrap:wrap}
+.star-set{display:flex;flex-direction:column;gap:var(--s-12);min-width:0}
 
-/* ══ THE SET IS A TABLE · 2026-09-26 ════════════════════════════════════
-   IT WAS A LIST OF TITLE-LED ROWS with a meta line that flowed — holder,
-   jurisdiction, year and score packed to the trailing edge in whatever order
-   they fitted — so no two rows put the same fact at the same x. A shortlist
-   is the one collection in this product that gets COMPARED, and comparison is
-   a column: the founder is deciding which of twelve matters, which means
-   reading one field down twelve rows rather than twelve fields across one.
+/* ── the set's own toolbar · views and order, nothing else ── */
+.star-tools{display:flex;align-items:center;gap:var(--s-8) var(--s-12);flex-wrap:wrap;
+            padding-block-end:var(--s-12);border-bottom:1px solid var(--border)}
+.star-set-h{margin:0}
+.star-tools .spacer{flex:1}
+.star-views .seg-btn{display:inline-flex;align-items:center;gap:var(--s-6)}
+.star-sortnote{display:flex;align-items:center;justify-content:space-between;gap:var(--s-4) var(--s-12);
+               flex-wrap:wrap;margin:0;color:var(--text-3)}
+.star-sortnote[hidden]{display:none}
 
-   IT REUSES .tbl's METRICS AND NOT ITS SELECTOR. 31-card.css sizes a table
-   inside a widget card at 8/12 of vertical padding on a hairline; this one
-   sits on the page with a group head above each run, so it takes those two
-   values and declares its own column behaviour rather than inheriting a
-   card's. Same rhythm, different host — writing .tbl on the markup would have
-   pulled in `td{border-bottom}` plus `tr:last-child td{border-bottom:0}`,
-   which is wrong at the end of every group but the last. */
-.star-tblwrap{overflow-x:auto}
-/* AND IT RINGS WHEN IT IS THE FOCUSED THING. starred.mjs gives this a tab
-   stop only while it actually scrolls, so the ring appears on exactly the
-   widths where the region is reachable and means something. The offset is
-   negative because the port has no margin of its own and an outside ring
-   would be clipped by the page. */
+/* ── one group per search ───────────────────────────────────────────────
+   THE HEADING IS THE FOUNDER'S OWN SENTENCE, in quotes because it is their
+   words, set at the card title's size so it reads as what the run below
+   answers. Under it: how many, when, and Run again — quiet, because the
+   heading is the thing. It wraps rather than truncates: a sentence cut at
+   its first clause is a different question. */
+.star-grp{display:flex;flex-direction:column;gap:var(--s-8);padding-block-start:var(--s-16)}
+.star-grp:first-child{padding-block-start:var(--s-4)}
+.star-gh{display:flex;flex-direction:column;gap:var(--s-4);min-width:0}
+.star-gh-q{margin:0;font-size:16px;line-height:1.35;font-weight:600;color:var(--text-1);
+           overflow-wrap:anywhere;text-wrap:pretty}
+.star-gh-none{color:var(--text-3);font-weight:400;font-style:italic}
+.star-gh-meta{margin:0;color:var(--text-3);display:flex;align-items:center;flex-wrap:wrap;gap:var(--s-4)}
+.star-run{display:inline-flex;align-items:center;gap:var(--s-4);color:var(--text-2);border-radius:var(--r-control);
+          padding:var(--s-2) var(--s-4);margin-inline-start:calc(-1 * var(--s-2))}
+.star-run:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+
+/* THE CARDS ARE THE RESULTS LIST'S, on the same widget ground the list sits
+   on there, so a patent looks the same in both places. */
+.star-cards{border:1px solid var(--border);border-radius:var(--r-widget);background:var(--surface);overflow:hidden}
+.star-cards .set-row{border-bottom:1px solid var(--border)}
+.star-cards .set-row:last-child{border-bottom:0}
+
+/* ══ THE LIST VIEW IS A TABLE ════════════════════════════════════════════
+   A shortlist is the one collection here that gets COMPARED, and comparison
+   is a column. Fixed columns, a header that names them, and a long value
+   truncates rather than widening its column and dragging the rest sideways.
+   One <tbody> per search under a spanning heading row. */
+.star-tblwrap{overflow-x:auto;border-top:1px solid var(--border-strong)}
 .star-tblwrap[tabindex]:focus-visible{outline:2px solid var(--focus);
       outline-offset:-2px;border-radius:var(--r-control)}
 .star-tbl{width:100%;border-collapse:collapse;table-layout:fixed}
@@ -94,105 +80,120 @@
       padding-block:var(--s-10);padding-inline:var(--s-8) 0}
 .star-tbl thead th{padding-block:var(--s-8);color:var(--text-3);
       border-bottom:1px solid var(--border-strong)}
-/* a cell is a field value, so meta (§4): 13. The group's heading row is a
-   <th> and keeps body, so each search still heads its rows. */
 .star-tbl tbody td{border-bottom:1px solid var(--border);font-size:13px}
-/* THE LEADING AND TRAILING CELLS SIT ON THE COLUMN'S EDGE. Every other cell
-   is padded from the one before it; the first has nothing before it and the
-   last has nothing after, so an inherited gutter there would indent the table
-   against the head and the two sentences around it. */
 .star-tbl th:first-child,.star-tbl td:first-child{padding-inline-start:0}
 .star-tbl th:last-child,.star-tbl td:last-child{padding-inline-end:0}
-
-/* ── the columns · fixed, because that is the whole point ───────────────
-   table-layout:fixed and these widths are what put every cell on a shared
-   edge whatever it holds. Title takes what is left; a long one truncates
-   rather than widening its column and dragging the four columns after it
-   sideways, which is the failure the old flowing meta line WAS.
-
-   THE WIDTHS ARE PIXELS AND NOT ch, WHICH ch MADE TEMPTING AND WRONG. A
-   column of patent numbers is monospace and `19ch` is exactly right for it —
-   on the <td>. But fixed layout resolves widths from the HEADER row, and the
-   header is 11.5px Urbanist while the cell is 13px Inconsolata, so the same
-   declaration means two different columns depending on which row it lands
-   in. A unit that changes meaning between the row that decides and the rows
-   that obey is not a unit this table can use. Number is sized to 17
-   characters of Inconsolata at 13px plus its gutter; the rest to their own
-   longest real value. Title is the only `auto` column, so it takes whatever
-   the other eight leave. */
-.star-c-n{width:32px;color:var(--text-3)}
+/* PIXELS, NOT ch: fixed layout resolves widths from the header row, which
+   is 11px Urbanist while the cells are 13px Inconsolata, so a ch width would
+   mean two different columns. Title is the one `auto` column. */
 .star-c-num{width:150px}
 .star-c-h{width:22%}
 .star-c-w{width:110px}
-.star-c-y{width:70px}
-.star-c-sc{width:84px}
-/* THE CONTROL COLUMN PAYS FOR ITS OWN GUTTER. Every cell takes 8px of
-   leading padding from the rule above, so a column sized to the 34px control
-   left it 26px of content box and the button overflowed by exactly the 8 —
-   measured as 6px of horizontal scroll on a table that otherwise summed to
-   the wrapper's width to the pixel, which gave the scroll port a tab stop at
-   every width. 42 is the control plus the gutter it sits after. */
+.star-c-y{width:64px}
+.star-c-sc{width:76px}
 .star-c-x{width:42px}
-/* EVERY TEXT CELL TRUNCATES RATHER THAN WRAPS, and that is the table's
-   contract rather than a space saving: a row that grows to three lines
-   because one holder name is long breaks the horizontal scan for the eleven
-   rows beside it. The full value is in the record and in the file. */
-.star-c-t,.star-c-h,.star-c-w{overflow:hidden;text-overflow:ellipsis;
-      white-space:nowrap}
-.star-tbl tbody .star-c-t{color:var(--text-1)}
+.star-c-t,.star-c-h,.star-c-w{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .star-tbl tbody .star-c-h,.star-tbl tbody .star-c-w,
 .star-tbl tbody .star-c-num{color:var(--text-3)}
-/* THE NUMERALS ARE TABULAR, which is what makes a score column readable down
-   its own edge — .fig carries the family and this carries the alignment for
-   the three columns where digits stack. §4. */
-.star-c-n,.star-c-num,.star-c-y,.star-c-sc{font-variant-numeric:tabular-nums}
-/* text-align does not move a flex button, so the trailing edge is an auto
-   margin. It matters because the column is 8px wider than the control and
-   the star should sit on the table's edge rather than 8px inside it. */
+.star-c-num,.star-c-y,.star-c-sc{font-variant-numeric:tabular-nums}
 .star-c-x .set-star{margin-inline-start:auto}
+/* THE TITLE IS THE BUTTON THAT OPENS THE RECORD, and it reads as the title
+   until it is pointed at. */
+.star-open{display:block;width:100%;text-align:left;color:var(--text-1);font-weight:500;
+           overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-radius:var(--r-control)}
+.star-open:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.starrow[data-open] td{background:var(--surface-sunken)}
+.star-tbl .star-grp-head th{padding-block:var(--s-20) var(--s-10);border-bottom:1px solid var(--border-strong);
+      white-space:normal}
+.star-tbl tbody:first-of-type .star-grp-head th{padding-block-start:var(--s-12)}
+@media (max-width:860px){
+  .star-tbl{table-layout:auto;min-width:720px}
+  .star-c-h{width:auto}
+}
 
-/* ── one group per search ───────────────────────────────────────────────
-   THE HEADING IS THE FOUNDER'S OWN SENTENCE and nothing else — no "Search:"
-   prefix, no quotation we added. It is what they typed, and the count beside
-   it is the only thing on the line that is ours.
+/* ══ THE REPORT PANEL ════════════════════════════════════════════════════
+   Sticky beside the set, so the way forward stays in view down a long
+   shortlist. Its two tabs are design-language.md §7's: the chosen one takes
+   the panel's surface and a 2px ink rule along its top and joins the body;
+   the other sits on the sunken ground in the quiet ink. */
+.star-rep{position:sticky;top:var(--s-16);display:flex;flex-direction:column;
+          border:1px solid var(--border);border-radius:var(--r-widget);background:var(--surface);overflow:hidden}
+.star-rep-eyebrow{margin:0;padding:var(--s-14) var(--s-20) var(--s-10);background:var(--surface-sunken);color:var(--text-3)}
+.star-tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-sunken)}
+.star-tab{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s-2);text-align:left;
+          padding:var(--s-12) var(--s-20);color:var(--text-3);
+          border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+          transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
+.star-tab+.star-tab{border-inline-start:1px solid var(--border)}
+.star-tab-name{font-size:13px;font-weight:600}
+.star-tab-for{font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+.star-tab[aria-selected="true"]{background:var(--surface);color:var(--text-1);
+          border-bottom-color:transparent;box-shadow:inset 0 2px 0 var(--text-1)}
+.star-tab[aria-selected="true"] .star-tab-for{color:var(--text-3)}
+.star-tab:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.star-rep-body{display:flex;flex-direction:column;gap:var(--s-16);padding:var(--s-20) var(--s-20) var(--s-16)}
+.star-rep-says{display:flex;flex-direction:column;gap:var(--s-16)}
+.star-rep-q{margin:0}
+.star-rg{display:flex;flex-direction:column;gap:var(--s-6)}
+.star-rg-h{margin:0;display:flex;align-items:center;gap:var(--s-8);min-height:18px;color:var(--text-3)}
+/* REAL BULLETS, the marker in the quiet ink so the words lead. */
+.star-bul{margin:0;padding-inline-start:var(--s-20);display:flex;flex-direction:column;gap:var(--s-4);
+          font-size:13px;line-height:1.45;color:var(--text-1);list-style:disc}
+.star-bul li::marker{color:var(--text-3)}
+/* ── the Pro label · design-language.md §7 ──────────────────────────────
+   Solid ink with inverse text: dark on white in light, white on dark in
+   dark, because it is the ink pair. A label, never a control. */
+.pro-label{display:inline-flex;align-items:center;height:18px;padding:0 var(--s-6);border-radius:var(--r-chip);
+           background:var(--text-1);color:var(--text-inverse);
+           font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.star-cta{width:100%;height:48px;font-size:16px;gap:var(--s-10);margin-block-start:var(--s-4)}
+.star-files{display:flex;flex-direction:column;gap:var(--s-4);border-top:1px solid var(--border);padding-block-start:var(--s-12)}
+.star-files-h{margin:0;color:var(--text-3)}
+.star-files-btns{display:flex;gap:var(--s-4);margin-inline-start:calc(-1 * var(--s-8))}
+.star-note{margin:var(--s-4) 0 0;color:var(--text-3);text-wrap:pretty}
 
-   IT SPANS EVERY COLUMN and carries the group's own top rule, so the table
-   reads as runs rather than as one undifferentiated list with labels in it.
-   No background: §2 has no tint to spend, and a heavier hairline plus the
-   space above is what separates a run from the run before it. */
-.star-grp-head th{padding-block:var(--s-20) var(--s-8);
-      border-bottom:1px solid var(--border-strong)}
-/* THE ROW IS A DIV INSIDE THE CELL — starred.mjs carries why. A flex <th>
-   spanning a fixed-layout table gives its children a zero basis and the
-   sentence truncates to one character. */
-.star-grp-in{display:flex;align-items:baseline;gap:var(--s-10);min-width:0}
-.star-grp:first-of-type .star-grp-head th{padding-block-start:var(--s-12)}
-.star-grp-q{color:var(--text-1);font-weight:500;min-width:0;
-      overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* A SET STARRED BEFORE ANY SEARCH RAN gets a sentence that says so rather
-   than an empty heading. It is a statement about the set and not a query, so
-   it takes the quiet ink the way every other note on this page does. */
-.star-grp-none{color:var(--text-3);font-weight:400;font-style:italic}
-.star-grp-n{color:var(--text-3);flex:0 0 auto}
+/* ══ THE DRAWER · the record over the page ════════════════════════════════
+   record.mjs moves the one record pane in here. About 200px of the page
+   stays visible at its leading side so the record reads as THIS CAME FROM
+   THERE; it slides in from the trailing edge, which is where it came from on
+   this page. The host itself takes no pointer: only the card does, so the
+   page under the gap stays usable. Full width under 640, where a 200px peek
+   would leave the record a column too narrow to read. */
+.star-drawer{position:absolute;inset-block:var(--s-16);inset-inline-end:var(--s-16);z-index:20;
+             width:min(688px,calc(100% - 200px));display:flex;flex-direction:column;pointer-events:none}
+@media (max-width:640px){.star-drawer{inset:0;width:auto}}
+.star-drawer .rec{pointer-events:auto;box-shadow:var(--shadow-float);
+                  transform:translateX(calc(100% + var(--s-16)))}
+.rec-open .star-drawer .rec{transform:none}
+/* THE DRAWER IS ALWAYS A FIXED-HEIGHT PANEL WITH ITS OWN SCROLLER. Below 1080
+   the results surface stacks and lets the record grow with the page
+   (21-surface.css: `.rec{flex:0 0 auto}`, `.rec-scroll{overflow:visible}`);
+   that rule follows the pane in here, where nothing scrolls the page under it,
+   and the closing block lands over the drawings. */
+.star-drawer .rec{flex:1 1 auto;min-height:0}
+.star-drawer .rec-scroll{overflow-y:auto}
+@media (max-width:640px){.star-drawer .rec{border-radius:0;border:0}}
+.rec-pos{flex:0 0 auto;color:var(--text-3);white-space:nowrap}
+.rec-pos[hidden]{display:none}
 
-/* IT SITS WITH THE TABLE, NOT WITH THE EXPORT BAR. The sentence describes the
-   sequence below it, so it reads as that table's caption rather than as a note
-   about the buttons above. --text-3: it is the quietest thing on the page. */
-.star-order{margin:var(--s-16) 0 var(--s-8);color:var(--text-3)}
-
-/* ITS MARKUP ALREADY CARRIED .t-body AND THIS OVERRODE IT -- 39 loads after
-   02, so the role class was decoration and the component decided. That is the
-   split-role defect from the other direction. */
-.star-note{margin:var(--s-20) 0 0;color:var(--text-3);max-width:68ch;
-           text-wrap:pretty}
+/* ══ THE TOAST · removed, and the way back ════════════════════════════════
+   Ink on the page, like the Pro label, because it is the one transient thing
+   here and it has to read over cards and over the table alike. */
+.star-toast{position:absolute;inset-inline-start:50%;inset-block-end:var(--s-24);z-index:25;
+            display:flex;align-items:center;gap:var(--s-12);max-width:calc(100% - var(--s-32));
+            padding:var(--s-6) var(--s-6) var(--s-6) var(--s-16);border-radius:var(--r-widget);
+            background:var(--text-1);color:var(--text-inverse);font-size:13px;box-shadow:var(--shadow-float);
+            opacity:0;transform:translate(-50%,var(--s-8));
+            transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease)}
+.star-toast[data-in]{opacity:1;transform:translate(-50%,0)}
+.star-toast[hidden]{display:none}
+.star-undo{color:var(--text-inverse);font-weight:600;height:32px;padding:0 var(--s-10);border-radius:var(--r-control)}
+.star-undo:focus-visible{outline:2px solid var(--text-inverse);outline-offset:-2px}
 
 /* ── the count chip, as a control ───────────────────────────────────────
-   On the results surface `N starred` is the only thing that knows how big the
-   set is, so it is also where the founder reaches to see it. It stays a chip:
-   it is a count of the same kind as `N matched` beside it, and promoting it to
-   a button shape would make one of two adjacent counts look like the act. What
-   marks it as pressable is the cursor, the underline on hover and the focus
-   ring — not a second silhouette. */
+   On the results surface `N starred` is where the founder reaches to see the
+   set. It stays a chip — a count beside `N matched` — and what marks it as
+   pressable is the cursor, the underline on hover and the focus ring. */
 .chip-link{cursor:pointer;color:var(--text-2);
            transition:color var(--dur-1) var(--ease),
                       border-color var(--dur-1) var(--ease)}
@@ -202,34 +203,9 @@
 @media (hover:hover) and (pointer:fine){
   .chip-link:hover{color:var(--text-1);border-color:var(--border-strong);
                    text-decoration:underline;text-underline-offset:2px}
-}
-
-/* ── narrow · the table scrolls sideways rather than collapsing ─────────
-   A TABLE THAT REFLOWS INTO CARDS IS NOT A TABLE ANY MORE, and the columns
-   are the reason this is one. Four of the nine are already sized in ch and
-   do not compress; the wrapper scrolls instead, which keeps every row's
-   fields on the same edges and lets the founder reach the rest by moving one
-   axis. The first two columns stay put so a row never loses which patent it
-   is while its holder and score are off to the side.
-
-   IT IS A REAL SCROLL PORT, so it needs to say so to a keyboard: tabindex=0
-   on an overflowing region is what lets arrow keys reach it, and the CSS
-   cannot supply that — starred.mjs sets it when the table overflows. */
-@media (max-width:860px){
-  .star-tbl{table-layout:auto;min-width:760px}
-  .star-c-h{width:auto}
-}
-
-/* ── a row leaving · design-language.md §6 "Lists and records" ───────────
-   It fades on --dur-2 and is removed; the rows under it and the group
-   headings then FLIP up into the space on --dur-3 (starred.mjs). Opacity and
-   transform only — a <tr> has no height to transition, and §6 would refuse
-   one if it did. */
-.starrow,.star-grp-head{transition:opacity var(--dur-2) var(--ease),
-                                   transform var(--dur-3) var(--ease)}
-.starrow[data-leaving]{opacity:0}
-
-/* ── hover, gated ── the second block, and it names :hover like the first ── */
-@media (hover:hover) and (pointer:fine){
   .starrow:hover td{background:var(--surface-sunken)}
+  .star-open:hover{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--text-3)}
+  .star-run:hover{color:var(--text-1);background:var(--surface-sunken)}
+  .star-tab[aria-selected="false"]:hover{color:var(--text-1)}
+  .star-undo:hover{background:var(--text-2)}
 }

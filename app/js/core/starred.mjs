@@ -154,11 +154,43 @@ export function toggle(id, row) {
      a renderer. `starredAt` is not shown anywhere yet; it is stored because
      insertion order is the only ordering the set has and a Map's order does
      not survive a future move off localStorage. */
-  if (on) ROWS.set(id, { ...row, id, starredUnder: SEARCH, starredSearch: SPEC, starredAt: Date.now() });
-  else ROWS.delete(id);
+  if (on) {
+    /* A PATENT STARRED AGAIN FROM A RECORD THAT HAS NO ROW gets the row it
+       had. The record's star hands over `{id}` when the patent is not on the
+       current page of results, and storing that would render the founder's
+       own shortlist entry as bars. The stamp is new: starring again is a new
+       act, under whatever search is running now. */
+    const had = LEFT.get(id);
+    const base = row && Object.keys(row).length > 1 ? row : (had || row);
+    ROWS.set(id, { ...base, id, starredUnder: SEARCH, starredSearch: SPEC, starredAt: Date.now() });
+  } else {
+    LEFT.set(id, ROWS.get(id));
+    ROWS.delete(id);
+  }
   write();
   announce();
   return on;
+}
+
+/* THE ROWS TAKEN OUT THIS SESSION, kept so an undo can put one back exactly as
+   it was — its stamp, and through restore() its place in the order. Memory
+   only: a removal the founder did not undo before reloading was meant. */
+const LEFT = new Map();
+
+/**
+ * Put a removed row back at the position it held. platform.md §5.2's undo.
+ * A Map has no insert-at, so the set is rebuilt in order — it is a shortlist,
+ * not an index, and the rebuild is the size of what the founder starred.
+ */
+export function restore(row, at) {
+  if (!row || typeof row.id !== 'string' || ROWS.has(row.id)) return;
+  const all = [...ROWS.values()];
+  all.splice(Math.max(0, Math.min(at, all.length)), 0, row);
+  ROWS.clear();
+  all.forEach(r => ROWS.set(r.id, r));
+  LEFT.delete(row.id);
+  write();
+  announce();
 }
 
 

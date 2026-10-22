@@ -725,8 +725,9 @@ and a file that silently took the sort would carry an order nobody chose.
 **A patent opens over the page, not by leaving it.** Pressing a title or a drawing slides the record
 (§4.5) in from the trailing edge as a drawer, with about 200px of the page left showing so it reads as
 *this came from there*. It is the same record as on the results surface — the same fields, drawings,
-claims and closing block — with two differences that come from where it is: its previous and next step
-through the starred order, and it says where the patent sits in it (*3 of 8*). Escape closes it and
+claims and closing block — with three differences that come from where it is: its previous and next
+step through the starred order, it says where the patent sits in it (*3 of 8*), and it offers no *Find
+similar*, which re-orders the results and belongs where they are. Escape closes it and
 returns focus to the row. A founder comparing their shortlist should not have to walk back to a search
 that may have moved on to read one of its own patents.
 

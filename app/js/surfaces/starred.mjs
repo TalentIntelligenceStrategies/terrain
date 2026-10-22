@@ -23,12 +23,11 @@ import { onActivate } from '../core/delegate.mjs';
 import { say } from '../core/live-region.mjs';
 import { esc } from '../core/dom.mjs';
 import * as Starred from '../core/starred.mjs';
-import { reduced, flip, DUR2 } from '../core/motion.mjs';
 import { btnDone } from '../core/button-wait.mjs';
-import { wait as pause } from '../core/timers.mjs';
-/* THE ONE CROSS-SURFACE IMPORT IN THIS FILE, and it is the right direction:
-   this surface is what the list's rows leave through. See rowFor()'s note. */
-import { rowFor } from './list.mjs';
+/* THE CROSS-SURFACE IMPORTS, and they run the right direction: this surface
+   is what the list's rows leave through (rowFor), and it draws them with the
+   list's own row (rowHTML) and orders them with the list's own menu. */
+import { rowFor, rowHTML, lmMenu, check } from './list.mjs';
 import { where, holderText } from '../core/format.mjs';
 
 /* THE COLUMNS ARE DECLARED ONCE and both formats read them, so a spreadsheet
@@ -162,41 +161,278 @@ const patents = n => n + (n === 1 ? ' patent' : ' patents');
 
 /* ── the surface ──────────────────────────────────────────────────────────── */
 
-function rowHTML(r, n) {
-  /* THE SAME SKELETON RULE AS THE LIST. `null` means render the bar and it is
-     the only thing that means that; a collection that printed real names where
-     the list it came from prints bars would be two contracts on one value.
-     In a table the bar sits inside its own cell, so a withheld value keeps
-     the column's edge instead of collapsing it. */
+/* WHAT EACH REPORT HOLDS, said plainly. The question is report.mjs's, word
+   for word, so the panel and the report it opens ask the same thing. Each
+   item names a real section of the report (platform.md §5.3) — the counted
+   ones under Ready now, the ones Pro writes under Pro — so the panel promises
+   nothing the report does not contain. */
+const REPORTS = {
+  founder: {
+    name: 'Founder report', ask: 'Can I build this, and protect it?',
+    ready: ['Who holds the patents near you', 'When and where they were filed',
+      'How many are granted, how many pending'],
+    pro: ['The closest claims, set against your idea', 'Where your idea may differ',
+      'Each patent in plain English'],
+  },
+  backer: {
+    name: 'Backer report', ask: 'Does this hold up, and who else is here?',
+    ready: ['How concentrated the holders are', 'How fast the field is filing, and where',
+      'Where filings cluster'],
+    pro: ['The closest claims to the company', 'Risk flags, each with its basis',
+      'Questions to ask the founders'],
+  },
+};
+let KIND = 'founder';
+
+/* THE VIEW IS KEPT IN THE BROWSER AS A CONVENIENCE. Losing it costs one press,
+   so a storage that throws (Safari private mode) is a default, not an error. */
+const VIEW_KEY = 'terrain:starred-view';
+let VIEW = 'detail';
+try { if (localStorage.getItem(VIEW_KEY) === 'list') VIEW = 'list'; } catch (e) { /* default */ }
+
+/* THE SORT IS A VIEW. null is the order the founder starred in. It applies
+   inside each search; the groups keep their order, and the files ignore it. */
+let SORT = null;
+const SORT_KEYS = {
+  filed: r => r.filed || (r.year != null ? String(r.year) : ''),
+  holder: r => (r.holder || '').toLowerCase(),
+  title: r => (r.skim || '').toLowerCase(),
+};
+const SORT_SAYS = {
+  'filed:-1': 'filing date, newest first', 'filed:1': 'filing date, oldest first',
+  'holder:1': 'holder, A to Z', 'title:1': 'title, A to Z',
+};
+function sorted(rows) {
+  if (!SORT) return rows;
+  const f = SORT_KEYS[SORT.key], d = SORT.dir;
+  /* a missing value sorts last whichever way, so a bar never leads a run */
+  return [...rows].sort((a, b) => {
+    const x = f(a), y = f(b);
+    if (!x !== !y) return x ? -1 : 1;
+    return (x > y ? 1 : x < y ? -1 : 0) * d;
+  });
+}
+
+const STAR_SVG = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+  + ' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+  + '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>';
+const RUN_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+  + ' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+  + '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>';
+
+/* the day a group was started, as the founder would say it */
+const DAY = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short' });
+
+/* ── one search, as a plain heading over its run ── */
+function headHTML(q, rs, gi) {
+  const at = Math.min(...rs.map(r => r.starredAt || Infinity));
+  const bits = ['<span class="fig fig-s">' + rs.length + '</span> starred'];
+  if (Number.isFinite(at)) bits.push(DAY.format(new Date(at)));
+  /* RUN AGAIN IS THE SEARCH THAT RAN, through the composer, as history runs
+     one (platform.md §5). Without a stamped search there is nothing to run. */
+  const run = q && rs[0].starredSearch
+    ? '<span aria-hidden="true">·</span><button class="star-run t-label" type="button" data-star-run="' + gi + '">'
+      + RUN_SVG + '<span>Run again</span></button>'
+    : '';
+  return '<div class="star-gh">'
+    + (q ? '<h3 class="star-gh-q">“' + esc(q) + '”</h3>'
+         : '<h3 class="star-gh-q star-gh-none">Starred without a search</h3>')
+    + '<p class="star-gh-meta t-label">' + bits.join(' <span aria-hidden="true">·</span> ') + run + '</p>'
+    + '</div>';
+}
+
+/* ── the List view's row ── THE SAME SKELETON RULE AS THE LIST: `null` is a
+   bar, inside its own cell, so a withheld value keeps the column's edge. */
+function tableRowHTML(r) {
   const cellOr = (v, cls, sk) => v != null
     ? '<td class="' + cls + '">' + esc(String(v)) + '</td>'
     : '<td class="' + cls + '"><span class="sk sk-h-micro ' + sk + '"></span></td>';
-
   return '<tr class="starrow" data-id="' + esc(r.id) + '">'
-    /* THE RANK IS THE FOUNDER'S OWN ORDER WITHIN THIS SEARCH, not a score
-       position. It restarts at 1 in each group because the group is what it
-       counts through, and #starOrder above says which order that is. */
-    + '<td class="star-c-n fig fig-s">' + n + '</td>'
     + cellOr(r.number, 'star-c-num fig fig-s', 'w-sm')
-    + cellOr(r.skim, 'star-c-t', 'w-full')
+    + '<td class="star-c-t">' + (r.skim != null
+        ? '<button class="star-open" type="button" data-pn="' + esc(r.id) + '"'
+          + ' aria-label="' + esc(r.skim) + '. Open the record.">' + esc(r.skim) + '</button>'
+        : '<button class="star-open" type="button" data-pn="' + esc(r.id) + '" aria-label="Open the record">'
+          + '<span class="sk sk-h-micro w-full"></span></button>') + '</td>'
     + cellOr(holderText(r.holder), 'star-c-h', 'w-md')
     + cellOr(where(r), 'star-c-w', 'w-sm')
     + '<td class="star-c-y fig fig-s">' + (r.year == null ? '' : r.year) + '</td>'
-    /* THE SCORE OBEYS THE SAME OMISSION RULE AS THE LIST'S: null means the
-       engine returned none, so the cell is empty rather than carrying a
-       label over a gap — and the CSV writes an empty cell for the same
-       reason. Against corpus/ that is every row. */
+    /* THE SCORE OBEYS THE LIST'S OMISSION RULE: null is an empty cell */
     + '<td class="star-c-sc fig fig-s">' + (r.score == null ? '' : r.score.toFixed(4)) + '</td>'
-    /* UNSTARRING IS AVAILABLE WHERE THE SET IS READ. A collection you can only
-       add to from somewhere else is a collection that only grows. */
-    + '<td class="star-c-x">'
-    + '<button class="set-ctl set-star" type="button" aria-pressed="true"'
-    + ' data-unstar="' + esc(r.id) + '"'
-    + ' aria-label="Remove this patent from your starred set">'
-    + '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
-    + ' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'
-    + '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg></button></td>'
+    /* UNSTARRING IS THE LIST'S OWN STAR, data-star and all, so one handler
+       (list.mjs) takes a patent out wherever it is pressed and the undo below
+       hears every removal the same way. */
+    + '<td class="star-c-x"><button class="set-ctl set-star" type="button" aria-pressed="true"'
+    + ' data-star="' + esc(r.id) + '" aria-label="Remove this patent from your starred set">'
+    + STAR_SVG + '</button></td>'
     + '</tr>';
+}
+
+function detailHTML(groups) {
+  return groups.map(([q, rs], gi) =>
+    '<section class="star-grp" data-q="' + esc(q) + '">'
+    + headHTML(q, rs, gi)
+    + '<div class="set-list star-cards">'
+    + sorted(rs).map((r, i) => rowHTML(r, i, { starred: true })).join('')
+    + '</div></section>').join('');
+}
+
+function listHTML(groups) {
+  return '<div class="star-tblwrap"><table class="star-tbl">'
+    + '<caption class="sr-only">Your starred patents, grouped by search</caption>'
+    + '<thead><tr>'
+    + '<th scope="col" class="t-micro star-c-num">Number</th>'
+    + '<th scope="col" class="t-micro star-c-t">Title</th>'
+    + '<th scope="col" class="t-micro star-c-h">Holder</th>'
+    + '<th scope="col" class="t-micro star-c-w">Where</th>'
+    + '<th scope="col" class="t-micro star-c-y">Year</th>'
+    + '<th scope="col" class="t-micro star-c-sc">Score</th>'
+    + '<th scope="col" class="star-c-x"><span class="sr-only">Remove</span></th>'
+    + '</tr></thead>'
+    /* THE FLEX HEADING IS A DIV INSIDE THE CELL, NOT THE CELL: a spanning
+       <th> in a fixed-layout table gives a flex child a zero basis. */
+    + groups.map(([q, rs], gi) => '<tbody class="star-grp-rows">'
+      + '<tr class="star-grp-head"><th scope="colgroup" colspan="7">' + headHTML(q, rs, gi) + '</th></tr>'
+      + sorted(rs).map(tableRowHTML).join('') + '</tbody>').join('')
+    + '</table></div>';
+}
+
+/* the report panel's words for the chosen tab */
+function reportHTML() {
+  const r = REPORTS[KIND];
+  const items = xs => '<ul class="star-bul">' + xs.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>';
+  return '<p class="t-title star-rep-q">' + esc(r.ask) + '</p>'
+    + '<div class="star-rg"><p class="star-rg-h t-micro">Ready now</p>' + items(r.ready) + '</div>'
+    + '<div class="star-rg"><p class="star-rg-h"><span class="pro-label">Pro</span>'
+    + '<span class="t-micro">About 10 minutes</span></p>' + items(r.pro) + '</div>';
+}
+function paintReport() {
+  document.querySelectorAll('[data-star-kind]').forEach(t => {
+    const on = t.getAttribute('data-star-kind') === KIND;
+    t.setAttribute('aria-selected', String(on));
+    t.setAttribute('tabindex', on ? '0' : '-1');
+  });
+  const panel = $('#starRepPanel'), says = $('#starRepSays');
+  if (panel) panel.setAttribute('aria-labelledby', KIND === 'founder' ? 'starTabFounder' : 'starTabBacker');
+  if (says) says.innerHTML = reportHTML();
+  const cta = $('#starCreate'), label = $('#starCreateLabel');
+  if (cta) cta.setAttribute('data-go', 'report/' + KIND);
+  if (label) label.textContent = 'Create ' + REPORTS[KIND].name;
+}
+
+function paintTools() {
+  document.querySelectorAll('[data-star-view]').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.getAttribute('data-star-view') === VIEW)));
+  const key = SORT ? SORT.key + ':' + SORT.dir : '';
+  const menu = $('#starSortMenu');
+  const item = menu && menu.querySelector('[data-star-sort="' + key + '"]');
+  if (item) check(menu, item);
+  const label = $('#starSortLabel');
+  if (label && item) label.textContent = item.textContent.trim();
+  const note = $('#starSortNote'), says = $('#starSortSays');
+  if (note) note.hidden = !SORT;
+  if (says && SORT) says.textContent = 'Sorted by ' + SORT_SAYS[key]
+    + ' within each search. Files keep the order you starred in.';
+}
+
+/* WHICH PATENT THE RECORD HAS OPEN, read off the marks record.mjs writes, so
+   a repaint can put them back on the new rows. */
+const openId = () => {
+  const row = document.querySelector('#starList .set-row[data-open], #starList .starrow[data-open]');
+  return row ? row.getAttribute('data-id') : null;
+};
+const openers = () => [...document.querySelectorAll('#starList .drill-toggle, #starList .star-open')];
+
+function paint(rows) {
+  const list = $('#starList'), body = $('#starBody'), empty = $('#starEmpty');
+  const count = $('#starCount');
+  if (!list || !body || !empty) return;
+  const n = rows.length;
+  body.hidden = n === 0;
+  empty.hidden = n !== 0;
+  const groups = groupBySearch(rows);
+  if (count) {
+    count.hidden = n === 0;
+    count.innerHTML = '<span class="fig fig-s">' + n + '</span>' + (n === 1 ? ' patent' : ' patents')
+      + ' · <span class="fig fig-s">' + groups.length + '</span>'
+      + (groups.length === 1 ? ' search' : ' searches');
+  }
+  const was = openId();
+  list.innerHTML = n ? (VIEW === 'list' ? listHTML(groups) : detailHTML(groups)) : '';
+  /* THE OPEN MARK SURVIVES THE REPAINT, so the row being read stays marked */
+  if (was) {
+    openers().forEach(b => {
+      const on = b.getAttribute('data-pn') === was;
+      b.setAttribute('aria-current', String(on));
+      const row = b.closest('.set-row, .starrow');
+      if (row) row.toggleAttribute('data-open', on);
+    });
+  }
+  /* A SCROLL PORT HAS TO BE REACHABLE BY KEYBOARD, and only the DOM knows
+     whether the table is scrolling at this width. */
+  const wrap = list.querySelector('.star-tblwrap');
+  if (wrap) {
+    if (wrap.scrollWidth > wrap.clientWidth) wrap.setAttribute('tabindex', '0');
+    else wrap.removeAttribute('tabindex');
+  }
+  paintTools();
+}
+
+/* ── removed, and the way back ─────────────────────────────────────────────
+   EVERY REMOVAL IS HEARD HERE, whichever star was pressed — a card's, a
+   table row's or the open record's — because they all go through the store.
+   The toast says which patent left and offers Undo for six seconds; undo puts
+   it back where it was in the starred order. */
+let TOAST_T = 0;
+function toast(row, at) {
+  const t = $('#starToast');
+  if (!t) return;
+  clearTimeout(TOAST_T);
+  t.innerHTML = '<span>Removed <span class="fig fig-s">' + esc(row.number || row.skim || 'a patent')
+    + '</span> from your starred set</span>'
+    + '<button class="star-undo" type="button" data-star-undo>Undo</button>';
+  t.hidden = false;
+  void t.offsetWidth;
+  t.setAttribute('data-in', '');
+  UNDO = { row, at };
+  TOAST_T = setTimeout(hideToast, 6000);
+}
+let UNDO = null;
+function hideToast() {
+  const t = $('#starToast');
+  UNDO = null;
+  if (!t) return;
+  t.removeAttribute('data-in');
+  setTimeout(() => { if (!t.hasAttribute('data-in')) t.hidden = true; }, 220);
+}
+
+let PREV = [];
+function onSet(rows) {
+  const ids = new Set(rows.map(r => r.id));
+  const gone = PREV.filter(r => !ids.has(r.id));
+  /* WHAT THE DOM SAID BEFORE THE REPAINT: the open patent, and its
+     neighbours in the order on screen, so the drawer can move to the next. */
+  const was = openId(), order = openers().map(b => b.getAttribute('data-pn'));
+  const hadFocus = document.activeElement && document.activeElement.closest('#starList');
+  paint(rows);
+  if (gone.length === 1) {
+    const row = gone[0];
+    toast(row, PREV.findIndex(r => r.id === row.id));
+    const i = order.indexOf(row.id);
+    const next = order.slice(i + 1).find(id => ids.has(id)) || order.slice(0, i).reverse().find(id => ids.has(id));
+    const nextBtn = next && document.querySelector('#starList [data-pn="' + CSS.escape(next) + '"]');
+    /* THE DRAWER MOVES ON when the patent it was showing is the one removed,
+       or closes when there is nothing left to show. */
+    if (was === row.id) {
+      if (nextBtn) nextBtn.click();
+      else { const x = $('#recClose'); if (x) x.click(); }
+    } else if (hadFocus && !document.activeElement.closest('#starList')) {
+      /* FOCUS GOES TO THE NEXT PATENT, not to <body> with the button that
+         held it — the place a founder clearing several expects to press. */
+      (nextBtn || $('#starTitle')).focus({ preventScroll: true });
+    }
+  }
+  PREV = rows;
 }
 
 /* ══ ONE GROUP PER SEARCH · platform.md §5.2 ═══════════════════════════════
@@ -229,113 +465,60 @@ function groupBySearch(rows) {
   return [...groups.entries()].reverse();
 }
 
-function groupHTML(rows) {
-  return groupBySearch(rows).map(([q, rs]) =>
-    '<tbody class="star-grp">'
-    /* THE FLEX ROW IS A DIV INSIDE THE CELL, NOT THE CELL. A spanning <th>
-       in a table-layout:fixed table has no width of its own to resolve
-       against — the fixed algorithm sizes columns from the first row and a
-       colspan cell is laid out into whatever that came to — so
-       `display:flex` on the <th> gave its children a zero basis and the
-       heading truncated to one character. Measured: "a folding drone arm…"
-       rendered as "a…". A block-level child of the cell measures against the
-       cell's resolved width, which is the whole table. */
-    + '<tr class="star-grp-head" data-q="' + esc(q) + '"><th scope="colgroup" colspan="9">'
-    + '<div class="star-grp-in">'
-    + (q
-        ? '<span class="star-grp-q">' + esc(q) + '</span>'
-        : '<span class="star-grp-q star-grp-none">Starred without a search</span>')
-    + '<span class="star-grp-n t-micro"><span class="fig fig-s">' + rs.length + '</span>'
-    + (rs.length === 1 ? ' patent' : ' patents') + '</span>'
-    + '</div></th></tr>'
-    + rs.map((r, i) => rowHTML(r, i + 1)).join('')
-    + '</tbody>').join('');
-}
-
-function paint(rows) {
-  const list = $('#starList'), body = $('#starBody'), empty = $('#starEmpty');
-  const count = $('#starCount');
-  if (!list || !body || !empty) return;
-  const n = rows.length;
-  body.hidden = n === 0;
-  empty.hidden = n !== 0;
-  const bar = $('#starBar');
-  if (bar) bar.hidden = n === 0;
-  /* THE LEDE DESCRIBES A SET, SO IT GOES WHEN THERE IS NONE. "These are the
-     patents you marked" over "Nothing starred yet" was two sentences
-     disagreeing about whether there was anything here; the empty note
-     already says what the page is for. */
-  const lede = $('.star-lede');
-  if (lede) lede.hidden = n === 0;
-  if (count) {
-    count.hidden = n === 0;
-    /* the count is a figure — see list.mjs's setTitle */
-    count.innerHTML = '<span class="fig fig-s">' + n + '</span>'
-      + (n === 1 ? ' patent' : ' patents');
-  }
-  /* THE HEADER ROW IS MARKUP AND THE BODY IS RENDERED, so the write targets
-     the groups rather than the table: innerHTML on #starList would take
-     <thead> with it and the columns would lose their names on the first
-     star. */
-  list.querySelectorAll('tbody').forEach(t => t.remove());
-  list.insertAdjacentHTML('beforeend', groupHTML(rows));
-
-  /* A SCROLL PORT HAS TO BE REACHABLE BY KEYBOARD, and only the DOM knows
-     whether this one is scrolling. Below 860px the table keeps its columns
-     and the wrapper scrolls sideways instead (39-starred.css); a region that
-     scrolls but has no tab stop is content a keyboard cannot reach at all,
-     and the attribute is wrong to ship unconditionally — a tab stop on an
-     element with nothing to scroll is a stop that does nothing.
-
-     Measured after the write, because the answer depends on what was just
-     rendered. */
-  const wrap = list.parentElement;
-  if (wrap) {
-    const scrolls = wrap.scrollWidth > wrap.clientWidth;
-    if (scrolls) wrap.setAttribute('tabindex', '0');
-    else wrap.removeAttribute('tabindex');
-  }
-}
-
 export function init() {
-  Starred.onChange(paint);
+  Starred.onChange(onSet);
+  paintReport();
+  lmMenu('starSortWrap', 'starSortBtn', 'starSortMenu');
 
-  /* ══ A ROW LEAVES, AND THE ROWS BELOW CLOSE THE GAP · §6 ══════════════
-     It used to vanish in the same frame as the press and every row under it
-     jumped up one, so the founder lost the row they were about to read next
-     and focus fell to <body> with the button that held it. Now the row fades
-     out on --dur-2, the set changes, and flip() plays the rows below — and the
-     group headings, keyed by their search — up into the space.
+  onActivate(document, '[data-star-view]', el => {
+    VIEW = el.getAttribute('data-star-view') === 'list' ? 'list' : 'detail';
+    try { localStorage.setItem(VIEW_KEY, VIEW); } catch (e) { /* a convenience */ }
+    paint(Starred.list());
+    say('destination', VIEW === 'list' ? 'Showing a table.' : 'Showing each patent in detail.');
+  });
 
-     FOCUS GOES TO THE NEXT ROW'S REMOVE BUTTON, or the previous one at the
-     end of the table, or the heading once the set is empty: the place a
-     founder clearing several rows in a row expects to press next.
+  onActivate(document, '[data-star-sort]', el => {
+    const v = el.getAttribute('data-star-sort');
+    const [key, dir] = v.split(':');
+    SORT = key ? { key, dir: Number(dir) || 1 } : null;
+    paint(Starred.list());
+    say('destination', SORT ? 'Sorted by ' + SORT_SAYS[v] + '.' : 'Back in the order you starred them.');
+    if (!key) { const b = $('#starSortBtn'); if (b) b.focus({ preventScroll: true }); }
+  });
 
-     A row already leaving ignores a second press — two presses is one
-     intention, and the second would toggle the patent back in. */
-  const key = el => el.getAttribute('data-id') || 'q:' + el.getAttribute('data-q');
-  onActivate(document, '#starList [data-unstar]', async el => {
-    const id = el.getAttribute('data-unstar');
-    const row = el.closest('.starrow');
-    if (row && row.hasAttribute('data-leaving')) return;
-    const rows = [...document.querySelectorAll('#starList .starrow')];
-    const at = rows.indexOf(row);
-    const near = rows[at + 1] || rows[at - 1];
-    const nextId = near && near !== row ? near.getAttribute('data-id') : null;
-    if (row && !reduced()) {
-      row.setAttribute('data-leaving', '');
-      await pause(DUR2);
-    }
-    const list = $('#starList');
-    flip(list, '.starrow, .star-grp-head', key, () => Starred.toggle(id),
-      list && list.parentElement);
-    const target = (nextId && list
-      && list.querySelector('[data-unstar="' + CSS.escape(nextId) + '"]'))
-      || $('#starTitle');
-    if (target) target.focus({ preventScroll: true });
-    say('destination', 'Removed. ' + (Starred.size()
-      ? Starred.size() + (Starred.size() === 1 ? ' patent' : ' patents') + ' left.'
-      : 'Nothing starred.'));
+  /* the tabs: a press, or arrows, Home and End between them */
+  onActivate(document, '[data-star-kind]', el => {
+    KIND = el.getAttribute('data-star-kind') === 'backer' ? 'backer' : 'founder';
+    paintReport();
+  });
+  document.addEventListener('keydown', e => {
+    const tab = e.target instanceof Element && e.target.closest('[data-star-kind]');
+    if (!tab || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+    e.preventDefault();
+    KIND = e.key === 'Home' ? 'founder' : e.key === 'End' ? 'backer'
+      : (KIND === 'founder' ? 'backer' : 'founder');
+    paintReport();
+    const now = document.querySelector('[data-star-kind="' + KIND + '"]');
+    if (now) now.focus();
+  });
+
+  onActivate(document, '[data-star-run]', el => {
+    const groups = groupBySearch(Starred.list());
+    const g = groups[Number(el.getAttribute('data-star-run'))];
+    const s = g && g[1][0] && g[1][0].starredSearch;
+    if (!s) return;
+    window.dispatchEvent(new CustomEvent('terrain:rerun',
+      { detail: { query: s.query, field: s.field, mode: s.mode } }));
+  });
+
+  onActivate(document, '[data-star-undo]', () => {
+    if (!UNDO) return;
+    const { row, at } = UNDO;
+    hideToast();
+    Starred.restore(row, at);
+    const back = document.querySelector('#starList [data-pn="' + CSS.escape(row.id) + '"]');
+    if (back) back.focus({ preventScroll: true });
+    say('destination', 'Put back.');
   });
 
   const take = (ext, mime, build) => () => {

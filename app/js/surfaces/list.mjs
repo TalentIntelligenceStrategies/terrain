@@ -216,11 +216,19 @@ function versionOf(rec) {
   return vs.find(v => v.kind === want) || vs[0] || null;
 }
 
-function rowHTML(rec, i) {
+/* THE STARRED PAGE DRAWS THIS SAME ROW (platform.md §5.2), from the stored
+   copy, with `{ starred: true }`. Three things on it belong to the SEARCH and
+   leave there: the rank, which is a position in a result order the starred
+   set does not have; the version switch, whose state lives in VER and whose
+   repaint finds its row in #setList; and the star's label, which asks a
+   question the founder has already answered. The first version shows as the
+   word, as a one-version patent's does. */
+export function rowHTML(rec, i, opts = {}) {
   const real = rec.skim != null;
   const pn = esc(rec.id);
-  const vs = Array.isArray(rec.versions) ? rec.versions : [];
-  const v = versionOf(rec);
+  const vsAll = Array.isArray(rec.versions) ? rec.versions : [];
+  const vs = opts.starred ? vsAll.slice(0, 1) : vsAll;
+  const v = opts.starred ? (vs[0] || null) : versionOf(rec);
   /* the version shown supplies the number and the date; without versions the
      row's own fields stand */
   const number = v ? v.number : rec.number;
@@ -233,7 +241,8 @@ function rowHTML(rec, i) {
        `grid-template-columns:auto 1fr` since the row was designed. */
     + '<button class="set-ctl set-star" type="button" aria-pressed="'
     + (STARRED.has(rec.id) ? 'true' : 'false') + '" data-star="' + pn + '"'
-    + ' aria-label="Star this patent as the one closest to your idea">'
+    + ' aria-label="' + (opts.starred ? 'Remove this patent from your starred set'
+        : 'Star this patent as the one closest to your idea') + '">'
     + '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
     + ' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'
     + '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg></button>'
@@ -286,7 +295,7 @@ function rowHTML(rec, i) {
        is true under relevance, newest and oldest alike — it is not a claim
        about relevance, and it does not become one when the sort changes. It
        always renders: unlike the score, there is no engine to withhold it. */
-    + '<span class="drill-rank fig fig-s">#' + (i + 1) + '</span>'
+    + (opts.starred ? '' : '<span class="drill-rank fig fig-s">#' + (i + 1) + '</span>')
     /* THE LABEL GOES WITH THE VALUE. Printing one without the other was a real
        defect against real data: every corpus record has `score: null`, so every
        row printed the word SCORE over an empty space. The whole block is
@@ -723,7 +732,7 @@ async function request(port, arg, sayWhat, into, mode) {
    a second overlay safe. An outside click closes too, and the trigger toggles.
    FOCUS MOVES INTO THE MENU on open, because a menu a keyboard cannot reach is
    a menu that is not there. */
-function lmMenu(wrapId, btnId, panelId) {
+export function lmMenu(wrapId, btnId, panelId) {
   const wrap = $('#' + wrapId), btn = $('#' + btnId), panel = $('#' + panelId);
   if (!wrap || !btn || !panel) return;
 
@@ -760,8 +769,9 @@ function lmMenu(wrapId, btnId, panelId) {
   return close;
 }
 
-/* one checked item per group, and the tick is the only thing that moves */
-function check(panel, el) {
+/* one checked item per group, and the tick is the only thing that moves.
+   The starred page's sort menu uses both, so they are exported. */
+export function check(panel, el) {
   panel.querySelectorAll('[role="menuitemradio"]').forEach(b =>
     b.setAttribute('aria-checked', String(b === el)));
 }

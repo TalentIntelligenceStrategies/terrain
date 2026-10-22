@@ -1,18 +1,20 @@
 <!-- ══ the starred set · platform.md §5.2 ═══════════════════════════════════
      The founder's own shortlist, read as a whole rather than one row at a
-     time, and the place it leaves the product from.
+     time, the report it becomes, and the place it leaves the product from.
 
      IT BORROWS THE PAGE SKELETON rather than inventing one: `.view-page`,
      `.main`, `.page-head`, `.pg-back`, `.foot`. Points, account, billing and
-     help all render in it, and a fifth full-width reading surface that looked
-     different from those four would be a layout claiming a distinction that is
-     not there.
+     help all render in it.
 
-     WHAT IT IS NOT is a destination. The four above are places you step off to
-     and come back from, and nothing on the path routes through one. This is on
-     the path — it is what the founder was assembling while they read the list.
-     The distinction is §1's and it shows in one place: the back control here
-     returns to the results rather than to wherever you came from. -->
+     WHAT IT IS NOT is a destination. Those are places you step off to and
+     come back from, and nothing on the path routes through one. This is on
+     the path — it is what the founder was assembling while they read the list
+     — which is why the back control returns to the results.
+
+     TWO COLUMNS: the set leading, the report trailing. The set is the work
+     and the report is the way forward, so the report panel holds the
+     surface's one filled button and the two files leave quietly from its
+     foot. Below 1080px the panel moves above the set. -->
   <section class="view view-page view-starred" data-view="starred" aria-label="What you starred">
     <main class="main">
       <header class="page-head">
@@ -26,60 +28,7 @@
             <span class="chip" id="starCount" hidden></span>
           </div>
         </div>
-        <!-- ══ what leaves, and in what shape ══════════════════════════════
-             TWO FORMATS AND NO THIRD. A CSV opens in the spreadsheet the
-             founder already works in; a Markdown list pastes into the document
-             they are already writing.
-
-             brief.md §1 draws the line at what a file may SAY rather than at
-             whether a file exists. Neither of these carries a cover page, a
-             summary or a conclusion, and both carry exactly the fields already
-             on screen. READING the set is the report's job, on its own surface
-             (platform.md §5.3), and its PDF is that page — so the two reports
-             lead the bar and the two files follow. None is primary: §3.8 allows
-             one filled button per surface, and on the report that is Run the
-             Pro report. -->
-        <!-- THE LABEL LEADS WITH THE VERB AND NAMES THE FORMAT. "Download"
-             because on the surface whose whole purpose is that the set LEAVES,
-             that is the word that has to be there; "CSV" and not
-             "spreadsheet" because the file is a CSV, the docs call it one, and
-             the founder choosing between two formats is choosing a format.
-             Both stay .btn-secondary, so §3.8's one-filled-button rule is
-             untouched and neither is recommended over the other.
-
-             IN THE PAGE'S HEAD, BESIDE THE TITLE IT ACTS ON. The bar sat on a
-             row of its own between the lede and the table, right-aligned
-             against nothing, so the page's two actions floated 150px from the
-             heading that names what they take out. The head is a flex row
-             aligned to its foot, so the bar lands at the trailing end of the
-             title's own line. Hidden with the table when the set is empty. -->
-        <div class="star-bar" id="starBar" hidden>
-          <button class="btn btn-secondary" type="button" data-go="report/founder">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
-            <span>Founder report</span>
-          </button>
-          <button class="btn btn-secondary" type="button" data-go="report/backer">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
-            <span>Backer report</span>
-          </button>
-          <button class="btn btn-secondary" id="starCsv" type="button">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
-            <span>Download CSV</span>
-          </button>
-          <button class="btn btn-secondary" id="starMd" type="button">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
-            <span>Download Markdown</span>
-          </button>
-        </div>
       </header>
-
-      <!-- THE LEDE HAS TO SURVIVE THE FOUNDER ARRIVING BY ACCIDENT. Starring
-           is cheap and its consequences are not obvious, so a page that opened
-           on a list of rows with no statement of what they are would leave the
-           download buttons as the only clue to what the set is for. -->
-      <p class="star-lede t-body">These are the patents you marked as close to what you
-        are building. They stay here while you search, they become a Founder or a Backer
-        report, and they are what you can take out of Terrain.</p>
 
       <!-- ══ the empty state ══ §8: an empty list is not a list of bars. A bar
            says a value exists and is being withheld; nothing is being withheld
@@ -88,74 +37,129 @@
            the founder can press from here fills it. -->
       <div id="starEmpty" hidden>
         <p class="empty-note t-body">Nothing starred yet.
-          <span class="empty-then">Star a patent on your results and it lands here, with
-            everything Terrain knows about it, ready to take out as a file.</span></p>
+          <span class="empty-then">Star a patent on your results and it lands here, ready to
+            become a Founder or a Backer report, or to leave as a file.</span></p>
       </div>
 
-      <div id="starBody" hidden>
+      <div class="star-grid" id="starBody" hidden>
+        <section class="star-set" aria-labelledby="starSetH">
+          <!-- ══ THE SET'S OWN TOOLBAR ═══════════════════════════════════════
+               How the set is drawn and in what order, and nothing else: both
+               change the view and neither changes the set or the files. The
+               two views are the results list's own card and a table
+               (platform.md §5.2); the sort is the results surface's own menu,
+               over the stored rows rather than through the engine, because
+               the whole set is already in the client. -->
+          <div class="star-tools">
+            <h2 class="t-title-s star-set-h" id="starSetH">Your shortlist</h2>
+            <span class="spacer"></span>
+            <div class="seg star-views" role="group" aria-label="How to show your starred patents">
+              <button class="seg-btn" id="starViewDetail" type="button" aria-pressed="true" data-star-view="detail">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
+                <span>Detail</span>
+              </button>
+              <button class="seg-btn" id="starViewList" type="button" aria-pressed="false" data-star-view="list">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg>
+                <span>List</span>
+              </button>
+            </div>
+            <div class="lm" id="starSortWrap">
+              <button class="lm-btn" id="starSortBtn" type="button" aria-haspopup="menu"
+                      aria-expanded="false" aria-controls="starSortMenu">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
+                <span id="starSortLabel">Starred order</span>
+                <svg class="lm-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="lm-menu" id="starSortMenu" role="menu" aria-label="Order each search's patents">
+                <button class="lm-item" type="button" role="menuitemradio" aria-checked="true" data-star-sort=""><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Starred order</span></button>
+                <button class="lm-item" type="button" role="menuitemradio" aria-checked="false" data-star-sort="filed:-1"><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Filed, newest first</span></button>
+                <button class="lm-item" type="button" role="menuitemradio" aria-checked="false" data-star-sort="filed:1"><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Filed, oldest first</span></button>
+                <button class="lm-item" type="button" role="menuitemradio" aria-checked="false" data-star-sort="holder:1"><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Holder, A to Z</span></button>
+                <button class="lm-item" type="button" role="menuitemradio" aria-checked="false" data-star-sort="title:1"><span class="lm-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Title, A to Z</span></button>
+              </div>
+            </div>
+          </div>
+          <!-- A SORT SAYS WHAT IT DID AND THAT THE FILES IGNORE IT. The order the
+               founder starred in is the one thing about the set not visible
+               from looking at it, and a file that silently took the sort would
+               carry an order nobody chose. -->
+          <p class="star-sortnote t-label" id="starSortNote" hidden>
+            <span id="starSortSays"></span>
+            <button class="btn btn-ghost" type="button" data-star-sort="">Starred order</button>
+          </p>
+          <!-- rendered by surfaces/starred.mjs: a group per search, as cards
+               (the results list's own row) or as a table -->
+          <div class="star-list" id="starList"></div>
+        </section>
 
-        <!-- THE ORDER IS THE ORDER THEY STARRED IN, and the page says so
-             because the file reproduces it. core/starred.mjs is a Map for this
-             reason — insertion order IS the order — and a founder who opens
-             the CSV expecting relevance would read the sequence as a ranking
-             Terrain authored. It is the one thing about this list that is not
-             visible from looking at it. -->
-        <p class="star-order t-body" id="starOrder">Grouped by the search you starred them
-          from, most recent search first, and within each one in the order you starred them.</p>
-
-        <!-- ══ A TABLE, AND IT HAS TO BE ONE · 2026-09-26 ═══════════════════
-             It was a <ul> of title-led rows with a meta line that flowed —
-             holder, jurisdiction, year and score packed to the trailing edge
-             in whatever order they fitted — so no two rows put the same fact
-             at the same x and the set could not be read down a column. A
-             shortlist is compared, and comparison is a column.
-
-             IT IS SEMANTICALLY A TABLE TOO, not a grid wearing one. The
-             columns are the fields the export carries; a screen reader
-             announcing "Holder", then the holder's name, is the same
-             affordance the header row gives a sighted reader, and neither is
-             available from a list of paragraphs.
-
-             ONE <tbody> PER SEARCH, with the sentence in a spanning row above
-             it. A <table> per group would say the groups are unrelated sets;
-             they are one set with an internal order, which is exactly what a
-             row group is for. -->
-        <div class="star-tblwrap">
-          <table class="star-tbl" id="starList">
-            <caption class="sr-only">Your starred patents, grouped by search</caption>
-            <thead>
-              <!-- EVERY WIDTH CLASS IS ON THE HEADER, and that is the whole
-                   of how table-layout:fixed works: it resolves the columns
-                   from the FIRST row and ignores every row after it. With the
-                   classes only on the <td>s, six of the nine columns were
-                   `auto` in the row that decides and split the leftover
-                   equally — Where came out 300px wide beside a Title that
-                   truncated at the same 300. The <td>s keep them too, because
-                   the classes carry colour and truncation as well as width. -->
-              <tr>
-                <th scope="col" class="t-micro star-c-n">#</th>
-                <th scope="col" class="t-micro star-c-num">Number</th>
-                <th scope="col" class="t-micro star-c-t">Title</th>
-                <th scope="col" class="t-micro star-c-h">Holder</th>
-                <th scope="col" class="t-micro star-c-w">Where</th>
-                <th scope="col" class="t-micro star-c-y">Year</th>
-                <th scope="col" class="t-micro star-c-sc">Score</th>
-                <th scope="col" class="star-c-x"><span class="sr-only">Remove</span></th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-
-        <!-- WHAT THE FILE CONTAINS, STATED BEFORE IT IS DOWNLOADED. A founder
-             pressing a download has no way to see inside it first, and what
-             the file says is the one thing §1's lock is about. So the page
-             says it, where they are standing when they decide. -->
-        <p class="star-note t-body">Both files carry the same fields as the rows above —
-          number, title, holder, where, year, score and the search you starred it
-          from — and nothing else. A reading of the set belongs to the reports, where
-          every AI-written section is marked and cites the patents it rests on.</p>
+        <!-- ══ THE REPORT, BESIDE THE SET · platform.md §5.2, §5.3 ══════════
+             Two tabs, not a switch: the audience is half of the choice, and a
+             segmented control the width of two words could not carry it
+             (design-language.md §7). What each report holds is said in two
+             groups — counted now, and what Pro writes — and every item names a
+             real section of the report, so the panel promises nothing the
+             report does not contain. -->
+        <aside class="star-rep" aria-label="Make a report">
+          <p class="t-micro star-rep-eyebrow">Turn this into a report</p>
+          <div class="star-tabs" role="tablist" aria-label="Which report">
+            <button class="star-tab" role="tab" type="button" id="starTabFounder" data-star-kind="founder"
+                    aria-selected="true" aria-controls="starRepPanel" tabindex="0">
+              <span class="star-tab-name">Founder report</span>
+              <span class="star-tab-for">For founders</span>
+            </button>
+            <button class="star-tab" role="tab" type="button" id="starTabBacker" data-star-kind="backer"
+                    aria-selected="false" aria-controls="starRepPanel" tabindex="-1">
+              <span class="star-tab-name">Backer report</span>
+              <span class="star-tab-for">For backers</span>
+            </button>
+          </div>
+          <div class="star-rep-body" role="tabpanel" id="starRepPanel" aria-labelledby="starTabFounder">
+            <!-- filled by surfaces/starred.mjs from its REPORTS -->
+            <div class="star-rep-says" id="starRepSays"></div>
+            <!-- THE SURFACE'S ONE FILLED BUTTON (design-language.md §7). Its
+                 data-go follows the tab. -->
+            <button class="btn btn-primary star-cta" id="starCreate" type="button" data-go="report/founder">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+              <span id="starCreateLabel">Create Founder report</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+            <!-- ══ what leaves, and in what shape ══════════════════════════
+                 TWO FORMATS AND NO THIRD. A CSV opens in the spreadsheet the
+                 founder already works in; a Markdown list pastes into the
+                 document they are already writing. brief.md §1 draws the line
+                 at what a file may SAY: both carry exactly the fields already on
+                 screen, and the sentence under them says so where the founder
+                 is standing when they decide. -->
+            <div class="star-files">
+              <p class="t-micro star-files-h">Or take the list out as a file</p>
+              <div class="star-files-btns">
+                <button class="btn btn-ghost" id="starCsv" type="button">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
+                  <span>CSV</span>
+                </button>
+                <button class="btn btn-ghost" id="starMd" type="button">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
+                  <span>Markdown</span>
+                </button>
+              </div>
+              <p class="star-note t-label">Both carry the fields on your screen — number, title,
+                holder, where, year, score and the search — in the order you starred them,
+                and nothing else.</p>
+            </div>
+          </div>
+        </aside>
       </div>
 
       <p class="foot"><em>Powered by</em><img class="foot-mark foot-mark-light" src="../brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg" alt="Innovue" width="95" height="13"><img class="foot-mark foot-mark-dark" src="../brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg" alt="Innovue" width="95" height="13"></p>
     </main>
+
+    <!-- ══ THE RECORD'S SECOND PLACE · platform.md §5.2 ══════════════════════
+         Empty in the markup. record.mjs MOVES the one record pane here when a
+         starred patent is opened and back to the results column when it
+         closes, so there is one record with one set of ids. A sibling of
+         .main, not inside it, so it stands over the page while the page
+         scrolls under it. -->
+    <div class="star-drawer" id="starDrawer"></div>
+    <!-- removed, and the way back. Filled by surfaces/starred.mjs. -->
+    <div class="star-toast" id="starToast" role="status" aria-live="polite" hidden></div>
   </section>

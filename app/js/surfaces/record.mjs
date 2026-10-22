@@ -58,6 +58,33 @@ let REC = null;
    that knows the founder's place in it. */
 let OPEN_ID = null;
 const FLOOR = 240;
+
+/* ══ ONE RECORD, TWO PLACES IT OPENS · platform.md §4.5, §5.2 ══════════════
+   The results surface opens it in its own column; the starred page opens it
+   as a drawer over the page. It is the same pane — the same markup, ids and
+   handlers — MOVED into whichever host asked, because two copies of the
+   record would be two records to keep in step, and every id in surface.html
+   is read by name somewhere.
+
+   THE HOST DECIDES THREE THINGS: where the pane sits, which list the stepping
+   pair walks (the results, or the starred set in the order it is drawn), and
+   whether Find similar is offered — it re-orders the results, which are not
+   on the starred page to be re-ordered. It is set by what was pressed and
+   kept across a step, which has no trigger. */
+let HOST = 'work';
+let HOME = null;
+const LISTS = {
+  work: { root: '#setList', rows: '#setList .drill-toggle', where: 'in your results' },
+  starred: { root: '#starList', rows: '#starList .drill-toggle, #starList .star-open', where: 'in your starred set' },
+};
+function place(host) {
+  const pane = $('#recPane');
+  if (!pane) return;
+  if (!HOME) HOME = pane.parentElement;
+  const to = host === 'starred' ? $('#starDrawer') : HOME;
+  if (to && pane.parentElement !== to) to.append(pane);
+}
+
 /* how many thumbnails the strip shows before the control. See figuresHTML. */
 const CAP = 12;
 
@@ -271,11 +298,11 @@ function setActs(on, id) {
     star.setAttribute('aria-pressed', String(Boolean(on) && Starred.has(id)));
   }
   if (sim) {
-    sim.hidden = !on;
+    sim.hidden = !on || HOST === 'starred';
     if (on) sim.setAttribute('data-pn', id);
     else sim.removeAttribute('data-pn');
   }
-  if (sep) sep.hidden = !on;
+  if (sep) sep.hidden = !on || HOST === 'starred';
 }
 
 function paneHTML(rec, id) {
@@ -436,7 +463,12 @@ function close() {
   if (restore) restore();
   restore = null;
   setTimeout(() => {
-    if (!app || !app.classList.contains('rec-open')) pane.hidden = true;
+    if (!app || !app.classList.contains('rec-open')) {
+      pane.hidden = true;
+      /* BACK TO THE RESULTS COLUMN ONCE IT IS AWAY, so the search finds its
+         record where its CSS and its keyboard scope expect it. */
+      if (HOST !== 'work') { HOST = 'work'; place('work'); syncPos(); }
+    }
   }, reduced() ? 0 : DUR2 + 20);
 }
 
@@ -451,10 +483,10 @@ function close() {
    ONE PLACE WRITES BOTH, so the visible mark and the announced state cannot
    drift. `id` of null clears. */
 function markOpen(id) {
-  document.querySelectorAll('#setList .drill-toggle').forEach(b => {
+  document.querySelectorAll(LISTS[HOST].rows).forEach(b => {
     const on = id != null && b.getAttribute('data-pn') === id;
     b.setAttribute('aria-current', String(on));
-    const row = b.closest('.set-row');
+    const row = b.closest('.set-row, .starrow');
     if (row) row.toggleAttribute('data-open', on);
   });
 }
@@ -464,8 +496,23 @@ function markOpen(id) {
    them, so a cached copy would be the one that went stale. Reading it costs a
    querySelectorAll on a press a human made. */
 function rowIds() {
-  return [...document.querySelectorAll('#setList .drill-toggle')]
+  return [...document.querySelectorAll(LISTS[HOST].rows)]
     .map(b => b.getAttribute('data-pn'));
+}
+
+/* WHERE THE OPEN PATENT SITS, SHOWN, ON THE STARRED PAGE ONLY. On the results
+   surface the list is beside the record and the founder can see their place;
+   on the starred page the drawer covers it, so the place is drawn in the head
+   rather than left to the stepping pair's labels. */
+function syncPos() {
+  const pos = $('#recPos');
+  if (!pos) return;
+  const ids = rowIds(), i = ids.indexOf(OPEN_ID);
+  pos.hidden = HOST !== 'starred' || i < 0;
+  if (!pos.hidden) {
+    pos.innerHTML = '<span class="fig fig-s">' + (i + 1) + '</span> of <span class="fig fig-s">'
+      + ids.length + '</span>';
+  }
 }
 
 /* Both controls are aria-disabled at the ends rather than hidden: a control
@@ -482,10 +529,11 @@ function syncSteps() {
     b.setAttribute('aria-disabled', String(none));
     b.setAttribute('aria-label', none
       ? word + ' patent — you are at the ' + (off < 0 ? 'first' : 'last') + ' result'
-      : word + ' patent in your results, ' + (to + 1) + ' of ' + ids.length);
+      : word + ' patent ' + LISTS[HOST].where + ', ' + (to + 1) + ' of ' + ids.length);
   };
   set('#recPrev', -1, 'Previous');
   set('#recNext', +1, 'Next');
+  syncPos();
 }
 
 /* WHAT THE VIEWER'S HEAD NAMES: the open record's number and title, as this
@@ -517,6 +565,17 @@ async function open(id, trigger, stepping, opts = {}) {
   if (!pane || !body) return;
 
   const app = $('#app');
+  /* THE HOST IS WHAT WAS PRESSED; a step or a version switch has no trigger
+     and stays where it is. A host change mid-read is a new open, so the pane
+     leaves the old place closed rather than carrying its state across. */
+  const host = trigger && trigger.closest && trigger.closest('#starList') ? 'starred'
+    : trigger ? 'work' : HOST;
+  if (host !== HOST && app && app.classList.contains('rec-open')) {
+    app.classList.remove('rec-open');
+    pane.hidden = true;
+  }
+  HOST = host;
+  place(host);
   OPEN_ID = id;
   /* the address names the open record, so a reload or a link reopens it */
   Url.record(id);
@@ -581,7 +640,7 @@ async function open(id, trigger, stepping, opts = {}) {
   const floor = entering && !reduced() ? Math.max(FLOOR, DUR3) : FLOOR;
   /* THE VERSION THE ROW IS SHOWING, read off the row (list.mjs writes
      data-ver). Absent, the engine returns its default document. */
-  const rowEl = document.querySelector('#setList .set-row[data-id="' + CSS.escape(id) + '"]');
+  const rowEl = document.querySelector(LISTS[HOST].root + ' .set-row[data-id="' + CSS.escape(id) + '"]');
   const version = rowEl && rowEl.getAttribute('data-ver');
   const [res] = await Promise.all([ENGINE.record(version ? { id, version } : { id }), pause(floor)]);
   if (stale('record', token)) return;
@@ -741,6 +800,8 @@ export function init(ctx) {
     say('work', 'All drawings shown.');
   });
   onActivate(document, '.drill-toggle', el => open(el.getAttribute('data-pn'), el));
+  /* the starred page's List view opens the same record from its title cell */
+  onActivate(document, '.star-open', el => open(el.getAttribute('data-pn'), el));
   /* the list's first row, after a search. `keep` leaves focus where the
      founder put it: they pressed Search, not this row. */
   /* A VERSION SWITCHED ON THE OPEN PATENT'S ROW reopens the record on it, in
