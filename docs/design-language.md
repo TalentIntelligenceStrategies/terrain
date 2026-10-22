@@ -857,6 +857,18 @@ way forward. **The primary action of a settings card is never deletion** — whe
 irreversible, the safe path is the affirmed button and the act is the ghost one, with the weight
 carried by the sentence above them rather than by a hue.
 
+**The Pro label is ink, and it is a label.** A solid `--text-1` chip with `--text-inverse` text — 11px,
+semibold, uppercase, `--r-chip`, no border — wherever Pro is named: beside the Pro group on the starred
+page's report panel and on the report's Pro sections. It swaps with the theme like the ink it is. It is
+the one solid chip in the product, which is what lets it mark the paid part without a hue, and it is
+never pressable, so it does not count against the one filled button.
+
+**Choosing between two reports is two tabs, not a switch.** The starred page's report panel opens with
+two full-width tabs, each carrying the report's name and who it is for. The chosen tab takes the
+panel's surface and a 2px ink rule along its top edge and joins the body under it; the other sits on
+`--surface-sunken` in `--text-3`. A segmented control the width of two words could not carry *for
+backers*, and the audience is the half of the choice that decides it. Arrow keys move between them.
+
 **A switch is a claim that the product does the thing when it is on.** Every other invented value in
 `demo/` is a grey bar or a figure the reader is told is illustrative; a control carries no such
 marking, and nothing about a toggle says *this is a sketch*. Do not add one for a capability that does

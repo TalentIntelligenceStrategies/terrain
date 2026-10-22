@@ -700,19 +700,49 @@ only by a founder who had already worked it out. A count that is visibly empty i
 it obvious, and it is the difference between the set being somewhere you go and something you watch
 accumulate.
 
-**It is a table, because a shortlist is the one collection here that gets compared.** It was a list
-of title-led rows with a meta line that flowed — holder, jurisdiction, year and score packed to the
-trailing edge in whatever order they fitted — so no two rows put the same fact at the same place and
-the set could not be read down a column. A founder deciding which of twelve matters reads one field
-down twelve rows, not twelve fields across one. Fixed columns, a header row that names them, and a
-long value truncates rather than widening its column and dragging the rest sideways. It takes the
-full width of the surface inside the same 16px gutter the results surface uses; the two sentences
-around it keep a reading measure of their own, because those are prose and the table is not.
+**The set reads two ways, and the founder picks.** *Detail* is the default: each starred patent is
+the **same card the results list draws** — number, version, title, inventors, holder, dates, class, the
+start of the abstract and the strip of drawings — because the founder starred it from that card and
+recognises it by its drawings, and because a second rendering of the same row would be a second
+opinion about what a row is. *List* is a table, because a shortlist is the one collection here that
+gets compared: a founder deciding which of twelve matters reads one field down twelve rows, not twelve
+fields across one. Fixed columns, a header row that names them, and a long value truncates rather than
+widening its column. A two-segment control in the list's own toolbar switches them, and the choice is
+kept in the browser as a convenience — losing it costs one press.
 
 **It is grouped by the search each patent was starred under, most recent search first.** A shortlist
 built across three searches is three questions, and reading it as one undifferentiated list loses
-which question each answer belongs to. Inside a group the order is the order they were starred,
-which is the only order the set has.
+which question each answer belongs to. Each group opens with its sentence as a plain heading — in
+quotes, because it is the founder's own words — and under it how many are starred from it, when, and
+*Run again*, which runs that search through the composer exactly as history does (§5). Inside a group
+the order is the order they were starred, which is the only order the set has.
+
+**Sorting is a view and never an edit.** A menu beside the toggle re-orders each group by filing date,
+holder or title, and the groups keep their order. *Starred order* puts it back. The files ignore it:
+the order the founder built is the one thing about the set that is not visible from looking at it,
+and a file that silently took the sort would carry an order nobody chose.
+
+**A patent opens over the page, not by leaving it.** Pressing a title or a drawing slides the record
+(§4.5) in from the trailing edge as a drawer, with about 200px of the page left showing so it reads as
+*this came from there*. It is the same record as on the results surface — the same fields, drawings,
+claims and closing block — with two differences that come from where it is: its previous and next step
+through the starred order, and it says where the patent sits in it (*3 of 8*). Escape closes it and
+returns focus to the row. A founder comparing their shortlist should not have to walk back to a search
+that may have moved on to read one of its own patents.
+
+**Removing a star can be undone.** Unstarring from a card, a row or the open record takes the patent
+out at once and says so in a toast at the foot of the page, with *Undo* for six seconds; undo puts it
+back where it was in the starred order. When the open record's patent is the one removed, the drawer
+moves to the next one. A shortlist is the founder's own work, and one mis-press should not cost it.
+
+**The report sits beside the set.** A panel at the trailing side holds two full-width tabs —
+*Founder report* and *Backer report*, each with who it is for — and under the chosen one its question,
+what it holds and the surface's one filled button, *Create Founder report* or *Create Backer report*.
+What it holds is said plainly in two groups: **Ready now**, the counted sections, and **Pro · about
+10 minutes**, the sections Pro writes, under the Pro label (`design-language.md` §7). Each item names a
+real section of the report (§5.3) in plain words, so the panel promises nothing the report does not
+contain. The two files leave from the foot of the panel as quiet links. Below 1080px the panel moves
+above the set.
 
 **That means a star is stamped when it happens.** Nothing afterwards knows which search a row came
 from, so the store records the **search that ran** — the query, the field, the settings and the
@@ -721,9 +751,9 @@ that sentence without searching again. The report needs all four: its counts of 
 each search behind the stars (§5.3). The stored row carries three fields of the store's own beside
 the engine's — the query, the search, and when it was starred — named so they read as ours.
 
-**Every column the file carries is on the row above it.** The page tells the founder the files carry
-the same fields as the rows, so a field that leaves in the file without appearing on screen is the
-one thing `brief.md` §1's test is about. The row shows all seven.
+**Every column the file carries is on screen.** The page tells the founder the files carry the same
+fields as the rows, so a field that leaves in the file without appearing on screen is the one thing
+`brief.md` §1's test is about. The List view shows all seven; the Detail card shows each of them too.
 
 **It leaves as a CSV or a Markdown list, or it becomes a report.** Both files carry the fields
 already on screen — number, title, holder, where, year, score, and the search it was starred under —
@@ -735,12 +765,10 @@ question: **does the file state anything the interface did not?** If it does, it
 Reading the set is the report's job, on its own surface, and nothing a reading says leaks into the
 two files.
 
-**Four buttons sit in the page's head, all secondary** — *Founder report* and *Backer report*, then
-*Download CSV* and *Download Markdown*, at the trailing end of the title's line. They act on the whole set, so
-they belong to the heading that names it rather than to a row of their own above the table. **The
-pressed button says *Downloaded* for a moment**, keeping its accessible name: a download has no
-screen of its own, and the page it was pressed on otherwise looks exactly as it did. The live region
-says it once.
+**The two downloads are quiet links at the foot of the report panel** — *CSV* and *Markdown* — because
+the report is the way forward and a file is the way out. **The pressed link says *Downloaded* for a
+moment**, keeping its accessible name: a download has no screen of its own, and the page it was
+pressed on otherwise looks exactly as it did. The live region says it once.
 
 **One record can leave on its own, through the same two builders.** The record's closing block offers
 the same CSV and Markdown for the patent being read, and it reads the **row** rather than the record
