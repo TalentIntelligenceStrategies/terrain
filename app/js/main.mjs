@@ -140,8 +140,8 @@ function viewForHash(h) {
      right now that the map is gone. */
   if (h === 'work' || h.startsWith('set')) return 'work';
   if (h.startsWith('starred')) return 'starred';
-  /* One report. A link from when there were two (`report/founder`,
-     `report/backer`) still lands on it. */
+  /* One report. Any `report/…` hash lands on it, so a link carrying a
+     trailing segment still opens the report. */
   if (h.startsWith('report')) return 'report';
   if (h.startsWith('account')) return 'account';
   if (h.startsWith('billing')) return 'billing';
