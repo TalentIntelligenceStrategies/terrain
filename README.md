@@ -1,10 +1,10 @@
 # TIS Terrain
 
-**Patent search built to return the patents actually near an idea, and two reports on what they
+**Patent search built to return the patents actually near an idea, and a report on what they may
 mean — for founders, and the people who back them.**
 
 You describe what you are building, Terrain returns the patents that are actually near it, you star
-the ones that matter, and the starred set becomes a Founder or a Backer report, or leaves as a file.
+the ones that matter, and the starred set becomes a patent report, or leaves as a file.
 Self-serve software searching Innovue's patent database.
 
 **The search shows what came back; a report says what it may mean, and shows its sources.** The gap

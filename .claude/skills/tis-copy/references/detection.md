@@ -84,6 +84,6 @@ fatal for a product whose claim is trust.
 - [ ] No filler, no poster lines
 - [ ] Passes the swap test
 - [ ] Every claim carries its basis in the same sentence or the note beside it
-- [ ] Nothing reads the set outside a report's Pro part; *report* names only the two reports
+- [ ] Nothing reads the set outside a report's Pro part; *report* names only the patent report
 - [ ] Opening enters directly — no context-setting
 - [ ] Closing doesn't restate what was just said

@@ -140,8 +140,8 @@ function viewForHash(h) {
      right now that the map is gone. */
   if (h === 'work' || h.startsWith('set')) return 'work';
   if (h.startsWith('starred')) return 'starred';
-  /* `report/founder` and `report/backer` are one surface with two questions;
-     report.mjs reads which from the hash. */
+  /* One report. A link from when there were two (`report/founder`,
+     `report/backer`) still lands on it. */
   if (h.startsWith('report')) return 'report';
   if (h.startsWith('account')) return 'account';
   if (h.startsWith('billing')) return 'billing';

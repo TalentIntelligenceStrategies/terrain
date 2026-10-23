@@ -49,7 +49,7 @@ Write three candidates. Name the claim each carries and its basis. Keep one and 
 **The swap test does the most work.** Substitute a competitor's name — a generative AI tool, Google
 Patents, an analyst platform. If the line still reads true, it is generic. Rewrite with what only
 Terrain can say: one sentence in and a set out; real records as published, with nothing generated
-in the search; a report for the founder or for the backer, whose readings show their sources.
+in the search; one report the founder and the backer both read, whose readings show their sources.
 
 ## 3 · Draft (block and long lanes)
 
@@ -82,7 +82,7 @@ Scan every output.
    *open ground*, anywhere. A sentence must stay true if the rest of the world's patents were added
    to the index (`brief.md` §1). Inside a Pro section a reading is marked as AI-written, cites what
    it rests on, and says *may* wherever it touches a claim; never *infringes*, *is clear*, *is novel*.
-5. **Report means the two reports** — *Founder report*, *Backer report*, and nothing else. Never
+5. **Report means the patent report**, and nothing else. Never
    *insights*, *decision-ready*, *actionable* or *AI-powered*, and never *free*: Pro is the only tier
    word.
 6. **No figure without its scope.** A figure from Innovue's internal research stays out of public

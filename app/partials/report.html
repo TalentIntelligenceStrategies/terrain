@@ -1,7 +1,7 @@
 <!-- ══ the report · platform.md §5.3 ════════════════════════════════════════
-     The starred set read for one question, as paper. Two reports, one shape:
-     the Founder report asks "can I build this, and protect it?", the Backer
-     report "does this hold up, and who else is here?".
+     The starred set read for one question, as paper: how close are these
+     patents to the idea, and who holds them? One report, whoever reads it —
+     a founder and a backer want the same sections.
 
      IT BORROWS THE PAGE SKELETON for its chrome — `.view-page`, `.main`,
      `.page-head`, `.pg-back`, `.foot` — and draws its content as sheets on the
@@ -20,17 +20,9 @@
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
             <span>What you starred</span>
           </button>
-          <h1 class="t-display-2" id="repTitle" tabindex="-1">Founder report</h1>
+          <h1 class="t-display-2" id="repTitle" tabindex="-1">Patent report</h1>
         </div>
-        <!-- THE SWITCH KEEPS THE SET. Founder and Backer read the same starred
-             patents for two different questions, so moving between them is a
-             change of question, not of data — the counts are asked for once.
-             aria-pressed is written here and kept by report.mjs. -->
         <div class="rep-tools">
-          <div class="seg" role="group" aria-label="Which report">
-            <button class="seg-btn" type="button" data-rep-kind="founder" aria-pressed="true">Founder</button>
-            <button class="seg-btn" type="button" data-rep-kind="backer" aria-pressed="false">Backer</button>
-          </div>
           <!-- PRINTS THE PAGE, and that is the whole file test: the PDF is
                this page and nothing more (brief.md §1). Before Pro has run it
                leaves the Pro part out, because a file of empty bars says

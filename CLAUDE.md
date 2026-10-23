@@ -13,12 +13,12 @@ not an accident — see "Relationship to the TIS monorepo" at the bottom.
 
 ## The product, in one paragraph
 
-Terrain is **patent search built to return the patents actually near an idea, and two reports on what
-they mean**, for founders and the people who back them (`docs/brief.md` §1 *Who it is for*). You
+Terrain is **patent search built to return the patents actually near an idea, and a report on what
+they may mean**, for founders and the people who back them (`docs/brief.md` §1 *Who it is for*). You
 describe what you are building, Terrain returns the patents that are actually near it, you star the
-ones that matter, and the starred set becomes a **Founder** or a **Backer** report — or leaves as a
-file. *Backers* are the investors, incubators and accelerators behind a startup; an incubator is a
-backer, not a third audience. Self-serve software searching Innovue's patent database. The search
+ones that matter, and the starred set becomes a **patent report** — or leaves as a file. *Backers* are
+the investors, incubators and accelerators behind a startup; an incubator is a backer, not a third
+audience. **One report serves both readers**, because a founder and a backer want the same sections. Self-serve software searching Innovue's patent database. The search
 shows no price; **Pro**, the part of a report that takes minutes, is paid per report and is the only
 tier word (`docs/brief.md` §6).
 

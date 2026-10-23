@@ -17,7 +17,7 @@
  * that says what the set MEANS belongs in a Pro section, marked and cited
  * (brief.md §1), and none is written in this file.
  */
-import { $, $$, esc } from '../core/dom.mjs';
+import { $, esc } from '../core/dom.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { say } from '../core/live-region.mjs';
 import * as Starred from '../core/starred.mjs';
@@ -26,41 +26,31 @@ import { bump, stale } from '../core/generation.mjs';
 import { codeOf, holderText } from '../core/format.mjs';
 
 let ENGINE = null;
-let KIND = 'founder';
-/* THE COUNTS ARE ASKED FOR ONCE PER SET, not once per switch: Founder and
-   Backer read the same stars, so a switch is a change of question, not of
-   data. Keyed by the searches it was asked about. */
+/* THE COUNTS ARE ASKED FOR ONCE PER SET, keyed by the searches they were
+   asked about, and dropped when the stars change. */
 let COUNTS = null;
 let COUNTED_FOR = '';
 
-/* ══ THE TWO REPORTS · the copy is the direction's, word for word ══════════ */
-const REPORTS = {
-  founder: {
-    name: 'Founder report', to: 'Founding team', ask: 'Can I build this, and protect it?',
-    subject: 'Your description',
-    counted: ['holders', 'years', 'offices', 'classes', 'status', 'licence'],
-    lead: ['Bottom line', 'Three sentences on the closest patents, citing their numbers.'],
-    pro: [
-      ['Closest claims', 'Your idea’s features against the closest claims. Each mark cites the claim and the passage it rests on. A feature no claim reaches is what falls outside.', 'chart'],
-      ['Where the idea may differ', 'Changes that may avoid the closest claims, each citing the claim it moves away from.', 'list'],
-      ['What’s already described', 'How much of your idea these patents already describe. The set is not a prior-art search.', 'text'],
-      ['Each patent in plain English', 'For every starred patent: what it protects, and what it doesn’t cover.', 'list'],
-    ],
-    disclaimer: 'Pro sections are written by AI from the patents you starred and your description. They are not legal advice, and not a freedom-to-operate, patentability or validity opinion. Patents outside this set may matter.',
-  },
-  backer: {
-    name: 'Backer report', to: 'Investment committee', ask: 'Does this hold up, and who else is here?',
-    subject: 'The company’s description',
-    counted: ['holders', 'status', 'years', 'offices', 'cluster'],
-    lead: ['The set in a page', 'One paragraph for an investment memo, citing the patents it rests on.'],
-    pro: [
-      ['Closest claims to the company', 'The company’s described technology against the closest claims, each mark citing the claim and passage.', 'chart'],
-      ['Other holders in the set', 'Each holder with its starred patents, and a note on what they cover.', 'list'],
-      ['Risk flags', 'What to check before backing it. Each flag gives its basis and the patents behind it. No score.', 'list'],
-      ['Questions to ask the founders', 'What these patents leave open, turned into questions for the team.', 'list'],
-    ],
-    disclaimer: 'Pro sections are written by AI from the patents you starred and the company’s description. They are not legal or investment advice, and not a freedom-to-operate or validity opinion. Patents outside this set may matter.',
-  },
+/* ══ THE PATENT REPORT · one report, whoever reads it ══════════════════════
+   A founder and a backer want the same sections — the founder wants the risk
+   flags and the questions before an investor asks them, the backer wants
+   where the idea may differ and each patent in plain English — so the report
+   is written in neutral voice and carries all of them (platform.md §5.3). */
+const REPORT = {
+  name: 'Patent report', ask: 'How close are these patents to the idea, and who holds them?',
+  subject: 'The description',
+  counted: ['holders', 'status', 'years', 'offices', 'classes', 'cluster', 'licence'],
+  lead: ['Bottom line', 'One paragraph on the closest patents, citing their numbers.'],
+  pro: [
+    ['Closest claims', 'The idea’s features against the closest claims. Each mark cites the claim and the passage it rests on. A feature no claim reaches is what falls outside.', 'chart'],
+    ['Where the idea may differ', 'Changes that may avoid the closest claims, each citing the claim it moves away from.', 'list'],
+    ['What’s already described', 'How much of the idea these patents already describe. The set is not a prior-art search.', 'text'],
+    ['Other holders in the set', 'Each holder with its starred patents, and a note on what they cover.', 'list'],
+    ['Risk flags', 'What to check before building or backing it. Each flag gives its basis and the patents behind it. No score.', 'list'],
+    ['Questions a backer may ask', 'What these patents leave open, turned into questions for the team.', 'list'],
+    ['Each patent in plain English', 'For every starred patent: what it protects, and what it doesn’t cover.', 'list'],
+  ],
+  disclaimer: 'Pro sections are written by AI from the patents you starred and the description. They are not legal or investment advice, and not a freedom-to-operate, patentability or validity opinion. Patents outside this set may matter.',
 };
 
 /* ══ the searches behind the stars ═══════════════════════════════════════
@@ -170,7 +160,7 @@ function exhibit(key, c, rows) {
     const title = top.length
       ? `${top.length === 1 ? 'One holder accounts' : `${['', 'One', 'Two', 'Three'][top.length]} holders account`} for ${held} of ${c.results} results${none ? `; ${none} name no holder` : ''}.`
       : `The holders of these ${c.results} results are withheld.`;
-    return { label: KIND === 'backer' ? 'Holder concentration' : 'Who holds them', title, base: field, body: holderTable(c) };
+    return { label: 'Who holds them', title, base: field, body: holderTable(c) };
   }
   if (key === 'years') {
     const span = yearSpan(c);
@@ -229,7 +219,7 @@ function sheet(inner, no, rep) {
 }
 
 function render(rows, searches, c) {
-  const rep = REPORTS[KIND];
+  const rep = REPORT;
   const queries = searches.map(s => s.query).filter(Boolean);
   const re = queries.length
     ? `${rep.subject}: “${esc(queries[0])}”${queries.length > 1 ? ` <span class="rep-sub">and ${plural(queries.length - 1, 'other search', 'other searches')}</span>` : ''}`
@@ -256,7 +246,6 @@ function render(rows, searches, c) {
   pages.push(sheet(`
     <h2 class="rep-h1">${rep.ask}</h2>
     <dl class="rep-meta">
-      <dt class="t-micro">To</dt><dd>${rep.to}</dd>
       <dt class="t-micro">Re</dt><dd>${re}</dd>
       <dt class="t-micro">Date</dt><dd>${DATE}</dd>
       <dt class="t-micro">Basis</dt><dd>${basis}</dd>
@@ -295,19 +284,7 @@ function render(rows, searches, c) {
 }
 
 /* ══ painting ════════════════════════════════════════════════════════════ */
-function kindFromHash() {
-  return location.hash.slice(1).split('/')[1] === 'backer' ? 'backer' : 'founder';
-}
-
-function setKind(k) {
-  KIND = k;
-  $$('[data-rep-kind]').forEach(b => b.setAttribute('aria-pressed', String(b.getAttribute('data-rep-kind') === k)));
-  const t = $('#repTitle');
-  if (t) t.textContent = REPORTS[k].name;
-}
-
 async function paint() {
-  setKind(kindFromHash());
   const desk = $('#repDesk'), empty = $('#repEmpty');
   const rows = Starred.list();
   if (!desk || !empty) return;
@@ -337,14 +314,6 @@ export function init(ctx) {
      the report is not on screen while the founder stars, and it asks again
      when it is. */
   Starred.onChange(() => { COUNTED_FOR = ''; });
-
-  onActivate(document, '[data-rep-kind]', el => {
-    const k = el.getAttribute('data-rep-kind');
-    if (k === KIND) return;
-    history.replaceState(null, '', '#report/' + k);
-    paint();
-    say('destination', REPORTS[k].name);
-  });
 
   /* RUN THE PRO REPORT, in the reference. It cannot run until Innovue's
      prompts are connected, so it says that where it was pressed rather than

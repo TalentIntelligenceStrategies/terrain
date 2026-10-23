@@ -73,7 +73,7 @@ Three rules that hold across published decks, whichever market they were made fo
 ## What a Terrain slide never says
 
 `sales/answers.md` Part 4 is the list. The ones a slide reaches for most: *accurate*, *strong
-match*, *white space*, *insights*, *AI-powered*, *free*, *report* for anything but the two reports, a chatbot's name, a score as a
+match*, *white space*, *insights*, *AI-powered*, *free*, *report* for anything but the patent report, a chatbot's name, a score as a
 percentage, and any figure without its scope.
 
 ## Before and after

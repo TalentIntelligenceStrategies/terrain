@@ -27,7 +27,7 @@
 | **The home surface** | Where the founder picks a technology field and describes an idea. One composer, one button. |
 | **The results surface** | The patents the search found down the left, with their drawings; whichever one you open on the right, with all of them. |
 | **The starred set** | Everything the founder starred, read as a whole, and where it leaves as a file or becomes a report. |
-| **The report** | The starred set as a Founder or a Backer report — counts anyone can check, then the Pro part, written when it is run. §5.3. |
+| **The report** | The starred set as a patent report — counts anyone can check, then the Pro part, written when it is run. §5.3. |
 | *Destinations* | Account settings · Plan & billing · Help. Reached from the masthead, returned from in place. |
 
 A **surface** is somewhere the product happens. A **destination** is somewhere the founder steps off
@@ -51,8 +51,8 @@ appearance control, the account menu.
 | 1 · First run | home | The field tiles, the composer, and the question above it. Nothing else. |
 | 2 · What was found | results | The ranked patents fill the left column, and keep it. Nothing is approved and nothing is waited for beyond the one call. |
 | 3 · Working | results | Sorting, grouping, starring, finding similar, reading a record, opening a drawing. The founder may stay here indefinitely and most of the product's value is spent here. |
-| 4 · Taking stock | starred set | The shortlist as a whole, two buttons that write a file, and two that open a report. |
-| 5 · The report | report | The starred set read for one question — building it, or backing it. Counts first; the Pro part follows, and runs only when asked. |
+| 4 · Taking stock | starred set | The shortlist as a whole, two links that write a file, and one button that opens the report. |
+| 5 · The report | report | The starred set read for one question, whoever is building it or backing it. Counts first; the Pro part follows, and runs only when asked. |
 
 **There is no confirm step and no build stream.** The search runs on submit. The reading, the five
 narrowing questions, the priced gate and the staged build were four ports and are now none — a
@@ -736,9 +736,9 @@ out at once and says so in a toast at the foot of the page, with *Undo* for six 
 back where it was in the starred order. When the open record's patent is the one removed, the drawer
 moves to the next one. A shortlist is the founder's own work, and one mis-press should not cost it.
 
-**The report sits beside the set.** A panel at the trailing side holds two full-width tabs —
-*Founder report* and *Backer report*, each with who it is for — and under the chosen one its question,
-what it holds and the surface's one filled button, *Create Founder report* or *Create Backer report*.
+**The report sits beside the set.** A panel at the trailing side holds the report's question, what
+it holds and the surface's one filled button, *Create patent report*. There is no choice of report
+before it: one report serves the founder and the backer alike (§5.3).
 What it holds is said plainly in two groups: **Ready now**, the counted sections, and **Pro · about
 10 minutes**, the sections Pro writes, under the Pro label (`design-language.md` §7). Each item names a
 real section of the report (§5.3) in plain words, so the panel promises nothing the report does not
@@ -779,17 +779,21 @@ set it came out of. Neither file reaches the engine: every byte is already in th
 
 ### 5.3 · The report
 
-**The starred set read for one question, as paper.** Two reports, one shape. The **Founder report**
-answers *can I build this, and protect it?*; the **Backer report** answers *does this hold up, and who
-else is here?* A backer is an investor, incubator or accelerator behind a startup (`brief.md` §1).
+**The starred set read for one question, as paper.** The **patent report** answers *how close are
+these patents to the idea, and who holds them?* **It is one report, whoever reads it.** A founder and a
+backer want the same sections — the founder wants the risk flags and the questions before an investor
+raises them, the backer wants where the idea may differ and each patent in plain English — so it
+carries all of them, in neutral voice (*the idea*, *the description*), and reads the same when a
+founder forwards it. A backer is an investor, incubator or accelerator behind a startup
+(`brief.md` §1).
 The page is drawn as a report rather than as an app screen — sheets on the ground, a memo header, a
 key-figures rail, numbered exhibits — because a backer reads it beside the memos they already get.
 `design-language.md` §7 carries how it looks.
 
 **It reads top to bottom in four parts.**
 
-1. **The memo header and how the set was made.** To (the founding team, or the investment
-   committee), about (the description the report reads against), date, and basis: how many searches,
+1. **The memo header and how the set was made.** About (the description the report reads
+   against), date, and basis: how many searches,
    across which offices, how many results they returned, how many patents are starred. **It comes
    before any number**, because the most common failure of a landscape is not saying how its set was
    made, and because *these counts describe what the searches returned, not every patent that exists*
@@ -809,10 +813,10 @@ key-figures rail, numbered exhibits — because a backer reads it beside the mem
 
 **The sections, in reading order.**
 
-| | Founder | Backer |
-| --- | --- | --- |
-| **Counted** | Who holds them · Filed by year · Where they were filed · Technology classes · Granted and pending · Listed for licence on TIS | Holder concentration · Granted and pending · Filed by year · Where they were filed · Where filings cluster |
-| **Pro** | Bottom line (written last, shown first) · Closest claims · Where the idea may differ · What's already described · Each patent in plain English | The set in a page (written last, shown first) · Closest claims to the company · Other holders in the set · Risk flags · Questions to ask the founders |
+| | |
+| --- | --- |
+| **Counted** | Who holds them · Granted and pending · Filed by year · Where they were filed · Technology classes · Where filings cluster · Listed for licence on TIS |
+| **Pro** | Bottom line (written last, shown first) · Closest claims · Where the idea may differ · What's already described · Other holders in the set · Risk flags · Questions a backer may ask · Each patent in plain English |
 
 **Every count adds up, and every exhibit says what it counted.**
 
@@ -832,13 +836,13 @@ the idea's features against each closest claim as *present*, *unclear* or *absen
 the symbol and the claim and passage it rests on; a feature no claim reaches is what falls outside.
 *Where the idea may differ* says what *may avoid* a claim, never what is clear. *What's already
 described* is not a novelty opinion, and says the set is not a prior-art search. *Risk flags* carry
-their basis and their patents and no score. *Who else is here* is not a list of acquirers, which needs
+their basis and their patents and no score. *Other holders in the set* is not a list of acquirers, which needs
 deal data the set does not hold.
 
-**The disclaimer is the whole of the legal hand-off.** The Founder report's reads: *Pro sections are
-written by AI from the patents you starred and your description. They are not legal advice, and not a
-freedom-to-operate, patentability or validity opinion. Patents outside this set may matter.* The
-Backer report's says *legal or investment advice*. Neither routes the reader anywhere.
+**The disclaimer is the whole of the legal hand-off.** It reads: *Pro sections are written by AI
+from the patents you starred and the description. They are not legal or investment advice, and not a
+freedom-to-operate, patentability or validity opinion. Patents outside this set may matter.* It
+routes the reader nowhere.
 
 **Download PDF prints the page.** Before Pro it carries the memo header, the counted part and the
 appendix, and no Pro part at all — a file of empty bars says nothing. After Pro it carries everything.
@@ -847,7 +851,7 @@ nothing its page did not.
 
 **What the reference cannot do yet, and says.** Run the Pro report waits on Innovue's prompts; in
 `app/` it answers inline that Pro runs once they are connected. The TIS listing is TIS-side data and
-renders as a skeleton bar until it exists. The Founder/Backer switch keeps the same starred set.
+renders as a skeleton bar until it exists.
 
 ---
 
@@ -1025,10 +1029,10 @@ anyone to configure it.
 | **The analysis layer, as a place to work** | Dozens of destinations of charts, matrices and trend cuts, each a reading authored for an analyst to navigate. A founder does not operate an analyst's workbench; the set — real, as published, and built to be near — is what the search returns. What comes back is narrower and has one home: a report on the starred set (§5.3), whose counted part says nothing the rows do not and whose Pro part is marked and cited. Every row below is downstream of that split. |
 | The authored taxonomy | IPtech wants a taxonomy written before the first search. Terrain generates its grouping from the result set — this is the whole of what makes it operable by a founder. |
 | Valuation (`價值通`) | A verdict on a patent's worth, as a score. Terrain shows no score of its own. |
-| Plain-English decode (`AI閱讀Pro`), on the record | A paraphrase in place of the record. It returns only as the Founder report's *Each patent in plain English*, marked as AI-written; the record itself stays as published. |
-| The landscape summary (`AI Insight`), at corpus scale | A reading of a whole field nobody chose. It returns only as a Pro section over the starred set — *Bottom line*, *The set in a page* — citing the patents it rests on. |
-| An attorney handoff file | A document somebody could file against. The report is not one: it is a reading for the founder or backer, under a disclaimer, and routes nobody anywhere (§5.3). |
-| The zone names (`地雷區` / `新興區` / `處女地帶`) | Minefield, emerging, virgin territory. They label absence, and a search result cannot carry a claim about what exists. The Backer report's *Where filings cluster* counts what came back and names no zone. |
+| Plain-English decode (`AI閱讀Pro`), on the record | A paraphrase in place of the record. It returns only as the report's *Each patent in plain English*, marked as AI-written; the record itself stays as published. |
+| The landscape summary (`AI Insight`), at corpus scale | A reading of a whole field nobody chose. It returns only as a Pro section over the starred set — *Bottom line* — citing the patents it rests on. |
+| An attorney handoff file | A document somebody could file against. The report is not one: it is a reading for the founder and whoever backs them, under a disclaimer, and routes nobody anywhere (§5.3). |
+| The zone names (`地雷區` / `新興區` / `處女地帶`) | Minefield, emerging, virgin territory. They label absence, and a search result cannot carry a claim about what exists. The report's *Where filings cluster* counts what came back and names no zone. |
 
 **What Terrain adds.** PI-VuePat, as inventoried (`visual-reference/pi-vuepat/`), had no
 multi-patent export: its egress was one patent at a time into another Innovue product. **A set the
@@ -1080,8 +1084,8 @@ postponed, it says so.
 8. **Running Pro in the reference.** Run the Pro report answers inline in `app/` until Innovue's
    prompts are connected. **Starts when:** Innovue writes the prompt behind each Pro section and
    states what a run returns (`components.md` §1).
-9. **Against its neighbours** — where the company's own filings sit among the starred set, for the
-   Backer report. **Starts when:** the company's own patents are an input, which starring does not
+9. **Against its neighbours** — where the company's own filings sit among the starred set, in the
+   report. **Starts when:** the company's own patents are an input, which starring does not
    guarantee.
 
 ---

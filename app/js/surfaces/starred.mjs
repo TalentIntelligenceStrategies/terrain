@@ -161,28 +161,18 @@ const patents = n => n + (n === 1 ? ' patent' : ' patents');
 
 /* ── the surface ──────────────────────────────────────────────────────────── */
 
-/* WHAT EACH REPORT HOLDS, said plainly. The question is report.mjs's, word
-   for word, so the panel and the report it opens ask the same thing. Each
-   item names a real section of the report (platform.md §5.3) — the counted
-   ones under Ready now, the ones Pro writes under Pro — so the panel promises
+/* WHAT THE REPORT HOLDS, said plainly. The question is report.mjs's, word for
+   word, so the panel and the report it opens ask the same thing. Each item
+   names a real section of the report (platform.md §5.3) — the counted ones
+   under Ready now, the ones Pro writes under Pro — so the panel promises
    nothing the report does not contain. */
-const REPORTS = {
-  founder: {
-    name: 'Founder report', ask: 'Can I build this, and protect it?',
-    ready: ['Who holds the patents near you', 'When and where they were filed',
-      'How many are granted, how many pending'],
-    pro: ['The closest claims, set against your idea', 'Where your idea may differ',
-      'Each patent in plain English'],
-  },
-  backer: {
-    name: 'Backer report', ask: 'Does this hold up, and who else is here?',
-    ready: ['How concentrated the holders are', 'How fast the field is filing, and where',
-      'Where filings cluster'],
-    pro: ['The closest claims to the company', 'Risk flags, each with its basis',
-      'Questions to ask the founders'],
-  },
+const REPORT = {
+  ask: 'How close are these patents to the idea, and who holds them?',
+  ready: ['Who holds the patents near the idea', 'When and where they were filed',
+    'How many are granted, how many pending', 'Where filings cluster'],
+  pro: ['The closest claims, set against the idea', 'Where the idea may differ',
+    'Risk flags, each with its basis', 'Questions a backer may ask', 'Each patent in plain English'],
 };
-let KIND = 'founder';
 
 /* THE VIEW IS KEPT IN THE BROWSER AS A CONVENIENCE. Losing it costs one press,
    so a storage that throws (Safari private mode) is a default, not an error. */
@@ -297,27 +287,15 @@ function listHTML(groups) {
     + '</table></div>';
 }
 
-/* the report panel's words for the chosen tab */
-function reportHTML() {
-  const r = REPORTS[KIND];
-  const items = xs => '<ul class="star-bul">' + xs.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>';
-  return '<p class="t-title star-rep-q">' + esc(r.ask) + '</p>'
-    + '<div class="star-rg"><p class="star-rg-h t-micro">Ready now</p>' + items(r.ready) + '</div>'
-    + '<div class="star-rg"><p class="star-rg-h"><span class="pro-label">Pro</span>'
-    + '<span class="t-micro">About 10 minutes</span></p>' + items(r.pro) + '</div>';
-}
+/* the report panel's words */
 function paintReport() {
-  document.querySelectorAll('[data-star-kind]').forEach(t => {
-    const on = t.getAttribute('data-star-kind') === KIND;
-    t.setAttribute('aria-selected', String(on));
-    t.setAttribute('tabindex', on ? '0' : '-1');
-  });
-  const panel = $('#starRepPanel'), says = $('#starRepSays');
-  if (panel) panel.setAttribute('aria-labelledby', KIND === 'founder' ? 'starTabFounder' : 'starTabBacker');
-  if (says) says.innerHTML = reportHTML();
-  const cta = $('#starCreate'), label = $('#starCreateLabel');
-  if (cta) cta.setAttribute('data-go', 'report/' + KIND);
-  if (label) label.textContent = 'Create ' + REPORTS[KIND].name;
+  const says = $('#starRepSays');
+  if (!says) return;
+  const items = xs => '<ul class="star-bul">' + xs.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>';
+  says.innerHTML = '<p class="t-title star-rep-q">' + esc(REPORT.ask) + '</p>'
+    + '<div class="star-rg"><p class="star-rg-h t-micro">Ready now</p>' + items(REPORT.ready) + '</div>'
+    + '<div class="star-rg"><p class="star-rg-h"><span class="pro-label">Pro</span>'
+    + '<span class="t-micro">About 10 minutes</span></p>' + items(REPORT.pro) + '</div>';
 }
 
 function paintTools() {
@@ -484,22 +462,6 @@ export function init() {
     paint(Starred.list());
     say('destination', SORT ? 'Sorted by ' + SORT_SAYS[v] + '.' : 'Back in the order you starred them.');
     if (!key) { const b = $('#starSortBtn'); if (b) b.focus({ preventScroll: true }); }
-  });
-
-  /* the tabs: a press, or arrows, Home and End between them */
-  onActivate(document, '[data-star-kind]', el => {
-    KIND = el.getAttribute('data-star-kind') === 'backer' ? 'backer' : 'founder';
-    paintReport();
-  });
-  document.addEventListener('keydown', e => {
-    const tab = e.target instanceof Element && e.target.closest('[data-star-kind]');
-    if (!tab || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
-    e.preventDefault();
-    KIND = e.key === 'Home' ? 'founder' : e.key === 'End' ? 'backer'
-      : (KIND === 'founder' ? 'backer' : 'founder');
-    paintReport();
-    const now = document.querySelector('[data-star-kind="' + KIND + '"]');
-    if (now) now.focus();
   });
 
   onActivate(document, '[data-star-run]', el => {

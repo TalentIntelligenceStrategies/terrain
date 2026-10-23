@@ -113,24 +113,12 @@
 
 /* ══ THE REPORT PANEL ════════════════════════════════════════════════════
    Sticky beside the set, so the way forward stays in view down a long
-   shortlist. Its two tabs are design-language.md §7's: the chosen one takes
-   the panel's surface and a 2px ink rule along its top and joins the body;
-   the other sits on the sunken ground in the quiet ink. */
+   shortlist. One report, so no tabs: the eyebrow sits on the sunken ground
+   and a rule divides it from the body. */
 .star-rep{position:sticky;top:var(--s-16);display:flex;flex-direction:column;
           border:1px solid var(--border);border-radius:var(--r-widget);background:var(--surface);overflow:hidden}
-.star-rep-eyebrow{margin:0;padding:var(--s-14) var(--s-20) var(--s-10);background:var(--surface-sunken);color:var(--text-3)}
-.star-tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-sunken)}
-.star-tab{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s-2);text-align:left;
-          padding:var(--s-12) var(--s-20);color:var(--text-3);
-          border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-          transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
-.star-tab+.star-tab{border-inline-start:1px solid var(--border)}
-.star-tab-name{font-size:13px;font-weight:600}
-.star-tab-for{font-size:11px;letter-spacing:.04em;text-transform:uppercase}
-.star-tab[aria-selected="true"]{background:var(--surface);color:var(--text-1);
-          border-bottom-color:transparent;box-shadow:inset 0 2px 0 var(--text-1)}
-.star-tab[aria-selected="true"] .star-tab-for{color:var(--text-3)}
-.star-tab:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.star-rep-eyebrow{margin:0;padding:var(--s-14) var(--s-20) var(--s-10);background:var(--surface-sunken);color:var(--text-3);
+                  border-bottom:1px solid var(--border)}
 .star-rep-body{display:flex;flex-direction:column;gap:var(--s-16);padding:var(--s-20) var(--s-20) var(--s-16)}
 .star-rep-says{display:flex;flex-direction:column;gap:var(--s-16)}
 .star-rep-q{margin:0}
@@ -206,6 +194,5 @@
   .starrow:hover td{background:var(--surface-sunken)}
   .star-open:hover{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--text-3)}
   .star-run:hover{color:var(--text-1);background:var(--surface-sunken)}
-  .star-tab[aria-selected="false"]:hover{color:var(--text-1)}
   .star-undo:hover{background:var(--text-2)}
 }

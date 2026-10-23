@@ -400,7 +400,7 @@ interface prints what it gets.
 | Kind | Case | Example |
 | --- | --- | --- |
 | Page and section titles | Sentence case | *What you starred* |
-| Buttons, menu items, tabs, chips | Sentence case, verb first when it acts | *Find similar*, *Create Founder report* |
+| Buttons, menu items, tabs, chips | Sentence case, verb first when it acts | *Find similar*, *Create patent report* |
 | Small field and section labels | `micro`, uppercase, three words at most | NUMBER, WHERE TO SEARCH |
 | Subtext, help, empty states | Sentence case, whole sentences | *Pick a patent on the left to read its record.* |
 | Counts | A figure and a word | *50 matched · 20 shown* |
@@ -863,11 +863,11 @@ page's report panel and on the report's Pro sections. It swaps with the theme li
 the one solid chip in the product, which is what lets it mark the paid part without a hue, and it is
 never pressable, so it does not count against the one filled button.
 
-**Choosing between two reports is two tabs, not a switch.** The starred page's report panel opens with
-two full-width tabs, each carrying the report's name and who it is for. The chosen tab takes the
-panel's surface and a 2px ink rule along its top edge and joins the body under it; the other sits on
-`--surface-sunken` in `--text-3`. A segmented control the width of two words could not carry *for
-backers*, and the audience is the half of the choice that decides it. Arrow keys move between them.
+**The report panel offers no choice of report.** There is one report, so the starred page's panel
+opens with an eyebrow on `--surface-sunken` above a 1px `--border` rule, then the report's question,
+what it holds and the one filled button. A choice the reader cannot answer better than the product —
+*which report do I want?* before they have seen either — is a control that costs a press and decides
+nothing.
 
 **A switch is a claim that the product does the thing when it is on.** Every other invented value in
 `demo/` is a grey bar or a figure the reader is told is illustrative; a control carries no such
@@ -956,8 +956,9 @@ because a backer reads it beside the memos they already get (`platform.md` §5.3
 `--surface` on `--ground`, one column of about 816px, generous margins, a running head and foot on
 each sheet, and *Powered by Innovue* in the foot as on every product surface.
 
-- **A memo header first**: To, Re, Date, Basis, as a two-column definition list between a 2px and a
-  1px `--text-1` rule — the convention an investment committee already reads.
+- **A memo header first**: Re, Date, Basis, as a two-column definition list between a 2px and a
+  1px `--text-1` rule — the convention an investment committee already reads. No To line: the
+  report is the same whoever it is forwarded to.
 - **A key-figures rail** beside the first exhibit: five figures in Inconsolata at 20px, each with a
   13px label. On a phone it stacks above.
 - **Numbered exhibits**: an 11px uppercase label (*Exhibit 2 · Filed by year*), a 16px title that
