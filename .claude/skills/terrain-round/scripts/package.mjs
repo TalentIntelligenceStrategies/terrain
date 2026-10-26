@@ -19,7 +19,10 @@
  *                do not go (platform.md §13.3)
  *   overlays/    design/overlays/round-N/ at --tag, plus all.css, all.js and
  *                apply.js, the whole patch as one console paste, or any items
- *                of it
+ *                of it. A round with no overlays ships no overlays/
+ *   template/    round-N/package/template/ as it is, when the round has one:
+ *                a runnable reference the cards point at
+ *   *.pdf        any PDF in round-N/package/, beside CHANGES.md
  *
  * EVERY REFUSAL IS SOMETHING THAT MUST BE TRUE BEFORE INNOVUE OPENS IT, the
  * same shape as tools/publish-pages.py: a dirty tree (the package would not be
@@ -96,6 +99,13 @@ const extra = path.join(pdir, 'contract');
 if (fs.existsSync(extra)) for (const f of fs.readdirSync(extra, { recursive: true }))
   if (fs.statSync(path.join(extra, f)).isFile()) put(`contract/${f}`, fs.readFileSync(path.join(extra, f)));
 
+/* A TEMPLATE AND ITS SAMPLES GO AS THEY ARE: a runnable folder the cards
+   point at, and the PDFs printed from it. */
+const tdir = path.join(pdir, 'template');
+if (fs.existsSync(tdir)) for (const f of fs.readdirSync(tdir, { recursive: true }))
+  if (fs.statSync(path.join(tdir, f)).isFile()) put(`template/${f}`, fs.readFileSync(path.join(tdir, f)));
+for (const f of fs.readdirSync(pdir)) if (f.endsWith('.pdf')) put(f, fs.readFileSync(path.join(pdir, f)));
+
 /* THE CODE IS app/ AND demo/, AND THE ENGINEERING DOCUMENTS GO WITH IT.
    demo/ is the working example of the contract, so a port that changed shape
    changed it too; design-language.md and components.md are what an engineer
@@ -124,6 +134,7 @@ if (docs.length) put('docs/docs.diff', git('diff', base, a.tag, '--', ...DOCS) +
    navigation, and runs the scripts once the page has loaded. */
 const odir = `design/overlays/round-${a.round}`;
 const ofiles = git('ls-tree', '-r', '--name-only', a.tag, '--', odir).split('\n').filter(Boolean).sort();
+if (ofiles.length) {
 for (const f of ofiles) put(`overlays/${path.basename(f)}`, show(f));
 const join = (ext, sep) => ofiles.filter(f => f.endsWith(ext))
   .map(f => `/* ${path.basename(f)} */\n` + show(f).toString('utf8')).join(sep);
@@ -172,6 +183,7 @@ ${items.join(',\n')}
   console.info('Applied: ' + ITEMS.map(i => i.id).join(' '));
 })();
 `);
+}
 
 execFileSync('zip', ['-qr', zip, '.'], { cwd: stage });
 fs.rmSync(stage, { recursive: true, force: true });
