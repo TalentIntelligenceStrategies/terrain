@@ -366,8 +366,8 @@ function sections(rows, searches, c, paper) {
   counted[0] = op('Part 1', 'The counts', `Every title states a count of the ${rows.length} starred patents. Beside each, lighter, is the same count over the ${c.results} results the searches returned; on a bar, a tick marks the results’ share.`) + counted[0];
   /* THE TURN: Part 1's last line hands over to Part 2. Before Pro on screen
      the band in Part 2 is the turn, so no line is drawn here. */
-  if (done) counted[counted.length - 1] += '<p class="rep-turn">Part 2 reads the starred patents against the description.<span>Each section cites the patents it rests on, by their row in the appendix.</span></p>';
-  else if (paper) counted[counted.length - 1] += '<p class="rep-turn">This copy carries the counts only.<span>Part 2 is written when Pro runs, and a copy printed after it carries both.</span></p>';
+  if (done) counted[counted.length - 1] += '<p class="rep-turn">The counts say who holds these patents, when they were filed and what the records leave out. They cannot say how close any claim comes to the idea.<span>That is a reading, and Part 2 is where the report makes one.</span></p>';
+  else if (paper) counted[counted.length - 1] += '<p class="rep-turn">This copy carries the counts only.<span>It does not say how close any claim comes to the idea.</span></p>';
   sec('counts', 'Part 1, the counts', counted);
 
   /* PART 2: an opener with the band and the list, then each section on a
@@ -604,10 +604,15 @@ export function init(ctx) {
      paper does not swap; the theme the founder chose comes back afterwards.
      The pages are built here rather than on the button, so the browser's own
      Print reaches the same file. */
-  let swapped = false, prior = null;
+  let swapped = false, prior = null, title = null;
   window.addEventListener('beforeprint', () => {
     if (!document.querySelector('.view-report.is-active')) return;
     swapped = true;
+    /* THE BROWSER NAMES THE FILE FROM THE TITLE, so the title is the file
+       name while the dialog is open */
+    title = document.title;
+    const d = new Date(), p2 = n => String(n).padStart(2, '0');
+    document.title = `terrain-patent-report-${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`;
     prior = document.documentElement.getAttribute('data-theme');
     document.documentElement.setAttribute('data-theme', 'light');
     const box = $('#repPrint');
@@ -617,6 +622,7 @@ export function init(ctx) {
     const box = $('#repPrint');
     if (box) box.innerHTML = '';
     if (!swapped) return;
+    if (title !== null) document.title = title;
     if (prior === null) document.documentElement.removeAttribute('data-theme');
     else document.documentElement.setAttribute('data-theme', prior);
     swapped = false; prior = null;
