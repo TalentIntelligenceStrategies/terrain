@@ -20,8 +20,8 @@ Three things follow from that and everything else is downstream of them:
   patent data should be able to find the heading, the figure and the caption without a hue telling
   them which is which.
 - **Nothing on the search surface is a reading of what is on screen.** Terrain prints the engine's
-  answer and the patent's own text. A reading lives in one place — a report's Pro part, marked as
-  AI-written and citing what it rests on (`brief.md` §1) — and a caption anywhere else states a count
+  answer and the patent's own text. A reading lives in one place — a report's Pro part, marked Pro
+  and citing what it rests on (`brief.md` §1) — and a caption anywhere else states a count
   or nothing.
 - **Nothing pretends to more certainty than it has.** A value we do not hold is a grey bar. A wait is
   a loader, not a fake skeleton. An empty result says what was searched.
@@ -51,7 +51,8 @@ amendment** — [`brief.md`](brief.md) §1 admits a view of the set — **but a 
 same terms. A chart draws from the neutral ramp: a bar is `--text-2`, a folded or withheld bucket
 `--border-strong`, an incomplete period an outline. Its series are told apart by position and label,
 never by colour, which is why the report uses small tables and one series per chart rather than a
-legend.
+legend. **Where a chart sets the starred set against the results, the results are a tick**, a 2px
+`--text-3` mark at their share: a shape, not a second colour.
 
 **Colour would encode direction, never desirability.** Whatever earns a hue next — a state, a
 direction — earns it as information. Nothing is green because it is good.
@@ -954,23 +955,70 @@ confirmation invites a second send of the same message.
 **The report is paper.** It is the one surface drawn as a document rather than as an app screen,
 because a backer reads it beside the memos they already get (`platform.md` §5.3). Sheets of
 `--surface` on `--ground`, one column of about 816px, generous margins, a running head and foot on
-each sheet, and *Powered by Innovue* in the foot as on every product surface.
+each sheet, and no Innovue mark: the report is a document, not a product surface (`brief.md` §3).
+`design/previews/terrain-report-lab.html` is the bench this look was chosen on.
 
-- **A memo header first**: Re, Date, Basis, as a two-column definition list between a 2px and a
-  1px `--text-1` rule — the convention an investment committee already reads. No To line: the
-  report is the same whoever it is forwarded to.
-- **A key-figures rail** beside the first exhibit: five figures in Inconsolata at 20px, each with a
-  13px label. On a phone it stacks above.
+- **The page is US Letter, 816 × 1056px at 96dpi**, with a text block inset 56px at the top, 72px at
+  the sides and 52px at the foot. **A hairline frame on every sheet**, 1px `--border` inset 36px.
+  Inside it, the running head — the lockup, and *Patent report · date* in 11px uppercase at
+  `--text-3`, over a 1px `--border` rule 12px below it and 32px above the first block — and the
+  foot, the same 11px uppercase over a 1px rule, with *Page n of N* at its trailing end. On a phone
+  the frame comes in to 12px.
+- **The cover is page one**, with no head or foot, and carries only what `brief.md` §1 lets a cover
+  carry. Its frame is double — `--text-3` at 36px, `--border` at 41px — and an ink band, the ink
+  pair inverted, sits flush inside the inner line: the lockup and the date at the top, the question
+  at 36px at the foot. Below the band, four figures in Inconsolata at 36px between hairlines, then
+  About and Basis.
+- **How the set was made** comes next: Re, Date, Basis as a definition list between a 2px `--text-1`
+  rule and a 1px `--border` one, then the contents. The figures are the cover's and the glance
+  page's; a third copy between them would only repeat them.
+- **At a glance is page 3**: the five figures at 26px on `--surface-sunken`, the Pro part's answers
+  one line each once it has run, and every counted exhibit small in a three-column grid, each with
+  the exhibit and page its full version is on.
 - **Numbered exhibits**: an 11px uppercase label (*Exhibit 2 · Filed by year*), a 16px title that
-  states a count, the chart or table, a 13px note, and an 11px source line naming the base. Two
-  exhibits share a sheet side by side above 640px.
-- **The Pro band** opens Part 2: `--surface-sunken`, full bleed to the sheet's edges, a 3px
-  `--text-1` rule above, the heading, one line on what Pro is, and **Run the Pro report**, the
-  surface's one filled button.
+  states a count, the chart or table, a 13px note, and an 11px source line naming the base. The
+  starred count is `--text-1`, the results' count beside it `--text-3`. A 1px
+  `--text-1` rule between them. **Two that share a base sit side by side** across a 1px `--border`
+  rule; the large ones run full width.
+- **Part 1 ends on the turn**: one 16px line at weight 500 with a 13px `--text-2` line under it,
+  32px below the last exhibit, behind a 3px `--text-1` rule down its left side. Before Pro on
+  screen the turn is the **band** that runs Pro: `--surface-sunken`, the same 3px rule, one line on
+  what Pro is, and **Run the Pro report**, whose confirm step opens inside the band. The surface's
+  one filled button is the same action in the page head; the band's is secondary and steps aside
+  while the step is open, and the head's steps down, so *Confirm and run* is the only filled button
+  while it is. While a run is queued or running the band holds *Ready in about N minutes* and no
+  button; a failed run holds its sentence and *Try again*.
+- **Part 2 opens on a page of its own**: *Part 2* in 11px uppercase, the title at 26px, a 13px
+  line under it, and *In this part*, its sections as a numbered list. **Then each Pro section starts
+  a page**: its number and title at 16px semibold with the Pro label beside them, the question it
+  answers at 13px `--text-3`, and its blocks. Reading text holds a 72ch measure; tables keep the
+  full width. The disclaimer, 11px `--text-3` over a 1px `--border` rule, closes the last section.
+- **A Pro section's blocks** (`components.md` §1), each drawn without a hue:
+  - **Prose** at 13px, line height 1.6. A citation is Inconsolata at 0.78em in `--text-3` —
+    `[5]`, `[5 cl. 1]`, *2.3*, *Exhibit 4* — and a checkable or outside fact carries an 11px
+    Inconsolata mark, *C* or *O*, in a 1px `--border` box.
+  - **Tables and the claim chart**: 11px `--text-3` headers over a 1px `--text-1` rule, 13px rows
+    on 1px `--border` hairlines. A chart mark is a symbol and its word — *present*, *unclear*,
+    *absent* — never a fill.
+  - **Bars** are `--text-1` on a share of their own base; a **matrix** marks a reach with a 9px
+    `--text-1` dot and its absence with a 3px `--border-strong` one.
+  - **Answers** sit in a two-column grid under a 1px `--text-1` rule, 16px gutters and a hairline
+    between the columns, each a 13px semibold head over 13px text; a question for the team sits on
+    `--surface-sunken`. A **checklist** is numbered 13px rows on hairlines.
+  - **One per patent**: a 13px semibold head (row, number, holder, kind), then labelled 13px lines;
+    where the abstract reads broader than claim 1, two boxes side by side, 1px `--border`, with what
+    claim 1 adds underlined.
+- **The appendix is one table per row**, sharing one set of columns, so it breaks between rows and
+  still reads as one table: number in Inconsolata over the title at 11px, the holder as recorded at
+  11px, then office, filed, kind and the nominal term. The source line travels with the last row.
+- **The closing page says what the report is not**, then how it was made.
 - **Type stays on the scale**: 11, 13, 16, 20, 26 and 36px, nothing between. Numbers are Inconsolata
   with tabular figures.
-- **It prints as itself.** `@media print` drops the app's chrome, breaks one sheet per page, and —
-  before Pro — leaves Part 2 out. It prints light in either theme, because paper does not swap.
+- **On screen a section is one sheet**, as tall as it needs. **On paper the same blocks are packed into
+  US Letter pages** by measuring — a block never splits, except at a point the template marks
+  between the rows of a list or table — with page numbers,
+  and the contents and the glance tiles filled with them. Before Pro, the paper leaves Part 2 out. It
+  prints light in either theme, because paper does not swap.
 
 ---
 

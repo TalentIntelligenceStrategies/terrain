@@ -741,9 +741,11 @@ it holds and the surface's one filled button, *Create patent report*. There is n
 before it: one report serves the founder and the backer alike (§5.3).
 What it holds is said plainly in two groups: **Ready now**, the counted sections, and **Pro · about
 10 minutes**, the sections Pro writes, under the Pro label (`design-language.md` §7). Each item names a
-real section of the report (§5.3) in plain words, so the panel promises nothing the report does not
-contain. The two files leave from the foot of the panel as quiet links. Below 1080px the panel moves
-above the set.
+real section of the report (§5.3) in plain words, and **every** section appears — the Pro ones
+as the engine's quote names them — so the panel promises nothing the report does not contain and leaves out nothing
+it does. The two files leave from the foot of the panel as quiet links. Below 1080px the panel moves
+above the set, and its two lists fold behind *What's in the report*: the question and the button
+stay, so the shortlist starts on the first screen.
 
 **That means a star is stamped when it happens.** Nothing afterwards knows which search a row came
 from, so the store records the **search that ran** — the query, the field, the settings and the
@@ -790,68 +792,91 @@ The page is drawn as a report rather than as an app screen — sheets on the gro
 key-figures rail, numbered exhibits — because a backer reads it beside the memos they already get.
 `design-language.md` §7 carries how it looks.
 
-**It reads top to bottom in four parts.**
+**It reads top to bottom: a cover, three front pages, two parts, an appendix and a closing page.**
+The look is `design-language.md` §7's, and `design/previews/terrain-report-lab.html` is the template:
+it draws every page and every block, filled with an illustrative set.
 
-1. **The memo header and how the set was made.** About (the description the report reads
-   against), date, and basis: how many searches,
-   across which offices, how many results they returned, how many patents are starred. **It comes
-   before any number**, because the most common failure of a landscape is not saying how its set was
-   made, and because *these counts describe what the searches returned, not every patent that exists*
-   is `brief.md` §1's test applied to a page.
-2. **The counted part.** Exhibits, each titled with a sentence that states a count and nothing more,
-   each with its base and a source line. **Two bases, and every exhibit names its own**: counts of the
-   field run over the **full results of the searches behind the stars** (the `fieldCounts` port,
-   `components.md` §1); counts of status and listing run over the **starred patents**. A hand-picked
-   set says little about a field, which is why the field is counted from the searches.
-3. **The Pro part.** A band with **Run the Pro report** — the surface's one filled button — then each
-   Pro section as its real heading, the question it answers, and skeleton bars. Nothing is generated
-   before it runs, so nothing is hidden behind a blur and no run is wasted. After it runs, each section
-   is marked as AI-written and cites the patents, claims and passages it rests on. A disclaimer closes
-   it.
-4. **The appendix: the starred patents**, one row each — number, holder, office, year filed, status,
-   TIS listing — from the starred rows themselves.
+1. **The cover**: the question, four figures, the description and the basis, and nothing the pages do
+   not also say (`brief.md` §1).
+2. **How the set was made**, before any number: the description the report reads against, the date,
+   and the basis — how many searches, across which offices, how many results they returned, how many
+   patents are starred — then the contents. The most common failure of a landscape is not saying how
+   its set was made, and *these counts describe the starred patents and what the searches returned,
+   not every patent that exists* is `brief.md` §1's test applied to a page.
+3. **At a glance**: five figures, the Pro part's answers one line each once Pro has run, and every
+   counted exhibit small, each with the page its full version is on.
+4. **Part 1, the counts.** Numbered exhibits, each titled with a sentence that states a count and
+   nothing more, with a note and a source line naming its base. **Each counts the starred patents,
+   with the results beside them**: the title and the dark number are the starred set's, counted in
+   the client over the rows it holds (`tallyField`); the lighter number and the tick on each bar are
+   the full results of the searches behind the stars (`fieldCounts`, `components.md` §1). A bar is a
+   share of its own base. Holders and classes list the set's largest first, then the results'
+   largest that the set lacks, at 0. **The set's own exhibits need no results beside them**: filed
+   to published, one line per patent; the inventor names as recorded; the record anomalies, from
+   the rows' `flags`, left out when no row was checked; and what the set does not contain — the
+   offices, kinds and text it has, and the fields no row records.
+5. **The turn.** Part 1 ends on one line that hands over to Part 2, and it has three states: before
+   Pro on screen it is the band that runs Pro; in a PDF printed before Pro it says *This copy carries
+   the counts only*; after Pro it says what Part 2 does with the counts.
+6. **Part 2, Pro.** An opener page, *In this part*, lists the sections. Then **each section on a page
+   of its own**: its number (2.1, 2.2 …), its title, the question it answers, the Pro label, and its
+   blocks. **Which sections there are, in what order, and what they say are Innovue's**: the engine
+   sends the list with the quote and the blocks with the result (`components.md` §1). The page lays
+   out any section the contract can describe. A reading cites the patents by their appendix row,
+   and another section or exhibit by the number the page gives it. The disclaimer closes the part
+   and travels with its last section.
+7. **The appendix: the starred patents**, one row each — reference, number and title, holder as
+   recorded, office, filing date, kind, and for a grant the filing year plus twenty, which the note
+   says is not an expiry date. Each row is its own table sharing one set of columns, so a long set
+   breaks between rows and still reads as one table; the source line travels with the last row.
+8. **The closing page says what the report is not**, then how it was made, and routes the reader
+   nowhere.
 
-**The sections, in reading order.**
-
-| | |
-| --- | --- |
-| **Counted** | Who holds them · Granted and pending · Filed by year · Where they were filed · Technology classes · Where filings cluster · Listed for licence on TIS |
-| **Pro** | Bottom line (written last, shown first) · Closest claims · Where the idea may differ · What's already described · Other holders in the set · Risk flags · Questions a backer may ask · Each patent in plain English |
+**The dark number is always the starred set's and the light one the results'**, and two small
+exhibits that share a base sit side by side, so a reader never has to work out which base a number
+is on.
 
 **Every count adds up, and every exhibit says what it counted.**
 
 - **Holder tables sum to the total.** Named holders, then *Others* with how many holders it folds,
-  then *Holder not recorded*, then the total. A share read against the named rows only inflates the
-  top holder. A holder the engine withholds (`null`) is a skeleton bar, as everywhere.
+  then *Holder not recorded*, then the total. A holder the engine withholds (`null`) is a skeleton
+  bar, as everywhere.
 - **The filing-year chart keeps the dip and marks it.** One year type, filing year, said in the note.
-  The last eighteen months are drawn as outlines and the note says why: applications publish about
-  eighteen months after filing. Cutting them hides data.
+  The last eighteen months are drawn as outlines, because applications publish about eighteen months
+  after filing.
 - **No growth rate, no share of a share, no composite score.** On a set this size they are false
   precision, and a score would be a verdict of Terrain's own.
-- **Where filings cluster is a class-by-period grid with the numbers in the cells**, not a map and not
-  shading that carries the meaning.
+- **Where filings cluster is a class-by-period grid with the numbers in the cells.**
 
-**The Pro sections are readings, and the rules are `brief.md` §1's.** The claim chart marks each of
-the idea's features against each closest claim as *present*, *unclear* or *absent*, with a word beside
-the symbol and the claim and passage it rests on; a feature no claim reaches is what falls outside.
-*Where the idea may differ* says what *may avoid* a claim, never what is clear. *What's already
-described* is not a novelty opinion, and says the set is not a prior-art search. *Risk flags* carry
-their basis and their patents and no score. *Other holders in the set* is not a list of acquirers, which needs
-deal data the set does not hold.
+**Five rules hold whatever Pro writes**, and they are `brief.md` §1's: no score, rank or probability
+of Terrain's own; *may* wherever a reading touches a claim, and never *infringes*, *is clear* or *is
+novel*; every reading cites what it rests on; a fact from outside the records names its source; and
+one disclaimer, which reads: *Pro sections are generated from the patents you starred and the
+description. They are not legal or investment advice, and not a freedom-to-operate, patentability or
+validity opinion. Patents outside this set may matter.*
 
-**The disclaimer is the whole of the legal hand-off.** It reads: *Pro sections are written by AI
-from the patents you starred and the description. They are not legal or investment advice, and not a
-freedom-to-operate, patentability or validity opinion. Patents outside this set may matter.* It
-routes the reader nowhere.
+**Download PDF prints the page**, on US Letter, with the cover as page one and a running head and
+a numbered foot on every page after it. Before Pro it carries everything but Part 2, and the turn
+says so; after Pro it carries everything. It prints light whatever the theme, because it is paper.
+The file test is §5.2's: the PDF states nothing its page did not.
 
-**Download PDF prints the page.** Before Pro it carries the memo header, the counted part and the
-appendix, and no Pro part at all — a file of empty bars says nothing. After Pro it carries everything.
-It prints light whatever the theme, because it is paper. The file test is §5.2's: the PDF states
-nothing its page did not.
+**How Pro runs.**
 
-**What the reference cannot do yet, and says.** Run the Pro report waits on Innovue's prompts; in
-`app/` it answers inline that Pro runs once they are connected. The TIS listing is TIS-side data and
-renders as a skeleton bar until it exists.
+- **The price is shown at the press.** *Run the Pro report* opens a confirm step in the band: the
+  sections Pro writes, from the quote, the price, and *Charged when the report is delivered. A run
+  that fails costs nothing.* The price prints as a bar until it is set; `XXX` never reaches the screen.
+- **A run takes minutes, and the band says where it is.** Queued and running show *Ready in about N
+  minutes* from the engine's estimate, and the founder can leave the page; the report fills in when
+  the result lands. A failed run says *Pro did not finish. Nothing was charged.* with *Try again*.
+- **The charge lands on delivery**, not at the press, so nothing needs refunding.
+- **A paid analysis outlives a changed set.** If the stars change after Pro has run, the report keeps
+  the analysis it paid for, with one line above it: *Written for the earlier set of N; the set now
+  has M.* A re-run is a new paid run, and the PDF carries the analysis with that line.
+
+**What the reference cannot do yet, and says.** The Pro sections wait on Innovue's prompts; in `app/`
+the confirm, running, done and failed states are real against the demo engine, which returns no
+written content. The TIS listing is TIS-side data and renders as a skeleton bar on screen until it
+exists, and is left out of the PDF.
 
 ---
 
@@ -1029,8 +1054,8 @@ anyone to configure it.
 | **The analysis layer, as a place to work** | Dozens of destinations of charts, matrices and trend cuts, each a reading authored for an analyst to navigate. A founder does not operate an analyst's workbench; the set — real, as published, and built to be near — is what the search returns. What comes back is narrower and has one home: a report on the starred set (§5.3), whose counted part says nothing the rows do not and whose Pro part is marked and cited. Every row below is downstream of that split. |
 | The authored taxonomy | IPtech wants a taxonomy written before the first search. Terrain generates its grouping from the result set — this is the whole of what makes it operable by a founder. |
 | Valuation (`價值通`) | A verdict on a patent's worth, as a score. Terrain shows no score of its own. |
-| Plain-English decode (`AI閱讀Pro`), on the record | A paraphrase in place of the record. It returns only as the report's *Each patent in plain English*, marked as AI-written; the record itself stays as published. |
-| The landscape summary (`AI Insight`), at corpus scale | A reading of a whole field nobody chose. It returns only as a Pro section over the starred set — *Bottom line* — citing the patents it rests on. |
+| Plain-English decode (`AI閱讀Pro`), on the record | A paraphrase in place of the record. It returns only inside the report's Pro part, marked Pro and cited; the record itself stays as published. |
+| The landscape summary (`AI Insight`), at corpus scale | A reading of a whole field nobody chose. It returns only inside the report's Pro part, over the starred set, citing the patents it rests on. |
 | An attorney handoff file | A document somebody could file against. The report is not one: it is a reading for the founder and whoever backs them, under a disclaimer, and routes nobody anywhere (§5.3). |
 | The zone names (`地雷區` / `新興區` / `處女地帶`) | Minefield, emerging, virgin territory. They label absence, and a search result cannot carry a claim about what exists. The report's *Where filings cluster* counts what came back and names no zone. |
 
@@ -1074,7 +1099,7 @@ postponed, it says so.
    (R1-13), so the filter can be checked against what is on screen.
 6. **Views of the set on the results surface** — the returned rows counted by filing year, holder,
    office or group, beside the list rather than in a report. The report's counted part (§5.3) already
-   draws them over the searches behind the stars, through the `fieldCounts` port; on the results
+   draws them beside the starred counts, through the `fieldCounts` port; on the results
    surface they would be a second place for the same numbers. **Starts when:** founders are seen
    leaving the results for the report only to read a count.
 7. **An attorney handoff file** — a document somebody could file against. **Decided against**, not
@@ -1083,7 +1108,7 @@ postponed, it says so.
    argued as one.
 8. **Running Pro in the reference.** Run the Pro report answers inline in `app/` until Innovue's
    prompts are connected. **Starts when:** Innovue writes the prompt behind each Pro section and
-   states what a run returns (`components.md` §1).
+   states what a run returns — `components.md` §1 lists what the port has to carry.
 9. **Against its neighbours** — where the company's own filings sit among the starred set, in the
    report. **Starts when:** the company's own patents are an input, which starring does not
    guarantee.
@@ -1231,87 +1256,50 @@ Innovue only. It is never published.
 
 ### 13.4 · The current round
 
-**Round 1, against their v1.0.21, captured 2026-10-14, from `handoff-2026-10-04`, sent as
-`terrain-handoff-2026-10-14`.** The list is replaced when the next round opens.
+**Round 2, against their v1.0.29, captured 2026-10-26, from `handoff-2026-10-14`.** A feature round:
+the starred page and the patent report, specified as **format and features**. What Pro writes, and
+how, is Innovue's; the package fixes how the report is laid out as a document, what each screen
+does, and the smallest contract the layout needs. The list is replaced when the next round opens.
 
 **Part A · conformance**: the package they hold has these, and their build does not.
 
 | ID | Component | Difference → wanted | Shown in |
 | --- | --- | --- | --- |
-| R1-01 | Result card, record | No star → a star on every card and in the record. **The star is a collection**: one starred set, each patent remembering the search it came from | `app/` |
-| R1-02 | Starred set, masthead | No starred set, no starred count → the masthead count, the starred set page grouped by search, and its CSV and Markdown downloads. Without it nothing leaves but one record at a time | `app/` |
-| R1-03 | Masthead | No account menu → the avatar menu: account settings, plan and billing, help, sign out, and the build at its foot | `app/` |
-| R1-04 | Search settings | The date range is in their settings panel and clipped below its foot, with three bases → in view, with two bases, filed and published | `app/` |
-| R1-05 | Result list | Every result in one endless scroll → 20, then *Show more*, which also lets drawings arrive sooner; *Results* in the settings caps the set rather than sizing the first page | `app/` |
-| R1-06 | Engine · names and titles | The same company in two spellings, names and titles in capitals → titles in sentence case with acronyms kept; holders merged to one form as the company writes itself; inventors in normal case. Design-language §4 *Case* | Their captures |
-| R1-25 | Landing · field tiles | The selected tile shares the disabled tiles' grey, so the other enabled tile reads as selected → selected white with the ink border, enabled white with the hairline, disabled grey with *Coming soon* | Overlay |
-| R1-26 | Every control | Focus shows as a 1 px border change or not at all (the search box, the version), and drops to the page after *Search settings* → a 2 px ring on `:focus-visible` everywhere, the search box ringed whole; focus never falls to the page; a skip link first | Overlay |
-| R1-27 | Result list | About 12 tab stops per card and no shortcuts → one stop per card, the drawings reached inside the record, `j` / `k` between results | `app/` |
-| R1-28 | Record · export | *Export this record* produced no file in the audit, and nothing confirms one → the file downloads, and its name is confirmed the way *Citation copied* is | Their captures; `app/` |
+| R2-01 | Result card, record, masthead | No star and no starred count (R1-01, R1-02) → a star on every card and in the record, and a standing count in the masthead that shows at nought. **The star is a collection**, and each starred patent remembers the search it was starred under (§5.1) | `app/` |
 
-**Part B · changes**: what we ask for that the package did not have.
+**Part B · changes**, by component.
 
 | ID | Component | Difference → wanted | Shown in |
 | --- | --- | --- | --- |
-| R1-07 | Masthead, landing | Cramped → more room; at least 40 px above the landing headline; the version label leaves the masthead for the account menu | Overlay; `app/` too |
-| R1-08 | Search bar, results bar | Cramped → more room; the view switch labelled or moved beside the sort; the query wraps to two lines before it truncates | Overlay; `app/` too |
-| R1-09 | Results surface | The loading line sits flush on the two panels and reads as their border → no line there; the search box's own border pulses while the search runs, in their border and focus-border colours. A running search keeps the button's name and marks it busy, keeps the old results at full opacity, and one polite status region announces counts, *Citation copied*, regrouping and find similar | Overlay; `app/` too |
-| R1-10 | Drawings | The drawing placeholder does not show in dark mode, so drawings below the fold arrive as blank white plates → visible in both themes. Every drawing tile is one skeleton while loading, a labelled failed tile with *Retry*, and absent when the patent has none | Overlay; `app/` too |
-| R1-11 | Masthead | Projects → **search history**: a *History* button that opens past searches (query, field, date), each rerun by a click, deleted singly or cleared. Their build already stores history and shows it as a dropdown under the search box on focus; this makes it findable | `app/` |
-| R1-12 | Search bar, masthead | The technology field sits in the nav → a chip at the start of the search bar, which opens the field list; it leaves the nav. The picked-group chip aligns to the card inset and shows its full label; the picked group is marked by a check, not a stripe, and the menu closes once it is picked | `app/` |
-| R1-13 | Every surface | The case and separator rules in design-language §4 *Case*: `micro` the only uppercase, inventors and holders separated by `; `, generated group names in sentence case, jurisdictions as codes | Overlay; `app/` too |
-| R1-29 | Address bar | A search never reaches the URL: Back shows a blank page, reload and forward land on an empty home → the query, field, mode and open record in the URL, so Back, reload and a shared link restore the search | `app/` |
-| R1-30 | Engine · relevance | Nonsense and out-of-field text return 50 results that look like a good set → a relevance floor in the engine, and below it the empty state their build already has. It names what was searched and how to rephrase it, and never says what the set means (brief §1) | `app/` |
-| R1-31 | Result card, record | The card and the record disagree about the holder, and the holder slot sometimes carries the inventors → one holder value from one source in both places; *No assignee listed* when there is none | Their captures; `app/` too |
-| R1-32 | Engine · grouping | Group names change every run over the same set → cached per result set, so an unchanged set gets the same labels | Their captures |
-| R1-33 | Find similar | The score is still called *Relevance*, and the open patent ranks first against itself at 1.0000 → the score reads *Nearness*, from the `nearness` that `rerank` returns, and the source card is marked *This patent* | Overlay; `app/` too |
-| R1-34 | Record | *Open in IPtech*, *Copy citation* and *Export this record* sit after the last claim → pinned to the foot of the record panel, always in view | Overlay; `app/` too |
-| R1-35 | Record · citation | The copied citation drops the kind code and every date → number with kind code · title · holder · publication date · jurisdiction code | `app/` |
-| R1-36 | Result card | About 14 data points at near-equal weight → title, holder and one date carry the card; inventors collapse to the first and *+n*; the priority date moves to the record. **Flags the card** (§13.1) | Overlay |
-| R1-37 | Record | The number and title scroll away → a compact sticky header with both once the title leaves view | Overlay; `app/` too |
-| R1-38 | Type scale | Eleven sizes between 10.5 and 36 px, and the record's section headings barely above its reading text → their sizes merged into six steps, 11 · 13 · 16 · 20 · 26 · 36, each a role, heading weight descending with level. The two lower steps sit under 1.25 apart, because holding 1.25 there would put card meta at 11 px or the whole card at 14. **Flags the type scale** (§13.1); `app/` takes the reduced scale | Overlay; `app/` too |
-| R1-39 | Patent-number search | *Patent not found* blames a TW prefix for a US number and drops the frame → the number echoed, the accepted forms named, *Search this as text* offered, both columns and the field control kept | Overlay; `app/` too |
-| R1-40 | Every control | Targets under 24 px: Grant / Application, the patent number link, the version → at least 24 px, a pseudo-element extending the hit area where the visible size stays | Overlay |
-| R1-41 | Results, record | No `<h1>` on results, and the record's title is not a heading → one `<h1>` per view, the record title a heading and its sections the level below | `app/` |
-| R1-42 | Result card | A single-version record shows one filled *Grant* pill that reads as a pressed segment → plain text when only one version exists | Overlay; `app/` too |
-| R1-44 | Error states | *Make sure the backend API is running.* reaches the founder → removed; the sentence says what the founder can do | Wording |
-| R1-45 | Theme switch | Every coloured transition fires at once and the page smears → transitions off for one frame during the swap | Overlay (script); `app/` too |
-| R1-46 | Search settings | Chips mark *on* with a filled square and show no *off* → a check when on, nothing when off | Overlay; `app/` too |
-| R1-47 | Drawings viewer | The viewer's strip fetches every drawing again and shows placeholders, though the record behind it has already loaded them → the strip reuses the drawings the record holds, so it is full when the viewer opens | Their captures |
+| R2-02 | Starred page | Nothing → the starred page: *Detail*, the results card, and *List*, a table, switched in the list's toolbar; grouped by the search each patent was starred under, newest first, each group headed by its sentence, its count, when, and *Run again*; sort as a view that the files ignore (§5.2) | `app/` |
+| R2-03 | Starred page · record | Nothing → the record opens as a drawer from the trailing edge with about 200px of the page showing; previous and next step through the starred order, it says *3 of 8*, and it offers no *Find similar* | `app/` |
+| R2-04 | Starred page · unstar | Nothing → unstarring takes the patent out at once with a toast and *Undo* for six seconds, which puts it back where it was | `app/` |
+| R2-05 | Starred page · report panel | Nothing → a panel at the trailing side: the report's question, *Ready now* and *Pro · about 10 minutes* naming every section, the one filled button *Create patent report*, and *CSV* and *Markdown* as quiet links that say *Downloaded* for a moment. Below 1080px it moves above the set and its lists fold | `app/` |
+| R2-06 | Starred page · files | Nothing → the set leaves as CSV or Markdown with the seven fields on screen, grouped by search in the page's order, and nothing the page did not show | `app/` |
+| R2-07 | Report · flow | Nothing → *Create patent report* opens the report; it reads on screen as sheets and prints as US Letter pages; *Download PDF* in its head | `app/` |
+| R2-08 | Report · page | Nothing → the page format: US Letter at 96dpi, the text block and frame, the running head and foot, the cover, *How the set was made*, *At a glance*, the type scale on paper (`design-language.md` §7) | Template |
+| R2-09 | Report · Part 1 | Nothing → numbered exhibits whose titles state a count, the starred set dark and the results light beside it, pairs that share a base side by side, and the set's own exhibits: filed to published, inventors, record anomalies, what the set does not contain | Template |
+| R2-10 | Report · the turn and the run | Nothing → Part 1's closing line in its three states; the band that runs Pro; confirm with the price and *charged on delivery*; queued and running with *Ready in about N minutes*; done; failed with *Nothing was charged* and *Try again* | `app/`; template |
+| R2-11 | Report · Part 2 | Nothing → an opener page listing the sections, each Pro section on a page of its own with its number, title, question and the Pro label, the nine block kinds as drawn, citations and the *C* / *O* marks, and the disclaimer closing the part. **The content shown is illustrative** | Template |
+| R2-12 | Report · appendix and close | Nothing → the starred patents one table per row on shared columns, the source line with the last row; the closing page | Template |
+| R2-13 | Report · PDF | Nothing → the page printed as the file: cover first, head and foot on every later page, light in either theme; before Pro without Part 2, after Pro with it | Template |
+| R2-14 | Engine · rows | The row carries no recorded holder and no record checks → `holderRecorded` and `flags` (`components.md` §1) | Contract |
+| R2-15 | Engine · counts | No counts over a result set → `fieldCounts` over every search behind the stars, each bucket list summing to `results`, without moving the current result set | Contract |
+| R2-16 | Engine · Pro | No Pro port → `proQuote` with the section list, `proStart`, `proStatus`, `proResult` as sections of blocks; the charge on delivery. **The sections and their content are Innovue's**; five rules hold whatever is written (§5.3) | Contract |
 
-**Questions for Innovue**, each closing the package:
+**Questions for Innovue**, closing the package:
 
 | ID | Question |
 | --- | --- |
-| R1-48 | Which patent-number forms does the lookup accept? `US9000581B2` and `US20130270686A1` are in the index and return *Patent not found*; `EP2214203A2` is found. R1-39's wording waits on the answer |
-| R1-49 | Does the database hold English titles and abstracts for JP and CN records? Their build prints the original language in an English interface |
-| R1-50 | What can R1-30's relevance floor be? Proposed: an absolute score below which a result is not returned, set where nonsense and out-of-field text fall, adjusted from their score distribution |
-| R1-51 | What should R1-32's group names be kept against, when no port identifies a result set? Proposed: a key on what the search was asked (`query`, `field`, `mode`, `settings`) while the index is unchanged, or a `setId` on `PatentSet` as a change on both sides |
+| R2-17 | Does a section you plan need a block the nine kinds cannot describe? Name it and we add it to the template before you build it |
 
-**Adopted from their build into `app/`**, not in the package. Each section that describes the old
-behaviour is rewritten in the commit that changes `app/`, and so is every section a Part A or Part B
-item marked *`app/` too* changes.
+**Not in this package**, by the user's choice, for round 3: R1-28's export confirmation, R1-34's
+pinned record actions and R1-35's citation, which v1.0.29 still lacks; the rest of round 1's list,
+whose state is in `round-2/STATE.md`; R1-48 to R1-51; and §13.5.
 
-| ID | What `app/` takes |
-| --- | --- |
-| R1-14 | The Grant / Application switch on each card |
-| R1-15 | The Text / Patent number toggle under the search box |
-| R1-16 | A picked group shown as a removable chip above the list |
-| R1-17 | **No legal status** — the status chip, the status filter and the CSV status column go |
-| R1-18 | **Find similar from the patent open in the record**, not from the starred set |
-| R1-19 | The coverage table with a grant date and an application date per jurisdiction |
-| R1-20 | **No points** — the meter, the points page and run costs go. §12 holds what replaces them |
-| R1-21 | The first result's record opens by itself after a search |
-| R1-22 | The relevance score on every card |
-| R1-23 | Rotate left and rotate right in the drawings viewer |
-| R1-24 | A search box the founder can drag taller |
-
-**Not raised:** the card's patent number dropping its kind code; the class
-code in the field label; the cards' double frame; two counts, search timing and four-decimal scores;
-the *Nearest to* chip truncating its number; the abstract's measure; a `max-width` transition; and
-*Granted patents* beside *Application*.
-**Conformant:** the generated grouping, which §9 adopts, and the result card's hover state, which
-was R1-43 until the audit found it conformant; the number is not reused.
+**Round 1's IDs stay valid where `app/` and the docs cite them** (*R1-39*, *R1-36* …): each is
+defined in this section as it stood at tag `handoff-2026-10-14`, and in that package's `CHANGES.md`,
+which Innovue holds. An ID is never reused.
 
 ### 13.5 · Queued for the next round
 
