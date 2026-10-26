@@ -26,16 +26,21 @@ let KEY = '';
 let PENDING = null;
 
 /* the request every Pro port takes: the set, the description it is read
-   against, and the searches that made it */
+   against, and the searches that made it. THE DESCRIPTION IS A SENTENCE,
+   never a patent number: the most recent text search's, or null when every
+   search was a number lookup. */
 export function request(rows) {
   const searches = searchesOf(rows);
-  return { starred: rows.map(r => r.id), description: searches[0]?.query ?? null, searches };
+  const text = searches.find(x => x.mode !== 'number');
+  return { starred: rows.map(r => r.id), description: text?.query ?? null, searches };
 }
 
 /* A FAILED QUOTE IS NOT KEPT, so the next look asks again rather than
    repeating a failure the engine may have recovered from. */
 export function quote(engine, rows) {
-  const key = rows.map(r => r.id).join(',');
+  /* keyed on the whole request: the same patents under another search are
+     another description */
+  const key = JSON.stringify(request(rows));
   if (key === KEY && PENDING) return PENDING;
   KEY = key;
   PENDING = engine.proQuote(request(rows)).then(res => {

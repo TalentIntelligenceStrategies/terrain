@@ -49,6 +49,9 @@
 
 <link rel="icon" href="../../brand/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../../brand/fonts/fonts.css">
+<!-- A PRO SECTION'S BLOCKS are drawn by app/'s renderer and styled by its
+     stylesheet, so the template and app/ draw a block one way -->
+<link rel="stylesheet" href="../../app/styles/43-blocks.css">
 <script>
 /* Before first paint: the direction, view and Pro state come from the URL so
    a headless print lands on the right one without a click. Paper does not
@@ -543,7 +546,7 @@ body{margin:0;background:var(--ground);color:var(--text-1);font-family:'Urbanist
 .sk{display:inline-block;height:.62em;width:var(--w,60%);border-radius:2px;background:var(--sk);vertical-align:middle}
 .skp{display:block;margin:.55em 0}
 .mk{display:inline-block;vertical-align:middle;flex:none}
-.cite{font-family:var(--f-num);font-size:.78em;color:var(--ink-3);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
+.cite{font-family:var(--f-num);font-size:11px;color:var(--ink-3);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
 .bal{text-wrap:balance}
 .pretty{text-wrap:pretty}
 
@@ -566,7 +569,7 @@ body{margin:0;background:var(--ground);color:var(--text-1);font-family:'Urbanist
 .ht .bc{width:34%;padding-right:var(--s-12)}
 .ht .r{text-align:right;width:3.5em}
 .ht .tot th,.ht .tot td{border-bottom:0;border-top:1px solid var(--ink);font-weight:600}
-.sub{color:var(--ink-3);font-size:.9em;margin-left:.35em}
+.sub{color:var(--ink-3);font-size:11px;margin-left:.35em}
 .cols{display:flex;align-items:flex-end;gap:6px;height:150px;padding-top:18px;border-bottom:1px solid var(--ink)}
 .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;height:100%;position:relative}
 .col-b{background:var(--bar);min-height:1px}
@@ -852,6 +855,8 @@ body{margin:0;background:var(--ground);color:var(--text-1);font-family:'Urbanist
 .cn .nl{margin-top:var(--s-4)}
 .cn{padding-bottom:var(--s-20);border-bottom:1px solid var(--hair)}
 .ps-cont > .cn{margin-top:var(--s-20)}
+/* a block carried onto the next row of a section keeps the gap between blocks */
+.ps-cont > .blk{margin-top:var(--s-16)}
 .band-turn{align-items:flex-start}
 .band-turn .bt{font-size:16px;line-height:1.4;font-weight:500;color:var(--ink);margin-bottom:var(--s-6);max-width:52ch}
 
@@ -929,6 +934,7 @@ body{margin:0;background:var(--ground);color:var(--text-1);font-family:'Urbanist
 import { esc } from '../../app/js/core/dom.mjs';
 import { codeOf, holderText } from '../../app/js/core/format.mjs';
 import { tallyField } from '../../app/js/ports.mjs';
+import { drawBlocks } from '../../app/js/core/blocks.mjs';
 
 /* ══ A HAND-WRITTEN SET, when ?set= names one on disk ════════════════════ */
 let SET = null;
@@ -939,6 +945,27 @@ let SET = null;
   }
 }
 const descGiven = () => !SET || document.documentElement.dataset.desc !== 'none';
+
+/* ══ ?blocks=demo · THE CONTRACT'S NINE KINDS, DRAWN ══════════════════════
+   The illustrative result in demo/pro-blocks.mjs — the same one the package
+   prints as contract/examples/pro-result-blocks.json — laid out by app/'s
+   own renderer, a page per section, so the engine's output can be checked
+   against a drawing. Its content is invented; the shapes are the contract. */
+const PB = new URLSearchParams(location.search).get('blocks') === 'demo' ? await import('../../demo/pro-blocks.mjs') : null;
+
+function blockSecs() {
+  const secn = Object.fromEntries(PB.SECTIONS.map((x, i) => [x.key, `2.${i + 1}`]));
+  const exn = { holders: 1, years: 2, status: 3 };
+  const ctx = { section: k => secn[k] || '', exhibit: k => exn[k] || '', patent: r => `Patent ${r}, fictional` };
+  const tag = '<span class="tag">Pro</span>';
+  const out = [{ key: 'blk', cls: '', blocks: [`<header class="op"><p class="op-n">The block kinds</p><h2 class="op-t bal">A Pro result, drawn</h2><p class="op-s pretty">contract/examples/pro-result-blocks.json, through the renderer app/ uses. The content is invented, about a fictional frame and three fictional patents; the shapes are the contract, and what a section says is yours.</p></header>`] }];
+  PB.SECTIONS.forEach((x, i) => {
+    const got = PB.RESULT.sections.find(r => r.key === x.key);
+    const b = drawBlocks(got ? got.blocks : [], ctx);
+    out.push({ key: `blk${i}`, cls: 'pg-pro1', blocks: [`<section class="ps"><h3><span class="n hn">2.${i + 1}</span>${esc(x.title)} ${tag}</h3><p class="ps-q pretty">${esc(x.question)}</p><div class="ps-b">${b[0] || ''}</div></section>`, ...b.slice(1).map(h => `<div class="ps-b ps-cont">${h}</div>`)] });
+  });
+  return out;
+}
 
 /* ══ THE ENGINE SEAM, as app/js/main.mjs has it ══════════════════════════ */
 async function engine() {
@@ -959,7 +986,7 @@ const STARS = 12;
 const REPORT = {
   name: 'Patent report', ask: 'How close are these patents to the idea, and who holds them?',
   counted: ['holders', 'status', 'years', 'offices', 'classes', 'cluster', 'licence'],
-  lead: ['Bottom line', 'One paragraph on the closest patents, citing their numbers.'],
+  lead: ['From Part 2', 'One paragraph on the closest patents, citing their numbers.'],
   pro: [
     ['Closest claims', 'The idea’s features against the closest claims. Each mark cites the claim and the passage it rests on. A feature no claim reaches is what falls outside.', 'chart'],
     ['Where the idea may differ', 'Changes that may avoid the closest claims, each citing the claim it moves away from.', 'list'],
@@ -1291,13 +1318,16 @@ const DIRS = {
    by measuring (paginate, below), so a page holds as much as fits and the
    PDF breaks where the screen does. */
 function sections(m, dir, after, view, div) {
+  if (PB) return blockSecs();
   const d = DIRS[dir], out = [];
   const sec = (key, blocks, cls = '', screenOnly = false) => out.push({ key, blocks: blocks.flatMap(b => b.split('<!--split-->')), cls, screenOnly });
   const withPro = after || view === 'screen';
   /* THE ORDER OF THE COUNTS. Ledger pairs the small exhibits that share a
      base — offices with classes, status with licence — so it reads field
      first and starred second; every other direction keeps §5.3's order. */
-  const ORDER = SET ? ['holders', 'years', 'timeline', ['offices', 'classes'], 'cluster', ['status', 'licence'], 'inventors', 'anomalies', 'lacks'] : d.order || REPORT.counted;
+  /* THE TIS LISTING STAYS OFF PAPER until its data exists, as in app/: on
+     screen its exhibit is bars, and a file of bars says nothing */
+  const ORDER = SET ? ['holders', 'years', 'timeline', ['offices', 'classes'], 'cluster', view === 'pages' ? 'status' : ['status', 'licence'], 'inventors', 'anomalies', 'lacks'] : d.order || REPORT.counted;
   const q = descGiven() ? m.query : null;
   m = { ...m, about: q ? `“${esc(q)}”` : 'No description given. Part 2 reads the claims alone.', re: q ? `The description: “${esc(q)}”` : 'No description given' };
   if (SET) {
@@ -1343,7 +1373,7 @@ function sections(m, dir, after, view, div) {
   const lead = `<section class="lead${after ? '' : ' only-screen'}"><h3>${REPORT.lead[0]} ${tags}</h3>${leadBody}</section>`;
   sec('made', [
     `${div ? `<header class="op"><p class="op-n">${d.labels[0]}</p><h2 class="op-t bal">How the set was made</h2><p class="op-s pretty">Every count in this report rests on what follows.</p></header>` : op(d.labels[0], 'How the set was made', 'Every count in this report rests on what follows.')}
-     <dl class="memo"><dt>About</dt><dd>${m.about}</dd><dt>Date</dt><dd>${D.long}</dd><dt>Basis</dt><dd class="pretty">${m.basis}</dd></dl>`,
+     <dl class="memo"><dt>Re</dt><dd>${m.re}</dd><dt>Date</dt><dd>${D.long}</dd><dt>Basis</dt><dd class="pretty">${m.basis}</dd></dl>`,
     `<div class="m-body m-one"><div class="m-main"><p class="lbl">Contents</p>${tocList}</div></div>`]);
 
   /* AT A GLANCE: the key figures, the bottom line, and every counted exhibit
@@ -1387,7 +1417,7 @@ function sections(m, dir, after, view, div) {
   const blocksOf = ([t, w, k], i) => SET && after && k === 'each'
     ? (([first, ...rest]) => [`<section class="ps" data-k="ps${i}"><h3>${hn(t, i)} ${tags}</h3><p class="ps-q pretty">${w}</p><div class="ps-b">${first}</div></section>`, ...rest.map(b => `<div class="ps-b ps-cont">${b}</div>`)])(eachBlocks())
     : SET && after ? ((h) => { const [a, ...b] = h.split('<!--split-->'); return [ps([t, w, k], i).replace(h, a), ...b.map(x => `<div class="ps-b ps-cont">${x}</div>`)]; })(setBody(k)) : [ps([t, w, k], i)];
-  const head = `${op(d.proLabel || d.part(2), 'Analysis')}${band}${feat}`;
+  const head = `${op(d.proLabel || d.part(2), 'Analysis', 'A reading of the starred patents against the description, a section to a page.')}${band}${feat}`;
   const disc = `<p class="disc pretty">${REPORT.disclaimer}</p>`;
   if (SET) {
     /* A PAGE PER SECTION: each Pro section starts a sheet of its own, so a
@@ -1397,7 +1427,7 @@ function sections(m, dir, after, view, div) {
     S[S.length - 1].push(`${S[S.length - 1].pop()}${disc}`);
     /* PART 2 OPENS ON A SHEET OF ITS OWN: the opener, the band (the run
        before Pro; the tag key after) and what the part holds, with pages */
-    const list = `<p class="lbl">In this part</p><ol class="toc">${PRO.map(([t], i) => `<li><span><span class="n">2.${i + 1}</span> ${t}</span><span class="dots"></span><span class="n" data-at="ps${i}"></span></li>`).join('')}</ol>`;
+    const list = `<p class="lbl">In this part</p><ol class="toc">${PRO.map(([t], i) => `<li><span><span class="n hn">2.${i + 1}</span> ${t}</span><span class="dots"></span><span class="n" data-at="ps${i}"></span></li>`).join('')}</ol>`;
     sec('pro', [`${head}${!after && descGiven() ? '' : list}`], 'pg-pro1', !after);
     S.forEach((bl, i) => sec(`pro${i}`, bl, 'pg-pro1', !after));
   } else {

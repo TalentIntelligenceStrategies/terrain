@@ -51,6 +51,15 @@ export function read() {
   return out;
 }
 
+/** a search run again with the settings it was stamped with — the starred
+ *  page's Run again. Missing keys take the defaults, so a stamp from before a
+ *  setting existed still reads. */
+export function apply(settings) {
+  if (!settings) return;
+  STATE = clone({ ...DEFAULTS, ...settings });
+  paint();
+}
+
 /* A BOUND IS A YEAR OR A FULL DATE, and anything between searches as its year.
    A half-typed date narrowing the search on something the founder did not
    finish would be worse than the wider search its year gives. A date that is

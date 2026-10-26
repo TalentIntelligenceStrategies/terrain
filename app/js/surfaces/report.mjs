@@ -44,6 +44,7 @@ import { codeOf, holderText } from '../core/format.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
 import { tallyField } from '../ports.mjs';
 import * as Pro from '../core/pro.mjs';
+import { drawBlocks } from '../core/blocks.mjs';
 
 let ENGINE = null;
 /* THE COUNTS ARE ASKED FOR ONCE PER SET, keyed by the searches they were
@@ -252,18 +253,23 @@ const proBody = () => skp(96) + skp(92) + skp(64);
    idle, queued, running, done or failed; `eta` is the engine's estimate in
    seconds. Kept in the page: a reload forgets a run, which an account would
    keep (platform.md §10 item 2). */
-const RUN_ = { state: 'idle', id: null, eta: null, key: '', result: null };
+const RUN_ = { state: 'idle', id: null, eta: null, key: '', n: 0, result: null };
 let QUOTE = null;
 const setKey = rows => rows.map(r => r.id).join(',');
-const runFor = rows => RUN_.key === setKey(rows) ? RUN_.state : 'idle';
-const minutes = s => Math.max(1, Math.round((s || 600) / 60));
+/* A PAID RESULT OUTLIVES A CHANGED SET (platform.md §5.3): once delivered it
+   stays, marked as written for the earlier set; only a run not yet charged
+   is tied to the set it was started for. */
+const runFor = rows => RUN_.state === 'done' || RUN_.key === setKey(rows) ? RUN_.state : 'idle';
+const forEarlier = rows => RUN_.state === 'done' && RUN_.key !== setKey(rows);
+/* no estimate reads as the band's own ten minutes */
+const minutes = s => Math.max(1, Math.round((s ?? 600) / 60));
 
 /* the band in each state of the run */
 function bandHTML(rows) {
   const st = runFor(rows);
   if (st === 'queued' || st === 'running') {
     const m = minutes(RUN_.eta);
-    return `<p class="rep-pretty">Pro is running. Ready in about ${m} ${m === 1 ? 'minute' : 'minutes'}. You can leave this page; the report fills in when it lands.</p>`;
+    return `<p class="rep-pretty">Pro is running. Ready in about ${m} ${m === 1 ? 'minute' : 'minutes'}.</p>`;
   }
   if (st === 'done') return `<p class="rep-pretty">Pro delivered on ${DATE_LONG}, and charged on delivery.</p>`;
   const names = QUOTE ? QUOTE.sections.map(x => esc(x.title)) : [];
@@ -321,6 +327,16 @@ function sections(rows, searches, c, paper) {
   const flat = order.flat();
 
   const done = runFor(rows) === 'done';
+  /* WHAT A CITATION PRINTS AS: an exhibit by its number, a section by 2.n,
+     a patent by its appendix row */
+  const proList = QUOTE ? QUOTE.sections : (RUN_.result?.sections || []).map(x => ({ key: x.key, title: x.key, question: '' }));
+  const EXN = Object.fromEntries(order.flat().map((k, i) => [k, i + 1]));
+  const SECN = Object.fromEntries(proList.map((x, i) => [x.key, `2.${i + 1}`]));
+  const bctx = {
+    section: k => SECN[k] || '',
+    exhibit: k => EXN[k] || '',
+    patent: ref => { const r = rows[ref - 1]; return r ? [r.number, r.holder ? holderText(r.holder) : null].filter(Boolean).join(' · ') : ''; },
+  };
   const part2 = !paper || done;
   const toc = [['How the set was made', 'made'], ['At a glance', 'glance'], ['Part 1 · The counts', 'counts'],
     ...(part2 ? [['Part 2 · Analysis', 'pro']] : []),
@@ -350,7 +366,12 @@ function sections(rows, searches, c, paper) {
   }).join('');
   /* THE PRO ANSWERS, one line each, once a run is done; bars before it, and
      on paper nothing until then */
-  const lead = paper && !done ? '' : `<section class="rep-lead" aria-label="From Part 2, Pro"><h3>From Part 2 ${tag}</h3>${skp(96)}${skp(90)}${skp(58)}<p class="rep-ex-note">${done ? 'One line from each of Part 2’s answers.' : 'One line from each of Part 2’s answers, written when you run the Pro report.'}</p></section>`;
+  /* THE RESULT'S SUMMARY, one line each, when the engine sends one; bars
+     before Pro on screen, and nothing on paper before it */
+  const summary = done && RUN_.result?.summary?.length ? RUN_.result.summary : null;
+  const lead = (paper && !done) || (done && !summary) ? '' : `<section class="rep-lead" aria-label="From Part 2, Pro"><h3>From Part 2 ${tag}</h3>${summary
+    ? `<ol class="rep-ps-sum">${summary.map(x => `<li>${drawBlocks([{ kind: 'p', sentences: [x] }], bctx)[0]}</li>`).join('')}</ol>`
+    : `${skp(96)}${skp(90)}${skp(58)}<p class="rep-ex-note">One line from Part 2, written when you run the Pro report.</p>`}</section>`;
   sec('glance', 'At a glance', [`${op('Summary', 'At a glance')}${dl('rep-gl-figs', figs)}${lead}`, `<div class="rep-gl">${tiles}</div>`]);
 
   let n = 0;
@@ -374,15 +395,24 @@ function sections(rows, searches, c, paper) {
      page of its own, in the order the quote sent. A failed quote leaves bars
      for the list rather than a list it cannot know. */
   if (part2) {
-    const list = QUOTE ? QUOTE.sections : null;
+    const list = proList.length ? proList : null;
     const inPart = list
       ? `<ol class="rep-toc rep-in-part">${list.map((x, i) => `<li><span class="rep-in-n">2.${i + 1}</span><span>${esc(x.title)}</span></li>`).join('')}</ol>`
       : `<ol class="rep-toc rep-in-part"><li>${sk(50)}</li><li>${sk(40)}</li><li>${sk(46)}</li></ol>`;
     const band = paper ? '' : `<div class="rep-pband" id="repBand">${bandHTML(rows)}<p class="rep-pro-say" id="repProSay" role="status"></p></div>`;
-    sec('pro', 'Part 2, the analysis', [`${op('Part 2', 'Analysis', 'Generated from the starred patents and the description, marked Pro, and citing what each reading rests on.')}${band}<div class="rep-made"><p class="rep-lbl">In this part</p>${inPart}</div>`], 'rep-pg-pro');
+    const earlier = forEarlier(rows) ? `<p class="rep-earlier">Written for the earlier set of ${RUN_.n}; the set now has ${rows.length}.</p>` : '';
+    sec('pro', 'Part 2, the analysis', [`${op('Part 2', 'Analysis', 'A reading of the starred patents against the description, a section to a page.')}${earlier}${band}<div class="rep-made"><p class="rep-lbl">In this part</p>${inPart}</div>`], 'rep-pg-pro');
     (list || []).forEach((x, i) => {
       const last = i === list.length - 1;
-      sec(`pro${i}`, `2.${i + 1} ${x.title}`, [`<section class="rep-ps"><h3><span class="rep-num">2.${i + 1}</span> ${esc(x.title)} ${tag}</h3><p class="rep-ps-q rep-pretty">${esc(x.question)}</p><div class="rep-ps-b">${proBody()}</div></section>${last ? `<p class="rep-disc rep-pretty">${REPORT.disclaimer}</p>` : ''}`], 'rep-pg-pro');
+      /* A DELIVERED SECTION IS ITS BLOCKS, each a block the paginator can
+         break before; before Pro, or with nothing delivered for it, bars */
+      const got = done ? RUN_.result?.sections?.find(r => r.key === x.key) : null;
+      const drawn = got ? drawBlocks(got.blocks, bctx) : [];
+      const body = drawn.length ? drawn : [proBody()];
+      const head = `<section class="rep-ps"><h3><span class="rep-in-n">2.${i + 1}</span> ${esc(x.title)} ${tag}</h3><p class="rep-ps-q rep-pretty">${esc(x.question)}</p><div class="rep-ps-b">${body[0]}</div></section>`;
+      const blocks = [head, ...body.slice(1).map(b => `<div class="rep-ps-b">${b}</div>`)];
+      if (last) blocks[blocks.length - 1] += `<p class="rep-disc rep-pretty">${REPORT.disclaimer}</p>`;
+      sec(`pro${i}`, `2.${i + 1} ${x.title}`, blocks, 'rep-pg-pro');
     });
   }
 
@@ -392,7 +422,7 @@ function sections(rows, searches, c, paper) {
     <div class="rep-tw"><table class="rep-apx"><thead><tr><th scope="col">Ref.</th><th scope="col">Number</th><th scope="col">Title</th><th scope="col">Holder</th><th scope="col">Office</th><th scope="col">Filed</th><th scope="col">Status</th></tr></thead><tbody>${rows.map((r, i) => {
       const k = r.versions?.[0]?.kind;
       const filed = r.filed ? String(r.filed).slice(0, 4) : (r.year ?? null);
-      return `<tr><td class="rep-num">${i + 1}</td><td class="rep-num rep-pn">${r.number ? esc(r.number) : sk(80)}</td><td class="rep-ti">${r.skim == null ? sk(80) : esc(r.skim)}</td><td class="rep-hold">${r.holder === null || r.holder === undefined ? sk(70) : esc(holderText(r.holder))}</td><td class="rep-num">${r.where ? esc(codeOf(r.where) || r.where) : '—'}</td><td class="rep-num">${filed ?? '—'}</td><td>${k === 'grant' ? 'Granted' : k === 'application' ? 'Application' : '—'}</td></tr>`;
+      return `<tr><td class="rep-num">${i + 1}</td><td class="rep-num rep-pn">${r.number ? esc(r.number) : sk(80)}</td><td class="rep-ti">${r.skim == null ? sk(80) : esc(r.skim)}</td><td class="rep-hold">${r.holder === null || r.holder === undefined ? sk(70) : esc(r.holderRecorded || holderText(r.holder))}</td><td class="rep-num">${r.where ? esc(codeOf(r.where) || r.where) : '—'}</td><td class="rep-num">${filed ?? '—'}</td><td>${k === 'grant' ? 'Granted' : k === 'application' ? 'Application' : '—'}</td></tr>`;
     }).join('')}</tbody></table></div>
     <p class="rep-ex-src">Source: TIS Terrain, ${DATE}. Base: ${rows.length} starred.</p>`]);
 
@@ -551,10 +581,10 @@ const failRun = msg => { RUN_.state = 'failed'; redrawBand(); announce(msg); };
 async function start() {
   const rows = Starred.list();
   if (!rows.length) return;
-  Object.assign(RUN_, { state: 'queued', id: null, eta: null, key: setKey(rows), result: null });
+  Object.assign(RUN_, { state: 'queued', id: null, eta: null, key: setKey(rows), n: rows.length, result: null });
   redrawBand();
   const res = await ENGINE.proStart(Pro.request(rows));
-  if (!res.ok) return failRun('Pro did not start. Nothing was charged.');
+  if (!res.ok) return failRun('Pro did not finish. Nothing was charged.');
   RUN_.id = res.data.runId;
   announce('Pro is running.');
   follow(RUN_.id);

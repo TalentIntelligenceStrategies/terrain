@@ -67,8 +67,11 @@ const cell = v => (v == null ? '' : String(v));
    \r\n because that is what the spec says and what Excel expects. */
 function toCSV(rows) {
   const q = s => '"' + String(s).replace(/"/g, '""') + '"';
-  const head = COLUMNS.map(c => q(c.head)).join(',');
-  const body = rows.map(r => COLUMNS.map(c => q(cell(c.get(r)))).join(','));
+  /* NO SCORE COLUMN WHEN NO ROW HAS ONE, because the page does not show one
+     either and a file may not carry a column its page did not */
+  const cols = rows.some(r => r.score != null) ? COLUMNS : COLUMNS.filter(c => c.key !== 'score');
+  const head = cols.map(c => q(c.head)).join(',');
+  const body = rows.map(r => cols.map(c => q(cell(c.get(r)))).join(','));
   return [head, ...body].join('\r\n') + '\r\n';
 }
 
@@ -514,7 +517,7 @@ export function init(ctx) {
     const s = g && g[1][0] && g[1][0].starredSearch;
     if (!s) return;
     window.dispatchEvent(new CustomEvent('terrain:rerun',
-      { detail: { query: s.query, field: s.field, mode: s.mode } }));
+      { detail: { query: s.query, field: s.field, settings: s.settings, mode: s.mode } }));
   });
 
   onActivate(document, '[data-star-undo]', () => {

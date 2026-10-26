@@ -148,11 +148,17 @@ export const CODE = {
  *  for. `null` means we hold no figure list, which is NOT zero: the tile prints
  *  nothing rather than `+0`.
  *
+ *  TWO OPTIONAL FIELDS ARE THE REPORT'S: `holderRecorded`, the holder exactly
+ *  as the record prints it, which the appendix shows while every count uses
+ *  `holder`; and `flags`, what the record anomalies exhibit lists — `[]`
+ *  checked and clean, `null` not checked, and the exhibit is left out.
+ *
  *  @typedef {{id:string, number:string|null, skim:string|null, holder:string|null,
  *             where:string|null, year:number|null, thumbs:Figure[],
  *             score:number|null, inventors:string[]|null, abstract:string|null,
  *             ipcMain:string|null, filed:string|null, published:string|null,
- *             kind:string|null, figs:number|null, versions:Version[]|null}} PatentRow */
+ *             kind:string|null, figs:number|null, versions:Version[]|null,
+ *             holderRecorded?:string|null, flags?:{code:string, text:string}[]|null}} PatentRow */
 /** A PATENT IS OFTEN TWO DOCUMENTS, the application as published and the grant,
  *  with their own numbers and dates. `versions` lists the ones the index holds,
  *  the one to show first first; the row shows one at a time and the founder

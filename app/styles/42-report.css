@@ -211,6 +211,13 @@
 .rep-pg .rep-pro-say:empty{display:none}
 .rep-in>.rep-ps+.rep-ps{margin-top:var(--s-24);padding-top:var(--s-24);border-top:1px solid var(--border)}
 .rep-pg .rep-ps-q{color:var(--text-3);margin-bottom:var(--s-12);max-width:72ch}
+/* a delivered section's blocks, one after another */
+.rep-ps+.rep-ps-b,.rep-ps-b+.rep-ps-b{margin-top:var(--s-16)}
+/* the Pro summary on At a glance, one line each */
+.rep-ps-sum{list-style:none;margin:0;padding:0}
+.rep-ps-sum li+li{margin-top:var(--s-6)}
+/* a paid result kept after the stars changed says which set it read */
+.rep-earlier{font-size:13px;font-weight:600;color:var(--text-1);margin-bottom:var(--s-16)}
 /* a failed run says so above the offer to try again, in ink and not a hue */
 .rep-pro-fail{flex-basis:100%;color:var(--text-1);font-weight:600}
 /* Part 2's opener lists its sections by number */

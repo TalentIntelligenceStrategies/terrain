@@ -16,7 +16,7 @@ import * as Url from '../core/url.mjs';
 import { waitOn, failWith } from '../core/wait.mjs';
 import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
-import { read as readSettings } from './settings.mjs';
+import { read as readSettings, apply as applySettings } from './settings.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { bar } from '../core/primitives.mjs';
 import { codeOf } from '../core/format.mjs';
@@ -162,6 +162,8 @@ export function init(ctx) {
     /* core/field refuses a field it knows is not ready, and holds one it does
        not know yet until the list arrives */
     if (h.field) selectField(h.field);
+    /* a starred search runs again as it ran, settings and all */
+    if (h.settings) applySettings(h.settings);
     Mode.set(h.mode || 'text');
     field.value = h.query || '';
     field.dispatchEvent(new Event('input', { bubbles: true }));

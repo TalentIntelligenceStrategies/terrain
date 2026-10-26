@@ -28,6 +28,7 @@
  */
 import { ok, err, CODE, PORTS, tallyField } from '../app/js/ports.mjs';
 import * as D from './data.mjs';
+import { SECTIONS, RESULT as PRO_RESULT } from './pro-blocks.mjs';
 
 const qs = new URLSearchParams(location.search);
 
@@ -121,19 +122,12 @@ const byNumber = (rows, q) => {
 };
 
 
-/* THE PRO RUNS THIS PAGE HAS STARTED, and the list a quote names. Illustrative:
-   the sections are Innovue's to decide. */
+/* THE PRO RUNS THIS PAGE HAS STARTED, and the list a quote names: the
+   illustrative result in pro-blocks.mjs, whose sections are Innovue's to
+   decide. */
 const RUNS = new Map();
 const PRO_FAIL = qs.has('profail');
-const PRO_SECTIONS = [
-  { key: 'closest', title: 'Closest claims', question: 'Where does each feature of the idea meet the nearest claims?' },
-  { key: 'differ', title: 'Where the idea may differ', question: 'What changes may take the idea away from the closest claims?' },
-  { key: 'described', title: 'What’s already described', question: 'What does the set already describe that a product might also do?' },
-  { key: 'holders', title: 'Other holders in the set', question: 'Who else holds patents here, and what do they cover?' },
-  { key: 'risks', title: 'Risk flags', question: 'What should be checked before building or backing the idea?' },
-  { key: 'conclusion', title: 'Conclusion', question: 'Who is here, how close is the nearest claim, what is open, and what must be checked?' },
-  { key: 'each', title: 'Each patent in plain English', question: 'What does each starred patent protect?' },
-];
+const PRO_SECTIONS = SECTIONS;
 
 export const DemoEngine = {
   /* ── the conversation and the gate ───────────────────────────────────── */
@@ -280,9 +274,9 @@ export const DemoEngine = {
      THE SECTION LIST IS ILLUSTRATIVE: which sections Pro writes, and what
      they say, are Innovue's (platform.md §5.3). The run moves queued →
      running → done in seconds rather than minutes, and ?profail ends it
-     failed. The result names each section and carries no blocks, so the
-     report draws bars where Innovue's content will land; the report lab
-     (design/previews/) draws every block kind filled. */
+     failed. The result is pro-blocks.mjs: invented content in every block
+     kind, about a fictional frame, so the report draws a delivered section
+     the way it will draw Innovue's. */
   proQuote: async () => respond('proQuote', { price: 'XXX', sections: PRO_SECTIONS }),
   proStart: async ({ starred = [] } = {}) => {
     const runId = 'run-' + (RUNS.size + 1);
@@ -299,7 +293,7 @@ export const DemoEngine = {
   proResult: async ({ runId } = {}) => {
     const run = RUNS.get(runId);
     if (!run) { await wait(DELAY.proResult); return err(CODE.NOT_FOUND, false, `demo: no run ${runId}`); }
-    return respond('proResult', { runId, starred: run.starred, sections: PRO_SECTIONS.map(({ key }) => ({ key, blocks: [] })) });
+    return respond('proResult', { runId, starred: run.starred, ...PRO_RESULT });
   },
 
   /* ── the destinations ────────────────────────────────────────────────── */
