@@ -35,6 +35,7 @@ mirror() {
   [ -d demo ] && cp -R demo "$d"/
   mkdir -p "$d/design/previews" "$d/docs"
   cp design/previews/terrain-loading-lab.html "$d/design/previews/" 2>/dev/null
+  cp design/previews/terrain-report-lab.html "$d/design/previews/" 2>/dev/null
   cp docs/*.md "$d/docs/" 2>/dev/null
   cp design/components.md "$d/design/" 2>/dev/null
 }

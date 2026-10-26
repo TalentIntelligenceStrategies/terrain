@@ -123,6 +123,13 @@
 .star-rep-says{display:flex;flex-direction:column;gap:var(--s-16)}
 .star-rep-q{margin:0}
 .star-rg{display:flex;flex-direction:column;gap:var(--s-6)}
+.star-rep-lists{display:flex;flex-direction:column;gap:var(--s-16)}
+.star-rep-tog{display:none;align-self:flex-start}
+.star-rep-tog[aria-expanded="true"] .star-rep-chev{transform:rotate(180deg)}
+@media (max-width:1080px){
+  .star-rep-tog{display:inline-flex}
+  .star-rep-lists:not([data-open]){display:none}
+}
 .star-rg-h{margin:0;display:flex;align-items:center;gap:var(--s-8);min-height:18px;color:var(--text-3)}
 /* REAL BULLETS, the marker in the quiet ink so the words lead. */
 .star-bul{margin:0;padding-inline-start:var(--s-20);display:flex;flex-direction:column;gap:var(--s-4);

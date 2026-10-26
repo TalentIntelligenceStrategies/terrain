@@ -168,9 +168,10 @@ const patents = n => n + (n === 1 ? ' patent' : ' patents');
    nothing the report does not contain. */
 const REPORT = {
   ask: 'How close are these patents to the idea, and who holds them?',
-  ready: ['Who holds the patents near the idea', 'When and where they were filed',
-    'How many are granted, how many pending', 'Where filings cluster'],
-  pro: ['The closest claims, set against the idea', 'Where the idea may differ',
+  ready: ['The set at a glance, on one page', 'Who holds the patents near the idea',
+    'When and where they were filed', 'How many are granted, how many pending', 'Where filings cluster'],
+  pro: ['A bottom line, citing the closest patents', 'The closest claims, set against the idea',
+    'Where the idea may differ', 'What these patents already describe', 'The other holders in the set',
     'Risk flags, each with its basis', 'Questions a backer may ask', 'Each patent in plain English'],
 };
 
@@ -206,6 +207,8 @@ function sorted(rows) {
 const STAR_SVG = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
   + ' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
   + '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>';
+const CHEV_SVG = '<svg class="star-rep-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+  + ' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
 const RUN_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
   + ' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
   + '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>';
@@ -214,26 +217,28 @@ const RUN_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" str
 const DAY = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short' });
 
 /* ── one search, as a plain heading over its run ── */
-function headHTML(q, rs, gi) {
+/* ONE SEARCH NEEDS NO COUNT UNDER IT: the head chip already says how many,
+   so a lone group keeps only Run again. */
+function headHTML(q, rs, gi, solo) {
   const at = Math.min(...rs.map(r => r.starredAt || Infinity));
-  const bits = ['<span class="fig fig-s">' + rs.length + '</span> starred'];
-  if (Number.isFinite(at)) bits.push(DAY.format(new Date(at)));
+  const bits = solo ? [] : ['<span class="fig fig-s">' + rs.length + '</span> starred'];
+  if (!solo && Number.isFinite(at)) bits.push(DAY.format(new Date(at)));
   /* RUN AGAIN IS THE SEARCH THAT RAN, through the composer, as history runs
      one (platform.md §5). Without a stamped search there is nothing to run. */
   const run = q && rs[0].starredSearch
-    ? '<span aria-hidden="true">·</span><button class="star-run t-label" type="button" data-star-run="' + gi + '">'
+    ? (bits.length ? '<span aria-hidden="true">·</span>' : '') + '<button class="star-run t-label" type="button" data-star-run="' + gi + '">'
       + RUN_SVG + '<span>Run again</span></button>'
     : '';
   return '<div class="star-gh">'
     + (q ? '<h3 class="star-gh-q">“' + esc(q) + '”</h3>'
          : '<h3 class="star-gh-q star-gh-none">Starred without a search</h3>')
-    + '<p class="star-gh-meta t-label">' + bits.join(' <span aria-hidden="true">·</span> ') + run + '</p>'
+    + (bits.length || run ? '<p class="star-gh-meta t-label">' + bits.join(' <span aria-hidden="true">·</span> ') + run + '</p>' : '')
     + '</div>';
 }
 
 /* ── the List view's row ── THE SAME SKELETON RULE AS THE LIST: `null` is a
    bar, inside its own cell, so a withheld value keeps the column's edge. */
-function tableRowHTML(r) {
+function tableRowHTML(r, score) {
   const cellOr = (v, cls, sk) => v != null
     ? '<td class="' + cls + '">' + esc(String(v)) + '</td>'
     : '<td class="' + cls + '"><span class="sk sk-h-micro ' + sk + '"></span></td>';
@@ -248,7 +253,7 @@ function tableRowHTML(r) {
     + cellOr(where(r), 'star-c-w', 'w-sm')
     + '<td class="star-c-y fig fig-s">' + (r.year == null ? '' : r.year) + '</td>'
     /* THE SCORE OBEYS THE LIST'S OMISSION RULE: null is an empty cell */
-    + '<td class="star-c-sc fig fig-s">' + (r.score == null ? '' : r.score.toFixed(4)) + '</td>'
+    + (score ? '<td class="star-c-sc fig fig-s">' + (r.score == null ? '' : r.score.toFixed(4)) + '</td>' : '')
     /* UNSTARRING IS THE LIST'S OWN STAR, data-star and all, so one handler
        (list.mjs) takes a patent out wherever it is pressed and the undo below
        hears every removal the same way. */
@@ -261,13 +266,16 @@ function tableRowHTML(r) {
 function detailHTML(groups) {
   return groups.map(([q, rs], gi) =>
     '<section class="star-grp" data-q="' + esc(q) + '">'
-    + headHTML(q, rs, gi)
+    + headHTML(q, rs, gi, groups.length === 1)
     + '<div class="set-list star-cards">'
     + sorted(rs).map((r, i) => rowHTML(r, i, { starred: true })).join('')
     + '</div></section>').join('');
 }
 
+/* A COLUMN EVERY ROW LEAVES EMPTY IS NOT DRAWN. The corpus returns no score,
+   and a Score header over blank cells reads as a value withheld. */
 function listHTML(groups) {
+  const score = groups.some(([, rs]) => rs.some(r => r.score != null));
   return '<div class="star-tblwrap"><table class="star-tbl">'
     + '<caption class="sr-only">Your starred patents, grouped by search</caption>'
     + '<thead><tr>'
@@ -276,14 +284,14 @@ function listHTML(groups) {
     + '<th scope="col" class="t-micro star-c-h">Holder</th>'
     + '<th scope="col" class="t-micro star-c-w">Where</th>'
     + '<th scope="col" class="t-micro star-c-y">Year</th>'
-    + '<th scope="col" class="t-micro star-c-sc">Score</th>'
+    + (score ? '<th scope="col" class="t-micro star-c-sc">Score</th>' : '')
     + '<th scope="col" class="star-c-x"><span class="sr-only">Remove</span></th>'
     + '</tr></thead>'
     /* THE FLEX HEADING IS A DIV INSIDE THE CELL, NOT THE CELL: a spanning
        <th> in a fixed-layout table gives a flex child a zero basis. */
     + groups.map(([q, rs], gi) => '<tbody class="star-grp-rows">'
-      + '<tr class="star-grp-head"><th scope="colgroup" colspan="7">' + headHTML(q, rs, gi) + '</th></tr>'
-      + sorted(rs).map(tableRowHTML).join('') + '</tbody>').join('')
+      + '<tr class="star-grp-head"><th scope="colgroup" colspan="' + (score ? 7 : 6) + '">' + headHTML(q, rs, gi, groups.length === 1) + '</th></tr>'
+      + sorted(rs).map(r => tableRowHTML(r, score)).join('') + '</tbody>').join('')
     + '</table></div>';
 }
 
@@ -292,10 +300,16 @@ function paintReport() {
   const says = $('#starRepSays');
   if (!says) return;
   const items = xs => '<ul class="star-bul">' + xs.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>';
+  /* STACKED, THE LISTS FOLD. Above the set on a narrow screen they would push
+     the shortlist below the fold, so the question and the button stay and
+     the lists wait behind a toggle; wide, the toggle is not drawn. */
   says.innerHTML = '<p class="t-title star-rep-q">' + esc(REPORT.ask) + '</p>'
+    + '<button class="star-run star-rep-tog t-label" id="starRepTog" type="button" aria-expanded="false" aria-controls="starRepLists">'
+    + '<span>What’s in the report</span>' + CHEV_SVG + '</button>'
+    + '<div class="star-rep-lists" id="starRepLists">'
     + '<div class="star-rg"><p class="star-rg-h t-micro">Ready now</p>' + items(REPORT.ready) + '</div>'
     + '<div class="star-rg"><p class="star-rg-h"><span class="pro-label">Pro</span>'
-    + '<span class="t-micro">About 10 minutes</span></p>' + items(REPORT.pro) + '</div>';
+    + '<span class="t-micro">About 10 minutes</span></p>' + items(REPORT.pro) + '</div></div>';
 }
 
 function paintTools() {
@@ -346,6 +360,10 @@ function paint(rows) {
       if (row) row.toggleAttribute('data-open', on);
     });
   }
+  /* THE NOTE NAMES WHAT THE SCREEN SHOWS, so a score nobody returned is not
+     promised under the buttons. */
+  const noteScore = $('#starNoteScore');
+  if (noteScore) noteScore.hidden = !rows.some(r => r.score != null);
   /* A SCROLL PORT HAS TO BE REACHABLE BY KEYBOARD, and only the DOM knows
      whether the table is scrolling at this width. */
   const wrap = list.querySelector('.star-tblwrap');
@@ -395,7 +413,9 @@ function onSet(rows) {
   paint(rows);
   if (gone.length === 1) {
     const row = gone[0];
-    toast(row, PREV.findIndex(r => r.id === row.id));
+    /* THE TOAST IS THIS SURFACE'S: a star cleared on the results is not news
+       to bring along to the next page. */
+    if (document.querySelector('.view-starred.is-active')) toast(row, PREV.findIndex(r => r.id === row.id));
     const i = order.indexOf(row.id);
     const next = order.slice(i + 1).find(id => ids.has(id)) || order.slice(0, i).reverse().find(id => ids.has(id));
     const nextBtn = next && document.querySelector('#starList [data-pn="' + CSS.escape(next) + '"]');
@@ -462,6 +482,12 @@ export function init() {
     paint(Starred.list());
     say('destination', SORT ? 'Sorted by ' + SORT_SAYS[v] + '.' : 'Back in the order you starred them.');
     if (!key) { const b = $('#starSortBtn'); if (b) b.focus({ preventScroll: true }); }
+  });
+
+  onActivate(document, '#starRepTog', el => {
+    const open = el.getAttribute('aria-expanded') !== 'true';
+    el.setAttribute('aria-expanded', String(open));
+    $('#starRepLists')?.toggleAttribute('data-open', open);
   });
 
   onActivate(document, '[data-star-run]', el => {

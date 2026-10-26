@@ -12,7 +12,7 @@ worth solving is not finding patent information but finding information a founde
 generative AI is near and writes what it returns, a keyword index is real and misses what is near.
 Terrain is built to give both — the real patents nearest the idea, exactly as published — and then a
 reading of the starred set that can be checked against it. A count of the set is admissible anywhere;
-a reading only in a report's Pro part, marked as AI-written and citing the patents it rests on.
+a reading only in a report's Pro part, marked Pro and citing the patents it rests on.
 
 Terrain is a TIS product in the Patent Intelligence pillar, and *Terrain* is its working name.
 Innovue builds and ships it. This repository holds the reference it is built from — `app/` — and
@@ -205,6 +205,6 @@ that is not theoretical — the licences travel with the files whether or not an
 ## Attribution
 
 Terrain is an **endorsed sub-brand**: the TIS mark appears in the lockup, Terrain is the product name.
-**Innovue appears as attribution only** — *Powered by Innovue* at the foot of every surface, rendered
+**Innovue appears as attribution only** — *Powered by Innovue* at the foot of every surface but a report, rendered
 as their own mark in their own blue, and the database cited in body copy where it does credibility
 work. Innovue never enters the product name or the primary lockup.

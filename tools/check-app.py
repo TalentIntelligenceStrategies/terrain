@@ -52,7 +52,8 @@ DEMO_JS  = walk('demo', ('.mjs', '.js'))
 APP_HTML = [p for p in walk('app', ('.html',))]
 PARTIALS = walk('app/partials', ('.html',))
 PREVIEWS = ['design/previews/terrain-prototype.html',
-            'design/previews/terrain-loading-lab.html']
+            'design/previews/terrain-loading-lab.html',
+            'design/previews/terrain-report-lab.html']
 TOKENS   = 'app/styles/tokens.css'
 
 def read(p):

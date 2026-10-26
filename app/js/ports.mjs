@@ -323,7 +323,9 @@ export const PORTS = [
  * tallyField — the FieldCounts arithmetic, over rows an engine already holds.
  *
  * THE REFERENCE FOR WHAT EACH BUCKET MEANS, not a client-side shortcut: the
- * client never holds these rows, which is why `fieldCounts` is a port. Both
+ * client never holds the field's rows, which is why `fieldCounts` is a port.
+ * The report runs it over the starred rows, which the client does hold, so
+ * the set and the field it is printed beside are bucketed one way. Both
  * fake engines call it so they cannot disagree about a bucket, and an engine
  * that counts server-side owes the same buckets — a filing year, a four-character
  * class, the first version's kind, and `null` kept apart from `''`.

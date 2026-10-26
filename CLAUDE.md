@@ -36,7 +36,7 @@ Innovue's, in two fields, against other tools. `docs/brief.md` §1 carries the w
 **The line is where a reading sits, not whether there is one.** A view of a set — counts by year,
 holder, office or class — is admissible anywhere, because every number in it can be checked against
 the rows, and a caption over it states a count. A reading — a summary, a claim chart, where an idea
-may differ — is admissible only in a report's Pro part, marked as AI-written, citing the patents it
+may differ — is admissible only in a report's Pro part, marked Pro, citing the patents it
 rests on, in *may* wording wherever it touches a claim. Out everywhere: a reading on the search
 surface, a score or probability of our own, and legal advice stated as fact (*infringes*, *is clear*,
 *is novel*). One disclaimer closes the Pro part and routes nobody anywhere.
@@ -240,7 +240,7 @@ three by a script that refuses:
   check**, and `sync-tokens.py --check` is the successor to the honour system.
 - Terrain **may** read a set, and **only** in a report's Pro part. The line moved from *never says
   what it means* to *where the reading sits and whether it shows its sources*: the search never
-  interprets, and a reading is marked as AI-written and cites the starred patents it rests on.
+  interprets, and a reading is marked Pro and cites the starred patents it rests on.
   `brief.md` §1 says what is admissible where, and `platform.md` §5.3 is the report.
 - `tools/` is no longer *everything CI or a publish runs*, and it is not *everything CI runs* either:
   it is **everything that can refuse**. `publish-pages.py` is admitted on that qualifier and on
@@ -504,7 +504,7 @@ folder does not carry them: the primary logo in dark and light, the dark dual se
 licensing-platform logo. They are there for decks.
 
 Terrain is an **endorsed sub-brand**: the TIS mark appears in the lockup, Terrain is the product name.
-Innovue appears as **attribution only** — *Powered by Innovue* at the foot of every product surface,
+Innovue appears as **attribution only** — *Powered by Innovue* at the foot of every product surface (a report carries none, `docs/brief.md` §3),
 rendered as their own mark (a sales deck says *our IP-technology provider* instead, with no mark), and the database cited in body copy where it does credibility work. **Innovue never
 enters the product name or the primary lockup.** The reasons are commercial, not aesthetic, and they
 are in `docs/brief.md` §3.

@@ -325,6 +325,11 @@ lines of markup each, built from the `fieldCounts` response and the starred rows
 report needs four shapes drawn one way and a charting module would be a second place a hue
 could come back from (`design-language.md` §2, §7).
 
+**`report` renders one sequence twice.** On screen each section is one sheet in `#repDesk`; on
+`beforeprint` the same blocks are packed into US Letter pages in `#repPrint` by measuring, and
+emptied on `afterprint`, so the browser's own Print reaches the same file as Download PDF.
+`design/previews/terrain-report-lab.html` is the bench the look was chosen on.
+
 **`js/charts/` is gone, and the report does not bring it back.** The four modules — `primitives`, `share`, `series`, `map` — left
 with the analysis layer; the skeleton bar they shared moved to
 `core/primitives.mjs`, which is where the surviving renderers read them from.

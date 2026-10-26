@@ -1,11 +1,21 @@
 /* ══ 42 · THE REPORT ════════════════════════════════════════════════════════
    platform.md §5.3, design-language.md §7 "The report is paper". The chrome is
    the page skeleton every reading surface uses; the sheets are the report's
-   own, and only the sheets print.
+   own. design/previews/terrain-report-lab.html is the bench this look was
+   chosen on, and these rules are its baseline in the app's idiom.
 
-   NO HUE, AND NO ACCENT IN DATA. A bar is --text-2, a folded or withheld
-   bucket --border-strong, an incomplete year an outline. The one filled
+   TWO RENDERINGS OF ONE SEQUENCE. On screen, #repDesk holds one sheet per
+   section, as tall as it needs. For the PDF, report.mjs packs the same blocks
+   into US Letter pages in #repPrint — 816 × 1056 at 96dpi — measuring as it
+   goes, so a block never splits and the file breaks where it was measured.
+
+   NO HUE, AND NO ACCENT IN DATA. A bar is --text-1, a folded or withheld
+   bucket --border-strong, an incomplete year an outline. The cover band is
+   the ink pair inverted, which is the accent and not a hue. The one filled
    button is Run the Pro report, which is a control (§3.8).
+
+   NO INNOVUE MARK ON A SHEET. A report is a document, not a product surface
+   (brief.md §3); the attribution stays on the app's own foot, off the paper.
    ═══════════════════════════════════════════════════════════════════════ */
 
 .view-report .main>*{width:100%}
@@ -14,120 +24,242 @@
 .view-report .pg-back{white-space:nowrap}
 @media (max-width:640px){.rep-tools{width:100%}}
 
-/* ── the desk and the sheet ─────────────────────────────── */
+/* ── the desk, and the print container off it ───────────────── */
 .rep-desk{display:flex;flex-direction:column;align-items:center;gap:var(--s-24);
           padding:var(--s-8) var(--s-16) var(--s-40)}
 .rep-desk.is-wait,.rep-desk.is-fail{min-height:320px}
-.rep-pro{display:contents}
-.rep-sheet{width:100%;max-width:816px;background:var(--surface);border:1px solid var(--border);
-           box-shadow:var(--shadow-raise);padding:var(--s-40) var(--s-40) var(--s-24);
-           display:flex;flex-direction:column;gap:var(--s-24);color:var(--text-1)}
-@media (max-width:640px){.rep-sheet{padding:var(--s-24) var(--s-16) var(--s-16)}}
-.rep-mast{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s-16);
-          border-bottom:3px solid var(--text-1);padding-bottom:var(--s-8)}
-.rep-brand{font-size:13px;font-weight:700}
-.rep-run,.rep-lbl,.rep-foot{color:var(--text-3);text-transform:uppercase;letter-spacing:.08em}
-.rep-foot{display:flex;justify-content:space-between;gap:var(--s-12);margin-top:auto;
-          border-top:1px solid var(--border);padding-top:var(--s-10)}
-.rep-h1{font-size:26px;line-height:1.2;font-weight:700;letter-spacing:-.015em;margin:0}
+/* LAID OUT BUT NOT SEEN: pagination measures, and an element that is not
+   rendered has no height to measure. */
+.rep-print{position:fixed;left:-10000px;top:0;visibility:hidden;pointer-events:none}
 
-/* ── the memo header · To, Re, Date, Basis ─────────────────── */
-.rep-meta{display:grid;grid-template-columns:96px 1fr;margin:0;font-size:13px;line-height:1.5;
-          border-top:2px solid var(--text-1);border-bottom:1px solid var(--text-1)}
-.rep-meta dt,.rep-meta dd{margin:0;padding:var(--s-6) 0;border-bottom:1px solid var(--border)}
-.rep-meta dt{color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;padding-top:var(--s-8)}
-.rep-meta dt:nth-last-child(2),.rep-meta dd:last-child{border-bottom:0}
-.rep-sub{color:var(--text-3)}
+/* ── a sheet ─────────────────────────────────────────────────────
+   A hairline frame on every sheet; the cover's frame is double, and the
+   band sits flush inside its inner line. */
+.rep-pg{position:relative;width:100%;max-width:816px;display:flex;flex-direction:column;
+        padding:56px 72px 52px;background:var(--surface);color:var(--text-1);
+        box-shadow:var(--shadow-raise);font-size:13px;line-height:1.5}
+.rep-pg::before{content:"";position:absolute;inset:36px;border:1px solid var(--border);pointer-events:none}
+/* THE RESETS WEIGH NOTHING, so any rule below that sets a margin wins. A
+   reset of `.rep-pg p` outranks `.rep-cv-kick` and silently zeroes it. */
+:where(.rep-pg) :where(p,h2,h3,dl,dd,ol,ul){margin:0}
+:where(.rep-pg) :where(ol,ul){padding:0;list-style:none}
+:where(.rep-pg) :where(table){border-collapse:collapse;width:100%}
+:where(.rep-pg) :where(th,td){padding:0;text-align:left;font-weight:inherit;vertical-align:baseline}
+.rep-in{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+.rep-grow{flex:1 1 auto}
+.rep-num{font-family:'Inconsolata',ui-monospace,monospace;font-variant-numeric:lining-nums tabular-nums}
+.rep-bal{text-wrap:balance}
+.rep-pretty{text-wrap:pretty}
+.rep-sub{color:var(--text-3);margin-left:.35em}
 
-/* ── the rail and the first column ─────────────────────────── */
-.rep-body{display:grid;grid-template-columns:200px minmax(0,1fr);gap:var(--s-32)}
-@media (max-width:640px){.rep-body{grid-template-columns:1fr}}
-.rep-rail{border-right:1px solid var(--border);padding-right:var(--s-20)}
-@media (max-width:640px){.rep-rail{border-right:0;padding-right:0;border-bottom:1px solid var(--border);padding-bottom:var(--s-16)}}
-.rep-kf{margin:var(--s-8) 0 0;display:flex;flex-direction:column;gap:var(--s-10)}
-.rep-kf dt{font-size:20px;line-height:1.1}
-.rep-kf dd{margin:0;font-size:13px;line-height:1.35;color:var(--text-2)}
-.rep-col1{display:flex;flex-direction:column;gap:var(--s-24);min-width:0}
-.rep-two{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-32)}
-@media (max-width:640px){.rep-two{grid-template-columns:1fr}}
+.rep-run{display:flex;justify-content:space-between;align-items:center;gap:var(--s-16);
+         font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);
+         padding-bottom:var(--s-12);border-bottom:1px solid var(--border);margin-bottom:var(--s-32)}
+.rep-brand{display:flex;align-items:center;gap:var(--s-8);color:var(--text-1);letter-spacing:.12em;white-space:nowrap}
+.rep-brand b{font-weight:700}
+.rep-mk{flex:none}
+.rep-ft{display:flex;justify-content:space-between;gap:var(--s-16);margin-top:auto;
+        font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);
+        padding-top:var(--s-12);border-top:1px solid var(--border)}
 
-/* ── an exhibit · label, a title that states a count, body, note, source ─ */
-.rep-ex,.rep-lead,.rep-prosec{display:flex;flex-direction:column;gap:var(--s-10);min-width:0}
-.rep-lbl{margin:0;border-top:1px solid var(--text-1);padding-top:var(--s-8)}
-.rep-lead{border-top:1px solid var(--text-1);padding-top:var(--s-10)}
-.rep-ex-t{font-size:16px;line-height:1.35;font-weight:600;margin:0}
-.rep-note{font-size:13px;line-height:1.5;color:var(--text-2);margin:0}
-.rep-src{color:var(--text-3);margin:0}
-.rep-protag{border:1px solid var(--border-strong);color:var(--text-3);border-radius:var(--r-chip);
-            padding:0 var(--s-6);margin-left:var(--s-6);vertical-align:2px;letter-spacing:.06em}
-.rep-sk{display:block;height:9px}
-.rep-sk+.rep-sk{margin-top:var(--s-8)}
+/* ── the cover ───────────────────────────────────────────────── */
+.rep-pg-cover{padding:42px;aspect-ratio:816 / 1056}
+.rep-pg-cover::before{border-color:var(--text-3)}
+.rep-pg-cover::after{content:"";position:absolute;inset:41px;border:1px solid var(--border);pointer-events:none}
+.rep-cv-band{flex:0 0 53%;display:flex;flex-direction:column;padding:var(--s-56) 46px;
+             background:var(--text-1);color:var(--text-inverse)}
+.rep-cv-top{display:flex;justify-content:space-between;align-items:center;gap:var(--s-16);
+            font-size:11px;text-transform:uppercase;letter-spacing:.12em}
+.rep-cv-top .rep-brand{color:inherit}
+.rep-cv-d,.rep-cv-kick{color:color-mix(in srgb,var(--text-inverse) 70%,transparent)}
+.rep-cv-d{letter-spacing:.08em}
+.rep-cv-kick{margin-top:auto;font-size:11px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:var(--s-16)}
+.rep-cv-q{font-size:36px;line-height:1.15;font-weight:500;letter-spacing:-.01em;max-width:560px}
+.rep-cv-low{flex:1;padding:var(--s-40) 46px var(--s-24)}
+.rep-cv-figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.rep-cv-figs div{padding:0 var(--s-16);border-left:1px solid var(--border)}
+.rep-cv-figs div:first-child{padding-left:0;border-left:0}
+.rep-cv-figs dt{font-family:'Inconsolata',ui-monospace,monospace;font-size:36px;font-weight:500;line-height:1}
+.rep-cv-figs dd{font-size:13px;color:var(--text-2);margin-top:var(--s-8)}
+.rep-cv-about{display:grid;grid-template-columns:120px 1fr;gap:var(--s-10) var(--s-24);margin-top:var(--s-40);line-height:1.55}
+.rep-cv-about dt{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);padding-top:2px}
 
-/* ── the charts ─────────────────────────────────────────── */
-.rep-ht{width:100%;border-collapse:collapse;font-size:13px}
-.rep-ht th,.rep-ht td{padding:var(--s-4) 0;text-align:left;vertical-align:middle}
-.rep-ht th{font-weight:500;width:36%;padding-right:var(--s-12);white-space:nowrap;overflow:hidden;
-           text-overflow:ellipsis;max-width:0}
-.rep-bar{display:block;height:10px;background:var(--text-2)}
+/* ── openers, the memo, the key figures ───────────────────────── */
+.rep-op{margin-bottom:var(--s-32)}
+.rep-op-n,.rep-lbl,.rep-ex-l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3)}
+.rep-pg .rep-op-n{margin-bottom:var(--s-6)}
+.rep-op-t{font-size:26px;line-height:1.2;font-weight:500}
+.rep-pg .rep-op-s{font-size:13px;color:var(--text-2);margin-top:var(--s-8);max-width:560px}
+.rep-memo{display:grid;grid-template-columns:120px 1fr;gap:var(--s-10) var(--s-24);padding:var(--s-16) 0;
+          border-top:2px solid var(--text-1);border-bottom:1px solid var(--border)}
+.rep-memo dt{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);padding-top:2px}
+.rep-made{margin-top:var(--s-32);max-width:480px}
+.rep-pg .rep-lbl{margin-bottom:var(--s-10)}
+.rep-toc li{display:flex;align-items:baseline;gap:var(--s-8);padding:6px 0}
+.rep-toc .rep-dots{flex:1;min-width:24px;border-bottom:1px dotted var(--text-3);transform:translateY(-4px)}
+/* a contents line names a page only on paper; on screen there are no pages */
+.rep-desk .rep-toc .rep-dots,.rep-desk .rep-toc .rep-num,.rep-desk .rep-at{display:none}
+.rep-lead{padding-bottom:var(--s-24);margin-bottom:var(--s-24);border-bottom:1px solid var(--border)}
+.rep-lead h3,.rep-ps h3{display:flex;align-items:center;gap:var(--s-8);font-size:16px;font-weight:600;margin-bottom:var(--s-6)}
+
+/* ── at a glance ─────────────────────────────────────────────── */
+.rep-gl-figs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--s-16);
+             padding:var(--s-16);margin-bottom:var(--s-24);background:var(--surface-sunken)}
+.rep-gl-figs dt{font-family:'Inconsolata',ui-monospace,monospace;font-size:26px;font-weight:500;line-height:1.1}
+.rep-gl-figs dd{font-size:11px;line-height:1.35;color:var(--text-2);margin-top:var(--s-4)}
+.rep-gl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-24);margin-top:var(--s-8)}
+.rep-gl-l{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.rep-pg .rep-gl-h{font-size:13px;font-weight:600;line-height:1.35;margin:var(--s-4) 0 var(--s-10);min-height:4.05em}
+.rep-gl-b{font-size:11px}
+.rep-gl-b .rep-hb{row-gap:var(--s-4)}
+.rep-gl-b .rep-bar-c{height:6px}
+.rep-gl-b .rep-hb-k{max-width:104px}
+/* a tile keeps the bar and its tick; the numbers beside are the full exhibit's */
+.rep-gl-b .rep-hb{grid-template-columns:minmax(0,auto) 1fr auto}
+.rep-gl-b .rep-hb-f,.rep-gl-b .rep-hb-h,.rep-gl-b .rep-yrs-f{display:none}
+/* a small chart names its first and last year and leaves the run between */
+.rep-gl-b .rep-yrs span:not(:first-child):not(:last-child){visibility:hidden}
+.rep-gl-b .rep-yrs span:first-child{text-align:left;overflow:visible}
+.rep-gl-b .rep-yrs span:last-child{text-align:right;overflow:visible}
+.rep-gl-b .rep-cols{height:72px;gap:2px;padding-top:0}
+.rep-gl-b .rep-col-v{display:none}
+.rep-gl-b .rep-yrs{gap:2px}
+.rep-gl-b .rep-split{height:14px}
+.rep-gl-b .rep-legend{gap:var(--s-4) var(--s-12);margin-top:var(--s-6)}
+.rep-gl-b .rep-ex-note{display:none}
+.rep-pg .rep-gl-p{font-size:11px;color:var(--text-3);margin-top:var(--s-10)}
+
+/* ── an exhibit · label, a title that states a count, body, note, source ─
+   Two that share a base sit side by side across a vertical rule. */
+.rep-pg .rep-ex-t{font-size:16px;line-height:1.35;font-weight:600;margin:var(--s-6) 0 var(--s-16)}
+.rep-pg .rep-ex-note{color:var(--text-2);margin-top:var(--s-12);max-width:72ch}
+.rep-pg .rep-ex-src{font-size:11px;color:var(--text-3);margin-top:var(--s-12);padding-top:var(--s-8);border-top:1px solid var(--border)}
+.rep-in>:is(.rep-ex,.rep-pair)+:is(.rep-ex,.rep-pair){margin-top:var(--s-24);padding-top:var(--s-24);border-top:1px solid var(--text-1)}
+.rep-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.rep-pair>.rep-ex:first-child{padding-right:var(--s-24)}
+.rep-pair>.rep-ex+.rep-ex{padding-left:var(--s-24);border-left:1px solid var(--border)}
+.rep-pair .rep-hb-k{max-width:120px}
+
+/* ── the charts ─────────────────────────────────────────────── */
+/* TWO COUNTS, ONE DARK. The starred count is --text-1 and the bar; the
+   results' is --text-3 and a tick at its share — a shape, not a second hue
+   (design-language.md §2). */
+.rep-hb{display:grid;grid-template-columns:minmax(0,auto) 1fr auto auto;column-gap:var(--s-12);row-gap:6px;align-items:center}
+.rep-hb-h{font-size:11px;color:var(--text-3);text-align:right}
+.rep-pg .rep-hb-f,.rep-pg .rep-f{color:var(--text-3)}
+.rep-tick{position:absolute;top:-3px;bottom:-3px;width:2px;margin-left:-1px;background:var(--text-3)}
+/* A NAME WRAPS, IT IS NEVER CUT. Paper has no hover to show the rest of
+   "Taiwan Semicon…", so a holder takes a second line instead. */
+.rep-hb-k{min-width:0;max-width:260px;line-height:1.3;overflow-wrap:anywhere}
+.rep-bar-c{position:relative;display:block;height:8px}
+.rep-bar{display:block;height:100%;background:var(--text-1)}
 .rep-bar.is-dim{background:var(--border-strong)}
-.rep-n{width:48px;text-align:right;padding-left:var(--s-10)}
-.rep-pct{width:48px;text-align:right;color:var(--text-3)}
-.rep-ht .rep-n{padding-left:var(--s-10)}
-.rep-tot th,.rep-tot td{border-top:1px solid var(--text-1);padding-top:var(--s-6);font-weight:600}
-.rep-hb{display:grid;grid-template-columns:minmax(64px,max-content) 1fr 44px;gap:var(--s-6) var(--s-12);
-        align-items:center;font-size:13px}
-.rep-k{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rep-hb .rep-n{width:auto}
-.rep-cols{display:flex;align-items:flex-end;gap:var(--s-6);height:150px;margin-bottom:var(--s-20);
-          border-bottom:1px solid var(--text-1)}
-.rep-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
-         height:100%;min-width:0;position:relative}
-.rep-b{width:100%;background:var(--text-2)}
-.rep-col.is-inc .rep-b{background:transparent;border:1.5px dashed var(--text-3);border-bottom:0}
-.rep-v{font-size:11px;color:var(--text-2);margin-bottom:var(--s-2)}
-.rep-y{position:absolute;bottom:-18px;font-size:11px;color:var(--text-3)}
-.rep-split{display:flex;gap:var(--s-2);font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
-.rep-split span{background:var(--text-2);color:var(--text-inverse);padding:var(--s-6) var(--s-8);
-                white-space:nowrap;overflow:hidden}
-.rep-split .is-dim{background:var(--border-strong);color:var(--text-1)}
-.rep-split .is-none{background:var(--surface-sunken);color:var(--text-2)}
-.rep-gridwrap{overflow-x:auto}
-.rep-grid,.rep-cc{width:100%;border-collapse:collapse;font-size:13px}
-.rep-grid th,.rep-grid td,.rep-cc th,.rep-cc td{padding:var(--s-6) var(--s-8);border-bottom:1px solid var(--border);text-align:right}
-.rep-grid thead th,.rep-cc thead th{font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;
-                                    color:var(--text-3);border-bottom:1px solid var(--text-1)}
-.rep-grid th:first-child,.rep-cc th,.rep-cc td,.rep-apx td,.rep-apx th{text-align:left}
-.rep-grid tbody th,.rep-cc tbody th{font-weight:500}
-.rep-t{font-weight:600}
-.rep-cc tbody th{width:28%}
-.rep-key{color:var(--text-3);margin:0}
-.rep-skl{margin:0;padding-left:var(--s-20);display:flex;flex-direction:column;gap:var(--s-10);
-         color:var(--text-3);font-size:13px}
-.rep-skl .rep-sk{margin-top:var(--s-6)}
+.rep-hb-n{text-align:right;min-width:2.5em}
+.rep-ht td,.rep-ht th{padding:5px 0;border-bottom:1px solid var(--border)}
+.rep-ht th{padding-right:var(--s-16);max-width:280px;line-height:1.35}
+.rep-ht .rep-bc{width:30%;padding-right:var(--s-12)}
+.rep-ht thead th{font-size:11px;color:var(--text-3);padding-top:0}
+.rep-ht .rep-f.rep-r{padding-left:var(--s-12)}
+.rep-ht .rep-r{text-align:right;width:3.5em}
+.rep-ht .rep-tot th,.rep-ht .rep-tot td{border-bottom:0;border-top:1px solid var(--text-1);font-weight:600}
+.rep-ht .rep-tot .rep-num{font-weight:500}
+.rep-cols{display:flex;align-items:flex-end;gap:6px;height:150px;padding-top:18px;border-bottom:1px solid var(--text-1)}
+.rep-col{position:relative;flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;min-width:0}
+.rep-col-t{position:absolute;left:-2px;right:-2px;height:2px;margin-bottom:-1px;background:var(--text-3)}
+.rep-col-b{background:var(--text-1);min-height:1px}
+.rep-col.is-inc .rep-col-b{background:transparent;box-shadow:inset 0 0 0 1px var(--text-1)}
+.rep-col-v{text-align:center;font-size:11px;color:var(--text-2);margin-bottom:3px}
+.rep-yrs{display:flex;gap:6px;margin-top:var(--s-4)}
+.rep-yrs span{flex:1;text-align:center;font-size:11px;color:var(--text-3)}
+.rep-yrs-f{margin-top:var(--s-2)}
+.rep-yrs-f span{color:var(--text-3)}
+.rep-yrs:not(.rep-yrs-f) span{color:var(--text-2)}
+.rep-split{display:flex;height:28px;gap:2px}
+.rep-split span{min-width:2px;background:var(--text-1)}
+.rep-split .is-dim,.rep-legend .is-dim{background:var(--border-strong)}
+.rep-split .is-none,.rep-legend .is-none{background:repeating-linear-gradient(135deg,var(--border-strong) 0 2px,transparent 2px 5px)}
+.rep-legend{display:flex;flex-wrap:wrap;gap:var(--s-6) var(--s-20);margin-top:var(--s-10);color:var(--text-2)}
+.rep-legend i{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:-1px;background:var(--text-1)}
+.rep-gt th,.rep-gt td,.rep-cc th,.rep-cc td,.rep-apx th,.rep-apx td{padding:5px var(--s-8);border-bottom:1px solid var(--border)}
+.rep-gt th,.rep-gt td{text-align:right}
+.rep-gt th:first-child,.rep-gt td:first-child,.rep-cc th:first-child,.rep-apx th:first-child,.rep-apx td:first-child{text-align:left;padding-left:0}
+.rep-gt thead th,.rep-cc thead th,.rep-apx thead th{font-size:11px;color:var(--text-3);border-bottom:1px solid var(--text-1)}
+.rep-gt thead th{white-space:nowrap}
+.rep-gt .rep-t{font-weight:500}
+.rep-apx td,.rep-apx th{font-size:13px}
+.rep-apx td{line-height:1.35}
+.rep-apx .rep-pn{white-space:nowrap}
+.rep-apx .rep-hold{max-width:170px}
+/* a table that scrolls on a phone; on paper and wide screens it simply fits */
+.rep-tw:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.rep-pg .rep-sk{display:inline-block;height:9px;vertical-align:middle}
+.rep-pg .rep-skp{display:block;height:9px;margin:var(--s-8) 0}
 
-/* ── Part 2 · the Pro band, full bleed to the sheet ─────────── */
-.rep-band{background:var(--surface-sunken);border-top:3px solid var(--text-1);
-          margin:0 calc(-1 * var(--s-40));padding:var(--s-20) var(--s-40);
-          display:flex;flex-wrap:wrap;gap:var(--s-12) var(--s-24);align-items:center;justify-content:space-between}
-@media (max-width:640px){.rep-band{margin:0 calc(-1 * var(--s-16));padding:var(--s-16)}}
-.rep-band h2{margin:0}
-.rep-band .rep-note{max-width:46ch}
-.rep-prosec{border-top:1px solid var(--border);padding-top:var(--s-12)}
-.rep-disc{color:var(--text-3);border-top:1px solid var(--border);padding-top:var(--s-10);
-          text-transform:none;letter-spacing:0;line-height:1.5;margin:0}
+/* ── Part 2 · the analysis ─────────────────────────────────────
+   It opens on a shaded band with a 3px left rule, so the one part that reads
+   the set is set apart from the parts that count it. */
+.rep-pband{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:var(--s-12) var(--s-20);
+           background:var(--surface-sunken);border-left:3px solid var(--text-1);
+           padding:var(--s-12) var(--s-16);margin-bottom:var(--s-32);color:var(--text-2)}
+.rep-pband>p{max-width:56ch}
+.rep-confirm{flex-basis:100%;display:grid;gap:var(--s-12);padding-top:var(--s-12);border-top:1px solid var(--border);color:var(--text-1)}
+.rep-confirm[hidden]{display:none}
+.rep-confirm ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-4) var(--s-24);color:var(--text-2)}
+.rep-confirm-price{display:flex;align-items:center;gap:var(--s-12)}
+.rep-confirm-price .rep-sk{width:72px}
+.rep-confirm-acts{display:flex;flex-wrap:wrap;gap:var(--s-12)}
+.rep-pg .rep-pro-say:empty{display:none}
+.rep-in>.rep-ps+.rep-ps{margin-top:var(--s-24);padding-top:var(--s-24);border-top:1px solid var(--border)}
+.rep-pg .rep-ps-q{color:var(--text-3);margin-bottom:var(--s-12);max-width:72ch}
+.rep-ps-l li{display:grid;grid-template-columns:1.6em 1fr}
+.rep-ps-l li+li{margin-top:var(--s-10)}
+.rep-pg .rep-disc{font-size:11px;line-height:1.55;color:var(--text-3);margin-top:var(--s-32);padding-top:var(--s-12);
+                  border-top:1px solid var(--border);max-width:72ch}
 
-/* ── print · the PDF is the sheets ────────────────────────────
-   The chrome, every other view and — before Pro has run — the whole Pro part
-   stay off the page. Printing light is report.mjs's job (beforeprint), because
-   tokens follow data-theme and paper does not swap. */
+/* ── the closing page ─────────────────────────────────────────── */
+.rep-cl li{padding:var(--s-16) 0;border-bottom:1px solid var(--border)}
+.rep-cl li:first-child{border-top:2px solid var(--text-1)}
+.rep-cl h3{font-size:16px;font-weight:600;margin-bottom:var(--s-4)}
+.rep-cl p{color:var(--text-2);max-width:64ch}
+.rep-cl-made{margin-top:var(--s-32)}
+
+/* ── a phone · the sheet is a column, not a page ───────────────── */
+@media (max-width:640px){
+  .rep-desk .rep-pg{padding:var(--s-32) var(--s-24) var(--s-24)}
+  .rep-desk .rep-pg::before{inset:var(--s-12)}
+  .rep-desk .rep-pg-cover{padding:17px;aspect-ratio:auto}
+  .rep-desk .rep-pg-cover::after{inset:16px}
+  .rep-desk .rep-cv-band{flex-basis:auto;min-height:360px;padding:var(--s-24)}
+  .rep-desk .rep-cv-q{font-size:26px}
+  .rep-desk .rep-cv-low{padding:var(--s-24)}
+  .rep-desk .rep-cv-figs{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:var(--s-20)}
+  .rep-desk .rep-cv-figs div:nth-child(3){padding-left:0;border-left:0}
+  .rep-desk .rep-cv-about,.rep-desk .rep-memo{grid-template-columns:1fr;row-gap:var(--s-4)}
+  .rep-desk .rep-pair,.rep-desk .rep-gl{grid-template-columns:1fr}
+  .rep-desk .rep-gl-figs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rep-desk .rep-pair>.rep-ex:first-child{padding-right:0}
+  .rep-desk .rep-pair>.rep-ex+.rep-ex{padding:var(--s-24) 0 0;margin-top:var(--s-24);border-left:0;border-top:1px solid var(--border)}
+  .rep-desk .rep-confirm ul{grid-template-columns:1fr}
+  /* WIDE TABLES SCROLL INSIDE THE SHEET rather than past its frame */
+  .rep-desk .rep-tw{overflow-x:auto}
+  .rep-desk .rep-apx{min-width:640px}
+  .rep-desk .rep-gt{min-width:480px}
+  .rep-desk .rep-ht .rep-pc{display:none}
+}
+
+/* ── print · the PDF is #repPrint and nothing else ─────────────
+   Printing light is report.mjs's job (beforeprint), because tokens follow
+   data-theme and paper does not swap. */
+@page{size:letter;margin:0}
 @media print{
-  .mast,.rep-head,.view:not(.view-report),.view-report .foot{display:none}
-  html,body,.stage,.view-report,.view-report .main{position:static;overflow:visible;height:auto;
+  .mast,.view:not(.view-report),.view-report .main{display:none}
+  html,body,.stage,.view-report{position:static;overflow:visible;height:auto;
     opacity:1;visibility:visible;transform:none;background:var(--surface)}
-  .rep-desk{padding:0;gap:0}
+  .rep-print{position:static;visibility:visible}
   /* A BAR IS A BACKGROUND, and browsers drop backgrounds when printing unless
      told otherwise — the chart would print as its numbers and nothing else. */
-  .rep-sheet{max-width:none;border:0;box-shadow:none;break-after:page;
-             -webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .rep-pro,.rep-lead{display:none}
+  .rep-print .rep-pg{box-shadow:none;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .rep-print .rep-pg:last-child{break-after:auto}
 }
+.rep-print .rep-pg{width:816px;max-width:none;height:1056px;overflow:hidden;box-shadow:none}
+.rep-print .rep-pg-cover{aspect-ratio:auto}

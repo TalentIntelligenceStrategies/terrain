@@ -7,7 +7,8 @@
      `.page-head`, `.pg-back`, `.foot` — and draws its content as sheets on the
      ground, because a backer reads it beside the memos they already get
      (design-language.md §7, "The report is paper"). The chrome is the app's;
-     the sheets are the report's, and only the sheets print.
+     the sheets are the report's, and only #repPrint — the same sheets packed
+     into pages — prints.
 
      THE SHEETS ARE BUILT BY js/surfaces/report.mjs from the starred set and
      the `fieldCounts` port. Nothing here is a value: every number on a sheet
@@ -24,13 +25,20 @@
         </div>
         <div class="rep-tools">
           <!-- PRINTS THE PAGE, and that is the whole file test: the PDF is
-               this page and nothing more (brief.md §1). Before Pro has run it
+               these sheets packed into pages and nothing more (brief.md §1),
+               with a cover and page numbers. Before Pro has run it
                leaves the Pro part out, because a file of empty bars says
                nothing. Secondary, because the one filled button on this
                surface is Run the Pro report. -->
           <button class="btn btn-secondary" id="repPdf" type="button">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
             <span>Download PDF</span>
+          </button>
+          <!-- THE SURFACE'S ONE FILLED BUTTON, in reach from the cover. It opens
+               the confirm step in the analysis band and scrolls there; the
+               band's own Run is secondary and steps aside while it is open. -->
+          <button class="btn btn-primary" id="repProTop" type="button" aria-expanded="false" aria-controls="repConfirm">
+            <span>Run the Pro report</span>
           </button>
         </div>
       </header>
@@ -45,6 +53,13 @@
 
       <div class="rep-desk" id="repDesk" aria-live="off"></div>
 
+      <!-- THE ATTRIBUTION IS THE APP'S, NOT THE REPORT'S. It sits on this
+           surface, under the sheets; no sheet carries it, and neither does the
+           PDF (brief.md §3). -->
       <p class="foot"><em>Powered by</em><img class="foot-mark foot-mark-light" src="../brand/logos/innovue/Innovue_Logo_Blue_eng_inline.svg" alt="Innovue" width="95" height="13"><img class="foot-mark foot-mark-dark" src="../brand/logos/innovue/Innovue_Logo_Light_eng_inline.svg" alt="Innovue" width="95" height="13"></p>
     </main>
+    <!-- THE PDF, packed into US Letter pages by report.mjs on beforeprint and
+         emptied on afterprint. Laid out off screen, because pagination
+         measures; the only thing that prints. -->
+    <div class="rep-print" id="repPrint" aria-hidden="true"></div>
   </section>

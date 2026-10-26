@@ -55,11 +55,13 @@ CLOSE  = '/* ══ end tokens ══ */'
 # that its block can no longer be verified, and that is why the page carries
 # its own note saying which it is.
 #
-# THIS IS NO LONGER TEMPORARY. The exit used to be publishing app/ at the same
-# URL; Terrain publishes nothing now, the whole publish pipeline was retired
-# with the landscape product, and this list has one entry for good.
+# The list is the two benches in design/previews/: the loading lab and the
+# report lab. Both are pages somebody may open on their own, so both carry the
+# bytes; the report lab needs a server for its engine and would still be
+# legible without one, which is the rule's test and not app/index.html's.
 TARGETS = [
     'design/previews/terrain-loading-lab.html',
+    'design/previews/terrain-report-lab.html',
 ]
 
 def read(p):
