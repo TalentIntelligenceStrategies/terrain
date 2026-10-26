@@ -111,7 +111,7 @@ the reply that it now searches the web.
   reading checkable, whatever produces it.
 - **Out everywhere:** a reading on the search surface; a verdict shown as a score, a rank or a
   probability of Terrain's own; and anything shaped like legal advice stated as fact — *infringes*,
-  *is clear*, *is free to use*, *is novel*, *is invalid*. *Holder A leads this space* is a reading and
+  *is clear*, *is free to use*, *freedom to operate*, *is novel*, *is invalid*, *will be granted*. *Holder A leads this space* is a reading and
   belongs in a Pro section if anywhere; *a design without feature C may avoid claim 1 of Patent X* is
   admissible there under the disclaimer; *you are clear to build* is not admissible at all.
 

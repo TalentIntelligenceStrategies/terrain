@@ -849,11 +849,19 @@ is on.
 - **Where filings cluster is a class-by-period grid with the numbers in the cells.**
 
 **Five rules hold whatever Pro writes**, and they are `brief.md` §1's: no score, rank or probability
-of Terrain's own; *may* wherever a reading touches a claim, and never *infringes*, *is clear* or *is
-novel*; every reading cites what it rests on; a fact from outside the records names its source; and
-one disclaimer, which reads: *Pro sections are generated from the patents you starred and the
+of Terrain's own; *may* wherever a reading touches a claim, and nothing shaped like legal advice stated as fact,
+in the words `brief.md` §1 lists; every reading cites
+what it rests on; a fact from outside the records names its source; and one disclaimer, which the
+report prints itself and reads: *Pro sections are generated from the patents you starred and the
 description. They are not legal or investment advice, and not a freedom-to-operate, patentability or
 validity opinion. Patents outside this set may matter.*
+
+**The five rules and the disclaimer are fixed; the rest of the words are Innovue's to change.** The
+report's question, the turn's lines, the closing page and the sections Pro writes are drawn in the
+template as one way to fill the layout, and the layout is what is specified. **How Pro's content
+is laid out is fixed by nine block kinds** (`components.md` §1), drawn by one renderer,
+`app/js/core/blocks.mjs`, which `app/` uses for a delivered section and the template uses for the
+contract's example.
 
 **Download PDF prints the page**, on US Letter, with the cover as page one and a running head and
 a numbered foot on every page after it. Before Pro it carries everything but Part 2, and the turn
@@ -866,16 +874,17 @@ The file test is §5.2's: the PDF states nothing its page did not.
   sections Pro writes, from the quote, the price, and *Charged when the report is delivered. A run
   that fails costs nothing.* The price prints as a bar until it is set; `XXX` never reaches the screen.
 - **A run takes minutes, and the band says where it is.** Queued and running show *Ready in about N
-  minutes* from the engine's estimate, and the founder can leave the page; the report fills in when
-  the result lands. A failed run says *Pro did not finish. Nothing was charged.* with *Try again*.
+  minutes* from the engine's estimate. A failed run says *Pro did not finish. Nothing was charged.* with *Try again*.
 - **The charge lands on delivery**, not at the press, so nothing needs refunding.
 - **A paid analysis outlives a changed set.** If the stars change after Pro has run, the report keeps
   the analysis it paid for, with one line above it: *Written for the earlier set of N; the set now
   has M.* A re-run is a new paid run, and the PDF carries the analysis with that line.
 
 **What the reference cannot do yet, and says.** The Pro sections wait on Innovue's prompts; in `app/`
-the confirm, running, done and failed states are real against the demo engine, which returns no
-written content. The TIS listing is TIS-side data and renders as a skeleton bar on screen until it
+the confirm, running, done and failed states are real against the demo engine, which returns an
+invented result in every block kind (`demo/pro-blocks.mjs`), and the corpus engine, which returns
+none. A run lives in the page: keeping one across a reload, and paying for it, come in a later
+round. The TIS listing is TIS-side data and renders as a skeleton bar on screen until it
 exists, and is left out of the PDF.
 
 ---

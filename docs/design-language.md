@@ -972,9 +972,10 @@ each sheet, and no Innovue mark: the report is a document, not a product surface
 - **How the set was made** comes next: Re, Date, Basis as a definition list between a 2px `--text-1`
   rule and a 1px `--border` one, then the contents. The figures are the cover's and the glance
   page's; a third copy between them would only repeat them.
-- **At a glance is page 3**: the five figures at 26px on `--surface-sunken`, the Pro part's answers
-  one line each once it has run, and every counted exhibit small in a three-column grid, each with
-  the exhibit and page its full version is on.
+- **At a glance is page 3**: the five figures at 26px on `--surface-sunken`, *From Part 2* — the Pro
+  result's summary, one line each, once it has run — and the counted exhibits small in a
+  three-column grid, as many as the page holds, each with the exhibit and page its full version is
+  on.
 - **Numbered exhibits**: an 11px uppercase label (*Exhibit 2 · Filed by year*), a 16px title that
   states a count, the chart or table, a 13px note, and an 11px source line naming the base. The
   starred count is `--text-1`, the results' count beside it `--text-3`. A 1px
@@ -990,13 +991,16 @@ each sheet, and no Innovue mark: the report is a document, not a product surface
   button; a failed run holds its sentence and *Try again*.
 - **Part 2 opens on a page of its own**: *Part 2* in 11px uppercase, the title at 26px, a 13px
   line under it, and *In this part*, its sections as a numbered list. **Then each Pro section starts
-  a page**: its number and title at 16px semibold with the Pro label beside them, the question it
+  a page**: its title at 16px semibold after its number in Inconsolata at weight 500 and
+  `--text-3`, with the Pro label beside them, the question it
   answers at 13px `--text-3`, and its blocks. Reading text holds a 72ch measure; tables keep the
   full width. The disclaimer, 11px `--text-3` over a 1px `--border` rule, closes the last section.
-- **A Pro section's blocks** (`components.md` §1), each drawn without a hue:
-  - **Prose** at 13px, line height 1.6. A citation is Inconsolata at 0.78em in `--text-3` —
-    `[5]`, `[5 cl. 1]`, *2.3*, *Exhibit 4* — and a checkable or outside fact carries an 11px
-    Inconsolata mark, *C* or *O*, in a 1px `--border` box.
+- **A Pro section's blocks** (`components.md` §1), each drawn without a hue, by one renderer —
+  `app/js/core/blocks.mjs` with `app/styles/43-blocks.css`, which the template links too:
+  - **Prose** at 13px, line height 1.6. A patent citation is Inconsolata at 11px in `--text-3`,
+    `[5]`; a section prints as its number, *2.3*, and an exhibit as *Exhibit 4*. A checkable fact
+    carries an 11px Inconsolata *C* in a 1px `--border` box; a fact from outside the records an *O*
+    in the darker box, `--text-3` edge and `--text-2` letter.
   - **Tables and the claim chart**: 11px `--text-3` headers over a 1px `--text-1` rule, 13px rows
     on 1px `--border` hairlines. A chart mark is a symbol and its word — *present*, *unclear*,
     *absent* — never a fill.
@@ -1005,9 +1009,9 @@ each sheet, and no Innovue mark: the report is a document, not a product surface
   - **Answers** sit in a two-column grid under a 1px `--text-1` rule, 16px gutters and a hairline
     between the columns, each a 13px semibold head over 13px text; a question for the team sits on
     `--surface-sunken`. A **checklist** is numbered 13px rows on hairlines.
-  - **One per patent**: a 13px semibold head (row, number, holder, kind), then labelled 13px lines;
-    where the abstract reads broader than claim 1, two boxes side by side, 1px `--border`, with what
-    claim 1 adds underlined.
+  - **One per patent**, over a hairline: a 13px semibold head (row, number, holder), then labelled
+    13px lines; where the abstract reads broader than claim 1, two boxes side by side, 1px
+    `--border`, 10 × 12px padding, with what claim 1 adds underlined.
 - **The appendix is one table per row**, sharing one set of columns, so it breaks between rows and
   still reads as one table: number in Inconsolata over the title at 11px, the holder as recorded at
   11px, then office, filed, kind and the nominal term. The source line travels with the last row.
