@@ -51,7 +51,7 @@ const ROLES = {
   ours: {
     fg: [/^--text-/, /^--figure-ink/, /^--accent/],
     bg: [/^--(surface|ground)/, /^--skeleton/, /^--(veil|scrim|figure-ground|track)/, /^--accent/],
-    border: [/^--border/, /^--veil-edge/, /^--accent/, /^--focus/],
+    border: [/^--border/, /^--veil-edge/, /^--accent/, /^--focus/, /^--text-/],
     /* the report's page geometry names its own lengths (the template) */
     space: [/^--s-/, /^--(px|pt|pb)$/], radius: [/^--r-/],
   },
