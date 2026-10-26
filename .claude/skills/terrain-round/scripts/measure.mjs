@@ -52,7 +52,8 @@ const ROLES = {
     fg: [/^--text-/, /^--figure-ink/, /^--accent/],
     bg: [/^--(surface|ground)/, /^--skeleton/, /^--(veil|scrim|figure-ground|track)/, /^--accent/],
     border: [/^--border/, /^--veil-edge/, /^--accent/, /^--focus/],
-    space: [/^--s-/], radius: [/^--r-/],
+    /* the report's page geometry names its own lengths (the template) */
+    space: [/^--s-/, /^--(px|pt|pb)$/], radius: [/^--r-/],
   },
   theirs: {
     fg: [/^--foreground$/, /^--muted-foreground$/, /^--card-foreground$/, /^--primary$/, /-foreground$/],
