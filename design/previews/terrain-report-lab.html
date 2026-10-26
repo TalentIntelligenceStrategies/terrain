@@ -1,0 +1,1594 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-dir="baseline" data-view="pages" data-pro="before" data-div="off">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terrain report lab</title>
+<meta name="robots" content="noindex, nofollow">
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     TERRAIN — THE REPORT LAB. A bench, not a product surface.
+
+     ONE REPORT, ONE BASELINE, TWO SOURCES. The patent report (platform.md
+     §5.3) in the brand — Urbanist, Inconsolata, the ink pair, no hue. The
+     cover is Framed Folio's: an ink band flush inside a double hairline
+     frame. The body is Ledger's: a hairline frame on every page, a summary
+     page, the small exhibits that share a base paired. The analysis opens on
+     a shaded band with a left rule. Dividers (?div=on) are an option.
+     No Innovue mark: a report is a document, not a product surface (brief §3).
+
+     THE CONTENT IS COMPUTED, NOT TYPED. The bench runs one search through
+     the same engine seam app/js/main.mjs uses — corpus/ when it is on disk,
+     demo/ otherwise or under ?data=demo — stars the first twelve, and counts
+     the field through `fieldCounts`. No holder name is in this file; one
+     appears only when corpus/ is served beside it.
+
+     THE PRO TEXT IS A PLACEHOLDER, AND SAYS SO. Pro does not run in the
+     reference. "After Pro" shows the shape of a reading — may wording, every
+     sentence citing the appendix rows it rests on — labelled Sample text, and
+     claims nothing about any patent or holder.
+
+     PAGES IS THE PDF. Every page is a US Letter sheet, 816 × 1056 at 96dpi,
+     with its running head and foot inside it rather than in @page margin
+     boxes, so the screen and the file paginate identically. Before Pro, the
+     Pages view and the PDF leave Part 2 out (platform.md §5.3).
+
+     Needs a server, like app/: python3 -m http.server 8765 from the repo
+     root, then /design/previews/terrain-report-lab.html
+     ?dir=baseline
+     ?view=screen|pages  ?pro=before|after  ?div=on|off
+
+     A HAND-WRITTEN SET. ?set=<name> reads corpus/<name>/report.mjs instead
+     of searching: its rows, its Part 1 additions (a filing timeline, record
+     anomalies, inventors, what the set does not contain) and Part 2 written
+     by hand from the records, every sentence tagged checkable, reading or
+     outside the record. corpus/ is local, so this file still names no
+     holder; without the module the bench falls back to the search above.
+     ?desc=given|none shows Part 2 with and without a description.
+     ═══════════════════════════════════════════════════════════════════════ -->
+
+<link rel="icon" href="../../brand/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../brand/fonts/fonts.css">
+<script>
+/* Before first paint: the direction, view and Pro state come from the URL so
+   a headless print lands on the right one without a click. Paper does not
+   swap, so the bench is light whatever the system says. */
+(function(){
+  var q = new URLSearchParams(location.search), r = document.documentElement;
+  var d = q.get('dir'), v = q.get('view'), p = q.get('pro');
+  if (/^(baseline)$/.test(d)) r.setAttribute('data-dir', d);
+  if (/^(screen|pages)$/.test(v)) r.setAttribute('data-view', v);
+  if (/^(before|after)$/.test(p)) r.setAttribute('data-pro', p);
+  if (/^(on|off)$/.test(q.get('div'))) r.setAttribute('data-div', q.get('div'));
+  r.setAttribute('data-desc', q.get('desc') === 'none' ? 'none' : 'given');
+})();
+</script>
+<style>
+/* ── TOKENS ── GENERATED. DO NOT EDIT BETWEEN THE SENTINELS. ──────────
+   Authored in app/styles/tokens.css and written here by
+   tools/sync-tokens.py --write. --check verifies it byte for byte and CI runs
+   it on every push, so an edit made here is reverted rather than kept.
+   The two TIS directions read these; the wild cards declare their own
+   palettes below the closing sentinel, which is the one place a page may.
+   ───────────────────────────────────────────────────────────────────── */
+/* ══ tokens · generated ══ */
+/* ══════════════════════════════════════════════════════════════════════════
+   TIS Terrain — tokens. THE ONE AUTHORED COPY.
+
+   Every other copy of this block is generated. tools/sync-tokens.py --write
+   writes it into the region between the sentinels, --check verifies it BYTE
+   FOR BYTE, and CI runs --check on every push. A value diff would pass while
+   the comments drifted, and the comments are where the measured contrast
+   ratios live.
+
+   THE TARGETS ARE THE TWO BENCHES, and neither is app/index.html or the
+   prototype. The prototype is frozen and reads tokens that left with the analysis layer, so
+   regenerating its block would blank it rather than update it; app/index.html
+   links this file directly, because it cannot work from a download under any
+   circumstances and a third generated copy beside the authored one is drift
+   risk bought for nothing. sync-tokens.py's TARGETS list is the count, and
+   it holds the loading lab and the report lab.
+
+   THE FILE IS ORDERED BY THEME-VARIANCE, NOT BY DOCUMENT SECTION. That is what
+   makes "the three blocks carry the same names in the same order" a one-line
+   assertion, and it makes ADDED TO LIGHT, FORGOT DARK — whose symptom is a
+   component that silently stays light and throws nothing — impossible to
+   commit. Safe, because custom properties resolve by cascade, not by position.
+
+   The cost is that a token does not sit where design-language.md discusses it:
+   --shadow-float is under §5 "Space, radius, elevation" there and is THEMED,
+   so it is in the themed half here. That mismatch is
+   the reason the file is not organised by §.
+
+   FIVE TIERS, and the rule for each is on its own block:
+     1 primitive  11   no component may read one
+     2 scale      28   invariant by construction
+     3 semantic   27   declared in all three blocks — this is the dark contract
+     4 derived     1   resolves THROUGH a themed token. Never in a dark block
+     5 component   —   not here at all. On the component's own class,
+                       design-language.md §3.9
+
+   THIS IS THE ONLY FILE PERMITTED TO DECLARE A CUSTOM PROPERTY ON :root.
+   check-app.py gate C refuses one anywhere else, which turns §3.2's exemption
+   into a FILE rather than a list of blocks that goes stale.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* both schemes declared, so the scrollbars, form controls and the canvas
+   behind the page follow the theme. [data-theme] pins it once the founder
+   has chosen — the attribute is what the toggle writes. */
+html{color-scheme:light dark;background:var(--ground)}
+:root[data-theme="light"]{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+
+/* ── 1 · PRIMITIVE ─────────────────────────────────────────────────────────
+   NO COMPONENT MAY READ ONE. A component that reads --n-* is a component that
+   stays light and throws nothing, logs nothing, and reads as correct CSS.
+   design-language.md §3.2; check-app.py gate A refuses it. */
+:root{
+  /* neutral ramp — even in L*, true neutral (R = G = B)
+
+     --n-7 IS MEASURED AGAINST --surface-sunken AND NOT SPACED WITH THE REST.
+     It has exactly one consumer, --text-3, and --text-3's hardest ground is
+     not --surface but --n-3, the sunken fill that .seg, .hf, .set-row[data-open]
+     and .set-thumb-more all use. At #6F6F6F that pair measured 4.41:1 against
+     the 4.5 owed to text under 18.66px — failing on the theme switch's own
+     labels, the record's eleven field labels, the open row's rank and the
+     drawing strip's MORE. Two steps darker clears it at 4.54:1 and costs
+     nothing anywhere else: on --surface it moves 5.02 -> 5.17. Dark's
+     --text-3 is a separate value and already measured 5.81 on its own sunken,
+     so it does not move. */
+  --n-0:#FFFFFF; --n-1:#FCFCFC; --n-2:#F6F6F6; --n-3:#F0F0F0;
+  --n-4:#E4E4E4; --n-5:#D1D1D1; --n-6:#B0B0B0; --n-7:#6D6D6D;
+  --n-8:#595959; --n-9:#383838; --n-10:#252525;
+}
+
+/* ── 2 · SCALE ─────────────────────────────────────────────────────────────
+   Invariant by construction: a step, a radius and a duration are the same in
+   both themes, and a dark block that redefined one would be saying the
+   interface is a different size at night. */
+:root{
+  --s-2:2px; --s-4:4px; --s-6:6px; --s-8:8px; --s-10:10px; --s-12:12px;
+  --s-14:14px; --s-16:16px; --s-20:20px; --s-24:24px; --s-32:32px;
+  --s-40:40px; --s-56:56px; --s-72:72px;
+  --r-chip:4px; --r-seg:6px; --r-control:8px; --r-inner:12px;
+  --r-widget:16px; --r-shell:20px; --r-pill:999px;
+  /* two curves. --ease for anything the founder initiated; --ease-in-out for
+     system-driven movement only, because it is flat at the start. Constant
+     motion is linear. design-language.md §6.                                  */
+  --ease:cubic-bezier(.2,0,0,1);
+  --ease-in-out:cubic-bezier(.77,0,.175,1);
+  --dur-1:120ms; --dur-2:200ms; --dur-3:320ms; --dur-4:520ms;
+  /* --dur-4 and --ease-in-out have no reader today. Both stay: the ladder
+     is invariant by construction, and a curve is part of a named vocabulary
+     rather than a rung. --ease-drawer went, because it was named for the
+     slide-over and the slide-over is retired -- a curve named for a dead
+     component is dead with it. */
+  --cycle:1.6s;                     /* one indicator cycle for the whole page */
+}
+
+/* ── 3 · SEMANTIC · light ──────────────────────────────────────────────────
+   COMPONENTS READ ONLY THESE. The next three blocks carry THE SAME NAMES IN
+   THE SAME ORDER, and check-app.py gate D refuses any drift between them.
+
+   THE COUNT IS NOT REPEATED HERE. This read "the same 28 names" while the
+   tier table eleven lines up read 32 and the file held 32 -- a tally nothing
+   checks, gone stale exactly the way the ramp comment above says they do.
+   Gate D asserts the PROPERTY, and gate G is what holds the number, in the
+   one place it is argued.                                                  */
+:root{
+  --ground:var(--n-2); --surface:var(--n-0); --surface-sunken:var(--n-3);
+  --border:var(--n-4); --border-strong:var(--n-5);
+  /* THE ACCENT · brief.md §5, design-language.md §3.8.
+     Terrain's accent is ACHROMATIC. It is the near-black ink pair, and that is
+     the decision rather than a slot waiting on a hue.
+
+     WHY THERE IS NO COLOUR HERE. §2 permits colour where it carries
+     information and nowhere else, and a control's colour carries none: it
+     says "press here", which its shape and its word already say. A chromatic
+     accent would also be the one hue in a product that has no other, so it
+     would read as data. The cost is worth naming: a near-black primary action
+     is calmer and less inviting than a coloured one.
+
+     THE FOUR TOKENS STAY, BECAUSE THE ACCENT IS A ROLE AND NOT A HUE.
+     All four hold ink values today, and that is not a reason to fold them into
+     --text-1. §3.8's three permitted sites have to be able to SAY they are the
+     accent; a site that read --text-1 would leave §3.8 pointing at nothing,
+     and the rule would stop being enforceable the moment somebody added a
+     fourth site. The VALUE is settled. The ROLE still needs a name.
+
+     THERE ARE FOUR, AND THE FOURTH IS THE ACCENT AS A FOREGROUND.
+     --accent is a FILL, --accent-ink is what sits ON that fill. Two of §3.8's
+     three sites do not want a fill: the selected technology tile keeps
+     --surface because "a filled accent tile here would be a second primary
+     action on a surface that already has Search" (38-home.css), and the
+     settings panel's segmented control is a pill on a track. Both point the
+     FILL token at `color`, which is a foreground job, so the foreground gets
+     its own token rather than a second job for --accent.
+
+     AND --accent-hover IS THE THIRD, NOT A SPARE. --ink-hover is a NEUTRAL:
+     one step along the neutral ramp, which is the correct hover for a
+     near-black fill. It and --accent-hover agree today and are still two
+     tokens, because one answers "how does an ink fill hover" and the other
+     answers "how does the accent hover", and those stay two questions. */
+  --accent:var(--n-10); --accent-ink:#FAFAFA; --accent-hover:var(--n-9);
+  --accent-on-surface:var(--n-10);   /* the accent as INK, on --surface */
+  --text-1:var(--n-10); --text-2:var(--n-8); --text-3:var(--n-7);
+  --text-disabled:var(--n-6); --text-inverse:#FAFAFA;
+  /* three more semantics, added with the dark pass. Each replaced a component
+     that was reaching past --n-* into the ramp: §10 makes dark cheap only if
+     no component reads a primitive, and eleven of them did. */
+  --ink-hover:var(--n-9);        /* hover on an ink fill — the only ink state */
+  --track-pressed:var(--n-4);    /* a bar track under the selected row */
+
+
+  /* THE CHART LAYER, SINGULAR — narrowed 2026-09-23. There were three, for a
+     dashboard of twelve widgets that no longer exists. --chart-trend and
+     --chart-unknown went with the filings chart; this one stayed because the
+     points page still draws a column per day, and a column is still a chart.
+
+     §3.5 narrows with it rather than being deleted: one series, no trend line,
+     no unpublished-window band. A second layer here means a second question is
+     being asked on one chart, and the destinations do not ask one. */
+
+  --skeleton:var(--n-4); --skeleton-shimmer:var(--n-3); --skeleton-strong:var(--n-5);
+
+  /* --veil is the translucent ground under a control bar FLOATING OVER
+     CONTENT — the figure viewer's zoom/rotate bar, sitting on a patent's own
+     line-work. Alpha because what is behind it is
+     the drawing and varies pixel to pixel, so a flat neutral would either
+     hide the drawing or fail to separate the buttons from it.
+
+     .82 IS MEASURED, not chosen for feel. Below about .78 the 1.5px Lucide
+     strokes stop clearing 4.5:1 against the black line-work that shows through;
+     above .90 the bar stops reading as floating and becomes a solid plate over
+     the figure. It is paired with a 1px --border, because §5 is explicit that a
+     shadow cannot separate two surfaces of the same colour and this one sits on
+     white. */
+  --veil:rgba(255,255,255,.82);
+  /* --veil-edge IS --veil's OWN ARGUMENT, APPLIED TO THE EDGE. The note above
+     says a translucent surface "composites over something whose colour varies
+     and cannot be a flat neutral". The BORDER on that same surface composites
+     over the same varying thing and was a flat neutral -- --border, which
+     SWAPS. So in dark the figure bar wore a #2E2E2E hairline measuring 13.6:1
+     against the #FFFFFF pill it edges, where light's #E4E4E4 measures 1.27:1.
+     A factor of ten for one declaration. The reasoning had been applied to the
+     fill and not to the edge; this is the other half of it.
+
+     .12 IS MEASURED TWICE, ONCE PER BACKDROP.
+     - Over WHITE paper the pill composites to #FFFFFF and this edge to
+       #E5E5E5: 1.26:1, against the 1.27:1 --border gives in light today. Dark
+       stops changing the edge; it keeps the one light already had.
+     - Over BLACK line-work the pill composites to #D1D1D1 and this edge to
+       #BCBCBC: 1.24:1. The edge is the same WEIGHT against both backdrops,
+       which is what an edge has to be.
+
+     AND THAT IS WHY IT IS ALPHA AND NOT A HEX. A solid #E4E4E4 edge measures
+     1.20:1 on the #D1D1D1 pill -- but INVERTED, lighter than what it edges. A
+     hairline darker than its pill over paper and lighter than it over a drawn
+     line changes polarity as the founder pans, and an edge that changes
+     polarity reads as an artefact rather than as an edge.
+
+     INK AND NOT BLACK, for --scrim's reason: it composites over whatever is
+     there, and the ramp's darkest neutral is what the rest of the system dims
+     toward. IT DOES NOT SWAP, for --veil's reason: the surface under it does
+     not. */
+  --veil-edge:rgba(37,37,37,.12);
+
+  /* --figure-ground IS WHITE IN BOTH THEMES, and that is a fact about the
+     content rather than an exemption from §10. A patent drawing is black
+     line-work on a transparent background; composited onto #1A1A1A it is a
+     blank rectangle. The dark contract swaps the tokens whose meaning is "the
+     surface under our own chrome"; this one means "the paper this drawing was
+     published on", which has no dark value.
+
+     A TOKEN RATHER THAN A LITERAL because §3.2's rule is that every colour is
+     a token. The gate is what stops the next white from being a judgement
+     call, and a named invariant is checkable where a hex is not. */
+  --figure-ground:#FFFFFF;
+  /* --figure-ink AND --figure-ink-strong ARE --figure-ground's HALF OF THE
+     SAME ARGUMENT. Paper does not swap, so the ink on it may not either. Every
+     caption that sits ON a drawing had been taking --text-*, which does swap:
+     measured in dark, the record's figure number was #8E8E8E on #FFFFFF paper
+     at 3.28:1, under the 4.5:1 §3.2 sets for small text, and a caption raised
+     to --text-1 was #F0F0F0 at 1.14:1 — invisible.
+
+     THE TWO VALUES ARE LIGHT'S OWN --text-2 AND --text-1, frozen. On white
+     paper they measure 7.00:1 and 14.68:1, so the quiet one clears the floor
+     for 11px text and the raised one is the same step up the ramp the rest
+     of the system uses. Freezing them rather than inventing a pair keeps the
+     figure captions reading like every other quiet-then-raised label.
+
+     THEY ARE NOT --text-2 AND --text-1 WITH A NOTE. A component reading a
+     token that swaps, over a surface that does not, is the exact defect
+     --veil-edge was added for three tokens ago. */
+  --figure-ink:#595959; --figure-ink-strong:#252525;
+
+  /* ── --scrim · the ONE dimming layer in the product ─────────────────────
+     §3.2 read "there is no scrim token, and no scrim" and closed with "a
+     dimming layer would arrive with whatever first needs one". This is that
+     thing: the enlarged patent drawing, which became a lightbox over the
+     viewport on 2026-09-24 because a drawing capped at one column of a split
+     is a drawing nobody can read the reference numerals on.
+
+     NOTHING ELSE MAY READ IT. The menus, the popovers and the record all dim
+     nothing and all still close on an outside click the document hears for
+     itself. A second caller is a sign the rule has stopped holding, not a
+     sign the token turned out to be useful.
+
+     .55 IS MEASURED against the stage it separates. --figure-ground is white
+     in both themes, so in LIGHT theme — where the page behind is --n-2 — the
+     scrim is the only thing making the lightbox's edge an edge. Composited it
+     lands at #838383 and clears the white stage at 3.79:1; at .48 it drops to
+     3.11 and below that it fails 3:1 outright, which is the floor for a
+     boundary that is not text. Above about .65 the page stops reading as a
+     page that is still there.
+
+     THE INK IS --n-10's VALUE AND NOT BLACK, for the reason --veil is alpha:
+     it composites over whatever the surface is, and the
+     ramp's darkest neutral is what the rest of the system dims toward. */
+  --scrim:rgba(37,37,37,.55);
+
+  /* elevation. THEMED, which is why it is here rather than with the scale:
+     an ink shadow is invisible on ink. --shadow-drop stood beside it as the
+     same elevation expressed as a filter, for a composer that was clipped;
+     nothing clips the composer now and nothing read it. */
+  --shadow-float:0 1px 2px rgba(37,37,37,.04), 0 8px 24px -6px rgba(37,37,37,.10);
+  /* --shadow-raise IS --shadow-float AT A THIRD OF THE GEOMETRY: offset 8->3,
+     blur 24->8, spread -6->-3. It is the second of exactly two rungs, and the
+     difference between them is how far off the page a thing is.
+
+     A THING THAT HAS LIFTED WITHOUT LEAVING. Still in the flow, pushing
+     nothing aside, under the founder's pointer -- a drawing tile coming
+     toward them. It is ALWAYS paired with the 1px translate that causes it,
+     because a shadow with no movement is a thing that grew rather than rose.
+
+     THE CONTACT LAYER GOES .04 -> .05 IN LIGHT and the ambient stays at .10.
+     A 1px lift needs its contact to read at all, where a floating panel has
+     the ambient doing the work. The negative spread survives at both rungs,
+     which is what keeps both downward-biased. */
+  --shadow-raise:0 1px 2px rgba(37,37,37,.05), 0 3px 8px -3px rgba(37,37,37,.10);
+}
+
+/* ── 3 · SEMANTIC · dark · design-language.md §10 ──────────────────────────
+   §10 is a contract with two halves and this is both of them.
+
+   The mechanical half: dark redefines SEMANTIC TOKENS ONLY and touches no
+   component rule. Two selectors carry the identical list — the media query so
+   an unset preference follows the system, the attribute so an explicit choice
+   beats the system in BOTH directions. That is why the media query is written
+   :not([data-theme="light"]) rather than bare: without it, choosing light on a
+   dark OS would do nothing.
+
+   The half that is not mechanical: this is not an inversion. Surfaces stop
+   being fills, and every value is picked against this ground rather than
+   lightened from its light counterpart. Every number in the comments below
+   was measured, the same way §10.3 measures the light set.
+
+   The list is duplicated on purpose. CSS has no way to share a declaration
+   block between two selectors, and the alternative — a third indirection
+   layer of --dark-* primitives — buys nothing and hides which value is live. */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+  /* neutral — a re-step, not an inversion. The ground/surface step is 1.06
+     against 1.08 in light, so --border does the separating that the step does
+     there. §10's reading of the dark reference screen. */
+  --ground:#141414; --surface:#1A1A1A; --surface-sunken:#101010;
+  --border:#2E2E2E; --border-strong:#454545;
+  /* the accent, achromatic here exactly as in light: the near-black fill
+     becomes a near-white one and --accent-ink inverts with it. There is no
+     hue to re-measure against this ground, which is the maintenance cost §3.8
+     stops paying by dropping the colour — a hue chosen against white and
+     carried unchanged into dark is how a component silently stops meeting
+     contrast (brief.md §5). */
+  --accent:#F0F0F0; --accent-ink:#141414; --accent-hover:#FFFFFF;
+  --accent-on-surface:#F0F0F0;
+  --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
+  --text-disabled:#5A5A5A; --text-inverse:#141414;
+  /* --text-1 is the primary fill and --text-inverse its label, so a near-black
+     button becomes a near-white one with no component rule changing. */
+  --ink-hover:#FFFFFF; --track-pressed:#2A2A2A;
+
+
+
+  /* the sweep is still the lighter band, so it still reads as a sweep */
+  --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
+  /* the stage under it stays WHITE in both themes — black line-work on #1A1A1A
+     is a blank rectangle — so the veil is the light value in the dark block
+     too. It is not an inversion that was forgotten: the surface this
+     composites over does not swap, so neither may this. */
+  --veil:rgba(255,255,255,.82);
+  --veil-edge:rgba(37,37,37,.12);
+  /* unchanged, deliberately: see the light block. The paper does not swap. */
+  --figure-ground:#FFFFFF;
+  --figure-ink:#595959; --figure-ink-strong:#252525;
+
+  /* THE SCRIM IS BLACK HERE AND INK IN THE LIGHT BLOCK, which is a real swap
+     rather than the --veil case one line up. --veil composites over a white
+     drawing that does not swap, so it may not swap either; --scrim composites
+     over the APP, which does. Ink at .55 over #141414 is barely a change —
+     it would dim nothing, which is the one thing a scrim exists to do.
+
+     .72 IS NOT A CONTRAST FLOOR. Against the white stage every value in the
+     usable range clears 20:1 here, so the binding constraint is the other
+     side: enough that the masthead and the list stop competing for the eye,
+     little enough that the page reads as behind rather than gone. */
+  --scrim:rgba(0,0,0,.72);
+
+  /* an ink shadow is invisible on ink. These go black and heavier, and the
+     hairline is doing most of the work regardless. */
+  --shadow-float:0 1px 2px rgba(0,0,0,.40), 0 8px 24px -6px rgba(0,0,0,.55);
+  --shadow-raise:0 1px 2px rgba(0,0,0,.45), 0 3px 8px -3px rgba(0,0,0,.55);
+  }
+}
+:root[data-theme="dark"]{
+  /* neutral — a re-step, not an inversion. The ground/surface step is 1.06
+     against 1.08 in light, so --border does the separating that the step does
+     there. §10's reading of the dark reference screen. */
+  --ground:#141414; --surface:#1A1A1A; --surface-sunken:#101010;
+  --border:#2E2E2E; --border-strong:#454545;
+  /* the accent, achromatic here exactly as in light: the near-black fill
+     becomes a near-white one and --accent-ink inverts with it. There is no
+     hue to re-measure against this ground, which is the maintenance cost §3.8
+     stops paying by dropping the colour — a hue chosen against white and
+     carried unchanged into dark is how a component silently stops meeting
+     contrast (brief.md §5). */
+  --accent:#F0F0F0; --accent-ink:#141414; --accent-hover:#FFFFFF;
+  --accent-on-surface:#F0F0F0;
+  --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
+  --text-disabled:#5A5A5A; --text-inverse:#141414;
+  /* --text-1 is the primary fill and --text-inverse its label, so a near-black
+     button becomes a near-white one with no component rule changing. */
+  --ink-hover:#FFFFFF; --track-pressed:#2A2A2A;
+
+
+
+  /* the sweep is still the lighter band, so it still reads as a sweep */
+  --skeleton:#2A2A2A; --skeleton-shimmer:#343434; --skeleton-strong:#424242;
+  /* the stage under it stays WHITE in both themes — black line-work on #1A1A1A
+     is a blank rectangle — so the veil is the light value in the dark block
+     too. It is not an inversion that was forgotten: the surface this
+     composites over does not swap, so neither may this. */
+  --veil:rgba(255,255,255,.82);
+  --veil-edge:rgba(37,37,37,.12);
+  /* unchanged, deliberately: see the light block. The paper does not swap. */
+  --figure-ground:#FFFFFF;
+  --figure-ink:#595959; --figure-ink-strong:#252525;
+
+  /* THE SCRIM IS BLACK HERE AND INK IN THE LIGHT BLOCK, which is a real swap
+     rather than the --veil case one line up. --veil composites over a white
+     drawing that does not swap, so it may not swap either; --scrim composites
+     over the APP, which does. Ink at .55 over #141414 is barely a change —
+     it would dim nothing, which is the one thing a scrim exists to do.
+
+     .72 IS NOT A CONTRAST FLOOR. Against the white stage every value in the
+     usable range clears 20:1 here, so the binding constraint is the other
+     side: enough that the masthead and the list stop competing for the eye,
+     little enough that the page reads as behind rather than gone. */
+  --scrim:rgba(0,0,0,.72);
+
+  /* an ink shadow is invisible on ink. These go black and heavier, and the
+     hairline is doing most of the work regardless. */
+  --shadow-float:0 1px 2px rgba(0,0,0,.40), 0 8px 24px -6px rgba(0,0,0,.55);
+  --shadow-raise:0 1px 2px rgba(0,0,0,.45), 0 3px 8px -3px rgba(0,0,0,.55);
+}
+
+/* ── 4 · DERIVED ───────────────────────────────────────────────────────────
+   EACH RESOLVES THROUGH A THEMED TOKEN, SO IT INVERTS FOR FREE. None of them
+   may ever be added to a dark block: a literal there would pin the value to
+   one palette while reading as perfectly correct CSS, which is the same
+   failure mode as a component reading a primitive.
+
+   Declared after the dark blocks on purpose, so that "the three blocks above
+   carry the same names in the same order" is true of the blocks and nothing
+   else has to be excepted from it. Position is otherwise irrelevant — custom
+   properties resolve by cascade. */
+:root{
+  /* THE FOCUS RING IS THE ACCENT. §3.8 names three places the accent may
+     appear and this is one of them, so it derives rather than being declared
+     twice — one edit to --accent moves the primary fill, the selected control
+     and the ring together. The accent is achromatic, so the ring is the same
+     near-black/near-white pair as the ink; deriving it still matters, because
+     it is what keeps the three permitted places to one declaration. */
+  --focus:var(--accent);
+}
+/* ══ end tokens ══ */
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE BENCH — chrome around the paper. Never printed.
+   ══════════════════════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{margin:0;background:var(--ground);color:var(--text-1);font-family:'Urbanist',system-ui,sans-serif}
+.bench{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-12) var(--s-24);
+  padding:var(--s-12) var(--s-24);background:var(--surface);border-bottom:1px solid var(--border)}
+.bench h1{margin:0;font-size:13px;font-weight:700;letter-spacing:.02em}
+.bench-g{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-8);min-width:0;max-width:100%}
+.bench-l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3)}
+.seg{display:inline-flex;flex-wrap:wrap;max-width:100%;padding:2px;border:1px solid var(--border);border-radius:var(--r-control);background:var(--surface-sunken)}
+.seg button{font:inherit;font-size:13px;font-weight:500;border:0;background:none;color:var(--text-2);
+  padding:var(--s-4) var(--s-10);border-radius:var(--r-seg);cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--text-1);box-shadow:var(--shadow-raise)}
+.bench-btn{font:inherit;font-size:13px;font-weight:600;border:0;border-radius:var(--r-control);
+  padding:var(--s-6) var(--s-14);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+@media (max-width:640px){.bench{position:static}}
+@media (hover:hover){
+  .seg button:hover{color:var(--text-1)}
+  .bench-btn:hover{background:var(--accent-hover)}
+}
+.bench-note{flex-basis:100%;margin:0;font-size:13px;color:var(--text-2)}
+.bench-over{font-size:11px;font-family:'Inconsolata',monospace;color:var(--text-2)}
+.bench-over[data-n]:not([data-n="0"]){color:var(--text-1);font-weight:500}
+
+.desk{display:flex;flex-direction:column;align-items:center;gap:var(--s-32);padding:var(--s-40) var(--s-16) var(--s-72)}
+.desk-say{font-size:13px;color:var(--text-2);max-width:816px;width:100%;margin:0}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE PAPER — what every direction shares. Geometry only; the look is below.
+   ══════════════════════════════════════════════════════════════════════════ */
+.pg{position:relative;width:816px;height:1056px;flex:none;display:flex;flex-direction:column;
+  padding:var(--pt) var(--px) var(--pb);background:var(--paper);color:var(--ink);overflow:hidden;
+  box-shadow:0 1px 2px rgba(0,0,0,.06),0 8px 32px rgba(0,0,0,.08);
+  font-family:var(--f-text);font-size:var(--fs-body);line-height:1.5;font-kerning:normal;
+  zoom:var(--zoom,1)}
+.pg[data-over]{outline:2px dashed var(--signal-over,#C00);outline-offset:4px}
+.pg-in{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+.run,.ft{flex:none}
+.ft{margin-top:auto}
+.pg p,.pg h2,.pg h3,.pg h4,.pg dl,.pg dd,.pg ol,.pg ul,.pg figure{margin:0}
+.pg ol,.pg ul{padding:0;list-style:none}
+.pg table{border-collapse:collapse;width:100%}
+.pg th,.pg td{padding:0;text-align:left;font-weight:inherit;vertical-align:baseline}
+.n,.pg .num{font-family:var(--f-num);font-variant-numeric:lining-nums tabular-nums}
+.grow{flex:1 1 auto}
+.sk{display:inline-block;height:.62em;width:var(--w,60%);border-radius:2px;background:var(--sk);vertical-align:middle}
+.skp{display:block;margin:.55em 0}
+.mk{display:inline-block;vertical-align:middle;flex:none}
+.cite{font-family:var(--f-num);font-size:.78em;color:var(--ink-3);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
+.bal{text-wrap:balance}
+.pretty{text-wrap:pretty}
+
+/* Only on screen: the Run button and the Pro part before it runs. */
+.only-screen{display:none}
+:root[data-view="screen"] .only-screen{display:revert}
+:root[data-view="screen"] .pg{height:auto;min-height:0}
+:root[data-view="screen"] .pg-cover{min-height:760px}
+:root[data-view="screen"] .ft .pgno{visibility:hidden}
+
+/* the charts, in shape; every direction colours them */
+.hb{display:grid;grid-template-columns:minmax(0,auto) 1fr auto;column-gap:var(--s-12);row-gap:var(--hb-gap,8px);align-items:center}
+.hb-k{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px}
+.bar-c{display:block;height:var(--bar-h,8px)}
+.bar{display:block;height:100%;background:var(--bar)}
+.bar.dim{background:var(--bar-dim)}
+.hb-n{text-align:right;min-width:2.5em}
+.ht td,.ht th{padding:var(--row-p,7px) 0;border-bottom:1px solid var(--hair)}
+.ht th{padding-right:var(--s-16);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ht .bc{width:34%;padding-right:var(--s-12)}
+.ht .r{text-align:right;width:3.5em}
+.ht .tot th,.ht .tot td{border-bottom:0;border-top:1px solid var(--ink);font-weight:600}
+.sub{color:var(--ink-3);font-size:.9em;margin-left:.35em}
+.cols{display:flex;align-items:flex-end;gap:6px;height:150px;padding-top:18px;border-bottom:1px solid var(--ink)}
+.col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;height:100%;position:relative}
+.col-b{background:var(--bar);min-height:1px}
+.col.inc .col-b{background:transparent;box-shadow:inset 0 0 0 1px var(--bar)}
+.col-v{text-align:center;font-size:var(--fs-micro);color:var(--ink-2);margin-bottom:3px}
+.yrs{display:flex;gap:6px;margin-top:4px}
+.yrs span{flex:1;text-align:center;font-size:var(--fs-micro);color:var(--ink-3)}
+.split{display:flex;height:var(--split-h,28px);gap:2px}
+.split span{min-width:2px;background:var(--bar)}
+.split .dim{background:var(--bar-dim)}
+.split .none{background:repeating-linear-gradient(135deg,var(--bar-dim) 0 2px,transparent 2px 5px)}
+.legend{display:flex;flex-wrap:wrap;gap:var(--s-6) var(--s-20);margin-top:var(--s-10);font-size:var(--fs-small);color:var(--ink-2)}
+.legend i{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:-1px;background:var(--bar)}
+.legend i.dim{background:var(--bar-dim)}
+.legend i.none{background:repeating-linear-gradient(135deg,var(--bar-dim) 0 2px,transparent 2px 5px)}
+.gt th,.gt td{padding:var(--row-p,7px) var(--s-8);border-bottom:1px solid var(--hair);text-align:right}
+.gt th:first-child,.gt td:first-child{text-align:left;padding-left:0}
+.gt thead th{font-size:var(--fs-micro);color:var(--ink-3);border-bottom:1px solid var(--ink)}
+.gt .t{font-weight:600}
+.cc th,.cc td{padding:var(--row-p,7px) var(--s-8);border-bottom:1px solid var(--hair)}
+.cc th:first-child{padding-left:0}
+.cc thead th{font-size:var(--fs-micro);color:var(--ink-3);border-bottom:1px solid var(--ink)}
+.cc .m{white-space:nowrap}
+.cc .m b{font-weight:400;font-family:var(--f-num);margin-right:6px}
+.apx td,.apx th{padding:var(--row-p,6px) var(--s-8);border-bottom:1px solid var(--hair);font-size:var(--fs-small)}
+.apx td:first-child,.apx th:first-child{padding-left:0}
+.apx thead th{font-size:var(--fs-micro);color:var(--ink-3);border-bottom:1px solid var(--ink)}
+.apx .hold{display:block;max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toc li{display:flex;align-items:baseline;gap:var(--s-8)}
+.toc .dots{flex:1;border-bottom:1px dotted var(--ink-3);transform:translateY(-4px);min-width:24px}
+.pro-list li{display:grid;grid-template-columns:1.6em 1fr;gap:0 var(--s-4)}
+.pro-list li+li{margin-top:var(--s-10)}
+.ex-num{display:none}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE BRAND, which the report is set in: Urbanist for text,
+   Inconsolata for every number, the ink pair, no hue. Tokens only.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root{
+  --paper:var(--surface);--ink:var(--text-1);--ink-2:var(--text-2);--ink-3:var(--text-3);
+  --hair:var(--border);--rule:var(--text-1);--bar:var(--text-1);--bar-dim:var(--border-strong);--sk:var(--skeleton);
+  --f-text:'Urbanist',system-ui,sans-serif;--f-num:'Inconsolata',ui-monospace,monospace;
+  --fs-micro:11px;--fs-small:13px;--fs-body:13px}
+/* THE LOCKUP: the submark and TIS bold, the product name regular */
+.brand b{font-weight:700}
+.tag{display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:var(--r-chip);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;line-height:1;background:var(--text-1);color:var(--text-inverse)}
+.run-btn{font:inherit;font-size:13px;font-weight:600;border:0;border-radius:var(--r-control);padding:10px 16px;background:var(--accent);color:var(--accent-ink);white-space:nowrap}
+.ht .tot .n,.gt .t{font-weight:500}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE COVER — Framed Folio's: the ink pair inverted, the accent and not a
+   hue, mounted flush inside a double hairline frame, the figures beneath.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root[data-dir="baseline"] .pg-cover{padding:0}
+:root[data-dir="baseline"] .cv-band{background:var(--text-1);color:var(--text-inverse);padding:var(--s-40) var(--px) var(--s-56);height:600px;display:flex;flex-direction:column}
+:root[data-dir="baseline"] .cv-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:400;text-transform:uppercase;letter-spacing:.12em}
+:root[data-dir="baseline"] .cv-top .brand{display:flex;align-items:center;gap:10px}
+:root[data-dir="baseline"] .cv-top .d{font-weight:500;letter-spacing:.08em;opacity:.72}
+:root[data-dir="baseline"] .cv-kick{font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.72;margin-bottom:var(--s-16)}
+:root[data-dir="baseline"] .cv-q{font-size:36px;line-height:1.15;font-weight:500;letter-spacing:-.01em;max-width:560px}
+:root[data-dir="baseline"] .cv-low{padding:var(--s-40) var(--px) var(--s-36,36px);display:flex;flex-direction:column;flex:1}
+:root[data-dir="baseline"] .cv-figs{display:grid;grid-template-columns:repeat(4,1fr)}
+:root[data-dir="baseline"] .cv-figs div{padding:0 var(--s-16);border-left:1px solid var(--hair)}
+:root[data-dir="baseline"] .cv-figs div:first-child{padding-left:0;border-left:0}
+:root[data-dir="baseline"] .cv-figs dt{font-family:var(--f-num);font-size:36px;font-weight:500;line-height:1}
+:root[data-dir="baseline"] .cv-figs dd{font-size:13px;color:var(--ink-2);margin-top:var(--s-8)}
+:root[data-dir="baseline"] .cv-about{margin-top:var(--s-40);display:grid;grid-template-columns:120px 1fr;gap:var(--s-10) var(--s-24);font-size:13px;line-height:1.55}
+:root[data-dir="baseline"] .cv-about dt{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);padding-top:2px}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   AT A GLANCE — page 3: the key figures, the bottom
+   line, and every counted exhibit small, with the page of its full version.
+   ══════════════════════════════════════════════════════════════════════════ */
+.pg .gl-figs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--s-16);padding:var(--s-16);margin-bottom:var(--s-24);background:var(--surface-sunken)}
+.pg .gl-figs dt{font-family:var(--f-num);font-size:26px;font-weight:500;line-height:1.1}
+.pg .gl-figs dd{font-size:11px;line-height:1.35;color:var(--ink-2);margin-top:var(--s-4)}
+.pg .gl-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-24);margin-top:var(--s-8)}
+.pg .gl-l{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.pg .gl-h{font-size:13px;font-weight:600;line-height:1.35;margin:var(--s-4) 0 var(--s-10);min-height:4.05em}
+.pg .gl-b{font-size:11px;--bar-h:6px;--hb-gap:4px;--split-h:14px}
+.pg .gl-b .hb-k{max-width:92px}
+.pg .gl-b .cols{height:72px;gap:2px;padding-top:0}
+.pg .gl-b .col-v{display:none}
+.pg .gl-b .yrs{gap:2px}
+.pg .gl-b .legend{font-size:11px;gap:var(--s-4) var(--s-12);margin-top:var(--s-6)}
+.pg .gl-b .ex-note{display:none}
+.pg .gl-p{font-size:11px;color:var(--ink-3);margin-top:var(--s-10)}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE BODY — Ledger's, ruled like a ledger: a hairline
+   frame on every page, small exhibits that share a base paired side by side
+   across a vertical rule, large ones full width.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root[data-dir="baseline"]{--px:72px;--pt:56px;--pb:52px;--row-p:5px;--hb-gap:6px}
+:root[data-dir="baseline"] .pg:not(.pg-cover)::before{content:"";position:absolute;inset:36px;border:1px solid var(--border);pointer-events:none}
+:root[data-dir="baseline"] .run{display:flex;justify-content:space-between;align-items:center;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);padding-bottom:var(--s-12);border-bottom:1px solid var(--hair);margin-bottom:var(--s-32)}
+:root[data-dir="baseline"] .brand{display:flex;align-items:center;gap:8px;color:var(--ink);letter-spacing:.12em;font-weight:400}
+/* the lockup on the cover band takes the band's inverse ink */
+:root[data-dir="baseline"] .cv-top .brand{color:inherit}
+:root[data-dir="baseline"] .ft{display:flex;justify-content:space-between;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);padding-top:var(--s-12);border-top:1px solid var(--hair)}
+:root[data-dir="baseline"] .op{margin-bottom:var(--s-32)}
+:root[data-dir="baseline"] .op-n,:root[data-dir="baseline"] .lbl,:root[data-dir="baseline"] .ex-l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3)}
+:root[data-dir="baseline"] .op-n{margin-bottom:var(--s-6)}
+:root[data-dir="baseline"] .op-t{font-size:26px;line-height:1.2;font-weight:500}
+:root[data-dir="baseline"] .op-s{font-size:13px;color:var(--ink-2);margin-top:var(--s-8);max-width:560px}
+:root[data-dir="baseline"] .memo{display:grid;grid-template-columns:120px 1fr;gap:var(--s-10) var(--s-24);padding:var(--s-16) 0;border-top:2px solid var(--rule);border-bottom:1px solid var(--hair);font-size:13px}
+:root[data-dir="baseline"] .memo dt{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);padding-top:2px}
+:root[data-dir="baseline"] .m-body{display:grid;grid-template-columns:168px 1fr;gap:var(--s-40);margin-top:var(--s-32)}
+:root[data-dir="baseline"] .kf div{padding:var(--s-12) 0;border-bottom:1px solid var(--hair)}
+:root[data-dir="baseline"] .kf div:first-child{padding-top:0}
+:root[data-dir="baseline"] .kf dt{font-family:var(--f-num);font-size:20px;font-weight:500;line-height:1.2}
+:root[data-dir="baseline"] .kf dd{font-size:13px;color:var(--ink-2)}
+:root[data-dir="baseline"] .lbl{margin-bottom:var(--s-10)}
+:root[data-dir="baseline"] .lead{padding-bottom:var(--s-24);margin-bottom:var(--s-24);border-bottom:1px solid var(--hair)}
+:root[data-dir="baseline"] .lead h3,:root[data-dir="baseline"] .ps h3{font-size:16px;font-weight:600;display:flex;align-items:center;gap:var(--s-8);margin-bottom:var(--s-6)}
+:root[data-dir="baseline"] .lead p{font-size:13px;line-height:1.6}
+:root[data-dir="baseline"] .toc li{font-size:13px;padding:6px 0}
+:root[data-dir="baseline"] .ex-t{font-size:16px;line-height:1.35;font-weight:600;margin:var(--s-6) 0 var(--s-16)}
+:root[data-dir="baseline"] .ex-note{font-size:13px;color:var(--ink-2);margin-top:var(--s-12)}
+:root[data-dir="baseline"] .ex-src{font-size:11px;color:var(--ink-3);margin-top:var(--s-12);padding-top:var(--s-8);border-top:1px solid var(--hair)}
+:root[data-dir="baseline"] :is(.ex,.pair) + :is(.ex,.pair){margin-top:var(--s-24);padding-top:var(--s-24);border-top:1px solid var(--rule)}
+:root[data-dir="baseline"] .pair{display:grid;grid-template-columns:1fr 1fr}
+:root[data-dir="baseline"] .pair .ex:first-child{padding-right:var(--s-24)}
+:root[data-dir="baseline"] .pair .ex + .ex{margin:0;padding:0 0 0 var(--s-24);border-top:0;border-left:1px solid var(--hair)}
+:root[data-dir="baseline"] .pair .hb-k{max-width:120px}
+:root[data-dir="baseline"] .band{display:flex;justify-content:space-between;align-items:center;gap:var(--s-20);background:var(--surface-sunken);border-left:3px solid var(--rule);padding:var(--s-12) var(--s-16);margin-bottom:var(--s-32);font-size:13px;color:var(--ink-2)}
+:root[data-dir="baseline"] .band h2{display:none}
+:root[data-dir="baseline"] .ps + .ps{margin-top:var(--s-24);padding-top:var(--s-24);border-top:1px solid var(--hair)}
+:root[data-dir="baseline"] .ps-q{font-size:13px;color:var(--ink-3);margin-bottom:var(--s-12)}
+:root[data-dir="baseline"] .ps-b{font-size:13px;line-height:1.6}
+/* reading text holds a measure; the tables beside it keep the full width */
+:root[data-dir="baseline"] .ps-q,:root[data-dir="baseline"] .ps-b > p,:root[data-dir="baseline"] .ps-b .pro-list,:root[data-dir="baseline"] .ex-note,:root[data-dir="baseline"] .disc{max-width:72ch}
+:root[data-dir="baseline"] .ps-b p + p{margin-top:var(--s-8)}
+:root[data-dir="baseline"] .disc{font-size:11px;line-height:1.55;color:var(--ink-3);margin-top:var(--s-32);padding-top:var(--s-12);border-top:1px solid var(--hair)}
+:root[data-dir="baseline"] .cl-list li{padding:var(--s-16) 0;border-bottom:1px solid var(--hair)}
+:root[data-dir="baseline"] .cl-list li:first-child{border-top:2px solid var(--rule)}
+:root[data-dir="baseline"] .cl-list h3{font-size:16px;font-weight:600;margin-bottom:var(--s-4)}
+:root[data-dir="baseline"] .cl-list p{font-size:13px;color:var(--ink-2);max-width:64ch}
+:root[data-dir="baseline"] .cl-made{margin-top:var(--s-32)}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   A HAND-WRITTEN SET (?set=) — the sections only a set with readings has.
+   Same ink pair, same hairlines; every mark is ink or the dim bar.
+   ══════════════════════════════════════════════════════════════════════════ */
+/* a sentence's tag: C checkable, R a reading, O outside the record */
+.st{display:inline-block;font-family:var(--f-num);font-size:11px;line-height:1;padding:2px 3px 1px;margin-left:4px;border:1px solid var(--hair);border-radius:2px;color:var(--ink-3);vertical-align:1px}
+.st-O{border-color:var(--ink-3);color:var(--ink-2)}
+.refs{font-family:var(--f-num);font-size:.78em;color:var(--ink-3);white-space:nowrap}
+.pg .why{display:block;font-size:11px;line-height:1.35;color:var(--ink-3);margin-top:2px;white-space:normal}
+.pg .cc .m2{white-space:normal;vertical-align:top}
+.pg .cc .m2 b{font-weight:400;font-family:var(--f-num);margin-right:6px}
+.pg .cc thead th .n{display:block;color:var(--ink);font-size:11px}
+.pg .rest{margin-top:var(--s-12)}
+.pg .rest li{font-size:13px;color:var(--ink-2)}
+.pg .rest li + li{margin-top:var(--s-4)}
+.pg .key{display:flex;gap:var(--s-16);font-size:11px;color:var(--ink-3);margin-top:var(--s-10)}
+.pg .key b{font-weight:400;font-family:var(--f-num);color:var(--ink);margin-right:4px}
+.pg .key .bx{display:inline-block;width:14px;height:9px;margin-right:6px;vertical-align:-1px;border:1px solid var(--hair)}
+.pg .key .bx.c1{border-color:var(--ink)}
+.pg .sub-h{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:var(--s-32) 0 var(--s-8)}
+.pg .sub-h:first-child{margin-top:0}
+
+/* the filing timeline: one track per record, filed → published */
+.tl{display:grid;grid-template-columns:200px 1fr;column-gap:var(--s-16);row-gap:6px;align-items:center;font-size:13px}
+.tl-k{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tl-k .n{color:var(--ink-3);margin-right:6px}
+.tl-t{position:relative;height:14px;background:linear-gradient(var(--hair),var(--hair)) 0 50%/100% 1px no-repeat}
+.tl-s{position:absolute;top:50%;height:2px;margin-top:-1px;background:var(--bar)}
+.tl-f{position:absolute;top:2px;width:2px;height:10px;margin-left:-1px;background:var(--bar)}
+.tl-p{position:absolute;top:2px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--bar)}
+.tl-p.app{background:var(--paper);box-shadow:inset 0 0 0 2px var(--bar)}
+.tl-ax{grid-column:2;position:relative;height:16px;border-top:1px solid var(--ink);margin-top:2px}
+.tl-ax span{position:absolute;top:3px;transform:translateX(-50%);font-size:var(--fs-micro);color:var(--ink-3)}
+.tl-lg{display:flex;gap:var(--s-20);font-size:11px;color:var(--ink-2);margin-top:var(--s-12)}
+.tl-lg i{display:inline-block;vertical-align:-1px;margin-right:6px}
+.tl-lg .f{width:2px;height:10px;background:var(--bar)}
+.tl-lg .g{width:10px;height:10px;border-radius:50%;background:var(--bar)}
+.tl-lg .a{width:10px;height:10px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--bar)}
+
+/* notes keyed to a row: anomalies, holders, risks */
+.nl li{display:grid;grid-template-columns:3.2em 1fr;gap:0 var(--s-8);padding:6px 0;border-bottom:1px solid var(--hair);font-size:13px}
+.nl li:first-child{border-top:1px solid var(--ink)}
+.nl .n{color:var(--ink-3)}
+.nl b{font-weight:600}
+
+/* what the set does not contain: two ledgers side by side */
+.lk{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-24)}
+.lk dl{display:grid;grid-template-columns:72px 1fr;align-content:start;font-size:13px}
+.lk dt,.lk dd{padding:6px 0;border-bottom:1px solid var(--hair)}
+.lk dt{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);padding-top:8px}
+.lk .lbl{grid-column:1/-1;border-bottom:1px solid var(--ink);padding-bottom:6px;margin:0}
+
+/* the turn: the last line of Part 1, the question Part 2 answers */
+.turn{margin-top:var(--s-32);padding:var(--s-16) 0 0 var(--s-16);border-left:3px solid var(--rule);font-size:16px;line-height:1.45;font-weight:500;max-width:56ch}
+.turn span{display:block;font-size:13px;font-weight:400;color:var(--ink-2);margin-top:var(--s-6)}
+
+/* the founder's features: the Pro input, on screen before it runs */
+.feat{margin:calc(-1 * var(--s-16)) 0 var(--s-32);padding:var(--s-12) var(--s-16);border:1px dashed var(--border-strong);font-size:13px}
+.feat .lbl{margin-bottom:var(--s-8)}
+.feat li{display:grid;grid-template-columns:1.8em 1fr;padding:4px 0;border-bottom:1px solid var(--hair)}
+.feat li:last-child{border-bottom:0}
+.feat p{font-size:11px;color:var(--ink-3);margin-top:var(--s-8)}
+
+/* how the set divides; the layer grid */
+.grp td,.grp th{padding:7px var(--s-8) 7px 0;border-bottom:1px solid var(--hair);vertical-align:top;font-size:13px}
+.grp tr:first-child :is(td,th){border-top:1px solid var(--ink)}
+.grp .c{text-align:right;width:3em;font-family:var(--f-num)}
+.lg th,.lg td{padding:5px 0;border-bottom:1px solid var(--hair);font-size:13px;text-align:center}
+.lg thead th{font-family:var(--f-num);font-size:var(--fs-micro);color:var(--ink-3);border-bottom:1px solid var(--ink)}
+.lg th:first-child,.lg td:first-child{text-align:left;padding-right:var(--s-8);width:auto}
+.lg td:not(.c){width:26px}
+.lg td.on::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--bar)}
+.lg td.off::before{content:"";display:inline-block;width:3px;height:3px;border-radius:50%;background:var(--bar-dim)}
+.lg .c{font-family:var(--f-num);text-align:right;width:8.5em;white-space:nowrap}
+.lg tr.empty th{color:var(--ink-2);font-style:italic}
+
+/* the interaction map: gesture → effect, with the claim it sits in */
+.gx{display:grid;grid-template-columns:minmax(0,1fr) 44px minmax(0,1fr) 96px;align-items:center;font-size:13px;row-gap:5px}
+.gx-g,.gx-e{padding:4px 8px;border:1px solid var(--hair)}
+.gx-g.c1{border-color:var(--ink)}
+.gx-e{background:var(--surface-sunken);border-color:transparent}
+.gx-a{position:relative;height:1px;background:var(--ink);margin:0 4px}
+.gx-a::after{content:"";position:absolute;right:-1px;top:-3px;border:3.5px solid transparent;border-left:5px solid var(--ink);border-right:0}
+.gx-c{font-family:var(--f-num);font-size:11px;color:var(--ink-3);text-align:right}
+.gx-h{font-size:var(--fs-micro);color:var(--ink-3);border-bottom:1px solid var(--ink);padding-bottom:4px}
+
+/* abstract against claim 1: what the claim adds, underlined */
+.dr{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-16);margin-top:var(--s-10);font-size:13px;line-height:1.5}
+.dr > div{padding:var(--s-10) var(--s-12);border:1px solid var(--hair)}
+.dr .lbl{margin-bottom:var(--s-6)}
+.dr q{color:var(--ink-2)}
+.dr li{padding:3px 0}
+.dr li span{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
+.ea h4{font-size:13px;font-weight:600;margin-bottom:2px}
+.ea p{font-size:13px}
+.ea p + p{margin-top:4px}
+.ea .lb{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-right:6px}
+.ea + .ea,.ps-cont > .ea{margin-top:var(--s-16);padding-top:var(--s-16);border-top:1px solid var(--hair)}
+.apx td.n{white-space:nowrap}
+.inv{display:flex;flex-wrap:wrap;gap:var(--s-6) var(--s-20);font-size:13px;color:var(--ink-2)}
+.inv b{font-weight:500;color:var(--ink);margin-left:4px}
+.wl td,.wl th{padding:7px var(--s-8) 7px 0;border-bottom:1px solid var(--hair);vertical-align:top;font-size:13px}
+.wl thead th{font-size:var(--fs-micro);color:var(--ink-3);border-bottom:1px solid var(--ink)}
+.apx .ttl{font-size:11px;line-height:1.35;max-width:190px}
+.gaps td,.gaps th{padding:6px var(--s-8) 6px 0;border-bottom:1px solid var(--hair);vertical-align:top;font-size:13px}
+.gaps thead th{font-size:var(--fs-micro);color:var(--ink-3);border-bottom:1px solid var(--ink)}
+/* the bench sheet: in the reads, out of the report. Screen only. */
+.pg-bench{background:var(--surface-sunken)}
+.pg-in > .at-top,.pg-in > .at-top > .cn,.pg-in > .at-top > .ea{margin-top:0;padding-top:0;border-top:0}
+.lead .bl li:last-child{border-bottom:0}
+.pg .cc thead th .nw{white-space:nowrap}
+:root[data-dir="baseline"] .m-body.m-one{grid-template-columns:1fr}
+.pg .toc li.sub{padding:3px 0 3px var(--s-16);font-size:13px;color:var(--ink-2)}
+.pg .toc li.sub .n:first-child{color:var(--ink-3);margin-right:4px}
+/* the bottom line: the conclusion's four answers, one line each */
+.bl li{display:grid;grid-template-columns:1.6em 1fr;padding:6px 0;border-bottom:1px solid var(--hair);font-size:13px;line-height:1.5}
+.bl li:first-child{border-top:1px solid var(--ink)}
+.bl .n{color:var(--ink-3)}
+.bl b{font-weight:600;margin-right:4px}
+/* 2.9: three answers and the team's questions in a 2×2 ledger */
+.cn-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--ink);margin-bottom:var(--s-24)}
+.cn-c{padding:var(--s-16) var(--s-16) var(--s-16) 0;border-bottom:1px solid var(--hair)}
+.cn-c:nth-child(odd){border-right:1px solid var(--hair)}
+.cn-c:nth-child(even){padding-left:var(--s-16);padding-right:0}
+.cn-c h4{display:flex;gap:var(--s-8);align-items:baseline;font-size:13px;font-weight:600;margin-bottom:var(--s-6)}
+.cn-c h4 .n{color:var(--ink-3);font-weight:500}
+.cn-c p{font-size:13px;line-height:1.55}
+.cn-qs{background:var(--surface-sunken);padding-left:var(--s-16) !important;padding-right:var(--s-16) !important}
+.cn-qs li{display:grid;grid-template-columns:1.6em 1fr;font-size:13px;line-height:1.5;padding:4px 0}
+.cn-qs .n{color:var(--ink-3)}
+.pg .hn{font-weight:500;color:var(--ink-3);margin-right:2px}
+.apx-f{table-layout:fixed}
+.apx-f .pn{display:block;white-space:nowrap}
+.apx-f .ttl{display:block;max-width:none;font-size:11px;line-height:1.3}
+.pg .apx-f td{padding:4px var(--s-8) 4px 0;font-size:13px;line-height:1.35}
+.pg .apx-f td:first-child{padding-left:0}
+.cn h4{display:flex;gap:var(--s-8);align-items:baseline;font-size:13px;font-weight:600;margin-bottom:var(--s-6)}
+.cn h4 .n{color:var(--ink-3);font-weight:500}
+.cn p{font-size:13px;line-height:1.6;max-width:72ch}
+.cn .cn-q{margin-top:var(--s-8);font-size:13px;color:var(--ink-2)}
+.cn .lb{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-right:8px}
+.cn .nl{margin-top:var(--s-4)}
+.cn{padding-bottom:var(--s-20);border-bottom:1px solid var(--hair)}
+.ps-cont > .cn{margin-top:var(--s-20)}
+.band-turn{align-items:flex-start}
+.band-turn .bt{font-size:16px;line-height:1.4;font-weight:500;color:var(--ink);margin-bottom:var(--s-6);max-width:52ch}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   D · PART DIVIDERS — any direction. A part opens on a page of its own: the
+   part's mark, its title over a 2px rule, and what is in it with pages.
+   ══════════════════════════════════════════════════════════════════════════ */
+.dv{max-width:600px}
+.pg .dv-n{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-3);margin-bottom:var(--s-16)}
+.pg .dv-t{font-size:36px;line-height:1.1;font-weight:500;letter-spacing:-.01em;padding-top:var(--s-16);border-top:2px solid var(--rule)}
+.pg .dv-s{font-size:13px;color:var(--ink-2);margin-top:var(--s-12);max-width:52ch}
+.pg .dv-toc{margin-top:var(--s-40)}
+.pg .dv .dv-toc li{font-size:13px;padding:var(--s-8) 0;border-bottom:1px solid var(--hair)}
+.dv-toc .dots{border:0}
+:root[data-view="screen"] .pg-div{min-height:640px}
+/* a divider is the part's opener, so it carries the foot and not the head */
+.pg-div .run{visibility:hidden}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE COVER MOUNT — the band flush to the frame's inner line.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root[data-dir="baseline"] .pg-cover{padding:42px}
+:root[data-dir="baseline"] .pg-cover::before,:root[data-dir="baseline"] .pg-cover::after{content:"";position:absolute;pointer-events:none}
+:root[data-dir="baseline"] .pg-cover::before{inset:36px;border:1px solid var(--text-3)}
+:root[data-dir="baseline"] .pg-cover::after{inset:41px;border:1px solid var(--border)}
+:root[data-dir="baseline"] .cv-band{height:560px;padding:var(--s-48,48px) 46px var(--s-56)}
+:root[data-dir="baseline"] .cv-low{padding:var(--s-40) 46px var(--s-24)}
+
+
+/* ══ PRINT — the Pages view, and nothing around it ═════════════════════════ */
+@page{size:letter;margin:0}
+@media print{
+  html,body{background:none}
+  .bench,.desk-say{display:none}
+  .desk{display:block;padding:0}
+  .pg{box-shadow:none;zoom:1;break-after:page;outline:0;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .pg:last-child{break-after:auto}
+  .only-screen{display:none !important}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="tis-mark" viewBox="0 0 1000 1000">
+    <polygon points="638.46,455.19 638.64,455.19 776.68,364.9 777.05,364.67 639.63,273.74 502.39,182.97 638.69,92.59 639.05,92.36 501.84,2.62 501.68,2.53 87.46,273.37 87.09,273.63 227.16,365.22 227.32,365.34 364.81,274.18 501.7,364.72 638.36,455.14"/>
+    <polygon points="74.44,292.6 74.44,444.7 212.46,530.2 212.46,674.02 74.88,588.77 74.44,588.52 74.44,726.72 488.06,997.17 488.5,997.47 488.5,843.46 352.78,759.38 352.78,617.98 488.06,701.78 488.5,702.06 488.5,563.35 74.88,292.9"/>
+    <polygon points="925.42,443.57 925.56,443.48 925.56,292.6 511.64,563.26 511.5,563.35 511.5,795.06 718.53,667.3 718.53,715.98 511.64,845.21 511.5,845.3 511.5,997.47 925.42,726.81 925.56,726.72 925.56,493.26 720.83,619.62 720.83,571.38"/>
+  </symbol>
+</svg>
+
+<header class="bench">
+  <h1>Report lab</h1>
+  <div class="bench-g"><span class="bench-l">Direction</span>
+    <div class="seg" id="segDir">
+      <button type="button" data-v="baseline">Baseline</button>
+    </div></div>
+  <div class="bench-g"><span class="bench-l">View</span>
+    <div class="seg" id="segView"><button type="button" data-v="screen">Screen</button><button type="button" data-v="pages">Pages · PDF</button></div></div>
+  <div class="bench-g"><span class="bench-l">Pro</span>
+    <div class="seg" id="segPro"><button type="button" data-v="before">Before</button><button type="button" data-v="after">After</button></div></div>
+  <div class="bench-g" id="gDesc" hidden><span class="bench-l">Description</span>
+    <div class="seg" id="segDesc"><button type="button" data-v="given">Given</button><button type="button" data-v="none">None</button></div></div>
+  <div class="bench-g"><span class="bench-l">D · Dividers</span>
+    <div class="seg" id="segDiv"><button type="button" data-v="off">Off</button><button type="button" data-v="on">On</button></div></div>
+  <button type="button" class="bench-btn" id="print">Print to PDF</button>
+  <span class="bench-over" id="over"></span>
+  <p class="bench-note" id="dirNote"></p>
+</header>
+
+<main class="desk" id="desk"><p class="desk-say">Counting the set…</p></main>
+
+<script type="module">
+import { esc } from '../../app/js/core/dom.mjs';
+import { codeOf, holderText } from '../../app/js/core/format.mjs';
+import { tallyField } from '../../app/js/ports.mjs';
+
+/* ══ A HAND-WRITTEN SET, when ?set= names one on disk ════════════════════ */
+let SET = null;
+{
+  const name = new URLSearchParams(location.search).get('set');
+  if (name && /^[a-z0-9-]+$/.test(name)) {
+    try { SET = await import(`../../corpus/${name}/report.mjs`); } catch { SET = null; }
+  }
+}
+const descGiven = () => !SET || document.documentElement.dataset.desc !== 'none';
+
+/* ══ THE ENGINE SEAM, as app/js/main.mjs has it ══════════════════════════ */
+async function engine() {
+  if (new URLSearchParams(location.search).get('data') === 'demo') return ['demo', (await import('../../demo/engine.mjs')).default];
+  try { return ['corpus', (await import('../../corpus/engine.mjs')).default]; }
+  catch { return ['demo', (await import('../../demo/engine.mjs')).default]; }
+}
+
+/* The description the report reads against. Written for the domain each
+   engine actually holds, so the counts beneath it are not absurd. */
+const IDEA = {
+  corpus: 'A compute-in-memory accelerator that runs neural-network inference inside an SRAM array, for low-power edge devices.',
+  demo: 'A foldable quadrotor airframe with load-bearing arm hinges and an integrated motor mount.',
+};
+const STARS = 12;
+
+/* ══ THE REPORT, as app/js/surfaces/report.mjs carries it ═════════════════ */
+const REPORT = {
+  name: 'Patent report', ask: 'How close are these patents to the idea, and who holds them?',
+  counted: ['holders', 'status', 'years', 'offices', 'classes', 'cluster', 'licence'],
+  lead: ['Bottom line', 'One paragraph on the closest patents, citing their numbers.'],
+  pro: [
+    ['Closest claims', 'The idea’s features against the closest claims. Each mark cites the claim and the passage it rests on. A feature no claim reaches is what falls outside.', 'chart'],
+    ['Where the idea may differ', 'Changes that may avoid the closest claims, each citing the claim it moves away from.', 'list'],
+    ['What’s already described', 'How much of the idea these patents already describe. The set is not a prior-art search.', 'text'],
+    ['Other holders in the set', 'Each holder with its starred patents, and a note on what they cover.', 'holders'],
+    ['Risk flags', 'What to check before building or backing it. Each flag gives its basis and the patents behind it. No score.', 'list'],
+    ['Questions a backer may ask', 'What these patents leave open, turned into questions for the team.', 'list'],
+    ['Each patent in plain English', 'For every starred patent: what it protects, and what it doesn’t cover.', 'each'],
+  ],
+  disclaimer: 'Pro sections are generated from the patents you starred and the description. They are not legal or investment advice, and not a freedom-to-operate, patentability or validity opinion. Patents outside this set may matter.',
+};
+
+const today = new Date();
+const D = {
+  short: today.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+  long: today.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
+  day: today.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+  iso: `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`,
+};
+const LAG = new Date(today.getFullYear(), today.getMonth() - 18, today.getDate()).getFullYear();
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+const pct = (n, of) => of ? Math.round(n / of * 100) + '%' : '';
+const sk = w => `<span class="sk" style="--w:${w}%"></span>`;
+const skp = w => `<span class="sk skp" style="--w:${w}%"></span>`;
+const two = n => String(n).padStart(2, '0');
+
+/* ══ the model: everything any direction may print, computed once ════════ */
+function statusOf(rows) {
+  const s = { grant: 0, application: 0, unknown: 0 };
+  for (const r of rows) { const k = r.versions?.[0]?.kind; s[k === 'grant' || k === 'application' ? k : 'unknown']++; }
+  return s;
+}
+function holderRows(c) {
+  const named = c.holders.filter(h => h.name);
+  const top = named.slice(0, 3), rest = named.slice(3);
+  const withheld = c.holders.find(h => h.name === null), none = c.holders.find(h => h.name === '');
+  const rows = top.map(h => ({ label: esc(h.name), n: h.n }));
+  if (withheld) rows.push({ label: sk(46), n: withheld.n, dim: true });
+  if (rest.length) rows.push({ label: `Others<span class="sub">${plural(rest.length, 'holder', 'holders')}</span>`, n: rest.reduce((a, h) => a + h.n, 0), dim: true });
+  if (none) rows.push({ label: 'Holder not recorded', n: none.n, dim: true });
+  return { rows, top, named };
+}
+function yearSpan(c) {
+  const ys = c.years.filter(([y]) => y != null).map(([y]) => y);
+  if (!ys.length) return [];
+  const lo = Math.max(Math.min(...ys), Math.max(...ys) - 11), hi = Math.max(...ys), by = new Map(c.years), out = [];
+  for (let y = lo; y <= hi; y++) out.push([y, by.get(y) || 0]);
+  return out;
+}
+
+/* the chart bodies — one markup, three stylesheets */
+const holderTable = (c) => {
+  const { rows } = holderRows(c), m = Math.max(1, ...rows.map(r => r.n));
+  return `<table class="ht"><tbody>${rows.map(r => `<tr><th scope="row">${r.label}</th><td class="bc"><span class="bar-c"><span class="bar${r.dim ? ' dim' : ''}" style="width:${(r.n / m * 100).toFixed(1)}%"></span></span></td><td class="r n">${r.n}</td><td class="r n">${pct(r.n, c.results)}</td></tr>`).join('')}
+    <tr class="tot"><th scope="row">Total</th><td></td><td class="r n">${c.results}</td><td class="r n">100%</td></tr></tbody></table>`;
+};
+const hbars = rows => {
+  const m = Math.max(1, ...rows.map(r => r[1]));
+  return `<div class="hb">${rows.map(([k, n, dim]) => `<span class="hb-k">${k}</span><span class="bar-c"><span class="bar${dim ? ' dim' : ''}" style="width:${(n / m * 100).toFixed(1)}%"></span></span><span class="hb-n n">${n}</span>`).join('')}</div>`;
+};
+const yearBars = c => {
+  const span = yearSpan(c);
+  if (!span.length) return `<p class="ex-note">No filing dates came back for these results.</p>`;
+  const m = Math.max(1, ...span.map(s => s[1]));
+  return `<div class="cols">${span.map(([y, n]) => `<div class="col${y >= LAG ? ' inc' : ''}"><span class="col-v n">${n}</span><span class="col-b" style="height:${(n / m * 100).toFixed(1)}%"></span></div>`).join('')}</div>
+    <div class="yrs">${span.map(([y]) => `<span class="n">${String(y).slice(2)}</span>`).join('')}</div>`;
+};
+const clusterGrid = c => {
+  const ys = c.years.filter(([y]) => y != null).map(([y]) => y);
+  if (!ys.length) return `<p class="ex-note">No filing dates came back for these results.</p>`;
+  const hi = Math.max(...ys), lo = Math.min(...ys), periods = [];
+  /* a hand-written set spans its own years, so every row adds up to its
+     total; the bench keeps the field's last ten years */
+  if (SET) { const w = Math.max(2, Math.ceil((hi - lo + 1) / 5)); for (let a = lo; a <= hi; a += w) periods.push([a, Math.min(a + w - 1, hi)]); }
+  else for (let i = 4; i >= 0; i--) periods.push([hi - 2 * i - 1, hi - 2 * i]);
+  const sum = (by, a, b) => { let n = 0; for (let y = a; y <= b; y++) n += by.get(y) || 0; return n; };
+  const rows = c.classYears.filter(([k]) => k).slice(0, 4);
+  if (!rows.length) return `<p class="ex-note">No classification came back for these results.</p>`;
+  return `<table class="gt"><thead><tr><th scope="col">Class</th>${periods.map(([a, b]) => `<th scope="col" class="n">${a === b ? a : `${a}–${String(b).slice(2)}`}</th>`).join('')}<th scope="col">All years</th></tr></thead><tbody>${rows.map(([k, yrs]) => {
+    const by = new Map(yrs), total = yrs.reduce((s, [, n]) => s + n, 0);
+    return `<tr><th scope="row" class="n">${esc(k)}</th>${periods.map(([a, b]) => `<td class="n">${sum(by, a, b)}</td>`).join('')}<td class="n t">${total}</td></tr>`;
+  }).join('')}</tbody></table>`;
+};
+
+/* In a hand-written set the results are the starred set, so the exhibits say
+   so rather than calling ten records "results". */
+const noun = s => !SET ? s : s.replace(/these results/g, 'the starred patents').replace(/(\d+) results/g, '$1 starred patents').replace(/\bresults\b/g, 'starred patents');
+function exhibit(key, c, rows) {
+  const e = exhibitOf(key, c, rows);
+  if (!e || !SET) return e;
+  const W = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+  let title = noun(e.title), body = e.body;
+  /* a title never singles out one of a tie */
+  if (key === 'classes') {
+    const named = c.classes.filter(([k]) => k);
+    if (named.length > 1 && named[0][1] === named[1][1]) {
+      const top = named[0][1], tie = named.filter(([, n]) => n === top).length;
+      title = `No class holds more than ${top} of the ${rows.length}; ${W[tie] || tie} tie at ${top}.`;
+    }
+  }
+  if (key === 'offices') title = title.replace(/ in US\./, ' in the US.');
+  if (key === 'cluster') title = 'The four largest classes by filing period; every row adds up to its total.';
+  if (key === 'status') body = body.replace(/Pending/g, 'Application');
+  return { ...e, title, body, base: noun(e.base), ...(key === 'holders' && SET.HOLDER_NOTE ? { note: cites(SET.HOLDER_NOTE) } : {}) };
+}
+function exhibitOf(key, c, rows) {
+  const field = `${c.results} results`, starred = `${rows.length} starred`;
+  if (SET) { const e = setExhibit(key, c, rows); if (e) return e; }
+  if (key === 'holders') {
+    const { top } = holderRows(c), held = top.reduce((a, h) => a + h.n, 0);
+    const none = (c.holders.find(h => h.name === '') || {}).n || 0;
+    const title = top.length
+      ? `${top.length === 1 ? 'One holder accounts' : `${['', 'One', 'Two', 'Three'][top.length]} holders account`} for ${held} of ${c.results} results${none ? `; ${none} name no holder` : ''}.`
+      : `The holders of these ${c.results} results are withheld.`;
+    return { label: 'Who holds them', title, base: field, body: holderTable(c) };
+  }
+  if (key === 'years') {
+    const span = yearSpan(c), peak = span.reduce((a, s) => (s[1] > a[1] ? s : a), [null, -1]);
+    return { label: 'Filed by year', title: peak[0] ? `Filings in these results peak in ${peak[0]}.` : 'No filing dates came back.', base: field, body: yearBars(c),
+      note: `Filing year. Applications publish about 18 months after filing, so ${LAG} onward is incomplete and drawn in outline.` };
+  }
+  if (key === 'offices') {
+    const rowsO = c.offices.map(([w, n]) => [w ? esc(codeOf(w) || w) : 'Not recorded', n, !w]);
+    const named = c.offices.filter(([w]) => w);
+    const title = named.length ? `${named[0][1]} of ${c.results} results ${named[0][1] === 1 ? 'was' : 'were'} filed in ${esc(codeOf(named[0][0]) || named[0][0])}.` : 'No office came back for these results.';
+    return { label: 'Where they were filed', title, base: field, body: hbars(rowsO) };
+  }
+  if (key === 'classes') {
+    const named = c.classes.filter(([k]) => k), top = named.slice(0, 4), restN = named.slice(4).reduce((a, [, n]) => a + n, 0);
+    const none = (c.classes.find(([k]) => !k) || [0, 0])[1];
+    const rowsC = [...top.map(([k, n]) => [`<span class="n">${esc(k)}</span>`, n]), ...(restN ? [['Other classes', restN, true]] : []), ...(none ? [['Unclassified', none, true]] : [])];
+    const title = top.length ? `${top[0][1]} of ${c.results} results sit in ${esc(top[0][0])}.` : 'No classification came back for these results.';
+    return { label: 'Technology classes', title, base: field, body: hbars(rowsC) };
+  }
+  if (key === 'cluster') {
+    return { label: 'Where filings cluster', title: 'The four largest classes across five two-year periods.', base: field, body: clusterGrid(c),
+      note: `Counts per class and period. ${LAG} onward is incomplete.` };
+  }
+  if (key === 'status') {
+    const s = statusOf(rows);
+    const segs = [['Granted', s.grant, ''], ['Pending', s.application, 'dim'], ['Not recorded', s.unknown, 'none']].filter(x => x[1]);
+    return { label: 'Granted and pending', title: `${s.grant} of the ${rows.length} starred patents are granted; ${s.application} are applications.`, base: starred,
+      body: `<div class="split">${segs.map(([, n, cls]) => `<span class="${cls}" style="flex:${n}"></span>`).join('')}</div>
+        <div class="legend">${segs.map(([l, n, cls]) => `<span><i class="${cls}"></i>${l} <span class="n">${n}</span></span>`).join('')}</div>` };
+  }
+  if (key === 'licence') {
+    return { label: 'Listed for licence on TIS', title: 'Which starred patents are listed on TIS’s licensing platform.', base: starred,
+      body: `${skp(70)}${skp(42)}`, note: 'The listing is TIS-side data and is not connected yet.' };
+  }
+  return null;
+}
+
+/* ══ A HAND-WRITTEN SET'S OWN SECTIONS ════════════════════════════════════
+   Part 1 gains four exhibits, every one checkable against the rows. Part 2
+   is the set's own text: each sentence a [text, tag] pair, each citation an
+   appendix row. Nothing here names a holder; the module does. */
+const TAG = { C: 'Checkable against the rows', R: 'A reading', O: 'Outside the record' };
+/* §key names a Part 2 section and Ex:key a Part 1 exhibit; both resolve to
+   the numbers the page prints, from the same order that numbers them. */
+let SECNUM = {}, EXNUM = {};
+const cites = s => esc(s).replace(/\[(\d+)\]/g, '<span class="cite">[$1]</span>')
+  .replace(/§([a-z]+)/g, (_, k) => SECNUM[k] || '§?').replace(/Ex:([a-z]+)/g, (_, k) => EXNUM[k] ? `Exhibit ${EXNUM[k]}` : 'Exhibit ?');
+const say = ([s, t]) => `${cites(s)}${t && t !== 'R' ? `<span class="st st-${t}" title="${TAG[t]}">${t}</span>` : ''}`;
+const refs = rs => rs && rs.length ? ` <span class="refs">${rs.map(r => `[${r}]`).join('')}</span>` : '';
+const byRef = r => SET.ROWS.find(x => x.ref === r);
+
+function setExhibit(key, c, rows) {
+  const starred = `${rows.length} starred`;
+  if (key === 'years') {
+    const ys = rows.map(r => r.year), top = Math.max(...c.years.map(([, n]) => n));
+    return { label: 'Filed by year', title: `The ${rows.length} were filed between ${Math.min(...ys)} and ${Math.max(...ys)}; no year holds more than ${top}.`, base: starred, body: yearBars(c),
+      note: 'Filing year as recorded. For several US records this may be a PCT or national-entry date rather than the earliest priority, and no record gives a priority date.' };
+  }
+  if (key === 'timeline') {
+    const f = rows.map(r => r.filed), p = rows.map(r => r.published);
+    const lo = Number(f.reduce((a, b) => a < b ? a : b).slice(0, 4)), hi = Number(p.reduce((a, b) => a > b ? a : b).slice(0, 4)) + 1;
+    const t0 = Date.parse(`${lo}-01-01`), t1 = Date.parse(`${hi}-01-01`), x = d => (Date.parse(d) - t0) / (t1 - t0) * 100;
+    const ticks = []; for (let y = lo; y <= hi; y += 2) ticks.push(y);
+    const body = `<div class="tl">${rows.map(r => {
+      const app = r.versions[0].kind !== 'grant';
+      return `<span class="tl-k"><span class="n">[${r.ref}]</span><span class="n">${esc(r.number)}</span></span><span class="tl-t"><span class="tl-s" style="left:${x(r.filed).toFixed(2)}%;width:${(x(r.published) - x(r.filed)).toFixed(2)}%"></span><span class="tl-f" style="left:${x(r.filed).toFixed(2)}%"></span><span class="tl-p${app ? ' app' : ''}" style="left:${x(r.published).toFixed(2)}%"></span></span>`;
+    }).join('')}<div class="tl-ax">${ticks.map(y => `<span class="n" style="left:${x(`${y}-01-01`).toFixed(2)}%">${y}</span>`).join('')}</div></div>
+      <div class="tl-lg"><span><i class="f"></i>Filed</span><span><i class="g"></i>Granted, on its grant date</span><span><i class="a"></i>Application, on its publication date</span></div>`;
+    const yr = s => s.slice(0, 4);
+    return { label: 'Filed to published', title: `Filed from ${yr(f[0])} to ${yr(f.reduce((a, b) => a > b ? a : b))}, published from ${yr(p.reduce((a, b) => a < b ? a : b))} to ${yr(p.reduce((a, b) => a > b ? a : b))}.`, base: starred, body,
+      note: 'One line per starred patent, in filing order, from its filing date to its grant or publication date as recorded.' };
+  }
+  if (key === 'inventors') {
+    const total = rows.reduce((a, r) => a + r.inventors.length, 0), I = SET.INVENTORS;
+    return { label: 'Inventors', title: I.exact.length ? `${I.exact.length} inventor names appear on more than one record.` : `${total} inventor names on ${rows.length} records; none appears on two.`, base: starred,
+      body: `<ol class="nl">${rows.map(r => `<li><span class="n">[${r.ref}]</span><span><span class="n">${esc(r.number)}</span> · ${r.inventors.map(esc).join(', ')}</span></li>`).join('')}</ol>`, note: esc(I.note) };
+  }
+  if (key === 'anomalies') {
+    const A = SET.ANOMALIES, on = new Set(A.map(([r]) => r)).size;
+    return { label: 'Record anomalies', title: `${A.length} things in the records to read with care, on ${on} of the ${rows.length}.`, base: starred,
+      body: `<ol class="nl">${A.map(([r, s]) => `<li><span class="n">[${r}]</span><span><span class="n">${esc(byRef(r).number)}</span>. ${cites(s)}</span></li>`).join('')}</ol>`,
+      note: 'Each quotes a field or a claim as recorded. None changes a count above.' };
+  }
+  if (key === 'lacks') {
+    const L = SET.LACKS, dl = (t, xs) => `<dl><p class="lbl">${t}</p>${xs.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`;
+    return { label: 'What the set does not contain', title: esc(L.title), base: starred,
+      body: `<div class="lk">${dl('In the records', L.have)}${dl('Not in any record', L.missing)}</div>` };
+  }
+  return null;
+}
+
+/* Part 2, in a hand-written set: the sections, then what each one holds. */
+function setPro() {
+  const given = descGiven();
+  return [
+    given ? ['Closest claims', 'The idea’s features against each closest claim 1. A claim reaches an idea only if every one of its elements does.', 'chart']
+          : ['Where the claims sit against a product', 'With no description, each line names a thing a product might do and the claims to read against it.', 'watch'],
+    ...(given ? [['Where the idea may differ', 'Changes that may take the idea away from the closest claims, each citing the claim it moves away from.', 'differ']] : []),
+    ['How the set divides', 'What each claim 1 requires, grouped; how many elements each carries; which records may be one invention.', 'groups'],
+    ['What’s already described', 'What these patents already describe that a product might also do. The set is not a prior-art search.', 'described'],
+    ['Claimed interactions', 'Every operator gesture the claims tie to a flight effect, and whether it sits in claim 1 or a dependent claim.', 'gestures'],
+    ['What no claim in this set reaches', 'Where each claim 1 sits in a formation product, and the parts of one that no claim 1 here is directed at.', 'layers'],
+    ['Other holders in the set', 'Each holder with its starred patents, and what they cover.', 'holders'],
+    ['Risk flags', 'What to check before building or backing it. Each flag gives its basis and the patents behind it. No score.', 'risks'],
+    ['Conclusion', 'Who is here, how close the nearest claim comes, what is open, and what to check — each answer citing the exhibits and sections it rests on.', 'conclusion'],
+    ['Each patent in plain English', 'For every starred patent: what it is, what claim 1 requires, and what sits only in dependent claims.', 'each'],
+  ];
+}
+const concOf = () => SET.PRO.conclusion.map((c, i) => !descGiven() && SET.PRO.conclusionNone && SET.PRO.conclusionNone.at === i ? SET.PRO.conclusionNone : c);
+const MK = { P: ['●', 'Present'], U: ['◐', 'Unclear'], A: ['○', 'Absent'] };
+function setBody(kind) {
+  const P = SET.PRO;
+  if (kind === 'chart') {
+    const ch = P.chart;
+    return `<table class="cc"><thead><tr><th scope="col">Feature of the idea</th>${ch.cols.map(r => `<th scope="col"><span class="n">[${r}]</span><span class="n nw">${esc(byRef(r).number)}</span>claim 1</th>`).join('')}</tr></thead><tbody>${SET.FEATURES.map((f, i) => `<tr><th scope="row">${esc(f)}</th>${ch.marks[i].map(([k, w]) => `<td class="m2"><b>${MK[k][0]}</b>${MK[k][1]}<span class="why">${cites(w)}</span></td>`).join('')}</tr>`).join('')}</tbody></table>
+      <p class="key"><span><b>●</b>Present</span><span><b>◐</b>Unclear</span><span><b>○</b>Absent as described</span></p>
+      <!--split--><p class="sub-h">What each claim requires that the description does not mention</p><ul class="rest">${ch.rest.map(s => `<li>${say(s)}</li>`).join('')}</ul>`;
+  }
+  if (kind === 'watch') return `<table class="wl"><thead><tr><th scope="col">If the product…</th><th scope="col">Read against</th><th scope="col">Note</th></tr></thead><tbody>${P.watch.map(([w, rs, n]) => `<tr><td>${esc(w)}</td><td class="n">${rs.map(r => esc(byRef(r).number)).join('<br>')}${refs(rs)}</td><td>${cites(n)}</td></tr>`).join('')}</tbody></table>`;
+  if (kind === 'differ') return `<ol class="pro-list">${P.differ.map((s, i) => `<li><span class="n">${i + 1}.</span><span class="pretty">${say(s)}</span></li>`).join('')}</ol>`;
+  if (kind === 'groups') {
+    const mx = Math.max(...P.breadth.map(([, n]) => n));
+    return `<table class="grp"><tbody>${P.groups.map(([g, rs, n]) => `<tr><th scope="row">${esc(g)}${n ? `<span class="why">${esc(n)}</span>` : ''}</th><td>${refs(rs)}</td><td class="c">${rs.length}</td></tr>`).join('')}</tbody></table>
+      <p class="sub-h">Elements in each claim 1</p>${hbars(P.breadth.map(([r, n]) => [`<span class="n">[${r}] ${esc(byRef(r).number)}</span>`, n]))}
+      <p class="ex-note">Counted by splitting claim 1 at its elements, which is itself a reading. Fewer elements generally ask less of a product; it is not a measure of strength.</p>
+      <p class="sub-h">Notes</p><ul class="rest">${P.groupNotes.map(s => `<li>${say(s)}</li>`).join('')}</ul>`;
+  }
+  if (kind === 'described') return `${P.described.map(s => `<p class="pretty">${say(s)}</p>`).join('')}
+      <p class="sub-h">Safety features already in the claims</p><ol class="nl">${P.safety.map(([s, rs, w]) => `<li><span class="n">${rs.map(r => `[${r}]`).join('')}</span><span>${esc(s)} <span class="refs">${esc(w)}</span></span></li>`).join('')}</ol>
+      <p class="sub-h">Earlier and later in the set</p><ul class="rest">${P.chronology.map(s => `<li>${say(s)}</li>`).join('')}</ul>`;
+  if (kind === 'gestures') return `<div class="gx"><span class="gx-h">The operator does</span><span class="gx-h"></span><span class="gx-h">The claim says the vehicles</span><span class="gx-h" style="text-align:right">Where</span>${P.gestures.map(([g, e, r, w, c1]) => `<span class="gx-g${c1 ? ' c1' : ''}">${esc(g)}</span><span class="gx-a"></span><span class="gx-e">${esc(e)}</span><span class="gx-c">[${r}] ${esc(w)}</span>`).join('')}</div>
+      <p class="key"><span><i class="bx c1"></i>In claim 1</span><span><i class="bx"></i>In a dependent claim only</span></p>`;
+  if (kind === 'layers') {
+    const L = P.layers, n = SET.ROWS.length;
+    return `<table class="lg"><thead><tr><th scope="col">Layer of a formation product</th>${SET.ROWS.map(r => `<th scope="col">${r.ref}</th>`).join('')}<th scope="col" class="c">Claim 1s</th></tr></thead><tbody>${L.rows.map(([l, rs]) => `<tr${rs.length ? '' : ' class="empty"'}><th scope="row">${esc(l)}</th>${SET.ROWS.map(r => `<td class="${rs.includes(r.ref) ? 'on' : 'off'}"></td>`).join('')}<td class="c">${rs.length ? rs.length : 'None in this set'}</td></tr>`).join('')}</tbody></table>
+      <p class="key"><span>Columns are appendix rows 1–${n}. A dot: claim 1 is directed at that layer.</span></p>
+      <ul class="rest">${L.notes.map(s => `<li>${say(s)}</li>`).join('')}</ul>`;
+  }
+  if (kind === 'holders') return `<ol class="nl">${P.holders.map(([h, rs, s, t]) => `<li><span class="n">${rs.map(r => `[${r}]`).join('')}</span><span><b>${esc(h)}</b>, <span class="n">${plural(rs.length, 'patent', 'patents')}</span>. ${say([s, t || 'R'])}</span></li>`).join('')}</ol>`;
+  if (kind === 'risks') return `<ol class="pro-list">${P.risks.map(([f, rs, b, t], i) => `<li><span class="n">${i + 1}.</span><span><b>${esc(f)}</b>${refs(rs)}. ${say([b, t])}</span></li>`).join('')}</ol>`;
+  if (kind === 'conclusion') {
+    const C = concOf();
+    const cell = (c, i) => `<div class="cn-c"><h4><span class="n">${i + 1}</span>${esc(c.head)}</h4><p class="pretty">${c.says.map(say).join(' ')}</p></div>`;
+    const asks = `<div class="cn-c cn-qs"><h4><span class="n">→</span>Ask the team</h4><ol>${C.filter(c => c.q).map((c, i) => `<li><span class="n">${i + 1}.</span><span>${cites(c.q)}</span></li>`).join('')}</ol></div>`;
+    const rest = C.slice(3).map((c, i) => `<div class="cn"><h4><span class="n">${i + 4}</span>${esc(c.head)}</h4><ol class="nl">${c.says.map((x, j) => `<li><span class="n">${j + 1}.</span><span>${say(x)}</span></li>`).join('')}</ol></div>`);
+    return [`<div class="cn-grid">${C.slice(0, 3).map(cell).join('')}${asks}</div>`, ...rest].join('<!--split-->');
+    return C.map((c, i) => `<div class="cn"><h4><span class="n">${i + 1}</span>${esc(c.head)}</h4>${c.list
+      ? `<ol class="nl">${c.says.map((x, j) => `<li><span class="n">${j + 1}.</span><span>${say(x)}</span></li>`).join('')}</ol>`
+      : `<p class="pretty">${c.says.map(say).join(' ')}</p>`}${c.q ? `<p class="cn-q"><span class="lb">Ask the team</span>${cites(c.q)}</p>` : ''}</div>`).join('<!--split-->');
+  }
+  return '';
+}
+/* Each patent in plain English is one block per patent, so it can run onto
+   as many pages as it needs without a patent splitting. */
+function eachBlocks() {
+  return SET.PRO.each.map(e => {
+    const r = byRef(e.ref), d = e.drift;
+    const drift = d ? `<div class="dr"><div><p class="lbl">${d.label ? d.label[0] : 'The abstract says'}</p><q>${cites(d.a)}</q></div><div><p class="lbl">${d.label ? d.label[1] : 'Claim 1 also requires'}</p><ul>${d.c.map(s => `<li>+ <span>${esc(s)}</span></li>`).join('')}</ul></div></div>` : '';
+    return `<div class="ea" data-k="ea${e.ref}"><h4><span class="n">[${e.ref}] ${esc(r.number)}</span> · ${esc(r.holder)} · ${r.versions[0].kind === 'grant' ? 'Granted' : 'Application'}</h4>
+      <p>${cites(e.plain)}</p>
+      <p><span class="lb">Claim 1</span>${cites(e.claim)}</p>
+      <p><span class="lb">Only in dependents</span>${cites(e.deps)}</p>${drift}</div>`;
+  });
+}
+
+/* SAMPLE TEXT. The shape of a Pro reading — may wording, a citation on every
+   sentence — and no claim about any patent or holder. */
+const SAMPLE = [
+  'Sample text. The closest claims may describe the core of the idea as the description states it <span class="cite">[1][3]</span>. Where the description adds a step the claims do not recite, the idea may differ from them <span class="cite">[2]</span>.',
+  'Sample text. A reading here cites the starred patents it rests on, by their row in the appendix, and claims nothing beyond them <span class="cite">[4]</span>.',
+  'Sample text. Each line names its basis and the patents behind it <span class="cite">[5][7]</span>.',
+  'Sample text. A question the set leaves open, turned toward the team rather than answered for it <span class="cite">[6]</span>.',
+];
+const MARKS = [['●', 'Present'], ['◐', 'Unclear'], ['○', 'Absent']];
+
+function proBody(kind, m, after) {
+  if (!after) {
+    if (kind === 'chart') return `<table class="cc"><thead><tr><th scope="col">Feature</th><th>Patent 1</th><th>Patent 2</th><th>Patent 3</th></tr></thead><tbody>${[1, 2, 3, 4].map(i => `<tr><th scope="row">Feature ${i}</th><td>${sk(60)}</td><td>${sk(60)}</td><td>${sk(60)}</td></tr>`).join('')}</tbody></table>`;
+    if (kind === 'text') return skp(96) + skp(92) + skp(64);
+    return `<ol class="pro-list">${[88, 72, 80].map((w, i) => `<li><span class="n">${i + 1}.</span><span>${sk(w)}</span></li>`).join('')}</ol>`;
+  }
+  if (kind === 'chart') {
+    const refs = m.rows.slice(0, 3);
+    return `<table class="cc"><thead><tr><th scope="col">Feature of the idea</th>${refs.map((r, i) => `<th scope="col"><span class="n">[${i + 1}]</span> claim 1</th>`).join('')}</tr></thead><tbody>${[0, 1, 2, 3].map(f => `<tr><th scope="row">Feature ${f + 1} <span class="sub">sample</span></th>${refs.map((_, i) => { const [s, w] = MARKS[(f + i * 2) % 3]; return `<td class="m"><b>${s}</b>${w}</td>`; }).join('')}</tr>`).join('')}</tbody></table>
+      <p class="ex-note">Sample marks. Each cites the claim and the passage it rests on; a feature no claim reaches is what falls outside.</p>`;
+  }
+  if (kind === 'text') return `<p class="pretty">${SAMPLE[0]}</p><p class="pretty">${SAMPLE[1]}</p>`;
+  if (kind === 'holders') return `<ol class="pro-list">${m.named.slice(0, 3).map((h, i) => `<li><span class="n">${i + 1}.</span><span><b>${esc(h.name)}</b>, <span class="n">${plural(h.n, 'result', 'results')}</span>. ${SAMPLE[2]}</span></li>`).join('') || `<li><span class="n">1.</span><span>${SAMPLE[2]}</span></li>`}</ol>`;
+  if (kind === 'each') return `<ol class="pro-list">${m.rows.slice(0, 3).map((r, i) => `<li><span class="n">[${i + 1}]</span><span><span class="n">${esc(r.number || '')}</span>. ${SAMPLE[1]}</span></li>`).join('')}</ol><p class="ex-note">…one entry for each of the ${m.rows.length} starred patents.</p>`;
+  return `<ol class="pro-list">${[0, 2, 3].map((s, i) => `<li><span class="n">${i + 1}.</span><span class="pretty">${SAMPLE[s]}</span></li>`).join('')}</ol>`;
+}
+
+/* ══ the three directions ════════════════════════════════════════════════ */
+const MARK = s => `<svg class="mk" width="${s}" height="${s}" fill="currentColor" aria-hidden="true"><use href="#tis-mark"/></svg>`;
+/* THE LOCKUP: the submark and TIS bold, the product name regular */
+const LOCK = s => `${MARK(s)}<span><b>TIS</b> Terrain</span>`;
+const figs = m => `${m.figs.slice(0, 4).map(([v, l]) => `<div><dt>${v}</dt><dd>${l}</dd></div>`).join('')}`;
+
+const DIRS = {
+  baseline: { note: 'Baseline — Framed Folio’s cover; Ledger’s body, with a hairline frame on every page and the small exhibits that share a base paired; an analysis that opens on a shaded band.',
+    part: n => `Part ${n}`, ex: n => `Exhibit ${n}`, labels: ['Before the numbers', 'Appendix', 'Last'],
+    order: ['holders', 'years', ['offices', 'classes'], 'cluster', ['status', 'licence']],
+    run: () => `<div class="brand">${LOCK(12)}</div><div class="run-r">Patent report · ${D.short}</div>`,
+    cover: m => `<div class="cv-band"><div class="cv-top"><span class="brand">${LOCK(22)}</span><span class="d">${D.long}</span></div><div class="grow"></div>
+        <p class="cv-kick">Patent report</p><h1 class="cv-q bal">${REPORT.ask}</h1></div>
+      <div class="cv-low"><dl class="cv-figs">${figs(m)}</dl>
+        <dl class="cv-about"><dt>About</dt><dd class="pretty">${m.about}</dd><dt>Basis</dt><dd class="pretty">${m.basisShort}</dd></dl>
+      </div>` },
+};
+
+/* ══ the sections ════════════════════════════════════════════════════════
+   A section is a list of BLOCKS — an opener, an exhibit, a Pro section, a
+   table — and a block never splits across a page. The Pages view packs them
+   by measuring (paginate, below), so a page holds as much as fits and the
+   PDF breaks where the screen does. */
+function sections(m, dir, after, view, div) {
+  const d = DIRS[dir], out = [];
+  const sec = (key, blocks, cls = '', screenOnly = false) => out.push({ key, blocks: blocks.flatMap(b => b.split('<!--split-->')), cls, screenOnly });
+  const withPro = after || view === 'screen';
+  /* THE ORDER OF THE COUNTS. Ledger pairs the small exhibits that share a
+     base — offices with classes, status with licence — so it reads field
+     first and starred second; every other direction keeps §5.3's order. */
+  const ORDER = SET ? ['holders', 'years', 'timeline', ['offices', 'classes'], 'cluster', ['status', 'licence'], 'inventors', 'anomalies', 'lacks'] : d.order || REPORT.counted;
+  const q = descGiven() ? m.query : null;
+  m = { ...m, about: q ? `“${esc(q)}”` : 'No description given. Part 2 reads the claims alone.', re: q ? `The description: “${esc(q)}”` : 'No description given' };
+  if (SET) {
+    EXNUM = Object.fromEntries(ORDER.flat().map((k, i) => [k, i + 1]));
+    SECNUM = Object.fromEntries(setPro().map(([, , k], i) => [k, `2.${i + 1}`]));
+    /* §closest is the closest-claims section whichever form it takes */
+    SECNUM.closest = SECNUM.chart || SECNUM.watch;
+  }
+  const countsSay = SET ? `Every title states a count over the ${m.rows.length} starred patents, and every count can be checked against the appendix.`
+    : `Every title states a count. The field is counted over the ${m.c.results} results; status and listing over the ${m.rows.length} starred.`;
+  const flat = ORDER.flat();
+  let exN = 0;
+  const ex = key => {
+    const e = exhibit(key, m.c, m.rows); exN++;
+    return `<section class="ex" data-k="ex${exN}"><div class="ex-h"><p class="ex-num">${d.ex(exN)}</p><p class="ex-l"><span class="x">${d.ex(exN)} · </span>${e.label}</p></div>
+      <h3 class="ex-t bal">${e.title}</h3>
+      <div class="ex-b">${e.body}</div>${e.note ? `<p class="ex-note pretty">${e.note}</p>` : ''}
+      <p class="ex-src">Source: TIS Terrain, ${D.short}. Base: ${e.base}.</p></section>`;
+  };
+  const tags = '<span class="tag">Pro</span>';
+  const op = (n, t, s) => div ? '' : `<header class="op"><p class="op-n">${n}</p><h2 class="op-t bal">${t}</h2>${s ? `<p class="op-s pretty">${s}</p>` : ''}</header>`;
+  /* the front matter is numbered too where the margin numbers it */
+  const fm = (n, s) => /^\d+$/.test(n) ? `${n} · ${s}` : s;
+  const toc = [[fm(d.labels[0], 'How the set was made'), 'made'], [fm(d.sum || '', 'At a glance'), 'glance'], [`${d.part(1)} · The counts`, 'counts'],
+    ...(withPro ? [[`${d.part(2)} · Analysis`, 'pro'], ...(SET ? setPro().map(([t], i) => [`<span class="n">2.${i + 1}</span> ${t}`, `ps${i}`, true]) : [])] : []),
+    ['Appendix · The starred patents', 'apx'], ['What this report is not', 'close']];
+  const tocList = `<ol class="toc">${toc.map(([t, k, sub]) => `<li${sub ? ' class="sub"' : ''}><span>${t}</span><span class="dots"></span><span class="n" ${sub ? 'data-at' : 'data-first'}="${k}"></span></li>`).join('')}</ol>`;
+  m = { ...m, toc, tocList };
+
+  /* A PART DIVIDER: the part's numeral and title, and what is in it with the
+     page each item lands on. It is the part's opener, so the inline opener
+     goes when dividers are on. */
+  const divider = (key, n, t, s, items, screenOnly = false) => {
+    if (!div) return;
+    sec(key, [`<div class="grow"></div><div class="dv"><p class="dv-n">${n}</p><h2 class="dv-t bal">${t}</h2>${s ? `<p class="dv-s pretty">${s}</p>` : ''}
+      <ol class="toc dv-toc">${items.map(([it, k]) => `<li><span>${it}</span><span class="dots"></span><span class="n" data-at="${k}"></span></li>`).join('')}</ol></div><div class="grow" style="flex-grow:.4"></div>`], 'pg-div', screenOnly);
+  };
+
+  sec('cover', [d.cover(m)], 'pg-cover');
+
+  const leadBody = after && SET ? `<ol class="bl">${concOf().map((c, i) => `<li><span class="n">${i + 1}</span><span><b>${esc(c.head)}</b> ${say(c.short)} <span class="refs">→ ${SECNUM.conclusion}</span></span></li>`).join('')}</ol>`
+    : after ? `<p class="pretty">${SAMPLE[0]} ${SAMPLE[1]}</p>` : `${skp(96)}${skp(90)}${skp(58)}<p class="ex-note">${REPORT.lead[1]} Written when you run the Pro report.</p>`;
+  const lead = `<section class="lead${after ? '' : ' only-screen'}"><h3>${REPORT.lead[0]} ${tags}</h3>${leadBody}</section>`;
+  sec('made', [
+    `${div ? `<header class="op"><p class="op-n">${d.labels[0]}</p><h2 class="op-t bal">How the set was made</h2><p class="op-s pretty">Every count in this report rests on what follows.</p></header>` : op(d.labels[0], 'How the set was made', 'Every count in this report rests on what follows.')}
+     <dl class="memo"><dt>About</dt><dd>${m.about}</dd><dt>Date</dt><dd>${D.long}</dd><dt>Basis</dt><dd class="pretty">${m.basis}</dd></dl>`,
+    `<div class="m-body m-one"><div class="m-main"><p class="lbl">Contents</p>${tocList}</div></div>`]);
+
+  /* AT A GLANCE: the key figures, the bottom line, and every counted exhibit
+     small, each with the page its full version is on. A view of the set, so
+     it is admissible before Part 1; the bottom line is Pro and marked. */
+  {
+    /* a hand-written set's bottom line is four answers, so the glance keeps the
+       three tiles a backer reads first and stays one page */
+    const tiles = (SET ? ['holders', 'status', 'years'] : ['holders', 'status', 'years', 'offices', 'classes', 'licence']).map(key => {
+      const e = exhibit(key, m.c, m.rows), n = flat.indexOf(key) + 1;
+      const body = key === 'holders' ? hbars(holderRows(m.c).rows.map(r => [r.label, r.n, r.dim])) : e.body;
+      return `<div class="gl-t"><p class="gl-l">${e.label}</p><p class="gl-h pretty">${e.title}</p><div class="gl-b">${body}</div><p class="gl-p">Exhibit ${n} · page <span class="n" data-at="ex${n}"></span></p></div>`;
+    }).join('');
+    sec('glance', [`${div ? '' : `<header class="op"><p class="op-n">${d.sum || 'Summary'}</p><h2 class="op-t">At a glance</h2></header>`}
+      <dl class="gl-figs">${m.figs.slice(0, 5).map(([v, l]) => `<div><dt>${v}</dt><dd>${l}</dd></div>`).join('')}</dl>${lead}`,
+      `<div class="gl-grid">${tiles}</div>`], 'pg-glance');
+  }
+
+  divider('counts', d.part(1), 'The counts', countsSay,
+    flat.map((k, i) => [exhibit(k, m.c, m.rows).label, `ex${i + 1}`]));
+  const blocks = ORDER.map(o => Array.isArray(o) ? `<div class="pair">${o.map(ex).join('')}</div>` : ex(o));
+  blocks[0] = `${op(d.part(1), 'The counts', countsSay)}${blocks[0]}`;
+  /* THE TURN. Part 1 ends on what its counts cannot say, which is the
+     question Part 2 opens by answering. */
+  /* After Pro it is a bridge; in a file made before Pro it states the copy's
+     scope and sells nothing, because that file is forwarded; on screen before
+     Pro it is not here at all — it heads the Pro band instead. */
+  if (SET && after) blocks.push(`${blocks.pop()}<p class="turn">The counts say who holds these patents, when they were filed and what the records leave out. They cannot say how close any claim comes to the idea.<span>That is a reading, and Part 2 is where the report makes one.</span></p>`);
+  else if (SET && view === 'pages') blocks.push(`${blocks.pop()}<p class="turn">This copy carries the counts only.<span>It does not say how close any claim comes to the idea.</span></p>`);
+  sec('counts', blocks);
+
+  const band = SET && !after ? `<div class="band band-turn"><div><p class="bt">The counts say who holds these and when. They can’t say how close any claim comes to ${descGiven() ? 'your idea' : 'your product'}.</p><p class="pretty">${descGiven() ? 'Pro reads each claim against your features, and cites every patent it rests on.' : 'Pro reads each claim and says what a product would need to do to come near it.'} Ready in about 10 minutes. Paid per report.</p></div><button type="button" class="run-btn only-screen">Run the Pro report</button></div>` : `<div class="band"><div><h2>${d.part(2)} · Analysis</h2><p class="pretty">${after ? 'Generated from the starred patents and the description. Every reading cites the patents it rests on, by their row in the appendix.' + (SET ? ' Everything in Part 2 is a reading of the claims. A sentence marked <span class="st st-C">C</span> can be checked against the rows; one marked <span class="st st-O">O</span> comes from outside the records.' : '') : 'Generated from the starred patents and the description. Ready in about 10 minutes. Paid per report.'}</p></div>${after ? '' : '<button type="button" class="run-btn only-screen">Run the Pro report</button>'}</div>`;
+  const PRO = SET ? setPro() : REPORT.pro;
+  const body = k => SET && after ? setBody(k) : proBody(k, m, after);
+  const hn = (t, i) => SET ? `<span class="n hn">2.${i + 1}</span>${t}` : t;
+  const ps = ([t, w, k], i) => `<section class="ps" data-k="ps${i}"><h3>${hn(t, i)} ${tags}</h3><p class="ps-q pretty">${w}</p><div class="ps-b">${body(k)}</div></section>`;
+  /* THE PRO INPUT. Before it runs, the band carries the idea's features as
+     the founder wrote them; they become the claim chart's rows. */
+  const feat = SET && !after && descGiven() ? `<div class="feat"><p class="lbl">The idea’s features · Pro reads each one against the closest claims</p><ol>${SET.FEATURES.map((f, i) => `<li><span class="n">${i + 1}.</span><span>${esc(f)}</span></li>`).join('')}</ol><p>Taken from the description; edit or add before you run. Each becomes a row of the claim chart.</p></div>` : '';
+  divider('pro', d.part(2), 'Analysis', 'Generated from the starred patents and the description. Every reading cites the patents it rests on.', PRO.map(([t], i) => [t, `ps${i}`]), !after);
+  const blocksOf = ([t, w, k], i) => SET && after && k === 'each'
+    ? (([first, ...rest]) => [`<section class="ps" data-k="ps${i}"><h3>${hn(t, i)} ${tags}</h3><p class="ps-q pretty">${w}</p><div class="ps-b">${first}</div></section>`, ...rest.map(b => `<div class="ps-b ps-cont">${b}</div>`)])(eachBlocks())
+    : SET && after ? ((h) => { const [a, ...b] = h.split('<!--split-->'); return [ps([t, w, k], i).replace(h, a), ...b.map(x => `<div class="ps-b ps-cont">${x}</div>`)]; })(setBody(k)) : [ps([t, w, k], i)];
+  const head = `${op(d.proLabel || d.part(2), 'Analysis')}${band}${feat}`;
+  const disc = `<p class="disc pretty">${REPORT.disclaimer}</p>`;
+  if (SET) {
+    /* A PAGE PER SECTION: each Pro section starts a sheet of its own, so a
+       backer can pull one out; the opener and band ride with the first, and
+       the disclaimer closes the last. */
+    const S = PRO.map(blocksOf);
+    S[S.length - 1].push(`${S[S.length - 1].pop()}${disc}`);
+    /* PART 2 OPENS ON A SHEET OF ITS OWN: the opener, the band (the run
+       before Pro; the tag key after) and what the part holds, with pages */
+    const list = `<p class="lbl">In this part</p><ol class="toc">${PRO.map(([t], i) => `<li><span><span class="n">2.${i + 1}</span> ${t}</span><span class="dots"></span><span class="n" data-at="ps${i}"></span></li>`).join('')}</ol>`;
+    sec('pro', [`${head}${!after && descGiven() ? '' : list}`], 'pg-pro1', !after);
+    S.forEach((bl, i) => sec(`pro${i}`, bl, 'pg-pro1', !after));
+  } else {
+    const P = PRO.flatMap(blocksOf), last = P.pop();
+    P[0] = `${head}${P[0]}`;
+    /* the disclaimer closes the Pro part, so it travels with the last section
+       rather than landing alone on a page of its own */
+    sec('pro', [...P, `${last}${disc}`], 'pg-pro1', !after);
+  }
+
+  divider('apx', d.labels[1], 'The starred patents', `${plural(m.rows.length, 'patent', 'patents')}, ${m.s.grant} granted, and what this report is not.`,
+    [['The starred patents', 'apx-t'], ['What this report is not', 'close-t']]);
+  sec('apx', [`${op(d.labels[1], 'The starred patents', `${plural(m.rows.length, 'patent', 'patents')}, ${m.s.grant} granted. A reading cites each by its row.${SET ? ' Nominal 20 yr is the filing year plus twenty, for grants only — not an expiry date, since priority, term adjustment and fees are not in the records.' : ''}`)}
+    ${SET ? (() => {
+      /* ONE TABLE PER ROW, sharing a colgroup, so a long set breaks at the
+         row that no longer fits and still reads as one table */
+      const cols = '<colgroup><col style="width:4%"><col style="width:40%"><col style="width:19%"><col style="width:6%"><col style="width:12%"><col style="width:12%"><col style="width:7%"></colgroup>';
+      const head = '<thead><tr><th scope="col">Ref.</th><th scope="col">Patent</th><th scope="col">Holder, as recorded</th><th scope="col">Office</th><th scope="col">Filed</th><th scope="col">Status</th><th scope="col">Nominal 20 yr</th></tr></thead>';
+      const tr = r => `<tr><td class="n">${r.ref}</td><td><span class="n pn">${esc(r.number)}</span><span class="ttl">${esc(r.title)}</span></td><td><span class="ttl">${esc(r.recorded)}</span></td><td class="n">${esc(r.where)}</td><td class="n">${r.filed}</td><td>${r.versions[0].kind === 'grant' ? 'Granted' : 'Application'}</td><td class="n">${r.nominal ?? '—'}</td></tr>`;
+      const last = m.rows.length - 1;
+      return m.rows.map((r, i) => `${i ? '<!--split-->' : ''}<table class="apx apx-f"${i ? '' : ' data-k="apx-t"'}>${cols}${i ? '' : head}<tbody>${tr(r)}</tbody></table>${i === last ? `<p class="ex-src">Source: TIS Terrain, ${D.short}. Base: ${m.rows.length} starred.</p>` : ''}`).join('');
+    })() : `<div class="apx-w" data-k="apx-t"><table class="apx"><thead><tr><th scope="col">Ref.</th><th scope="col">Number</th><th scope="col">Holder</th><th scope="col">Office</th><th scope="col">Filed</th><th scope="col">Status</th><th scope="col">TIS listing</th></tr></thead><tbody>${m.rows.map((r, i) => {
+      const k = r.versions?.[0]?.kind, filed = r.filed ? String(r.filed).slice(0, 4) : (r.year ?? '—');
+      return `<tr><td class="n">${i + 1}</td><td class="n">${r.number ? esc(r.number) : sk(80)}</td><td>${r.holder == null ? sk(70) : `<span class="hold">${esc(holderText(r.holder))}</span>`}</td><td class="n">${r.where ? esc(codeOf(r.where) || r.where) : '—'}</td><td class="n">${filed}</td><td>${k === 'grant' ? 'Granted' : k === 'application' ? 'Application' : '—'}</td><td>${sk(50)}</td></tr>`;
+    }).join('')}</tbody></table>
+    <p class="ex-src">Source: TIS Terrain, ${D.short}. Base: ${m.rows.length} starred.</p></div>`}`]);
+
+  sec('close', [
+    `${div ? `<header class="op"><p class="op-n">${d.labels[2]}</p><h2 class="op-t bal">What this report is not</h2></header>` : op(d.labels[2], 'What this report is not')}
+    <ol class="cl-list" data-k="close-t">
+      <li><h3>It is not advice.</h3><p class="pretty">Nothing here is legal or investment advice.</p></li>
+      <li><h3>It is not an opinion on any patent.</h3><p class="pretty">It is not a freedom-to-operate, patentability or validity opinion, and no word in it says a patent is infringed, clear or novel.</p></li>
+      <li><h3>It is not a full search.</h3><p class="pretty">${SET ? `Its counts and its readings rest on the ${plural(m.rows.length, 'patent', 'patents')} starred from one search, whose full results are not part of this copy.` : `Its counts describe what ${plural(m.searches.length, 'search', 'searches')} returned — ${plural(m.c.results, 'result', 'results')} — and its readings rest on the ${plural(m.rows.length, 'patent', 'patents')} starred from them.`} Patents outside this set may matter.</p></li>
+      <li><h3>It holds no score.</h3><p class="pretty">No number in it is a rating, a rank or a probability. Every count can be checked against the rows it was taken from.</p></li>
+      <li><h3>Its readings are marked.</h3><p class="pretty">Part 2 is generated from the starred patents and the description, marked Pro, and every reading cites the patents it rests on.${after ? '' : ' It has not been run for this copy, so this copy carries none.'}${SET && after ? ` All of it is a reading of the claims unless marked: <span class="st st-C">C</span> checkable against the rows, <span class="st st-O">O</span> a fact from outside the records, to verify before relying on it.` : ''}</p></li>
+    </ol>`,
+    `<div class="cl-made"><p class="lbl">How this report was made</p>
+      <dl class="memo"><dt>Generated</dt><dd>By TIS Terrain on ${D.long}, from a starred set.</dd><dt>Searches</dt><dd>${m.searches.map(s => `“${esc(s.query)}”`).join('; ')}</dd><dt>Basis</dt><dd class="pretty">${m.basis}</dd></dl></div>`], 'pg-close');
+
+  /* THE BENCH SHEET: what the two reads found that the report leaves out,
+     and why. On screen only — it is a note to whoever is cutting, not paper. */
+  if (SET && SET.BENCH) sec('bench', [`<header class="op"><p class="op-n">Bench · not in the report</p><h2 class="op-t">In the reads, out of the report</h2><p class="op-s pretty">Screen only. Never printed.</p></header>
+    <ol class="cl-list">${SET.BENCH.map(([t, s, w]) => `<li><h3>${esc(t)}</h3><p class="pretty">${cites(s)}</p><p class="pretty"><b>Why out:</b> ${esc(w)}</p></li>`).join('')}</ol>`], 'pg-bench', true);
+
+  return out.filter(s => view === 'screen' || !s.screenOnly);
+}
+
+const foot = (no, of) => `<span class="ft-l">Patent report · ${D.short}</span><span class="pgno">Page <span class="n">${no}</span> of <span class="n">${of}</span></span>`;
+
+/* ══ pagination ══════════════════════════════════════════════════════════
+   Each section starts a page. A block goes onto the current page; if the page
+   now holds more than it shows and the block was not alone on it, the block
+   comes off and starts the next one. Screen view does not paginate: one
+   sheet per section, as tall as it needs. */
+function paginate(secs, view, d) {
+  const desk = document.getElementById('desk'), pages = [];
+  desk.innerHTML = '';
+  const fresh = (s, cont) => {
+    const el = document.createElement('section'), cover = s.key === 'cover';
+    el.className = `pg ${cont ? '' : s.cls}`.trim();
+    /* the head and foot are filled now, with placeholder numbers, because
+       the room a page has is what is left after them */
+    el.innerHTML = `${cover ? '' : `<div class="run">${d.run(1, 1)}</div>`}<div class="pg-in"></div>${cover ? '' : `<div class="ft">${foot(1, 1)}</div>`}`;
+    desk.append(el); pages.push({ el, key: s.key, cover });
+    return el.querySelector('.pg-in');
+  };
+  for (const s of secs) {
+    let inn = fresh(s, false), n = 0;
+    for (const b of s.blocks) {
+      const before = inn.childNodes.length;
+      inn.insertAdjacentHTML('beforeend', b);
+      if (view === 'pages' && n > 0 && inn.scrollHeight > inn.clientHeight + 1) {
+        [...inn.childNodes].slice(before).forEach(x => x.remove());
+        inn = fresh(s, true);
+        inn.insertAdjacentHTML('beforeend', b);
+      }
+      n++;
+    }
+  }
+  /* A CONTINUED BLOCK NEVER OPENS A PAGE WITH A RULE: whatever lands first
+     on a sheet drops the top rule and the space that separated it */
+  for (const p of pages) p.el.querySelector('.pg-in')?.firstElementChild?.classList.add('at-top');
+  return pages;
+}
+
+async function paint(m) {
+  const r = document.documentElement, dir = r.dataset.dir, view = r.dataset.view, after = r.dataset.pro === 'after', div = r.dataset.div === 'on';
+  const d = DIRS[dir];
+  document.getElementById('dirNote').textContent = d.note;
+  for (const [id, key] of [['segDir', 'dir'], ['segView', 'view'], ['segPro', 'pro'], ['segDiv', 'div'], ['segDesc', 'desc']])
+    for (const b of document.querySelectorAll(`#${id} button`)) b.setAttribute('aria-pressed', String(b.dataset.v === r.dataset[key]));
+  fit();
+  /* twice: a typeface the direction has not used yet loads only once text
+     asks for it, and a page measured in the fallback packs wrong */
+  const secs = sections(m, dir, after, view, div);
+  paginate(secs, view, d);
+  await document.fonts.ready;
+  const pages = paginate(secs, view, d);
+  const of = pages.length, firstOf = {};
+  pages.forEach((p, i) => {
+    if (!(p.key in firstOf)) firstOf[p.key] = i + 1;
+    if (p.cover) return;
+    p.el.setAttribute('aria-label', `Page ${i + 1}`);
+    p.el.querySelector('.run').innerHTML = d.run(i + 1, of);
+    p.el.querySelector('.ft').innerHTML = foot(i + 1, of);
+  });
+  for (const el of document.querySelectorAll('[data-first]')) el.textContent = firstOf[el.dataset.first] || '';
+  /* an item's page, for the dividers and the glance tiles */
+  const at = {};
+  pages.forEach((p, i) => { for (const k of p.el.querySelectorAll('[data-k]')) if (!(k.dataset.k in at)) at[k.dataset.k] = i + 1; });
+  for (const el of document.querySelectorAll('[data-at]')) el.textContent = at[el.dataset.at] || '';
+  if (view === 'pages' && !after) document.getElementById('desk').insertAdjacentHTML('afterbegin', '<p class="desk-say">Before Pro, the PDF leaves Part 2 out. Switch to Screen to see it, or to After to see it filled.</p>');
+  check();
+}
+
+/* OVERFLOW IS A BUG ON PAPER: a fixed sheet that holds more than it shows
+   prints the cut. Every page is measured and an overflowing one outlined. */
+function check() {
+  let n = 0;
+  for (const p of document.querySelectorAll('.pg')) {
+    const inn = p.querySelector('.pg-in');
+    const over = document.documentElement.dataset.view === 'pages' && inn.scrollHeight > inn.clientHeight + 1;
+    p.toggleAttribute('data-over', over); if (over) n++;
+  }
+  const o = document.getElementById('over');
+  o.dataset.n = n; o.textContent = document.documentElement.dataset.view === 'pages' ? (n ? `${n} page${n > 1 ? 's' : ''} overflow` : 'All pages fit') : '';
+  document.documentElement.dataset.ready = '1';
+}
+function fit() {
+  const z = Math.min(1, (innerWidth - 32) / 816);
+  document.documentElement.style.setProperty('--zoom', String(z));
+}
+addEventListener('resize', fit);
+addEventListener('beforeprint', () => document.documentElement.style.setProperty('--zoom', '1'));
+addEventListener('afterprint', fit);
+
+let kind, query, searches, rows, fc;
+if (SET) {
+  /* a hand-written set: its rows are the starred set, counted in the client
+     exactly as the report counts starred rows (tallyField) */
+  kind = 'set'; query = SET.QUERY; rows = SET.ROWS;
+  searches = [{ query: SET.SEARCH, field: null, settings: {}, mode: 'text' }];
+  fc = { ok: true, data: tallyField(rows) };
+  document.getElementById('gDesc').hidden = false;
+} else {
+  let E; [kind, E] = await engine();
+  query = IDEA[kind];
+  searches = [{ query, field: null, settings: { count: 40 }, mode: 'text' }];
+  const res = await E.search({ query, settings: { count: 40 }, mode: 'text' });
+  rows = (res.ok ? res.data.patents : []).slice(0, STARS);
+  fc = await E.fieldCounts({ searches });
+}
+if (!fc.ok || !rows.length) {
+  document.getElementById('desk').innerHTML = '<p class="desk-say">The counts did not load.</p>';
+} else {
+  const c = fc.data, s = statusOf(rows), h = holderRows(c);
+  const offices = c.offices.filter(([w]) => w).length;
+  const top3 = h.top.reduce((a, x) => a + x.n, 0);
+  const model = {
+    kind, query, searches, rows, c, s, offices, named: h.named,
+    basis: SET ? `${esc(SET.BASIS)} Counts describe the starred patents, not every patent that exists.`
+      : `${plural(searches.length, 'search', 'searches')}, ${plural(c.results, 'result', 'results')}; ${plural(rows.length, 'patent', 'patents')} starred. Counts describe what the searches returned, not every patent that exists.`,
+    basisShort: SET ? `One search, “${esc(SET.SEARCH)}”; ${plural(rows.length, 'patent', 'patents')} starred.`
+      : `${plural(searches.length, 'search', 'searches')}, ${plural(c.results, 'result', 'results')}, ${plural(rows.length, 'patent', 'patents')} starred.`,
+    figs: SET ? [
+      [rows.length, 'patents starred'],
+      [`${s.grant} / ${rows.length}`, 'granted'],
+      [offices, offices === 1 ? 'office' : 'offices'],
+      [h.named.length, 'holders'],
+      [top3, `held by the top ${h.top.length} holders`],
+    ] : [
+      [c.results, `results from ${plural(searches.length, 'search', 'searches')}`],
+      [rows.length, 'patents starred'],
+      [`${s.grant} / ${rows.length}`, 'starred patents granted'],
+      [offices, offices === 1 ? 'office' : 'offices'],
+      ...(top3 ? [[top3, `results held by the top ${h.top.length} holders`]] : []),
+    ],
+  };
+  paint(model);
+  const set = (key, v) => {
+    document.documentElement.dataset[key] = v;
+    const u = new URL(location.href); u.searchParams.set(key, v); history.replaceState(null, '', u);
+    paint(model);
+  };
+  for (const [id, key] of [['segDir', 'dir'], ['segView', 'view'], ['segPro', 'pro'], ['segDiv', 'div'], ['segDesc', 'desc']])
+    document.getElementById(id).addEventListener('click', e => { const b = e.target.closest('button'); if (b) set(key, b.dataset.v); });
+  document.getElementById('print').addEventListener('click', () => {
+    if (document.documentElement.dataset.view !== 'pages') set('view', 'pages');
+    window.print();
+  });
+}
+</script>
+</body>
+</html>
