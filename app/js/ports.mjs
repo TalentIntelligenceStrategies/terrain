@@ -301,9 +301,18 @@ export const PORTS = [
      over more rows than it holds, so it asks: each search behind the stars,
      re-run with its stamped settings, counted whole. It does not touch the
      current result set — the list the founder left behind is still there when
-     they go back. The Pro part has no port yet: Innovue writes the prompt
-     behind each section, and platform.md §10 item 8 is what starts one. */
+     they go back. */
   'fieldCounts',     // {searches:[{query, field, settings, mode}]} → FieldCounts
+
+  /* THE PRO PART. What its sections are and what they say are the engine's:
+     the quote names them before anything runs, and the result fills them as
+     blocks (components.md §1). A run takes minutes, so it is started, then
+     asked after, then fetched — and THE CHARGE LANDS ON DELIVERY, never at the
+     start, so a run that fails has charged nothing. */
+  'proQuote',        // {starred:[id], description, searches} → {price, sections:[{key, title, question}]}
+  'proStart',        // same request → {runId}, tied to exactly that starred set
+  'proStatus',       // {runId} → {state:'queued'|'running'|'done'|'failed', etaSeconds}
+  'proResult',       // {runId} → {runId, starred:[id], sections:[{key, blocks:[Block]}]}
 
   /* the record */
   'record',          // {id, version?:'grant'|'application'} → Record

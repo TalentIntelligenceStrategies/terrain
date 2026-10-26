@@ -17,12 +17,17 @@
  * about the set the founder picked, so the set leads; the field is there for
  * scale (platform.md §5.3).
  *
- * ═══ THE PRO PART IS HEADINGS AND BARS ══════════════════════════════════════
- * Nothing is generated before Pro runs, so nothing is hidden behind a blur
- * (design-language.md §8). In the reference Pro does not run yet: Run opens
- * the confirm step — what Pro writes, the price, charged on delivery — and its
- * Confirm says Pro runs once Innovue's prompts are connected. platform.md §10
- * item 8 is what starts it. The PDF leaves the Pro part out until it has run.
+ * ═══ THE PRO PART IS THE ENGINE'S SECTIONS ══════════════════════════════════
+ * Which sections Pro writes, and what they say, come from the engine: the
+ * quote names them and the result fills them (core/pro.mjs, components.md
+ * §1). Nothing is generated before Pro runs, so nothing is hidden behind a
+ * blur (design-language.md §8). Run opens the confirm step — what Pro writes,
+ * the price, charged on delivery — and Confirm starts a run that the band
+ * follows: queued, running with its estimate, done or failed. This file draws
+ * a delivered section's heading and question; its blocks are the report
+ * lab's to draw (design/previews/terrain-report-lab.html), and until they
+ * land here a section shows bars. The PDF leaves the Pro part out until a run
+ * is done.
  *
  * ═══ A CAPTION STATES A COUNT ═══════════════════════════════════════════════
  * Every exhibit title here is arithmetic over the rows beneath it. A sentence
@@ -38,6 +43,7 @@ import { bump, stale } from '../core/generation.mjs';
 import { codeOf, holderText } from '../core/format.mjs';
 import { push, drop } from '../core/esc-stack.mjs';
 import { tallyField } from '../ports.mjs';
+import * as Pro from '../core/pro.mjs';
 
 let ENGINE = null;
 /* THE COUNTS ARE ASKED FOR ONCE PER SET, keyed by the searches they were
@@ -56,33 +62,8 @@ const REPORT = {
   name: 'Patent report', ask: 'How close are these patents to the idea, and who holds them?',
   /* field first, starred second; a pair shares a base */
   counted: ['holders', 'years', ['offices', 'classes'], 'cluster', ['status', 'licence']],
-  lead: ['Bottom line', 'One paragraph on the closest patents, citing their numbers.'],
-  pro: [
-    ['Closest claims', 'The idea’s features against the closest claims. Each mark cites the claim and the passage it rests on. A feature no claim reaches is what falls outside.', 'chart'],
-    ['Where the idea may differ', 'Changes that may avoid the closest claims, each citing the claim it moves away from.', 'list'],
-    ['What’s already described', 'How much of the idea these patents already describe. The set is not a prior-art search.', 'text'],
-    ['Other holders in the set', 'Each holder with its starred patents, and a note on what they cover.', 'list'],
-    ['Risk flags', 'What to check before building or backing it. Each flag gives its basis and the patents behind it. No score.', 'list'],
-    ['Questions a backer may ask', 'What these patents leave open, turned into questions for the team.', 'list'],
-    ['Each patent in plain English', 'For every starred patent: what it protects, and what it doesn’t cover.', 'list'],
-  ],
   disclaimer: 'Pro sections are generated from the patents you starred and the description. They are not legal or investment advice, and not a freedom-to-operate, patentability or validity opinion. Patents outside this set may matter.',
 };
-
-/* ══ the searches behind the stars ═══════════════════════════════════════
-   One per distinct stamped search, most recent first. A star from before the
-   whole search was stamped carries its sentence only, and is re-run with the
-   engine's default settings — said in the basis line rather than hidden. */
-function searchesOf(rows) {
-  const seen = new Map();
-  for (const r of [...rows].reverse()) {
-    const s = r.starredSearch || (r.starredUnder ? { query: r.starredUnder, field: null, settings: {}, mode: 'text' } : null);
-    if (!s) continue;
-    const key = JSON.stringify([s.query, s.field, s.settings, s.mode]);
-    if (!seen.has(key)) seen.set(key, s);
-  }
-  return [...seen.values()];
-}
 
 const today = new Date();
 const DATE = today.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -262,14 +243,42 @@ function exhibit(key, c, rows, S) {
   return null;
 }
 
-/* ══ the Pro bodies: the real shape, empty ═══════════════════════════════ */
-function proBody(kind) {
-  if (kind === 'chart') {
-    return `<table class="rep-cc"><thead><tr><th scope="col">Feature</th><th scope="col">Patent 1</th><th scope="col">Patent 2</th><th scope="col">Patent 3</th></tr></thead><tbody>${[1, 2, 3, 4].map(i =>
-      `<tr><th scope="row">Feature ${i}</th><td>${sk(60)}</td><td>${sk(60)}</td><td>${sk(60)}</td></tr>`).join('')}</tbody></table><p class="rep-ex-note">● present · ◐ unclear · ○ absent, each citing claim and passage</p>`;
+/* ══ a Pro section's body before its blocks land: bars, the length of a
+   paragraph. A delivered section's blocks are the report lab's to draw. */
+const proBody = () => skp(96) + skp(92) + skp(64);
+
+/* ══ THE RUN ═════════════════════════════════════════════════════════════
+   One run at a time, tied to the starred set it was started for. `state` is
+   idle, queued, running, done or failed; `eta` is the engine's estimate in
+   seconds. Kept in the page: a reload forgets a run, which an account would
+   keep (platform.md §10 item 2). */
+const RUN_ = { state: 'idle', id: null, eta: null, key: '', result: null };
+let QUOTE = null;
+const setKey = rows => rows.map(r => r.id).join(',');
+const runFor = rows => RUN_.key === setKey(rows) ? RUN_.state : 'idle';
+const minutes = s => Math.max(1, Math.round((s || 600) / 60));
+
+/* the band in each state of the run */
+function bandHTML(rows) {
+  const st = runFor(rows);
+  if (st === 'queued' || st === 'running') {
+    const m = minutes(RUN_.eta);
+    return `<p class="rep-pretty">Pro is running. Ready in about ${m} ${m === 1 ? 'minute' : 'minutes'}. You can leave this page; the report fills in when it lands.</p>`;
   }
-  if (kind === 'list') return `<ol class="rep-ps-l">${[88, 72, 80].map((w, i) => `<li><span class="rep-num">${i + 1}.</span><span>${sk(w)}</span></li>`).join('')}</ol>`;
-  return skp(96) + skp(92) + skp(64);
+  if (st === 'done') return `<p class="rep-pretty">Pro delivered on ${DATE_LONG}, and charged on delivery.</p>`;
+  const names = QUOTE ? QUOTE.sections.map(x => esc(x.title)) : [];
+  const price = QUOTE && QUOTE.price !== 'XXX'
+    ? `<span class="rep-num">${esc(String(QUOTE.price))}</span>`
+    : '<span class="sk rep-sk"></span><span class="sr-only">not set yet</span>';
+  const failed = st === 'failed' ? '<p class="rep-pretty rep-pro-fail">Pro did not finish. Nothing was charged.</p>' : '';
+  return `${failed}<p class="rep-pretty">Generated from the starred patents and the description. Ready in about 10 minutes. Paid per report.</p>
+        <button class="btn btn-secondary" id="repRun" type="button" aria-expanded="false" aria-controls="repConfirm">${st === 'failed' ? 'Try again' : 'Run the Pro report'}</button>
+        <div class="rep-confirm" id="repConfirm" role="group" aria-label="Run the Pro report" hidden>
+          <p class="rep-lbl">Pro writes</p><ul>${names.length ? names.map(x => `<li>${x}</li>`).join('') : `<li>${sk(70)}</li><li>${sk(60)}</li><li>${sk(66)}</li>`}</ul>
+          <p class="rep-confirm-price"><span>Price</span>${price}</p>
+          <p class="rep-pretty">Charged when the report is delivered. A run that fails costs nothing.</p>
+          <div class="rep-confirm-acts"><button class="btn btn-primary" id="repConfirmRun" type="button">Confirm and run</button><button class="btn btn-ghost" id="repCancel" type="button">Cancel</button></div>
+        </div>`;
 }
 
 /* ══ the sections ════════════════════════════════════════════════════════
@@ -311,8 +320,10 @@ function sections(rows, searches, c, paper) {
     : REPORT.counted;
   const flat = order.flat();
 
+  const done = runFor(rows) === 'done';
+  const part2 = !paper || done;
   const toc = [['How the set was made', 'made'], ['At a glance', 'glance'], ['Part 1 · The counts', 'counts'],
-    ...(paper ? [] : [['Part 2 · Analysis', 'pro']]),
+    ...(part2 ? [['Part 2 · Analysis', 'pro']] : []),
     ['Appendix · The starred patents', 'apx'], ['What this report is not', 'close']];
 
   /* THE COVER STATES WHAT ITS PAGES STATE, and nothing else (brief.md §1). */
@@ -337,7 +348,9 @@ function sections(rows, searches, c, paper) {
     const e = exhibit(key, c, rows, S), n = flat.indexOf(key) + 1;
     return `<div class="rep-gl-t"><p class="rep-gl-l">${e.label}</p><p class="rep-gl-h rep-pretty">${e.title}</p><div class="rep-gl-b">${e.glance || e.body}</div><p class="rep-gl-p">Exhibit ${n}<span class="rep-at"> · page <span class="rep-num" data-at="ex${n}"></span></span></p></div>`;
   }).join('');
-  const lead = paper ? '' : `<section class="rep-lead" aria-label="${REPORT.lead[0]}, Pro"><h3>${REPORT.lead[0]} ${tag}</h3>${skp(96)}${skp(90)}${skp(58)}<p class="rep-ex-note">${REPORT.lead[1]} Written when you run the Pro report.</p></section>`;
+  /* THE PRO ANSWERS, one line each, once a run is done; bars before it, and
+     on paper nothing until then */
+  const lead = paper && !done ? '' : `<section class="rep-lead" aria-label="From Part 2, Pro"><h3>From Part 2 ${tag}</h3>${skp(96)}${skp(90)}${skp(58)}<p class="rep-ex-note">${done ? 'One line from each of Part 2’s answers.' : 'One line from each of Part 2’s answers, written when you run the Pro report.'}</p></section>`;
   sec('glance', 'At a glance', [`${op('Summary', 'At a glance')}${dl('rep-gl-figs', figs)}${lead}`, `<div class="rep-gl">${tiles}</div>`]);
 
   let n = 0;
@@ -351,24 +364,26 @@ function sections(rows, searches, c, paper) {
   };
   const counted = order.map(o => Array.isArray(o) ? `<div class="rep-pair">${o.map(ex).join('')}</div>` : ex(o));
   counted[0] = op('Part 1', 'The counts', `Every title states a count of the ${rows.length} starred patents. Beside each, lighter, is the same count over the ${c.results} results the searches returned; on a bar, a tick marks the results’ share.`) + counted[0];
+  /* THE TURN: Part 1's last line hands over to Part 2. Before Pro on screen
+     the band in Part 2 is the turn, so no line is drawn here. */
+  if (done) counted[counted.length - 1] += '<p class="rep-turn">Part 2 reads the starred patents against the description.<span>Each section cites the patents it rests on, by their row in the appendix.</span></p>';
+  else if (paper) counted[counted.length - 1] += '<p class="rep-turn">This copy carries the counts only.<span>Part 2 is written when Pro runs, and a copy printed after it carries both.</span></p>';
   sec('counts', 'Part 1, the counts', counted);
 
-  if (!paper) {
-    const names = [REPORT.lead[0], ...REPORT.pro.map(([t]) => t)];
-    const band = `<div class="rep-pband"><p class="rep-pretty">Generated from the starred patents and the description. Ready in about 10 minutes. Paid per report.</p>
-        <button class="btn btn-secondary" id="repRun" type="button" aria-expanded="false" aria-controls="repConfirm">Run the Pro report</button>
-        <div class="rep-confirm" id="repConfirm" role="group" aria-label="Run the Pro report" hidden>
-          <p class="rep-lbl">Pro writes</p><ul>${names.map(x => `<li>${x}</li>`).join('')}</ul>
-          <p class="rep-confirm-price"><span>Price</span><span class="sk rep-sk"></span><span class="sr-only">not set yet</span></p>
-          <p class="rep-pretty">Charged when the report is delivered. A run that fails costs nothing.</p>
-          <div class="rep-confirm-acts"><button class="btn btn-primary" id="repConfirmRun" type="button">Confirm and run</button><button class="btn btn-ghost" id="repCancel" type="button">Cancel</button></div>
-        </div>
-        <p class="rep-pro-say" id="repProSay" role="status"></p></div>`;
-    const ps = ([t, w, k]) => `<section class="rep-ps"><h3>${t} ${tag}</h3><p class="rep-ps-q rep-pretty">${w}</p><div class="rep-ps-b">${proBody(k)}</div></section>`;
-    const P = REPORT.pro.map(ps);
-    P[0] = op('Part 2', 'Analysis') + band + P[0];
-    P[P.length - 1] += `<p class="rep-disc rep-pretty">${REPORT.disclaimer}</p>`;
-    sec('pro', 'Part 2, the analysis', P, 'rep-pg-pro');
+  /* PART 2: an opener with the band and the list, then each section on a
+     page of its own, in the order the quote sent. A failed quote leaves bars
+     for the list rather than a list it cannot know. */
+  if (part2) {
+    const list = QUOTE ? QUOTE.sections : null;
+    const inPart = list
+      ? `<ol class="rep-toc rep-in-part">${list.map((x, i) => `<li><span class="rep-in-n">2.${i + 1}</span><span>${esc(x.title)}</span></li>`).join('')}</ol>`
+      : `<ol class="rep-toc rep-in-part"><li>${sk(50)}</li><li>${sk(40)}</li><li>${sk(46)}</li></ol>`;
+    const band = paper ? '' : `<div class="rep-pband" id="repBand">${bandHTML(rows)}<p class="rep-pro-say" id="repProSay" role="status"></p></div>`;
+    sec('pro', 'Part 2, the analysis', [`${op('Part 2', 'Analysis', 'Generated from the starred patents and the description, marked Pro, and citing what each reading rests on.')}${band}<div class="rep-made"><p class="rep-lbl">In this part</p>${inPart}</div>`], 'rep-pg-pro');
+    (list || []).forEach((x, i) => {
+      const last = i === list.length - 1;
+      sec(`pro${i}`, `2.${i + 1} ${x.title}`, [`<section class="rep-ps"><h3><span class="rep-num">2.${i + 1}</span> ${esc(x.title)} ${tag}</h3><p class="rep-ps-q rep-pretty">${esc(x.question)}</p><div class="rep-ps-b">${proBody()}</div></section>${last ? `<p class="rep-disc rep-pretty">${REPORT.disclaimer}</p>` : ''}`], 'rep-pg-pro');
+    });
   }
 
   /* THE APPENDIX NAMES EACH PATENT, because a reader of the file has nothing
@@ -387,7 +402,7 @@ function sections(rows, searches, c, paper) {
       <li><h3>It is not an opinion on any patent.</h3><p class="rep-pretty">It is not a freedom-to-operate, patentability or validity opinion, and no word in it says a patent is infringed, clear or novel.</p></li>
       <li><h3>It is not a full search.</h3><p class="rep-pretty">Its counts describe the ${plural(rows.length, 'patent', 'patents')} starred, beside what ${plural(searches.length, 'search', 'searches')} returned — ${plural(c.results, 'result', 'results')} — and its readings rest on the starred patents. Patents outside this set may matter.</p></li>
       <li><h3>It holds no score.</h3><p class="rep-pretty">No number in it is a rating, a rank or a probability. Every count can be checked against the rows it was taken from.</p></li>
-      <li><h3>Its readings are marked.</h3><p class="rep-pretty">Part 2 is generated from the starred patents and the description, marked Pro, and every reading cites the patents it rests on.${paper ? ' It has not been run for this copy, so this copy carries none.' : ''}</p></li>
+      <li><h3>Its readings are marked.</h3><p class="rep-pretty">Part 2 is generated from the starred patents and the description, marked Pro, and every reading cites the patents it rests on.${paper && !done ? ' It has not been run for this copy, so this copy carries none.' : ''}</p></li>
     </ol>`,
     `<div class="rep-cl-made"><p class="rep-lbl">How this report was made</p>
       <dl class="rep-memo"><dt>Generated</dt><dd>By TIS Terrain on ${DATE_LONG}, from a starred set.</dd><dt>Searches</dt><dd>${queries.length ? queries.map(q => `“${esc(q)}”`).join('; ') : 'Not recorded'}</dd></dl></div>`]);
@@ -447,11 +462,15 @@ async function paint() {
   if (!desk || !empty) return;
   empty.hidden = rows.length > 0;
   $('#repPdf').hidden = !rows.length;
-  $('#repProTop').hidden = !rows.length;
+  const st = runFor(rows);
+  $('#repProTop').hidden = !rows.length || !(st === 'idle' || st === 'failed');
   closeConfirm(false);
   if (!rows.length) { desk.innerHTML = ''; LAST = null; return; }
-  const searches = searchesOf(rows);
+  const searches = Pro.searchesOf(rows);
   const key = JSON.stringify(searches);
+  /* THE QUOTE NAMES PART 2'S SECTIONS. Asked beside the counts; a failure
+     leaves the list as bars and the band still offers the run. */
+  const quoted = Pro.quote(ENGINE, rows).then(r => { QUOTE = r.ok ? r.data : null; });
   const land = c => {
     LAST = { rows, searches, c };
     landIn(desk, screenHTML(sections(rows, searches, c, false)));
@@ -461,10 +480,10 @@ async function paint() {
       if (w.scrollWidth > w.clientWidth) { w.setAttribute('tabindex', '0'); w.setAttribute('role', 'region'); w.setAttribute('aria-label', 'Table, scrolls sideways'); }
     });
   };
-  if (COUNTS && COUNTED_FOR === key) { land(COUNTS); return; }
+  if (COUNTS && COUNTED_FOR === key) { await quoted; land(COUNTS); return; }
   const token = bump('report');
   waitOn(desk, 480);
-  const res = await ENGINE.fieldCounts({ searches });
+  const [res] = await Promise.all([ENGINE.fieldCounts({ searches }), quoted]);
   if (stale('report', token)) return;
   if (!res.ok) {
     failWith(desk, 'The counts for this report did not load.', res.retryable ? () => paint() : null);
@@ -513,6 +532,61 @@ function closeConfirm(refocus) {
   OPENER = null;
 }
 
+/* ══ starting and following a run ════════════════════════════════════════
+   The band is redrawn in place on each status, so the founder's place in the
+   report holds; the whole report is redrawn once, when the result lands. */
+function redrawBand() {
+  const band = $('#repBand');
+  const st = runFor(Starred.list());
+  const top = $('#repProTop');
+  if (top) top.hidden = !(st === 'idle' || st === 'failed');
+  if (!band) return;
+  const line = $('#repProSay');
+  band.innerHTML = bandHTML(Starred.list()) + (line ? line.outerHTML : '');
+}
+/* THE BAND SAYS THE STATE ON SCREEN, so the change is announced once and not
+   printed a second time under it */
+const announce = msg => say('destination', msg);
+const failRun = msg => { RUN_.state = 'failed'; redrawBand(); announce(msg); };
+async function start() {
+  const rows = Starred.list();
+  if (!rows.length) return;
+  Object.assign(RUN_, { state: 'queued', id: null, eta: null, key: setKey(rows), result: null });
+  redrawBand();
+  const res = await ENGINE.proStart(Pro.request(rows));
+  if (!res.ok) return failRun('Pro did not start. Nothing was charged.');
+  RUN_.id = res.data.runId;
+  announce('Pro is running.');
+  follow(RUN_.id);
+}
+/* A RETRYABLE STATUS FAILURE IS NOT A FAILED RUN: the run may be fine and
+   only the question failed, so it is asked again. */
+async function follow(id) {
+  while (RUN_.id === id) {
+    const res = await ENGINE.proStatus({ runId: id });
+    if (RUN_.id !== id) return;
+    if (!res.ok) {
+      if (res.retryable) { await new Promise(r => setTimeout(r, 3000)); continue; }
+      return failRun('Pro did not finish. Nothing was charged.');
+    }
+    const { state, etaSeconds } = res.data;
+    if (state === 'failed') return failRun('Pro did not finish. Nothing was charged.');
+    if (state === 'done') {
+      const out = await ENGINE.proResult({ runId: id });
+      if (RUN_.id !== id) return;
+      if (!out.ok) return failRun('Pro did not finish. Nothing was charged.');
+      Object.assign(RUN_, { state: 'done', eta: null, result: out.data });
+      if (document.querySelector('.view-report.is-active')) paint();
+      announce('Pro is delivered.');
+      return;
+    }
+    const changed = RUN_.state !== state || minutes(RUN_.eta) !== minutes(etaSeconds);
+    Object.assign(RUN_, { state, eta: etaSeconds });
+    if (changed) redrawBand();
+    await new Promise(r => setTimeout(r, 1500));
+  }
+}
+
 export function init(ctx) {
   ENGINE = ctx.engine;
   ctx.onRoute(view => { if (view === 'report') paint(); else closeConfirm(false); });
@@ -524,16 +598,7 @@ export function init(ctx) {
   onActivate(document, '#repRun', el => openConfirm(el));
   onActivate(document, '#repProTop', el => openConfirm(el));
   onActivate(document, '#repCancel', () => closeConfirm(true));
-  /* IN THE REFERENCE, CONFIRM SAYS WHY NOTHING STARTS. Pro cannot run until
-     Innovue's prompts are connected, so it says that where it was pressed
-     rather than pretending to start a ten-minute job. */
-  onActivate(document, '#repConfirmRun', () => {
-    closeConfirm(true);
-    const line = $('#repProSay');
-    const msg = 'Pro runs once Innovue’s prompts are connected. Nothing has been charged.';
-    if (line) line.textContent = msg;
-    say('destination', msg);
-  });
+  onActivate(document, '#repConfirmRun', () => { closeConfirm(false); start(); });
 
   /* THE PDF IS THE PAGE, PACKED. Printed light whatever the theme, because
      paper does not swap; the theme the founder chose comes back afterwards.

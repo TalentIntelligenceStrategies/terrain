@@ -63,7 +63,7 @@ hides their way out.
 
 ## 1 · Built, and data-bearing
 
-Every component below consumes engine data. **The names are the ports** — the sixteen entries of
+Every component below consumes engine data. **The names are the ports** — the twenty entries of
 `PORTS` in [`app/js/ports.mjs`](../app/js/ports.mjs) — and every one returns the same envelope:
 `{ ok: true, data }` or `{ ok: false, code, retryable, detail? }`. §0.1 is why. `code` is one of
 `UNAVAILABLE` `TIMEOUT` `RATE_LIMITED` (retryable) or `NO_CORPUS` `NOT_FOUND` `UNSUPPORTED` (not); an

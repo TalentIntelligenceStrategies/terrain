@@ -23,6 +23,7 @@ import { onActivate } from '../core/delegate.mjs';
 import { say } from '../core/live-region.mjs';
 import { esc } from '../core/dom.mjs';
 import * as Starred from '../core/starred.mjs';
+import * as Pro from '../core/pro.mjs';
 import { btnDone } from '../core/button-wait.mjs';
 /* THE CROSS-SURFACE IMPORTS, and they run the right direction: this surface
    is what the list's rows leave through (rowFor), and it draws them with the
@@ -165,15 +166,15 @@ const patents = n => n + (n === 1 ? ' patent' : ' patents');
    word, so the panel and the report it opens ask the same thing. Each item
    names a real section of the report (platform.md §5.3) — the counted ones
    under Ready now, the ones Pro writes under Pro — so the panel promises
-   nothing the report does not contain. */
+   nothing the report does not contain. THE PRO LIST IS THE ENGINE'S: it comes
+   with the quote (core/pro.mjs), and is bars until the quote lands. */
 const REPORT = {
   ask: 'How close are these patents to the idea, and who holds them?',
   ready: ['The set at a glance, on one page', 'Who holds the patents near the idea',
     'When and where they were filed', 'How many are granted, how many pending', 'Where filings cluster'],
-  pro: ['A bottom line, citing the closest patents', 'The closest claims, set against the idea',
-    'Where the idea may differ', 'What these patents already describe', 'The other holders in the set',
-    'Risk flags, each with its basis', 'Questions a backer may ask', 'Each patent in plain English'],
 };
+let ENGINE = null;
+let PRO = null;
 
 /* THE VIEW IS KEPT IN THE BROWSER AS A CONVENIENCE. Losing it costs one press,
    so a storage that throws (Safari private mode) is a default, not an error. */
@@ -300,6 +301,7 @@ function paintReport() {
   const says = $('#starRepSays');
   if (!says) return;
   const items = xs => '<ul class="star-bul">' + xs.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>';
+  const bars = '<ul class="star-bul">' + [64, 52, 58].map(w => '<li><span class="sk sk-h-label" style="width:' + w + '%"></span></li>').join('') + '</ul>';
   /* STACKED, THE LISTS FOLD. Above the set on a narrow screen they would push
      the shortlist below the fold, so the question and the button stay and
      the lists wait behind a toggle; wide, the toggle is not drawn. */
@@ -309,7 +311,20 @@ function paintReport() {
     + '<div class="star-rep-lists" id="starRepLists">'
     + '<div class="star-rg"><p class="star-rg-h t-micro">Ready now</p>' + items(REPORT.ready) + '</div>'
     + '<div class="star-rg"><p class="star-rg-h"><span class="pro-label">Pro</span>'
-    + '<span class="t-micro">About 10 minutes</span></p>' + items(REPORT.pro) + '</div></div>';
+    + '<span class="t-micro">About 10 minutes</span></p>' + (PRO ? items(PRO) : bars) + '</div></div>';
+}
+
+/* the Pro list, asked once per starred set; an empty set asks nothing */
+async function quotePro() {
+  const rows = Starred.list();
+  if (!ENGINE || !rows.length) return;
+  const res = await Pro.quote(ENGINE, rows);
+  const next = res.ok ? res.data.sections.map(x => x.title) : null;
+  if (JSON.stringify(next) === JSON.stringify(PRO)) return;
+  PRO = next;
+  const open = $('#starRepTog')?.getAttribute('aria-expanded');
+  paintReport();
+  if (open) $('#starRepTog')?.setAttribute('aria-expanded', open);
 }
 
 function paintTools() {
@@ -463,9 +478,12 @@ function groupBySearch(rows) {
   return [...groups.entries()].reverse();
 }
 
-export function init() {
+export function init(ctx) {
+  ENGINE = ctx.engine;
   Starred.onChange(onSet);
+  Starred.onChange(quotePro);
   paintReport();
+  quotePro();
   lmMenu('starSortWrap', 'starSortBtn', 'starSortMenu');
 
   onActivate(document, '[data-star-view]', el => {

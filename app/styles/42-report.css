@@ -180,10 +180,10 @@
 .rep-split .is-none,.rep-legend .is-none{background:repeating-linear-gradient(135deg,var(--border-strong) 0 2px,transparent 2px 5px)}
 .rep-legend{display:flex;flex-wrap:wrap;gap:var(--s-6) var(--s-20);margin-top:var(--s-10);color:var(--text-2)}
 .rep-legend i{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:-1px;background:var(--text-1)}
-.rep-gt th,.rep-gt td,.rep-cc th,.rep-cc td,.rep-apx th,.rep-apx td{padding:5px var(--s-8);border-bottom:1px solid var(--border)}
+.rep-gt th,.rep-gt td,.rep-apx th,.rep-apx td{padding:5px var(--s-8);border-bottom:1px solid var(--border)}
 .rep-gt th,.rep-gt td{text-align:right}
-.rep-gt th:first-child,.rep-gt td:first-child,.rep-cc th:first-child,.rep-apx th:first-child,.rep-apx td:first-child{text-align:left;padding-left:0}
-.rep-gt thead th,.rep-cc thead th,.rep-apx thead th{font-size:11px;color:var(--text-3);border-bottom:1px solid var(--text-1)}
+.rep-gt th:first-child,.rep-gt td:first-child,.rep-apx th:first-child,.rep-apx td:first-child{text-align:left;padding-left:0}
+.rep-gt thead th,.rep-apx thead th{font-size:11px;color:var(--text-3);border-bottom:1px solid var(--text-1)}
 .rep-gt thead th{white-space:nowrap}
 .rep-gt .rep-t{font-weight:500}
 .rep-apx td,.rep-apx th{font-size:13px}
@@ -211,8 +211,14 @@
 .rep-pg .rep-pro-say:empty{display:none}
 .rep-in>.rep-ps+.rep-ps{margin-top:var(--s-24);padding-top:var(--s-24);border-top:1px solid var(--border)}
 .rep-pg .rep-ps-q{color:var(--text-3);margin-bottom:var(--s-12);max-width:72ch}
-.rep-ps-l li{display:grid;grid-template-columns:1.6em 1fr}
-.rep-ps-l li+li{margin-top:var(--s-10)}
+/* a failed run says so above the offer to try again, in ink and not a hue */
+.rep-pro-fail{flex-basis:100%;color:var(--text-1);font-weight:600}
+/* Part 2's opener lists its sections by number */
+.rep-in-part li{gap:var(--s-12)}
+.rep-in-n{font-family:'Inconsolata',ui-monospace,monospace;font-variant-numeric:lining-nums tabular-nums;color:var(--text-3);min-width:2.4em}
+/* THE TURN: Part 1's last line, handing over to Part 2, behind the band's rule */
+.rep-turn{margin-top:var(--s-32);padding:var(--s-16) 0 0 var(--s-16);border-left:3px solid var(--text-1);font-size:16px;line-height:1.45;font-weight:500;max-width:56ch}
+.rep-turn span{display:block;font-size:13px;font-weight:400;color:var(--text-2);margin-top:var(--s-6)}
 .rep-pg .rep-disc{font-size:11px;line-height:1.55;color:var(--text-3);margin-top:var(--s-32);padding-top:var(--s-12);
                   border-top:1px solid var(--border);max-width:72ch}
 
