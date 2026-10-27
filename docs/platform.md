@@ -850,7 +850,7 @@ is on.
 
 **Five rules hold whatever Pro writes**, and they are `brief.md` §1's: no score, rank or probability
 of Terrain's own; *may* wherever a reading touches a claim, and nothing shaped like legal advice stated as fact,
-in the words `brief.md` §1 lists; every reading cites
+in the words `brief.md` §1 lists; every sentence cites
 what it rests on; a fact from outside the records names its source; and one disclaimer, which the
 report prints itself and reads: *Pro sections are generated from the patents you starred and the
 description. They are not legal or investment advice, and not a freedom-to-operate, patentability or
@@ -1312,7 +1312,7 @@ which Innovue holds. An ID is never reused.
 
 ### 13.5 · Queued for the next round
 
-What has been settled since round 1 was sent, and goes in round 2's package.
+What has been settled since round 1 was sent, and goes in round 3's package: round 2 carried the starred page and the report only.
 
 | What | Difference → wanted |
 | --- | --- |

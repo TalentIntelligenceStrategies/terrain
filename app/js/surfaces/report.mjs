@@ -23,11 +23,10 @@
  * §1). Nothing is generated before Pro runs, so nothing is hidden behind a
  * blur (design-language.md §8). Run opens the confirm step — what Pro writes,
  * the price, charged on delivery — and Confirm starts a run that the band
- * follows: queued, running with its estimate, done or failed. This file draws
- * a delivered section's heading and question; its blocks are the report
- * lab's to draw (design/previews/terrain-report-lab.html), and until they
- * land here a section shows bars. The PDF leaves the Pro part out until a run
- * is done.
+ * follows: queued, running with its estimate, done or failed. A delivered
+ * section is drawn by core/blocks.mjs, the renderer the report template uses
+ * too; until it lands a section shows bars. The PDF leaves the Pro part out
+ * until a run is done.
  *
  * ═══ A CAPTION STATES A COUNT ═══════════════════════════════════════════════
  * Every exhibit title here is arithmetic over the rows beneath it. A sentence
@@ -245,7 +244,7 @@ function exhibit(key, c, rows, S) {
 }
 
 /* ══ a Pro section's body before its blocks land: bars, the length of a
-   paragraph. A delivered section's blocks are the report lab's to draw. */
+   paragraph */
 const proBody = () => skp(96) + skp(92) + skp(64);
 
 /* ══ THE RUN ═════════════════════════════════════════════════════════════
@@ -253,7 +252,10 @@ const proBody = () => skp(96) + skp(92) + skp(64);
    idle, queued, running, done or failed; `eta` is the engine's estimate in
    seconds. Kept in the page: a reload forgets a run, which an account would
    keep (platform.md §10 item 2). */
-const RUN_ = { state: 'idle', id: null, eta: null, key: '', n: 0, result: null };
+/* `rows` and `quote` are the set and the quote the run was started with: a
+   delivered result's [n] and its sections read against them, so a set that
+   changed afterwards cannot make [2] name another patent. */
+const RUN_ = { state: 'idle', id: null, eta: null, key: '', n: 0, rows: [], quote: null, result: null, at: '' };
 let QUOTE = null;
 const setKey = rows => rows.map(r => r.id).join(',');
 /* A PAID RESULT OUTLIVES A CHANGED SET (platform.md §5.3): once delivered it
@@ -271,7 +273,7 @@ function bandHTML(rows) {
     const m = minutes(RUN_.eta);
     return `<p class="rep-pretty">Pro is running. Ready in about ${m} ${m === 1 ? 'minute' : 'minutes'}.</p>`;
   }
-  if (st === 'done') return `<p class="rep-pretty">Pro delivered on ${DATE_LONG}, and charged on delivery.</p>`;
+  if (st === 'done') return `<p class="rep-pretty">Pro delivered on ${RUN_.at}, and charged on delivery.</p>`;
   const names = QUOTE ? QUOTE.sections.map(x => esc(x.title)) : [];
   const price = QUOTE && QUOTE.price !== 'XXX'
     ? `<span class="rep-num">${esc(String(QUOTE.price))}</span>`
@@ -329,13 +331,15 @@ function sections(rows, searches, c, paper) {
   const done = runFor(rows) === 'done';
   /* WHAT A CITATION PRINTS AS: an exhibit by its number, a section by 2.n,
      a patent by its appendix row */
-  const proList = QUOTE ? QUOTE.sections : (RUN_.result?.sections || []).map(x => ({ key: x.key, title: x.key, question: '' }));
+  const quoted = done && RUN_.quote ? RUN_.quote : QUOTE;
+  const proList = quoted ? quoted.sections : (RUN_.result?.sections || []).map(x => ({ key: x.key, title: x.key, question: '' }));
+  const cited = done ? RUN_.rows : rows;
   const EXN = Object.fromEntries(order.flat().map((k, i) => [k, i + 1]));
   const SECN = Object.fromEntries(proList.map((x, i) => [x.key, `2.${i + 1}`]));
   const bctx = {
     section: k => SECN[k] || '',
     exhibit: k => EXN[k] || '',
-    patent: ref => { const r = rows[ref - 1]; return r ? [r.number, r.holder ? holderText(r.holder) : null].filter(Boolean).join(' · ') : ''; },
+    patent: ref => { const r = cited[ref - 1]; return r ? [r.number, r.holder ? holderText(r.holder) : null].filter(Boolean).join(' · ') : ''; },
   };
   const part2 = !paper || done;
   const toc = [['How the set was made', 'made'], ['At a glance', 'glance'], ['Part 1 · The counts', 'counts'],
@@ -581,7 +585,7 @@ const failRun = msg => { RUN_.state = 'failed'; redrawBand(); announce(msg); };
 async function start() {
   const rows = Starred.list();
   if (!rows.length) return;
-  Object.assign(RUN_, { state: 'queued', id: null, eta: null, key: setKey(rows), n: rows.length, result: null });
+  Object.assign(RUN_, { state: 'queued', id: null, eta: null, key: setKey(rows), n: rows.length, rows: [...rows], quote: QUOTE, result: null, at: '' });
   redrawBand();
   const res = await ENGINE.proStart(Pro.request(rows));
   if (!res.ok) return failRun('Pro did not finish. Nothing was charged.');
@@ -605,7 +609,8 @@ async function follow(id) {
       const out = await ENGINE.proResult({ runId: id });
       if (RUN_.id !== id) return;
       if (!out.ok) return failRun('Pro did not finish. Nothing was charged.');
-      Object.assign(RUN_, { state: 'done', eta: null, result: out.data });
+      Object.assign(RUN_, { state: 'done', eta: null, result: out.data,
+        at: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) });
       if (document.querySelector('.view-report.is-active')) paint();
       announce('Pro is delivered.');
       return;

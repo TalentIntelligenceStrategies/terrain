@@ -23,7 +23,7 @@ function sentence(s, ctx) {
   if (typeof s === 'string') return esc(s);
   const text = esc(s.text || '')
     .replace(/\[(\d+)\]/g, '<span class="blk-cite">[$1]</span>')
-    .replace(/§([a-z][a-z0-9-]*)/g, (_, k) => ctx.section(k) || '§?')
+    .replace(/§([a-z][a-z0-9-]*)/g, (_, k) => ctx.section(k) || '§ ?')
     .replace(/Ex:([a-z][a-z0-9-]*)/g, (_, k) => (ctx.exhibit(k) ? `Exhibit ${ctx.exhibit(k)}` : 'Exhibit ?'));
   const mark = s.tag === 'C' || s.tag === 'O'
     ? `<span class="blk-mark blk-mark-${s.tag}" title="${TAG[s.tag]}${s.tag === 'O' && s.source ? ': ' + esc(s.source.name) : ''}">${s.tag}</span>` : '';
@@ -42,7 +42,7 @@ const KINDS = {
     `<li><span class="blk-n">${b.numbered ? i + 1 + '.' : '·'}</span><span>${sentence(s, ctx)}</span></li>`).join('')}</ol>`,
 
   table: (b, ctx) => `<table class="blk blk-table"><thead><tr>${(b.head || []).map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>
-    <tbody>${(b.rows || []).map(r => `<tr>${r.map(c => `<td>${sentence(c, ctx)}</td>`).join('')}</tr>`).join('')}</tbody></table>`,
+    <tbody>${(b.rows || []).map(r => `<tr>${r.map((c, i) => (i ? `<td>${sentence(c, ctx)}</td>` : `<th scope="row">${sentence(c, ctx)}</th>`)).join('')}</tr>`).join('')}</tbody></table>`,
 
   chart: (b, ctx) => `<table class="blk blk-table blk-chart"><thead><tr><th scope="col">Feature</th>${(b.cols || []).map(n => `<th scope="col">${ref(n)}</th>`).join('')}</tr></thead>
     <tbody>${(b.rows || []).map(r => `<tr><th scope="row">${esc(r.label)}</th>${(r.cells || []).map(c =>
@@ -56,7 +56,7 @@ const KINDS = {
 
   matrix: (b, ctx) => `<table class="blk blk-matrix"><thead><tr><th scope="col"></th>${(b.cols || []).map(n => `<th scope="col">${ref(n)}</th>`).join('')}</tr></thead>
     <tbody>${(b.rows || []).map(r => `<tr><th scope="row">${esc(r.label)}</th>${(b.cols || []).map(n =>
-      (r.on || []).includes(n) ? '<td class="on"><span class="sr-only">reaches</span></td>' : '<td class="off"><span class="sr-only">does not reach</span></td>').join('')}</tr>`).join('')}</tbody></table>`,
+      (r.on || []).includes(n) ? '<td class="on"><span class="sr-only">marked</span></td>' : '<td class="off"><span class="sr-only">not marked</span></td>').join('')}</tr>`).join('')}</tbody></table>`,
 
   answers: (b, ctx) => `<div class="blk blk-answers">${(b.items || []).map((a, i) =>
     `<div class="blk-a"><h4><span class="blk-n">${i + 1}</span> ${esc(a.head)}</h4><p>${say(a.says, ctx)}</p>${a.ask ? `<p class="blk-ask">${esc(a.ask)}</p>` : ''}</div>`).join('')}</div>`,
@@ -71,7 +71,9 @@ const KINDS = {
       <div><p class="blk-lb">Claim 1 also requires</p><ul>${(b.abstractReadsBroader.adds || []).map(x => `<li><span>${esc(x)}</span></li>`).join('')}</ul></div></div>` : ''}</div>`,
 };
 
-/* ctx: { section(key) → '2.3', exhibit(key) → 4, patent(ref) → 'US 9,841,761 · Granted' }.
+/* ctx: { section(key) → '2.3', exhibit(key) → 4, patent(ref) → 'US 9,841,761 · Holder' }.
+   A key the report does not draw prints as § ? or Exhibit ?, so a dangling
+   citation shows rather than vanishing from the middle of a sentence.
    Each block is its own string, so a paginator can break between them. */
 export function drawBlocks(blocks, ctx = {}) {
   const c = { section: () => '', exhibit: () => '', patent: () => '', ...ctx };

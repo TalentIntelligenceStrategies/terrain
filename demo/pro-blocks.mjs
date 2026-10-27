@@ -1,7 +1,7 @@
 /* pro-blocks — an illustrative Pro result: seven sections, every block kind
  * at least once. The demo engine's proQuote and proResult answer with it,
  * the report template draws it (?blocks=demo), and the package's
- * contract/examples/pro-result-blocks.json is printed from it, so the three
+ * contract/examples/pro-result.json is printed from it, so the three
  * cannot drift apart.
  *
  * THE CONTENT IS INVENTED AND IS NOT A SPEC. It reads a fictional folding
@@ -48,7 +48,7 @@ export const RESULT = {
     { key: 'described', blocks: [
       { kind: 'matrix', cols: [1, 2, 3], rows: [
         { label: 'Airframe', on: [1, 2] }, { label: 'Arm lock', on: [1] }, { label: 'Flight software', on: [] } ] },
-      { kind: 'p', sentences: [S('No claim 1 in this set reaches flight software [1][2][3].', [{ ref: 1 }, { ref: 2 }, { ref: 3 }], 'C')] } ] },
+      { kind: 'p', sentences: [S('No claim 1 in this set may reach flight software [1][2][3].', [{ ref: 1 }, { ref: 2 }, { ref: 3 }])] } ] },
     { key: 'holders', blocks: [
       { kind: 'table', head: ['Holder', 'Patents', 'What their claims may cover'], rows: [
         ['Holder A', S('[1] [3]', [{ ref: 1 }, { ref: 3 }]), S('Both may cover a strut that locks the arm open [1][3].', [{ ref: 1 }, { ref: 3 }])],
@@ -63,7 +63,7 @@ export const RESULT = {
     { key: 'conclusion', blocks: [
       { kind: 'answers', items: [
         { head: 'How close is the nearest claim?', says: [S('Claim 1 of [2] may come nearest, at the hinge (§closest, Ex:holders).', [{ ref: 2, claim: 1 }])], ask: 'Has the team filed on a mid-arm fold?' },
-        { head: 'What is open?', says: [S('No claim 1 here reaches flight software (§described).', [{ ref: 1 }, { ref: 2 }, { ref: 3 }], 'C')] } ] },
+        { head: 'What may be open?', says: [S('No claim 1 here may reach flight software (§described).', [{ ref: 1 }, { ref: 2 }, { ref: 3 }])] } ] },
       { kind: 'checklist', items: [
         { text: S('Whether [3] was granted, and with what claims.', [{ ref: 3 }], 'C'), section: 'closest' },
         { text: S('Who holds [1] today.', [{ ref: 1 }], 'O', { name: 'Assignment records' }), section: 'holders' } ] } ] },

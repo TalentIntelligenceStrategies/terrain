@@ -948,7 +948,7 @@ const descGiven = () => !SET || document.documentElement.dataset.desc !== 'none'
 
 /* ══ ?blocks=demo · THE CONTRACT'S NINE KINDS, DRAWN ══════════════════════
    The illustrative result in demo/pro-blocks.mjs — the same one the package
-   prints as contract/examples/pro-result-blocks.json — laid out by app/'s
+   prints as contract/examples/pro-result.json — laid out by app/'s
    own renderer, a page per section, so the engine's output can be checked
    against a drawing. Its content is invented; the shapes are the contract. */
 const PB = new URLSearchParams(location.search).get('blocks') === 'demo' ? await import('../../demo/pro-blocks.mjs') : null;
@@ -958,7 +958,7 @@ function blockSecs() {
   const exn = { holders: 1, years: 2, status: 3 };
   const ctx = { section: k => secn[k] || '', exhibit: k => exn[k] || '', patent: r => `Patent ${r}, fictional` };
   const tag = '<span class="tag">Pro</span>';
-  const out = [{ key: 'blk', cls: '', blocks: [`<header class="op"><p class="op-n">The block kinds</p><h2 class="op-t bal">A Pro result, drawn</h2><p class="op-s pretty">contract/examples/pro-result-blocks.json, through the renderer app/ uses. The content is invented, about a fictional frame and three fictional patents; the shapes are the contract, and what a section says is yours.</p></header>`] }];
+  const out = [{ key: 'blk', cls: '', blocks: [`<header class="op"><p class="op-n">The block kinds</p><h2 class="op-t bal">A Pro result, drawn</h2><p class="op-s pretty">contract/examples/pro-result.json, through the renderer app/ uses. The content is invented, about a fictional frame and three fictional patents; the shapes are the contract, and what a section says is yours.</p></header>`] }];
   PB.SECTIONS.forEach((x, i) => {
     const got = PB.RESULT.sections.find(r => r.key === x.key);
     const b = drawBlocks(got ? got.blocks : [], ctx);

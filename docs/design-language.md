@@ -1019,8 +1019,9 @@ each sheet, and no Innovue mark: the report is a document, not a product surface
 - **Type stays on the scale**: 11, 13, 16, 20, 26 and 36px, nothing between. Numbers are Inconsolata
   with tabular figures.
 - **On screen a section is one sheet**, as tall as it needs. **On paper the same blocks are packed into
-  US Letter pages** by measuring — a block never splits, except at a point the template marks
-  between the rows of a list or table — with page numbers,
+  US Letter pages** by measuring — a block never splits, so a block from the engine is kept under a
+  page, and the worked example's own long tables carry split points between their rows — with page
+  numbers,
   and the contents and the glance tiles filled with them. Before Pro, the paper leaves Part 2 out. It
   prints light in either theme, because paper does not swap.
 
