@@ -24,10 +24,12 @@
  *   --clip x,y,w,h  crop
  *   --tag <name>    suffix for the file names, to keep variants apart
  *   --without <IDs> with --item all, leave these out (the unchosen variant)
+ *   --viewport <name> phone, floor, narrow, tablet, landscape (lib.mjs VIEWPORTS);
+ *                   the file names carry it, desktop's do not
  *
  * Writes overlay/<item>-<state>[-tag]-<theme>-before.png and -after.png. */
 import path from 'node:path';
-import { args, roundDir, open, die, readOverlay, reachTheirs, THEIRS_STATES } from './lib.mjs';
+import { args, roundDir, open, die, readOverlay, reachTheirs, THEIRS_STATES, viewport } from './lib.mjs';
 
 const a = args();
 if (!a.item) die('--item <ID|all> is required');
@@ -37,7 +39,8 @@ const overlay = readOverlay(a.round, a.item, a.without ? String(a.without).split
 const out = roundDir(a.round, 'overlay');
 console.log('overlay files:', overlay.files.join(', '));
 
-const { browser, page } = await open({});
+const vp = viewport(a.viewport || 'desktop');
+const { browser, page } = await open({ viewport: vp.name });
 page.on('console', m => { if (m.type() === 'error' && !/ERR_FAILED/.test(m.text())) console.error('page:', m.text().slice(0, 200)); });
 page.on('pageerror', e => console.error('page error:', e.message.slice(0, 200)));
 const settle = ms => page.waitForTimeout(ms);
@@ -52,7 +55,7 @@ async function setTheme(t) {
   const ok = !modal && await page.locator(`button[aria-label="${name}"]`).first()
     .click({ timeout: 1500, trial: false }).then(() => true).catch(() => false);
   if (!ok) await page.evaluate(t => { document.documentElement.dataset.theme = t; }, t);
-  await page.mouse.move(1, 899);
+  await page.mouse.move(1, vp.height - 1);
   await settle(700);
 }
 
@@ -72,7 +75,7 @@ async function prep() {
 async function shot(theme, when) {
   await setTheme(theme);
   await prep();
-  const tag = a.tag ? `-${a.tag}` : '';
+  const tag = (vp.name !== 'desktop' ? `-${vp.name}` : '') + (a.tag ? `-${a.tag}` : '');
   const f = `${a.item}-${state}${tag}-${theme}-${when}.png`;
   const clip = a.clip ? (([x, y, width, height]) => ({ x, y, width, height }))(a.clip.split(',').map(Number)) : undefined;
   await page.screenshot({ path: path.join(out, f), clip });

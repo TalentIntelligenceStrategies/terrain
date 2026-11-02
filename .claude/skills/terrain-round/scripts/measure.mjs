@@ -18,7 +18,7 @@
  * ONE PAGE PER JOB, MEASURED IN BOTH THEMES. A state on their build costs a
  * search on their service, so a spec job reaches its state once and measures
  * every item on it, in each theme it lists, by switching the theme in place.
- * A job is { target, state, query?, url?, overlay?, without?, themes?, prep?,
+ * A job is { target, state, viewport?, query?, url?, overlay?, without?, themes?, prep?,
  * items: [{ component, selector, state?, interact?, steps?, undo?, depth?, pad? }] };
  * steps and undo are actions: {click: css} {label: regex} {hover: css}
  * {focus: css} {fill: [css, text]} {type: text} {key: name} {wait: ms} {eval: js}
@@ -186,12 +186,12 @@ async function setTheme(page, theme) {
   await page.waitForTimeout(700);
 }
 
-async function measureOne(page, item, { target, state, theme, idx, overlay }) {
+async function measureOne(page, item, { target, state, theme, idx, overlay, vpName }) {
   const depth = Number(item.depth ?? 2);
   const st = item.state || state;
   /* the target leads the name, so their build and app/ measured under one
      component and state never write the same file */
-  const stem = [target === 'theirs' ? 'theirs' : 'ours', item.component, st, theme, item.interact].filter(Boolean).join('-');
+  const stem = [target === 'theirs' ? 'theirs' : 'ours', item.component, st, vpName && vpName !== 'desktop' ? vpName : '', theme, item.interact].filter(Boolean).join('-');
   const el = page.locator(item.selector).first();
   if (!(await el.count())) throw new Error(`nothing matches ${item.selector}`);
   await el.scrollIntoViewIfNeeded().catch(() => {});
@@ -293,8 +293,10 @@ for (const job of jobs) {
   const target = job.target || 'ours';
   const themes = job.themes || ['light', 'dark'];
   const state = job.state || 'results';
-  const cellOf = (item, theme) => [item.state || state, theme, item.interact].filter(Boolean).join(' · ');
-  const { browser, ctx, page } = await open({ theme: 'light', width: job.width || 1440, height: job.height || 900 });
+  const cellOf = (item, theme) => [item.state || state, job.viewport && job.viewport !== 'desktop' ? job.viewport : '', theme, item.interact].filter(Boolean).join(' · ');
+  /* viewport names a preset (phone is touch, so hover-only rules stay off);
+     width and height still override it for a one-off size. */
+  const { browser, ctx, page } = await open({ theme: 'light', viewport: job.viewport, width: job.width, height: job.height });
   try {
     if (target === 'theirs' && job.overlay) await injectOverlay(ctx, readOverlay(a.round, job.overlay, job.without || []));
     if (target === 'theirs') await reachTheirs(page, state, job.query);
@@ -319,7 +321,7 @@ for (const job of jobs) {
     for (const item of job.items) {
       try {
         await act(page, item.steps);
-        const stem = await measureOne(page, item, { target, state, theme, idx, overlay: job.overlay });
+        const stem = await measureOne(page, item, { vpName: job.viewport, target, state, theme, idx, overlay: job.overlay });
         grid.push({ target, component: item.component, cell: cellOf(item, theme), result: `[measured](${stem}.md)` });
         console.log('wrote', stem);
       } catch (e) {

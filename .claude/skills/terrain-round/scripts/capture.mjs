@@ -3,6 +3,15 @@
  *   node capture.mjs --round 2                  their live build
  *   node capture.mjs --round 2 --target ours    app/ on 127.0.0.1:8765
  *   node capture.mjs --round 2 --url <url>      any other copy
+ *   node capture.mjs --round 3 --viewport phone  the same states on an emulated phone
+ *   node capture.mjs --round 3 --viewport checks tablet, floor, narrow, landscape: one
+ *                                                search, resized through each
+ *
+ * Desktop writes captures/<target>/; any other viewport captures/<target>-<viewport>/.
+ * On a touch viewport every step's log also lists the controls under 44px and
+ * the inputs under 16px (touchProbe), and the phone states add the composer
+ * focused, the soft keyboard simulated by a shorter viewport, and the record
+ * scrolled by its own scroller rather than by an aimed wheel.
  *
  * Writes captures/<target>/NN-<state>-<theme>.png and captures/<target>/log.md:
  * the visible text of every open popover and the control labels per step,
@@ -14,14 +23,28 @@
  * kind that a screenshot alone would have recorded as missing. */
 import fs from 'node:fs';
 import path from 'node:path';
-import { args, roundDir, open, click, search, setTheme, labels, openRecord, THEIRS, OURS_LOCAL, QUERY } from './lib.mjs';
+import { args, roundDir, open, click, search, setTheme as clickTheme, labels, openRecord, viewport, scrollAt, touchProbe, VIEWPORTS, THEIRS, OURS_LOCAL, QUERY } from './lib.mjs';
 
 const a = args();
 const target = a.target || 'theirs';
 const url = a.url || (target === 'ours' ? OURS_LOCAL : THEIRS);
 const query = a.query || QUERY;
-const dir = roundDir(a.round, 'captures', target);
-const log = [`# Capture · ${target} · ${url}`, '', `Query: ${query}`, `Taken: ${new Date().toISOString()}`, ''];
+const vpName = a.viewport || 'desktop';
+const checks = vpName === 'checks';
+const vp = checks ? viewport('phone') : viewport(vpName);
+const isTouch = !!vp.hasTouch;
+const dir = roundDir(a.round, 'captures', vpName === 'desktop' ? target : `${target}-${vpName}`);
+const log = [`# Capture · ${target} · ${url} · ${vpName}`, '', `Query: ${query}`, `Taken: ${new Date().toISOString()}`, ''];
+
+/* On a phone the appearance control may sit in a menu, and a click that finds
+   nothing would leave a "dark" shot light. Both builds key the theme on
+   data-theme on <html>, which is what their control writes. */
+async function setTheme(page, theme) {
+  const hit = await page.locator(`button[aria-label="${theme === 'dark' ? 'Dark' : 'Light'} appearance"]:visible`).count();
+  if (hit) return clickTheme(page, theme);
+  await page.evaluate(t => { document.documentElement.dataset.theme = t; }, theme);
+  log.push(`(theme ${theme} written to data-theme: no visible appearance control at ${vpName})`, '');
+}
 let n = 0;
 
 async function step(page, tag, fn) {
@@ -38,12 +61,42 @@ async function step(page, tag, fn) {
   log.push(`## ${tag}`, '', `![](${file})`, '');
   if (open_.length) log.push('Open layers:', ...open_.map(t => `> ${t}`), '');
   log.push('Controls: ' + (await labels(page)).filter(l => !/^(Drawing|Figure) \d|more drawings|^Open US|^View details/.test(l)).join(' · '), '');
+  if (isTouch) {
+    const t = await touchProbe(page);
+    log.push(`Viewport ${page.viewportSize().width}×${page.viewportSize().height} · sideways overflow ${t.overflowX}px`,
+      `Under 44px (${t.small.length}): ${t.small.join(' · ') || 'none'}`,
+      `Inputs under 16px: ${t.zoom.join(' · ') || 'none'}`, '');
+  }
+}
+
+/* The checks pass: one search, the results and the record at every check
+   width, by resizing one touch context. A width is a layout question, and a
+   fresh search per width would be the same answer four times on their service. */
+if (checks) {
+  const sizes = ['tablet', 'floor', 'narrow', 'landscape'];
+  const { browser, page, blocked } = await open({ viewport: 'phone', theme: 'light' });
+  const to = async name => { const v = VIEWPORTS[name]; await page.setViewportSize({ width: v.width, height: v.height }); await page.waitForTimeout(1200); };
+  await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
+  await page.waitForTimeout(1500);
+  for (const s of sizes) { await to(s); await step(page, `home-${s}-light`, async () => { await page.evaluate(() => scrollTo(0, 0)); }); }
+  await to('phone');
+  await search(page, url, query);
+  for (const s of sizes) {
+    await to(s);
+    await step(page, `results-${s}-light`, async () => { await page.keyboard.press('Escape'); await page.waitForTimeout(500); await page.evaluate(() => scrollTo(0, 0)); });
+    await step(page, `record-${s}-light`, async () => { await openRecord(page); await page.waitForTimeout(1200); });
+  }
+  log.push(`PostHog requests blocked: ${blocked.length}`, '');
+  await browser.close();
+  fs.writeFileSync(path.join(dir, 'log.md'), log.join('\n'));
+  console.log(`captured ${n} states into ${path.relative(process.cwd(), dir)}`);
+  process.exit(0);
 }
 
 const esc = page => page.keyboard.press('Escape').then(() => page.waitForTimeout(400));
 
 for (const theme of ['light', 'dark']) {
-  const { browser, page, blocked } = await open({ theme });
+  const { browser, page, blocked } = await open({ theme, viewport: vpName });
   const t = `-${theme}`;
   await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
   await page.waitForTimeout(1500);
@@ -53,13 +106,26 @@ for (const theme of ['light', 'dark']) {
     log.push(`Version on the masthead: ${version || 'none printed'}`, '');
   }
   await step(page, 'home' + t, async () => {});
+  if (isTouch) {
+    /* A real soft keyboard shrinks the visual viewport, not the layout one, so
+       this overstates what a fixed bar does; the name says simulated. What it
+       shows truly is whether the field and Search stay in reach above it. */
+    await step(page, 'composer-focused' + t, async () => { await page.locator('textarea:visible').first().tap(); await page.waitForTimeout(600); });
+    await step(page, 'keyboard-simulated' + t, async () => { await page.setViewportSize({ width: vp.width, height: vp.height - 336 }); await page.waitForTimeout(800); });
+    await page.setViewportSize({ width: vp.width, height: vp.height });
+    await page.locator('textarea:visible').first().blur().catch(() => {});
+  }
   await step(page, 'settings' + t, async () => { await click(page, /^Search settings$/); });
   await esc(page);
   await step(page, 'patent-number-mode' + t, async () => { if (!(await click(page, /^Patent number$/))) throw new Error('no patent-number mode'); });
   await click(page, /^Text$/);
   await step(page, 'results' + t, async () => { await search(page, url, query); await page.evaluate(() => scrollTo(0, 0)); });
-  await step(page, 'results-scrolled' + t, async () => { await page.mouse.move(360, 600); await page.mouse.wheel(0, 2400); await page.waitForTimeout(1500); });
-  await page.mouse.wheel(0, -9000);
+  await step(page, 'results-scrolled' + t, async () => {
+    if (isTouch) { log.push(`(results scrolled: ${await scrollAt(page, 2400)})`); }
+    else { await page.mouse.move(360, 600); await page.mouse.wheel(0, 2400); }
+    await page.waitForTimeout(1500);
+  });
+  if (isTouch) await scrollAt(page, -9000); else await page.mouse.wheel(0, -9000);
   await step(page, 'sort' + t, async () => { await click(page, /^(Relevance|Sort the list)$/); });
   await esc(page);
   await step(page, 'filter' + t, async () => { if (!(await click(page, /^Filter$/))) throw new Error('no filter control'); });
@@ -77,8 +143,12 @@ for (const theme of ['light', 'dark']) {
   await step(page, 'drawings-only' + t, async () => { await click(page, /^Drawings only$/, 6000); });
   await click(page, /^Details and drawings$/, 2000);
   await step(page, 'record' + t, async () => { await openRecord(page); await page.waitForTimeout(1500); });
-  await step(page, 'record-scrolled' + t, async () => { await page.mouse.move(1080, 600); await page.mouse.wheel(0, 2000); await page.waitForTimeout(1500); });
-  await page.mouse.wheel(0, -9000);
+  await step(page, 'record-scrolled' + t, async () => {
+    if (isTouch) { log.push(`(record scrolled: ${await scrollAt(page, 2000)})`); }
+    else { await page.mouse.move(1080, 600); await page.mouse.wheel(0, 2000); }
+    await page.waitForTimeout(1500);
+  });
+  if (isTouch) await scrollAt(page, -9000); else await page.mouse.wheel(0, -9000);
   await step(page, 'lightbox' + t, async () => {
     const f = page.locator('button[aria-label^="Open figure"]:visible, button[aria-label$="open it larger"]:visible').first();
     if (await f.count()) await f.click(); else throw new Error('no figure control in the record');
@@ -94,8 +164,10 @@ for (const theme of ['light', 'dark']) {
   });
   await step(page, 'find-similar' + t, async () => { if (!(await click(page, /^Find similar$/, 12000))) throw new Error('no find similar'); await page.evaluate(() => scrollTo(0, 0)); });
   await step(page, 'starred-set' + t, async () => { if (!(await click(page, /starred set/i, 3000))) throw new Error('no starred set'); });
-  await page.setViewportSize({ width: 390, height: 844 });
-  await step(page, 'phone' + t, async () => { await page.waitForTimeout(1500); });
+  if (!isTouch) {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await step(page, 'phone' + t, async () => { await page.waitForTimeout(1500); });
+  }
   log.push(`PostHog requests blocked (${theme}): ${blocked.length}`, '');
   await browser.close();
 }
@@ -103,7 +175,7 @@ for (const theme of ['light', 'dark']) {
 fs.writeFileSync(path.join(dir, 'log.md'), log.join('\n'));
 console.log(`captured ${n} states into ${path.relative(process.cwd(), dir)}`);
 
-if (target === 'theirs' && !a.url) {
+if (target === 'theirs' && !a.url && vpName === 'desktop') {
   const bdir = roundDir(a.round, 'bundle');
   const html = await (await fetch(THEIRS)).text();
   fs.writeFileSync(path.join(bdir, 'index.html'), html);

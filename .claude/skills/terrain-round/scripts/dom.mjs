@@ -14,7 +14,10 @@ import { args, roundDir, open, reachTheirs } from './lib.mjs';
 const a = args();
 const state = a.state || 'results';
 const out = roundDir(a.round, 'dom');
-const { browser, page } = await open({});
+/* --viewport phone dumps the markup a phone gets: their breakpoints render a
+   different tree, and an overlay selector read from the desktop dump can miss. */
+const vpn = a.viewport && a.viewport !== 'desktop' ? a.viewport : '';
+const { browser, page } = await open({ viewport: a.viewport });
 await reachTheirs(page, state, a.query);
 
 const vars = {};
@@ -31,8 +34,8 @@ for (const theme of ['light', 'dark']) {
 }
 await page.evaluate(() => { document.documentElement.dataset.theme = 'light'; });
 
-fs.writeFileSync(path.join(out, `${state}.html`), await page.content());
-fs.writeFileSync(path.join(out, `${state}-vars.json`), JSON.stringify(vars, null, 1));
+fs.writeFileSync(path.join(out, `${state}${vpn ? '-' + vpn : ''}.html`), await page.content());
+fs.writeFileSync(path.join(out, `${state}${vpn ? '-' + vpn : ''}-vars.json`), JSON.stringify(vars, null, 1));
 const outline = await page.evaluate(() => {
   const lines = [];
   const walk = (el, d) => {
@@ -54,6 +57,6 @@ const outline = await page.evaluate(() => {
   walk(document.body, 0);
   return lines.join('\n');
 });
-fs.writeFileSync(path.join(out, `${state}-outline.txt`), outline);
+fs.writeFileSync(path.join(out, `${state}${vpn ? '-' + vpn : ''}-outline.txt`), outline);
 console.log('wrote', state, outline.split('\n').length, 'lines,', Object.keys(vars.light).length, 'vars');
 await browser.close();

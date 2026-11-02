@@ -14,7 +14,7 @@ const a = args();
 const states = a.state ? [a.state] : ['home', 'results'];
 const out = roundDir(a.round, 'dom');
 for (const state of states) {
-  const { browser, page } = await open({});
+  const { browser, page } = await open({ viewport: a.viewport });
   await reachTheirs(page, state, a.query);
   const rows = await page.evaluate(() => {
     const m = new Map();
@@ -36,7 +36,7 @@ for (const state of states) {
   });
   const md = ['| size | weight | line-height | family | case | count | samples |', '| --- | --- | --- | --- | --- | --- | --- |',
     ...rows.map(([k, e]) => `| ${k} | ${e.n} | ${e.ex.join(' · ').replace(/\|/g, '/')} |`)].join('\n');
-  fs.writeFileSync(path.join(out, `type-${state}.md`), `# Type on their ${state}\n\n${md}\n`);
+  fs.writeFileSync(path.join(out, `type-${state}${a.viewport && a.viewport !== 'desktop' ? '-' + a.viewport : ''}.md`), `# Type on their ${state}\n\n${md}\n`);
   console.log('wrote type-' + state + '.md', rows.length, 'rows');
   await browser.close();
 }

@@ -35,12 +35,37 @@ export function roundDir(n, ...sub) {
 
 export function die(msg) { console.error(`refused: ${msg}`); process.exit(1); }
 
-/* scale is the device pixel ratio: 1 for rounds, 2 for the deck's captures */
-export async function open({ width = 1440, height = 900, theme, scale = 1 } = {}) {
+/* The viewports a round reviews at. PHONE IS AN EMULATED DEVICE, NOT A NARROW
+   WINDOW: isMobile makes Chromium honour the page's meta viewport and hasTouch
+   makes (hover:hover) and (pointer:fine) false, so a hover-only control is
+   missing here exactly as it is on a phone. A 390px desktop window would match
+   every width query and still report a mouse. floor and narrow are the widths
+   design-language.md §6 designs down to and wraps the masthead at. */
+const IPHONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
+const touch = { isMobile: true, hasTouch: true, userAgent: IPHONE_UA };
+export const VIEWPORTS = {
+  desktop:   { width: 1440, height: 900, scale: 1 },
+  tablet:    { width: 820, height: 1180, scale: 2, ...touch },
+  phone:     { width: 390, height: 844, scale: 3, ...touch },
+  floor:     { width: 375, height: 667, scale: 2, ...touch },
+  narrow:    { width: 320, height: 568, scale: 2, ...touch },
+  landscape: { width: 844, height: 390, scale: 3, ...touch },
+};
+export function viewport(name = 'desktop') {
+  if (!VIEWPORTS[name]) die(`--viewport is one of ${Object.keys(VIEWPORTS).join(', ')}`);
+  return { name, ...VIEWPORTS[name] };
+}
+
+/* scale is the device pixel ratio: 1 for desktop rounds, 2 for the deck's
+   captures; a preset brings its own unless scale is given. */
+export async function open({ viewport: vp, width, height, theme, scale } = {}) {
+  const v = vp ? viewport(vp) : VIEWPORTS.desktop;
   const exe = process.env.TERRAIN_CHROME || undefined;
   const browser = await chromium.launch(exe ? { executablePath: exe } : {});
   const ctx = await browser.newContext({
-    viewport: { width, height }, deviceScaleFactor: scale, locale: 'en-US', acceptDownloads: true,
+    viewport: { width: width || v.width, height: height || v.height },
+    deviceScaleFactor: scale || v.scale, locale: 'en-US', acceptDownloads: true,
+    isMobile: !!v.isMobile, hasTouch: !!v.hasTouch, ...(v.userAgent ? { userAgent: v.userAgent } : {}),
     colorScheme: theme === 'dark' ? 'dark' : 'light',
     permissions: ['clipboard-read', 'clipboard-write'],
   });
@@ -84,6 +109,43 @@ export async function reach(page, url, state, query = QUERY) {
   if (state === 'record') await openRecord(page);
   if (state === 'scrolled') { await page.mouse.move(360, 600); await page.mouse.wheel(0, 2400); await page.waitForTimeout(2500); }
   if (state === 'phone') { await page.setViewportSize({ width: 390, height: 844 }); await page.waitForTimeout(1500); }
+}
+
+/* Scroll whatever scrolls under a point, by dy. THE WHEEL IS AIMED, and a
+   desktop script aims it at x=1080 for the record pane, which on a phone is off
+   the screen: the wheel lands nowhere and the shot is the unscrolled state with
+   a "scrolled" name. This finds the nearest scrollable ancestor of the element
+   at (x, y) — the page itself when there is none — and moves it. */
+export async function scrollAt(page, dy, x, y) {
+  return page.evaluate(({ dy, x, y }) => {
+    const vw = innerWidth, vh = innerHeight;
+    let e = document.elementFromPoint(x ?? vw / 2, y ?? vh * 0.6);
+    while (e && e !== document.body) {
+      const s = getComputedStyle(e);
+      if (/(auto|scroll)/.test(s.overflowY) && e.scrollHeight > e.clientHeight + 1) { e.scrollTop += dy; return e.id || e.className.toString().slice(0, 40); }
+      e = e.parentElement;
+    }
+    scrollBy(0, dy); return 'page';
+  }, { dy, x, y });
+}
+
+/* What a thumb has to hit. Every visible control whose box is under 44 CSS px
+   on either side (Apple's floor, and WCAG 2.5.5's AAA), plus every text input
+   whose computed size is under 16px — iOS Safari zooms the page on focus
+   below that, and nothing on the page can stop it but the size. */
+export async function touchProbe(page) {
+  return page.evaluate(() => {
+    const vis = e => { const r = e.getBoundingClientRect(); return r.width > 1 && r.height > 1 && r.bottom > 0 && r.top < innerHeight && getComputedStyle(e).visibility !== 'hidden'; };
+    const name = e => (e.getAttribute('aria-label') || e.innerText || e.getAttribute('title') || e.tagName).trim().replace(/\s+/g, ' ').slice(0, 50);
+    const small = [...document.querySelectorAll('button, a[href], [role=button], [role=checkbox], [role=radio], [role=tab], [role=menuitem], input, select, textarea, summary')]
+      .filter(vis).map(e => ({ e, r: e.getBoundingClientRect() })).filter(({ r }) => r.width < 44 || r.height < 44)
+      .map(({ e, r }) => `${name(e)} ${Math.round(r.width)}×${Math.round(r.height)}`);
+    const zoom = [...document.querySelectorAll('input:not([type=checkbox]):not([type=radio]):not([type=hidden]), textarea, select')]
+      .filter(vis).map(e => ({ e, fs: parseFloat(getComputedStyle(e).fontSize) })).filter(({ fs }) => fs < 16)
+      .map(({ e, fs }) => `${e.getAttribute('aria-label') || e.placeholder || e.name || e.tagName} ${fs}px`);
+    const over = document.documentElement.scrollWidth - innerWidth;
+    return { small, zoom, overflowX: over > 0 ? over : 0 };
+  });
 }
 
 /* THE RECORD IS A TOGGLE ON THEIR BUILD, and it opens the first result by

@@ -7,6 +7,10 @@
  *
  * Journeys: first-visit reading patent-number errors return field-switch take-out keyboard.
  *
+ *   node audit.mjs --round 3 --journey all --viewport phone
+ *
+ * --viewport names a lib.mjs preset; any but desktop writes audit/<target>-<viewport>/.
+ *
  * Writes audit/<target>/<journey>/NN-<step>-{light,dark}.png and one log.md per
  * journey: the step, the URL, how long any wait took, the visible text of open
  * layers, the control labels, and, on the keyboard journey, where focus is and
@@ -23,7 +27,7 @@
  * Every search on their build is counted in the log. */
 import fs from 'node:fs';
 import path from 'node:path';
-import { args, roundDir, open, click, setTheme, labels, openRecord, die, THEIRS, OURS_LOCAL, QUERY } from './lib.mjs';
+import { args, roundDir, open, click, setTheme, labels, openRecord, die, viewport, scrollAt, touchProbe, THEIRS, OURS_LOCAL, QUERY } from './lib.mjs';
 
 const DEFAULT_QUERIES = {
   fixed: {
@@ -47,6 +51,7 @@ const DEFAULT_QUERIES = {
 const JOURNEYS = ['first-visit', 'reading', 'patent-number', 'errors', 'return', 'field-switch', 'take-out', 'keyboard'];
 
 const a = args();
+const VP = viewport(a.viewport || 'desktop');
 const target = a.target || 'theirs';
 const url = target === 'ours' ? (a.url || OURS_LOCAL) : THEIRS;
 const dark = !a['no-dark'];
@@ -62,7 +67,7 @@ let searches = 0;
 
 /* ── one journey's recorder ─────────────────────────────────────────────── */
 function recorder(page, journey) {
-  const dir = roundDir(a.round, 'audit', target, journey);
+  const dir = roundDir(a.round, 'audit', VP.name === 'desktop' ? target : `${target}-${VP.name}`, journey);
   const log = [`# ${journey} · ${target}`, '', `${new Date().toISOString()} · ${url}`, ''];
   let n = 0;
   const layers = () => page.evaluate(() => [...document.querySelectorAll('[role=dialog],[role=menu],[role=listbox],[role=alert],[role=status],dialog[open],[popover]')]
@@ -222,7 +227,7 @@ const J = {
     await r.step('browser-forward', async () => { await page.goForward({ waitUntil: 'networkidle' }).catch(() => {}); await page.waitForTimeout(2000); });
     await r.step('reload', async () => { await page.reload({ waitUntil: 'networkidle' }); await page.waitForTimeout(2500); });
     const state = await ctx.storageState();
-    const ctx2 = await browser.newContext({ storageState: state, viewport: { width: 1440, height: 900 }, locale: 'en-US' });
+    const ctx2 = await browser.newContext({ storageState: state, viewport: { width: VP.width, height: VP.height }, deviceScaleFactor: VP.scale, isMobile: !!VP.isMobile, hasTouch: !!VP.hasTouch, ...(VP.userAgent ? { userAgent: VP.userAgent } : {}), locale: 'en-US' });
     await ctx2.route(/posthog/i, x => x.abort());
     const p2 = await ctx2.newPage();
     const r2 = recorder(p2, 'return');
@@ -326,7 +331,7 @@ const J = {
 };
 
 for (const journey of which) {
-  const { browser, ctx, page } = await open({ theme: 'light' });
+  const { browser, ctx, page } = await open({ theme: 'light', viewport: VP.name });
   const r = recorder(page, journey);
   try { await J[journey](page, r, ctx, browser); }
   catch (e) { r.log.push(`JOURNEY STOPPED: ${e.message.split('\n')[0]}`, ''); }
