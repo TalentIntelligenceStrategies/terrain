@@ -56,6 +56,41 @@ export function viewport(name = 'desktop') {
   return { name, ...VIEWPORTS[name] };
 }
 
+/* REPLAY: THEIR API, ANSWERED FROM A RECORDING. A round's search budget on
+   their service is a few dozen, and an overlay round shoots hundreds of
+   pictures at two viewports. Every request to their /api/ is keyed by
+   method, path, query and body; a recorded answer is served from
+   round-N/replay/api.json, and one that is missing goes to the network ONCE,
+   is stored, and is counted out loud. The bundle, fonts and drawings still
+   load live: they are static files, not searches.
+
+   mode 'record' stores what it fetches; 'replay' also fetches what is missing
+   (and stores it), but prints LIVE for each, so a run that should have cost
+   nothing says when it did not. Call the returned save() before closing. */
+export async function replay(ctx, round, { mode = 'replay' } = {}) {
+  const file = path.join(roundDir(round, 'replay'), 'api.json');
+  const store = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
+  let live = 0, served = 0, dirty = false;
+  await ctx.route(/\/ipcembedding\/api\//, async route => {
+    const r = route.request(), u = new URL(r.url());
+    const key = `${r.method()} ${u.pathname}${u.search} ${r.postData() || ''}`;
+    const hit = store[key];
+    if (hit) { served++; return route.fulfill({ status: hit.status, headers: hit.headers, body: Buffer.from(hit.body, 'base64') }); }
+    live++;
+    if (mode !== 'record') console.log(`LIVE (not in the recording): ${r.method()} ${u.pathname}`);
+    const res = await route.fetch().catch(() => null);
+    if (!res) return route.abort();
+    const body = await res.body();
+    store[key] = { status: res.status(), headers: res.headers(), body: body.toString('base64') };
+    dirty = true;
+    return route.fulfill({ response: res, body });
+  });
+  return {
+    stats: () => ({ live, served }),
+    save: () => { if (dirty) fs.writeFileSync(file, JSON.stringify(store)); return { live, served, keys: Object.keys(store).length }; },
+  };
+}
+
 /* scale is the device pixel ratio: 1 for desktop rounds, 2 for the deck's
    captures; a preset brings its own unless scale is given. */
 export async function open({ viewport: vp, width, height, theme, scale } = {}) {
@@ -238,14 +273,26 @@ export async function reachTheirs(page, state, query) {
   if (state === 'notfound') return submit(query || 'US12-345', 'Patent number');
   await submit(query || QUERY);
   if (state === 'scrolled') { await page.mouse.move(360, 600); await page.mouse.wheel(0, 2400); await settle(2500); }
-  if (state === 'record-scrolled') { await page.locator('#results-side-pane').evaluate(e => { e.scrollTop = 1400; }); await settle(800); }
+  /* The record opens by itself only where the columns sit side by side. */
+  if (['record', 'record-scrolled', 'similar'].includes(state)) await openRecord(page).catch(() => {});
+  if (state === 'record-scrolled') {
+    const pane = page.locator('#results-side-pane:visible');
+    if (await pane.count()) await pane.evaluate(e => { e.scrollTop = 1400; }); else await scrollAt(page, 1400);
+    await settle(800);
+  }
   if (state === 'similar') await click(page, /^Find similar$/, 6000);
-  if (state === 'lightbox') { await page.locator('button[aria-label^="Open figure 1 "]').first().click(); await settle(2500); }
+  if (state === 'lightbox') {
+    /* Below 1080 no record opens by itself, and the row's figures are not the
+       record's, so a phone opens the record first and takes its first figure. */
+    const fig = () => page.locator('button[aria-label^="Open figure 1 "]:visible, button[aria-label^="Open figure"]:visible').first();
+    if (!(await fig().count())) await openRecord(page);
+    await fig().click({ timeout: 8000 }); await settle(2500);
+  }
   if (state === 'group') await click(page, /^Group the results$/, 20000);
   if (state === 'loading') {
     /* Hold the NEXT search so the in-flight state can be shot, with the
        results already on screen still there: the state R1-09 is about. */
-    await page.route(/\/api\/Search\//, async r => { await new Promise(res => setTimeout(res, 60000)); r.continue().catch(() => {}); });
+    await page.route(/\/api\/Search\//, async r => { await new Promise(res => setTimeout(res, 60000)); r.fallback().catch(() => {}); });
     await click(page, /^Expand search box/, 600);
     await click(page, /^Search$/, 1500);
   }

@@ -24,12 +24,13 @@
  *   --clip x,y,w,h  crop
  *   --tag <name>    suffix for the file names, to keep variants apart
  *   --without <IDs> with --item all, leave these out (the unchosen variant)
+ *   --live          ask their service, not round-N/replay/api.json
  *   --viewport <name> phone, floor, narrow, tablet, landscape (lib.mjs VIEWPORTS);
  *                   the file names carry it, desktop's do not
  *
  * Writes overlay/<item>-<state>[-tag]-<theme>-before.png and -after.png. */
 import path from 'node:path';
-import { args, roundDir, open, die, readOverlay, reachTheirs, THEIRS_STATES, viewport } from './lib.mjs';
+import { args, roundDir, open, die, readOverlay, reachTheirs, THEIRS_STATES, viewport, replay } from './lib.mjs';
 
 const a = args();
 if (!a.item) die('--item <ID|all> is required');
@@ -40,7 +41,9 @@ const out = roundDir(a.round, 'overlay');
 console.log('overlay files:', overlay.files.join(', '));
 
 const vp = viewport(a.viewport || 'desktop');
-const { browser, page } = await open({ viewport: vp.name });
+const { browser, ctx, page } = await open({ viewport: vp.name });
+/* Their API is answered from the round's recording unless --live; see replay() in lib.mjs. */
+const rec = a.live ? null : await replay(ctx, a.round);
 page.on('console', m => { if (m.type() === 'error' && !/ERR_FAILED/.test(m.text())) console.error('page:', m.text().slice(0, 200)); });
 page.on('pageerror', e => console.error('page error:', e.message.slice(0, 200)));
 const settle = ms => page.waitForTimeout(ms);
@@ -90,4 +93,5 @@ if (overlay.js) await page.addScriptTag({ content: overlay.js });
 await settle(1200);
 await shot('dark', 'after');
 await shot('light', 'after');
+if (rec) console.log('replay:', JSON.stringify(rec.save()));
 await browser.close();

@@ -9,7 +9,7 @@
  * box), which is what is actually read. One search per run. */
 import fs from 'node:fs';
 import path from 'node:path';
-import { args, roundDir, open, reachTheirs } from './lib.mjs';
+import { args, roundDir, open, reachTheirs, replay } from './lib.mjs';
 
 const a = args();
 const state = a.state || 'results';
@@ -17,7 +17,8 @@ const out = roundDir(a.round, 'dom');
 /* --viewport phone dumps the markup a phone gets: their breakpoints render a
    different tree, and an overlay selector read from the desktop dump can miss. */
 const vpn = a.viewport && a.viewport !== 'desktop' ? a.viewport : '';
-const { browser, page } = await open({ viewport: a.viewport });
+const { browser, ctx, page } = await open({ viewport: a.viewport });
+const rec = a.live ? null : await replay(ctx, a.round);
 await reachTheirs(page, state, a.query);
 
 const vars = {};
@@ -59,4 +60,5 @@ const outline = await page.evaluate(() => {
 });
 fs.writeFileSync(path.join(out, `${state}${vpn ? '-' + vpn : ''}-outline.txt`), outline);
 console.log('wrote', state, outline.split('\n').length, 'lines,', Object.keys(vars.light).length, 'vars');
+if (rec) console.log('replay:', JSON.stringify(rec.save()));
 await browser.close();
