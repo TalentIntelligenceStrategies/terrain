@@ -253,6 +253,10 @@ construction rather than by discipline. §3.9 carries the tier.
 2. **The focus ring.** `--focus` becomes the accent rather than ink.
 3. **The selected state** of a segmented control or a menu item.
 
+**A ring means focus and nothing else.** A selected tile changes its edge at 1px and its ink; the
+2px ring at an offset is reserved for focus, so a selected tile that also has focus shows both, and
+one that is only selected never looks focused.
+
 **Where it may not appear:**
 
 - **In data.** Not a score, not a relevance rank, not a count. §2 permits the accent in controls and
@@ -655,6 +659,12 @@ alone, and a row's meta is one column so no qualifier is cut. **At 320px the mas
 second row rather than hiding anything** — height is what a phone has to spare, and a control that
 is not there cannot be found.
 
+**On a coarse pointer every control is reached through 44×44**, whatever size its glyph is drawn.
+Where the glyph should stay small the box grows by a transparent hit area rather than by padding, so
+the layout does not move; where two hit areas would overlap, the controls move apart instead. A
+control that only a hardware keyboard can use, *Keyboard shortcuts*, is not shown to a touch
+screen.
+
 **A result row is ~370px, and it buys back the trip into the record.** Measured at 1440 it is 371px
 with a one-line title and 393 with two: an eyebrow, a full-width title, the who-and-when grid as a
 13px meta line, a three-line abstract and the drawing strip. A row of four fields was ~102px.
@@ -695,6 +705,11 @@ size, and a ratio computed from one is a ratio about nothing.
 is the half that still carries it: a shadow cannot separate two surfaces of the same colour, and these
 are white tiles on a white row. *§5's first clause used to be the other half. It is not a prohibition
 any more, so the argument has to stand without it — and it does, on something neither document said.*
+
+**The tile is cut by the card's edge, never by its padding.** The strip bleeds through the row's
+inline padding to the card's border and scrolls back to it with `scroll-padding-inline`, so the
+first tile still aligns with the text above it at rest. A tile cut at an invisible line inside the
+card reads as where the strip ends; one cut by the card's own edge reads as more.
 
 **A fade is theme-asymmetric in the wrong direction.** The gradient would run from the row's own
 background to transparent. In light the row is `--surface` `#FFFFFF` and the tiles are
@@ -750,8 +765,11 @@ both wrap, and a wrapping list inside a half-track is exactly the column of whit
 pair was added to remove.
 
 **Under about 600px the longest values wrap onto second lines under their own labels**, the shared
-edge stops existing, and the grid costs whitespace for nothing — so it halves to one pair. Below
-420px the label goes above the value.
+edge stops existing, and the grid costs whitespace for nothing — so it halves to one pair. **Below
+420px the short identifiers pair up again**: number, kind, the dates and the office are each under
+twelve characters, so two of them fit to a row with the label beside its value, and the holder and
+the inventors take a row each. One identifier to a row, label above, was a screen of eleven rows
+before the drawings, and on a phone the drawings now come first (`platform.md` §4.5).
 
 The chain, at a 1440px window:
 

@@ -211,8 +211,12 @@ change anything is worse than a missing one. **It stays folded**, §4.2: one lin
 mode — into the URL, and the open record adds itself. A reload, a link sent to a colleague, and Back
 or Forward between two searches all bring the search back by running it again, with its record open;
 a URL that names a record the first page does not hold opens the first result instead. **A search is
-a step and a record is not**: each search is one entry in the browser's history, and reading five
-records in a row rewrites the entry rather than adding five.
+a step, and so is whatever covers the thing before it**: each search is one entry in the browser's
+history, an enlarged drawing is one more, and below 1080px, where the record is reached by leaving
+the list, so is the record. Back closes the drawing and leaves the record open, and on a phone it
+closes the record and leaves the list where it was; a Back that ends a reading session by throwing
+away the results is the gesture punishing the one person using it. Where the record sits beside the
+list it covers nothing, so reading five records in a row rewrites the entry rather than adding five.
 
 ### 4.1 · The masthead
 
@@ -473,6 +477,12 @@ meant under all of it. Measured, that put them about 950px down a 1300px scrolle
 opened a patent to see what it looks like scrolled past five to forty claims of legal prose and
 mostly concluded there were no pictures. Ordering by what a patent is published in lost to ordering
 by what the reader came for.
+
+**On a phone the drawings come before the field panel**, on the same argument one step further. Under
+the stack the panel is one column, so even compacted it fills the first screen, and a founder who
+opened a patent to see what it looks like is again scrolling past identifiers to find out whether it
+has pictures. The record opens on its title, the holder and the date, then the drawings, then the
+abstract; the identifiers follow, and the classes sit behind *More details*.
 
 **The record's title is the largest type in the pane.** It is `display-2`, 26/700, two steps above the
 row's `title-s`: the row answers *which of these*, the record answers *this one*, and a row and the document
@@ -1276,8 +1286,77 @@ phone takes the weight**, because neither earlier package specified it: the phon
 that fits at 1440 truncates at 390), so holding type out would hold the phone half out with it.
 
 **The list is the audit's, and nothing else.** Round 1's deferred items and §13.5 are not carried; a
-finding that matches an earlier ID cites it. The accepted list replaces this paragraph when the
-verdicts are in.
+finding that matches an earlier ID cites it. Every item is an overlay on their build; **+ `app/`**
+marks the nine where `app/` shares the fault and changes too, settled in this document or
+`design-language.md` first. *If confirmed* marks two the audit could not establish, verified before
+an overlay is written. Two findings were rejected: a record opening that seemed to run *Find
+similar* by itself did not reproduce, and keeping the list-and-record split down to 768px is a layout
+change, not an interface one.
+
+| ID | Viewport | Component | Wanted | `app/` |
+| --- | --- | --- | --- | --- |
+| R3-01 | phone | Composer | Search stays in view above the keyboard, on home and in the reopened box; the return key reads *Search* | |
+| R3-02 | phone | Record | *Find similar* closes the record onto the reordered list, at the top, with *Nearest to …* and Restore in view | |
+| R3-03 | phone | Drawing viewer | A sideways swipe steps the figure; a pinch zooms the drawing, never the page; one finger pans when zoomed | + `app/` |
+| R3-04 | phone | Drawing viewer, record | Back closes the drawing and leaves the record; Back from the record leaves the list (§4) | + `app/` |
+| R3-05 | both | Number search | A malformed number is told apart from a missing one, with the accepted forms | |
+| R3-06 | both | Number search | The placeholder is a number from an office the search covers; no character counter | |
+| R3-07 | phone | Number search | No autocorrect, autocapitalise or spellcheck on the number | |
+| R3-08 | phone | Search settings | The technology field is reachable from results | |
+| R3-09 | phone | Record | Export is two buttons, CSV and Markdown, and the download is confirmed by name (was R1-28) | |
+| R3-10 | both | Record | A claim preamble (*We claim:*) is an unnumbered lead-in, not claim 1 | |
+| R3-11 | both | List, record, viewer | One kind code everywhere; holder names as published (was R1-06) | |
+| R3-12 | both | Search settings | *Grants · Applications*; Rerank says what it changes | |
+| R3-13 | phone | Search bar | Folded, it is the query on one line and Search | |
+| R3-14 | phone | Masthead | One row on the gutter; one appearance control; the version leaves it (was R1-07) | |
+| R3-15 | phone | Home | The composer follows the lede; the fields are a chip row under it, *Coming soon* last | |
+| R3-16 | phone | Record | Title, holder, date, drawings, abstract, then the identifiers, two short ones to a row; classes behind *More details* | + `app/` |
+| R3-17 | both | List | No score on a row; the rank stays | |
+| R3-18 | phone | Results | One pinned row of at most 56px; the toolbar scrolls with the results header | |
+| R3-19 | phone | Record | A bottom sheet: handle, drag down or the scrim to close, actions on the safe area | |
+| R3-20 | phone | Drawing viewer | Full bleed, the drawing at full width, close at the top edge | + `app/` |
+| R3-21 | both | List | The kind is text in the number line; the version switch is in the record, where both exist (was R1-42) | |
+| R3-22 | phone | List | Titles to two lines; holder and inventor stacked full width | |
+| R3-23 | phone | List | Two whole results to a screen | |
+| R3-24 | phone | Record | The head names the patent from the start | |
+| R3-25 | phone | Record | In landscape the record fills the height; one action row | |
+| R3-26 | phone | Shell | Fixed layers clear the safe area | |
+| R3-27 | phone | Grouping panel | A sheet with Done; sentence-case headings, no dead indent | |
+| R3-28 | phone | Search settings | A sheet with a scrim; Reset and Done pinned | |
+| R3-29 | phone | List | *Drawings only* shows larger drawings | |
+| R3-30 | phone | Composer | The mode switch says *Text* and *Patent #* | |
+| R3-31 | tablet | Search bar | Search stays inside the composer at 820 and in landscape | |
+| R3-32 | phone | List | No keyboard-shortcuts control on a touch screen | |
+| R3-33 | both | Home, settings, record | One uppercase label per surface; the rest sentence case | |
+| R3-34 | phone | List | Sort sits on the count line | |
+| R3-35 | tablet | Home | The field grid is three and three | |
+| R3-36 | phone | Every control | 44×44 to a coarse pointer; the whole row opens the record (was R1-40) | + `app/` |
+| R3-37 | both | List | Tab reaches each row's version switch and number link | |
+| R3-38 | phone | Record | Focus and assistive technology stay inside the record, *if confirmed* | + `app/` |
+| R3-39 | phone | Record | Focus lands on the heading on open, not on *Next* | |
+| R3-40 | phone | Record | Focus returns to the row on close | |
+| R3-41 | both | Composer | An empty Search stays in the tab order and answers (was R1-26) | |
+| R3-42 | both | Segmented control | The selected segment is distinct in dark | |
+| R3-43 | both | Drawing viewer | Its controls swap in dark; the current thumbnail is ringed | |
+| R3-44 | both | List | A drawing strip is named for its patent; each thumbnail for its figure | |
+| R3-45 | both | List | A row's link is named by its title | |
+| R3-46 | both | Home | A ring means focus; a selected tile says so another way | + `app/` |
+| R3-47 | both | Record | A disabled chevron reads as disabled, at about 3:1 | |
+| R3-48 | both | List, record | Figure badges at 7:1 or more | |
+| R3-49 | both | List | One word for the order; no stray *0 results* | |
+| R3-50 | phone | List | One status region for *Find similar* | |
+| R3-51 | phone | Search settings | A chip shows its off state (was R1-46) | |
+| R3-52 | both | Shell | The page declares English; Chinese records declare theirs | |
+| R3-53 | desktop | Shell | A focus ring in dark (was R1-26) | |
+| R3-54 | desktop | Record | Drawings that fail say so, with Retry, *if confirmed* | |
+| R3-55 | desktop | Record | Escape closes the record | |
+| R3-56 | desktop | Composer | No empty history panel on focus | |
+| R3-57 | phone | List | One placeholder for a drawing that is loading (was R1-10) | |
+| R3-58 | phone | Drawing viewer | The arrows have an edge on the paper | |
+| R3-59 | phone | Home | The hero sits inside the gutter; the lede does not open a line on a dash | + `app/` |
+| R3-60 | both | List | The strip is cut by the card's edge | + `app/` |
+| R3-61 | both | Shell | Reduced motion stills dialog and popover enter and exit | |
+| R3-62 | desktop | Drawing viewer | The thumbnail strip is centred | |
 
 **Earlier rounds' IDs stay valid where `app/` and the docs cite them** (*R1-39*, *R1-36* …): each is
 defined in this section as it stood at that round's tag — `handoff-2026-10-14` for R1,
