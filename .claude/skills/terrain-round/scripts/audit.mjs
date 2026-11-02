@@ -10,6 +10,14 @@
  *   node audit.mjs --round 3 --journey all --viewport phone
  *
  * --viewport names a lib.mjs preset; any but desktop writes audit/<target>-<viewport>/.
+ * On a touch viewport every step also logs touchProbe (controls under 44px,
+ * inputs under 16px, sideways overflow).
+ *
+ * The phone journey (touch viewports only, ONE search) walks what a phone
+ * adds: the soft keyboard, touch gestures, browser back, the safe area. Its
+ * gestures are Chromium's own synthesized touch input (Input.synthesize*
+ * over CDP), not scrollLeft written by a script: a strip that scrolls when
+ * told to may still ignore a finger.
  *
  * Writes audit/<target>/<journey>/NN-<step>-{light,dark}.png and one log.md per
  * journey: the step, the URL, how long any wait took, the visible text of open
@@ -27,7 +35,7 @@
  * Every search on their build is counted in the log. */
 import fs from 'node:fs';
 import path from 'node:path';
-import { args, roundDir, open, click, setTheme, labels, openRecord, die, viewport, scrollAt, touchProbe, THEIRS, OURS_LOCAL, QUERY } from './lib.mjs';
+import { args, roundDir, open, click, setTheme, labels, openRecord, die, viewport, touchProbe, THEIRS, OURS_LOCAL, QUERY } from './lib.mjs';
 
 const DEFAULT_QUERIES = {
   fixed: {
@@ -48,7 +56,7 @@ const DEFAULT_QUERIES = {
     numberMissing: 'US99999999B2',
   },
 };
-const JOURNEYS = ['first-visit', 'reading', 'patent-number', 'errors', 'return', 'field-switch', 'take-out', 'keyboard'];
+const JOURNEYS = ['first-visit', 'reading', 'patent-number', 'errors', 'return', 'field-switch', 'take-out', 'keyboard', 'phone'];
 
 const a = args();
 const VP = viewport(a.viewport || 'desktop');
@@ -60,7 +68,8 @@ const want = k => !only || only.includes(k);
 const qfile = path.join(roundDir(a.round), 'queries.json');
 if (!fs.existsSync(qfile)) { fs.writeFileSync(qfile, JSON.stringify(DEFAULT_QUERIES, null, 2)); console.log('wrote default queries to', qfile); }
 const Q = JSON.parse(fs.readFileSync(qfile, 'utf8'));
-const which = a.journey === 'all' || !a.journey ? JOURNEYS : String(a.journey).split(',');
+/* all = the desktop eight, plus phone on a touch viewport */
+const which = a.journey === 'all' || !a.journey ? JOURNEYS.filter(j => j !== 'phone' || VP.hasTouch) : String(a.journey).split(',');
 for (const j of which) if (!JOURNEYS.includes(j)) die(`unknown journey ${j}; one of ${JOURNEYS.join(', ')}`);
 
 let searches = 0;
@@ -96,6 +105,10 @@ function recorder(page, journey) {
       const head = await page.evaluate(() => document.body.innerText.slice(0, 400).replace(/\n+/g, ' ⏎ ')).catch(() => '');
       log.push(`Top of page: ${head}`, '');
       log.push('Controls: ' + (await labels(page).catch(() => [])).filter(x => !/^(Drawing|Figure) \d|more drawings|^Open US|^View details/.test(x)).join(' · '), '');
+      if (VP.hasTouch) {
+        const t = await touchProbe(page).catch(() => null);
+        if (t) log.push(`Under 44px (${t.small.length}): ${t.small.join(' · ') || 'none'}`, `Inputs under 16px: ${t.zoom.join(' · ') || 'none'} · sideways overflow ${t.overflowX}px`, '');
+      }
       return !err;
     },
     write() { log.push(`Searches on ${target} in this journey so far: ${searches}`, ''); fs.writeFileSync(path.join(dir, 'log.md'), log.join('\n')); },
@@ -285,6 +298,173 @@ const J = {
       const head = fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').slice(0, 6).join('\n') : '(not saved)';
       r.log.push(`Downloaded ${path.basename(f)}:`, '```', head, '```', '');
     }
+  },
+
+  async phone(page, r, ctx) {
+    if (!VP.hasTouch) die('the phone journey needs a touch viewport: --viewport phone');
+    const cdp = await ctx.newCDPSession(page);
+    const W = VP.width, H = VP.height, KB = 336;   /* an iPhone keyboard with its bar, in CSS px */
+    /* a finger drag from (x,y) by (dx,dy), as Chromium's touch input */
+    const swipe = (x, y, dx, dy) => cdp.send('Input.synthesizeScrollGesture', { x: Math.round(x), y: Math.round(y), xDistance: dx, yDistance: dy, gestureSourceType: 'touch', speed: 1200 }).then(() => page.waitForTimeout(900));
+    const pinch = (x, y, scale) => cdp.send('Input.synthesizePinchGesture', { x: Math.round(x), y: Math.round(y), scaleFactor: scale, gestureSourceType: 'touch' }).then(() => page.waitForTimeout(900));
+    const box = sel => page.locator(sel).first().boundingBox().catch(() => null);
+    const note = (...l) => r.log.push(...l, '');
+    const text = () => page.evaluate(() => document.body.innerText).catch(() => '');
+
+    /* ── safe area and hover, read from the page before anything moves ── */
+    await home(page);
+    const meta = await page.evaluate(() => document.querySelector('meta[name=viewport]')?.content || '(none)');
+    const css = await page.evaluate(() => {
+      const hoverOnly = [], safe = [];
+      const walk = (rules, inHover) => { for (const r of rules) {
+        if (r.cssRules && r.media) { walk(r.cssRules, inHover || /hover\s*:\s*hover/.test(r.media.mediaText)); continue; }
+        if (r.cssRules && !r.selectorText) { walk(r.cssRules, inHover); continue; }
+        const t = r.cssText || '';
+        if (/safe-area-inset/.test(t)) safe.push(t.slice(0, 140));
+        /* a :hover rule that REVEALS something, outside (hover:hover) */
+        if (!inHover && /:hover/.test(r.selectorText || '') && /(opacity:\s*1|visibility:\s*visible|display:\s*(block|flex|inline|grid))/.test(t)) hoverOnly.push(t.slice(0, 160));
+        if (r.cssRules) walk(r.cssRules, inHover);
+      } };
+      for (const sh of document.styleSheets) { try { walk(sh.cssRules, false); } catch {} }
+      return { hoverOnly, safe };
+    });
+    note('### Safe area and hover', `meta viewport: ${meta}`,
+      `Rules reading env(safe-area-inset-*): ${css.safe.length}${css.safe.length ? '\n> ' + css.safe.slice(0, 8).join('\n> ') : ''}`,
+      `:hover rules that reveal something outside (hover:hover): ${css.hoverOnly.length}${css.hoverOnly.length ? '\n> ' + css.hoverOnly.slice(0, 12).join('\n> ') : ''}`);
+
+    /* ── the soft keyboard ── */
+    const field = 'textarea:visible';
+    await r.step('kb-home', async () => {});
+    await r.step('kb-focused', async () => {
+      await page.locator(field).first().tap();
+      await page.setViewportSize({ width: W, height: H - KB });
+      /* what iOS does on focus: bring the field into the visible area */
+      await page.locator(field).first().evaluate(e => e.scrollIntoView({ block: 'nearest' }));
+      await page.waitForTimeout(700);
+    }, { note: `viewport shortened by ${KB}px, field scrolled into view (simulated keyboard)` });
+    const reach = async tag => {
+      /* the composer's own submit: the LAST control named exactly Search, since
+         a masthead "New search" or a search icon may come first */
+      const all = page.getByRole('button', { name: 'Search', exact: true });
+      const n = await all.count();
+      const s = n ? await all.nth(n - 1).boundingBox().catch(() => null) : null;
+      const f = await box(field);
+      const vh = page.viewportSize().height;
+      note(`${tag}: field ${f ? `${Math.round(f.y)}–${Math.round(f.y + f.height)}` : 'not found'} · Search ${s ? `${Math.round(s.y)}–${Math.round(s.y + s.height)}` : 'not found'} · visible height ${vh} · Search ${s && s.y + s.height <= vh && s.y >= 0 ? 'in view' : 'OUT OF VIEW'}`);
+    };
+    await reach('Focused, empty');
+    await r.step('kb-long-text', async () => {
+      await page.locator(field).first().fill(Q.fixed.long);
+      await page.locator(field).first().evaluate(e => e.scrollIntoView({ block: 'nearest' }));
+      await page.waitForTimeout(600);
+    }, { note: 'a four-sentence description typed with the keyboard up' });
+    await reach('Focused, four sentences');
+    await page.setViewportSize({ width: W, height: H });
+
+    /* ── one search, then touch ── */
+    let ms = 0;
+    await r.step('results', async () => { ms = await submit(page, Q.fixed.packaging); await page.evaluate(() => scrollTo(0, 0)); });
+    note(`Wait from Search to results: ${ms} ms`);
+    await r.step('results-scroll-1', () => swipe(W / 2, H * 0.75, 0, -600), { note: 'finger drag up 600px' });
+    await r.step('results-scroll-2', () => swipe(W / 2, H * 0.75, 0, -1800), { note: 'finger drag up 1800px more: does the search box pin, fold or leave?' });
+    await r.step('results-scroll-back', () => swipe(W / 2, H * 0.3, 0, 900), { note: 'finger drag down 900px: does anything come back?' });
+    await page.evaluate(() => scrollTo(0, 0)); await page.waitForTimeout(500);
+    await r.step('kb-folded-search', async () => {
+      await click(page, /^(Expand search box|Edit your search)/, 600);
+      await page.setViewportSize({ width: W, height: H - KB });
+      await page.locator(field).first().evaluate(e => { e.focus(); e.scrollIntoView({ block: 'nearest' }); }).catch(() => {});
+      await page.waitForTimeout(700);
+    }, { note: 'the folded search reopened with the keyboard up (simulated)' });
+    await reach('Folded search reopened');
+    await page.keyboard.press('Escape').catch(() => {});
+    await page.setViewportSize({ width: W, height: H });
+    await page.evaluate(() => { document.activeElement?.blur(); scrollTo(0, 0); }); await page.waitForTimeout(600);
+
+    /* the drawing strip on the first row, by finger */
+    const strip = await page.evaluate(() => {
+      const e = [...document.querySelectorAll('body *')].find(e => {
+        const s = getComputedStyle(e);
+        return /(auto|scroll)/.test(s.overflowX) && e.scrollWidth > e.clientWidth + 4 && e.querySelector('img') && e.getBoundingClientRect().height > 40;
+      });
+      if (!e) return null;
+      e.scrollIntoView({ block: 'center' });
+      const b = e.getBoundingClientRect(); e.dataset.auditStrip = '1';
+      return { x: b.x + b.width / 2, y: b.y + b.height / 2, before: e.scrollLeft };
+    });
+    if (strip) {
+      await r.step('strip-swipe', () => swipe(strip.x + 100, strip.y, -260, 0), { note: 'finger drag left 260px on the first drawing strip' });
+      const after = await page.evaluate(() => document.querySelector('[data-audit-strip]')?.scrollLeft ?? null);
+      note(`Strip scrollLeft: ${strip.before} → ${after} (${after > strip.before ? 'moved under a finger' : 'DID NOT MOVE'})`);
+    } else note('No horizontally scrolling drawing strip found on the first row.');
+
+    /* tap a row: what opens, and how it closes */
+    await page.evaluate(() => scrollTo(0, 0)); await page.waitForTimeout(400);
+    await r.step('row-tap', async () => {
+      const t = page.locator('button[aria-label^="View details"]:visible, button[aria-label*="Open the record"]:visible').first();
+      if (!(await t.count())) throw new Error('no row control to tap');
+      const isOpen = (await page.locator('button[aria-label^="Close details"]:visible, button[aria-label^="Close this patent"]:visible').count()) > 0;
+      if (!isOpen) { await t.tap(); await page.waitForTimeout(3000); }
+    });
+    const url1 = page.url();
+    /* Is the record a sheet over the list, or a panel in the flow? The
+       nearest fixed/absolute or dialog ancestor of its close control says. */
+    const sheet = await page.evaluate(() => {
+      const c = document.querySelector('button[aria-label^="Close details"], button[aria-label^="Close this patent"]');
+      let e = c; while (e && e !== document.body) { const s = getComputedStyle(e); if (e.getAttribute('role') === 'dialog' || e.getAttribute('aria-modal') === 'true' || s.position === 'fixed') break; e = e.parentElement; }
+      if (!e || e === document.body) return null;
+      const b = e.getBoundingClientRect(); return { x: b.x + b.width / 2, y: Math.max(b.y, 0) + 30, role: e.getAttribute('role') || '', pos: getComputedStyle(e).position };
+    });
+    if (sheet) {
+      await r.step('sheet-drag-down', () => swipe(sheet.x, sheet.y, 0, 400), { note: `finger drag down 400px from the top of the record (${sheet.role || sheet.pos})` });
+      const stillOpen = (await page.locator('button[aria-label^="Close details"]:visible, button[aria-label^="Close this patent"]:visible').count()) > 0;
+      note(`After a drag down on the record sheet: ${stillOpen ? 'still open' : 'dismissed'}`);
+      if (!stillOpen) await openRecord(page).catch(() => {});
+    } else note('The record is not a sheet: no fixed or dialog ancestor of its close control. No drag-to-dismiss tried.');
+
+    /* the lightbox, by finger */
+    await r.step('lightbox', async () => {
+      const f = page.locator('button[aria-label^="Open figure"]:visible, button[aria-label$="open it larger"]:visible').first();
+      if (!(await f.count())) throw new Error('no figure control in the record');
+      await f.tap(); await page.waitForTimeout(2500);
+    });
+    const fig = async () => ((await text()).match(/Figure \d+ of \d+|\d+ of \d+/) || ['?'])[0];
+    const zoom = async () => ((await text()).match(/\d+%/) || ['?'])[0];
+    const f0 = await fig(), z0 = await zoom();
+    /* count what the page RECEIVES, so "no change" can be told apart from
+       "the gesture never arrived" */
+    await page.evaluate(() => { window.__ev = {}; for (const t of ['touchstart', 'touchmove', 'pointerdown', 'pointermove', 'wheel']) document.addEventListener(t, e => { const k = t + (e.pointerType ? ':' + e.pointerType : ''); window.__ev[k] = (window.__ev[k] || 0) + 1; }, { capture: true, passive: true }); });
+    await r.step('lightbox-swipe', () => swipe(W * 0.75, H / 2, -W * 0.5, 0), { note: 'finger drag left across the drawing' });
+    note(`Events the page received during the swipe: ${JSON.stringify(await page.evaluate(() => window.__ev))}`);
+    const f1 = await fig();
+    note(`Lightbox swipe: ${f0} → ${f1} (${f0 !== f1 ? 'changed figure' : 'NO CHANGE'})`);
+    await r.step('lightbox-pinch', () => pinch(W / 2, H / 2, 2), { note: 'two-finger pinch out, ×2' });
+    const z1 = await zoom();
+    const scale = await page.evaluate(() => { const i = [...document.querySelectorAll('img')].filter(i => i.getBoundingClientRect().width > 200).pop(); return i ? `${getComputedStyle(i).transform} · ${Math.round(i.getBoundingClientRect().width)}px wide` : '(no large image)'; });
+    note(`Lightbox pinch: zoom readout ${z0} → ${z1}; the large image: ${scale}`);
+
+    /* back: out of the lightbox, out of the record */
+    const u0 = page.url();
+    await r.step('back-from-lightbox', async () => { await page.goBack({ waitUntil: 'domcontentloaded', timeout: 8000 }).catch(() => {}); await page.waitForTimeout(1500); });
+    note(`Back from the lightbox: URL ${u0} → ${page.url()} · lightbox ${(await text()).includes(f1) && /Zoom in/.test(JSON.stringify(await labels(page))) ? 'still open' : 'closed'} · record ${(await page.locator('button[aria-label^="Close details"]:visible').count()) ? 'open' : 'closed'}`);
+    /* if back went further than the lightbox, put the page back where it was
+       before testing back from the record */
+    if (page.url() !== u0) { note(`Back went past the lightbox to ${page.url()}; going forward again.`); await page.goForward().catch(() => {}); await page.waitForTimeout(2000); await page.keyboard.press('Escape').catch(() => {}); }
+    await openRecord(page).catch(e => note(`Could not reopen the record: ${e.message.split('\n')[0]}`));
+    const u1 = page.url();
+    await r.step('back-from-record', async () => { await page.goBack({ waitUntil: 'domcontentloaded', timeout: 8000 }).catch(() => {}); await page.waitForTimeout(1500); });
+    note(`Back from the record: URL ${u1} → ${page.url()} · record ${(await page.locator('button[aria-label^="Close details"]:visible').count()) ? 'open' : 'closed'} · results ${/matched/.test(await text()) ? 'still on screen' : 'GONE'}`);
+    note(`Record URL when opened by tap: ${url1}`);
+
+    /* landscape and the bottom edge */
+    await page.goForward().catch(() => {}); await page.waitForTimeout(1200);
+    await page.setViewportSize({ width: H, height: W });
+    await r.step('landscape', () => page.waitForTimeout(1200), { note: `${H}×${W}` });
+    const bottom = await page.evaluate(() => [...document.querySelectorAll('body *')].filter(e => {
+      const s = getComputedStyle(e); if (!/(fixed|sticky)/.test(s.position)) return false;
+      const b = e.getBoundingClientRect(); return b.height > 0 && b.bottom >= innerHeight - 34 && b.bottom <= innerHeight + 1;
+    }).map(e => `${e.tagName.toLowerCase()}${e.getAttribute('aria-label') ? '[' + e.getAttribute('aria-label') + ']' : ''} ${getComputedStyle(e).position} pb=${getComputedStyle(e).paddingBottom}`).slice(0, 10));
+    note(`Fixed or sticky elements within 34px of the bottom edge (the home indicator) in landscape: ${bottom.join(' · ') || 'none'}`);
+    await page.setViewportSize({ width: W, height: H });
   },
 
   async keyboard(page, r) {

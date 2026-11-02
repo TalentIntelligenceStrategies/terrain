@@ -189,5 +189,10 @@ if (target === 'theirs' && !a.url && vpName === 'desktop') {
     fs.writeFileSync(path.join(bdir, f), js);
     for (const m of js.matchAll(/["'`]\.\/([A-Za-z0-9_-]+\.js)["'`]/g)) queue.push(m[1]);
   }
-  console.log(`saved ${seen.size} bundle files into ${path.relative(process.cwd(), bdir)}`);
+  /* Their stylesheet, as entry.css whatever its hash: phase 4 reads the rule
+     it overrides here before writing an overlay, and the JS alone does not
+     say what a breakpoint does. */
+  const css = [...new Set([...html.matchAll(/_nuxt\/(entry[A-Za-z0-9_.-]*\.css)/g)].map(m => m[1]))];
+  for (const f of css) fs.writeFileSync(path.join(bdir, 'entry.css'), await (await fetch(`${THEIRS}_nuxt/${f}`)).text());
+  console.log(`saved ${seen.size} bundle files${css.length ? ' and entry.css' : ' (no entry stylesheet linked)'} into ${path.relative(process.cwd(), bdir)}`);
 }
