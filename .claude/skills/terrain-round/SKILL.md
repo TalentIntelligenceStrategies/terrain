@@ -49,6 +49,15 @@ cd .claude/skills/terrain-round && npm install && npx playwright install chromiu
 paths from the repo root. For `--target ours`, serve the repo first:
 `python3 -m http.server 8765` from the root.
 
+## Viewports
+
+Every browser script takes `--viewport`: `desktop` 1440×900 (the default), `tablet` 820×1180,
+`phone` 390×844 (DPR 3, touch, a mobile user agent), `floor` 375×667, `narrow` 320×568, and
+`landscape` 844×390 with touch. **`phone` is the one the phone half is drawn and measured at**;
+`floor` and `narrow` are checks, because `design-language.md` §6 designs down to 375 and wraps the
+masthead at 320. A measure job names its preset as `"viewport"`. Phone captures go in their own
+folder beside the desktop ones (`captures/theirs-phone/`).
+
 ## Phase 0 · setup
 
 1. Open their build and read the version from the masthead.
@@ -80,7 +89,8 @@ Checkpoint: what renders, what is built but not shown, what changed since last r
 
 **A wider look before the differences are settled**: what each build offers and how it is to use,
 what their code carries unrendered, and a design critique of their build from user flow down to
-hover states. Desktop only. Light in full; dark as a check for breakage.
+hover states. **Desktop and phone, at the same depth.** Light in full; dark as a check for breakage
+on each.
 
 1. **Queries.** Reuse the set recorded in the last round's STATE.md, or write one: about five fixed
    queries (reused everywhere, so screenshots compare) and about eight edge cases (one word, 500+
@@ -93,7 +103,10 @@ hover states. Desktop only. Light in full; dark as a check for breakage.
    node .claude/skills/terrain-round/scripts/audit.mjs --round N --journey all --target ours  # app/
    node .claude/skills/terrain-round/scripts/audit.mjs --round N --journey all --theme dark   # theirs, dark check
    ```
-   Journeys: `first-visit reading patent-number errors return field-switch take-out keyboard`.
+   Journeys: `first-visit reading patent-number errors return field-switch take-out keyboard`. Run
+   them again with `--viewport phone`, which adds `touch` (hit areas, hover-only affordances, swipe
+   on the strip and the lightbox), `keyboard-overlap` (input zoom, a bar under the soft keyboard),
+   `back` (browser back out of the record and the lightbox) and `safe-area`.
 3. **Hidden scan:** `node .claude/skills/terrain-round/scripts/hidden.mjs --round N`. Every string
    in their message table that no capture or audit log shows. A string proves a label, not a
    feature.
@@ -105,13 +118,20 @@ hover states. Desktop only. Light in full; dark as a check for breakage.
 6. **Design pass B**: invoke the `impeccable` skill on the same inputs, **without reading pass A** →
    `audit/review-impeccable.md`.
 
-   Both passes: type and hierarchy may be suggested (accepted ones become flagged items, §13.1);
-   note **also in ours** where the matching `app/` capture shares the issue.
-7. **Merge** → `audit/findings.md`, only after both passes are done.
-   - Deduplicate. Each finding gets: ID `A-NN` · journey · area (features and flow / layout and
+   **Further passes** when the round asks for them, each by its own agent on the same inputs and
+   none reading another: `responsive-craft` (320 → 1440, the stack below 1080, sticky and scroll),
+   `mobile-app-ui-design` (thumb reach, sheets, gestures, where the primary action sits) and
+   `better-accessibility` (touch targets, hover-only states, focus order, names on glyph controls),
+   each → `audit/review-<skill>.md`. Lettered C, D, E after A and B.
+
+   Every pass: type and hierarchy may be suggested (accepted ones become flagged items, §13.1);
+   each finding names its viewport (desktop, phone, both); note **also in ours** where the matching
+   `app/` capture shares the issue; **a finding that needs a feature the build lacks is marked
+   *out: feature*** when §13.4 rules features out.
+7. **Merge** → `audit/findings.md`, only after every pass is done.
+   - Deduplicate. Each finding gets: ID `A-NN` · journey · viewport · area (features and flow / layout and
      hierarchy / states and feedback / motion and polish) · finding · suggestion · **impact**
-     high/medium/low · **effort for Innovue** small/medium/large · also in ours · raised by A, B or
-     both · screenshots.
+     high/medium/low · **effort for Innovue** small/medium/large · also in ours · raised by (A–E) · screenshots.
    - A finding already covered by the current §13.4 list links to that ID instead of repeating it.
    - Sort by impact, then effort.
 8. **Report** → `audit/report.html`, one local page: counts, the comparison, the hidden list, every
@@ -167,6 +187,8 @@ For each item, in the order the user picks:
      run**: the before shots are taken in both themes, then the overlay goes into the same page.
      An item a picture cannot show (a hit area, a transition count) is verified by measuring it
      on the live page, and the number goes in the header comment.
+     An item that touches the phone is shot again with `--viewport phone`, and one that changes a
+     breakpoint at `floor` and `narrow` too.
   4. **Alternatives** are separate IDs (`R2-08a`, `R2-08b`); files named for the base ID
      (`R2-08.css`) are shared by both. `--item all --without R2-08b` shoots the combined patch with
      the unchosen variant left out.

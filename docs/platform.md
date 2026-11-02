@@ -1265,54 +1265,28 @@ Innovue only. It is never published.
 
 ### 13.4 · The current round
 
-**Round 2, against their v1.0.29, captured 2026-10-26, from `handoff-2026-10-14`.** A feature round:
-the starred page and the patent report, specified as **format and features**. What Pro writes, and
-how, is Innovue's; the package fixes how the report is laid out as a document, what each screen
-does, and the smallest contract the layout needs. The list is replaced when the next round opens.
+**Round 3, against their v1.0.35, captured 2026-11-02, from `handoff-2026-10-26`.** A UX and
+interface round on what their build already has, **with no new feature**: a finding that needs one is
+recorded as out of scope and not carried. **Desktop and phone are reviewed at the same depth, and the
+phone takes the weight**, because neither earlier package specified it: the phone layout is drawn at
+390px, checked at 375 and 320, and every card names the viewport it applies to.
 
-**Part A · conformance**: the package they hold has these, and their build does not.
+**Type and text layout are open on every component this round**, on both viewports — the flag
+§13.1 allows. The phone is where type decides use (an input under 16px zooms the page on iOS, a label
+that fits at 1440 truncates at 390), so holding type out would hold the phone half out with it.
 
-| ID | Component | Difference → wanted | Shown in |
-| --- | --- | --- | --- |
-| R2-01 | Result card, record, masthead | No star and no starred count (R1-01, R1-02) → a star on every card and in the record, and a standing count in the masthead that shows at nought. **The star is a collection**, and each starred patent remembers the search it was starred under (§5.1) | `app/` |
+**The list is the audit's, and nothing else.** Round 1's deferred items and §13.5 are not carried; a
+finding that matches an earlier ID cites it. The accepted list replaces this paragraph when the
+verdicts are in.
 
-**Part B · changes**, by component.
-
-| ID | Component | Difference → wanted | Shown in |
-| --- | --- | --- | --- |
-| R2-02 | Starred page | Nothing → the starred page: *Detail*, the results card, and *List*, a table, switched in the list's toolbar; grouped by the search each patent was starred under, newest first, each group headed by its sentence, its count, when, and *Run again*; sort as a view that the files ignore (§5.2) | `app/` |
-| R2-03 | Starred page · record | Nothing → the record opens as a drawer from the trailing edge with about 200px of the page showing; previous and next step through the starred order, it says *3 of 8*, and it offers no *Find similar* | `app/` |
-| R2-04 | Starred page · unstar | Nothing → unstarring takes the patent out at once with a toast and *Undo* for six seconds, which puts it back where it was | `app/` |
-| R2-05 | Starred page · report panel | Nothing → a panel at the trailing side: the report's question, *Ready now* and *Pro · about 10 minutes* naming every section, the one filled button *Create patent report*, and *CSV* and *Markdown* as quiet links that say *Downloaded* for a moment. Below 1080px it moves above the set and its lists fold | `app/` |
-| R2-06 | Starred page · files | Nothing → the set leaves as CSV or Markdown with the seven fields on screen, grouped by search in the page's order, and nothing the page did not show | `app/` |
-| R2-07 | Report · flow | Nothing → *Create patent report* opens the report; it reads on screen as sheets and prints as US Letter pages; *Download PDF* in its head | `app/` |
-| R2-08 | Report · page | Nothing → the page format: US Letter at 96dpi, the text block and frame, the running head and foot, the cover, *How the set was made*, *At a glance*, the type scale on paper (`design-language.md` §7) | Template |
-| R2-09 | Report · Part 1 | Nothing → numbered exhibits whose titles state a count, the starred set dark and the results light beside it, pairs that share a base side by side, and the set's own exhibits: filed to published, inventors, record anomalies, what the set does not contain | Template |
-| R2-10 | Report · the turn and the run | Nothing → Part 1's closing line in its three states; the band that runs Pro; confirm with the price and *charged on delivery*; queued and running with *Ready in about N minutes*; done; failed with *Nothing was charged* and *Try again* | `app/`; template |
-| R2-11 | Report · Part 2 | Nothing → an opener page listing the sections, each Pro section on a page of its own with its number, title, question and the Pro label, the nine block kinds as drawn, citations and the *C* / *O* marks, and the disclaimer closing the part. **The content shown is illustrative** | Template |
-| R2-12 | Report · appendix and close | Nothing → the starred patents one table per row on shared columns, the source line with the last row; the closing page | Template |
-| R2-13 | Report · PDF | Nothing → the page printed as the file: cover first, head and foot on every later page, light in either theme; before Pro without Part 2, after Pro with it | Template |
-| R2-14 | Engine · rows | The row carries no recorded holder and no record checks → `holderRecorded` and `flags` (`components.md` §1) | Contract |
-| R2-15 | Engine · counts | No counts over a result set → `fieldCounts` over every search behind the stars, each bucket list summing to `results`, without moving the current result set | Contract |
-| R2-16 | Engine · Pro | No Pro port → `proQuote` with the section list, `proStart`, `proStatus`, `proResult` as sections of blocks; the charge on delivery. **The sections and their content are Innovue's**; five rules hold whatever is written (§5.3) | Contract |
-
-**Questions for Innovue**, closing the package:
-
-| ID | Question |
-| --- | --- |
-| R2-17 | Does a section you plan need a block the nine kinds cannot describe? Name it and we add it to the template before you build it |
-
-**Not in this package**, by the user's choice, for round 3: R1-28's export confirmation, R1-34's
-pinned record actions and R1-35's citation, which v1.0.29 still lacks; the rest of round 1's list,
-whose state is in `round-2/STATE.md`; R1-48 to R1-51; and §13.5.
-
-**Round 1's IDs stay valid where `app/` and the docs cite them** (*R1-39*, *R1-36* …): each is
-defined in this section as it stood at tag `handoff-2026-10-14`, and in that package's `CHANGES.md`,
-which Innovue holds. An ID is never reused.
+**Earlier rounds' IDs stay valid where `app/` and the docs cite them** (*R1-39*, *R1-36* …): each is
+defined in this section as it stood at that round's tag — `handoff-2026-10-14` for R1,
+`handoff-2026-10-26` for R2 — and in that package's `CHANGES.md`, which Innovue holds. An ID is never
+reused.
 
 ### 13.5 · Queued for the next round
 
-What has been settled since round 1 was sent, and goes in round 3's package: round 2 carried the starred page and the report only.
+What has been settled since round 1 was sent and not yet packaged: round 2 carried the starred page and the report, and round 3 is an interface round. Each goes in the first round whose scope it fits.
 
 | What | Difference → wanted |
 | --- | --- |
