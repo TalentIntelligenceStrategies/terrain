@@ -279,10 +279,12 @@ OpenAPI description with a JSON Schema and a captured example for each of its 19
 they hold the delta built from `handoff-2026-10-14`**, the first round against their shipped build:
 what their build does not yet do, what changed here since, the reduced type scale, a working patch
 for their live build, and the contract for the six ports that changed shape and the four that were
-removed. **The contract they hold is `design/components.md` at `handoff-2026-10-14`**, 15 ports.
+removed. **On top of that they hold the delta built from `handoff-2026-10-26`**: the starred page, the
+patent report as a template with two sample PDFs, the block contract, and the five ports that are new
+or changed. **The contract they hold is `design/components.md` at `handoff-2026-10-26`**, 20 ports.
 
 **A change to a port's shape after that tag is a change they do not have.** `git diff
-handoff-2026-10-14 -- app/js/ports.mjs design/components.md` is what has moved since, and a new
+handoff-2026-10-26 -- app/js/ports.mjs design/components.md` is what has moved since, and a new
 package with a new tag is how it reaches them. The tag is the record; nothing else here tracks it.
 
 **Every package is a delta** from the newest `handoff-*` tag: what their shipped build got wrong
