@@ -651,8 +651,8 @@ reasoning in its own comments. This section carries what a reader cannot get fro
 `fill="currentColor"` so it inverts for free. Content on `--ground`, cards on `--surface`, one working
 surface beneath the bar.
 
-**Below 1080px the columns stack, and the layout is designed down to 375px.** The list sits over the
-record, each still one panel, and nothing is dropped to make it fit: every region keeps its control
+**Below 1080px the list is the page and the record is a sheet over it, and the layout is designed
+down to 375px.** Nothing is dropped to make it fit: every region keeps its control
 and loses its words. On a phone the masthead is one row of glyphs with the labels as accessible names,
 the field tiles are one row that scrolls sideways, the folded search bar is the sentence and Search
 alone, and a row's meta is one column so no qualifier is cut. **At 320px the masthead wraps to a
@@ -789,9 +789,13 @@ field list never collapses at any width, while the share appears to protect a fl
 a split above the stack and the full width below it — a viewport query would fire at the wrong moment
 in both directions.
 
-**The columns stack below 1080**, in the 56px band between there and the floor, list above record.
-That is not a third structure: it is the same two regions in the other axis, and the list keeps a
-46vh cap so the record it opened sits beneath it rather than off the bottom of the page.
+**Below 1080 the record is a sheet over the list**, not a second region under it. Stacked, the
+record a founder opened arrived below the list they were scanning, so opening one meant losing
+their place in the other and Back threw both away. As a sheet it covers the list without moving
+it: closing it, by its control, a drag down, the scrim or Back, returns to the row that opened it,
+where it was. The sheet takes the full width, rounds its top corners only, stops 24px short of the
+top so the list still shows it is there, and scrolls itself, with `overscroll-behavior: contain` so
+the list behind never moves under a finger.
 
 **Above the stack the breakpoints adjust components, never the structure.** A label narrows, the
 thumbnail strip fits fewer per row, the field tiles reflow.
@@ -829,8 +833,8 @@ non-flexing item above a scrolling sibling stays put without saying so, which is
 fills its column gives for free. The rule is about what persists, not about a property: a `sticky`
 declaration that reproduces this arrangement is the same claim and answers to the same count.
 
-*The record's head keeps its `sticky` anyway, because below 1080 the panel is not frozen and sticky
-is the whole of what holds it. That depends on a detail worth writing down once: the card is
+*The record's head keeps its `sticky` anyway, because below 1080 the record is a sheet that scrolls
+itself and sticky is the whole of what holds its head. That depends on a detail worth writing down once: the card is
 `overflow:clip` and not `overflow:hidden`. `hidden` makes an element a scroll container, so a sticky
 child resolves against the card — which never scrolls — and travels away with it, throwing nothing
 and logging nothing. `clip` clips to the radius without creating a scrollport.*

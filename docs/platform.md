@@ -212,7 +212,7 @@ mode — into the URL, and the open record adds itself. A reload, a link sent to
 or Forward between two searches all bring the search back by running it again, with its record open;
 a URL that names a record the first page does not hold opens the first result instead. **A search is
 a step, and so is whatever covers the thing before it**: each search is one entry in the browser's
-history, an enlarged drawing is one more, and below 1080px, where the record is reached by leaving
+history, an enlarged drawing is one more, and below 1080px, where the record is a sheet over
 the list, so is the record. Back closes the drawing and leaves the record open, and on a phone it
 closes the record and leaves the list where it was; a Back that ends a reading session by throwing
 away the results is the gesture punishing the one person using it. Where the record sits beside the
@@ -460,8 +460,8 @@ its own retry in the panel.
 **After a search the first result's record opens by itself**, where the columns sit side by side.
 The right column would otherwise say *pick a patent* beside a list that has already ranked one
 first. Focus stays where the founder put it — they pressed Search, not the row — and below 1080px,
-where the columns stack, nothing opens, because a record arriving there would push the list the
-founder asked for below the fold. A sort, a grouping branch or *Show more* opens nothing: those are
+where the record is a sheet over the list, nothing opens, because a record arriving there would
+cover the list the founder asked for. A sort, a grouping branch or *Show more* opens nothing: those are
 the founder working the set they have.
 
 **The two columns divide by how hard you are looking, and the division is between them rather than
@@ -1287,7 +1287,7 @@ that fits at 1440 truncates at 390), so holding type out would hold the phone ha
 
 **The list is the audit's, and nothing else.** Round 1's deferred items and §13.5 are not carried; a
 finding that matches an earlier ID cites it. Every item is an overlay on their build; **+ `app/`**
-marks the nine where `app/` shares the fault and changes too, settled in this document or
+marks the ten where `app/` shares the fault and changes too, settled in this document or
 `design-language.md` first. *If confirmed* marks two the audit could not establish, verified before
 an overlay is written. Two findings were rejected: a record opening that seemed to run *Find
 similar* by itself did not reproduce, and keeping the list-and-record split down to 768px is a layout
@@ -1313,7 +1313,7 @@ change, not an interface one.
 | R3-16 | phone | Record | Title, holder, date, drawings, abstract, then the identifiers, two short ones to a row; classes behind *More details* | + `app/` |
 | R3-17 | both | List | No score on a row; the rank stays | |
 | R3-18 | phone | Results | One pinned row of at most 56px; the toolbar scrolls with the results header | |
-| R3-19 | phone | Record | A bottom sheet: handle, drag down or the scrim to close, actions on the safe area | |
+| R3-19 | phone | Record | A bottom sheet over the list: handle, drag down or the scrim to close, actions on the safe area | + `app/` |
 | R3-20 | phone | Drawing viewer | Full bleed, the drawing at full width, close at the top edge | + `app/` |
 | R3-21 | both | List | The kind is text in the number line; the version switch is in the record, where both exist (was R1-42) | |
 | R3-22 | phone | List | Titles to two lines; holder and inventor stacked full width | |
