@@ -1,0 +1,73 @@
+/* R3-16 · Patent record (phone): what it opens on
+ *
+ * Current: below sm the record opens on eleven label/value pairs, Number to
+ * Classes, one per line with the uppercase label above each value (their
+ * @container record (max-width: 420px) rule); the drawings start a screen
+ * and a half down and the abstract after them.
+ * Wanted:  title, then holder and date (a byline under the title, R3-16
+ * script), then the drawings, then the abstract, then the identifiers, then
+ * the claims. In the identifiers the short ones (number, application, kind,
+ * the three dates, where) sit two to a row with the label beside the value;
+ * holder and inventors take a row each, label beside value; main class and
+ * classes are behind "More details".
+ * Viewport: phone, below sm (40rem); below 360px the short fields go one
+ * to a row, still label beside value. Tablet, landscape and desktop keep
+ * their grid.
+ *
+ * Measured at 390×844 (with the R3-19 sheet): the Drawings heading moves
+ * from 740px below the record's top to about 190px; the identifiers block
+ * is 553px tall before and 203px after, classes closed.
+ *
+ * Not patchable here, and part of the item: the order is CSS `order` on the
+ * record body's flex column, so reading and Tab order still follow the DOM
+ * (fields, drawings, abstract). The component must render the sections in
+ * the new order. The fields are told apart by their label text (the script
+ * tags them data-terrain-field); the component should key them itself. */
+@media not all and (min-width: 40rem) {
+  [role="dialog"][data-result-detail] .detail-body > section[aria-label="Drawings"] { order: 1; }
+  [role="dialog"][data-result-detail] .detail-body > section:not([aria-label]):not(:has(ol)) { order: 2; }
+  [role="dialog"][data-result-detail] .detail-body > dl.record-fields,
+  [role="dialog"][data-result-detail] .detail-body > [data-terrain-more-toggle] { order: 3; }
+  [role="dialog"][data-result-detail] .detail-body > section:has(ol) { order: 4; }
+
+  [role="dialog"][data-result-detail] .detail-body > dl.record-fields {
+    grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 10px 12px;
+    align-items: baseline;
+  }
+  [role="dialog"][data-result-detail] .detail-body > dl.record-fields dd.mono:not(.chip-list) { white-space: nowrap; }
+  [role="dialog"][data-result-detail] .detail-body > dl.record-fields dt { margin: 0; }
+  [role="dialog"][data-result-detail] .detail-body > dl.record-fields dt.field-wide { grid-column: 1; margin: 0; }
+  [role="dialog"][data-result-detail] .detail-body > dl.record-fields dd.field-wide { grid-column: 2 / -1; }
+  [role="dialog"][data-result-detail] .detail-body > dl.record-fields:not([data-terrain-more="open"]) > :is([data-terrain-field="main class"], [data-terrain-field="classes"]) {
+    display: none;
+  }
+  /* "More details" sits under the fields block, as a quiet text control. */
+  [data-terrain-more-toggle] {
+    align-self: flex-start;
+    margin-top: -16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted-foreground);
+    border-radius: calc(var(--radius) - 4px);
+  }
+  [data-terrain-more-toggle]:hover { color: var(--foreground); }
+  [data-terrain-more-toggle]:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  [data-terrain-more-toggle] svg { width: 14px; height: 14px; transition: rotate var(--dur-fast) ease; }
+  [data-terrain-more-toggle][aria-expanded="true"] svg { rotate: 180deg; }
+  [data-terrain-byline] {
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--muted-foreground);
+  }
+}
+@media not all and (min-width: 360px) {
+  [role="dialog"][data-result-detail] .detail-body > dl.record-fields {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+}
