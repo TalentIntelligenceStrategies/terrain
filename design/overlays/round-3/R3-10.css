@@ -1,0 +1,26 @@
+/* R3-10 · Patent record: a claim preamble is a lead-in, not claim 1
+ *
+ * Current: when a patent's first claim string is only a preamble ("We
+ * claim:"), their claim list renders it as claim 1, and every claim after
+ * it is numbered one too high; the Claims count is one too high as well.
+ * Seen on US 05672367.
+ * Wanted:  a leading claim that ends in a colon and has no body renders as
+ * an unnumbered lead-in above the list, in the muted text colour; the
+ * claims after it count from 1, and the count beside Claims leaves it out.
+ * Numbers their build parsed from the claim text itself (the span with
+ * text-foreground/80) are kept as they are.
+ * Viewport: both, the desktop pane and the phone dialog.
+ *
+ * Verified by injection, not on US 05672367, which is not in the replay
+ * recording: the measuring script prepends <li>"1." "We claim:"</li> to the
+ * claim list of US 09000581 B2 in their own markup, renumbers the rest 2–20
+ * as index numbers and sets the count to 20. With the patch the lead-in has
+ * no number, the next claim reads "1.", the last "19.", and the count 19.
+ *
+ * In the component: drop the preamble before numbering, in the function
+ * that builds the claim rows (PatentDetailBody), and render it as a <p>
+ * above the <ol>. The rule here is: trimmed text ends in ":" and is at most
+ * six words. */
+[data-result-detail] li[data-terrain-claim-lead] { display: block; }
+[data-result-detail] li[data-terrain-claim-lead] > span { display: none; }
+[data-result-detail] li[data-terrain-claim-lead] > p { color: var(--muted-foreground); }
