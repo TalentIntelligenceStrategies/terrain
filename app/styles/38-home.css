@@ -91,7 +91,13 @@
 
 /* §3.8 SITE 3 OF 3 — the selected state of a control. The LABEL and the glyph
    take the accent; the tile stays --surface, because a filled accent tile here
-   would be a second primary action on a surface that already has Search. */
+   would be a second primary action on a surface that already has Search.
+
+   A RING MEANS FOCUS AND NOTHING ELSE (§3.8). Selected is the 1px edge and the
+   ink below; the 2px ring at an offset is :focus-visible's alone, so a tile
+   that is both shows both and one that is only selected never looks focused.
+   Measured (R3-46): selected #D1D1D1 at 1px, no outline; focused adds the 2px
+   --focus ring at 2px. */
 .field[aria-pressed="true"]{border-color:var(--border-strong);color:var(--text-1)}
 .field[aria-pressed="true"] .field-name{color:var(--accent-on-surface);font-weight:600}
 .field[aria-pressed="true"] .field-icon{color:var(--accent-on-surface)}
@@ -170,8 +176,12 @@
   .conv-body > .conv-col:has(.fields){margin-bottom:var(--s-16)}
   .conv-intro{margin-bottom:var(--s-32)}
   .cover{margin-top:var(--s-32)}
+  /* --s-4 OF BLOCK PADDING IS THE RING'S ROOM, and --s-2 clipped half of it
+     (design-language.md §3.8, R3-46): a scroller clips its own focus ring on
+     all four sides, and a 2px ring at a 2px offset needs 4. The negative
+     block margin keeps the row where it stood. */
   .fields{display:flex;gap:var(--s-8);overflow-x:auto;overscroll-behavior-x:contain;
-          margin-inline:calc(-1 * var(--s-16));padding:var(--s-2) var(--s-16);
+          margin:calc(-1 * var(--s-2)) calc(-1 * var(--s-16));padding:var(--s-4) var(--s-16);
           scrollbar-width:none}
   .fields::-webkit-scrollbar{display:none}
   .field{flex:0 0 auto;width:auto;height:auto;min-width:168px;min-height:64px;
