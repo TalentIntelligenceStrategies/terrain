@@ -1,0 +1,17 @@
+/* R3-35 · Home: at tablet width the field grid is three and three
+ *
+ * Current: the grid is repeat(auto-fit, minmax(140px, 1fr)). At 820 that is
+ * five to a row, which leaves "Medical diagnostics" alone on the second
+ * row; in 844×390 landscape the sixth is cut off by the fold.
+ * Wanted:  from sm up to lg (640–1023px), three columns, so the six fields
+ * are two rows of three. Below sm the fields are a chip row (R3-15); from
+ * lg the grid is six across, as it is now at 1440.
+ * Viewport: tablet (820) and landscape (844). Phone and desktop unchanged.
+ *
+ * In the component: grid-cols-3 between sm and lg, or
+ * repeat(auto-fit, minmax(150px, 1fr)) capped at three columns there. */
+@media (min-width: 40rem) and (max-width: 63.98rem) {
+  section[aria-label="Patent technology fields"] > div {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
