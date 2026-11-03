@@ -1,7 +1,8 @@
 /* Shared by every /terrain-round script.
  *
- * THE LIVE BUILD RECORDS SESSIONS, so every page this opens has PostHog
- * blocked before the first request. Our iterations are not their users.
+ * THE LIVE BUILD RECORDS SESSIONS, so every page this opens has PostHog and
+ * their RUM collector (/rum/, OpenObserve, shipped by v1.0.36) blocked before
+ * the first request. Our iterations are not their users.
  *
  * Paths are resolved from the repo root, never the cwd, so a script run from
  * anywhere writes into the same round folder. */
@@ -114,10 +115,11 @@ export async function open({ viewport: vp, width, height, theme, scale } = {}) {
     colorScheme: theme === 'dark' ? 'dark' : 'light',
     permissions: ['clipboard-read', 'clipboard-write'],
   });
-  await ctx.route(/posthog/i, r => r.abort());
+  const TELEMETRY = /posthog|\/rum\/v\d/i;
+  await ctx.route(TELEMETRY, r => r.abort());
   const page = await ctx.newPage();
   const blocked = [];
-  page.on('requestfailed', r => { if (/posthog/i.test(r.url())) blocked.push(r.url()); });
+  page.on('requestfailed', r => { if (TELEMETRY.test(r.url())) blocked.push(r.url()); });
   return { browser, ctx, page, blocked };
 }
 
@@ -275,9 +277,9 @@ export async function reachTheirs(page, state, query) {
     ]);
     await settle(5000);
   }
-  if (state === 'home') { await page.goto(THEIRS, { waitUntil: 'networkidle' }); return settle(1500); }
+  if (state === 'home') { await page.goto(THEIRS, { waitUntil: 'networkidle', timeout: 60000 }); return settle(1500); }
   if (state === 'settings') {
-    await page.goto(THEIRS, { waitUntil: 'networkidle' }); await settle(1200);
+    await page.goto(THEIRS, { waitUntil: 'networkidle', timeout: 60000 }); await settle(1200);
     return click(page, /^Search settings$/, 1000);
   }
   if (state === 'notfound') return submit(query || 'US12-345', 'Patent number');

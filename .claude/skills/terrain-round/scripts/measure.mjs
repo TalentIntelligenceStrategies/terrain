@@ -28,10 +28,22 @@
  * to; the pixels are what they check their build against. Tokens are read from
  * the page being measured — app/'s from tokens.css as the page resolves them,
  * theirs from their own :root — so a value on an overlay item that matches no
- * token of theirs prints as a raw value, and that is a finding, not a gap. */
+ * token of theirs prints as a raw value, and that is a finding, not a gap.
+ *
+ * THEIR API IS REPLAYED, as in overlay.mjs, unless --live: a measuring run
+ * reaches the same states the overlay shots did, so it should cost nothing.
+ *
+ * A TOUCH VIEWPORT IS MEASURED UNDER A NOTCH. Chromium's emulation reports
+ * every safe-area inset as 0, so a fixed bar that ignores env() measures the
+ * same as one that honours it; a touch job sets an iPhone's insets (47 top,
+ * 34 bottom) unless it says "safeArea": false. And every control on a touch
+ * job carries the share of a 44×44 square, centred on it, that a tap would
+ * land on it — the number design-language.md §7 asks for, read from
+ * elementFromPoint rather than from its box, so an enlarged hit area counts
+ * and a neighbour lying over it does not. */
 import fs from 'node:fs';
 import path from 'node:path';
-import { args, roundDir, open, reach, reachTheirs, click, die, readOverlay, injectOverlay, THEIRS, OURS_LOCAL, QUERY } from './lib.mjs';
+import { args, roundDir, open, reach, reachTheirs, click, die, readOverlay, injectOverlay, replay, THEIRS, OURS_LOCAL, QUERY } from './lib.mjs';
 
 const a = args();
 const out = roundDir(a.round, 'measure');
@@ -174,10 +186,18 @@ async function act(page, steps = []) {
   }
 }
 
-/* Their control is in the masthead; ours is in the account menu, so it is
-   pressed by its data attribute. Either way the result is checked, and set
-   directly if the control could not be reached (an open dialog covers it). */
-async function setTheme(page, theme) {
+/* Ours is pressed by its data attribute, and the result is checked and set
+   directly if the control could not be reached. THEIRS IS NEVER PRESSED: their
+   control is in the masthead, and a press there is an outside click to
+   whatever is open — the viewer, the grouping popover, the settings sheet,
+   the record card on a phone — so the dark pass measured a page with nothing
+   on it. Their palette keys on html[data-theme] alone (entry.css), so the
+   attribute is the whole switch. */
+async function setTheme(page, theme, target) {
+  if (target === 'theirs') {
+    await page.evaluate(t => { document.documentElement.setAttribute('data-theme', t); document.documentElement.style.colorScheme = t; }, theme);
+    return page.waitForTimeout(700);
+  }
   const pressed = await page.evaluate(t => { const b = document.querySelector(`[data-theme-set="${t}"]`); if (b) b.click(); return !!b; }, theme);
   if (!pressed) await click(page, theme === 'dark' ? /^Dark appearance$/ : /^Light appearance$/, 0);
   await page.waitForTimeout(500);
@@ -186,7 +206,7 @@ async function setTheme(page, theme) {
   await page.waitForTimeout(700);
 }
 
-async function measureOne(page, item, { target, state, theme, idx, overlay, vpName }) {
+async function measureOne(page, item, { target, state, theme, idx, overlay, vpName, touch }) {
   const depth = Number(item.depth ?? 2);
   const st = item.state || state;
   /* the target leads the name, so their build and app/ measured under one
@@ -199,8 +219,23 @@ async function measureOne(page, item, { target, state, theme, idx, overlay, vpNa
   if (item.interact === 'focus') { await page.keyboard.press('Shift'); await el.focus(); }
   await page.waitForTimeout(500);
 
-  const rows = await el.evaluate((root, depth) => {
+  const rows = await el.evaluate((root, { depth, touch }) => {
     const out = [];
+    /* the share of a 44×44 square on the control's centre that lands on it */
+    const hit = e => {
+      if (!e.checkVisibility({ visibilityProperty: true, opacityProperty: true })) return null;   /* a closed menu is not a target */
+      const r = e.getBoundingClientRect(), cx = r.x + r.width / 2, cy = r.y + r.height / 2;
+      let n = 0, on = 0;
+      for (let dx = -20; dx <= 20; dx += 5) for (let dy = -20; dy <= 20; dy += 5) {
+        const x = cx + dx, y = cy + dy;
+        if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) continue;
+        n++;
+        const t = document.elementFromPoint(x, y);
+        if (t && (t === e || e.contains(t))) on++;
+      }
+      return n ? Math.round(on / n * 100) : null;
+    };
+    const control = e => e.matches('button, a[href], input, select, textarea, summary, [role=button], [role=tab], [role=menuitem], [role=checkbox], [role=radio], [role=option]');
     const walk = (e, d) => {
       const r = e.getBoundingClientRect();
       if (r.width > 1 && r.height > 1) {   /* a 1×1 box is .sr-only, not layout */
@@ -214,6 +249,8 @@ async function measureOne(page, item, { target, state, theme, idx, overlay, vpNa
           outline: s.outlineStyle !== 'none' && s.outlineWidth !== '0px' ? [s.outlineWidth, s.outlineColor, s.outlineOffset] : null,
           shadow: s.boxShadow !== 'none' ? s.boxShadow : '',
           font: `${s.fontSize} / ${s.lineHeight} · ${s.fontWeight}`,
+          hit: touch && control(e) ? hit(e) : null,
+          pos: /fixed|sticky/.test(s.position) ? `${s.position} ${['top', 'right', 'bottom', 'left'].map(k => s[k]).join(' ')}` : '',
         });
       }
       if (d < depth) for (const c of e.children) walk(c, d + 1);
@@ -238,7 +275,7 @@ async function measureOne(page, item, { target, state, theme, idx, overlay, vpNa
     }
     document.body.appendChild(layer);
     return out;
-  }, depth);
+  }, { depth, touch: !!touch });
   if (!rows.length) throw new Error(`${item.selector} has no box`);
 
   const vp = page.viewportSize();
@@ -261,24 +298,36 @@ async function measureOne(page, item, { target, state, theme, idx, overlay, vpNa
   return stem;
 }
 
+/* AN ARGUED RAW VALUE IS NAMED BY ITS ARGUMENT. measure/argued.json maps a
+   raw value to the item whose header argues it (the drawing's paper does not
+   swap, so a badge on it keeps their own black); it prints as that, and every
+   other raw value still prints as (no token), a finding. Their own markup's
+   raw values are listed with "theirs:" and go to the card as notes. */
+const ARGUED = (() => { const f = path.join(out, 'argued.json'); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {}; })();
+
 function render(m) {
-  const { tok, box } = namer(m.idx, m.target, m.conv);
+  const named = namer(m.idx, m.target, m.conv);
+  const box = named.box, tok = (v, role) => {
+    const t = named.tok(v, role);
+    return t.endsWith('(no token)') && ARGUED[v] ? `${v} (${ARGUED[v]})` : t;
+  };
   const where = m.target === 'theirs' ? `their build${m.overlay ? ` with overlay ${m.overlay}` : ''}` : 'app/';
   const extra = m.rows.some(o => o.outline || o.shadow);
+  const hits = m.rows.some(o => o.hit != null), pos = m.rows.some(o => o.pos);
   return [
     `### ${m.component} · ${m.state} · ${m.theme}${m.interact ? ' · ' + m.interact : ''}`, '',
     `Measured on ${where}, \`${m.selector}\`, ${m.date}.`, '',
     `![](${m.stem}.png)`, '',
-    `| # | Element | Size | Padding | Margin | Gap | Radius | Text | Fill | Border | Type |${extra ? ' Ring / shadow |' : ''}`,
-    `| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |${extra ? ' --- |' : ''}`,
-    ...m.rows.map(o => `| ${o.n} | \`${o.name}\` | ${o.size} | ${box(o.padding)} | ${box(o.margin)} | ${box(o.gap)} | ${box(o.radius, 'radius')} | ${tok(o.fg, 'fg')} | ${tok(o.bg, 'bg')} | ${tok(o.border, 'border')} | ${o.font} |${extra ? ` ${[o.outline && `${o.outline[0]} ${tok(o.outline[1], 'border')}, offset ${o.outline[2]}`, o.shadow].filter(Boolean).join(' · ')} |` : ''}`),
+    `| # | Element | Size | Padding | Margin | Gap | Radius | Text | Fill | Border | Type |${extra ? ' Ring / shadow |' : ''}${hits ? ' 44×44 hit |' : ''}${pos ? ' Position |' : ''}`,
+    `| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |${extra ? ' --- |' : ''}${hits ? ' --- |' : ''}${pos ? ' --- |' : ''}`,
+    ...m.rows.map(o => `| ${o.n} | \`${o.name}\` | ${o.size} | ${box(o.padding)} | ${box(o.margin)} | ${box(o.gap)} | ${box(o.radius, 'radius')} | ${tok(o.fg, 'fg')} | ${tok(o.bg, 'bg')} | ${tok(o.border, 'border')} | ${o.font} |${extra ? ` ${[o.outline && `${o.outline[0]} ${tok(o.outline[1], 'border')}, offset ${o.outline[2]}`, o.shadow].filter(Boolean).join(' · ')} |` : ''}${hits ? ` ${o.hit == null ? '' : o.hit + '%'} |` : ''}${pos ? ` ${o.pos || ''} |` : ''}`),
     '',
   ].join('\n');
 }
 
 /* --render: rewrite every table from the raw values it was measured from */
 if (a.render) {
-  const files = fs.readdirSync(out).filter(f => f.endsWith('.json') && !/^(GRID|spec)/.test(f));
+  const files = fs.readdirSync(out).filter(f => f.endsWith('.json') && !/^(GRID|spec|argued)/.test(f));
   for (const f of files) {
     const m = JSON.parse(fs.readFileSync(path.join(out, f), 'utf8'));
     fs.writeFileSync(path.join(out, `${m.stem}.md`), render(m));
@@ -297,6 +346,14 @@ for (const job of jobs) {
   /* viewport names a preset (phone is touch, so hover-only rules stay off);
      width and height still override it for a one-off size. */
   const { browser, ctx, page } = await open({ theme: 'light', viewport: job.viewport, width: job.width, height: job.height });
+  const rec = target === 'theirs' && !a.live ? await replay(ctx, a.round) : null;
+  const touch = ['phone', 'floor', 'narrow', 'tablet', 'landscape'].includes(job.viewport);
+  if (touch && job.safeArea !== false) {
+    const land = job.viewport === 'landscape';
+    const insets = land ? { top: 0, bottom: 21, left: 47, right: 47 } : { top: 47, bottom: 34, left: 0, right: 0 };
+    const cdp = await ctx.newCDPSession(page);
+    await cdp.send('Emulation.setSafeAreaInsetsOverride', { insets }).catch(e => console.error(`safe area not emulated: ${e.message.split('\n')[0]}`));
+  }
   try {
     if (target === 'theirs' && job.overlay) await injectOverlay(ctx, readOverlay(a.round, job.overlay, job.without || []));
     if (target === 'theirs') await reachTheirs(page, state, job.query);
@@ -312,16 +369,17 @@ for (const job of jobs) {
   } catch (e) {
     for (const item of job.items) for (const theme of themes) grid.push({ target, component: item.component, cell: cellOf(item, theme), result: `not reached: ${e.message.split('\n')[0]}` });
     console.error(`job ${target}/${state}: ${e.message.split('\n')[0]}`);
+    if (rec) console.log('replay:', JSON.stringify(rec.save()));
     await browser.close();
     continue;
   }
   for (const theme of themes) {
-    await setTheme(page, theme);
+    await setTheme(page, theme, target);
     const idx = await tokenIndexWithSrgb(page);
     for (const item of job.items) {
       try {
         await act(page, item.steps);
-        const stem = await measureOne(page, item, { vpName: job.viewport, target, state, theme, idx, overlay: job.overlay });
+        const stem = await measureOne(page, item, { vpName: job.viewport, target, state, theme, idx, overlay: job.overlay, touch });
         grid.push({ target, component: item.component, cell: cellOf(item, theme), result: `[measured](${stem}.md)` });
         console.log('wrote', stem);
       } catch (e) {
@@ -333,6 +391,7 @@ for (const job of jobs) {
       await page.evaluate(() => document.activeElement?.blur?.());
     }
   }
+  if (rec) console.log('replay:', JSON.stringify(rec.save()));
   await browser.close();
 }
 
