@@ -1,73 +1,69 @@
-/* R3-16 · Patent record (phone): what it opens on
+/* R3-16 · Patent record (phone): the field panel in two columns; the drawings a strip
  *
- * Current: below sm the record opens on eleven label/value pairs, Number to
- * Classes, one per line with the uppercase label above each value (their
- * @container record (max-width: 420px) rule); the drawings start a screen
- * and a half down and the abstract after them.
- * Wanted:  title, then holder and date (a byline under the title, R3-16
- * script), then the drawings, then the abstract, then the identifiers, then
- * the claims. In the identifiers the short ones (number, application, kind,
- * the three dates, where) sit two to a row with the label beside the value;
- * holder and inventors take a row each, label beside value; main class and
- * classes are behind "More details".
- * Viewport: phone, below sm (40rem); below 360px the short fields go one
- * to a row, still label beside value. Tablet, landscape and desktop keep
- * their grid.
+ * Current: below sm the record's field panel is one column (their
+ * @container record (max-width: 420px) rule): eleven label/value pairs,
+ * Number to Classes, one to a row, 553px tall at 390, before the drawings.
+ * The drawings are .detail-figures, a grid of 148px tiles two to a row,
+ * capped at 12 behind "Show all {n} drawings": nine drawings are five rows,
+ * about 1000px, before the abstract.
+ * Wanted:  their order stays (title, field panel, drawings, abstract,
+ * claims). The panel keeps its style, the small uppercase label above the
+ * value, in two columns (design-language.md §7, "Below 420px it pairs up
+ * again"): number, application, kind, the dates, the office and the main
+ * class pair up, two to a row; holder, inventors and classes each take a
+ * full row. The drawings are one row that scrolls sideways, as a result
+ * row's strip (platform.md §4.5): the row's tile size (96×112, h-28 w-24),
+ * gap 8, bleeding through the record body's 20px padding to the card's
+ * edge so the cut tile reads as "more" (R3-60's treatment), with x
+ * proximity snap. The strip is not capped (R3-16 script presses "Show
+ * all").
+ * Viewport: the panel pairs where the record body is 420px or narrower (a
+ * container width, as their own rule is, which only the phone reaches);
+ * the strip is phone, below sm (40rem). Landscape, tablet and desktop are
+ * unchanged.
  *
- * Measured at 390×844 (with the R3-19 sheet): the Drawings heading moves
- * from 740px below the record's top to about 190px; the identifiers block
- * is 553px tall before and 203px after, classes closed.
+ * Measured at 390×844, the combined patch (R3-19's card): field panel
+ * 553px tall before, 364px after (Number·Application, Kind·Filed,
+ * Published·Priority, Where·Main class, then Holder, Inventors, Classes);
+ * the drawings 995px of grid before, a 116px strip after, nine 96×112
+ * tiles in one row (scroll width 968 in 372); the Abstract heading moves
+ * from 1740px to 672px below the top of the record's scroll.
  *
- * Not patchable here, and part of the item: the order is CSS `order` on the
- * record body's flex column, so reading and Tab order still follow the DOM
- * (fields, drawings, abstract). The component must render the sections in
- * the new order. The fields are told apart by their label text (the script
- * tags them data-terrain-field); the component should key them itself. */
-@media not all and (min-width: 40rem) {
-  [role="dialog"][data-result-detail] .detail-body > section[aria-label="Drawings"] { order: 1; }
-  [role="dialog"][data-result-detail] .detail-body > section:not([aria-label]):not(:has(ol)) { order: 2; }
-  [role="dialog"][data-result-detail] .detail-body > dl.record-fields,
-  [role="dialog"][data-result-detail] .detail-body > [data-terrain-more-toggle] { order: 3; }
-  [role="dialog"][data-result-detail] .detail-body > section:has(ol) { order: 4; }
-
-  [role="dialog"][data-result-detail] .detail-body > dl.record-fields {
-    grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
-    gap: 10px 12px;
-    align-items: baseline;
-  }
-  [role="dialog"][data-result-detail] .detail-body > dl.record-fields dd.mono:not(.chip-list) { white-space: nowrap; }
-  [role="dialog"][data-result-detail] .detail-body > dl.record-fields dt { margin: 0; }
-  [role="dialog"][data-result-detail] .detail-body > dl.record-fields dt.field-wide { grid-column: 1; margin: 0; }
-  [role="dialog"][data-result-detail] .detail-body > dl.record-fields dd.field-wide { grid-column: 2 / -1; }
-  [role="dialog"][data-result-detail] .detail-body > dl.record-fields:not([data-terrain-more="open"]) > :is([data-terrain-field="main class"], [data-terrain-field="classes"]) {
-    display: none;
-  }
-  /* "More details" sits under the fields block, as a quiet text control. */
-  [data-terrain-more-toggle] {
-    align-self: flex-start;
-    margin-top: -16px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 0;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--muted-foreground);
-    border-radius: calc(var(--radius) - 4px);
-  }
-  [data-terrain-more-toggle]:hover { color: var(--foreground); }
-  [data-terrain-more-toggle]:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
-  [data-terrain-more-toggle] svg { width: 14px; height: 14px; transition: rotate var(--dur-fast) ease; }
-  [data-terrain-more-toggle][aria-expanded="true"] svg { rotate: 180deg; }
-  [data-terrain-byline] {
-    margin-top: 6px;
-    font-size: 14px;
-    line-height: 1.4;
-    color: var(--muted-foreground);
-  }
+ * Not patchable here: the panel's pairing is grid-row/grid-column written
+ * by the script onto each dt/dd, because a label-above-value pair in a
+ * flat <dl> cannot be placed two to a row by CSS alone. In the component:
+ * wrap each pair in a <div> (valid inside <dl>) and let the grid place the
+ * divs, with the wide fields spanning; render the strip uncapped below sm. */
+dl.record-fields[data-terrain-pairs] {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 4px 14px;
+  align-items: start;
 }
-@media not all and (min-width: 360px) {
-  [role="dialog"][data-result-detail] .detail-body > dl.record-fields {
-    grid-template-columns: auto minmax(0, 1fr);
+dl.record-fields[data-terrain-pairs] dt { margin: 8px 0 0; }
+dl.record-fields[data-terrain-pairs] dt[data-terrain-first-row] { margin-top: 0; }
+dl.record-fields[data-terrain-pairs] dt.field-wide { margin-bottom: 0; }
+
+@media not all and (min-width: 40rem) {
+  [role="dialog"][data-result-detail] .detail-figures {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    margin-inline: -1.25rem;
+    padding-inline: 1.25rem;
+    padding-bottom: 4px;
+    scroll-padding-inline: 1.25rem;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+  }
+  [role="dialog"][data-result-detail] .detail-figures > * {
+    flex: none;
+    width: 96px;
+    height: 112px;
+    aspect-ratio: auto;
+    scroll-snap-align: start;
+  }
+  [role="dialog"][data-result-detail] section[aria-label="Drawings"] button[data-terrain-show-all] {
+    display: none;
   }
 }
