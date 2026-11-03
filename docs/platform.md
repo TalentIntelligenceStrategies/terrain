@@ -315,7 +315,11 @@ at the eyebrow's trailing edge, and the number and the date beside it are the ch
 record opens on the same one, and switching while it is open turns the record over in place. **One
 version is a word, not a switch**: a single filled segment reads as the pressed half of a switch with
 its other half missing, so a patent the index holds once says *Grant* or *Application* in plain text.
-A patent whose versions the engine did not return shows neither.
+A patent whose versions the engine did not return shows neither. **On a phone the switch moves into
+the record**, and the row says the kind in words beside the number: at 390px the segment takes a
+line of its own on every row, the one place on the row a status chip would sit, for a choice made
+on one patent in fifty. The record sheet carries it at full width under its head, where the
+document it turns over is the one being read.
 
 **The position always renders; the score may not.** There is no engine to withhold an ordinal. A
 score the engine did not return takes its label with it and the cluster is the position alone.
@@ -1288,10 +1292,10 @@ that fits at 1440 truncates at 390), so holding type out would hold the phone ha
 **The list is the audit's, and nothing else.** Round 1's deferred items and §13.5 are not carried; a
 finding that matches an earlier ID cites it. Every item is an overlay on their build; **+ `app/`**
 marks the ten where `app/` shares the fault and changes too, settled in this document or
-`design-language.md` first. *If confirmed* marks two the audit could not establish, verified before
-an overlay is written. Two findings were rejected: a record opening that seemed to run *Find
-similar* by itself did not reproduce, and keeping the list-and-record split down to 768px is a layout
-change, not an interface one.
+`design-language.md` first. Three findings did not reproduce when measured on the live page and are withdrawn: the phone record already keeps focus and assistive technology inside it, a failed drawing already says so with Retry, and the focus ring in dark is drawn at every stop. Three findings were rejected: a record opening that seemed to run *Find
+similar* by itself did not reproduce; keeping the list-and-record split down to 768px is a layout
+change, not an interface one; and removing the score from a row would hide the engine's own
+number, which `brief.md` §1 prints. R3-17 is withdrawn for that reason and not reused.
 
 | ID | Viewport | Component | Wanted | `app/` |
 | --- | --- | --- | --- | --- |
@@ -1311,13 +1315,12 @@ change, not an interface one.
 | R3-14 | phone | Masthead | One row on the gutter; one appearance control; the version leaves it (was R1-07) | |
 | R3-15 | phone | Home | The composer follows the lede; the fields are a chip row under it, *Coming soon* last | |
 | R3-16 | phone | Record | Title, holder, date, drawings, abstract, then the identifiers, two short ones to a row; classes behind *More details* | + `app/` |
-| R3-17 | both | List | No score on a row; the rank stays | |
 | R3-18 | phone | Results | One pinned row of at most 56px; the toolbar scrolls with the results header | |
 | R3-19 | phone | Record | A bottom sheet over the list: handle, drag down or the scrim to close, actions on the safe area | + `app/` |
 | R3-20 | phone | Drawing viewer | Full bleed, the drawing at full width, close at the top edge | + `app/` |
-| R3-21 | both | List | The kind is text in the number line; the version switch is in the record, where both exist (was R1-42) | |
+| R3-21 | phone | List, record | The kind is text in the number line; the version switch is in the record sheet, where both exist (was R1-42) | + `app/` |
 | R3-22 | phone | List | Titles to two lines; holder and inventor stacked full width | |
-| R3-23 | phone | List | Two whole results to a screen | |
+| R3-23 | phone | List | Number, kind, rank and score on one line; smaller strip tiles; the abstract keeps three lines | |
 | R3-24 | phone | Record | The head names the patent from the start | |
 | R3-25 | phone | Record | In landscape the record fills the height; one action row | |
 | R3-26 | phone | Shell | Fixed layers clear the safe area | |
@@ -1327,12 +1330,11 @@ change, not an interface one.
 | R3-30 | phone | Composer | The mode switch says *Text* and *Patent #* | |
 | R3-31 | tablet | Search bar | Search stays inside the composer at 820 and in landscape | |
 | R3-32 | phone | List | No keyboard-shortcuts control on a touch screen | |
-| R3-33 | both | Home, settings, record | One uppercase label per surface; the rest sentence case | |
+| R3-33 | both | Search settings | A small uppercase label is three words at most: *Results to show* | |
 | R3-34 | phone | List | Sort sits on the count line | |
 | R3-35 | tablet | Home | The field grid is three and three | |
 | R3-36 | phone | Every control | 44×44 to a coarse pointer; the whole row opens the record (was R1-40) | + `app/` |
 | R3-37 | both | List | Tab reaches each row's version switch and number link | |
-| R3-38 | phone | Record | Focus and assistive technology stay inside the record, *if confirmed* | + `app/` |
 | R3-39 | phone | Record | Focus lands on the heading on open, not on *Next* | |
 | R3-40 | phone | Record | Focus returns to the row on close | |
 | R3-41 | both | Composer | An empty Search stays in the tab order and answers (was R1-26) | |
@@ -1343,12 +1345,10 @@ change, not an interface one.
 | R3-46 | both | Home | A ring means focus; a selected tile says so another way | + `app/` |
 | R3-47 | both | Record | A disabled chevron reads as disabled, at about 3:1 | |
 | R3-48 | both | List, record | Figure badges at 7:1 or more | |
-| R3-49 | both | List | One word for the order; no stray *0 results* | |
+| R3-49 | both | List | No stray *0 results* over the list | |
 | R3-50 | phone | List | One status region for *Find similar* | |
 | R3-51 | phone | Search settings | A chip shows its off state (was R1-46) | |
 | R3-52 | both | Shell | The page declares English; Chinese records declare theirs | |
-| R3-53 | desktop | Shell | A focus ring in dark (was R1-26) | |
-| R3-54 | desktop | Record | Drawings that fail say so, with Retry, *if confirmed* | |
 | R3-55 | desktop | Record | Escape closes the record | |
 | R3-56 | desktop | Composer | No empty history panel on focus | |
 | R3-57 | phone | List | One placeholder for a drawing that is loading (was R1-10) | |

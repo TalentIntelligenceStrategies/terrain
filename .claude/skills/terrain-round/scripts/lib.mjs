@@ -87,7 +87,17 @@ export async function replay(ctx, round, { mode = 'replay' } = {}) {
   });
   return {
     stats: () => ({ live, served }),
-    save: () => { if (dirty) fs.writeFileSync(file, JSON.stringify(store)); return { live, served, keys: Object.keys(store).length }; },
+    /* Merged with what is on disk, never a rewrite of it: two runs saving at
+       once would otherwise each drop the other's new entries. */
+    save: () => {
+      if (dirty) {
+        const now = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
+        for (const [k, v] of Object.entries(now)) if (!(k in store)) store[k] = v;
+        const tmp = `${file}.${process.pid}`;
+        fs.writeFileSync(tmp, JSON.stringify(store)); fs.renameSync(tmp, file);
+      }
+      return { live, served, keys: Object.keys(store).length };
+    },
   };
 }
 
@@ -189,7 +199,7 @@ export async function touchProbe(page) {
 export async function openRecord(page) {
   const isOpen = async () => (await page.locator('button[aria-label^="Close details"]:visible, button[aria-label^="Close this patent"]:visible').count()) > 0;
   if (await isOpen()) return;
-  const r = page.locator('button[aria-label^="View details"]:visible, button[aria-label*="Open the record"]:visible').first();
+  const r = page.locator('button[aria-label^="View details"]:visible, button[data-card-primary]:visible, button[aria-label*="Open the record"]:visible').first();
   if (await r.count()) { await r.click(); await page.waitForTimeout(4000); }
   if (!(await isOpen())) throw new Error('the record did not open');
 }
