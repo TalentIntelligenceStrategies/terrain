@@ -15,7 +15,8 @@
  * Measured on the live page at 390 with the patch: sheet 390 wide, bottom
  * at 844; tick left edge = heading left edge; title starts 26px in from
  * the heading (was 76) and wraps in 307px (was 240); count right edge =
- * row's right padding edge.
+ * row's right padding edge. Done is 44px tall (their btn-secondary is 36,
+ * which left 89% of a 44×44 square on it).
  *
  * What the patch cannot do: Reka positions the popover's wrapper with an
  * inline transform, and a transformed ancestor is the containing block of a
@@ -67,6 +68,9 @@
     flex: none;
     border-top: 1px solid var(--border);
     padding-top: 12px;
+  }
+  .result-groups-popover [data-r327-foot] > .btn {
+    min-height: 44px;
   }
 }
 @media (min-width: 40rem) {
