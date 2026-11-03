@@ -1,0 +1,38 @@
+/* R3-31 · Search bar: Search stays inside the composer at tablet width
+ *
+ * Current: from sm the folded results composer is one row that does not
+ * wrap (sm:flex-nowrap): mode, settings, group, the view toggle, the query
+ * line, "Top 50 results · 0.26 s" and Search. At 820 and at 844×390 it
+ * does not fit; every item but the query line is shrink-0, so Search runs
+ * past the card's right border to the screen edge, and the page is wider
+ * than the viewport, which is why the masthead rule stops short of the
+ * right edge.
+ * Wanted:  from sm up to lg (640–1023px) the row wraps: the controls on
+ * the first line, and the query line, the count and Search on the second,
+ * with Search at the right inside the card; the card never grows past the
+ * page; the masthead runs the full width.
+ * Viewport: tablet (820) and landscape (844×390). From lg the row fits and
+ * is unchanged; below sm it is R3-13.
+ *
+ * In the component: flex-wrap on the row below lg, the query line
+ * flex: 1 1 16rem (so it moves to the second line before anything
+ * overflows), Search margin-inline-start: auto, min-width: 0 on the card;
+ * or move the count and the view toggle into the results header below lg. */
+@media (min-width: 40rem) and (max-width: 63.98rem) {
+  .search-box-morph {
+    min-width: 0;
+  }
+  .search-box-morph > div:has(> [role="group"][aria-label="Search mode"]) {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .search-box-morph [data-search-line] {
+    flex: 1 1 16rem;
+  }
+  .search-box-morph div:has(> button[aria-label="Search"]) {
+    margin-inline-start: auto;
+  }
+  #__nuxt > div > header {
+    inline-size: 100%;
+  }
+}
