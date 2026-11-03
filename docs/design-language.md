@@ -800,7 +800,10 @@ it: closing it, by its control, a drag down on its head, the scrim, Escape or Ba
 row that opened it, where it was. **The card sits 8px from every edge** with its four corners
 rounded, so a sliver of the list shows on each side and the record reads as something laid over
 the founder's place rather than a page that replaced it; 8px rather than the gutter's 16 because
-at 390 the second 8 on each side is width the field panel needs. It scrolls itself, with
+at 390 the second 8 on each side is width the field panel needs. **The scrim closes it to a pointer
+and not to a finger**: a touch screen moves a tap that close to the card onto the card, so on a
+phone the drag down and the close control are the ways out, and Back is the platform's. That is the
+cost of the 8, taken knowingly; a gutter wide enough to tap would be the 16 again. It scrolls itself, with
 `overscroll-behavior: contain` so the list behind never moves under a finger.
 
 **Above the stack the breakpoints adjust components, never the structure.** A label narrows, the
