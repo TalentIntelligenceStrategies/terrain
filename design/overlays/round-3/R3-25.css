@@ -1,0 +1,39 @@
+/* R3-25 · Patent record (landscape phone): fill the height, one action row
+ *
+ * Current: at 844×390 the record is their centred dialog card,
+ * max-height calc(100dvh - 32px) with a 16px inset top and bottom and 20px
+ * corners; the head is about 55px and the footer of two text buttons about
+ * 67px (pt-5 + py-4), so about 230px of 390 is left for the record.
+ * Wanted:  below 480px tall, the dialog takes the full height, no inset
+ * and no corner radius; the head and the footer are each one 44px row
+ * (the footer's actions stay in the footer, on one row).
+ * Viewport: landscape: (max-height: 480px), below lg (where the dialog
+ * exists). The width stays their sm:max-w-2xl (672px), centred.
+ *
+ * Measured at 844×390 with the patch: dialog top 0, height 390; head 44,
+ * footer 44; the record's scroll area 302px (was about 230).
+ *
+ * Phone portrait is never this short, so the bottom sheet (R3-19) and this
+ * rule never meet. */
+@media (max-height: 480px) and (max-width: 63.99rem) {
+  [role="dialog"][data-result-detail] {
+    top: 0;
+    bottom: 0;
+    translate: -50% 0;
+    max-height: 100dvh;
+    height: 100dvh;
+    border-radius: 0;
+    border-block-width: 0;
+  }
+  [role="dialog"][data-result-detail] > [data-terrain-record-head],
+  [role="dialog"][data-result-detail] > div:has(> button[aria-label="Find similar"]) {
+    min-height: 44px;
+    padding-block: 0;
+  }
+  [role="dialog"][data-result-detail] .record-foot {
+    flex-wrap: nowrap;
+    min-height: 44px;
+    padding-block: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
