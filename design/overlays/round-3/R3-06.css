@@ -1,0 +1,14 @@
+/* R3-06 · Number search: no character counter on a patent number
+ *
+ * Current: number mode reuses the text field and keeps its "0 / 5000"
+ * counter under a field for a number of about ten characters.
+ * Wanted:  the counter is hidden in number mode and comes back in Text. The
+ * placeholder is a number from an office the search covers (R3-06.js).
+ * Viewport: both.
+ *
+ * In the component: render the counter (the span after the textarea) only
+ * when mode is by-text. Keyed here on their own aria-pressed on the Patent
+ * number segment, so the patch adds no state. */
+.search-box-morph:has([role="group"][aria-label="Search mode"] > button[aria-label="Patent number"][aria-pressed="true"]) textarea + div {
+  display: none;
+}
