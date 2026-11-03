@@ -1,0 +1,17 @@
+/* R3-62 · Drawing viewer: the thumbnail strip is centred
+ *
+ * Current: on desktop the strip is left-packed in the 1100px panel: nine
+ * thumbnails take the left 640px, under a drawing and a zoom pill that are
+ * both centred, so the eye moves between three anchors.
+ * Wanted:  the strip centred under the drawing (justify-content: safe
+ * center), so a strip shorter than the panel sits on the same axis as the
+ * drawing and the pill, and one that overflows still starts at its first
+ * thumbnail and scrolls, rather than clipping both ends.
+ * Viewport: 40rem and up. On a phone the strip overflows at nine figures and
+ * safe center falls back to start anyway; the rule is kept off it so the
+ * phone is unchanged. */
+@media (min-width: 40rem) {
+  .figview .figstrip[aria-label] {
+    justify-content: safe center;
+  }
+}
