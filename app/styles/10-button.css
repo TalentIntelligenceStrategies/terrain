@@ -135,6 +135,38 @@
    may sit in any file in any order and still win.  */
 .btn[hidden]{display:none}
 
+/* ══ ON A COARSE POINTER EVERY CONTROL IS REACHED THROUGH 44×44 ══════════
+   design-language.md §7. Measured at 390 before this, by sampling a 44×44
+   square on each control's centre (not its box, which is what a thumb does
+   not see): the record's stepping pair and close reached 31% of it and each
+   overlapped the next, the appearance switch 31%, a row's star 43%.
+
+   WHERE THE GLYPH STAYS SMALL, THE AREA GROWS AND THE BOX DOES NOT: a
+   transparent ::before centred on the control, never smaller than the
+   control, so nothing on the page moves. inset reads the control's own size
+   as its containing block, so (50% − 22px) is half of what it is short of
+   44 on that axis, and min() keeps a large control's area its own box.
+   ::before because .icon-btn.has-set already spends ::after on its dot.
+   .pop-chip and .sw spend ::before on their own marks and are not listed.
+
+   WHERE TWO AREAS WOULD OVERLAP, THE CONTROLS MOVE APART instead: the
+   segments of a switch take a 44px width, the masthead's items a 44px floor,
+   and the masthead, the list's head, the record's head and foot and the
+   viewer's bar space themselves in their own files (20-shell.css,
+   21-surface.css, 35-record.css, 40-figure.css). */
+@media (pointer:coarse){
+  :is(.icon-btn,.info-btn,.set-ctl,.seg-btn,.lm-btn,.rec-act,.btn,
+      .mast-btn,.mast-brand,.meter,.profile,.figview-step,.figbar-btn,
+      .pn-figs-more,.set-more-btn,.field-chip){position:relative}
+  :is(.icon-btn,.info-btn,.set-ctl,.seg-btn,.lm-btn,.rec-act,.btn,
+      .mast-btn,.mast-brand,.meter,.profile,.figview-step,.figbar-btn,
+      .pn-figs-more,.set-more-btn,.field-chip)::before{
+    content:"";position:absolute;
+    inset:min(0px, calc(50% - 22px)) min(0px, calc(50% - 22px))}
+  .seg-btn{min-width:44px}
+  .mast-btn,.mast-brand,.meter,.profile{min-width:44px;justify-content:center}
+}
+
 /* ── hover, gated ── every rule here NAMES :hover; nothing else may. ── */
 @media (hover:hover) and (pointer:fine){
   .btn-primary:hover{background:var(--accent-hover)}

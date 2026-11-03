@@ -77,6 +77,15 @@
   .meter{padding:var(--s-4) var(--s-6)}
   #histMenu{width:min(340px,calc(100vw - var(--s-24)))}
 }
+/* ON A COARSE POINTER THE MASTHEAD IS EIGHT 44px AREAS (10-button.css), 372px
+   with the switch's own padding, so its gap closes to 2 and its padding to 8
+   to hold one row at 390. At 375 and below it takes the second row that 320
+   already had, which is the trade §7 names: height is what a phone has to
+   spare, and an area a thumb shares with its neighbour is not one. The row
+   gap is 14 so a wrapped row's areas clear the first row's. */
+@media (max-width:719px) and (pointer:coarse){
+  .mast{gap:var(--s-14) var(--s-2);padding-inline:var(--s-8)}
+}
 /* ── the skip link ────────────────────────────────────────────────────────
    :focus AND NOT :focus-visible, which is the one place in the tree that
    distinction goes the other way. A skip link is unreachable by pointer — it

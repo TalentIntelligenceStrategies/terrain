@@ -484,6 +484,14 @@
      words and an ellipsis, and the number is what identifies the patent. */
   .figview-title{display:none}
 }
+/* ON A COARSE POINTER THE BAR'S BUTTONS ARE 44 SQUARE, because they sit 2px
+   apart and a transparent area on each would claim its neighbour's glyph
+   (design-language.md §7). The bar is a pill floating over the drawing, so
+   it grows rather than anything around it moving; at 320 it is five buttons
+   and the reading, and fits. */
+@media (pointer:coarse){
+  .figbar-btn{width:44px;height:44px}
+}
 /* ══ BELOW 640 THE VIEWER IS FULL BLEED · platform.md §13.4, R3-20 ════════
    At 390 the panel sat 8px inside the window with its corners rounded, so the
    drawing got 372px of a 390px screen and the head and the strip were a card

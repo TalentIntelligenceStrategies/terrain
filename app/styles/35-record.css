@@ -266,6 +266,18 @@
 /* .rec-end-h AND .rec-end-note WENT WITH THE HEADING AND THE PARAGRAPH. The
    sentence they carried is in .rec-end-info's panel; the heading named a group
    that is now two groups in two places. */
+/* ON A COARSE POINTER THE HEAD'S CONTROLS ARE 44 SQUARE AND THE FOOT'S ROWS
+   MOVE APART (design-language.md §7). The head's 28px glyph buttons sat 8px
+   apart, so three 44px areas overlapped; spaced out to a clear pitch instead,
+   the five overran the head at 320 and Close was clipped by the card. As
+   boxes they fit — 5 × 44 and the divider in 237px — and the head's block
+   padding gives back what the taller boxes take, so it stays 52px. The foot
+   wraps to two rows, 32px tall and 8 apart, so its rows move 16 apart. */
+@media (pointer:coarse){
+  .rec .rec-head{gap:var(--s-2);padding-block:var(--s-4)}
+  .rec-head :is(.icon-btn,.rec-act){min-width:44px;min-height:44px;justify-content:center}
+  .rec-acts{row-gap:var(--s-16)}
+}
 @media (hover:hover){
   .rec-act:hover{background:var(--surface-sunken);color:var(--text-1)}
   .rec-act:hover svg{color:var(--text-2)}

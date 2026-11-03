@@ -984,6 +984,28 @@ export function init(ctx) {
   onActivate(document, '.set-star[data-star]', el =>
     toggleStar(el.getAttribute('data-star'), el));
 
+  /* ══ THE WHOLE ROW OPENS ITS RECORD · design-language.md §7, R3-36 ══════
+     The row's button is its three bands; the star's column under the star,
+     the gap above the strip and the padding round it were dead ground — on a
+     phone, about a third of the row a thumb lands on. A press there is the
+     row's press, handed to its button so there is one path and one return
+     point for focus.
+
+     NOT ON A CONTROL, NOT ON A SELECTION. A press that starts on the star,
+     the version switch or a drawing is theirs, and one that ends a text
+     selection is somebody copying a holder name. The button stays the one
+     keyboard and assistive-technology target, so nothing here takes a tab
+     stop or a role. */
+  document.addEventListener('click', e => {
+    const t = e.target instanceof Element ? e.target : null;
+    const row = t && t.closest('#setList .set-row');
+    if (!row || e.defaultPrevented || t.closest('button, a, input, select, textarea, [role="group"]')) return;
+    const sel = window.getSelection && window.getSelection();
+    if (sel && !sel.isCollapsed && row.contains(sel.anchorNode)) return;
+    const btn = row.querySelector('.drill-toggle');
+    if (btn) btn.click();
+  });
+
   /* THE WAY BACK, from the empty state: the settings it names, opened. */
   onActivate(document, '[data-empty-settings]', () => {
     const btn = $('#resSettings');

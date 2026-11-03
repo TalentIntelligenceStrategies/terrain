@@ -379,6 +379,10 @@
    element doing the job an auto margin on the heading used to do in .listhead
    — see the note above .set-listcol. */
 .set-bar .spacer{flex:1 1 auto}
+/* on a coarse pointer the head's two rows of controls sat 39px centre to
+   centre, so the info button's 44px area reached into the view switch's;
+   16 of row gap clears it (design-language.md §7) */
+@media (pointer:coarse){ .set-bar{row-gap:var(--s-16)} }
 /* THE HEADING'S MARGIN GOES, the same as .rec-head h2's. An h2 carries
    14.11px above and below from the type scale, which was right while it stood
    on ground in a flex column and is 28px of head height here — measured 79px
