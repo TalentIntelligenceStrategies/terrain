@@ -125,7 +125,13 @@ function clampPan() {
   if (scale <= 1 || !el.img.naturalWidth) { panX = 0; panY = 0; return; }
   const sw = el.stage.clientWidth, sh = el.stage.clientHeight;
   const nw = el.img.naturalWidth, nh = el.img.naturalHeight;
-  const fit = Math.min((sw - 48) / nw, (sh - 80) / nh);
+  /* THE FIT IS READ OFF THE IMAGE'S OWN PADDING, which 40-figure.css sets and
+     a phone takes to zero inline. Hard-coded as 48 and 80 it was a second copy
+     of a stylesheet value, and the bound would have been 48px wrong there. */
+  const cs = getComputedStyle(el.img);
+  const px = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+  const py = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+  const fit = Math.min((sw - px) / nw, (sh - py) / nh);
   let w = nw * fit * scale, h = nh * fit * scale;
   if (rot % 180) [w, h] = [h, w];
   const mx = Math.max(0, (w - sw) / 2 + 24), my = Math.max(0, (h - sh) / 2 + 24);

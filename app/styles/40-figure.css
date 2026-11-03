@@ -249,7 +249,11 @@
 .figview-no{flex:0 0 auto;color:var(--text-2)}
 .figview-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
                font-size:13px;font-weight:500;color:var(--text-1)}
-.figview-cap{flex:0 0 auto;min-width:0;color:var(--text-3)}
+.figview-cap{flex:0 0 auto;min-width:0;color:var(--text-3);font-size:13px;line-height:1.4}
+/* INNOVUE'S TYPE FOR THIS HEAD (platform.md §13.1, ported in R3-20): the
+   count is a 13/1.4 sentence, not an 11px uppercase label — it is a position
+   read once, and caps made the one live line on the viewer the loudest. Their
+   number is 14px, which is off §4's scale, so it stays at fig-s. */
 
 /* ── the stage ──────────────────────────────────────────────────────────
    WHITE, AND FOR THE SAME REASON THE THUMBNAILS ARE. Black line-work on a
@@ -480,9 +484,27 @@
      words and an ellipsis, and the number is what identifies the patent. */
   .figview-title{display:none}
 }
-/* the gutter closes on a phone, where 24px a side is 15% of the window */
-@media (max-width:520px){
-  .figview{padding:var(--s-8)}
+/* ══ BELOW 640 THE VIEWER IS FULL BLEED · platform.md §13.4, R3-20 ════════
+   At 390 the panel sat 8px inside the window with its corners rounded, so the
+   drawing got 372px of a 390px screen and the head and the strip were a card
+   on the record card. A plate is read across, and on a phone every pixel the
+   frame takes is a pixel of the drawing: no inset, no radius, no edge, and
+   the panel's two maxima go, which is what *Fill the screen* does everywhere
+   else — so on a phone that control has nothing left to do and is not shown.
+
+   CLOSE IS AT THE TOP EDGE AT 44×44, the head's trailing corner with nothing
+   between it and the window; the head's block padding becomes the button's
+   own box, so the head is no taller than it was. The safe area pads it once
+   the page opts into the inset (R3-26). */
+@media (max-width:640px){
+  .figview{padding:0}
+  .figview-panel{max-width:none;max-height:none;border:0;border-radius:0;box-shadow:none}
+  .figview-head{padding:env(safe-area-inset-top) 0 0 var(--s-16);gap:var(--s-8)}
+  .figview-x{width:44px;height:44px;display:grid;place-items:center;padding:0}
+  /* and the drawing takes the width: the bar still floats over the foot, so
+     the block padding that clears it stays */
+  .figview-img{padding-inline:0}
+  #figFull,.figbar-sep:has(+#figFull){display:none}
 }
 
 /* ── `Drawings only` · it strips the LIST, not the record ───────────────
