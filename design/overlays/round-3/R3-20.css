@@ -1,0 +1,80 @@
+/* R3-20 · Drawing viewer: full bleed on a phone
+ *
+ * Current: below 520px the viewer is a 374x692 card inset 8px over a
+ * translucent scrim, with the record still showing round it. The drawing
+ * gets about 372x330 of a 372x503 stage (24px padding inside the image box);
+ * the zoom pill takes its own 58px band under the stage; the 32px close sits
+ * mid-header straight after "Figure 1 of 9", while the record's own close
+ * sits at the right edge above it.
+ * Wanted:  below 40rem the viewer is the whole screen: inset 0, 100dvh, no
+ * radius, no edge, no shadow, over a solid scrim (--card, the panel's own
+ * ground, so nothing of the record shows through while it lands). The
+ * drawing runs the full width of the screen. The zoom pill is overlaid on
+ * the bottom of the drawing instead of taking a band. The close is 44x44 at
+ * the top-right edge, inside the safe area. The thumbnail strip stays where
+ * it is, under the drawing, clear of the home indicator.
+ * Viewport: phone (below 40rem). Desktop and tablet are unchanged.
+ *
+ * Also here, as this component's part of R3-26 (fixed layers clear the safe
+ * area): the head and strip take env(safe-area-inset-*) on a phone and in
+ * Fill screen; the inset card above 40rem keeps at least its 24px from each
+ * edge and more where the inset is larger. Emulation reports every inset as
+ * 0, so this part is not shown by the shots; it is read from the rule.
+ *
+ * Measured (phone 390x844): panel 374x692 at (8,76), radius 16px ->
+ * 390x844 at (0,0), radius 0; stage 372x503 -> 390x719; drawing drawn at
+ * 324x227 -> 390x273 (full width); close 32x32 at x 199 -> 44x44 at
+ * (342,4), 4px from the right edge; scrim solid --card in both themes.
+ * Desktop boxes unchanged (panel 1100x738, stage 1098x516). */
+@media not all and (min-width: 40rem) {
+  .figview[role="dialog"] {
+    padding: 0;
+  }
+  /* :root lifts it over their dark-theme scrim rule, (0,3,1). */
+  :root .figview[role="dialog"][aria-label]::before {
+    background: var(--card);
+  }
+  .figview[role="dialog"] .figview-panel {
+    max-width: none;
+    max-height: none;
+    height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .figview[role="dialog"] .figview-head {
+    padding-block: max(4px, env(safe-area-inset-top)) 4px;
+    padding-inline: max(16px, env(safe-area-inset-left)) max(4px, env(safe-area-inset-right));
+  }
+  .figview-head .figbar-btn[aria-label="Close large image"] {
+    margin-inline-start: auto;
+    width: 44px;
+    height: 44px;
+  }
+  .figview-stage .figview-img {
+    padding: 8px 0;
+  }
+  /* Pulled up over the stage by its own height plus a 12px gap; the stage
+     is flex: auto, so it grows into the band the pill gave up. */
+  .figview .figbar[role="toolbar"] {
+    margin-block: -54px 12px;
+    z-index: 1;
+  }
+  .figview[role="dialog"] .figstrip {
+    padding-block-end: max(8px, env(safe-area-inset-bottom));
+    padding-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
+  }
+}
+@media (min-width: 40rem) {
+  .figview[role="dialog"]:not([data-full]) {
+    padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+  }
+  .figview[data-full] .figview-head {
+    padding-block-start: max(12px, env(safe-area-inset-top));
+    padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));
+  }
+  .figview[data-full] .figstrip {
+    padding-block-end: max(12px, env(safe-area-inset-bottom));
+    padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));
+  }
+}
