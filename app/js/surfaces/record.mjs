@@ -328,6 +328,27 @@ function scoreHTML(id) {
    one handler, one set. Clearing it to "" rather than removing it keeps the
    attribute selector in 35-record.css matching an empty, hidden control rather
    than falling through to an unstyled one for a frame. */
+/* THE RECORD'S VERSION SWITCH, for a phone (platform.md §4.3). Written from
+   the row, which holds the versions and the choice; the row's own class and
+   data-ver-of are the whole wiring, so list.mjs's delegated handler switches
+   it, repaints both, and reopens this record on the version chosen. */
+const VER_WORDS = { grant: 'Grant', application: 'Application' };
+function verSwitch(id) {
+  const box = $('#recVer');
+  if (!box) return;
+  const row = id && HOST === 'work' ? rowFor(id) : null;
+  const vs = row && Array.isArray(row.versions) ? row.versions : [];
+  box.hidden = vs.length < 2;
+  if (box.hidden) { box.replaceChildren(); return; }
+  const el = document.querySelector('#setList .set-row[data-id="' + CSS.escape(id) + '"]');
+  const now = (el && el.getAttribute('data-ver')) || vs[0].kind;
+  box.innerHTML = '<div class="seg ver-switch" role="group" aria-label="Which version of this patent">'
+    + vs.map(x => '<button class="seg-btn" type="button" data-ver-of="' + esc(id) + '"'
+      + ' data-ver-kind="' + esc(x.kind) + '" aria-pressed="' + String(x.kind === now) + '">'
+      + esc(VER_WORDS[x.kind] || x.kind) + '</button>').join('')
+    + '</div>';
+}
+
 function setActs(on, id) {
   const star = $('#recStar'), sim = $('#recSimilar'), sep = $('.rec-head-sep');
   if (star) {
@@ -341,6 +362,7 @@ function setActs(on, id) {
     else sim.removeAttribute('data-pn');
   }
   if (sep) sep.hidden = !on || HOST === 'starred';
+  verSwitch(on ? id : null);
 }
 
 function paneHTML(rec, id) {

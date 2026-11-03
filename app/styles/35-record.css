@@ -321,6 +321,16 @@
    and moves focus into it — and it closes by ×, a drag down on its head, the
    scrim, Escape or Back. */
 .rec-scrim{display:none}
+/* THE VERSION SWITCH UNDER THE HEAD, on a phone only (platform.md §4.3): full
+   width, its two segments sharing it, on the head's own inline padding and a
+   hairline under it like the head's. Above 640 the switch is on the row. */
+.rec-ver{display:none}
+@media (max-width:640px){
+  .rec-ver:not([hidden]){display:block;flex:0 0 auto;padding:var(--s-8) var(--s-20);
+                         border-bottom:1px solid var(--border)}
+  .rec-ver .ver-switch{position:static;display:flex}
+  .rec-ver .seg-btn{flex:1 1 0;height:44px}
+}
 @media (max-width:1079px){
   .panecol .rec{position:fixed;inset:var(--s-8);z-index:41;
                 box-shadow:var(--shadow-float)}

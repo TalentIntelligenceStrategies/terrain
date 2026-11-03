@@ -160,6 +160,18 @@
 .set-row[data-vers] .drill-row{position:relative}
 .set-row[data-vers] .drill-eyebrow{padding-inline-end:calc(137px + var(--s-8));min-height:var(--s-32)}
 .ver-switch{position:absolute;inset-block-start:var(--s-2);inset-inline-end:0}
+/* the word stands in for the switch only where the switch has left the row */
+.set-row[data-vers] .drill-ver{display:none}
+/* ── ON A PHONE THE SWITCH MOVES INTO THE RECORD · platform.md §4.3 ─────────
+   At 390 the segment took a line of its own on every row that had one, in the
+   place a status chip would sit, for a choice made on one patent in fifty.
+   The row says the kind in words beside the number instead, and the record
+   card carries the switch at full width under its head (35-record.css). */
+@media (max-width:640px){
+  .set-row[data-vers] .ver-switch{display:none}
+  .set-row[data-vers] .drill-ver{display:inline}
+  .set-row[data-vers] .drill-eyebrow{padding-inline-end:0;min-height:0}
+}
 .drill-title{min-width:0}
 /* SIZE, LINE-HEIGHT AND WEIGHT ARE .t-title-s's, ON THE MARKUP: 16/600, the
    card title. What is left here is what belongs to the component. */

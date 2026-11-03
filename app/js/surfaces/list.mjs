@@ -285,7 +285,11 @@ export function rowHTML(rec, i, opts = {}) {
        a skeleton the wrong size for the thing it withholds. */
     + '<span class="drill-no fig fig-s">'
     + (number != null ? esc(number) : bar('w-md')) + '</span>'
-    + (vs.length === 1 && VER_WORD[v.kind]
+    /* THE KIND IN WORDS, beside the number. A patent the index holds once
+       shows it everywhere; one with two shows the chosen one's word only on
+       a phone, where the switch moves into the record (platform.md §4.3) —
+       34-list.css decides which, so the word is always written. */
+    + (v && VER_WORD[v.kind]
         ? '<span class="drill-ver t-micro">' + VER_WORD[v.kind] + '</span>' : '')
     /* THE SEARCH'S OWN CLUSTER. It is one element so that the pair travels
        together when the eyebrow wraps: a rank at the end of one line and a
@@ -406,9 +410,11 @@ function setVersion(id, kind) {
   row.setAttribute('data-ver', v.kind);
   const no = row.querySelector('.drill-no');
   if (no) no.innerHTML = v.number != null ? esc(v.number) : bar('w-md');
+  const word = row.querySelector('.drill-ver');
+  if (word) word.textContent = VER_WORD[v.kind] || v.kind;
   const when = row.querySelector('.dm-when .fig');
   if (when && v.published != null) when.textContent = v.published;
-  row.querySelectorAll('[data-ver-kind]').forEach(b =>
+  document.querySelectorAll('[data-ver-of="' + CSS.escape(id) + '"]').forEach(b =>
     b.setAttribute('aria-pressed', String(b.getAttribute('data-ver-kind') === v.kind)));
   window.dispatchEvent(new CustomEvent('terrain:version', { detail: { id, kind: v.kind } }));
   say('list', 'Showing the ' + (VER_WORD[v.kind] || v.kind).toLowerCase() + '.');
