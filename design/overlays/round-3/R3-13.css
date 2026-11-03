@@ -1,0 +1,43 @@
+/* R3-13 · Search bar: folded on the phone, it is the query and Search
+ *
+ * Current: below sm the folded search box shows no query. Their query line
+ * ([data-search-line]) and the Search button are both "max-sm:hidden", and
+ * in their place a bare magnifier (an icon-only "Expand search box: …")
+ * sits on a row of its own. Nothing on the results screen says what the
+ * 50 results are for; the query is only in that button's accessible name.
+ * Wanted:  below sm, the folded box ends in one row: the query on one line,
+ * the tap target that expands the box, with Search at its right. The
+ * magnifier-only expand goes, since the query line does what it did. The
+ * mode, settings, group and view controls stay where they are, above that
+ * row; R3-18 lets them scroll away and pins this row alone.
+ * Viewport: phone (below sm). Desktop already shows the query line and
+ * Search and is unchanged.
+ *
+ * Search in this row runs the query shown, as it does on desktop. When the
+ * box is open their line turns invisible but keeps its place, so the row
+ * keeps Search at the right under the open field.
+ *
+ * In the component: below sm, drop "max-sm:hidden" from the query line and
+ * from Search, clamp the line to one line (line-clamp-1), do not render the
+ * sm:hidden icon button, and put the line and Search last in the row. */
+@media not all and (min-width: 40rem) {
+  .search-box-morph [data-search-line] {
+    display: flex;
+    order: 10;
+    /* the whole row but Search (48px) and the row's gap (16px) */
+    flex: 1 1 calc(100% - 64px);
+  }
+  .search-box-morph [data-search-line] > span {
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+  .search-box-morph div:has(> button[aria-label="Search"]) {
+    order: 11;
+  }
+  .search-box-morph button[aria-label="Search"] {
+    display: inline-flex;
+  }
+  .search-box-morph button[aria-label^="Expand search box"]:not([data-search-line]) {
+    display: none;
+  }
+}
