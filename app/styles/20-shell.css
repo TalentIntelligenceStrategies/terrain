@@ -214,6 +214,9 @@
            color var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
 .menu-item:active{transform:scale(.985)}
 .menu-item svg{color:var(--text-3);flex:0 0 16px}
+/* stacked items cannot borrow a neighbour's space for a hit area, so to a
+   coarse pointer each item is 44 tall itself (design-language.md §7) */
+@media (pointer:coarse){ .menu-item{min-height:44px} }
 .menu-sep{height:1px;background:var(--border);margin:var(--s-6) var(--s-8)}
 
 /* ── main ───────────────────────────────────────────────── */
