@@ -651,7 +651,7 @@ reasoning in its own comments. This section carries what a reader cannot get fro
 `fill="currentColor"` so it inverts for free. Content on `--ground`, cards on `--surface`, one working
 surface beneath the bar.
 
-**Below 1080px the list is the page and the record is a sheet over it, and the layout is designed
+**Below 1080px the list is the page and the record is a card over it, and the layout is designed
 down to 375px.** Nothing is dropped to make it fit: every region keeps its control
 and loses its words. On a phone the masthead is one row of glyphs with the labels as accessible names,
 the field tiles are one row that scrolls sideways, the folded search bar is the sentence and Search
@@ -766,10 +766,10 @@ pair was added to remove.
 
 **Under about 600px the longest values wrap onto second lines under their own labels**, the shared
 edge stops existing, and the grid costs whitespace for nothing — so it halves to one pair. **Below
-420px the short identifiers pair up again**: number, kind, the dates and the office are each under
-twelve characters, so two of them fit to a row with the label beside its value, and the holder and
-the inventors take a row each. One identifier to a row, label above, was a screen of eleven rows
-before the drawings, and on a phone the drawings now come first (`platform.md` §4.5).
+420px it pairs up again**, label still above value: number, kind, the dates and the office are each
+under twelve characters, so two of them fit to a row in the panel, and the holder, the inventors and
+the classes take a row each. One identifier to a row was a screen of eleven rows before the
+drawings; two to a row is six.
 
 The chain, at a 1440px window:
 
@@ -789,13 +789,15 @@ field list never collapses at any width, while the share appears to protect a fl
 a split above the stack and the full width below it — a viewport query would fire at the wrong moment
 in both directions.
 
-**Below 1080 the record is a sheet over the list**, not a second region under it. Stacked, the
+**Below 1080 the record is a card over the list**, not a second region under it. Stacked, the
 record a founder opened arrived below the list they were scanning, so opening one meant losing
-their place in the other and Back threw both away. As a sheet it covers the list without moving
-it: closing it, by its control, a drag down, the scrim or Back, returns to the row that opened it,
-where it was. The sheet takes the full width, rounds its top corners only, stops 24px short of the
-top so the list still shows it is there, and scrolls itself, with `overscroll-behavior: contain` so
-the list behind never moves under a finger.
+their place in the other and Back threw both away. As a card it covers the list without moving
+it: closing it, by its control, a drag down on its head, the scrim, Escape or Back, returns to the
+row that opened it, where it was. **The card sits 8px from every edge** with its four corners
+rounded, so a sliver of the list shows on each side and the record reads as something laid over
+the founder's place rather than a page that replaced it; 8px rather than the gutter's 16 because
+at 390 the second 8 on each side is width the field panel needs. It scrolls itself, with
+`overscroll-behavior: contain` so the list behind never moves under a finger.
 
 **Above the stack the breakpoints adjust components, never the structure.** A label narrows, the
 thumbnail strip fits fewer per row, the field tiles reflow.
@@ -833,7 +835,7 @@ non-flexing item above a scrolling sibling stays put without saying so, which is
 fills its column gives for free. The rule is about what persists, not about a property: a `sticky`
 declaration that reproduces this arrangement is the same claim and answers to the same count.
 
-*The record's head keeps its `sticky` anyway, because below 1080 the record is a sheet that scrolls
+*The record's head keeps its `sticky` anyway, because below 1080 the record is a card that scrolls
 itself and sticky is the whole of what holds its head. That depends on a detail worth writing down once: the card is
 `overflow:clip` and not `overflow:hidden`. `hidden` makes an element a scroll container, so a sticky
 child resolves against the card — which never scrolls — and travels away with it, throwing nothing

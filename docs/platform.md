@@ -212,7 +212,7 @@ mode — into the URL, and the open record adds itself. A reload, a link sent to
 or Forward between two searches all bring the search back by running it again, with its record open;
 a URL that names a record the first page does not hold opens the first result instead. **A search is
 a step, and so is whatever covers the thing before it**: each search is one entry in the browser's
-history, an enlarged drawing is one more, and below 1080px, where the record is a sheet over
+history, an enlarged drawing is one more, and below 1080px, where the record is a card over
 the list, so is the record. Back closes the drawing and leaves the record open, and on a phone it
 closes the record and leaves the list where it was; a Back that ends a reading session by throwing
 away the results is the gesture punishing the one person using it. Where the record sits beside the
@@ -318,7 +318,7 @@ its other half missing, so a patent the index holds once says *Grant* or *Applic
 A patent whose versions the engine did not return shows neither. **On a phone the switch moves into
 the record**, and the row says the kind in words beside the number: at 390px the segment takes a
 line of its own on every row, the one place on the row a status chip would sit, for a choice made
-on one patent in fifty. The record sheet carries it at full width under its head, where the
+on one patent in fifty. The record card carries it at full width under its head, where the
 document it turns over is the one being read.
 
 **The position always renders; the score may not.** There is no engine to withhold an ordinal. A
@@ -464,7 +464,7 @@ its own retry in the panel.
 **After a search the first result's record opens by itself**, where the columns sit side by side.
 The right column would otherwise say *pick a patent* beside a list that has already ranked one
 first. Focus stays where the founder put it — they pressed Search, not the row — and below 1080px,
-where the record is a sheet over the list, nothing opens, because a record arriving there would
+where the record is a card over the list, nothing opens, because a record arriving there would
 cover the list the founder asked for. A sort, a grouping branch or *Show more* opens nothing: those are
 the founder working the set they have.
 
@@ -482,11 +482,12 @@ opened a patent to see what it looks like scrolled past five to forty claims of 
 mostly concluded there were no pictures. Ordering by what a patent is published in lost to ordering
 by what the reader came for.
 
-**On a phone the drawings come before the field panel**, on the same argument one step further. Under
-the stack the panel is one column, so even compacted it fills the first screen, and a founder who
-opened a patent to see what it looks like is again scrolling past identifiers to find out whether it
-has pictures. The record opens on its title, the holder and the date, then the drawings, then the
-abstract; the identifiers follow, and the classes sit behind *More details*.
+**On a phone the record's drawings are the row's strip, not a grid**, on the same argument one step
+further. A grid of 148px tiles at phone width is two to a row, so nine drawings are five rows and a
+record with forty is a long walk to the abstract past figures the founder has not asked for. One
+row that scrolls sideways keeps every drawing a swipe away and the abstract a constant distance
+below the field panel, whatever the patent carries; the cap on a long strip does not apply,
+because a strip that scrolls has nothing to cap.
 
 **The record's title is the largest type in the pane.** It is `display-2`, 26/700, two steps above the
 row's `title-s`: the row answers *which of these*, the record answers *this one*, and a row and the document
@@ -1314,11 +1315,11 @@ number, which `brief.md` §1 prints. R3-17 is withdrawn for that reason and not 
 | R3-13 | phone | Search bar | Folded, it is the query on one line and Search | |
 | R3-14 | phone | Masthead | One row on the gutter; one appearance control; the version leaves it (was R1-07) | |
 | R3-15 | phone | Home | The composer follows the lede; the fields are a chip row under it, *Coming soon* last | |
-| R3-16 | phone | Record | Title, holder, date, drawings, abstract, then the identifiers, two short ones to a row; classes behind *More details* | + `app/` |
+| R3-16 | phone | Record | The field panel in two columns; the drawings a strip that scrolls sideways, as on a row | + `app/` |
 | R3-18 | phone | Results | One pinned row of at most 56px; the toolbar scrolls with the results header | |
-| R3-19 | phone | Record | A bottom sheet over the list: handle, drag down or the scrim to close, actions on the safe area | + `app/` |
+| R3-19 | phone | Record | A card over the list, 8px from every edge: a drag down, the scrim, ×, Escape or Back close it; actions on the safe area | + `app/` |
 | R3-20 | phone | Drawing viewer | Full bleed, the drawing at full width, close at the top edge | + `app/` |
-| R3-21 | phone | List, record | The kind is text in the number line; the version switch is in the record sheet, where both exist (was R1-42) | + `app/` |
+| R3-21 | phone | List, record | The kind is text in the number line; the version switch is in the record, where both exist (was R1-42) | + `app/` |
 | R3-22 | phone | List | Titles to two lines; holder and inventor stacked full width | |
 | R3-23 | phone | List | Number, kind, rank and score on one line; smaller strip tiles; the abstract keeps three lines | |
 | R3-24 | phone | Record | The head names the patent from the start | |
