@@ -1,0 +1,37 @@
+/* R3-03 · Drawing viewer: swipe steps the figure, pinch zooms the drawing
+ *
+ * Current: on a phone the viewer ignores every finger. A swipe leaves
+ * "Figure 1 of 9"; a pinch zooms the whole page (visualViewport.scale 2)
+ * while the readout stays at 100%. The gesture code is already in the
+ * component (pointer handlers on .figview-stage: a 48px horizontal swipe at
+ * 100% steps the figure, two-pointer distance drives the zoom the +/-
+ * buttons drive, one finger pans above 100%), and the stage already has
+ * touch-action: none. None of it is reached. The record on a phone is a
+ * Reka modal dialog, which sets pointer-events: none on <body>; the viewer
+ * is teleported to <body> outside the dialog, so it inherits none, and
+ * every touch on it falls through to the record underneath
+ * (elementFromPoint at the stage centre returns the record's figure
+ * button). The touch-action on the stage never applies because the stage
+ * is never the target. On desktop the record is not modal, the body keeps
+ * pointer-events, and the viewer works.
+ * Wanted:  the viewer takes its own pointer events, so the existing gesture
+ * code runs: a sideways swipe steps the figure through Next/Previous, a pinch
+ * zooms the drawing and never the page, one finger pans when zoomed. The
+ * buttons stay the single-pointer path. touch-action: none stays on the
+ * stage only, as it is.
+ * Viewport: every viewport; the fault shows wherever the record is modal
+ * (below 1080px).
+ *
+ * Measured (CDP touch, phone 390x844, replayed API):
+ *   before: swipe -186px  Figure 1 of 9 -> 1 of 9 (pointercancel after one
+ *           move); pinch x2  zoom 100% -> 100%, visualViewport.scale 1 -> 2.
+ *   after:  swipe -195px  Figure 1 of 9 -> 2 of 9; pinch x2  zoom 100% ->
+ *           248%, image matrix(2.48 ...), visualViewport.scale stays 1;
+ *           one-finger drag at 248% pans the image by (-72, -48)px; taps on
+ *           Zoom out and Next still work (150%, Figure 3 of 9).
+ *
+ * In the component: mount the viewer inside the dialog's layer, or give its
+ * root pointer-events: auto, as Reka's own DialogContent does. */
+.figview[role="dialog"][aria-label] {
+  pointer-events: auto;
+}
