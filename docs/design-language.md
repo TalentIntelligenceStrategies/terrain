@@ -162,14 +162,18 @@ surface under our own chrome*; this one means *the paper this was published on*,
 value. It is a token rather than a literal because §3.2's rule is that every colour is a token — a
 named invariant is checkable where a hex in a component is a judgement call the gate has to allow.
 
-**There is exactly one scrim, and it is the enlarged drawing.** The figure viewer is a lightbox over
-the viewport, because capped at one column of a two-column split it is too small for the reference
-numerals a founder enlarges a drawing to read.
+**There are exactly two scrims, and each is a layer laid over the founder's place without moving
+it.** The figure viewer is a lightbox over the viewport, because capped at one column of a
+two-column split it is too small for the reference numerals a founder enlarges a drawing to read.
+**Below 1080 the record is a card over the list** (§7), because stacked under the list it cost the
+founder their place in it. Both are a thing being read on top of the set it came from, and the dim
+says the set is still there.
 
-**Everything else still dims nothing**, and the list is the rule rather than an anecdote: the record
-opens in its own column, the grouping panel is a popover, the delete confirmation is inline, and
-every menu closes on an outside click the document hears for itself. `--scrim` has one reader. **A
-second one is a sign this rule has stopped holding**, not a sign the token turned out to be useful.
+**Everything else still dims nothing**, and the list is the rule rather than an anecdote: above 1080
+the record opens in its own column, the grouping panel is a popover, the delete confirmation is
+inline, and every menu closes on an outside click the document hears for itself. `--scrim` has two
+readers. **A third is a sign this rule has stopped holding**, not a sign the token turned out to be
+useful.
 
 `--text-3` is darker than it looks like it should be. It carries the 11px micro-labels, which are
 small text and need the full 4.5:1 — the obvious mid-grey lands at 3.6 and fails.

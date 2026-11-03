@@ -367,8 +367,8 @@ An inventory, so that a fifth has to argue for itself.
 ## What is deliberately absent
 
 No build step. No framework. No preprocessor. No bundler. No `--dark-*` primitive layer — a third
-indirection buys nothing and hides which value is live. **One** scrim token with **one** reader,
-the enlarged drawing, and nothing else in the product dims anything. No `@layer`.
+indirection buys nothing and hides which value is live. **One** scrim token with **two** readers,
+the enlarged drawing and the record card below 1080, and nothing else in the product dims anything. No `@layer`.
 No `og:image`, and no link-preview meta at all. The tree is published to GitHub Pages, and an
 `og:image` would have to be a PNG or a JPG, which the raster rule refuses on `main`.
 

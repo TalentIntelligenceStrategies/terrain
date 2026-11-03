@@ -594,7 +594,9 @@ technical drawing 44% of the window, and reference numerals are what a founder e
 made it the page rather than a panel on the page, and a patent drawing is a portrait plate, so most
 of that width went to empty ground either side of it while the scrim was reduced to a frame nobody
 reads as one. It opens at a size the drawing fills, with enough scrim left to say the page is still
-behind it.
+behind it. **Below 640 the plate is the width of the screen**, so there is no size the drawing fills
+that leaves scrim either side: the viewer opens full bleed, close at the top edge, and *Fill the
+screen* is not shown because there is nothing left for it to fill.
 
 **Full bleed is reached from inside it, and it is the page's own.** *Fill the screen* drops the
 panel's two maxima and the viewer's padding, so the drawing fills the viewport the lightbox already
@@ -609,7 +611,8 @@ product whose other two work for everyone. Pressing a row's tile opens the recor
 the panel over it — the row carries small renditions of the first twelve and the panel needs the
 published plate, so the record fetch is where the drawing comes from rather than a detour around it.
 
-**So it is the product's one scrim, one `position:fixed` node and one focus trap**, and each of
+**So it is one of the product's two scrims, two `position:fixed` layers and two focus traps** — the
+other is the record card below 1080 ([`design-language.md`](design-language.md) §7) — and each of
 those rules is narrowed rather than repealed —
 [`design-language.md`](design-language.md) §3.2 anticipated exactly this, closing with *a dimming
 layer would arrive with whatever first needs one*. The page behind goes `inert` for the length of
