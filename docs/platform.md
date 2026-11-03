@@ -240,7 +240,11 @@ One region is protected by name: the appearance control.
 **On a phone every region keeps its control and loses its words.** Below 720px the lockup is the
 mark alone, New search and the switcher are their glyphs, the meters drop their units and the profile
 its chevron, and the bar is one 48px row at 390px. Every dropped word is still the control's
-accessible name. At 320px the bar wraps to a second row rather than hiding a region.
+accessible name. **Below 420px the appearance control is one button that steps through light, dark
+and system**, its glyph the state it is in: three segments at a 44px reach are 132px, which at 375
+is the width the bar does not have. It is still the appearance control, in the bar, with the same
+three states, so it is not a demotion. At 320px the bar wraps to a second row rather than hiding a
+region.
 
 ### 4.2 · The search bar
 
