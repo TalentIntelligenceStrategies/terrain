@@ -133,6 +133,10 @@ const MONO = { number: 1, appno: 1, filed: 1, published: 1, ipcMain: 1, ipc: 1 }
    argument. It is a map beside MONO rather than a test inside the renderer
    because the two answer the same shape of question about a field. */
 const WIDE = { inventors: 1, ipc: 1 };
+/* AND WHICH TAKE A ROW ONLY WHEN THE PANEL PAIRS UP BELOW 420 (design-
+   language.md §7): the holder is one name, so it shares a row in the wide
+   grid, and is too long to share one in a 140px half. */
+const ROW = { holder: 1 };
 /* platform.md §4.5's five-field handoff, and the only place it exists. It was
    specified, claimed as built, and never built: 35-record.css said "the
    five-field handoff is now a SUBSET VIEW of this same record through the
@@ -384,9 +388,13 @@ function paneHTML(rec, id) {
            added to remove. The class goes on BOTH halves: a <dt> left in a
            half-track strands its own label a row above its value. */
         const wide = WIDE[k] ? ' hf-wide' : '';
-        return '<dt class="t-micro' + wide + '">' + label + '</dt>'
+        /* THE PAIR IS WRAPPED, for the narrow panel's sake (35-record.css):
+           below 420 a pair stacks label over value, two to a row, and the
+           holder takes a row of its own there as the two lists do here. */
+        return '<div class="hf-pair' + wide + (ROW[k] ? ' hf-row' : '') + '">'
+          + '<dt class="t-micro' + wide + '">' + label + '</dt>'
           + '<dd class="' + (MONO[k] ? 'fig' : '') + wide + '">'
-          + valueHTML(rec, k) + '</dd>';
+          + valueHTML(rec, k) + '</dd></div>';
       }).join('') + '</dl>'
     /* ══ THE DRAWINGS SIT UNDER THE FIELD PANEL ═══════════════════════════
        platform.md §4.5, and this is the third position they have had. They

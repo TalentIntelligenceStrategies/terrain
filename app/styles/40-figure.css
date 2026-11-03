@@ -484,6 +484,25 @@
      words and an ellipsis, and the number is what identifies the patent. */
   .figview-title{display:none}
 }
+/* ══ ON A PHONE THE RECORD'S DRAWINGS ARE THE ROW'S STRIP · platform.md §4.5 ═
+   A grid of 148px tiles at phone width is two to a row, so nine drawings were
+   five rows and a record with forty was a long walk to the abstract. One row
+   that scrolls sideways keeps every drawing a swipe away and the abstract a
+   constant distance below the field panel, at the row's own 102px tile.
+
+   NO CAP, because a strip that scrolls has nothing to cap: every tile shows
+   and *Show all* has nothing to disclose. It is cut by the card's edge as the
+   row's is (34-list.css, R3-60) — bled through the body's 20px and given it
+   back as padding, so the first tile sits on the text's edge at rest. */
+@media (max-width:640px){
+  .pn-figs{display:flex;gap:var(--s-6);overflow-x:auto;overscroll-behavior-x:contain;
+           margin-inline:calc(-1 * var(--s-20));
+           padding:var(--s-4) var(--s-20);
+           scroll-padding-inline:var(--s-20)}
+  .pn-fig{flex:0 0 auto;width:102px}
+  .pn-figs[data-capped]>.pn-fig:nth-child(n+13){display:block}
+  .pn-figs-more{display:none}
+}
 /* ON A COARSE POINTER THE BAR'S BUTTONS ARE 44 SQUARE, because they sit 2px
    apart and a transparent area on each would claim its neighbour's glyph
    (design-language.md §7). The bar is a pill floating over the drawing, so

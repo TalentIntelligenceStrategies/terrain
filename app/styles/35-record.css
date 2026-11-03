@@ -418,10 +418,19 @@
 @container rec (max-width:600px){
   .hf{grid-template-columns:auto minmax(0,1fr)}
 }
+/* ══ BELOW 420 IT PAIRS UP AGAIN, LABEL STILL ABOVE VALUE · §7, R3-16 ══════
+   One identifier to a row was a screen of eleven rows before the drawings.
+   Number, kind, the dates and the office are each under twelve characters, so
+   two fit to a row in the panel; the holder, the inventors and the classes
+   take a row each. A pair stacks its label over its value, so the grid needs
+   the pair as one item: record.mjs wraps each in a <div>, which a <dl>
+   permits, and above 420 that <div> is display:contents and the four-track
+   grid sees the <dt> and <dd> exactly as before. */
+.hf-pair{display:contents}
 @container rec (max-width:420px){
-  .hf{grid-template-columns:1fr;gap:var(--s-4) 0}
-  .hf dt{margin-block-start:var(--s-8)}
-  .hf dt:first-of-type{margin-block-start:0}
+  .hf{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-12) var(--s-14)}
+  .hf-pair{display:flex;flex-direction:column;gap:var(--s-4);min-width:0}
+  .hf-pair.hf-wide,.hf-pair.hf-row{grid-column:1/-1}
   .hf dt.hf-wide{margin-block-end:0}
 }
 
