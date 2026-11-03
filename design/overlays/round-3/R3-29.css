@@ -1,0 +1,35 @@
+/* R3-29 · Result row, phone: Drawings only shows larger drawings
+ *
+ * Current: on a phone "Drawings only" drops the abstract and the meta but
+ * keeps the same strip, three 96x112 thumbnails a row with a fourth cut, so
+ * the drawings are no bigger than in "Details and drawings".
+ * Wanted:  in Drawings only, below sm, each row shows its first four figures
+ * as a two-column grid at the full width of the row (about 154px a tile at
+ * 390, in the record's 4:5). The rest stay one tap away: a tile opens the
+ * figure viewer, whose strip carries every figure.
+ * Viewport: phone (below sm, 40rem). Desktop's Drawings only is unchanged.
+ *
+ * Keyed on their own view-mode control (title="Drawings only",
+ * aria-pressed="true"). In the component: the mode is already a prop of the
+ * card; render the grid variant of the strip for it below sm. */
+@media not all and (min-width: 40rem) {
+  :root:has(button[title="Drawings only"][aria-pressed="true"]) [data-result-card] div:has(> [data-idx]),
+  :root:has(button[title="Drawings only"][aria-pressed="true"]) [data-result-card] [role="status"][aria-label="Loading drawings"] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+  :root:has(button[title="Drawings only"][aria-pressed="true"]) [data-result-card] [data-idx],
+  :root:has(button[title="Drawings only"][aria-pressed="true"]) [data-result-card] [role="status"][aria-label="Loading drawings"] > div {
+    width: auto;
+    height: auto;
+    aspect-ratio: 4 / 5;
+  }
+  :root:has(button[title="Drawings only"][aria-pressed="true"]) [data-result-card] [data-idx]:nth-child(n + 5),
+  :root:has(button[title="Drawings only"][aria-pressed="true"]) [data-result-card] [role="status"][aria-label="Loading drawings"] > div:nth-child(n + 5) {
+    display: none;
+  }
+}
