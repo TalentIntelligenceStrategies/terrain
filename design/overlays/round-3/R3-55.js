@@ -49,7 +49,7 @@
       close.click();
       if (dialog || !digits) return; /* the dialog's focus return is R3-40 */
       setTimeout(() => {
-        const row = [...document.querySelectorAll('[data-card-primary][aria-label^="View details"]')]
+        const row = [...document.querySelectorAll('[data-card-primary][aria-label]')]
           .find(b => b.getAttribute('aria-label').includes(digits));
         row?.focus({ preventScroll: false });
       }, 60);

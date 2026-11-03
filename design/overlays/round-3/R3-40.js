@@ -27,7 +27,7 @@
 
   const toRow = () => {
     if (!digits) return;
-    const row = [...document.querySelectorAll('[data-card-primary][aria-label^="View details"]')]
+    const row = [...document.querySelectorAll('[data-card-primary][aria-label]')]
       .find(b => b.getAttribute('aria-label').includes(digits) && b.getClientRects().length);
     if (!row) return;
     row.focus({ preventScroll: true });

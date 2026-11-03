@@ -13,7 +13,7 @@
  * is beside the record).
  *
  * Measured at 390×844 with the patch: after the press, the record closes
- * once [role=status][title="Nearest to US 09000581 B2"] exists; scrollY 0;
+ * once their chip titled "Nearest to US 09000581 B2" exists; scrollY 0;
  * the chip and Restore are both inside the viewport below the masthead.
  *
  * "The list has changed" is read from their own chip naming this record's
@@ -37,7 +37,8 @@
     const t0 = performance.now();
     const tick = () => {
       if (!d.isConnected || performance.now() - t0 > 15000) return;
-      const chip = [...document.querySelectorAll('[role="status"][title^="Nearest to "]')].find(c => c.title === `Nearest to ${pn}`);
+      /* Keyed on the chip's title, not its role: R3-50 takes role="status" off it. */
+      const chip = [...document.querySelectorAll('[title^="Nearest to "]')].find(c => c.title === `Nearest to ${pn}`);
       if (!chip || btn.getAttribute('aria-busy') === 'true') return void setTimeout(tick, 120);
       d.querySelector('button[aria-label="Close details"]')?.click();
       /* After the record has left and focus has gone back to the row. */
