@@ -1,0 +1,29 @@
+/* R3-60 · Drawing strip: cut by the card's edge
+ *
+ * Current: the strip lives inside the row's 20px inline padding, so its last
+ * visible tile ends in a hard cut at the card's inner edge, with nothing to
+ * say the strip scrolls.
+ * Wanted:  the strip bleeds through the row's padding to the card's edge
+ * (margin-inline -1.25rem, padding-inline 1.25rem), so at rest the first
+ * tile still lines up with the text and the cut tile sits at the card's own
+ * edge, which reads as "more". scroll-padding-inline equals the padding and
+ * scroll-snap-type is x proximity, so a flick settles a tile against the
+ * text column rather than half under the edge.
+ * Viewport: both. The row's padding is px-5 at every width.
+ *
+ * The rule above the strip (border-t on its wrapper) stays inside the
+ * padding. In the component: the same on the strip's scroller; if the row
+ * padding changes, the three values follow it. */
+[data-result-card] div.overflow-x-auto:has(> [data-idx]),
+[data-result-card] [role="status"][aria-label="Loading drawings"] {
+  margin-inline: -1.25rem;
+  padding-inline: 1.25rem;
+  scroll-padding-inline: 1.25rem;
+  scroll-snap-type: x proximity;
+}
+[data-result-card] [role="status"][aria-label="Loading drawings"] {
+  overflow: hidden;
+}
+[data-result-card] div.overflow-x-auto > [data-idx] {
+  scroll-snap-align: start;
+}
