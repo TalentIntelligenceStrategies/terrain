@@ -265,7 +265,11 @@
 .figview-stage{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;
                background:var(--figure-ground);
                display:grid;grid-template-rows:minmax(0,1fr);place-items:center}
-.figview-stage{touch-action:none}
+/* THE FINGERS ARE THE VIEWER'S, ALL OF IT. On the stage alone, a pinch that
+   began on the head or the bar went to the browser and zoomed the page, close
+   control and all, off the screen. The strip keeps its sideways scroll. */
+.figview{touch-action:none}
+.figstrip{touch-action:pan-x}
 .figview-stage.can-pan{cursor:grab}
 .figview-stage.can-pan.is-gesture{cursor:grabbing}
 

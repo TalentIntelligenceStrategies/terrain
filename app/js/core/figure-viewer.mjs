@@ -453,24 +453,28 @@ export function init() {
        · the wheel zooms about the cursor — a trackpad pinch arrives as a
          wheel with ctrlKey and a finer delta, so it gets a finer rate.
 
-     touch-action:none on the stage (40-figure.css) is what stops the browser
-     taking the same fingers for its own page zoom. */
+     touch-action:none on the whole viewer (40-figure.css) is what stops the
+     browser taking the same fingers for its own page zoom — on the stage it
+     was the drawing's, and a pinch that began on the head or the bar zoomed
+     the page with the close control off screen. */
   if (el.stage) {
     const pts = new Map();
-    let pan = null, pinch = null, swipe = null, lastTap = null;
+    let pan = null, pinch = null, swipe = null, press = null, lastTap = null, lastType = 'mouse';
     const mid = () => { const [a, b] = [...pts.values()];
       return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.hypot(a.x - b.x, a.y - b.y) }; };
 
     el.stage.addEventListener('pointerdown', e => {
       if (e.button !== 0 || e.target.closest('button')) return;
+      lastType = e.pointerType;
       pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
       el.stage.setPointerCapture(e.pointerId);
       if (pts.size === 2) {
         const m = mid();
         pinch = { d: m.d || 1, s: scale, x: m.x, y: m.y };
-        pan = swipe = null;
+        pan = swipe = press = null;
         gesture(true);
       } else if (pts.size === 1) {
+        if (e.pointerType !== 'mouse') press = { x: e.clientX, y: e.clientY };
         if (scale > 1) { pan = { x: e.clientX - panX, y: e.clientY - panY }; gesture(true); }
         else if (e.pointerType !== 'mouse') swipe = { x: e.clientX, y: e.clientY };
       }
@@ -499,23 +503,39 @@ export function init() {
         if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) {
           setFig(at + (dx < 0 ? 1 : -1), true);
           lastTap = null;
-        } else if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
-          /* TWO TAPS ARE A DOUBLE TAP. dblclick does not fire for touch once
-             touch-action is none, so the stage counts its own. */
-          const now = e.timeStamp;
-          if (lastTap && now - lastTap.t < 300 && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 30) {
-            zoomTo(scale > 1.001 ? 1 : 2, e.clientX, e.clientY);
-            lastTap = null;
-          } else lastTap = { t: now, x: e.clientX, y: e.clientY };
         }
+      }
+      /* TWO TAPS ARE A DOUBLE TAP, AT ANY ZOOM. The stage counts its own
+         (the dblclick below is a mouse's), and it counted only inside the
+         swipe, which exists at 100% or less — so above 100% two taps did
+         nothing, and the way back from 200% was the bar. */
+      if (press && e.type === 'pointerup'
+          && Math.abs(e.clientX - press.x) < 10 && Math.abs(e.clientY - press.y) < 10) {
+        const now = e.timeStamp;
+        if (lastTap && now - lastTap.t < 300 && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 30) {
+          zoomTo(scale > 1.001 ? 1 : 2, e.clientX, e.clientY);
+          lastTap = null;
+        } else lastTap = { t: now, x: e.clientX, y: e.clientY };
+      }
+      press = null;
+      /* ONE FINGER LIFTED OFF A PINCH CARRIES ON AS A PAN. Ending the gesture
+         there left the remaining finger doing nothing until it was lifted and
+         put down again, which is the opposite of how the drawing was moving. */
+      if (pinch && pts.size === 1 && scale > 1) {
+        const [p] = [...pts.values()];
+        pan = { x: p.x - panX, y: p.y - panY };
       }
       if (pts.size < 2) pinch = null;
       if (pts.size === 0) { pan = null; swipe = null; gesture(false); }
     };
     el.stage.addEventListener('pointerup', end);
     el.stage.addEventListener('pointercancel', end);
+    /* A MOUSE'S DOUBLE CLICK, AND ONLY A MOUSE'S. Chromium synthesises a
+       dblclick from two taps whatever touch-action says, so a finger's double
+       tap zoomed in through the counter above and straight back out through
+       this — measured, two taps left the drawing at 100%. */
     el.stage.addEventListener('dblclick', e => {
-      if (e.target.closest('button')) return;
+      if (e.target.closest('button') || lastType !== 'mouse') return;
       zoomTo(scale > 1.001 ? 1 : 2, e.clientX, e.clientY);
     });
     el.stage.addEventListener('wheel', e => {
