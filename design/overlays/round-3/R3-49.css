@@ -1,0 +1,17 @@
+/* R3-49 · Results header: no stray "0 results"
+ *
+ * Current: the group-filter bar above the list is collapsed (grid rows 0fr,
+ * aria-hidden) when no group is chosen, but its "0 results" badge is still
+ * in the page's text: a text capture, find-in-page and a reader in browse
+ * mode all read "Nearness · 0 RESULTS" over fifty rows.
+ * Wanted:  while the bar is closed, nothing in it is in the page. When a
+ * group is chosen the bar opens and its count is real (node.total over the
+ * chosen groups' members), so the badge is kept there, not removed.
+ * Viewport: both.
+ *
+ * In the component: render the badge only when the bar is open (v-if on the
+ * same flag as .is-open). The order keeps its two words, Relevance and
+ * Nearness: platform.md §5.1, the score says what the order is by. */
+.collapse-y:not(.is-open) > [aria-hidden="true"] {
+  visibility: hidden;
+}
