@@ -191,6 +191,15 @@
   .field-name{white-space:nowrap}
 }
 
+/* THE HERO SITS INSIDE THE GUTTER (R3-59). At 36px "What are you building?"
+   measured 354px of a 358px line at 390 — flush to the right gutter — and
+   broke to two lines at 375. Under 420 it takes the scale's next step down,
+   26, which is one line with room at every phone width. A clamp() between the
+   two would track the window more closely and is not on §4's scale, which
+   check-app.py enforces, so the step is a step. */
+@media (max-width:420px){
+  .conv-intro h1{font-size:26px}
+}
 /* ══ the results surface's search bar ════════════════════════════════════
    The same .cmp component as the home surface, kept on screen after the run.
    It does not scroll away, which is why there is no pin control: theirs exists
