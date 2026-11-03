@@ -1,0 +1,79 @@
+/* R3-19 · Patent record (phone): a bottom sheet
+ *
+ * Current: below sm the record is a Reka DialogContent card centred with a
+ * 16px inset and 20px corners all round, the masthead above and the dimmed
+ * list below. No grab handle and no drag to close; close, previous and next
+ * are 24×24 in the top-right corner.
+ * Wanted:  a full-width sheet from the bottom edge, top corners only,
+ * max-height calc(100dvh - 24px), a 36×4 grab handle, a finger drag down
+ * closes it (R3-19 script), a tap on the scrim closes it, the record scrolls
+ * with overscroll-behavior: contain, the action bar (.record-foot) sits on
+ * the bottom safe area, and Close details is 44×44.
+ * Viewport: phone, below sm (40rem). The dialog only exists below lg, and
+ * nothing here applies at or above sm, so desktop, tablet and landscape are
+ * unchanged.
+ *
+ * Measured on their build at 390×844 before this patch: a tap on the scrim
+ * already closes the record (Reka's pointer-down-outside, kept), so the
+ * patch adds nothing for it. With the patch: sheet 390 wide, bottom 844,
+ * top 24; Close details 44×44.
+ *
+ * Not patchable here, and part of the item: the drag is a script on top of
+ * their dialog; in the component it belongs with the dialog's own state
+ * (drag offset, release velocity, and close through the same path as ×).
+ * The enter/leave motion is a slide, not their zoom-95; the component
+ * should own those keyframes too. Only Close details is enlarged; previous
+ * and next take R3-36's 44px hit areas. */
+@media not all and (min-width: 40rem) {
+  [role="dialog"][data-result-detail] {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    translate: 0 var(--terrain-sheet-drag, 0px);
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 24px);
+    border-width: 1px 0 0;
+    border-radius: 20px 20px 0 0;
+    animation: terrain-sheet-in var(--dur-land) var(--ease-out-expo);
+  }
+  [role="dialog"][data-result-detail][data-state="closed"] {
+    animation: terrain-sheet-out var(--dur-swap) ease-in forwards;
+  }
+  [role="dialog"][data-result-detail]:not([data-terrain-dragging]) {
+    transition: translate var(--dur-land) var(--ease-out-expo);
+  }
+  /* The grab handle: a flex item above the head, so it adds 16px of height
+     and is the place a drag starts from. */
+  [role="dialog"][data-result-detail]::before {
+    content: "";
+    flex: none;
+    align-self: center;
+    width: 36px;
+    height: 4px;
+    margin: 8px 0 4px;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--muted-foreground) 45%, transparent);
+  }
+  [role="dialog"][data-result-detail] > [class*="overflow-y-auto"] {
+    overscroll-behavior: contain;
+  }
+  [role="dialog"][data-result-detail] .record-foot {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  [role="dialog"][data-result-detail] button[aria-label="Close details"] {
+    width: 44px;
+    height: 44px;
+    margin-block: -10px;
+    margin-inline-end: -10px;
+  }
+}
+@keyframes terrain-sheet-in { from { transform: translateY(100%); } }
+@keyframes terrain-sheet-out { to { transform: translateY(100%); } }
+@media (prefers-reduced-motion: reduce) {
+  @media not all and (min-width: 40rem) {
+    [role="dialog"][data-result-detail],
+    [role="dialog"][data-result-detail][data-state="closed"] { animation: none; transition: none; }
+  }
+}
