@@ -1,16 +1,19 @@
-/* R3-19 · Patent record (phone): drag the sheet down to close it
+/* R3-19 · Patent record (phone): a drag down on its head closes it
  *
- * Current: only the 24px corner × or the browser's back closes the record.
- * Wanted:  a finger drag down closes it. A drag starts on the grab handle or
- * the head row, or anywhere in the record while it is scrolled to the top;
- * the sheet follows the finger, and on release it closes past 96px or on a
- * quick flick (over 0.5px/ms), otherwise it springs back. Closing goes
- * through their own Close details button, so the URL, focus return and
- * analytics are theirs.
+ * Current: the corner ×, a tap on the scrim and Back close the record; a
+ * drag does nothing.
+ * Wanted:  a finger drag down that starts on the card's head row closes it.
+ * The card follows the finger; on release it closes past 96px or on a quick
+ * flick (over 0.5px/ms), otherwise it springs back. A drag that starts in
+ * the record's body scrolls the record, as before. Closing goes through
+ * their own Close details button, so the URL, focus return (R3-40) and
+ * analytics are theirs. A press that does not move is still a tap on the
+ * head's controls.
  * Viewport: phone, below sm (40rem), re-evaluated on change.
  *
- * Measured: a 300px touch drag down from the head (CDP synthesizeScrollGesture,
- * gestureSourceType touch) closes the record; a 40px drag springs back.
+ * Measured at 390×844 with the patch injected before load (CDP
+ * synthesizeScrollGesture, gestureSourceType touch, from the head): 40px
+ * springs back; 120px and 300px close.
  *
  * In the component this is the dialog's own drag state, not listeners laid
  * over it. */
@@ -19,6 +22,7 @@
   window.__terrainR3_19 = true;
   const phone = matchMedia('not all and (min-width: 40rem)');
   const SEL = '[role="dialog"][data-result-detail]';
+  const HEAD = `${SEL} > div:has(> button[aria-label="Find similar"])`;
   let drag = null;
 
   const reset = d => {
@@ -28,15 +32,10 @@
 
   document.addEventListener('touchstart', e => {
     if (!phone.matches || e.touches.length !== 1) return;
-    const d = e.target.closest?.(SEL);
-    if (!d) return;
-    const scroller = d.querySelector(':scope > [class*="overflow-y-auto"]');
-    const foot = d.querySelector('.record-foot');
-    if (foot?.contains(e.target)) return;
-    const inBody = scroller?.contains(e.target);
-    if (inBody && scroller.scrollTop > 0) return;
+    const head = e.target.closest?.(HEAD);
+    if (!head) return;
     const t = e.touches[0];
-    drag = { d, scroller, inBody, y0: t.clientY, y: t.clientY, t0: performance.now(), on: false };
+    drag = { d: head.closest(SEL), y0: t.clientY, y: t.clientY, t0: performance.now(), on: false };
   }, { passive: true, capture: true });
 
   document.addEventListener('touchmove', e => {
@@ -45,7 +44,7 @@
     const dy = t.clientY - drag.y0;
     drag.y = t.clientY;
     if (!drag.on) {
-      if (dy < -4 || (drag.inBody && drag.scroller.scrollTop > 0)) { drag = null; return; }
+      if (dy < -4) { drag = null; return; }
       if (dy < 8) return;
       drag.on = true;
       drag.d.setAttribute('data-terrain-dragging', '');
@@ -63,8 +62,7 @@
     const v = dy / Math.max(1, performance.now() - t0);
     const close = d.querySelector('button[aria-label="Close details"]');
     if ((dy > 96 || v > 0.5) && close) {
-      /* Keep the offset: their leave animation starts from where the finger
-         let go. */
+      /* Keep the offset: their leave animation starts where the finger let go. */
       d.removeAttribute('data-terrain-dragging');
       close.click();
     } else reset(d);

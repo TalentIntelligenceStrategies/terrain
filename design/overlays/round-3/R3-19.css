@@ -1,66 +1,59 @@
-/* R3-19 · Patent record (phone): a bottom sheet
+/* R3-19 · Patent record (phone): a card over the list, 8px from every edge
  *
  * Current: below sm the record is a Reka DialogContent card centred with a
- * 16px inset and 20px corners all round, the masthead above and the dimmed
- * list below. No grab handle and no drag to close; close, previous and next
- * are 24×24 in the top-right corner.
- * Wanted:  a full-width sheet from the bottom edge, top corners only,
- * max-height calc(100dvh - 24px), a 36×4 grab handle, a finger drag down
- * closes it (R3-19 script), a tap on the scrim closes it, the record scrolls
- * with overscroll-behavior: contain, the action bar (.record-foot) sits on
- * the bottom safe area, and Close details is 44×44.
- * Viewport: phone, below sm (40rem). The dialog only exists below lg, and
- * nothing here applies at or above sm, so desktop, tablet and landscape are
- * unchanged.
+ * 16px inset (max-w calc(100% - 2rem), max-h calc(100dvh - 32px)) and 20px
+ * corners. Only the 24×24 corner ×, a tap on the scrim and Back close it;
+ * Escape does not (R3-55), and there is no drag.
+ * Wanted:  their floating card, tightened (design-language.md §7, "Below
+ * 1080 the record is a card over the list"): 8px from every edge, its four
+ * corners rounded as theirs, so a sliver of the list shows on each side. It
+ * scrolls itself with overscroll-behavior: contain. A drag down on its head
+ * closes it (R3-19 script), as do the scrim, ×, Escape (R3-55) and Back.
+ * The footer actions clear the bottom safe area, and Close details is 44×44.
+ * Viewport: phone, below sm (40rem). The dialog only exists below lg; from
+ * sm up their centred card is unchanged, and landscape is R3-25's.
  *
- * Measured on their build at 390×844 before this patch: a tap on the scrim
- * already closes the record (Reka's pointer-down-outside, kept), so the
- * patch adds nothing for it. With the patch: sheet 390 wide, bottom 844,
- * top 24; Close details 44×44.
+ * Measured at 390×844, the combined patch, injected before the page loads:
+ * card x 8, y 8, w 374, h 828 (was 16, 16, 358, 812); corners 20px;
+ * Close details 44×44; the scroll area overscroll-behavior contain. A
+ * touch drag down on the head (CDP synthesizeScrollGesture, touch) of 40px
+ * springs back; 120px and 300px close it, and focus returns to the row
+ * (R3-40). ×, Escape (R3-55) and Back close it.
  *
- * Not patchable here, and part of the item: the drag is a script on top of
- * their dialog; in the component it belongs with the dialog's own state
- * (drag offset, release velocity, and close through the same path as ×).
- * The enter/leave motion is a slide, not their zoom-95; the component
- * should own those keyframes too. Only Close details is enlarged; previous
- * and next take R3-36's 44px hit areas. */
+ * The scrim: a click in the 8px gutter closes the record (Reka's
+ * pointer-down-outside, measured with a mouse click at x 4). A touch tap
+ * there does not, with or without this patch: Chrome's touch adjustment
+ * moves any tap within about 8px of the card onto the card (on their own
+ * 16px inset a tap 6px from the card fails too, 14px away succeeds). With
+ * an 8px gutter on every side the scrim is not a finger target on a full
+ * card; the drag on the head is the gesture that replaces it.
+ *
+ * Not patchable here: the drag is a script laid over their dialog; in the
+ * component it belongs with the dialog's own state (drag offset, release
+ * velocity) and closes through the same path as ×. The 8px card should be
+ * the DialogContent's own classes below sm (inset-2, no translate), with
+ * env(safe-area-inset-*) on the top and bottom. Only Close is enlarged
+ * here; the rest of the head takes R3-36's 44px. */
 @media not all and (min-width: 40rem) {
   [role="dialog"][data-result-detail] {
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    top: max(8px, env(safe-area-inset-top));
+    bottom: max(8px, env(safe-area-inset-bottom));
+    left: 8px;
+    right: 8px;
+    width: auto;
+    max-width: none;
+    max-height: none;
     translate: 0 var(--terrain-sheet-drag, 0px);
-    width: 100%;
-    max-width: 100%;
-    max-height: calc(100dvh - 24px);
-    border-width: 1px 0 0;
-    border-radius: 20px 20px 0 0;
-    animation: terrain-sheet-in var(--dur-land) var(--ease-out-expo);
-  }
-  [role="dialog"][data-result-detail][data-state="closed"] {
-    animation: terrain-sheet-out var(--dur-swap) ease-in forwards;
   }
   [role="dialog"][data-result-detail]:not([data-terrain-dragging]) {
     transition: translate var(--dur-land) var(--ease-out-expo);
   }
-  /* The grab handle: a flex item above the head, so it adds 16px of height
-     and is the place a drag starts from. */
-  [role="dialog"][data-result-detail]::before {
-    content: "";
-    flex: none;
-    align-self: center;
-    width: 36px;
-    height: 4px;
-    margin: 8px 0 4px;
-    border-radius: 2px;
-    background: color-mix(in srgb, var(--muted-foreground) 45%, transparent);
+  [role="dialog"][data-result-detail] [data-terrain-record-head],
+  [role="dialog"][data-result-detail] > div:has(> button[aria-label="Find similar"]) {
+    touch-action: none;
   }
   [role="dialog"][data-result-detail] > [class*="overflow-y-auto"] {
     overscroll-behavior: contain;
-  }
-  [role="dialog"][data-result-detail] .record-foot {
-    padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
   [role="dialog"][data-result-detail] button[aria-label="Close details"] {
     width: 44px;
@@ -69,11 +62,8 @@
     margin-inline-end: -10px;
   }
 }
-@keyframes terrain-sheet-in { from { transform: translateY(100%); } }
-@keyframes terrain-sheet-out { to { transform: translateY(100%); } }
 @media (prefers-reduced-motion: reduce) {
   @media not all and (min-width: 40rem) {
-    [role="dialog"][data-result-detail],
-    [role="dialog"][data-result-detail][data-state="closed"] { animation: none; transition: none; }
+    [role="dialog"][data-result-detail] { transition: none; }
   }
 }
