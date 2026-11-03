@@ -1,0 +1,41 @@
+/* R3-18 · Results: one pinned row on the phone
+ *
+ * Current: below sm the pinned chrome on results is the masthead plus the
+ * whole folded composer, mode, settings, group, the view toggle on its own
+ * row and the magnifier on a third: it ends at about 205–261 of 844px and
+ * stays pinned after any drag, so one and a half results fit under it.
+ * Wanted:  below sm, the folded composer scrolls with the page until only
+ * its last row is left under the masthead, and that row stays: the query
+ * and Search (R3-13), 56px from the masthead's rule to the composer's.
+ * Mode, settings, group and the view toggle scroll away above it, with the
+ * results header below it, and come back when the page is scrolled to the
+ * top. While the box is open (expanded) nothing is hidden: the whole
+ * composer pins, as it does now.
+ * Viewport: phone (below sm). Desktop and tablet are unchanged.
+ * Measured at 390 with R3-13 and R3-14: at scrollY 0 the composer is
+ * 57–248, as before; at 300, 600 and 2400 the query row sits at 56–100
+ * and the composer's bottom edge at 112, so 55px is pinned under the
+ * masthead (was about 205px). --r3-pin-shift measured 135px.
+ *
+ * The patch is their sticky wrapper with a negative offset: top is the
+ * masthead's height less the distance from the wrapper's top to the
+ * query row, which the R3-18 script measures (--r3-pin-shift), because the
+ * controls above the row wrap to one, two or three lines with the width.
+ * The row's padding below it is trimmed so the pinned part is 56px.
+ *
+ * Their bundle ships the strings for an unpinned state ("Unpin (collapses
+ * into a header pill when scrolling)") but no component uses them; this is
+ * that state, done as a sticky offset rather than a second element. In the
+ * component: on phones, render the toolbar as the first row of the results
+ * header (so it scrolls by construction) and pin only the query row. */
+@media not all and (min-width: 40rem) {
+  #main-content > div.sticky:has([data-search-line]:not(.invisible)) {
+    top: calc(3.5rem + env(safe-area-inset-top, 0px) - var(--r3-pin-shift, 0px));
+  }
+  #main-content > div.sticky:has([data-search-line]:not(.invisible)) > div {
+    padding-bottom: 4px;
+  }
+  #main-content > div.sticky:has([data-search-line]:not(.invisible)) .search-box-morph {
+    padding-bottom: 6px;
+  }
+}
