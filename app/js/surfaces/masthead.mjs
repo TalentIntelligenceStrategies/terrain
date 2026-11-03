@@ -196,12 +196,33 @@ export function init(ctx) {
     if (h) location.hash = h;
   });
 
-  /* the theme control lives in the profile menu · design-language.md §10.4 */
+  /* ══ THE APPEARANCE CONTROL · design-language.md §10.4, platform.md §4.1 ══
+     Two faces of one value: three segments, and below 420 one button that
+     steps through them. The value is <html data-theme> and its storage, both
+     applyTheme's, so the two faces are painted from it and hold nothing of
+     their own. They are painted at init as well, because the segments shipped
+     with "system" pressed whatever the stored choice was. */
+  const ORDER = ['light', 'dark', 'system'];
+  const WORD = { light: 'light', dark: 'dark', system: 'system' };
+  const paintTheme = () => {
+    const now = document.documentElement.getAttribute('data-theme') || 'system';
+    $$('[data-theme-set]').forEach(b =>
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-theme-set') === now)));
+    const step = $('#themeStep');
+    if (step) {
+      const next = ORDER[(ORDER.indexOf(now) + 1) % ORDER.length];
+      step.setAttribute('data-state', now);
+      step.setAttribute('aria-label', 'Appearance: ' + WORD[now] + '. Change to ' + WORD[next]);
+    }
+  };
   onActivate(document, '[data-theme-set]', el => {
     ctx.applyTheme(el.getAttribute('data-theme-set'));
-    $$('[data-theme-set]').forEach(b =>
-      b.setAttribute('aria-pressed',
-        String(b.getAttribute('data-theme-set') ===
-          (document.documentElement.getAttribute('data-theme') || 'system'))));
+    paintTheme();
   });
+  onActivate(document, '#themeStep', () => {
+    const now = document.documentElement.getAttribute('data-theme') || 'system';
+    ctx.applyTheme(ORDER[(ORDER.indexOf(now) + 1) % ORDER.length]);
+    paintTheme();
+  });
+  paintTheme();
 }

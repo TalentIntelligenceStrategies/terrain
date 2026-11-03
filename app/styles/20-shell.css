@@ -190,6 +190,18 @@
    pair never got them. */
 .theme-seg .seg-btn{padding:0 var(--s-6)}
 .theme-seg .seg-btn[aria-pressed="true"]{background:var(--surface);color:var(--text-1)}
+/* BELOW 420 THE SWITCH IS ONE BUTTON (platform.md §4.1): 44 square, the glyph
+   of the state it is in. Above it the three segments stand and this is not
+   drawn; the two never show together, and masthead.mjs paints both. */
+.theme-step{display:none}
+.theme-step svg{display:none}
+.theme-step[data-state="light"] .theme-step-light,
+.theme-step[data-state="dark"] .theme-step-dark,
+.theme-step[data-state="system"] .theme-step-system{display:block}
+@media (max-width:419px){
+  .mast .theme-seg{display:none}
+  .theme-step{display:flex;width:44px;height:44px;flex:0 0 auto}
+}
 .profile{display:flex;align-items:center;gap:var(--s-6);flex:0 0 auto;
          padding:var(--s-4) var(--s-6);border-radius:var(--r-control);
          transition:background var(--dur-1) var(--ease),transform var(--dur-1) var(--ease)}
