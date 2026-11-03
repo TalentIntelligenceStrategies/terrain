@@ -1,0 +1,93 @@
+/* R3-15 · Home: on the phone the composer follows the lede
+ *
+ * Current: below sm the hero runs heading, lede, then six field tiles of
+ * 120px in a two-column grid (three of them "Coming soon"), roughly 270–663
+ * of 844px, and only then the composer, at about 680–810, showing its
+ * placeholder and little else. At 375×667, 320 and in landscape it is off
+ * the first screen. The page's one ask is the last thing in view.
+ * Wanted:  below sm, heading, lede, the composer, then the fields as one
+ * compact row of chips under it, the live fields first and the three
+ * "Coming soon" last; the row scrolls sideways inside the page gutter, and
+ * the coverage table follows. A chip is 40px tall: the field's icon at
+ * 16px and its name, "Coming soon" beside the name.
+ * Viewport: phone (below sm). From sm the tiles are R3-35 (820) and the
+ * desktop grid, unchanged.
+ * Measured at 390 with the patch (and R3-14): composer top 252px (was
+ * 680), the chip row at 455–501, coverage after; document scrollWidth
+ * equals the viewport (no sideways page scroll).
+ *
+ * The patch reorders with CSS only: the hero section becomes
+ * display: contents below sm so its heading, lede and fields can be placed
+ * around the composer, which in their markup is the hero's sibling. In the
+ * component, render the field picker after the composer on phones (or move
+ * the composer into the hero). "Coming soon" is already last in their
+ * order; the chip row keeps that order. Selection on a chip is R3-46. */
+@media not all and (min-width: 40rem) {
+  #main-content:has(section[aria-label="Patent technology fields"]) {
+    display: flex;
+    flex-direction: column;
+  }
+  #main-content > section:has(> section[aria-label="Patent technology fields"]) {
+    display: contents;
+  }
+  #main-content:has(section[aria-label="Patent technology fields"]) > * {
+    order: 5;
+  }
+  #main-content > section:has(> section[aria-label="Patent technology fields"]) > h1 {
+    order: 1;
+    /* the hero's pt-12, which display: contents drops */
+    margin-top: 3rem;
+  }
+  #main-content > section:has(> section[aria-label="Patent technology fields"]) > p {
+    order: 2;
+  }
+  #main-content:has(section[aria-label="Patent technology fields"]) > div:has(.search-box-morph) {
+    order: 3;
+    margin-top: 12px;
+  }
+  #main-content section[aria-label="Patent technology fields"] {
+    order: 4;
+    margin-top: 4px;
+    min-width: 0;
+  }
+  /* a column flex item with auto side margins shrinks to its content */
+  #main-content:has(section[aria-label="Patent technology fields"]) > section[aria-label="Data coverage"] {
+    width: 100%;
+  }
+
+  /* the chip row */
+  #main-content section[aria-label="Patent technology fields"] > div {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    margin-inline: -1rem;
+    padding: 2px 1rem 4px;
+    scroll-padding-inline: 1rem;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  #main-content section[aria-label="Patent technology fields"] > div > * {
+    flex: none;
+    flex-direction: row;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 14px;
+    gap: 6px;
+    border-radius: 9999px;
+    white-space: nowrap;
+  }
+  #main-content section[aria-label="Patent technology fields"] > div > * > svg {
+    width: 16px;
+    height: 16px;
+  }
+  /* "Coming soon", beside the name rather than under it */
+  #main-content section[aria-label="Patent technology fields"] > div > div > span + span {
+    margin-top: 0;
+    margin-inline-start: 2px;
+  }
+  /* R3-46's check sits in the chip's flow, not in a tile's corner */
+  #main-content section[aria-label="Patent technology fields"] > div > button[aria-pressed="true"]::after {
+    position: static;
+    margin-inline-start: 2px;
+  }
+}
