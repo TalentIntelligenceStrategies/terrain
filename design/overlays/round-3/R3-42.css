@@ -1,0 +1,42 @@
+/* R3-42 · Segmented control: the selected segment is distinct in dark
+ *
+ * Current: in dark the selected segment (T on the search box; 50, Off and
+ * Published in settings) sits on --card #1A1A1A inside a track of --muted
+ * #252525, or --muted at 50% over the card on the search box: the
+ * selected one is DARKER than the track it sits in, set apart by a
+ * hairline. Light reads the right way round (white on #EEEEEE).
+ * Wanted:  in dark the track recedes to --background and the selected
+ * segment rises to --accent with an --input edge and full-ink text;
+ * unselected text stays one step muted (--muted-foreground). Light is
+ * unchanged.
+ * Viewport: both.
+ *
+ * Measured on the live page (computed colours, WCAG contrast):
+ *   before  selected / track       #1A1A1A / #252525  1.14:1, the wrong way
+ *           search mode            #1A1A1A / #1F1F1F  1.06:1
+ *   after   selected / track       #2B2B2B / #141414  1.30:1, the right way
+ *           selected edge / track  #3D3D3D / #141414  1.70:1
+ *           text, selected #F0F0F0 on #2B2B2B 12.4:1; unselected #A3A3A3
+ *           on #141414 7.3:1
+ *   light, unchanged: #FFFFFF / #EEEEEE 1.16:1 with their --border edge
+ *   and shadow-sm, which reads clearly.
+ * The step is carried by fill, edge and ink together, not by fill alone.
+ *
+ * Their dark selector is [data-theme=dark] (and the violet theme, which
+ * shares the dark tokens); the patch uses the same. */
+:is([data-theme="dark"], [data-theme="violet"]) .seg {
+  background: var(--background);
+}
+:is([data-theme="dark"], [data-theme="violet"]) .seg-btn[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--input);
+  color: var(--foreground);
+}
+:is([data-theme="dark"], [data-theme="violet"]) [role="group"][aria-label="Search mode"] {
+  background: var(--background);
+}
+:is([data-theme="dark"], [data-theme="violet"]) [role="group"][aria-label="Search mode"] > button[aria-pressed="true"] {
+  background: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--input);
+  color: var(--foreground);
+}
