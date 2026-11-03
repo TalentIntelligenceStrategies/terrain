@@ -1,0 +1,22 @@
+/* R3-23 · Result row, phone: two whole results to a screen
+ *
+ * Current: a phone card is about 408px (measured, row 1 at 390x844): the
+ * number, then the Grant | Application segment on a line of its own with
+ * rank and score, the title, a two-column meta grid, three lines of
+ * abstract and a strip of 96x112 tiles. Under the pinned chrome a founder
+ * scans one patent per swipe.
+ * Wanted:  number, kind, rank and score on one line (R3-21 takes the
+ * segment off the row on a phone); strip tiles are 80x100, the record's 4:5.
+ * The abstract keeps its three lines: they are what a founder decides by
+ * without opening the record (platform.md §4.3).
+ * Viewport: phone (below sm, 40rem). Desktop is untouched.
+ *
+ * Measured: to be re-measured with the combined patch (phase 5). */
+@media not all and (min-width: 40rem) {
+  [data-result-card] [data-idx],
+  [data-result-card] [role="status"][aria-label="Loading drawings"] > div,
+  [data-result-card] .relative.flex.gap-2 > div.bg-muted {
+    width: 80px;
+    height: 100px;
+  }
+}
