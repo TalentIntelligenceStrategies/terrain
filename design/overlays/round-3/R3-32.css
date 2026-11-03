@@ -1,0 +1,18 @@
+/* R3-32 · Results header: no keyboard-shortcuts control on a touch screen
+ *
+ * Current: a 28x28 "Keyboard shortcuts" button ships to touch phones, 16x28
+ * once "Restore the original order" appears: the narrowest target on the
+ * page, for shortcuts a touch user cannot press.
+ * Wanted:  the control is not rendered where the primary pointer is coarse
+ * and cannot hover. A tablet with a keyboard and trackpad reports a fine
+ * pointer and keeps it.
+ * Viewport: (hover: none) and (pointer: coarse), whatever the width.
+ *
+ * In the component: v-if on a useMediaQuery for the same query, so the
+ * button is not in the tab order or the accessibility tree either; the
+ * patch's display: none does both. */
+@media (hover: none) and (pointer: coarse) {
+  button[aria-label="Keyboard shortcuts"] {
+    display: none;
+  }
+}
