@@ -340,17 +340,31 @@
    --s-6 OF MARGIN PLUS --s-4 OF PADDING IS THE --s-10 §7 MEASURES, and the 4
    is not a fudge: overflow-x:auto computes overflow-y to auto as well, so a
    scroller clips its own focus ring on all four sides. A 2px ring at 2px of
-   offset needs exactly 4, and the negative inline margin puts the first tile
-   back on the title's leading edge.
+   offset needs exactly 4.
 
    WHITE GROUND IN BOTH THEMES, like every other drawing surface here.
    --figure-ground is a fact about the content: black line-work on #1A1A1A is a
    blank rectangle. 40-figure.css carries the argument. */
+/* ══ THE TILE IS CUT BY THE CARD'S EDGE · design-language.md §7 ═══════════
+   It was cut by the row's inline padding, 16px inside the border, and a tile
+   cut at an invisible line inside the card reads as where the strip ends. The
+   strip bleeds now, through the row's padding to the border on the trailing
+   side and through the star's column to it on the leading one, and the same
+   amounts come back as padding and as scroll-padding — so at rest the first
+   tile still sits on the title's leading edge, and scrolled back it returns
+   there rather than to the border.
+
+   THE LEADING AMOUNT IS THE ROW'S GRID: its padding, the star's 32px column
+   and the gap after it (.set-row, .set-ctl below). The coarse-pointer hit
+   area grows the star by a transparent ::after, not its box, so it does not
+   move this. The --s-4 inside each is the focus ring's room, as before. */
 .set-thumbs{display:flex;gap:var(--s-6);
             margin-block-start:var(--s-6);
-            padding:var(--s-4);margin-inline:calc(-1 * var(--s-4));
+            padding-block:var(--s-4);
+            padding-inline:calc(var(--s-10) + 32px + var(--s-16)) var(--s-16);
+            margin-inline:calc(-1 * (var(--s-10) + 32px + var(--s-16))) calc(-1 * var(--s-16));
             overflow-x:auto;overscroll-behavior-x:contain;
-            scroll-padding-inline:var(--s-12)}
+            scroll-padding-inline:calc(var(--s-10) + 32px + var(--s-16)) var(--s-16)}
 
 /* THE TILE CARRIES THE RATIO, NOT THE IMAGE INSIDE IT. On the <img> it made a
    picture tile 89.5px tall against a 90px non-picture one — half a pixel of
