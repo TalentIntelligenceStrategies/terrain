@@ -243,8 +243,8 @@ its chevron, and the bar is one 48px row at 390px. Every dropped word is still t
 accessible name. **Below 420px the appearance control is one button that steps through light, dark
 and system**, its glyph the state it is in: three segments at a 44px reach are 132px, which at 375
 is the width the bar does not have. It is still the appearance control, in the bar, with the same
-three states, so it is not a demotion. At 320px the bar wraps to a second row rather than hiding a
-region.
+three states, so it is not a demotion. The bar is one row down to 320px; a region it could not hold
+would wrap it to a second row rather than be hidden.
 
 ### 4.2 · The search bar
 

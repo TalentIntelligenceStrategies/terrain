@@ -659,9 +659,9 @@ surface beneath the bar.
 down to 375px.** Nothing is dropped to make it fit: every region keeps its control
 and loses its words. On a phone the masthead is one row of glyphs with the labels as accessible names,
 the field tiles are one row that scrolls sideways, the folded search bar is the sentence and Search
-alone, and a row's meta is one column so no qualifier is cut. **At 320px the masthead wraps to a
-second row rather than hiding anything** — height is what a phone has to spare, and a control that
-is not there cannot be found.
+alone, and a row's meta is one column so no qualifier is cut. **The masthead is one row down to 320px**,
+and a region it could not hold would wrap it to a second row rather than be hidden — height is what
+a phone has to spare, and a control that is not there cannot be found.
 
 **On a coarse pointer every control is reached through 44×44**, whatever size its glyph is drawn.
 Where the glyph should stay small the box grows by a transparent hit area rather than by padding, so
