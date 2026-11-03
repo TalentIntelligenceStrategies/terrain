@@ -300,17 +300,44 @@
    the UA rule, so without this the attribute does nothing for layout AND the
    forced reflow in openRecordOverlay would have nothing to commit. */
 .rec[hidden]{display:none}
-/* ── below the floor · platform.md §4.5 ──────────────────────────────────
-   The columns stack at 1079 and the record is in the LOWER one now, under a
-   list capped at 46vh. That cap is what makes stacking work — a list the
-   reader scrolls a few rows of, with the record they opened beneath it — so
-   it stays, and the record takes the rest of the height rather than borrowing
-   from the list the way it used to.
+/* ══ BELOW 1080 THE RECORD IS A CARD OVER THE LIST · design-language.md §7 ══
+   Stacked, the record a founder opened arrived under the list they were
+   scanning, and opening one lost their place in the other. As a card it
+   covers the list without moving it, so closing it returns to the row that
+   opened it, where it was.
 
-   ITS OWN CAP COMES OFF, because a .rec inside a flexing column with nothing
-   below it needs no ceiling. */
+   8px FROM EVERY EDGE, ALL FOUR CORNERS ROUNDED. The sliver of list on each
+   side is what makes the record read as laid over the founder's place rather
+   than as a page that replaced it; 8 and not the gutter's 16, because at 390
+   the second 8 a side is width the field panel needs. The card is the panel
+   it is side by side — head, scroller, foot — so the head and the ways out
+   stay put by flex and only .rec-scroll moves, with its
+   `overscroll-behavior:contain` keeping the list behind still under a finger.
+
+   SCOPED TO .panecol, because the starred page hosts the same pane as a
+   drawer of its own (39-starred.css) and is not this.
+
+   IT IS MODAL WHILE IT IS OPEN — record.mjs marks everything behind it inert
+   and moves focus into it — and it closes by ×, a drag down on its head, the
+   scrim, Escape or Back. */
+.rec-scrim{display:none}
 @media (max-width:1079px){
-  .rec-open .panecol{min-height:60vh}
+  .panecol .rec{position:fixed;inset:var(--s-8);z-index:41;
+                box-shadow:var(--shadow-float)}
+  /* THE DRAG IS THE FINGER'S, NOT A TRANSITION. While it is held the card
+     follows --sheet-y with nothing easing it; released short of the line it
+     eases back, and past it the close carries the offset into its fade. */
+  .panecol .rec[data-drag]{transform:translateY(var(--sheet-y,0px))}
+  .panecol .rec[data-drag="held"]{transition:none}
+  .rec-scrim{display:block;position:fixed;inset:0;z-index:40;
+             background:var(--scrim);opacity:0;pointer-events:none;
+             touch-action:none;
+             transition:opacity var(--dur-2) var(--ease)}
+  .rec-open .panecol:has(>.rec:not([hidden])) .rec-scrim{opacity:1;pointer-events:auto}
+  .panecol .rec-head{touch-action:none;cursor:grab}
+  /* THE WAYS OUT SIT ON THE SAFE AREA. env() is 0 until the page opts into
+     the inset (R3-26), and the 12px floor is the foot's own padding. */
+  .panecol .rec-end{padding-block-end:max(var(--s-12), env(safe-area-inset-bottom))}
 }
 
 /* THE CONTAINER THE FIELD LIST QUERIES. The query itself is below .hf, where

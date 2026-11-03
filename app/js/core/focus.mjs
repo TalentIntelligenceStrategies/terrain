@@ -14,6 +14,10 @@
  * What goes inert is the covered pane: 880px of controls a keyboard would tab
  * into and a pointer could never reach. A CONTROL YOU CAN FOCUS AND CANNOT SEE
  * IS WORSE THAN ONE YOU CANNOT FOCUS.
+ *
+ * BELOW 1080 IT IS MODAL, because there it is a card over the list rather
+ * than a column beside it (design-language.md §7): record.mjs marks what is
+ * behind it inert with setInert below, by the same argument one size down.
  */
 
 /** Focus without scrolling anything into view. The default for anything mid-transition. */

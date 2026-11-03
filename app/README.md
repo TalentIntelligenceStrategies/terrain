@@ -181,6 +181,7 @@ passes.
 | `--fig-scale` | the figure viewer | `var(--fig-scale,1)` | zoom, between 0.5 and 4: the buttons land on the ladder's stops, a gesture anywhere between them |
 | `--fig-rot` | the figure viewer | `var(--fig-rot,0deg)` | rotation, a quarter turn at a time |
 | `--fig-x` `--fig-y` | the figure viewer, panning and zooming about a point | `var(--fig-x,0px)` | pan offset. **All four compose into ONE transform, and the CSS decides the order** — a JS-built transform string is three call sites that can disagree about whether rotation happens before scale |
+| `--sheet-y` | the record card below 1080, while a finger drags it down | `var(--sheet-y,0px)` | the drag offset. Read only under `[data-drag]`, so a card nobody is holding has no transform of its own |
 
 *`--mx-n`, `--mx-min`, `--mx-head` and `--xr-n` left with the analysis layer.*
 

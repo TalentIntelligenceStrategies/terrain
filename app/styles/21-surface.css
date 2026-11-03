@@ -31,7 +31,7 @@
    graceful end of the behaviour rather than the broken one, which is the
    whole reason the container query was fixed before this line was touched.
 
-   Below 1080 the columns stack and none of this applies. */
+   Below 1080 the record is a card and none of this applies. */
 .view-work{overflow:hidden}
 .view-work.is-active{display:flex;flex-direction:column}
 .work-split{display:flex;flex:1;min-height:0}
@@ -44,8 +44,8 @@
    container query) rather than being held up by the split.
 
    THE LIST IS FLOORED RATHER THAN FIXED. 340px is design-language.md §7's
-   measured minimum for a readable result row; below that the split has
-   already stacked.
+   measured minimum for a readable result row; below that the list is the
+   page and the record a card over it.
 
    AND IT IS A PERCENTAGE BASIS WITH `flex:0 1`, not `width:50%`. A width
    would be measured before the border between them and leave the two columns
@@ -207,66 +207,43 @@
 .rec-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
             scrollbar-gutter:stable}
 
-/* ── stacked, below 1080 ───────────────────────────────────────────────────
-   THE SURFACE SCROLLS AGAIN HERE, and line 33 is what it is undoing. .view
-   already scrolls for every other view in the product (20-shell.css:20);
-   .view-work opts out so its two columns can each own a scroller, which is
-   right side by side and wrong stacked. Stacked, the opt-out put the record
-   BELOW THE FOLD WITH NOTHING TO SCROLL: measured at 640x400 — a 1280x800
-   laptop at 200% zoom — the masthead and the search bar take 235px, the
-   capped list takes 184 and the record pane starts at y=419 in a 400px
-   window, with 19px of scroll available to reach it. It was not hard to
-   reach; it was gone.
+/* ── below 1080, the list is the page · design-language.md §7 ──────────────
+   THE COLUMNS USED TO STACK, and the record a founder opened arrived under the
+   list they were scanning: opening one meant losing their place in the other,
+   and Back threw both away. The record is a card over the list now
+   (35-record.css), so the list keeps the whole surface and its panel stays
+   frozen exactly as it is side by side — head and Sort pinned, rows
+   scrolling inside — and nothing here has to move for a record to open.
 
-   THE 46vh CAP IS THE RIGHT DESIGN AND IS KEPT: it holds a scrollable list
-   preview with the record directly under it, so picking a row does not send
-   the founder past twenty rows to read one. It only stops meaning anything
-   once it is shorter than the thing it is previewing. One .set-row is 379px
-   and the sort bar above it is another 60, so the cap earns its keep
-   at roughly 950px of window and not below — measured 0 rows fully visible at
-   every stacked size. Under 700px of height it is doing nothing but hiding,
-   so it goes and the page scrolls instead. */
-/* ONLY THE RECORD UNFREEZES, AND THE LIST KEEPS ITS PANEL. The cap is what
-   makes that the right split: a capped column is already a box of a fixed
-   height, so the panel inside it fills that box and the rows scroll within —
-   which is exactly the "scrollable list preview" the cap exists to produce,
-   now with its head and its Sort still on screen. The record has no
-   cap and no reason for one: it is the last thing on the page, so it grows
-   and the page scrolls past it. */
+   THE RIGHT COLUMN TAKES NO ROOM. It still hosts the record, because the
+   record's ids, handlers and the starred page's drawer all find it there; a
+   fixed card is laid out against the viewport whoever its parent is. The
+   idle sentence goes with the column: there is no second region for it to
+   explain. The list's 340px floor goes too, because the floor existed for
+   the split and a 320px phone is narrower than it. */
 @media (max-width:1079px){
-  /* AND THE SPLIT STOPS FLEXING, which is what the foot exposed. .work-split
-     is `flex:1` — `flex:1 1 0%` — so stacked it took the port's height and
-     no more, the record overflowed OUT of it, and the attribution after it
-     was laid out at y=846 of a 900px window with 1,700px of claims painting
-     straight over it. Side by side that basis is right: the two columns
-     divide the height they are given. Stacked, the split IS the content and
-     has to be as tall as it. */
-  .work-split{flex-direction:column;flex:0 0 auto}
-  .listcol{flex:0 0 auto;width:auto;min-width:0;max-height:46vh}
-  .view-work{overflow-y:auto;overflow-x:hidden}
-  .panecol{flex:0 0 auto;overflow:visible}
-  .rec{flex:0 0 auto}
-  .rec-scroll{overflow:visible}
+  .listcol{flex:1 1 auto;min-width:0}
+  .panecol{flex:0 0 0;padding:0;overflow:visible}
+  .pane-idle{display:none}
 }
+/* UNDER 700px OF HEIGHT THE PANEL UNFREEZES and the page scrolls instead. A
+   landscape phone gives the frozen list under 200px of rows under the
+   masthead and the search bar, which is a box that mostly hides; grown to its
+   content, the surface scrolls past it and the bar leaves with the first
+   gesture. The card is fixed, so it is unaffected either way. */
 @media (max-width:1079px) and (max-height:699px){
-  .listcol{max-height:none}
+  .view-work{overflow-y:auto;overflow-x:hidden}
+  .work-split{flex:0 0 auto}
+  .listcol{overflow:visible}
   .set-wrap>.card{flex:0 0 auto}
   .set-listcol{overflow:visible}
-  /* AND THE PANE HAS TO STOP FLEXING, which is the half of this that is not
-     obvious. .panecol took what the capped list left, which is the right
-     behaviour while there IS a cap. With the cap gone the list is 8077px in a
-     316px box and the pane's share of the remainder is nothing: measured
-     height 0, scrollHeight 0. The record was not below the fold, it had no
-     box. Both columns size to their content here and the surface scrolls
-     past them. The .panecol rule moved up into the block above, because it
-     is true at every stacked height and was only ever written here. */
 }
 /* NO SHORT-VIEWPORT ESCAPE AT TWO COLUMNS, and that is measured rather than
    assumed. At 1440x600 the frozen panel gives 258px of body against the old
    scroller's ~200, and at 1080x500 it gives 158 against 247 with the head
    already gone — worse in neither case, better in most. Unfreezing here would
    put an 8000px list and a 2000px record on one page scroll, which is the
-   trade the 46vh cap below 1080 exists to refuse. */
+   trade the card below 1080 exists to refuse. */
 
 /* ── the Market / Technology toggle, in the surface's head ──────────────
    IT HAD A BAND OF ITS OWN inside the right pane until 2026-09-11 — a

@@ -413,6 +413,14 @@
                it is open and the idle sentence steps aside, which is why
                closing it is an X rather than a back chevron — nothing is
                behind it. -->
+          <!-- ══ BELOW 1080 THE RECORD IS A CARD, AND THIS IS ITS SCRIM ══════
+               design-language.md §7. Stacked, the record arrived under the
+               list, so opening one lost the founder's place in the other. As a
+               card it covers the list without moving it, and a press here is
+               one of its ways out. A sibling and not a pseudo-element of .rec:
+               the card moves under a finger and its scrim must not. Above
+               1080 it does not render. -->
+          <div class="rec-scrim" id="recScrim" aria-hidden="true"></div>
           <section class="rec" id="recPane" aria-labelledby="recTitle" hidden>
             <!-- CLOSE IS AN X AT THE TRAILING EDGE, not a back chevron at the
                  leading one. A chevron says "the thing you were looking at is

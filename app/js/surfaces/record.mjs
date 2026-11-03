@@ -25,7 +25,7 @@ import { waitOn, landIn, failWith } from '../core/wait.mjs';
 import { say } from '../core/live-region.mjs';
 import { onActivate } from '../core/delegate.mjs';
 import { push, drop, top } from '../core/esc-stack.mjs';
-import { focusQuietly, captureFocus } from '../core/focus.mjs';
+import { focusQuietly, captureFocus, setInert } from '../core/focus.mjs';
 import { wait as pause } from '../core/timers.mjs';
 import { bar, bars, langAttr } from '../core/primitives.mjs';
 import { where, holderText, noAssignee } from '../core/format.mjs';
@@ -58,6 +58,40 @@ let REC = null;
    that knows the founder's place in it. */
 let OPEN_ID = null;
 const FLOOR = 240;
+
+/* ══ BELOW 1080 THE RECORD IS A CARD OVER THE LIST, AND IT IS MODAL ════════
+   design-language.md §7. Side by side the record covers nothing and the list
+   beside it stays live; as a card it covers the list, and a list the pointer
+   cannot reach and the Tab key can is an interface lying about what is
+   reachable — the viewer's argument, figure-viewer.mjs. So everything behind
+   it goes inert while it is open and focus moves into it.
+
+   INERT IS WORKED OUT, NOT LISTED. The pane is four levels inside #app and
+   inert works downward, so the siblings of each ancestor up to #app are what
+   go — computed on open, so a region the surface gains later is covered
+   without anybody remembering to add it. Three things stay live: the scrim,
+   which is one of the ways out; the live regions, which announce for the
+   card; and anything already inert, which is somebody else's to release.
+
+   ONLY ON THE RESULTS SURFACE. The starred page hosts the same pane as its
+   own drawer, and that is not this. */
+const CARD = matchMedia('(max-width:1079px)');
+const isCard = () => CARD.matches && HOST === 'work';
+let BEHIND = [];
+function modal(on) {
+  BEHIND.forEach(n => setInert(n, false));
+  BEHIND = [];
+  const pane = $('#recPane'), app = $('#app');
+  if (!on || !pane || !app) return;
+  for (let n = pane; n && n !== app && n.parentElement; n = n.parentElement) {
+    for (const sib of n.parentElement.children) {
+      if (sib === n || sib.id === 'recScrim' || sib.hasAttribute('inert')
+          || sib.matches('[aria-live], [role="alert"], [role="status"]')) continue;
+      setInert(sib, true);
+      BEHIND.push(sib);
+    }
+  }
+}
 
 /* ══ ONE RECORD, TWO PLACES IT OPENS · platform.md §4.5, §5.2 ══════════════
    The results surface opens it in its own column; the starred page opens it
@@ -450,6 +484,7 @@ function close() {
   setActs(false, null);
   REC = null;
   drop('record');
+  modal(false);
   /* `restore` IS A FUNCTION, NOT A NODE. captureFocus hands back the act of
      restoring rather than the thing to restore to, because it is the one that
      knows about the fallback and about isConnected — a row re-rendered while
@@ -465,6 +500,8 @@ function close() {
   setTimeout(() => {
     if (!app || !app.classList.contains('rec-open')) {
       pane.hidden = true;
+      pane.removeAttribute('data-drag');
+      pane.style.removeProperty('--sheet-y');
       /* BACK TO THE RESULTS COLUMN ONCE IT IS AWAY, so the search finds its
          record where its CSS and its keyboard scope expect it. */
       if (HOST !== 'work') { HOST = 'work'; place('work'); syncPos(); }
@@ -601,6 +638,16 @@ async function open(id, trigger, stepping, opts = {}) {
   if (entering) void pane.offsetWidth;
   if (app) requestAnimationFrame(() => app.classList.add('rec-open'));
   push('record', close);
+  /* THE CARD TAKES FOCUS ON OPEN, `keep` or not. Keeping focus where the
+     founder put it is right beside a list that stays live; behind a card the
+     row it would stay on is inert, and inert focus is focus on <body>. The
+     return point was captured above, before anything went inert. */
+  if (entering && isCard()) {
+    pane.removeAttribute('data-drag');
+    pane.style.removeProperty('--sheet-y');
+    modal(true);
+  }
+  if (!stepping && isCard()) focusQuietly($('#recTitle'));
 
   /* THE PANEL GOES BACK TO THE TOP, AND IT HAS TO BE SAID OUT LOUD.
      Replacing #recBody's innerHTML used to reset the scroll for free, because
@@ -731,8 +778,66 @@ async function open(id, trigger, stepping, opts = {}) {
   /* focus moves to the heading, quietly — preventScroll is the fix for the
      record jumping the pane it opened over. NOT ON A STEP: the founder's hand
      is on the Next button and moving focus off it breaks the second press. */
-  if (!stepping && !opts.keep) focusQuietly($('#recTitle'));
+  if (!stepping && !opts.keep && !isCard()) focusQuietly($('#recTitle'));
   else say('list', 'Patent ' + (rowIds().indexOf(id) + 1) + ' of ' + rowIds().length + '.');
+}
+
+/* ── the card's other ways out · design-language.md §7 ─────────────────────
+   THE SCRIM, BOTH ENDS OF THE PRESS ON IT, the viewer's rule: a drag that
+   started inside the card and ended past its edge is not a request to leave.
+
+   THE DRAG IS ON THE HEAD, never on a control in it and never on the
+   scroller, which is the claims' and already moves under a finger. Down past
+   a quarter of the card (capped at 120px), or a flick, closes it; anything
+   shorter eases back. A width change across 1080 with the record open turns
+   the modal on or off with it, because the same pane is a card on one side of
+   that line and a column on the other. */
+function cardWays() {
+  const pane = $('#recPane'), scrim = $('#recScrim');
+  if (!pane) return;
+  if (scrim) {
+    let down = false;
+    scrim.addEventListener('pointerdown', () => { down = true; });
+    scrim.addEventListener('click', () => { if (down && isCard()) close(); down = false; });
+  }
+  let d = null;
+  pane.addEventListener('pointerdown', e => {
+    if (!isCard() || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    const t = e.target instanceof Element ? e.target : null;
+    if (!t || !t.closest('.rec-head') || t.closest('button, a')) return;
+    d = { id: e.pointerId, y: e.clientY, t: e.timeStamp, dy: 0 };
+    pane.setPointerCapture(e.pointerId);
+    pane.setAttribute('data-drag', 'held');
+  });
+  pane.addEventListener('pointermove', e => {
+    if (!d || e.pointerId !== d.id) return;
+    d.dy = Math.max(0, e.clientY - d.y);
+    pane.style.setProperty('--sheet-y', d.dy + 'px');
+  });
+  const end = e => {
+    if (!d || e.pointerId !== d.id) return;
+    const { dy, t } = d;
+    d = null;
+    const flick = dy > 24 && dy / Math.max(1, e.timeStamp - t) > 0.5;
+    if (e.type === 'pointerup' && (dy > Math.min(120, pane.clientHeight / 4) || flick)) {
+      pane.setAttribute('data-drag', 'out');
+      close();
+      return;
+    }
+    pane.setAttribute('data-drag', 'back');
+    pane.style.setProperty('--sheet-y', '0px');
+    setTimeout(() => {
+      if (pane.getAttribute('data-drag') === 'back') pane.removeAttribute('data-drag');
+    }, reduced() ? 0 : DUR2 + 20);
+  };
+  pane.addEventListener('pointerup', end);
+  pane.addEventListener('pointercancel', end);
+  CARD.addEventListener('change', () => {
+    const app = $('#app');
+    if (pane.hidden || HOST !== 'work' || !app || !app.classList.contains('rec-open')) return;
+    modal(CARD.matches);
+    if (CARD.matches) focusQuietly($('#recTitle'));
+  });
 }
 
 export function init(ctx) {
@@ -837,6 +942,7 @@ export function init(ctx) {
     open(id, el, false, { figure: Number(el.getAttribute('data-fig-n')) });
   });
   onActivate(document, '#recClose', close);
+  cardWays();
 
   /* ══ THE KEYBOARD · platform.md §4.3 ═════════════════════════════════════
      The flow is search → read → star, and every step of it was a Tab walk:
