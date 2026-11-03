@@ -1,0 +1,44 @@
+/* R3-24 · Patent record (dialog form): the head names the patent from the start
+ *
+ * Current: the head row's left side (div.min-w-0.flex-1 after the sr-only
+ * h2) is empty until the record is scrolled past its title; then their
+ * PatentDetailToolbar fills it with number and title. Before that a record
+ * does not say which patent it is, and the row changes shape under the thumb.
+ * Wanted:  the publication number in Inconsolata at the left from the
+ * start, in the same 13px muted style their scrolled heading uses, so the
+ * scrolled state only adds the title beside it; actions stay at the right.
+ * Viewport: the dialog form of the record, which their build renders only
+ * below lg (phone, landscape, tablet). The desktop pane is not touched.
+ *
+ * Layout and selectors, for the Grant/Application switch (R3-21):
+ *   head      [data-terrain-record-head]  (flex row, gap 8px, px 20 py 12)
+ *   name slot [data-terrain-record-name]  (flex: 1, min-width 0; truncates)
+ *   then      Find similar · divider · Previous · Next · Close details
+ * At 390 the row is name ~105px + Find similar 104 + divider 9 + 24 + 24 +
+ * 44 (Close, R3-19) + gaps: about 340 of 350. A 136px switch does not fit
+ * on that row at phone width; it needs its own row under the head, or
+ * Find similar has to go icon-only below sm. With R3-36's 44px boxes the
+ * row is fuller still, so below sm Find similar is icon-only: its
+ * accessible name and title stay "Find similar", and the number keeps the
+ * row's free width (measured in phase 5).
+ *
+ * Not patchable here: the number is drawn from a data attribute as
+ * generated content (Vue owns the slot's children). In the component the
+ * toolbar renders heading.number always and adds heading.title on scroll. */
+[data-terrain-record-name]:empty::before {
+  content: attr(data-terrain-pn);
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+
+@media not all and (min-width: 40rem) {
+  [data-terrain-record-head] button[aria-label="Find similar"] {
+    font-size: 0;
+    gap: 0;
+  }
+}
