@@ -1,0 +1,22 @@
+/* R3-34 · Results header, phone: Sort sits on the count line
+ *
+ * Current: below sm the count block is basis-full (max-sm:basis-full), so
+ * the Sort trigger drops to a line of its own, alone at the right with
+ * nothing on its left.
+ * Wanted:  "50 matched · 50 shown" and Sort share one line, Sort at the
+ * right. To fit at 390 (count 201px + trigger 119px against 316px) the
+ * trigger drops its leading arrows icon below sm and keeps its chevron, the
+ * cue that it opens a menu: 99px. A count too long for the line (four-digit
+ * totals) still wraps Sort below, as the row is flex-wrap.
+ * Viewport: phone (below sm, 40rem). Desktop is untouched.
+ *
+ * The 44px hit area for the trigger is R3-36, not this item. In the
+ * component: drop max-sm:basis-full and hide the leading icon below sm. */
+@media not all and (min-width: 40rem) {
+  section.shell-swap header > div > div.flex-1 {
+    flex-basis: auto;
+  }
+  button[aria-label="Sort the list"] > svg:first-child {
+    display: none;
+  }
+}
