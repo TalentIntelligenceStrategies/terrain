@@ -1,0 +1,21 @@
+/* R3-58 · Drawing viewer: the figure arrows have an edge on the paper
+ *
+ * Current: Previous figure / Next figure are white discs (#ffffffd1) on the
+ * white drawing ground, with a 1px #2525251f edge (1.1:1 on white) and a
+ * faint shadow. The glyph reads; the disc does not, so the arrows look like
+ * loose chevrons over the drawing's margins.
+ * Wanted:  a 1px edge that reads on the paper, in both themes.
+ * Viewport: all (the discs are the same everywhere).
+ *
+ * The paper is #fff in both themes (--figure-ground in ours: it does not
+ * swap, because it is the sheet the drawing was published on), so the edge
+ * must not swap either. Their --border is #e4e4e4 in light (1.3:1 on white)
+ * and #333 in dark: one would not read and the other would change for no
+ * reason. The edge is their own ink, #252525, the value their rule already
+ * uses for this disc at 12%, raised to 50%: composited on white it is
+ * #929292, 3.1:1. In the component this is one non-swapping token for
+ * "line on the paper", which the zoom pill can take too where it sits on the
+ * drawing. */
+.figview-stage .figview-step[aria-label] {
+  border-color: #25252580;
+}
