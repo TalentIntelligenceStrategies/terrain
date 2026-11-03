@@ -1,0 +1,31 @@
+/* R3-22 · Result row, phone: titles to two lines; holder and inventor stacked
+ *
+ * Current: below sm the title is line-clamp-1, so "Semiconductor device
+ * package with…" loses the words that tell it from the next ten rows; the
+ * holder clamps to "TAIWAN SEMICOND…" in half a column while the inventor
+ * column beside it has room.
+ * Wanted:  the title clamps at two lines with text-wrap: pretty; holder and
+ * inventor each take a full-width line of their own, holder first. Holder
+ * names are as published: no case change. The date and class line is
+ * unchanged.
+ * Viewport: phone (below sm, 40rem). Desktop is untouched: its title is
+ * line-clamp-none and its meta is two columns, as shipped.
+ *
+ * In the component: line-clamp-2 in place of line-clamp-1 below sm, and
+ * flex-col on the holder/inventor row below sm. */
+@media not all and (min-width: 40rem) {
+  [data-result-card] button[data-card-primary] {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    text-wrap: pretty;
+  }
+  [data-result-card] div.flex-col.border-t > div:first-child {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+  }
+  [data-result-card] div.flex-col.border-t > div:first-child > div {
+    flex: none;
+    width: 100%;
+  }
+}
