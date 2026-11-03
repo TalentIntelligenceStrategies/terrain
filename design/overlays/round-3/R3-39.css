@@ -1,0 +1,6 @@
+/* R3-39 · Patent record (dialog form): focus lands on the heading
+ *
+ * The heading takes focus programmatically (R3-39 script) and is not a
+ * control, so it draws no ring. Every control in the record already draws
+ * its ring only on :focus-visible (their focus-visible:ring-2 utilities). */
+[role="dialog"][data-result-detail] h3[tabindex="-1"]:focus { outline: none; }
