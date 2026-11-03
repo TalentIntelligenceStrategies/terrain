@@ -462,10 +462,14 @@ function nameInHead(rec) {
   NAME_IO.observe(title);
 }
 
-function close() {
+/* `opts.history === false` is a close that Back, or a route, already made: the
+   entry is gone, so going back over it would leave a second step. Every other
+   close — ×, Escape, the scrim, a drag — goes back over the card's entry. */
+function close(opts) {
+  const fromHistory = !!opts && opts.history === false;
   OPEN_ID = null;
   nameInHead(null);
-  Url.record(null);
+  if (fromHistory || !Url.uncover('record')) Url.record(null);
   const pane = $('#recPane');
   const app = $('#app');
   if (!pane || pane.hidden) return;
@@ -473,7 +477,7 @@ function close() {
      inside the same column, so closing the record underneath it would leave a
      figure floating over an empty pane with its own esc-stack entry still
      registered. */
-  Viewer.close();
+  Viewer.close({ history: false });
   if (app) app.classList.remove('rec-open');
   markOpen(null);
   /* `data-mode` IS NOT RESET HERE and no longer could be. It was a property of
@@ -614,8 +618,11 @@ async function open(id, trigger, stepping, opts = {}) {
   HOST = host;
   place(host);
   OPEN_ID = id;
-  /* the address names the open record, so a reload or a link reopens it */
-  Url.record(id);
+  /* the address names the open record, so a reload or a link reopens it —
+     and below 1080, where the record is a card over the list, the first open
+     is a step of its own, so Back closes the card and leaves the list
+     (platform.md §4). A step or a version switch rewrites it. */
+  Url.record(id, { cover: !stepping && isCard() && !(app && app.classList.contains('rec-open')) });
   /* A STEP DOES NOT RE-CAPTURE THE RETURN POINT. Escape after five Next
      presses must land back on the row the founder actually opened, not on the
      one they stepped to — otherwise closing returns them somewhere they never
@@ -855,7 +862,15 @@ export function init(ctx) {
      THE RECORD GOES TOO, and for a plainer reason: it is the thing the
      drawing belongs to, and coming back to a surface mid-read is a state the
      founder did not leave in. */
-  ctx.onRoute(() => { if (Viewer.isOpen()) Viewer.close(); close(); });
+  ctx.onRoute(() => {
+    if (Viewer.isOpen()) Viewer.close({ history: false });
+    close({ history: false });
+    Url.forget();
+  });
+  /* BACK CLOSED THE CARD: its entry is already gone. */
+  window.addEventListener('terrain:uncover', e => {
+    if (e.detail.kinds.includes('record')) close({ history: false });
+  });
 
   /* load and error do not bubble, so they are caught on the way down. One
      listener for every tile the record will ever render. */

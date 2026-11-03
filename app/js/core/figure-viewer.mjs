@@ -55,6 +55,7 @@ import { say } from './live-region.mjs';
 import { reduced, DUR1 } from './motion.mjs';
 import { loader } from './loader.mjs';
 import { failHTML } from './wait.mjs';
+import * as Url from './url.mjs';
 
 /* ══ THE LADDER, AND WHAT IS ALLOWED BETWEEN ITS RUNGS ═════════════════════
    platform.md §4.5. The BUTTONS and the + − 0 keys step a fixed ladder: a
@@ -268,6 +269,7 @@ function setFig(i, announce) {
                                   behavior: reduced() ? 'auto' : 'smooth' });
   }
   if (announce) say('work', 'Figure ' + f.n + ' of ' + FIGS.length + '.');
+  Url.figure(f.n);
 }
 
 function stripHTML() {
@@ -335,13 +337,19 @@ export function open(figures, index, trigger, context) {
      founder expects. esc-stack's own header says it exists so that a second
      overlay is safe to add; this is the second overlay. */
   push('figure', close);
+  /* AN ENLARGED DRAWING IS A STEP IN THE HISTORY, everywhere (platform.md
+     §4): Back closes it and leaves the record it was opened from. */
+  if (!Url.covered('figure')) Url.cover('figure', Url.figureHash(FIGS[at].n));
   const closeBtn = $('#figClose');
   if (closeBtn) focusQuietly(closeBtn);
   say('work', 'Figure ' + FIGS[at].n + ' of ' + FIGS.length + ' open.');
 }
 
-export function close() {
+/* `opts.history === false` is a close Back already made, or one the record
+   makes on its own way out; every other close goes back over the entry. */
+export function close(opts) {
   if (!el.root || el.root.hidden) return;
+  if (!(opts && opts.history === false)) Url.uncover('figure');
   el.root.classList.remove('is-open');
   /* MAXIMISED IS NOT A PREFERENCE, so it does not survive the close. It is a
      state of THIS reading of THIS plate — the founder went full bleed for a
@@ -386,7 +394,10 @@ export function init() {
     if (b) b.addEventListener('click', fn);
   };
 
-  on('#figClose', close);
+  on('#figClose', () => close());
+  window.addEventListener('terrain:uncover', e => {
+    if (e.detail.kinds.includes('figure')) close({ history: false });
+  });
   on('#figIn', () => zoomTo(stepUp()));
   on('#figOut', () => zoomTo(stepDown()));
   on('#figRot', () => { rot = (rot + 90) % 360; panX = panY = 0; apply(); });
