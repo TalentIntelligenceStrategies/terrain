@@ -8,12 +8,14 @@
  * Wanted:  below sm, heading, lede, the composer, then the fields as one
  * compact row of chips under it, the live fields first and the three
  * "Coming soon" last; the row scrolls sideways inside the page gutter, and
- * the coverage table follows. A chip is 40px tall: the field's icon at
- * 16px and its name, "Coming soon" beside the name.
+ * the coverage table follows. A chip is 44px tall, the size a coarse
+ * pointer is given (R3-36): the field's icon at 16px and its name, "Coming
+ * soon" beside the name. Measured at 390 with the combined patch: 44px tall,
+ * 100% of a 44×44 square on its centre lands on it (40px gave 89%).
  * Viewport: phone (below sm). From sm the tiles are R3-35 (820) and the
  * desktop grid, unchanged.
  * Measured at 390 with the patch (and R3-14): composer top 252px (was
- * 680), the chip row at 455–501, coverage after; document scrollWidth
+ * 680), the chip row at 455–505, coverage after; document scrollWidth
  * equals the viewport (no sideways page scroll).
  *
  * The patch reorders with CSS only: the hero section becomes
@@ -70,7 +72,7 @@
     flex: none;
     flex-direction: row;
     align-items: center;
-    min-height: 40px;
+    min-height: 44px;
     padding: 0 14px;
     gap: 6px;
     border-radius: 9999px;
