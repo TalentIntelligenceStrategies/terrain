@@ -7,11 +7,14 @@
  * (/drw/usb_09000581_13896616_B2/0/1).
  * Wanted:  "US 09000581 B2" in the row's number, its link title, its
  * accessible names, and the viewer's heading. Holder names stay exactly as
- * published: no case change, in any surface.
+ * published: no case change, in any surface. Since v1.0.36 a US record's
+ * holder can read in Chinese (a standard name); the kind-code part of this
+ * item stands either way, and holder names follow the answer to the
+ * package's question Q1.
  * Viewport: both.
  *
- * In the component: one formatter (kt(), used for pnLabel) that appends the
- * full kind code, used by the list, the record and the viewer alike. The
+ * In the component: one formatter (the one that builds the row's number
+ * label) that appends the full kind code, used by the list, the record and the viewer alike. The
  * patch rewrites the formatted strings after render. */
 (() => {
   if (window.__r3_11) return;
