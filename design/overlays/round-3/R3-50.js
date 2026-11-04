@@ -11,7 +11,7 @@
  * completion by "Nearest to US 09000581 B2. 50 matched, 50 shown." The chip
  * is plain text. The visible loading line is unchanged; their v-if already
  * removes it on completion.
- * Viewport: both (the finding was on a phone).
+ * Viewport: both (it was found on a phone).
  *
  * Measured on a phone, every live region's text logged on each mutation
  * after Find similar: start "50 matched, 50 shown." → +332ms "Finding
