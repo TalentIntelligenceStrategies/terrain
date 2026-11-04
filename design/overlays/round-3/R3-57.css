@@ -11,13 +11,13 @@
  * motion their own rule stops the sweep and leaves a still tile on paper.
  * A failure keeps their shipped figureFailed, "Figure {index} did not
  * load", with Retry (TiffImage, unchanged).
- * Viewport: both (the finding was on a phone).
+ * Viewport: both (it shows most on a phone, where drawings load slowest).
  *
  * Their tile already uses bg-white and their badge bg-black, so the patch
  * uses white and black for the paper and the sweep. In the component: drop
  * bg-muted from TiffImage's placeholder span inside a figure tile, and give
  * the strip's loading tiles the tile's own bg-white and border. Preloading
- * the next two rows' first figure (in the finding) is not patchable. */
+ * drawings ahead of the scroll is not asked this round. */
 [data-idx] > span.bg-muted:has(> .sk-shimmer),
 .detail-figures > div > span.bg-muted:has(> .sk-shimmer) {
   background-color: transparent;
