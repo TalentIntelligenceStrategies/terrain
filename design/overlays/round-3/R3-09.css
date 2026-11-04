@@ -5,7 +5,8 @@
  * edge mid-code; neither item says what it holds, and nothing confirms the
  * download.
  * Wanted:  two inline footer buttons, CSV and Markdown, beside Open in
- * IPtech; after either, one line in the footer confirms the file by name
+ * IPtech, named "Download this record as CSV" and "Download this record
+ * as Markdown"; after either, one line in the footer confirms the file by name
  * ("Downloaded 09000581.csv"), in a polite status region.
  * Viewport: phone, below sm (40rem). At sm and above the dropdown is
  * unchanged.
