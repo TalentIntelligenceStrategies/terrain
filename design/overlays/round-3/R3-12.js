@@ -6,9 +6,9 @@
  * Wanted:  the two chips read "Grants" and "Applications". Under Rerank, one
  * muted line: "Re-scores the top 200 against your text. Text mode only."
  *
- * What Rerank does, read from their bundle (D8xliVdY.js), not from a
+ * What Rerank does, read from your shipped client code, not from a
  * response: with Rerank on and a text query, the search asks for 400 hits
- * (gc = 400), keeps the top 200 (yc = 200; grant/application pairs merged
+ * keeps the top 200 (grant/application pairs merged
  * first where both kinds are searched), posts those 200 and the query text
  * to /Search/GetPatentRerank, re-sorts them by the scores it returns and
  * keeps the first "How many to bring back". If the call fails it falls back
