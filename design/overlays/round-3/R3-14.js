@@ -1,14 +1,15 @@
-/* R3-14 · Masthead: one appearance button on the phone
+/* R3-14 · Masthead: one appearance button on a narrow phone; the version in the footer
  *
  * Current: three buttons, Light, Dark and Match your system appearance, in
- * a group that does not fit the phone row.
- * Wanted:  below sm, one button that shows the appearance in use and, when
- * pressed, moves to the next: light → dark → system → light. Its name says
- * the appearance in use ("Appearance: Dark"); each press is the same as
- * pressing the next of their three buttons, so their store, their
- * persistence and their data-theme on <html> are untouched.
- * Viewport: phone (below sm). The button is in the page at every width and
- * shown only below sm (R3-14.css); at sm and up their group is unchanged.
+ * a group that does not fit the phone row; the version beside them.
+ * Wanted:  below 420px, one button that shows the appearance in use and,
+ * when pressed, moves to the next: light → dark → system → light. Its name
+ * says the appearance in use ("Appearance: Dark"); each press is the same
+ * as pressing the next of the three buttons, so the store, its persistence
+ * and data-theme on <html> are untouched. Below sm the version is shown in
+ * the footer, after "Powered by Innovue", in the footer's muted text.
+ * Viewport: the button below 420px, the version below sm (R3-14.css). Both
+ * are in the page at every width and shown only there.
  *
  * In the component: one button bound to the same setting, cycling it, with
  * the current appearance's icon (sun, moon, monitor). */
@@ -53,8 +54,20 @@
     }
   };
 
-  new MutationObserver(sync).observe(document.documentElement, {
+  /* the version, copied into the footer once; shown below sm by the CSS */
+  const version = () => {
+    const v = document.querySelector('#__nuxt header [role="group"][aria-label="Choose appearance"] ~ button:not(.r3-appearance)');
+    const foot = document.querySelector('#__nuxt > div > footer');
+    if (!v || !foot) return;
+    const text = v.textContent.trim();
+    let s = foot.querySelector(':scope > .r3-version');
+    if (!s) { s = document.createElement('span'); s.className = 'r3-version font-mono'; foot.append(s); }
+    if (s.textContent !== '· ' + text) s.textContent = '· ' + text;
+  };
+
+  new MutationObserver(() => { sync(); version(); }).observe(document.documentElement, {
     subtree: true, childList: true, attributes: true, attributeFilter: ['aria-pressed', 'data-theme'],
   });
   sync();
+  version();
 })();
