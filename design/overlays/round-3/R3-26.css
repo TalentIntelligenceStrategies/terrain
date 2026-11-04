@@ -15,7 +15,7 @@
  * and every value is the one it replaces.
  *
  * Measured with the patch at 1440, 820 and 390, insets 0: masthead top
- * padding 0, sides 24px, main sides 16px, footer sides 16px and bottom
+ * padding 0, sides 24px (8px at 390, R3-14's), main sides 16px, footer sides 16px and bottom
  * 24px, all unchanged. At 390 with an iPhone's insets emulated (top 47,
  * bottom 34): masthead top padding 47px, and the pinned composer's top
  * moves down by the same 47px.
