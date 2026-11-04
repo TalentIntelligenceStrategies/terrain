@@ -3,8 +3,9 @@
  * For each visible control under 44px on either side whose position is
  * static or relative and whose ::after is unused, writes data-r336 and the
  * reach on each side: (44 - size) / 2, cut to half the gap to the nearest
- * control on that side, so no two areas overlap. Recomputed on layout
- * change; only under (pointer: coarse). */
+ * control on that side, so no two areas overlap. That cut is the patch's
+ * stand-in: the component moves such controls apart instead (R3-36.css).
+ * Recomputed on layout change; only under (pointer: coarse). */
 (() => {
   if (window.__r3_36) return;
   window.__r3_36 = true;
