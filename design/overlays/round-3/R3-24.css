@@ -7,20 +7,22 @@
  * Wanted:  the publication number in Inconsolata at the left from the
  * start, in the same 13px muted style their scrolled heading uses, so the
  * scrolled state only adds the title beside it; actions stay at the right.
+ * Below sm, Find similar is icon-only (a 44×44 button; its accessible name
+ * and title stay "Find similar"), so the number keeps the head's free width
+ * beside Previous, Next and Close, each 44×44 (R3-36).
  * Viewport: the dialog form of the record, which their build renders only
- * below lg (phone, landscape, tablet). The desktop pane is not touched.
+ * below lg (phone, landscape, tablet); Find similar is icon-only below sm.
+ * The desktop pane is not touched.
  *
- * Layout and selectors, for the Grant/Application switch (R3-21):
+ * Layout and selectors:
  *   head      [data-terrain-record-head]  (flex row, gap 8px, px 20 py 12)
  *   name slot [data-terrain-record-name]  (flex: 1, min-width 0; truncates)
  *   then      Find similar · divider · Previous · Next · Close details
- * At 390 the row is name ~105px + Find similar 104 + divider 9 + 24 + 24 +
- * 44 (Close, R3-19) + gaps: about 340 of 350. A 136px switch does not fit
- * on that row at phone width; it needs its own row under the head, or
- * Find similar has to go icon-only below sm. With R3-36's 44px boxes the
- * row is fuller still, so below sm Find similar is icon-only: its
- * accessible name and title stay "Find similar", and the number keeps the
- * row's free width (measured in phase 5).
+ *
+ * Measured at 390×844 with the combined patch: the name slot 117×18 at the
+ * left, "US 09000581 B2" whole; Find similar, Previous, Next and Close each
+ * 44×44; on a record with both versions the head is 121px tall, the switch
+ * (R3-21) on its second line, 332×44.
  *
  * Not patchable here: the number is drawn from a data attribute as
  * generated content (Vue owns the slot's children). In the component the
