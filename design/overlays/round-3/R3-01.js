@@ -13,8 +13,8 @@
  * under the masthead. The reopened box is pinned already, so it needs only
  * Search back (R3-01.css).
  * Viewport: phone (below sm) for the scroll; enterkeyhint at every width.
- * Measured at 390 with the keyboard simulated (viewport shortened 336px,
- * as the audit did), visible height 508:
+ * Measured at 390 with the keyboard simulated (viewport shortened 336px),
+ * visible height 508:
  *   home, before: field 452–508, Search 540–576 (out of view)
  *   home, after:  field 376–432, Search 464–500 (in view, 8px clear),
  *                 the same with four sentences typed; enterkeyhint=search

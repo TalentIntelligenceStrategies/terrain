@@ -3,7 +3,7 @@
  * Current: below sm, once a search has run their Search button is
  * "max-sm:hidden", and the magnifier that stands in for it renders only
  * while the box is folded. Reopened (expanded) on results, the box has no
- * Search at all: the audit found "Search not found" with the keyboard up.
+ * Search at all: with the keyboard up there is no control that submits.
  * Wanted:  below sm, the reopened box shows Search at the right of its
  * last row, under the field; the R3-01 script keeps that row above the
  * keyboard. Folded, the row is R3-13's.
