@@ -1,6 +1,6 @@
 /* R3-20 · Drawing viewer: full bleed on a phone
  *
- * Current: below 520px the viewer is a 374x692 card inset 8px over a
+ * Current: below 520px (your own rule) the viewer is a 374x692 card inset 8px over a
  * translucent scrim, with the record still showing round it. The drawing
  * gets about 372x330 of a 372x503 stage (24px padding inside the image box);
  * the zoom pill takes its own 58px band under the stage; the 32px close sits
@@ -18,8 +18,10 @@
  * Also here, as this component's part of R3-26 (fixed layers clear the safe
  * area): the head and strip take env(safe-area-inset-*) on a phone and in
  * Fill screen; the inset card above 40rem keeps at least its 24px from each
- * edge and more where the inset is larger. Emulation reports every inset as
- * 0, so this part is not shown by the shots; it is read from the rule.
+ * edge and more where the inset is larger. Chromium reports every inset as
+ * 0 unless one is emulated, so the before and after shots do not show this
+ * part; with an iPhone's insets emulated (47 top, 34 bottom) the close sits
+ * below the status bar and the strip above the home indicator.
  *
  * Measured (phone 390x844): panel 374x692 at (8,76), radius 16px ->
  * 390x844 at (0,0), radius 0; stage 372x503 -> 390x719; drawing drawn at
