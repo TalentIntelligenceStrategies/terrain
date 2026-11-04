@@ -5,8 +5,11 @@
  * name ends "e.g. EP4047638A1". Where to search lists the United States,
  * China and Taiwan only, so the first example is one the search cannot
  * find.
- * Wanted:  "e.g. US9000581B2 or US20230123456A1" in the placeholder and
- * "e.g. US9000581B2" in the name. US9000581B2 is a grant in their US index
+ * Wanted:  the placeholder reads "Enter a patent publication or grant
+ * number, e.g. US9000581B2 or US20230123456A1" and the name ends "e.g.
+ * US9000581B2" (in full: "Patent publication or grant number, e.g.
+ * US9000581B2", which R3-41's hint repeats). Only the example changes.
+ * US9000581B2 is a grant in their US index
  * (it is the first row of the round's stock search). The counter goes in
  * number mode (R3-06.css).
  * Viewport: both.
