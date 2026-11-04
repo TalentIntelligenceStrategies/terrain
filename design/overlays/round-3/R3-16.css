@@ -10,8 +10,9 @@
  * claims). The panel keeps its style, the small uppercase label above the
  * value, in two columns (design-language.md §7, "Below 420px it pairs up
  * again"): number, application, kind, the dates, the office and the main
- * class pair up, two to a row; holder, inventors and classes each take a
- * full row. The drawings are one row that scrolls sideways, the way a
+ * class pair up, two to a row (your panel has the application number and
+ * the main class as well, short identifiers like the rest, so they pair
+ * too); holder, inventors and classes each take a full row. The drawings are one row that scrolls sideways, the way a
  * result row's strip does: tiles 102px wide at 4:5 (102×128, the paper's
  * proportion, as the row's 80×100 is on a phone, R3-23), 6px apart,
  * bleeding through the record body's 20px padding to the card's edge so
