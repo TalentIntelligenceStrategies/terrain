@@ -6,13 +6,14 @@
  * (which drops rec= from the URL) focus is on <body>, and it has been seen
  * on the masthead's theme switch.
  * Wanted:  however the record closes (×, Escape, the scrim, a drag, back),
- * focus lands on the View details of the row whose record was open, and
+ * focus lands on the link of the row whose record was open (named
+ * "{title}, {pn}" by R3-45), and
  * that row is scrolled into view below the pinned masthead if it is not
  * already in view.
  * Viewport: the dialog form of the record (below lg).
  *
- * Measured with the patch: after back, activeElement is "View details of
- * US 09000581 B", its card's top below the masthead's bottom (57px).
+ * Measured with the patch: after back, activeElement is that row's link
+ * (here without R3-11 and R3-45, so "View details of US 09000581 B"), its card's top below the masthead's bottom (57px).
  *
  * In the component: DialogContent @close-auto-focus.prevent, then focus
  * the row's [data-card-primary] for the closed pnRaw, and scroll it with
