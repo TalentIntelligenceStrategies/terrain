@@ -10,7 +10,7 @@
  *
  * In the component: grid-cols-3 between sm and lg, or
  * repeat(auto-fit, minmax(150px, 1fr)) capped at three columns there. */
-@media (min-width: 40rem) and (max-width: 63.98rem) {
+@media (min-width: 40rem) and (max-width: 63.99rem) {
   section[aria-label="Patent technology fields"] > div {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
