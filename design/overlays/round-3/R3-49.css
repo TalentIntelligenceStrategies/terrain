@@ -11,7 +11,7 @@
  *
  * In the component: render the badge only when the bar is open (v-if on the
  * same flag as .is-open). The order keeps its two words, Relevance and
- * Nearness: platform.md §5.1, the score says what the order is by. */
+ * Nearness: the score's label says what the list is ordered by. */
 .collapse-y:not(.is-open) > [aria-hidden="true"] {
   visibility: hidden;
 }
