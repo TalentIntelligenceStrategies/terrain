@@ -8,6 +8,7 @@
  * autocapitalize="characters", autocorrect="off" and spellcheck="false",
  * with enterkeyhint="search" as in every mode (R3-01); back in Text it
  * drops the first three and keeps enterkeyhint="search".
+ *
  * Measured at 390 and 1440 with R3-01 and R3-07 together:
  *   Text:           enterkeyhint search; the other three absent
  *   Patent number:  characters / off / false / search
