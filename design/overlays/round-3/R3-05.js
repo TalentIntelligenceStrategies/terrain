@@ -17,8 +17,8 @@
  * Viewport: both.
  *
  * The shape test: spaces, hyphens and a slash are separators; what is left
- * is an optional two-letter office code, then, for Taiwan only, an optional
- * series letter I or M, then six to thirteen digits, an optional ".n" check
+ * is an optional two-letter office code, then an optional series letter
+ * I or M (Taiwan's; accepted after TW or with no office code), then six to thirteen digits, an optional ".n" check
  * digit (CN applications) and an optional kind code (one letter, one
  * optional digit). Run on these inputs: US12-345, "hello world", 12345 and
  * USX1234567 are malformed; US99999999B2, US 09000581 B2,
