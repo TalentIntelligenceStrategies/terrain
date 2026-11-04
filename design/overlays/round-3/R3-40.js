@@ -3,8 +3,8 @@
  * Current: Reka returns focus on close to whatever had it when the dialog
  * opened. Measured at 390×844: after ×, and after a tap on the scrim,
  * focus is on the row's View details (right); after the browser's back
- * (which drops rec= from the URL) focus is on <body>; the audit saw it on
- * the masthead's theme switch.
+ * (which drops rec= from the URL) focus is on <body>, and it has been seen
+ * on the masthead's theme switch.
  * Wanted:  however the record closes (×, Escape, the scrim, a drag, back),
  * focus lands on the View details of the row whose record was open, and
  * that row is scrolled into view below the pinned masthead if it is not
