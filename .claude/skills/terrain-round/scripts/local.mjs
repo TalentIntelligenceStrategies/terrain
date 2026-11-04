@@ -32,12 +32,13 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '
 
 const CSP = `<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:">`;
 const PILL = on => `<style>
-#terrain-local{position:fixed;z-index:2147483647;left:max(12px,env(safe-area-inset-left,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));
-display:flex;align-items:center;gap:8px;min-height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--border);
-background:var(--card);color:var(--foreground);font:500 13px/1 var(--font-sans,system-ui);box-shadow:0 2px 10px rgba(0,0,0,.15);cursor:pointer}
+#terrain-local{position:fixed;z-index:2147483647;right:env(safe-area-inset-right,0px);top:62%;
+display:flex;align-items:center;gap:6px;writing-mode:vertical-rl;min-width:28px;padding:12px 6px;border-radius:10px 0 0 10px;border:1px solid var(--border);border-right:0;
+background:var(--card);color:var(--foreground);font:500 12px/1 var(--font-sans,system-ui);box-shadow:0 2px 10px rgba(0,0,0,.15);cursor:pointer}
+/* a tab on the right edge, clear of their footers and of the record's actions */
 #terrain-local b{font-weight:700}#terrain-local:focus-visible{outline:2px solid var(--ring);outline-offset:2px}</style>
 <button id="terrain-local" type="button" aria-pressed="${on}" title="Local copy of v${version}. Turn the round ${a.round} patch ${on ? 'off' : 'on'}"
-onclick="document.cookie='terrain_patch=${on ? 'off' : 'on'};path=/';location.reload()">Local copy · Patch: <b>${on ? `on (round ${a.round})` : 'off'}</b></button>`;
+onclick="document.cookie='terrain_patch=${on ? 'off' : 'on'};path=/';location.reload()">Patch <b>${on ? 'on' : 'off'}</b></button>`;
 
 function page(req) {
   let html = fs.readFileSync(path.join(mirror, 'ipcembedding', 'index.html'), 'utf8')
