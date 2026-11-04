@@ -15,14 +15,14 @@
  * because the same .stop is what breaks it there.
  *
  * Measured with the patch: desktop, Escape removes rec= and the pane;
- * focus "View details of US 09000581 B". With the lightbox open, the first
+ * focus on that row's link. With the lightbox open, the first
  * Escape closes only the lightbox and the record stays.
  *
  * What was open is read in the capture phase on window, before any
  * handler (theirs or Reka's) has closed it, and acted on after the event.
  * In the component: on the desktop pane, a keydown.esc handler that
  * checks the same overlay state their shortcut handler already reads
- * (yt / overlayOpen); in the dialog, let Escape through the .stop. */
+ * (the open-overlay flag); in the dialog, let Escape through the .stop. */
 (() => {
   if (window.__terrainR3_55) return;
   window.__terrainR3_55 = true;
