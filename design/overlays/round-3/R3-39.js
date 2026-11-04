@@ -16,7 +16,7 @@
  *
  * In the component: DialogContent @open-auto-focus.prevent, then focus the
  * heading ref once the patent has loaded. The patch waits up to 4s for the
- * title and gives up if the founder has touched or typed in the meantime. */
+ * title and gives up if the user has touched or typed in the meantime. */
 (() => {
   if (window.__terrainR3_39) return;
   window.__terrainR3_39 = true;
