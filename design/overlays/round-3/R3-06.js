@@ -11,9 +11,9 @@
  * number mode (R3-06.css).
  * Viewport: both.
  *
- * In the component: change modes.placeholderByPatent and
- * modes.queryLabelByPatent in the English strings (the Traditional Chinese
- * strings carry the same EP example). The patch rewrites the two attributes
+ * In the component: change the number-mode placeholder and field label in
+ * the English strings (the Traditional Chinese strings carry the same EP
+ * example). The label is also the empty-field hint of R3-41. The patch rewrites the two attributes
  * whenever Vue writes them. */
 (() => {
   if (window.__r3_06) return;

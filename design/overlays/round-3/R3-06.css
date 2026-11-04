@@ -6,8 +6,8 @@
  * placeholder is a number from an office the search covers (R3-06.js).
  * Viewport: both.
  *
- * In the component: render the counter (the span after the textarea) only
- * when mode is by-text. Keyed here on their own aria-pressed on the Patent
+ * In the component: render the counter (the row after the textarea, a div
+ * holding the "0 / 5000" span) only when the mode is Text. Keyed here on their own aria-pressed on the Patent
  * number segment, so the patch adds no state. */
 .search-box-morph:has([role="group"][aria-label="Search mode"] > button[aria-label="Patent number"][aria-pressed="true"]) textarea + div {
   display: none;
