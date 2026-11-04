@@ -2,7 +2,7 @@
  *
  * Current: the row's primary control, the title button, is named "View
  * details of US 08664729 B", so a screen reader's list of controls is fifty
- * numbers with no title, the one thing a founder scans by (WCAG 2.4.4).
+ * numbers with no title, the one thing a user scans by (WCAG 2.4.4).
  * Wanted:  aria-label "{title}, {pn}", e.g. "Semiconductor package,
  * US 09000581 B2", with the full kind (R3-11).
  * Viewport: both.
