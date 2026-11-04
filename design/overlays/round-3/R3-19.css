@@ -8,7 +8,8 @@
  * 1080 the record is a card over the list"): 8px from every edge, its four
  * corners rounded as theirs, so a sliver of the list shows on each side. It
  * scrolls itself with overscroll-behavior: contain. A drag down on its head
- * closes it (R3-19 script), as do the scrim, ×, Escape (R3-55) and Back.
+ * closes it (R3-19 script), as do ×, Escape (R3-55), Back, and a pointer
+ * click on the scrim; a finger tap on the 8px gutter does not (below).
  * The footer actions clear the bottom safe area, and Close details is 44×44.
  * Viewport: phone, below sm (40rem). The dialog only exists below lg; from
  * sm up their centred card is unchanged, and landscape is R3-25's.
@@ -17,7 +18,7 @@
  * card x 8, y 8, w 374, h 828 (was 16, 16, 358, 812); corners 20px;
  * Close details 44×44; the scroll area overscroll-behavior contain. A
  * touch drag down on the head (CDP synthesizeScrollGesture, touch) of 40px
- * springs back; 120px and 300px close it, and focus returns to the row
+ * springs back; 300px closes it, and focus returns to the row
  * (R3-40). ×, Escape (R3-55) and Back close it.
  *
  * The scrim: a click in the 8px gutter closes the record (Reka's

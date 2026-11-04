@@ -3,8 +3,9 @@
  * Current: the corner ×, a tap on the scrim and Back close the record; a
  * drag does nothing.
  * Wanted:  a finger drag down that starts on the card's head row closes it.
- * The card follows the finger; on release it closes past 96px or on a quick
- * flick (over 0.5px/ms), otherwise it springs back. A drag that starts in
+ * The card follows the finger; on release it closes once it has travelled
+ * past 120px or a quarter of the card's height, whichever is less, or on a
+ * flick: more than 24px at over 0.5px/ms. Otherwise it springs back. A drag that starts in
  * the record's body scrolls the record, as before. Closing goes through
  * their own Close details button, so the URL, focus return (R3-40) and
  * analytics are theirs. A press that does not move is still a tap on the
@@ -12,8 +13,11 @@
  * Viewport: phone, below sm (40rem), re-evaluated on change.
  *
  * Measured at 390×844 with the patch injected before load (CDP
- * synthesizeScrollGesture, gestureSourceType touch, from the head): 40px
- * springs back; 120px and 300px close.
+ * synthesizeScrollGesture, gestureSourceType touch, from the head; the card
+ * is 828px tall there, so the threshold is 120px):
+ *   a slow 100px drag springs back; a slow 140px drag closes
+ *   a flick of 95px in 176ms (0.54px/ms) closes
+ *   a flick of 75px in 155ms (0.48px/ms) springs back, as it should
  *
  * In the component this is the dialog's own drag state, not listeners laid
  * over it. */
@@ -61,7 +65,8 @@
     const dy = y - y0;
     const v = dy / Math.max(1, performance.now() - t0);
     const close = d.querySelector('button[aria-label="Close details"]');
-    if ((dy > 96 || v > 0.5) && close) {
+    const far = Math.min(120, d.getBoundingClientRect().height / 4);
+    if ((dy > far || (dy > 24 && v > 0.5)) && close) {
       /* Keep the offset: their leave animation starts where the finger let go. */
       d.removeAttribute('data-terrain-dragging');
       close.click();
