@@ -2,7 +2,7 @@
  *
  * Current: What to include reads "Granted patents" beside the singular
  * "Application". Rerank results reads Off / On and nothing says what it
- * changes, so a founder has no reason to pick either.
+ * changes, so nobody has a reason to pick either.
  * Wanted:  the two chips read "Grants" and "Applications". Under Rerank, one
  * muted line: "Re-scores the top 200 against your text. Text mode only."
  *
@@ -12,8 +12,8 @@
  * first where both kinds are searched), posts those 200 and the query text
  * to /Search/GetPatentRerank, re-sorts them by the scores it returns and
  * keeps the first "How many to bring back". If the call fails it falls back
- * to the original order. In patent-number mode it does nothing (ca() requires
- * a text query). What model scores the 200 is not in the client; the hint
+ * to the original order. In patent-number mode it does nothing (the rerank
+ * call requires a text query). What model scores the 200 is not in the client; the hint
  * says only what the client shows.
  * Viewport: both.
  *
