@@ -9,9 +9,8 @@
  * own at full width, a 44px segmented control switches the version; it is
  * shown only where both versions exist, and it is in the natural tab order
  * (R3-37).
- * Viewport: phone only (below sm, 40rem). On desktop the record sits
- * beside the list and the row keeps its switch; R3-21.css hides all of
- * this from 40rem up.
+ * Viewport: phone only (below sm, 40rem). From sm up the row keeps its
+ * switch; R3-21.css hides all of this from 40rem up.
  *
  * The control is div[data-r3-version], inserted into the record's head row
  * (div.border-b:has(> button[aria-label="Close details"])); R3-21.css lets

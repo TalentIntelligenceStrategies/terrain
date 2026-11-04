@@ -6,8 +6,9 @@
  *
  * The segment is hidden, not removed, because the patch's record control
  * drives it; in the component it is not rendered on the row at all.
- * Viewport: phone (below sm, 40rem). On desktop the row keeps its switch,
- * since the record sits beside the list there, and none of this applies.
+ * Viewport: phone (below sm, 40rem). From sm up the row keeps its switch
+ * and none of this applies: there the row has the width for it, and the
+ * switch is chosen before the record opens.
  * On a phone the switch sits under the record's head, on a line of its
  * own, at full width. */
 @media not all and (min-width: 40rem) {
