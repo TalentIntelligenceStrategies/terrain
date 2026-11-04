@@ -22,9 +22,14 @@
  * again -> ?s=…, record closed, results stay. × and Escape each return the
  * URL to ?s=…&rec=09000581 without adding an entry, and the next Back
  * leaves the record. Forward into the dead &fig entry steps back to the
- * record. Desktop: the same, except Back from the record lands on
- * ?s=…&rec=… again, because the app reopens the first record by itself
- * at that width (their behaviour, unchanged).
+ * record. Desktop: the viewer's entry behaves the same.
+ *
+ * Desktop, after the viewer: Back from ?s=…&rec=… lands on ?s=… and your
+ * build opens the first record again by itself, as it does on every search
+ * at that width. That is intended and unchanged: on desktop the record is a
+ * pane beside the list, not a layer over it, so Back is not asked to close
+ * it. Only what covers (the viewer everywhere, the record below lg) is a
+ * history step.
  *
  * In the component: push on open and listen for popstate in the viewer
  * itself (or put fig in the route the record already uses), close on pop,
