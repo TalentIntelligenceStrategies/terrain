@@ -206,6 +206,16 @@ For each item, in the order the user picks:
 - **Run the overlay half first and stop at its checkpoint**, then the `app/` half. They answer to
   different references and the user reviews them differently.
 - Commit overlays and `app/` changes, one item per commit.
+- **To show the user the whole patch, serve their build locally** rather than patching a window on
+  their live address, which reads as editing their site:
+  ```sh
+  node .claude/skills/terrain-round/scripts/mirror.mjs --round N   # once: their static files and drawings
+  node .claude/skills/terrain-round/scripts/local.mjs --round N    # http://127.0.0.1:8766/ipcembedding/
+  ```
+  The mirror walks their site with every `/api/` call answered from `replay/api.json` and never
+  from their service. The server answers only from that recording (any other search shows an
+  error), keeps every request on 127.0.0.1 with a CSP, reads the overlays on each load, and has a
+  *Patch: on / off* pill. `round-N/mirror/` is their code: it stays in `visual-reference/`.
 
 Checkpoint: every item done or explicitly deferred.
 
@@ -289,6 +299,7 @@ measuring found that changes an item.
 6. Tick phase 6 in STATE.md. The round is closed; the next `/terrain-round` opens N+1.
 
 Checkpoint: the zip's path, and what is in it. Sending it is the user's act, not this skill's.
+To look through it before it goes, serve it locally (`local.mjs`, phase 4).
 
 ## STATE.md template
 
