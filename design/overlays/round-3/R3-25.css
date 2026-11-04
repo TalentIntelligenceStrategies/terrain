@@ -13,7 +13,7 @@
  * Measured at 844×390 with the patch: dialog top 0, height 390; head 44,
  * footer 44; the record's scroll area 302px (was about 230).
  *
- * Phone portrait is never this short, so the bottom sheet (R3-19) and this
+ * Phone portrait is never this short, so the card (R3-19) and this
  * rule never meet. */
 @media (max-height: 480px) and (max-width: 63.99rem) {
   [role="dialog"][data-result-detail] {
