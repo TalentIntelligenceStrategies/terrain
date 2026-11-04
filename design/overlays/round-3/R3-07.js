@@ -4,18 +4,20 @@
  * autocapitalize, autocorrect, spellcheck or enterkeyhint on it, so iOS
  * capitalises the first letter only, offers to correct "US20230123456A1"
  * and underlines it as a misspelling.
- * Wanted:  in number mode the field carries autocapitalize="characters",
- * autocorrect="off", spellcheck="false" and enterkeyhint="search"; back in
- * Text it carries what it carried before (none of the four, on their build).
- * Measured on the live page at 390 and 1440, with the patch:
- * Text: all four absent; Patent number: characters / off / false / search;
- * Text again: all four absent.
+ * Wanted:  in Patent number mode the field carries
+ * autocapitalize="characters", autocorrect="off" and spellcheck="false",
+ * with enterkeyhint="search" as in every mode (R3-01); back in Text it
+ * drops the first three and keeps enterkeyhint="search".
+ * Measured at 390 and 1440 with R3-01 and R3-07 together:
+ *   Text:           enterkeyhint search; the other three absent
+ *   Patent number:  characters / off / false / search
+ *   Text again:     enterkeyhint search; the other three absent
  * Viewport: both. The item is filed for the phone, where the keyboard is the
  * fault, but the attributes are input semantics with no layout, and desktop
  * spellcheck underlines a patent number exactly as iOS does.
  *
- * In the component: bind the four attributes to mode === 'by-patent' on the
- * textarea. The patch follows their aria-pressed on the Patent number
+ * In the component: bind autocapitalize, autocorrect and spellcheck to the
+ * Patent number mode on the textarea; enterkeyhint="search" is constant. The patch follows their aria-pressed on the Patent number
  * segment. */
 (() => {
   if (window.__r3_07) return;
