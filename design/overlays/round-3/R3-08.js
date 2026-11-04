@@ -16,12 +16,10 @@
  * the panel is open below sm, and puts it back, at the same place, before
  * the panel leaves the page or the viewport widens. In the component, render
  * the header's field select (or a second instance bound to the same
- * setting) in the panel's first row below sm. Choosing a field closes the
- * panel, because their panel closes on any pointerdown outside it and the
- * select's list is portalled to <body>; that is the right ending here, since
- * the choice reruns the search, but it also drops any other change made in
- * the panel without Done. The component should apply the panel first, or
- * keep the field change for Done. */
+ * setting) in the panel's first row below sm. Choosing a field reruns the
+ * search in it at once, exactly as the header select does, and the panel
+ * closes with it (their panel closes on a pointerdown outside it, and the
+ * select's list is portalled to <body>). */
 (() => {
   if (window.__r3_08) return;
   window.__r3_08 = true;
