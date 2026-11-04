@@ -5,17 +5,16 @@
  * Search settings to the page (focus is lost), Search is never reached,
  * and pressing it does nothing and says nothing. It is drawn as --primary
  * at 50% opacity: #929292 behind a white icon in light (3.1:1), and in dark
- * the brightest control on the page, so the one control that cannot act
- * reads as the one to press.
+ * it is the brightest control on the page.
  * Wanted:  Search is never natively disabled. Empty, it carries
  * aria-disabled="true", stays in the tab order, and is drawn as a muted
  * surface (--muted fill, --muted-foreground icon, full opacity) in both
  * themes. Pressing it, or Enter in the empty field, focuses the field and
  * shows a hint under the box, tied to the field with aria-describedby:
  * the field's own label ("Describe what you are building, e.g. hinge
- * structure for foldable displays", or in number mode "Patent publication
- * or grant number, e.g. EP4047638A1"; their queryLabel strings). The hint
- * goes when the field has text.
+ * structure for foldable displays", or in Patent number mode "Patent
+ * publication or grant number, e.g. US9000581B2", the label as R3-06
+ * changes it). The hint goes when the field has text.
  * Viewport: both.
  * Measured at 1440 with the patch: Tab goes Search settings → Search
  * (aria-disabled="true") → on; Enter on the empty Search focuses the
@@ -24,11 +23,11 @@
  * dark (6.1:1), opacity 1 (was #252525 and #F0F0F0 at 50%). Typing
  * "hinge" removes aria-disabled and the hint and restores --primary.
  *
- * In the component: bind aria-disabled to !canSubmit instead of disabled,
+ * In the component: bind aria-disabled to "cannot submit" instead of disabled,
  * keep loading as aria-busy, and on an empty submit focus the textarea and
- * render the hint. The patch removes the disabled attribute their render
- * sets, and keys its style on its own data-r341-empty so it does not
- * touch their loading state (which also sets aria-disabled). */
+ * render the hint from the field's label. The patch removes the disabled
+ * attribute the build sets, and keys its style on its own data-r341-empty
+ * so it does not touch the loading state (which also sets aria-disabled). */
 .search-box-morph button[aria-label="Search"][data-r341-empty] {
   opacity: 1;
   background: var(--muted);
