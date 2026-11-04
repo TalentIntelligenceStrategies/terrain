@@ -7,7 +7,7 @@
  * only because no press ever reached the viewer.
  * Wanted:  a press on the viewer belongs to the viewer. The record closes
  * only from its own close, or from Back after the viewer is gone (R3-04).
- * Viewport: wherever the record is a modal dialog (below 1080px); a no-op
+ * Viewport: wherever the record is a modal dialog (below lg); a no-op
  * elsewhere, because no outside-press listener is registered there.
  *
  * Measured (phone, replayed API): with the CSS alone, a tap on Zoom out

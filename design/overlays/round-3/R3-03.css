@@ -17,10 +17,13 @@
  * Wanted:  the viewer takes its own pointer events, so the existing gesture
  * code runs: a sideways swipe steps the figure through Next/Previous, a pinch
  * zooms the drawing and never the page, one finger pans when zoomed. The
- * buttons stay the single-pointer path. touch-action: none stays on the
- * stage only, as it is.
- * Viewport: every viewport; the fault shows wherever the record is modal
- * (below 1080px).
+ * buttons stay the single-pointer path. The fingers are the viewer's, all
+ * of it: touch-action: none on the whole viewer, not on the stage alone,
+ * and pan-x on its thumbnail strip, which keeps its sideways scroll. On the
+ * stage alone, a pinch that begins on the head or the zoom bar goes to the
+ * browser and zooms the page, the close control with it, off the screen.
+ * Viewport: every viewport; the fault shows wherever the record is a modal
+ * dialog (below lg on your build).
  *
  * Measured (CDP touch, phone 390x844, replayed API):
  *   before: swipe -186px  Figure 1 of 9 -> 1 of 9 (pointercancel after one
@@ -31,7 +34,12 @@
  *           Zoom out and Next still work (150%, Figure 3 of 9).
  *
  * In the component: mount the viewer inside the dialog's layer, or give its
- * root pointer-events: auto, as Reka's own DialogContent does. */
+ * root pointer-events: auto, as Reka's own DialogContent does; and move
+ * touch-action: none from .figview-stage to the viewer's root. */
 .figview[role="dialog"][aria-label] {
   pointer-events: auto;
+  touch-action: none;
+}
+.figview[role="dialog"][aria-label] .figstrip {
+  touch-action: pan-x;
 }
