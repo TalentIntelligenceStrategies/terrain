@@ -1,7 +1,7 @@
 /* R3-52 · Shell: the page declares English; Chinese records declare theirs
  *
- * Current: <html lang="en"> is set at runtime (bundle/index.html opens a
- * bare <html>; Nuxt adds lang="en" after boot, measured on v1.0.35). CN
+ * Current: <html lang="en"> is set at runtime (the served index.html opens
+ * a bare <html>; Nuxt adds lang="en" after boot, measured on v1.0.35). CN
  * and TW records carry no lang of their own, so a screen reader reads
  * their titles, holders and abstracts with the English voice (WCAG 3.1.1,
  * 3.1.2).
