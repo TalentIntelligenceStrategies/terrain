@@ -1,5 +1,4 @@
-/* R3-43 · Drawing viewer: its controls swap in dark; the current thumbnail
- * is ringed
+/* R3-43 · Drawing viewer: its controls swap in dark; the current thumbnail is ringed
  *
  * Current: the viewer's head turns --card (#1a1a1a) in dark, but its icons
  * are a hard-coded #595959: the close is 2.5:1 on the band (7.0:1 in light).
@@ -8,8 +7,9 @@
  * #252525. The current thumbnail's only mark is a 1px --foreground border,
  * which in dark is #f0f0f0 against a white thumbnail and disappears.
  * Wanted:  the head icons, the pill, its readout, separators and pressed
- * state from their swapping tokens (--muted-foreground, --card, --border,
- * --primary / --primary-foreground, --accent); a 2px ink-pair ring on the
+ * state from your swapping tokens (--muted-foreground; the pill --card at
+ * 88%, so the drawing shows faintly through it; --border; --primary /
+ * --primary-foreground; --accent); a 2px ink-pair ring on the
  * current thumbnail (--foreground, offset 2px so the band shows between
  * ring and thumbnail) in both themes. The paper stays white in both themes:
  * that is right and unchanged here.
@@ -19,7 +19,9 @@
  * dark 2.48:1 -> 6.9:1, light 7.0:1 -> 5.57:1; zoom readout and icons on
  * the pill dark 4.77:1 on a light pill -> 6.9:1 on a --card pill (4.79:1
  * where the pill sits on the paper, phone); current-thumbnail outline
- * 2px solid #252525 / #f0f0f0, offset 2px.
+ * 2px solid #252525 / #f0f0f0, offset 2px. The close icon's drop in light,
+ * 7.0:1 to 5.57:1, is on purpose: it takes --muted-foreground, as the
+ * other head icons do, and stays above 4.5:1.
  *
  * In the component: the pill is the one control that can sit on the paper
  * (it does on a phone, R3-20); there it is still a --card pill with a
