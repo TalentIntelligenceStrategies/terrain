@@ -14,9 +14,8 @@
  * lede reads "…closest to it<NBSP>— and…", and no line opens on the dash.
  *
  * In the component: the clamp on the h1 below sm, text-wrap: pretty on the
- * lede, and a no-break space before the em dash in the lede string (or
- * the dash rewritten as a comma: "…closest to it, and gives you the data
- * to take anywhere."). The patch changes no word. */
+ * lede, and a no-break space before the em dash in the lede string. The
+ * patch changes no word. */
 @media not all and (min-width: 40rem) {
   #main-content h1.text-4xl {
     font-size: clamp(1.75rem, 1rem + 4vw, 2.25rem);
