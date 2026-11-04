@@ -12,22 +12,24 @@
  * the taller masthead; the skip link, the main column and the footer clear
  * the sides and the bottom.
  * Viewport: phone, portrait and landscape. Everywhere else the insets are 0
- * and every value is the one it replaces; measured at 1440, 820 and 390 with
- * the patch at 1440: masthead top padding 0, sides 24px, main sides 16px,
- * footer sides 16px and bottom 24px: all unchanged. With Chromium's
- * safe-area emulation (top 47, bottom 34) at 390: masthead top padding
- * 47px, the pinned composer's top moves down by the same 47px.
+ * and every value is the one it replaces.
+ *
+ * Measured with the patch at 1440, 820 and 390, insets 0: masthead top
+ * padding 0, sides 24px, main sides 16px, footer sides 16px and bottom
+ * 24px, all unchanged. At 390 with an iPhone's insets emulated (top 47,
+ * bottom 34): masthead top padding 47px, and the pinned composer's top
+ * moves down by the same 47px.
  *
  * Add viewport-fit=cover to the meta viewport only together with this, never
  * before it. The patch does not add it, so on today's Safari it changes
  * nothing; it is the spec for the day cover goes in.
  *
- * Other layers need the same and are not in this file: the phone record
- * dialog's footer (Open in IPtech, Export) and its close button, the
- * drawing viewer's close, counter and thumbnail strip, the Search settings
- * sheet (R3-28 pads its foot already) and the grouping panel (R3-27), and
- * any toast. Each takes max(<its padding>, env(safe-area-inset-*)) on the
- * edges it touches. */
+ * The other fixed layers take the inset in their own items: the phone
+ * record's footer and close (R3-19), the drawing viewer's close and
+ * thumbnail strip (R3-20), the grouping sheet's Done (R3-27) and the Search
+ * settings sheet's Reset and Done (R3-28). What no item covers is left for
+ * the component: a toast, and any fixed layer added later. Each takes
+ * max(<its padding>, env(safe-area-inset-*)) on the edges it touches. */
 #__nuxt > div > header {
   padding-top: env(safe-area-inset-top, 0px);
 }
