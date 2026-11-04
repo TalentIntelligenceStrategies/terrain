@@ -158,7 +158,7 @@ put('overlays/apply.js', `/* The round-${a.round} patch for your live build (${a
    run it), and the round shows as CHANGES.md describes it. Reload to remove it.
 
    To apply only some items, list them on the ONLY line below before pasting,
-   for example ['R1-07', 'R1-38']. Empty applies every item. */
+   for example ['${ids[0]}']. Empty applies every item. */
 const ONLY = [];
 (() => {
   if (window.__terrainRound${a.round}) { console.info('The round-${a.round} patch is already applied. Reload to remove it.'); return; }
