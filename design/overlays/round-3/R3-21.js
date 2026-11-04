@@ -5,22 +5,24 @@
  * "Grant" in the same slot, so the slot means two things. On a phone it
  * takes a line of its own. Its purpose is only in its accessible name.
  * Wanted:  the row says its kind as text in the number line,
- * "US 09000581 B2 · Grant". The version switch is a 44px segmented control
- * in the record header, shown only where both versions exist, and it is in
- * the natural tab order (R3-37).
- * Viewport: phone only; desktop keeps the row switch (platform.md §4.3),
- * and R3-21.css hides all of this from 40rem up. The record header wraps and the switch takes
- * the header's second line at full width (R3-21.css).
+ * "US 09000581 B2 · Grant". In the record, under its head, on a line of its
+ * own at full width, a 44px segmented control switches the version; it is
+ * shown only where both versions exist, and it is in the natural tab order
+ * (R3-37).
+ * Viewport: phone only (below sm, 40rem). On desktop the record sits
+ * beside the list and the row keeps its switch; R3-21.css hides all of
+ * this from 40rem up.
  *
- * The record-header control is placed in the header row
- * (div.border-b:has(> button[aria-label="Close details"])), immediately
- * before "Find similar", as div[data-r3-version]. The left of the header,
- * the empty div.min-w-0.flex-1, is left alone for the publication number.
+ * The control is div[data-r3-version], inserted into the record's head row
+ * (div.border-b:has(> button[aria-label="Close details"])); R3-21.css lets
+ * that row wrap and gives the control the full second line. The left of
+ * the head, the empty div.min-w-0.flex-1, is left for the publication
+ * number (R3-24).
  *
  * The patch drives their own state: each record button clicks the hidden
- * row segment of the row whose number the record shows, so their
- * De(index) still emits "open" and the record follows. In the component the
- * variant index (d) belongs to the record, not the card: the record header
+ * row segment of the row whose number the record shows, so the card's own
+ * version handler still emits "open" and the record follows. In the component the
+ * variant index belongs to the record, not the card: the record header
  * renders the segment from hit.alternatives, and the card renders
  * kind-as-text from the current variant. */
 (() => {

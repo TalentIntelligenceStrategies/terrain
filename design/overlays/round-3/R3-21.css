@@ -7,8 +7,9 @@
  * The segment is hidden, not removed, because the patch's record control
  * drives it; in the component it is not rendered on the row at all.
  * Viewport: phone (below sm, 40rem). On desktop the row keeps its switch,
- * as platform.md §4.3 decides, and none of this applies. On a phone the
- * record header wraps and the switch takes the second line at full width. */
+ * since the record sits beside the list there, and none of this applies.
+ * On a phone the switch sits under the record's head, on a line of its
+ * own, at full width. */
 @media not all and (min-width: 40rem) {
   [data-result-card] [role="group"][aria-label="Switch grant/application version"],
   [data-result-card] [data-r3-kind-src] {
