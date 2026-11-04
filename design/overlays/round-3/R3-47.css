@@ -15,12 +15,13 @@
  * patch the disabled one was 1.51:1 and 1.76:1.
  *
  * Their token set has no tertiary text colour at 3:1, so the patch mixes
- * --muted-foreground into --card per theme. The component wants one token
+ * --muted-foreground into --card per theme (dark, and your violet theme,
+ * which shares the dark tokens). The component wants one token
  * (a disabled foreground) defined in both theme blocks. */
 [data-result-detail] button:is([aria-label="Previous patent"], [aria-label="Next patent"]):disabled {
   opacity: 1;
   color: color-mix(in srgb, var(--muted-foreground) 70%, var(--card));
 }
-:root[data-theme="dark"] [data-result-detail] button:is([aria-label="Previous patent"], [aria-label="Next patent"]):disabled {
+:root:is([data-theme="dark"], [data-theme="violet"]) [data-result-detail] button:is([aria-label="Previous patent"], [aria-label="Next patent"]):disabled {
   color: color-mix(in srgb, var(--muted-foreground) 55%, var(--card));
 }
