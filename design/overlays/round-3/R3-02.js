@@ -9,8 +9,9 @@
  * record once the list has changed and lands on the reordered list
  * scrolled to the top, with the "Nearest to …" chip and Restore in view,
  * and focus on the anchor row's View details (R3-40).
- * Viewport: phone, below sm (40rem). Desktop is unchanged (there the list
- * is beside the record).
+ * Viewport: phone, below sm (40rem). From sm up the record is unchanged:
+ * on desktop the list is beside it, and on a tablet its centred dialog
+ * leaves the list in view around it.
  *
  * Measured at 390×844 with the patch: after the press, the record closes
  * once their chip titled "Nearest to US 09000581 B2" exists; scrollY 0;
