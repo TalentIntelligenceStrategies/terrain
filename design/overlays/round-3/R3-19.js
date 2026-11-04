@@ -24,7 +24,7 @@
 (() => {
   if (window.__terrainR3_19) return;
   window.__terrainR3_19 = true;
-  const phone = matchMedia('not all and (min-width: 40rem)');
+  const phone = matchMedia('(max-width: 39.99rem) and (min-height: 480.01px)');
   const SEL = '[role="dialog"][data-result-detail]';
   const HEAD = `${SEL} > div:has(> button[aria-label="Find similar"])`;
   let drag = null;

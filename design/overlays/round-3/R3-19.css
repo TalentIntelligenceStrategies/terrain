@@ -35,7 +35,7 @@
  * the DialogContent's own classes below sm (inset-2, no translate), with
  * env(safe-area-inset-*) on the top and bottom. Only Close is enlarged
  * here; the rest of the head takes R3-36's 44px. */
-@media not all and (min-width: 40rem) {
+@media (max-width: 39.99rem) and (min-height: 480.01px) {
   [role="dialog"][data-result-detail] {
     top: max(8px, env(safe-area-inset-top));
     bottom: max(8px, env(safe-area-inset-bottom));
@@ -64,7 +64,7 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  @media not all and (min-width: 40rem) {
+  @media (max-width: 39.99rem) and (min-height: 480.01px) {
     [role="dialog"][data-result-detail] { transition: none; }
   }
 }
