@@ -3,15 +3,18 @@
  * Current: a phone card is about 408px (measured, row 1 at 390x844): the
  * number, then the Grant | Application segment on a line of its own with
  * rank and score, the title, a two-column meta grid, three lines of
- * abstract and a strip of 96x112 tiles. Under the pinned chrome a founder
+ * abstract and a strip of 96x112 tiles. Under the pinned controls a reader
  * scans one patent per swipe.
  * Wanted:  number, kind, rank and score on one line (R3-21 takes the
  * segment off the row on a phone); strip tiles are 80x100, the record's 4:5.
- * The abstract keeps its three lines: they are what a founder decides by
- * without opening the record (platform.md §4.3).
+ * The abstract keeps its three lines: they are what a reader decides by
+ * without opening the record.
  * Viewport: phone (below sm, 40rem). Desktop is untouched.
  *
- * Measured: to be re-measured with the combined patch (phase 5). */
+ * Measured at 390×844 with the combined patch, row 1: the row 382px tall
+ * (was about 408); the number line one 18px line, number and kind 153px at
+ * the left, rank and score 124px at the right; title 23px; the abstract
+ * three lines, 55px; the strip 117px tall, 80×100 tiles. */
 @media not all and (min-width: 40rem) {
   [data-result-card] [data-idx],
   [data-result-card] [role="status"][aria-label="Loading drawings"] > div,
