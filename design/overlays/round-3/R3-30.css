@@ -2,7 +2,7 @@
  *
  * Current: below sm the two segments are glyphs, a T and a #. Their names
  * are right for a screen reader ("Text", "Patent number"), but # does not
- * read as patent number to a sighted founder, and the desktop tooltip never
+ * read as patent number to a sighted user, and the desktop tooltip never
  * shows on touch.
  * Wanted:  below sm, the segments say "Text" and "Patent #" (their
  * byText and byPatentShort strings); the glyphs go. The accessible names
