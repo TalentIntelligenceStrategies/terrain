@@ -24,14 +24,21 @@
  * other head icons do, and stays above 4.5:1.
  *
  * In the component: the pill is the one control that can sit on the paper
- * (it does on a phone, R3-20); there it is still a --card pill with a
- * --border edge, which reads on white in both themes. */
+ * (it does on a phone, R3-20). There it stays a --card pill, but its edge is
+ * the paper's line, R3-58's #252525 at 50% (3.1:1 on white): --border is
+ * 1.3:1 on white in light and would not read. That is the non-swapping
+ * token the package's Q3 asks about. */
 .figview .figbar-btn[aria-label] {
   color: var(--muted-foreground);
 }
 .figview .figbar[role="toolbar"] {
   background: color-mix(in oklab, var(--card) 88%, transparent);
   border-color: var(--border);
+}
+@media not all and (min-width: 40rem) {
+  .figview .figbar[role="toolbar"] {
+    border-color: #25252580;
+  }
 }
 .figview .figbar .figbar-zoom {
   color: var(--muted-foreground);
