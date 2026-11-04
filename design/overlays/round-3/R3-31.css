@@ -18,7 +18,7 @@
  * flex: 1 1 16rem (so it moves to the second line before anything
  * overflows), Search margin-inline-start: auto, min-width: 0 on the card;
  * or move the count and the view toggle into the results header below lg. */
-@media (min-width: 40rem) and (max-width: 63.98rem) {
+@media (min-width: 40rem) and (max-width: 63.99rem) {
   .search-box-morph {
     min-width: 0;
   }
