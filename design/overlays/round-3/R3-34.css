@@ -7,19 +7,20 @@
  * are equal.
  * Wanted:  one line. At the left the count, short: "50 results" when every
  * match is shown, "50 of 120" when fewer are, 16/20 semibold with its
- * numerals in Inconsolata, never wrapping. At the right, 8px apart, two
- * controls of one family: the view toggle (Results view: Details and
- * drawings, Drawings only) as two icon halves in one box, and Sort with its
- * words and chevron; both 36px, the card's surface, a 1px border in
- * --border, the same corner (radius − 2px), centred on the count's line.
+ * numerals in Inconsolata at 500, never wrapping. At the right, 8px apart,
+ * two controls of one family: Sort with its words and chevron, keeping its
+ * own outline button's surface and 1px --border, at 36px and the corner
+ * radius − 2px; and the view toggle (Results view: Details and drawings,
+ * Drawings only) drawn to match it, two icon halves in one box. Both are
+ * centred on the count's line.
  * Sort drops its leading arrows icon below sm and keeps its chevron, the
  * cue that it opens a menu.
  * Viewport: phone (below sm, 40rem). Desktop is untouched.
  *
  * Measured at 390 with the combined patch: count, view and Sort on one
  * line, their centres within 1px of each other; view 90×36, Sort 36px tall.
- * Under 360px Sort is its arrows icon alone (44×36), so at 320 the line
- * still fits. The 44px hit areas are R3-36's.
+ * Under 360px (one width query beyond their breakpoints) Sort is its
+ * arrows icon alone (44×36), so at 320 the line still fits. The 44px hit areas are R3-36's.
  *
  * In the component: drop max-sm:basis-full and hide Sort's leading icon
  * below sm; render the count as "N results" / "N of M"; render the view

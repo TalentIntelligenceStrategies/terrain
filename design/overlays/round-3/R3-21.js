@@ -5,13 +5,17 @@
  * "Grant" in the same slot, so the slot means two things. On a phone it
  * takes a line of its own. Its purpose is only in its accessible name.
  * Wanted:  the row says its kind as text in the number line,
- * "US 09000581 B2 · Grant". In the record, the head's title block (R3-24)
- * says the kind beside the number, and the version is chosen under the
- * title with two text tabs, Grant and Application, 44px tall, the current
- * one in the foreground colour with a 2px underline on the head's bottom
- * rule, shown only where both versions exist. It is in the natural tab order (R3-37).
+ * "US 09000581 B2 · Grant". In the record, where both versions exist, the
+ * version is chosen under the title (R3-24's head) with two text tabs,
+ * Grant and Application, 44px tall, the current one in the foreground
+ * colour with a 2px underline on the head's bottom rule; on a patent with
+ * one version there are no tabs and the kind is beside the number. It is in the natural tab order (R3-37).
  * Viewport: phone only (below sm, 40rem). From sm up the row keeps its
  * switch; R3-21.css hides all of this from 40rem up.
+ *
+ * Needs R3-24: the tabs go under its title, and its head holds steady
+ * while a version loads from the row's number and title, which this
+ * script writes on the dialog (data-r3-row-pn, data-r3-row-title).
  *
  * The patch drives their own state: a pick clicks the hidden row segment of
  * the row whose number the record shows, so the card's own version handler

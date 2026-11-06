@@ -6,13 +6,14 @@
  * column beside it has room. Under the title, the desktop two-column grid
  * is squeezed: holder and inventors on one line, the date and the class on
  * another, the class floating in a column of its own; the gaps are 23px
- * then 26px; the holder and "Published 2015-04-07" are both dark and
- * semibold, so they compete, and the calendar icon is dark where the others
+ * then 26px; the holder and "Published 2015-04-07" are both dark at their
+ * medium weight (500), so they compete, and the calendar icon is dark where the others
  * are grey.
  * Wanted:  the title, 17/22 semibold, clamps at two lines with
- * text-wrap: pretty. Under its rule (14px below it), one fact per line, 6px
- * apart, the holder and inventors at 14/20, the date line at 13/18: the holder, the inventors, then the date and
- * the class, "2015-04-07 · H01L 23/36". Only the holder is the foreground
+ * text-wrap: pretty. Under its rule (4px more above it, 14px below it),
+ * one fact per line, 6px apart, the holder and inventors at 14/20, the date
+ * line at 13/18: the holder, the inventors, then the date and
+ * the class, "2015-04-07 · US H01L 23/36". Only the holder is the foreground
  * colour (their medium weight); the inventors, the date and the class are
  * muted, the date and class in Inconsolata, the date without its
  * "Published" label; every icon is muted. Holder names are as published: no
@@ -20,8 +21,9 @@
  * Viewport: phone (below sm, 40rem). Desktop is untouched: its title is
  * line-clamp-none and its meta is two columns, as shipped.
  *
- * Measured at 390 with the combined patch: three 18px lines at 6px gaps;
- * holder rgb(37,37,37) weight 500, the rest the muted foreground at 400.
+ * Measured at 390 with the combined patch: two 20px lines and one 18px
+ * line, 6px apart; holder rgb(37,37,37) at 500 and the inventors muted at
+ * 400, both as theirs already are; the date line muted at 400.
  *
  * In the component: line-clamp-2 in place of line-clamp-1 below sm;
  * below sm the meta is a flex-col of three lines with gap-1.5, the date line

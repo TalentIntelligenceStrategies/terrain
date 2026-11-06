@@ -17,17 +17,24 @@
  * Viewport: phone, below sm (40rem); sm to lg keeps the number-only slot.
  * The desktop pane is not touched.
  *
- * Layout and selectors, below sm:
- *   head   [data-terrain-record-head], a grid: · | Find similar | ‹ | › | ×,
- *          then the number, the title and the version tabs across; padding
- *          4 8 16 20
- *   name   [data-r3-name] (display: contents) > [data-r3-meta] (number and
- *          kind), [data-r3-title], [data-r3-version] (R3-21)
- *   their  slot [data-terrain-record-name] and the divider are hidden
+ * Below sm the head, [data-terrain-record-head], is a grid of four rows:
+ * the actions at the right; the number and kind ([data-r3-meta]); the
+ * title ([data-r3-title]); the version tabs ([data-r3-version], R3-21).
+ * Its padding is 4 8 16 20, and 0 at the bottom when the tabs end it.
+ * [data-r3-name] holds the number and title and is display: contents.
+ * Their name slot ([data-terrain-record-name]) and divider are hidden.
+ *
+ * Needs R3-21 for the tabs and for the head to hold steady while a version
+ * loads: R3-21 writes the row's number and title on the dialog
+ * (data-r3-row-pn, data-r3-row-title), which the head shows until the
+ * version's own heading arrives. The title changes only if the two
+ * versions were published under different titles.
  *
  * Measured at 390×844 with the combined patch: the actions at the top
- * right; number, title and tabs in one block under them; a one-line title
- * with both versions makes the head 152px.
+ * right, all four in their muted colour (Find similar takes it here, its
+ * labelled form was the foreground); number, title and tabs in one block
+ * under them; a one-line title with both versions makes the head 151px,
+ * and it holds that height across a version switch.
  *
  * In the component: on phones the toolbar renders heading.number and
  * heading.title from the start under the actions, the title line-clamped to

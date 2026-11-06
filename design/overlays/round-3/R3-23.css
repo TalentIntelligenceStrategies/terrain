@@ -17,11 +17,12 @@
  * Viewport: phone (below sm, 40rem). Desktop is untouched.
  *
  * Measured at 390×844 with the combined patch, row 1: the row 382px tall
- * (was about 408); the number line one 18px line, number and kind 153px at
- * the left, rank and score 124px at the right; title 23px; the abstract
+ * (was about 408); the number line one 20px line, the rank chip and the
+ * number and kind at the left, the score at the right, their centres level; title 23px; the abstract
  * three lines, 55px; the strip 117px tall, 80×100 tiles.
  *
- * Under 360px the score moves to a second line, under the number, so the
+ * Under 360px (one width query beyond their breakpoints, for the narrowest
+ * phones) the score moves to a second line, under the number, so the
  * number and kind are never cut.
  *
  * In the component: below sm the number line is a grid, rank | number and
