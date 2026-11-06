@@ -322,8 +322,8 @@ its other half missing, so a patent the index holds once says *Grant* or *Applic
 A patent whose versions the engine did not return shows neither. **On a phone the switch moves into
 the record**, and the row says the kind in words beside the number: at 390px the segment takes a
 line of its own on every row, the one place on the row a status chip would sit, for a choice made
-on one patent in fifty. The record card carries it at full width under its head, where the
-document it turns over is the one being read.
+on one patent in fifty. The record card carries it as two tabs under its head, the current one
+underlined, where the document it turns over is the one being read.
 
 **The position always renders; the score may not.** There is no engine to withhold an ordinal. A
 score the engine did not return takes its label with it and the cluster is the position alone.
@@ -1319,17 +1319,17 @@ number, which `brief.md` §1 prints. R3-17 is withdrawn for that reason and not 
 | R3-10 | both | Record | A claim preamble (*We claim:*) is an unnumbered lead-in, not claim 1 | |
 | R3-11 | both | List, record, viewer | One kind code everywhere; holder names as published (was R1-06) | |
 | R3-12 | both | Search settings | *Grants · Applications*; Rerank says what it changes | |
-| R3-13 | phone | Search bar | Folded, it is the query on one line and Search | |
+| R3-13 | phone | Search bar | Folded, one row: settings, the query on one line and Search; opened, the field over one tool row | |
 | R3-14 | phone | Masthead | One row on the gutter; one appearance control; the version leaves it (was R1-07) | |
 | R3-15 | phone | Home | The composer follows the lede; the fields are a chip row under it, *Coming soon* last | |
 | R3-16 | phone | Record | The field panel in two columns; the drawings a strip that scrolls sideways, as on a row | + `app/` |
-| R3-18 | phone | Results | One pinned row of at most 56px; the toolbar scrolls with the results header | |
+| R3-18 | phone | Results | The search floats at the bottom of results and grows upward when opened, over a scrim; the masthead alone is pinned | |
 | R3-19 | phone | Record | A card over the list, 8px from every edge: a drag down, the scrim, ×, Escape or Back close it; actions on the safe area | + `app/` |
 | R3-20 | phone | Drawing viewer | Full bleed, the drawing at full width, close at the top edge | + `app/` |
-| R3-21 | phone | List, record | The kind is text in the number line; the version switch is in the record, where both exist (was R1-42) | + `app/` |
-| R3-22 | phone | List | Titles to two lines; holder and inventor stacked full width | |
-| R3-23 | phone | List | Number, kind, rank and score on one line; smaller strip tiles; the abstract keeps three lines | |
-| R3-24 | phone | Record | The head names the patent from the start | |
+| R3-21 | phone | List, record | The kind is text in the number line; in the record the version is two tabs under the title, where both exist (was R1-42) | + `app/` |
+| R3-22 | phone | List | Titles to two lines; holder, inventors, and date with class, on three even lines | |
+| R3-23 | phone | List | The rank leads the number line as a soft chip; smaller strip tiles; the abstract keeps three lines | |
+| R3-24 | phone | Record | The head names the patent from the start and keeps it: actions, then number and title, steady across versions | |
 | R3-25 | phone | Record | In landscape the record fills the height; one action row | |
 | R3-26 | phone | Shell | Fixed layers clear the safe area | |
 | R3-27 | phone | Grouping panel | A sheet with Done; sentence-case headings, no dead indent | |
@@ -1339,7 +1339,7 @@ number, which `brief.md` §1 prints. R3-17 is withdrawn for that reason and not 
 | R3-31 | tablet | Search bar | Search stays inside the composer at 820 and in landscape | |
 | R3-32 | phone | List | No keyboard-shortcuts control on a touch screen | |
 | R3-33 | both | Search settings | A small uppercase label is three words at most: *Results to show* | |
-| R3-34 | phone | List | Sort sits on the count line | |
+| R3-34 | phone | List | One line: "50 results", the view toggle and Sort as one family of controls | |
 | R3-35 | tablet | Home | The field grid is three and three | |
 | R3-36 | phone | Every control | 44×44 to a coarse pointer; the whole row opens the record (was R1-40) | + `app/` |
 | R3-37 | both | List | Tab reaches each row's version switch and number link | |

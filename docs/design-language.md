@@ -806,6 +806,15 @@ phone the drag down and the close control are the ways out, and Back is the plat
 cost of the 8, taken knowingly; a gutter wide enough to tap would be the 16 again. It scrolls itself, with
 `overscroll-behavior: contain` so the list behind never moves under a finger.
 
+**On the card the head is the patent's name, and it does not change.** Its first row is the record's
+actions, *Find similar*, previous, next and close, all in the same muted colour; under them the
+publication number, then the title in full, cut only past four lines, so the body never repeats
+either. Where a patent has a grant and an application, two text tabs under the title choose between
+them, the current one underlined on the head's rule; a tab is a view of the same patent, which a
+switch beside the number made look like a setting. **Switching versions moves nothing**: while the
+other version loads, the head keeps the title and takes the number it is switching to, so the
+reader's eye has nothing to find again.
+
 **Above the stack the breakpoints adjust components, never the structure.** A label narrows, the
 thumbnail strip fits fewer per row, the field tiles reflow.
 
