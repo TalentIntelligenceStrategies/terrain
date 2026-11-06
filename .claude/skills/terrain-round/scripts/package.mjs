@@ -11,15 +11,16 @@
  *   CHANGES.md   as written, and every other .md in package/ beside it
  *   images/      every image CHANGES.md links, and only those
  *   contract/    the diff of ports.mjs and components.md since --base, plus
- *                anything put in round-N/package/contract/ by hand
+ *                anything put in round-N/package/contract/ by hand; no
+ *                contract/ when both are empty
  *   code/        the app/ and demo/ files changed since --base, at --tag,
- *                with app.diff and demo.diff
+ *                with app.diff and demo.diff, each only when not empty
  *   docs/        design-language.md and components.md when they changed, at
  *                --tag, and docs.diff. brief.md and platform.md are ours and
  *                do not go (platform.md §13.3)
- *   overlays/    design/overlays/round-N/ at --tag, plus all.css, all.js and
- *                apply.js, the whole patch as one console paste, or any items
- *                of it. A round with no overlays ships no overlays/
+ *   overlays/    design/overlays/round-N/ at --tag, plus apply.js, the whole
+ *                patch as one console paste, or any items of it. A round
+ *                with no overlays ships no overlays/
  *   template/    round-N/package/template/ as it is, when the round has one:
  *                a runnable reference the cards point at
  *   *.pdf        any PDF in round-N/package/, beside CHANGES.md
@@ -31,7 +32,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { ROOT, args, die } from './lib.mjs';
+import { ROOT, args, die, buildApply } from './lib.mjs';
 
 const a = args();
 if (!a.tag || !/^handoff-\d{4}-\d{2}-\d{2}$/.test(a.tag)) die('--tag handoff-YYYY-MM-DD is required');
@@ -94,7 +95,10 @@ for (const doc of docsMd) {
   put(doc, text);
 }
 
-put('contract/contract.diff', git('diff', base, a.tag, '--', 'app/js/ports.mjs', 'design/components.md') + '\n');
+/* AN EMPTY DIFF IS NOT SENT: it is a file Innovue opens to find nothing in.
+   The README says the contract did not change, and that is the record. */
+const putDiff = (name, ...p) => { const d = git('diff', base, a.tag, '--', ...p); if (d.trim()) put(name, d + '\n'); };
+putDiff('contract/contract.diff', 'app/js/ports.mjs', 'design/components.md');
 const extra = path.join(pdir, 'contract');
 if (fs.existsSync(extra)) for (const f of fs.readdirSync(extra, { recursive: true }))
   if (fs.statSync(path.join(extra, f)).isFile()) put(`contract/${f}`, fs.readFileSync(path.join(extra, f)));
@@ -119,70 +123,31 @@ const show = f => execFileSync('git', ['show', `${a.tag}:${f}`], { cwd: ROOT });
 const namesIn = (...p) => git('diff', '--name-only', base, a.tag, '--', ...p).split('\n').filter(Boolean);
 const changed = namesIn('app/', 'demo/');
 for (const f of changed) if (at(f)) put(`code/${f}`, show(f));
-put('code/app.diff', git('diff', base, a.tag, '--', 'app/') + '\n');
-put('code/demo.diff', git('diff', base, a.tag, '--', 'demo/') + '\n');
+putDiff('code/app.diff', 'app/');
+putDiff('code/demo.diff', 'demo/');
 const DOCS = ['docs/design-language.md', 'design/components.md'];
 const docs = namesIn(...DOCS);
 for (const f of docs) if (at(f)) put(`docs/${path.basename(f)}`, show(f));
 if (docs.length) put('docs/docs.diff', git('diff', base, a.tag, '--', ...DOCS) + '\n');
 
-/* THE PATCH, AS FILES AND AS ONE PASTE. Each item's file, and then all.css
-   and all.js, the same patch joined (stylesheets by a newline, because a
-   stray ';' at the top level of CSS swallows the next rule; scripts by ';'),
-   and apply.js, which Innovue pastes into the console on their own build:
-   it puts the stylesheet in, keeps it in across their client-side
-   navigation, and runs the scripts once the page has loaded. */
+/* THE PATCH, AS FILES AND AS ONE PASTE. Each item's file, and apply.js,
+   which Innovue pastes into the console on their own build: it puts the
+   stylesheet in, keeps it in across their client-side navigation, and runs
+   the scripts once the page has loaded. The whole patch joined into one
+   stylesheet and one script is not sent as well: apply.js already is that,
+   with each item kept apart, and a third copy is only a third thing to
+   keep in step. */
 const odir = `design/overlays/round-${a.round}`;
 const ofiles = git('ls-tree', '-r', '--name-only', a.tag, '--', odir).split('\n').filter(Boolean).sort();
 if (ofiles.length) {
 for (const f of ofiles) put(`overlays/${path.basename(f)}`, show(f));
-const join = (ext, sep) => ofiles.filter(f => f.endsWith(ext))
-  .map(f => `/* ${path.basename(f)} */\n` + show(f).toString('utf8')).join(sep);
-const allCss = join('.css', '\n'), allJs = join('.js', '\n;\n');
-put('overlays/all.css', allCss);
-put('overlays/all.js', allJs);
 /* apply.js CARRIES EACH ITEM APART, so one line at its top picks a subset:
    an engineer comparing one item before and after should not have to read
    the whole round to find it. A second paste is refused rather than doubled,
    because the scripts add elements (the skip link, a live region) that a
    second run would add again. */
-const ids = [...new Set(ofiles.map(f => path.basename(f).replace(/\.(css|js)$/, '')))];
-const items = ids.map(id => {
-  const css = ofiles.find(f => path.basename(f) === id + '.css');
-  const js = ofiles.find(f => path.basename(f) === id + '.js');
-  return `    { id: ${JSON.stringify(id)},\n      css: ${JSON.stringify(css ? show(css).toString('utf8') : '')},\n`
-    + `      js: ${js ? '() => {\n' + show(js).toString('utf8').split('\n').map(l => '        ' + l).join('\n') + '\n      }' : 'null'} }`;
-});
-put('overlays/apply.js', `/* The round-${a.round} patch for your live build (${a.tag}). Open the build,
-   paste this into the browser console (or save it as a DevTools snippet and
-   run it), and the round shows as CHANGES.md describes it. Reload to remove it.
-
-   To apply only some items, list them on the ONLY line below before pasting,
-   for example ['${ids[0]}']. Empty applies every item. */
-const ONLY = [];
-(() => {
-  if (window.__terrainRound${a.round}) { console.info('The round-${a.round} patch is already applied. Reload to remove it.'); return; }
-  window.__terrainRound${a.round} = true;
-  const ITEMS = [
-${items.join(',\n')}
-  ].filter(i => !ONLY.length || ONLY.includes(i.id));
-  const CSS = ITEMS.map(i => i.css).join('\\n');
-  const put = () => {
-    if (document.getElementById('terrain-round-${a.round}')) return;
-    const s = document.createElement('style');
-    s.id = 'terrain-round-${a.round}';
-    s.textContent = CSS;
-    document.head.appendChild(s);
-  };
-  put();
-  new MutationObserver(put).observe(document.documentElement, { childList: true, subtree: true });
-  const run = () => {
-    for (const i of ITEMS) if (i.js) try { i.js(); } catch (e) { console.warn(i.id, e); }
-  };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
-  console.info('Applied: ' + ITEMS.map(i => i.id).join(' '));
-})();
-`);
+put('overlays/apply.js', buildApply(a.round, a.tag,
+  ofiles.map(f => ({ name: path.basename(f), text: show(f).toString('utf8') }))));
 }
 
 execFileSync('zip', ['-qr', zip, '.'], { cwd: stage });

@@ -325,3 +325,47 @@ export async function reachTheirs(page, state, query) {
     await click(page, /^Search$/, 1500);
   }
 }
+
+/* apply.js, the round's patch as one console paste: package.mjs writes it into
+ * the zip and fake.mjs --patch runs it, so what we look at locally is the file
+ * Innovue pastes, built by the same lines. `files` is [{ name, text }] of the
+ * round's overlay files, sorted. */
+export function buildApply(round, tag, files) {
+  const ids = [...new Set(files.map(f => f.name.replace(/\.(css|js)$/, '')))];
+  const items = ids.map(id => {
+    const css = files.find(f => f.name === id + '.css');
+    const js = files.find(f => f.name === id + '.js');
+    return `    { id: ${JSON.stringify(id)},\n      css: ${JSON.stringify(css ? css.text : '')},\n`
+      + `      js: ${js ? '() => {\n' + js.text.split('\n').map(l => '        ' + l).join('\n') + '\n      }' : 'null'} }`;
+  });
+  return `/* The round-${round} patch for your live build (${tag}). Open the build,
+   paste this into the browser console (or save it as a DevTools snippet and
+   run it), and the round shows as CHANGES.md describes it. Reload to remove it.
+
+   To apply only some items, list them on the ONLY line below before pasting,
+   for example ['${ids[0]}']. Empty applies every item. */
+const ONLY = [];
+(() => {
+  if (window.__terrainRound${round}) { console.info('The round-${round} patch is already applied. Reload to remove it.'); return; }
+  window.__terrainRound${round} = true;
+  const ITEMS = [
+${items.join(',\n')}
+  ].filter(i => !ONLY.length || ONLY.includes(i.id));
+  const CSS = ITEMS.map(i => i.css).join('\\n');
+  const put = () => {
+    if (document.getElementById('terrain-round-${round}')) return;
+    const s = document.createElement('style');
+    s.id = 'terrain-round-${round}';
+    s.textContent = CSS;
+    document.head.appendChild(s);
+  };
+  put();
+  new MutationObserver(put).observe(document.documentElement, { childList: true, subtree: true });
+  const run = () => {
+    for (const i of ITEMS) if (i.js) try { i.js(); } catch (e) { console.warn(i.id, e); }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  console.info('Applied: ' + ITEMS.map(i => i.id).join(' '));
+})();
+`;
+}
