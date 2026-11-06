@@ -2,7 +2,7 @@
  *
  * Current: at 390 the masthead wraps to two rows. Row one is the mark with
  * "TIS Terrain", New and History, starting about 34px in; the three
- * appearance buttons and "v1.0.35" drop to a second row that straddles the
+ * appearance buttons and the version label drop to a second row that straddles the
  * header rule and overlaps the composer's top edge, and on scroll the
  * field tiles. At 320 the wordmark goes and the bar still wraps.
  * Wanted:  below sm (40rem), one 57px row, padded 8px at each side so the

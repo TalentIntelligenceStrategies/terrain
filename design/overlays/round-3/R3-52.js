@@ -1,7 +1,8 @@
 /* R3-52 · Shell: the page declares English; Chinese records declare theirs
  *
  * Current: <html lang="en"> is set at runtime (the served index.html opens
- * a bare <html>; Nuxt adds lang="en" after boot, measured on v1.0.35). CN
+ * a bare <html>; Nuxt adds lang="en" after boot, measured on v1.0.35 and
+ * still so on v1.0.36). CN
  * and TW records carry no lang of their own, so a screen reader reads
  * their titles, holders and abstracts with the English voice (WCAG 3.1.1,
  * 3.1.2).
@@ -19,7 +20,9 @@
  * patch was checked on a list row and a record whose office and text were
  * rewritten to CN and Chinese in the page: title and abstract
  * lang="zh-Hans", a Latin holder none, the record's h3 zh-Hans, the US
- * rows none, <html lang="en">.
+ * rows none, <html lang="en">. Checked again on a Taiwan record served
+ * whole (office, title, holder and abstract in Chinese): the row's and the
+ * record's three texts and the record's h3 lang="zh-Hant", <html lang="en">.
  *
  * In the component: lang="en" in the html template (app.head.htmlAttrs),
  * and a lang binding on the three elements from the record's country. */
