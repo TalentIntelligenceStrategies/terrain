@@ -1,29 +1,24 @@
-/* R3-21 · Result row and record header, phone: the kind is text; the switch is in the record
+/* R3-21 · Result row and record, phone: the kind is text; the version is chosen under the title
  *
  * Current: every row carries a 49x22 / 81x22 Grant | Application segment
  * where a status chip would sit, and a single-version row prints plain
  * "Grant" in the same slot, so the slot means two things. On a phone it
  * takes a line of its own. Its purpose is only in its accessible name.
  * Wanted:  the row says its kind as text in the number line,
- * "US 09000581 B2 · Grant". In the record, under its head, on a line of its
- * own at full width, a 44px segmented control switches the version; it is
- * shown only where both versions exist, and it is in the natural tab order
- * (R3-37).
+ * "US 09000581 B2 · Grant". In the record, the head's title block (R3-24)
+ * says the kind beside the number, and the version is chosen under the
+ * title with two text tabs, Grant and Application, 44px tall, the current
+ * one in the foreground colour with a 2px underline on the head's bottom
+ * rule, shown only where both versions exist. It is in the natural tab order (R3-37).
  * Viewport: phone only (below sm, 40rem). From sm up the row keeps its
  * switch; R3-21.css hides all of this from 40rem up.
  *
- * The control is div[data-r3-version], inserted into the record's head row
- * (div.border-b:has(> button[aria-label="Close details"])); R3-21.css lets
- * that row wrap and gives the control the full second line. The left of
- * the head, the empty div.min-w-0.flex-1, is left for the publication
- * number (R3-24).
- *
- * The patch drives their own state: each record button clicks the hidden
- * row segment of the row whose number the record shows, so the card's own
- * version handler still emits "open" and the record follows. In the component the
- * variant index belongs to the record, not the card: the record header
- * renders the segment from hit.alternatives, and the card renders
- * kind-as-text from the current variant. */
+ * The patch drives their own state: a pick clicks the hidden row segment of
+ * the row whose number the record shows, so the card's own version handler
+ * still emits "open" and the record follows. In the component the variant
+ * index belongs to the record, not the card: the record head renders the
+ * tabs under its title from hit.alternatives, and the card renders kind-as-text
+ * from the current variant. */
 (() => {
   if (window.__r3_21) return;
   window.__r3_21 = true;
@@ -31,17 +26,17 @@
   const digits = s => ((s || '').match(/\b[A-Z]{2} ([0-9A-Z]{5,})/) || [])[1] || '';
 
   /* Row: kind as text inside the number link, before its icon. */
+  const rowWord = card => {
+    const group = card.querySelector(GROUP);
+    if (group) return group.querySelector('button[aria-pressed="true"]')?.textContent.trim() || '';
+    const meta = card.querySelector('div:has(> div > span.font-mono.text-muted-foreground)');
+    const only = meta && [...meta.children].find(c => c.tagName === 'SPAN' && /^(Grant|Application)$/.test(c.textContent.trim()));
+    if (only) { only.setAttribute('data-r3-kind-src', ''); return only.textContent.trim(); }
+    return card.querySelector('[data-r3-kind-src]')?.textContent.trim() || '';
+  };
   const rowKind = card => {
     const link = card.querySelector('a[href], a[title^="Open "]');
-    if (!link) return;
-    const group = card.querySelector(GROUP);
-    let word = '';
-    if (group) word = group.querySelector('button[aria-pressed="true"]')?.textContent.trim() || '';
-    else {
-      const meta = card.querySelector('div:has(> div > span.font-mono.text-muted-foreground)');
-      const only = meta && [...meta.children].find(c => c.tagName === 'SPAN' && /^(Grant|Application)$/.test(c.textContent.trim()));
-      if (only) { only.setAttribute('data-r3-kind-src', ''); word = only.textContent.trim(); }
-    }
+    const word = link && rowWord(card);
     if (!word) return;
     let tag = link.querySelector('[data-r3-kind]');
     if (!tag) {
@@ -53,38 +48,52 @@
     if (tag.textContent !== t) tag.textContent = t;
   };
 
-  /* Record header: the switch, where the record's row has both versions. */
-  const recordNumber = header => {
-    const box = header.parentElement;
-    const dt = [...box.querySelectorAll('dl.record-fields dt')].find(d => d.textContent.trim() === 'Number');
+  /* Record: which row it is, read from its fields, or its number while loading. */
+  const recordNumber = d => {
+    const dt = [...d.querySelectorAll('dl.record-fields dt')].find(x => x.textContent.trim() === 'Number');
     const n = dt?.nextElementSibling?.textContent.trim();
     if (n) return n;
-    /* Still loading, or failed: the record's heading still prints its number. */
-    const head = [...box.querySelectorAll('.font-mono')].map(e => e.textContent.trim())
-      .find(t => /^(?:[A-Z]{2} )?[0-9A-Z]{5,}(?: [A-Z][0-9]?)?$/.test(t));
-    return head ? head.replace(/^[A-Z]{2} /, '').replace(/ [A-Z][0-9]?$/, '') : '';
+    const pn = d.querySelector('[data-r3-pn]')?.textContent.trim() || '';
+    return pn.replace(/^[A-Z]{2} /, '').replace(/ [A-Z][0-9]?$/, '');
   };
   const rowFor = n => (n && [...document.querySelectorAll('[data-result-card]')]
     .find(c => digits(c.querySelector('a[title^="Open "]')?.textContent) === n)) || null;
 
   let last = null;
-  const record = header => {
-    let sw = header.querySelector(':scope > [data-r3-version]');
-    const n = recordNumber(header);
-    /* While the other version's record loads there is no Number yet: keep
-       the switch, and the focus on it, against the row it last drove. */
-    const row = rowFor(n) || (!n && last?.isConnected ? last : null);
+  const record = d => {
+    const fields = d.querySelector('dl.record-fields');
+    const name = d.querySelector('[data-r3-name]');
+    const title = name?.querySelector(':scope > [data-r3-title]');
+    let sw = d.querySelector('[data-r3-version]');
+    if (!title) return;
+    const n = fields ? recordNumber(d) : '';
+    /* While the other version loads, or if it fails to, the record has no
+       Number the row shows: keep the tabs, and the focus on them, against the
+       row they last drove, so the reader can always switch back. */
+    const row = rowFor(n) || (last?.isConnected ? last : null);
+    /* the row's number and title, for R3-24's head while the record has none */
+    const rowPn = row?.querySelector('a[title^="Open "] > span')?.textContent.trim() || '';
+    if ((d.getAttribute('data-r3-row-pn') || '') !== rowPn) d.setAttribute('data-r3-row-pn', rowPn);
+    const rowTitle = row?.querySelector('button[data-card-primary]')?.textContent.trim() || '';
+    if ((d.getAttribute('data-r3-row-title') || '') !== rowTitle) d.setAttribute('data-r3-row-title', rowTitle);
     const source = row?.querySelector(GROUP);
+    /* the kind beside the number in the head (R3-24 draws it) */
+    const meta = name.querySelector(':scope > [data-r3-meta]');
+    const word = row ? rowWord(row) : '';
+    if (meta && (meta.getAttribute('data-kind') || '') !== word) {
+      if (word) meta.setAttribute('data-kind', word); else meta.removeAttribute('data-kind');
+    }
     if (!source) { sw?.remove(); return; }
-    const from = [...source.querySelectorAll('button')];
-    if (!sw) {
+    last = row;
+    if (!sw || sw.previousElementSibling !== title) {
+      sw?.remove();
       sw = document.createElement('div');
       sw.setAttribute('data-r3-version', '');
       sw.setAttribute('role', 'group');
-      sw.setAttribute('aria-label', source.getAttribute('aria-label'));
-      header.insertBefore(sw, header.querySelector(':scope > button[aria-label="Find similar"]'));
+      sw.setAttribute('aria-label', 'Version');
+      title.after(sw);
     }
-    last = row;
+    const from = [...source.querySelectorAll('button')];
     const mine = [...sw.querySelectorAll('button')];
     from.forEach((b, i) => {
       let m = mine[i];
@@ -95,7 +104,7 @@
           const r = last?.querySelectorAll(`${GROUP} button`)[i];
           if (r && r.getAttribute('aria-pressed') !== 'true') r.click();
         });
-        sw.appendChild(m);
+        sw.append(m);
       }
       if (m.textContent !== b.textContent.trim()) m.textContent = b.textContent.trim();
       const p = b.getAttribute('aria-pressed') === 'true' ? 'true' : 'false';
@@ -106,7 +115,7 @@
 
   const fix = () => {
     document.querySelectorAll('[data-result-card]').forEach(rowKind);
-    document.querySelectorAll('div.border-b:has(> button[aria-label="Close details"])').forEach(record);
+    document.querySelectorAll('[role="dialog"][data-result-detail]').forEach(record);
   };
   let queued = false;
   const later = () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; fix(); }); } };

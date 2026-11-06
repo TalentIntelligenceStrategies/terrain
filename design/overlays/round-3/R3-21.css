@@ -1,16 +1,19 @@
-/* R3-21 · Result row and record header, phone: the kind is text; the switch is in the record
+/* R3-21 · Result row and record, phone: the kind is text; the version is chosen under the title
  *
  * See R3-21.js for Current and Wanted. This file hides the row's segment and
  * the single-version kind word (both replaced by the text in the number
- * line), styles the kind text, and draws the record header's switch.
+ * line), styles the kind text, and draws the record's version tabs under
+ * the title in the head (R3-24 places them).
  *
- * The segment is hidden, not removed, because the patch's record control
- * drives it; in the component it is not rendered on the row at all.
+ * The segment is hidden, not removed, because the patch's tabs drive it;
+ * in the component it is not rendered on the row at all.
  * Viewport: phone (below sm, 40rem). From sm up the row keeps its switch
  * and none of this applies: there the row has the width for it, and the
  * switch is chosen before the record opens.
- * On a phone the switch sits under the record's head, on a line of its
- * own, at full width. */
+ *
+ * Measured at 390: two tabs, 44px tall, 24px apart, under the title; the
+ * current one's 2px underline sits on the head's bottom rule; absent on a
+ * patent with one version. */
 @media not all and (min-width: 40rem) {
   [data-result-card] [role="group"][aria-label="Switch grant/application version"],
   [data-result-card] [data-r3-kind-src] {
@@ -24,47 +27,36 @@
   white-space: nowrap;
 }
 [data-r3-version] {
-  display: inline-flex;
-  flex-shrink: 0;
-  height: 44px;
-  padding: 2px;
-  gap: 2px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--card);
+  display: flex;
+  gap: 24px;
 }
 [data-r3-version] > button {
-  min-width: 44px;
-  padding: 0 12px;
-  border-radius: calc(var(--radius) - 2px);
-  font-size: 0.875rem;
-  line-height: 1;
+  position: relative;
+  height: 44px;
+  padding: 0;
+  font-size: 14px;
+  line-height: 20px;
   color: var(--muted-foreground);
   cursor: pointer;
 }
-[data-r3-version] > button:hover {
+[data-r3-version] > button[aria-pressed="true"] {
+  font-weight: 500;
   color: var(--foreground);
 }
-[data-r3-version] > button[aria-pressed="true"] {
-  background: color-mix(in oklch, var(--primary) 10%, transparent);
-  color: var(--primary);
-  font-weight: 500;
+/* the current tab's underline sits on the head's bottom rule */
+[data-r3-version] > button[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--foreground);
 }
 [data-r3-version] > button:focus-visible {
   outline: 2px solid var(--ring);
-  outline-offset: -2px;
-}
-@media not all and (min-width: 40rem) {
-  div.border-b:has(> [data-r3-version]) {
-    flex-wrap: wrap;
-  }
-  [data-r3-version] {
-    order: 99;
-    flex-basis: 100%;
-  }
-  [data-r3-version] > button {
-    flex: 1 1 0;
-  }
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 /* Last in the file, so it outranks the display rules above by source order. */
 @media (min-width: 40rem) {
