@@ -58,6 +58,16 @@ for (const vp of ['desktop', 'phone']) {
     });
     try {
       await reachTheirs(page, state);
+      /* A row's drawings load as it comes into view, so walk the whole list
+         once, or the copy shows "did not load" below the first screen. */
+      if (state === 'results') {
+        for (let i = 0; i < 80; i++) {
+          const end = await page.evaluate(() => { scrollBy(0, innerHeight * 0.8); return innerHeight + scrollY >= document.body.scrollHeight - 4; });
+          await page.waitForTimeout(500);
+          if (end) break;
+        }
+        await page.waitForTimeout(2000);
+      }
       version ??= await page.evaluate(() => (document.body.innerText.match(/v\d+\.\d+\.\d+/) || [])[0] || null);
     } catch (e) { console.log(`  ${vp} ${state}: did not finish (${e.message.split('\n')[0]})`); }
     console.log(`${vp} ${state}: ${saved.size} files so far`);
