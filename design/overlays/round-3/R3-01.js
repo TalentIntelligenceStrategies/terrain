@@ -39,6 +39,9 @@
     const t = document.activeElement;
     if (!phone.matches || !t || !t.matches('.search-box-morph textarea')) return;
     const box = t.closest('.search-box-morph');
+    /* docked at the bottom (R3-18), the box rides on the keyboard itself */
+    const dock = box.closest('#main-content > div.sticky');
+    if (dock && getComputedStyle(dock).position === 'fixed') return;
     const search = box.querySelector('button[aria-label="Search"]');
     const row = search && search.getClientRects().length ? search : box;
     const bottom = vv ? vv.offsetTop + vv.height : innerHeight;

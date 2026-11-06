@@ -1,41 +1,119 @@
-/* R3-18 · Results: one pinned row on the phone
+/* R3-18 · Results, phone: the search floats at the bottom
  *
  * Current: below sm the pinned chrome on results is the masthead plus the
- * whole folded composer, mode, settings, group, the view toggle on its own
- * row and the magnifier on a third: it ends at about 205–261 of 844px and
- * stays pinned after any drag, so one and a half results fit under it.
- * Wanted:  below sm, the folded composer scrolls with the page until only
- * its last row is left under the masthead, and that row stays: the query
- * and Search (R3-13), 56px from the masthead's rule to the composer's.
- * Mode, settings, group and the view toggle scroll away above it, with the
- * results header below it, and come back when the page is scrolled to the
- * top. While the box is open (expanded) nothing is hidden: the whole
- * composer pins, as it does now.
- * Viewport: phone (below sm). Desktop and tablet are unchanged.
- * Measured at 390 with R3-13 and R3-14: at scrollY 0 the composer is
- * 57–248, as before; at 300, 600 and 2400 the query row sits at 56–100
- * and the composer's bottom edge at 112, so 55px is pinned under the
- * masthead (was about 205px). --r3-pin-shift measured 135px.
+ * whole folded composer (mode, settings, group, the view toggle, the
+ * magnifier): it ends at about 205–261 of 844px and stays pinned after any
+ * drag, so one and a half results fit under it, and the search is at the
+ * top of the screen, the farthest place from the thumb. In landscape
+ * (844×390) the pinned composer takes about 130 of 390px.
+ * Wanted:  on results the search box floats at the bottom of the screen
+ * from the start and stays there: one row (R3-13), 52px, 12px in from the
+ * sides and above the home indicator, with no band behind it and no
+ * border; its depth is a layered shadow and a hairline ring. Its corner is
+ * Search's corner plus the 4px between them, so the two nest. The top is
+ * the masthead alone, then the results, which end above the box.
+ * Tapped, the box grows upward where it floats (240ms, their own track)
+ * into the editor: the field, then the mode, settings, grouping and Search;
+ * the results behind dim, and a tap on them closes it. With the soft
+ * keyboard up the box sits on the keyboard. Home is unchanged: there the
+ * composer is the page.
+ * Viewport: phone (below sm), and short screens below lg (max-height
+ * 480px: a phone in landscape). Desktop and tablet are unchanged.
  *
- * The patch is their sticky wrapper with a negative offset: top is the
- * masthead's height less the distance from the wrapper's top to the
- * query row, which the R3-18 script measures (--r3-pin-shift), because the
- * controls above the row wrap to one, two or three lines with the width.
- * The row's padding below it is trimmed so the pinned part is 56px.
+ * Measured at 390×844 with the combined patch: the box 366×52 at x 12,
+ * its bottom 12px over the bottom safe area; Search 44×44 at 4px in; the
+ * list padded to end 16px above the box. --r3-kb and --r3-dock-h are
+ * written by the R3-18 script, which also draws the scrim.
  *
- * Their bundle ships the strings for an unpinned state ("Unpin (collapses
- * into a header pill when scrolling)") but no component uses them; this is
- * that state, done as a sticky offset rather than a second element. In the
- * component: on phones, render the toolbar as the first row of the results
- * header (so it scrolls by construction) and pin only the query row. */
-@media not all and (min-width: 40rem) {
-  #main-content > div.sticky:has([data-search-line]:not(.invisible)) {
-    top: calc(3.5rem + env(safe-area-inset-top, 0px) - var(--r3-pin-shift, 0px));
+ * In the component: on phones the results page renders the composer as a
+ * floating dock (fixed, bottom: keyboard inset), not in the sticky header
+ * slot, and pads the list by its height. */
+.r3-scrim {
+  display: none;
+}
+@media (max-width: 39.99rem), (max-height: 480px) and (max-width: 63.99rem) {
+  #main-content > div.sticky:has([data-search-line]) {
+    position: fixed;
+    inset-inline: 0;
+    top: auto;
+    bottom: var(--r3-kb, 0px);
+    z-index: 30;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    pointer-events: none;
   }
-  #main-content > div.sticky:has([data-search-line]:not(.invisible)) > div {
-    padding-bottom: 4px;
+  #main-content > div.sticky:has([data-search-line]) > div {
+    max-width: none;
+    padding: 0 max(12px, env(safe-area-inset-right, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
   }
-  #main-content > div.sticky:has([data-search-line]:not(.invisible)) .search-box-morph {
-    padding-bottom: 6px;
+  /* with the keyboard up, the home indicator is under the keyboard */
+  html[data-r3-kb] #main-content > div.sticky:has([data-search-line]) > div {
+    padding-bottom: 8px;
+  }
+  #main-content > div.sticky:has([data-search-line]) .search-box-morph {
+    pointer-events: auto;
+    border: 0;
+    /* Search's corner (radius - 2px) plus the 4px between them */
+    border-radius: calc(var(--radius) + 2px);
+    background: var(--card);
+    box-shadow:
+      0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent),
+      0 2px 6px -1px rgb(0 0 0 / 0.08),
+      0 12px 32px -8px rgb(0 0 0 / 0.18);
+    transition: scale 150ms cubic-bezier(0.2, 0, 0, 1), border-radius 240ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  /* opened, the padding is 8px, so the corner is Search's plus 8px */
+  #main-content > div.sticky:has([data-search-line]) .search-box-morph:has([data-search-line].invisible) {
+    border-radius: calc(var(--radius) + 6px);
+    box-shadow:
+      0 0 0 1px color-mix(in oklch, var(--foreground) 14%, transparent),
+      0 2px 6px -1px rgb(0 0 0 / 0.08),
+      0 16px 40px -8px rgb(0 0 0 / 0.22);
+  }
+  /* their keyboard ring (2px, offset 2) reads as a double outline around a
+     floating box, and a field being typed in always matches it; here focus is
+     the box's own edge, firmer, in the 45% their focused border uses */
+  #main-content > div.sticky:has([data-search-line]) .search-box-morph:has(textarea:focus-visible) {
+    outline: none;
+    box-shadow:
+      0 0 0 1.5px color-mix(in oklch, var(--foreground) 45%, transparent),
+      0 2px 6px -1px rgb(0 0 0 / 0.08),
+      0 16px 40px -8px rgb(0 0 0 / 0.22);
+  }
+  #main-content > div.sticky:has([data-search-line]) .search-box-morph textarea {
+    min-height: 72px;
+  }
+  #main-content > div.sticky:has([data-search-line]) .search-box-morph:has([data-search-line]:active) {
+    scale: 0.96;
+  }
+  #main-content:has(> div.sticky [data-search-line]) {
+    padding-bottom: calc(var(--r3-dock-h, 64px) + 16px);
+  }
+  /* the results dim while the box is open; a tap on them closes it */
+  .r3-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 29;
+    display: block;
+    /* a dark veil in both themes: dimming, never lightening */
+    background: rgb(0 0 0 / 0.32);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 240ms cubic-bezier(0.2, 0, 0, 1), visibility 0s linear 240ms;
+  }
+  #main-content:has(.search-box-morph [data-search-line].invisible) .r3-scrim {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .r3-scrim,
+  #main-content > div.sticky .search-box-morph {
+    transition: none;
+  }
+  #main-content > div.sticky .search-box-morph:has([data-search-line]:active) {
+    scale: none;
   }
 }
