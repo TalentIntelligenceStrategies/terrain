@@ -328,7 +328,7 @@ function scoreHTML(id) {
    one handler, one set. Clearing it to "" rather than removing it keeps the
    attribute selector in 35-record.css matching an empty, hidden control rather
    than falling through to an unstyled one for a frame. */
-/* THE RECORD'S VERSION SWITCH, for a phone (platform.md §4.3). Written from
+/* THE RECORD'S VERSION TABS, for a phone (platform.md §4.3). Written from
    the row, which holds the versions and the choice; the row's own class and
    data-ver-of are the whole wiring, so list.mjs's delegated handler switches
    it, repaints both, and reopens this record on the version chosen. */

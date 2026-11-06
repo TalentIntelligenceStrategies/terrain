@@ -321,15 +321,23 @@
    and moves focus into it — and it closes by ×, a drag down on its head, the
    scrim, Escape or Back. */
 .rec-scrim{display:none}
-/* THE VERSION SWITCH UNDER THE HEAD, on a phone only (platform.md §4.3): full
-   width, its two segments sharing it, on the head's own inline padding and a
-   hairline under it like the head's. Above 640 the switch is on the row. */
+/* THE VERSION TABS UNDER THE HEAD, on a phone only (platform.md §4.3,
+   design-language.md §7): two text tabs on the head's own inline padding, the
+   current one underlined on the hairline under them. A tab is a view of the
+   same patent; the segmented pair it replaced read as a setting. The buttons
+   keep the row switch's class and data, so list.mjs's handler drives both.
+   Above 640 the switch is on the row. */
 .rec-ver{display:none}
 @media (max-width:640px){
-  .rec-ver:not([hidden]){display:block;flex:0 0 auto;padding:var(--s-8) var(--s-20);
+  .rec-ver:not([hidden]){display:block;flex:0 0 auto;padding:0 var(--s-20);
                          border-bottom:1px solid var(--border)}
-  .rec-ver .ver-switch{position:static;display:flex}
-  .rec-ver .seg-btn{flex:1 1 0;height:44px}
+  .rec-ver .ver-switch{position:static;display:flex;gap:var(--s-24);padding:0;
+                       background:none;border-radius:0}
+  .rec-ver .seg-btn{position:relative;height:44px;padding:0;border:0;border-radius:0;
+                    background:none;font-size:13px;font-weight:400;color:var(--text-3)}
+  .rec-ver .seg-btn[aria-pressed="true"]{font-weight:500;color:var(--text-1);background:none}
+  .rec-ver .seg-btn[aria-pressed="true"]::after{content:"";position:absolute;inset-inline:0;
+                    inset-block-end:-1px;height:2px;border-radius:1px;background:var(--text-1)}
 }
 @media (max-width:1079px){
   .panecol .rec{position:fixed;inset:var(--s-8);z-index:41;
