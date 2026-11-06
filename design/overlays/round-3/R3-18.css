@@ -8,21 +8,26 @@
  * (844×390) the pinned composer takes about 130 of 390px.
  * Wanted:  on results the search box floats at the bottom of the screen
  * from the start and stays there: one row (R3-13), 52px, 12px in from the
- * sides and above the home indicator, with no band behind it and no
- * border; its depth is a layered shadow and a hairline ring. Its corner is
+ * sides and 12px above the home indicator (the bottom safe area), with no
+ * band behind it and no border; its depth is a layered shadow and a
+ * hairline ring. Its corner is
  * Search's corner plus the 4px between them, so the two nest. The top is
  * the masthead alone, then the results, which end above the box.
- * Tapped, the box grows upward where it floats (240ms, their own track)
- * into the editor: the field, then the mode, settings, grouping and Search;
- * the results behind dim, and a tap on them closes it. With the soft
- * keyboard up the box sits on the keyboard. Home is unchanged: there the
+ * Tapped, the box grows upward where it floats, with their own expand
+ * transition, into the editor: the field, then the mode, settings,
+ * grouping and Search; the results behind dim, and a tap on them closes
+ * it. With the soft keyboard up the box sits 8px above the keyboard. Home is unchanged: there the
  * composer is the page.
  * Viewport: phone (below sm), and short screens below lg (max-height
  * 480px: a phone in landscape). Desktop and tablet are unchanged.
  *
  * Measured at 390×844 with the combined patch: the box 366×52 at x 12,
- * its bottom 12px over the bottom safe area; Search 44×44 at 4px in; the
- * list padded to end 16px above the box. --r3-kb and --r3-dock-h are
+ * its bottom 12px above the bottom safe area; Search 44×44 at 4px in; the
+ * list padded to end 16px above the box.
+ *
+ * The shadow and the scrim are black at low opacity in both themes, as
+ * their own shadow-md is: they darken whatever is under them, and no token
+ * of theirs names a shadow or an overlay. --r3-kb and --r3-dock-h are
  * written by the R3-18 script, which also draws the scrim.
  *
  * In the component: on phones the results page renders the composer as a
@@ -45,7 +50,7 @@
   }
   #main-content > div.sticky:has([data-search-line]) > div {
     max-width: none;
-    padding: 0 max(12px, env(safe-area-inset-right, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+    padding: 0 max(12px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
   }
   /* with the keyboard up, the home indicator is under the keyboard */
   html[data-r3-kb] #main-content > div.sticky:has([data-search-line]) > div {

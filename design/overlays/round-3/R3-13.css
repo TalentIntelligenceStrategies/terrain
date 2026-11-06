@@ -6,14 +6,18 @@
  * sits on a row of its own, under the mode switch, settings and group and a
  * full row of "Details and drawings / Drawings only": three rows, about
  * 190px, and nothing on the results screen says what the 50 results are for.
- * Wanted:  folded, the box is one 44px row: Search settings at the left,
- * the query on one line at 14px (the tap target that opens the box; the
- * opened field keeps 16px, under which iOS zooms into it) and Search,
- * 44×44, at the right. Opened, it is the field, then one tool row: the mode
- * switch (Text | Patent #), settings and grouping, and Search at the right.
- * The view toggle leaves the box for the results count line (R3-34), as it
- * changes how results show, not what is searched. On results the box
- * floats at the bottom of the screen (R3-18).
+ * Wanted:  folded, the box is one 52px row, 44px controls in 4px of
+ * padding: Search settings at the left, the query on one line at 14px with
+ * their chevron after it (the tap target that opens the box; the opened
+ * field keeps 16px, under which iOS zooms into it), and Search, 44×44 and
+ * icon-only, at the right. Opened, it is the field, then one tool row: the
+ * Text | Patent # switch, settings and grouping, and Search at the right.
+ * Below sm the view toggle leaves the box for the results count line
+ * (R3-34), as it changes how results show, not what is searched; in
+ * landscape it stays in the opened box's tool row. Their "Top 50 results ·
+ * 0.86 s" line in the box (hidden below sm already) stays hidden: the
+ * results header says the count. On results the box floats at the bottom
+ * of the screen (R3-18).
  * Viewport: phone (below sm), and short screens below lg (max-height
  * 480px: a phone in landscape). Desktop is unchanged.
  *
@@ -29,7 +33,7 @@
     column-gap: 4px;
     row-gap: 8px;
   }
-  .search-box-morph [role="group"][aria-label="View mode"],
+  .search-box-morph:has([data-search-line]:not(.invisible)) [role="group"][aria-label="View mode"],
   .search-box-morph button[aria-label^="Expand search box"]:not([data-search-line]),
   .search-box-morph div.hidden:has(> span.tabular-nums) {
     display: none;
@@ -112,5 +116,12 @@
   .search-box-morph:has([data-search-line].invisible) div:has(> button[aria-label="Search"]) {
     order: 99;
     margin-inline-start: 4px;
+  }
+}
+/* Below sm the view toggle lives on the count line (R3-34); in landscape it
+   stays in the opened box's tool row. */
+@media not all and (min-width: 40rem) {
+  .search-box-morph [role="group"][aria-label="View mode"] {
+    display: none;
   }
 }
