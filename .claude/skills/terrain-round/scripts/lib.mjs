@@ -152,7 +152,15 @@ export async function reach(page, url, state, query = QUERY) {
   if (!STATES.includes(state)) die(`--state is one of ${STATES.join(', ')}`);
   if (state === 'home') { await page.goto(url, { waitUntil: 'networkidle' }); await page.waitForTimeout(1500); return; }
   await search(page, url, query);
-  if (state === 'group') await click(page, /^Group the results$/, 20000);
+  if (state === 'group') {
+    /* On a phone with round 3's patch the folded box holds no grouping
+       control: it is in the opened box, so open it first. */
+    if (!(await page.locator('button[aria-label="Group the results"]:visible').count())) {
+      await page.locator('[data-search-line]').first().click().catch(() => {});
+      await settle(800);
+    }
+    await click(page, /^Group the results$/, 20000);
+  }
   if (state === 'record') await openRecord(page);
   if (state === 'scrolled') { await page.mouse.move(360, 600); await page.mouse.wheel(0, 2400); await page.waitForTimeout(2500); }
   if (state === 'phone') { await page.setViewportSize({ width: 390, height: 844 }); await page.waitForTimeout(1500); }
@@ -300,7 +308,15 @@ export async function reachTheirs(page, state, query) {
     if (!(await fig().count())) await openRecord(page);
     await fig().click({ timeout: 8000 }); await settle(2500);
   }
-  if (state === 'group') await click(page, /^Group the results$/, 20000);
+  if (state === 'group') {
+    /* On a phone with round 3's patch the folded box holds no grouping
+       control: it is in the opened box, so open it first. */
+    if (!(await page.locator('button[aria-label="Group the results"]:visible').count())) {
+      await page.locator('[data-search-line]').first().click().catch(() => {});
+      await settle(800);
+    }
+    await click(page, /^Group the results$/, 20000);
+  }
   if (state === 'loading') {
     /* Hold the NEXT search so the in-flight state can be shot, with the
        results already on screen still there: the state R1-09 is about. */
