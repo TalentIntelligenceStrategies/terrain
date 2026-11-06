@@ -1,32 +1,39 @@
-/* R3-24 · Patent record (dialog form): the head names the patent from the start
+/* R3-24 · Patent record (dialog form): the head names the patent, always
  *
  * Current: the head row's left side (div.min-w-0.flex-1 after the sr-only
  * h2) is empty until the record is scrolled past its title; then their
- * PatentDetailToolbar fills it with number and title. Before that a record
+ * PatentDetailToolbar squeezes number and title into it, and on a phone the
+ * title shows as a single letter ("US 09000581 B2 S…"). Before that a record
  * does not say which patent it is, and the row changes shape under the thumb.
- * Wanted:  the publication number in Inconsolata at the left from the
- * start, in the same 13px muted style their scrolled heading uses, so the
- * scrolled state only adds the title beside it; actions stay at the right.
- * Below sm, Find similar is icon-only (a 44×44 button; its accessible name
- * and title stay "Find similar"), so the number keeps the head's free width
- * beside Previous, Next and Close, each 44×44 (R3-36).
- * Viewport: the dialog form of the record, which their build renders only
- * below lg (phone, landscape, tablet); Find similar is icon-only below sm.
+ * Wanted:  below sm, the head is the patent's name and does not change on
+ * scroll. Row 1 is the record's actions at the right, Find similar
+ * (icon-only), Previous, Next and Close, each 44×44. Under it a title block:
+ * the publication number, 13px muted, with the kind beside it only on a
+ * patent with one version (the tabs say it otherwise); 6px below, the title, 20/26
+ * semibold, in full, cut only past four lines; under it, the version
+ * tabs (R3-21) where both versions exist, ending the head on its rule. The title is only in the head:
+ * the body no longer repeats the number and the title. From sm up (the dialog exists below lg)
+ * the head shows the number at the left from the start, as before.
+ * Viewport: phone, below sm (40rem); sm to lg keeps the number-only slot.
  * The desktop pane is not touched.
  *
- * Layout and selectors:
- *   head      [data-terrain-record-head]  (flex row, gap 8px, px 20 py 12)
- *   name slot [data-terrain-record-name]  (flex: 1, min-width 0; truncates)
- *   then      Find similar · divider · Previous · Next · Close details
+ * Layout and selectors, below sm:
+ *   head   [data-terrain-record-head], a grid: · | Find similar | ‹ | › | ×,
+ *          then the number, the title and the version tabs across; padding
+ *          4 8 16 20
+ *   name   [data-r3-name] (display: contents) > [data-r3-meta] (number and
+ *          kind), [data-r3-title], [data-r3-version] (R3-21)
+ *   their  slot [data-terrain-record-name] and the divider are hidden
  *
- * Measured at 390×844 with the combined patch: the name slot 117×18 at the
- * left, "US 09000581 B2" whole; Find similar, Previous, Next and Close each
- * 44×44; on a record with both versions the head is 121px tall, the switch
- * (R3-21) on its second line, 332×44.
+ * Measured at 390×844 with the combined patch: the actions at the top
+ * right; number, title and tabs in one block under them; a one-line title
+ * with both versions makes the head 152px.
  *
- * Not patchable here: the number is drawn from a data attribute as
- * generated content (Vue owns the slot's children). In the component the
- * toolbar renders heading.number always and adds heading.title on scroll. */
+ * In the component: on phones the toolbar renders heading.number and
+ * heading.title from the start under the actions, the title line-clamped to
+ * four lines, the version tabs under it, and
+ * the body's number and h3 are not rendered; the toolbar's scroll state is
+ * not needed there. */
 [data-terrain-record-name]:empty::before {
   content: attr(data-terrain-pn);
   display: block;
@@ -37,10 +44,119 @@
   font-size: 13px;
   color: var(--muted-foreground);
 }
+[data-r3-name] {
+  display: none;
+}
 
 @media not all and (min-width: 40rem) {
-  [data-terrain-record-head] button[aria-label="Find similar"] {
+  [role="dialog"][data-result-detail] > [data-terrain-record-head] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 44px 44px 44px 44px;
+    grid-template-areas:
+      ".     similar prev  next  close"
+      "meta  meta    meta  meta  meta"
+      "title title   title title title"
+      "ver   ver     ver   ver   ver";
+    column-gap: 0;
+    row-gap: 0;
+    align-items: center;
+    padding: 4px 8px 16px 20px;
+  }
+  [data-terrain-record-head] > [data-terrain-record-name],
+  [data-terrain-record-head] > span[aria-hidden="true"] {
+    display: none;
+  }
+  [data-terrain-record-head] > [data-r3-name] {
+    display: contents;
+  }
+  [data-r3-meta] {
+    grid-area: meta;
+    display: flex;
+    align-items: baseline;
+    min-width: 0;
+    margin-top: 4px;
+    padding-inline-end: 12px;
+  }
+  [data-r3-pn] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+  }
+  [data-r3-meta][data-kind]::after {
+    content: "· " attr(data-kind);
+    margin-inline-start: 6px;
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+  }
+  /* with the version tabs under the title, the kind beside the number
+     repeats them */
+  [data-terrain-record-head]:has([data-r3-version]) [data-r3-meta][data-kind]::after {
+    content: none;
+  }
+  [data-r3-title] {
+    grid-area: title;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    overflow: hidden;
+    margin-top: 6px;
+    padding-inline-end: 12px;
+    font-size: 20px;
+    line-height: 26px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--foreground);
+    text-wrap: balance;
+  }
+  [data-terrain-record-head] [data-r3-version] {
+    grid-area: ver;
+    justify-self: start;
+    margin: 4px 0 0;
+  }
+  /* with the version tabs, they end the head on its rule */
+  [role="dialog"][data-result-detail] > [data-terrain-record-head]:has([data-r3-version]) {
+    padding-bottom: 0;
+  }
+  /* icon-only in the actions row, it takes the row's colour: their labelled
+     button was the foreground on the card's fill */
+  [data-terrain-record-head] > button[aria-label="Find similar"] {
+    grid-area: similar;
     font-size: 0;
     gap: 0;
+    background: transparent;
+    color: var(--muted-foreground);
+  }
+  [data-terrain-record-head] > button[aria-label="Find similar"]:hover {
+    color: var(--foreground);
+  }
+  [data-terrain-record-head] > button[aria-label="Previous patent"] { grid-area: prev; }
+  [data-terrain-record-head] > button[aria-label="Next patent"] { grid-area: next; }
+  [role="dialog"][data-result-detail] [data-terrain-record-head] > button[aria-label="Close details"] {
+    grid-area: close;
+    margin: 0;
+  }
+  [data-terrain-record-head] > button {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    justify-content: center;
+    border-radius: calc(var(--radius) - 2px);
+  }
+  [data-terrain-record-head] > button > svg {
+    width: 20px;
+    height: 20px;
+  }
+  /* the body's number and title, now in the head; while a version loads or
+     fails, their body heads with the bare number alone, hidden the same way */
+  [role="dialog"][data-result-detail] [class*="overflow-y-auto"] > div:has(> p.font-mono + h3),
+  [role="dialog"][data-result-detail] [class*="overflow-y-auto"] > div.border-b:first-child:has(> p.font-mono) {
+    display: none;
   }
 }
