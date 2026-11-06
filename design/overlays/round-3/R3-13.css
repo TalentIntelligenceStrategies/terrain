@@ -41,6 +41,11 @@
     padding: 0;
     border-radius: calc(var(--radius) - 2px);
   }
+  /* icon-only here, in landscape too (their label shows from sm up); the
+     button's name stays "Search" */
+  .search-box-morph button[aria-label="Search"] > span {
+    display: none;
+  }
   .search-box-morph button[aria-label="Search settings"],
   .search-box-morph button[aria-label="Group the results"] {
     width: 44px;
