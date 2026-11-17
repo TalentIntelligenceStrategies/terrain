@@ -3,7 +3,7 @@
  * Current: the row's primary control, the title button, is named "View
  * details of US 9000581 B2", so the heading's accessible name is the number
  * too, and a screen reader's list of controls is fifty numbers with no
- * title, the one thing a user scans by (WCAG 2.4.4).
+ * title (WCAG 2.4.4).
  * Wanted:  aria-label "{title}, {pn}", e.g. "Semiconductor package,
  * US 9000581 B2".
  * Viewport: both.
