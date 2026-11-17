@@ -1,23 +1,28 @@
 /* R4-27 (restores R3-57) · Drawing strip: one placeholder for a drawing that is loading
  *
- * Current: two placeholders. A figure still loading is a flat bg-muted tile
- * with its badge (#DDD in light, dark grey on the white tile in dark), which
- * on a phone looks like a failure; a strip still loading is six shimmer
+ * Current: a figure tile still loading shows TiffImage's bg-muted span under
+ * .sk-shimmer: rgb(238,238,238) in light and rgb(37,37,37) in dark, a
+ * dark-grey block on the tile's white paper, which on a phone reads as a
+ * failure; the sweep is themed (oklch 0.72 / 0.15 with a 0.96 band in dark).
+ * A strip still loading ([role=status] "Loading drawings") draws its shimmer
  * tiles on the card's ground, with no paper under them.
  * Wanted:  one placeholder: their .sk-shimmer on the paper ground, which is
  * what the drawing arrives on, so nothing changes colour when it lands. The
  * paper does not swap with the theme, so the sweep is drawn in black at low
  * alpha, as their light theme draws it, in both themes. Under reduced
  * motion their own rule stops the sweep and leaves a still tile on paper.
- * A failure keeps their shipped figureFailed, "Figure {index} did not
- * load", with Retry (TiffImage, unchanged).
+ * A failure keeps their shipped "Figure {index} did not load" with Retry.
  * Viewport: both (it shows most on a phone, where drawings load slowest).
+ *
+ * Measured at 390 with every drawing request held, light and dark: the
+ * span is transparent over the tile's white, the shimmer rgba(0,0,0,.04)
+ * with a .07 band. The strip-level loader did not stay up long enough to
+ * sample in the recorded search; its rule is written against its markup.
  *
  * Their tile already uses bg-white and their badge bg-black, so the patch
  * uses white and black for the paper and the sweep. In the component: drop
  * bg-muted from TiffImage's placeholder span inside a figure tile, and give
- * the strip's loading tiles the tile's own bg-white and border. Preloading
- * drawings ahead of the scroll is not asked this round. */
+ * the strip's loading tiles the tile's own bg-white and border. */
 [data-idx] > span.bg-muted:has(> .sk-shimmer),
 .detail-figures > div > span.bg-muted:has(> .sk-shimmer) {
   background-color: transparent;
