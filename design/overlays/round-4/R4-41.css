@@ -1,12 +1,13 @@
 /* R4-41 (restores R3-47) · Patent record: a disabled chevron reads as disabled
  *
  * Current: on the first record, Previous patent is natively disabled
- * (disabled, measured) and drawn at their disabled:opacity-30 over
+ * (disabled, measured) and drawn at your disabled:opacity-30 over
  * --muted-foreground: #D2D2D2 on #FFF (about 1.5:1) and #434343 on #1A1A1A
- * (about 1.8:1). Beside the live chevron it reads as a missing icon.
+ * (about 1.8:1).
  * Wanted:  the disabled chevron at about 3:1 against the card in both
- * themes, full opacity, and still lighter than the live one; disabled stays
- * native, so it announces dimmed.
+ * themes, full opacity, and still lighter than the live one:
+ * --muted-foreground mixed 70% into --card in light, 55% in dark (in
+ * srgb). Disabled stays native, so it announces dimmed.
  * Viewport: both (the desktop pane and the phone dialog share the toolbar).
  *
  * Measured on the rendered button at 390 (phone head, 44×44) and 1440 (the
@@ -15,7 +16,7 @@
  * chevron stays 5.57:1 and 6.90:1; without the patch the disabled one is
  * opacity 0.3 over rgb(104,104,104), 1.52:1 and 1.76:1.
  *
- * Their token set has no tertiary text colour at 3:1, so the patch mixes
+ * Your token set has no tertiary text colour at 3:1, so the patch mixes
  * --muted-foreground into --card per theme (dark, and your violet theme,
  * which shares the dark tokens). The component wants one token
  * (a disabled foreground) defined in both theme blocks. */
