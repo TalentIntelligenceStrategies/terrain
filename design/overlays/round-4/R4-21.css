@@ -1,29 +1,27 @@
 /* R4-21 (restores R3-22) · Result row, phone: titles to two lines; the facts on three even lines
  *
- * Current: below sm the title is line-clamp-1, so "Semiconductor device
- * package with…" loses the words that tell it from the next ten rows; the
- * holder clamps to "TAIWAN SEMICOND…" in half a column while the inventor
- * column beside it has room. Under the title, the desktop two-column grid
- * is squeezed: holder and inventors on one line, the date and the class on
- * another, the class floating in a column of its own; the gaps are 23px
- * then 26px; the holder and "Published 2015-04-07" are both dark at their
- * medium weight (500), so they compete, and the calendar icon is dark where the others
- * are grey.
+ * Current: below sm the title is line-clamp-1 at 16/23.2, so "Semiconductor
+ * device package with…" loses the words that tell it from the next ten rows.
+ * Under it the desktop two-column grid is squeezed into 316px: holder and
+ * inventors share one line (the holder clamped to half the column), the
+ * date and the class share the next, 13px text, 4px gap plus mt-1 (lines at
+ * y 222 and 248 in row 1 at 390). "Published 2015-04-07" is the foreground
+ * colour at weight 500, as heavy as the holder, and its calendar icon is
+ * dark where the other icons are muted.
  * Wanted:  the title, 17/22 semibold, clamps at two lines with
  * text-wrap: pretty. Under its rule (4px more above it, 14px below it),
  * one fact per line, 6px apart, the holder and inventors at 14/20, the date
- * line at 13/18: the holder, the inventors, then the date and
- * the class, "2015-04-07 · US H01L 23/36". Only the holder is the foreground
- * colour (their medium weight); the inventors, the date and the class are
- * muted, the date and class in Inconsolata, the date without its
- * "Published" label; every icon is muted. Holder names are as published: no
- * case change.
+ * line at 13/18: the holder, the inventors, then the date and the class,
+ * "2015-04-07 · US H01L 23/36". Only the holder is the foreground colour
+ * (their medium weight); the inventors, the date and the class are muted, the
+ * date and class in Inconsolata, the date without its "Published" label;
+ * every icon is muted. Holder names are as published: no case change.
  * Viewport: phone (below sm, 40rem). Desktop is untouched: its title is
  * line-clamp-none and its meta is two columns, as shipped.
  *
- * Measured at 390 with the combined patch: two 20px lines and one 18px
- * line, 6px apart; holder rgb(37,37,37) at 500 and the inventors muted at
- * 400, both as theirs already are; the date line muted at 400.
+ * Measured at 390 with the patch, row 1: title 17/22, clamp 2; three lines at
+ * y 174, 200 and 226, 20/20/18px tall, 6px apart; the holder rgb(37,37,37) at
+ * 500, the inventors and the date line muted (rgb(104,104,104)) at 400.
  *
  * In the component: line-clamp-2 in place of line-clamp-1 below sm;
  * below sm the meta is a flex-col of three lines with gap-1.5, the date line
