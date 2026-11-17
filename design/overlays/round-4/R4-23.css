@@ -16,21 +16,21 @@
  * patent with one version. */
 @media not all and (min-width: 40rem) {
   [data-result-card] [role="group"][aria-label="Switch grant/application version"],
-  [data-result-card] [data-r3-kind-src] {
+  [data-result-card] [data-r4-kind-src] {
     display: none;
   }
 }
-[data-r3-kind] {
+[data-r4-kind] {
   display: inline-block; /* keeps the link's hover underline off the kind */
   font-family: var(--font-sans);
   color: var(--muted-foreground);
   white-space: nowrap;
 }
-[data-r3-version] {
+[data-r4-version] {
   display: flex;
   gap: 24px;
 }
-[data-r3-version] > button {
+[data-r4-version] > button {
   position: relative;
   height: 44px;
   padding: 0;
@@ -39,12 +39,12 @@
   color: var(--muted-foreground);
   cursor: pointer;
 }
-[data-r3-version] > button[aria-pressed="true"] {
+[data-r4-version] > button[aria-pressed="true"] {
   font-weight: 500;
   color: var(--foreground);
 }
 /* the current tab's underline sits on the head's bottom rule */
-[data-r3-version] > button[aria-pressed="true"]::after {
+[data-r4-version] > button[aria-pressed="true"]::after {
   content: "";
   position: absolute;
   inset-inline: 0;
@@ -53,7 +53,7 @@
   border-radius: 1px;
   background: var(--foreground);
 }
-[data-r3-version] > button:focus-visible {
+[data-r4-version] > button:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
   border-radius: 2px;
@@ -61,22 +61,22 @@
 /* The record's head (phone): with the tabs, they end the head on its rule;
    on a patent with one version, the kind beside the number instead. */
 @media not all and (min-width: 40rem) {
-  [role="dialog"][data-result-detail] [data-detail-head]:has([data-r3-version]) {
+  [role="dialog"][data-result-detail] [data-detail-head]:has([data-r4-version]) {
     padding-bottom: 0;
   }
-  [data-detail-head] [data-r3-version] {
+  [data-detail-head] [data-r4-version] {
     margin-top: 4px;
   }
-  [data-detail-head] p[data-r3-head-kind]::after {
-    content: " · " attr(data-r3-head-kind);
+  [data-detail-head] p[data-r4-head-kind]::after {
+    content: " · " attr(data-r4-head-kind);
     font-family: var(--font-sans);
   }
 }
 /* Last in the file, so it outranks the display rules above by source order. */
 @media (min-width: 40rem) {
-  [data-r3-kind],
-  [data-r3-version],
-  [data-detail-head] p[data-r3-head-kind]::after {
+  [data-r4-kind],
+  [data-r4-version],
+  [data-detail-head] p[data-r4-head-kind]::after {
     display: none;
   }
 }

@@ -42,8 +42,8 @@
   padding-top: env(safe-area-inset-top, 0px);
 }
 #__nuxt > div > header > div {
-  padding-left: max(var(--r3-mast-pad, 1.5rem), env(safe-area-inset-left, 0px));
-  padding-right: max(var(--r3-mast-pad-end, var(--r3-mast-pad, 1.5rem)), env(safe-area-inset-right, 0px));
+  padding-left: max(var(--r4-mast-pad, 1.5rem), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--r4-mast-pad-end, var(--r4-mast-pad, 1.5rem)), env(safe-area-inset-right, 0px));
 }
 #__nuxt > div > a[href="#main-content"] {
   top: max(1rem, env(safe-area-inset-top, 0px));

@@ -35,7 +35,7 @@
  * below sm; render the count as "N results" / "N of M"; give the header's
  * View mode group the outline-button box (border, h-9, rounded-md,
  * overflow-hidden, gap-0) with w-11 halves; h-9 on Sort below sm. */
-[data-r3-count] {
+[data-r4-count] {
   display: none;
 }
 @media not all and (min-width: 40rem) {
@@ -47,7 +47,7 @@
     flex: 1 1 auto;
     min-width: 0;
   }
-  /* their heading stays for screen readers; [data-r3-count] is what shows */
+  /* their heading stays for screen readers; [data-r4-count] is what shows */
   section.shell-swap header h2 {
     position: absolute;
     width: 1px;
@@ -56,7 +56,7 @@
     clip-path: inset(50%);
     white-space: nowrap;
   }
-  [data-r3-count] {
+  [data-r4-count] {
     display: block;
     margin: 0;
     font-size: 16px;
@@ -65,7 +65,7 @@
     color: var(--foreground);
     white-space: nowrap;
   }
-  [data-r3-count] > span {
+  [data-r4-count] > span {
     font-family: var(--font-mono);
     font-weight: 500;
   }

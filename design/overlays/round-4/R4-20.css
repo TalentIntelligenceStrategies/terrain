@@ -31,7 +31,7 @@
  * What the patch cannot do: Reka positions the popover's wrapper with an
  * inline transform, and a transformed ancestor is the containing block of a
  * fixed element. R4-20.js reads where Reka put the wrapper and offsets the
- * sheet by that much (--r327-x, --r327-y), every time Reka moves it. In the
+ * sheet by that much (--r420-x, --r420-y), every time Reka moves it. In the
  * component, anchor the popover to the trigger that is on screen (the one
  * in the opened box), and below sm render the panel as a sheet (a Reka
  * Dialog, or the popover with position strategy fixed and no transform).
@@ -44,30 +44,30 @@
     visibility: visible;
     pointer-events: auto;
   }
-  .result-groups-popover[data-r327] {
+  .result-groups-popover[data-r420] {
     position: fixed;
-    left: calc(-1 * var(--r327-x, 0px));
+    left: calc(-1 * var(--r420-x, 0px));
     top: auto;
-    bottom: calc(var(--r327-y, 0px) - var(--r327-vh, 100dvh));
-    width: var(--r327-vw, 100vw);
+    bottom: calc(var(--r420-y, 0px) - var(--r420-vh, 100dvh));
+    width: var(--r420-vw, 100vw);
     max-height: 80dvh;
     border-bottom: 0;
     border-radius: 16px 16px 0 0;
     padding-bottom: calc(16px + env(safe-area-inset-bottom));
     box-shadow: 0 0 0 100vmax color-mix(in oklab, var(--color-black) 45%, transparent);
   }
-  .result-groups-popover[data-r327] ul > li > h3 {
+  .result-groups-popover[data-r420] ul > li > h3 {
     letter-spacing: 0;
     font-size: 14px;
     line-height: 1.35;
     font-weight: 500;
     color: var(--foreground);
   }
-  .result-groups-popover[data-r327] [data-group-node] {
+  .result-groups-popover[data-r420] [data-group-node] {
     margin-inline: -8px;
     width: calc(100% + 16px);
   }
-  .result-groups-popover[data-r327] [data-group-node] > span.font-mono {
+  .result-groups-popover[data-r420] [data-group-node] > span.font-mono {
     order: 2;
     width: auto;
     min-width: 2ch;
@@ -75,23 +75,23 @@
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
   }
-  .result-groups-popover[data-r327] [data-group-node] > span:not(.font-mono) {
+  .result-groups-popover[data-r420] [data-group-node] > span:not(.font-mono) {
     order: 1;
     flex: 1;
   }
-  .result-groups-popover [data-r327-foot] {
+  .result-groups-popover [data-r420-foot] {
     display: flex;
     justify-content: flex-end;
     flex: none;
     border-top: 1px solid var(--border);
     padding-top: 12px;
   }
-  .result-groups-popover [data-r327-foot] > .btn {
+  .result-groups-popover [data-r420-foot] > .btn {
     min-height: 44px;
   }
 }
 @media (min-width: 40rem) and (min-height: 480.02px), (min-width: 64rem) {
-  .result-groups-popover [data-r327-foot] {
+  .result-groups-popover [data-r420-foot] {
     display: none;
   }
 }

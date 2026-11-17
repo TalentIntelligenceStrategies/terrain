@@ -6,7 +6,7 @@
  * stretched back to the row) and not as the header's ghost button. The
  * trigger's height is h-7! (important), so the 44px is the wrapper's. */
 @media not all and (min-width: 40rem) {
-  .pop-set [data-r308] {
+  .pop-set [data-r414] {
     display: flex;
     align-self: stretch;
     align-items: center;
@@ -16,7 +16,7 @@
     border-radius: 8px;
     background: var(--card);
   }
-  .pop-set [data-r308] > button {
+  .pop-set [data-r414] > button {
     flex: 1;
     justify-content: space-between;
     color: var(--foreground);

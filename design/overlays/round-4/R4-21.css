@@ -76,7 +76,7 @@
     clip-path: inset(50%);
     white-space: nowrap;
   }
-  [data-r3-date] {
+  [data-r4-date] {
     font-family: var(--font-mono);
     white-space: nowrap;
   }
@@ -87,11 +87,11 @@
     font-family: var(--font-sans);
   }
 }
-[data-r3-date] {
+[data-r4-date] {
   display: none;
 }
 @media not all and (min-width: 40rem) {
-  [data-r3-date] {
+  [data-r4-date] {
     display: inline;
   }
 }

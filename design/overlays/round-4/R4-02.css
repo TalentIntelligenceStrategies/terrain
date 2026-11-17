@@ -37,10 +37,10 @@
  * version is reached from home. */
 @media not all and (min-width: 40rem) {
   #__nuxt > div > header > div {
-    --r3-mast-pad: 8px;
+    --r4-mast-pad: 8px;
     flex-wrap: nowrap;
     gap: 4px;
-    padding-inline: var(--r3-mast-pad);
+    padding-inline: var(--r4-mast-pad);
   }
   /* the wordmark: out of sight, still the mark's name */
   #__nuxt > div > header button[title="Back to home"] > span {
@@ -58,7 +58,7 @@
   #__nuxt > div > header [role="group"][aria-label="Choose appearance"] ~ button[aria-haspopup="dialog"] {
     display: none;
   }
-  #__nuxt > div > footer > .r3-version {
+  #__nuxt > div > footer > .r4-version {
     display: inline-flex;
   }
 }
@@ -67,26 +67,26 @@
    The row pads 6px and 1px so the first and last glyphs land on the gutter. */
 @media (not (min-width: 40rem)) and (pointer: coarse) {
   #__nuxt > div > header > div {
-    --r3-mast-pad: 6px;
-    --r3-mast-pad-end: 1px;
-    padding-inline: var(--r3-mast-pad) var(--r3-mast-pad-end);
+    --r4-mast-pad: 6px;
+    --r4-mast-pad-end: 1px;
+    padding-inline: var(--r4-mast-pad) var(--r4-mast-pad-end);
   }
 }
 @media (max-width: 419px) {
   #__nuxt > div > header [role="group"][aria-label="Choose appearance"] {
     display: none;
   }
-  #__nuxt > div > header .r3-appearance {
+  #__nuxt > div > header .r4-appearance {
     display: inline-flex;
   }
 }
-.r3-version {
+.r4-version {
   display: none;
   align-items: baseline;
   gap: 0.375rem;
 }
 /* the one appearance button the script adds; their size-7 icon button */
-.r3-appearance {
+.r4-appearance {
   display: none;
   align-items: center;
   justify-content: center;
@@ -95,10 +95,10 @@
   border-radius: calc(var(--radius) - 2px);
   color: var(--muted-foreground);
 }
-.r3-appearance:hover {
+.r4-appearance:hover {
   color: var(--foreground);
 }
-.r3-appearance svg {
+.r4-appearance svg {
   width: 14px;
   height: 14px;
 }

@@ -41,7 +41,7 @@
     [role="group"][aria-label="Choose appearance"] > button,
     button[aria-haspopup="dialog"],
     [aria-label="Change search domain"],
-    .r3-appearance
+    .r4-appearance
   ) {
     min-width: 44px;
     min-height: 44px;

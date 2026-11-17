@@ -56,17 +56,17 @@
     if (group) return group.querySelector('button[aria-pressed="true"]')?.textContent.trim() || '';
     const meta = card.querySelector('div:has(> div > span.font-mono.text-muted-foreground)');
     const only = meta && [...meta.children].find(c => c.tagName === 'SPAN' && /^(Grant|Application)$/.test(c.textContent.trim()));
-    if (only) { only.setAttribute('data-r3-kind-src', ''); return only.textContent.trim(); }
-    return card.querySelector('[data-r3-kind-src]')?.textContent.trim() || '';
+    if (only) { only.setAttribute('data-r4-kind-src', ''); return only.textContent.trim(); }
+    return card.querySelector('[data-r4-kind-src]')?.textContent.trim() || '';
   };
   const rowKind = card => {
     const link = card.querySelector('a[href], a[title^="Open "]');
     const word = link && rowWord(card);
     if (!word) return;
-    let tag = link.querySelector('[data-r3-kind]');
+    let tag = link.querySelector('[data-r4-kind]');
     if (!tag) {
       tag = document.createElement('span');
-      tag.setAttribute('data-r3-kind', '');
+      tag.setAttribute('data-r4-kind', '');
       link.insertBefore(tag, link.querySelector('svg'));
     }
     const t = `· ${word}`;
@@ -88,7 +88,7 @@
        title h3 (inside div.min-w-0). While a version loads the h3 may be
        absent: the tabs then sit under the number. */
     const head = d.querySelector('[data-detail-head]');
-    let sw = d.querySelector('[data-r3-version]');
+    let sw = d.querySelector('[data-r4-version]');
     const num = head?.querySelector('p.font-mono');
     const title = head?.querySelector('h3') || num;
     if (!title) { sw?.remove(); return; }
@@ -99,14 +99,14 @@
     const source = row?.querySelector(GROUP);
     /* One version: no tabs, the kind beside the number (R4-23.css draws it). */
     const word = !source && row ? rowWord(row) : '';
-    if (num && (num.getAttribute('data-r3-head-kind') || '') !== word) {
-      if (word) num.setAttribute('data-r3-head-kind', word); else num.removeAttribute('data-r3-head-kind');
+    if (num && (num.getAttribute('data-r4-head-kind') || '') !== word) {
+      if (word) num.setAttribute('data-r4-head-kind', word); else num.removeAttribute('data-r4-head-kind');
     }
     if (!source) { sw?.remove(); return; }
     last = row;
     if (!sw) {
       sw = document.createElement('div');
-      sw.setAttribute('data-r3-version', '');
+      sw.setAttribute('data-r4-version', '');
       sw.setAttribute('role', 'group');
       sw.setAttribute('aria-label', 'Version');
     }

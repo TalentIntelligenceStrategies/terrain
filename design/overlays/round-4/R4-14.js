@@ -36,9 +36,9 @@
     if (!moved) return;
     const { node, parent, next, row } = moved;
     if (parent.isConnected) parent.insertBefore(node, next && next.parentNode === parent ? next : null);
-    node.removeAttribute('data-r308');
+    node.removeAttribute('data-r414');
     if (row) {
-      row.removeAttribute('data-r308-row');
+      row.removeAttribute('data-r414-row');
       const p = row.querySelector(':scope > p');
       if (p) p.hidden = false;
     }
@@ -55,8 +55,8 @@
     if (!trigger) return;
     const node = trigger.parentElement;
     moved = { node, parent: node.parentNode, next: node.nextSibling, row };
-    node.setAttribute('data-r308', '');
-    row.setAttribute('data-r308-row', '');
+    node.setAttribute('data-r414', '');
+    row.setAttribute('data-r414-row', '');
     const p = row.querySelector(':scope > p');
     if (p) p.hidden = true;
     row.appendChild(node);

@@ -1,6 +1,6 @@
 /* R4-21 (restores R3-22) · Result row, phone: the date without its label
  *
- * Writes [data-r3-date] beside each row's "Published 2015-04-07", holding
+ * Writes [data-r4-date] beside each row's "Published 2015-04-07", holding
  * the date alone; R4-21.css shows it below sm and hides theirs visually,
  * where it stays as the accessible text. Re-read on every change, as Vue
  * re-renders the list. Idempotent.
@@ -15,10 +15,10 @@
       const theirs = box.querySelector(':scope > span.truncate');
       const date = (theirs?.textContent.match(/\d{4}-\d{2}-\d{2}/) || [])[0];
       if (!date) continue;
-      let mine = box.querySelector(':scope > [data-r3-date]');
+      let mine = box.querySelector(':scope > [data-r4-date]');
       if (!mine) {
         mine = document.createElement('span');
-        mine.setAttribute('data-r3-date', '');
+        mine.setAttribute('data-r4-date', '');
         mine.setAttribute('aria-hidden', 'true');
         box.append(mine);
       }

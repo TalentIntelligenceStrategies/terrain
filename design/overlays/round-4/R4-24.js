@@ -1,6 +1,6 @@
 /* R4-24 (restores R3-34) · Results header, phone: the count reads "50 results"
  *
- * Writes [data-r3-count] after their count heading: "50 results" when every
+ * Writes [data-r4-count] after their count heading: "50 results" when every
  * match is shown ("1 result" for one), "50 of 120" when fewer are (shown of
  * matched), read from the heading's two numbers. Their heading stays as the
  * accessible text (R4-24.css hides it visually below sm); ours is
@@ -17,10 +17,10 @@
     if (!h2) return;
     const [m, sh] = [...h2.querySelectorAll('span.font-mono')].map(x => x.textContent.trim());
     if (!m || !sh) return;
-    let el = h2.parentElement.querySelector(':scope > [data-r3-count]');
+    let el = h2.parentElement.querySelector(':scope > [data-r4-count]');
     if (!el) {
       el = document.createElement('p');
-      el.setAttribute('data-r3-count', '');
+      el.setAttribute('data-r4-count', '');
       el.setAttribute('aria-hidden', 'true');
       h2.after(el);
     }

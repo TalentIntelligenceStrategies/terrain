@@ -38,9 +38,9 @@
       }
     }
     const seg = document.querySelector('.pop-set [role="group"][aria-labelledby="popRerankLbl"]');
-    if (seg && !seg.parentElement.querySelector('[data-r312]')) {
+    if (seg && !seg.parentElement.querySelector('[data-r416]')) {
       const p = document.createElement('p');
-      p.dataset.r312 = '';
+      p.dataset.r416 = '';
       p.id = 'popRerankHint';
       p.className = 'pop-hint';
       p.textContent = HINT;

@@ -31,19 +31,19 @@
       const n = box.querySelector('[role="group"][aria-label="Search mode"] > button[aria-label="Patent number"]');
       if (!t || !n) continue;
       const on = n.getAttribute('aria-pressed') === 'true';
-      if (on && t.dataset.r307 !== 'number') {
+      if (on && t.dataset.r412 !== 'number') {
         const saved = {};
         for (const a of Object.keys(NUMBER)) saved[a] = t.getAttribute(a);
-        t.dataset.r307Saved = JSON.stringify(saved);
+        t.dataset.r412Saved = JSON.stringify(saved);
         for (const [a, v] of Object.entries(NUMBER)) t.setAttribute(a, v);
-        t.dataset.r307 = 'number';
-      } else if (!on && t.dataset.r307 === 'number') {
-        const saved = JSON.parse(t.dataset.r307Saved || '{}');
+        t.dataset.r412 = 'number';
+      } else if (!on && t.dataset.r412 === 'number') {
+        const saved = JSON.parse(t.dataset.r412Saved || '{}');
         for (const a of Object.keys(NUMBER)) {
           if (saved[a] == null) t.removeAttribute(a); else t.setAttribute(a, saved[a]);
         }
-        delete t.dataset.r307;
-        delete t.dataset.r307Saved;
+        delete t.dataset.r412;
+        delete t.dataset.r412Saved;
       }
     }
   };

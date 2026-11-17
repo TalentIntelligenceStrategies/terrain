@@ -38,14 +38,14 @@
   const fix = () => {
     for (const chip of document.querySelectorAll('span[role="status"][title^="Nearest to"]')) {
       chip.removeAttribute('role');
-      chip.setAttribute('data-r3-chip', '');
+      chip.setAttribute('data-r4-chip', '');
     }
     const lines = [...document.querySelectorAll('main p')].filter(p => p.textContent.trim() === LOADING);
     for (const p of lines) if (p.getAttribute('role') === 'status') { p.removeAttribute('role'); p.removeAttribute('aria-live'); }
     const loading = lines.length > 0;
     if (loading && !was) say(LOADING);
     if (!loading && was) {
-      const chip = document.querySelector('[data-r3-chip]');
+      const chip = document.querySelector('[data-r4-chip]');
       const count = document.querySelector('section.shell-swap header h2')?.textContent.trim().replace(/\s+/g, ' ').replace(' · ', ', ');
       say([chip?.getAttribute('title'), count].filter(Boolean).join('. ') + '.');
     }

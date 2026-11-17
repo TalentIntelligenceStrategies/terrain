@@ -19,10 +19,10 @@
     for (const n of [...p.childNodes].filter(n => n.nodeType === 3)) {
       if (phone.matches) {
         const t = n.data.replace(/ ([—–])/g, `${NBSP}$1`);
-        if (t !== n.data) { n.__r359 = n.data; n.data = t; }
-      } else if (n.__r359 !== undefined) {
-        n.data = n.__r359;
-        delete n.__r359;
+        if (t !== n.data) { n.__r406 = n.data; n.data = t; }
+      } else if (n.__r406 !== undefined) {
+        n.data = n.__r406;
+        delete n.__r406;
       }
     }
   };

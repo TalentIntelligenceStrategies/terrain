@@ -38,14 +38,14 @@
  *
  * The shadow and the scrim are black at low opacity in both themes, as your
  * own shadow-md is: they darken whatever is under them, and no token of
- * yours names a shadow or an overlay. --r3-kb and --r3-dock-h are written by
+ * yours names a shadow or an overlay. --r4-kb and --r4-dock-h are written by
  * R4-13.js, which also draws the scrim.
  *
  * In the component: on phones the results page renders the composer as a
  * floating dock (fixed, bottom: the keyboard inset), not in the sticky
  * header slot, does not write the masthead height to it, and pads the list
  * by its height. */
-.r3-scrim {
+.r4-scrim {
   display: none;
 }
 @media (max-width: 39.99rem), (max-height: 480px) and (max-width: 63.99rem) {
@@ -56,7 +56,7 @@
   #main-content > div.sticky:has([data-search-line]) {
     position: fixed;
     inset-inline: 0;
-    bottom: var(--r3-kb, 0px);
+    bottom: var(--r4-kb, 0px);
     z-index: 30;
     display: flex;
     flex-direction: column;
@@ -72,7 +72,7 @@
     padding: 0 max(12px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
   }
   /* with the keyboard up, the home indicator is under the keyboard */
-  html[data-r3-kb] #main-content > div.sticky:has([data-search-line]) > div {
+  html[data-r4-kb] #main-content > div.sticky:has([data-search-line]) > div {
     padding-bottom: 8px;
   }
   #main-content > div.sticky:has([data-search-line]) .search-box-morph {
@@ -119,10 +119,10 @@
     scale: 0.96;
   }
   #main-content:has(> div.sticky [data-search-line]) {
-    padding-bottom: calc(var(--r3-dock-h, 64px) + 16px);
+    padding-bottom: calc(var(--r4-dock-h, 64px) + 16px);
   }
   /* the results dim while the box is open; a tap on them closes it */
-  .r3-scrim {
+  .r4-scrim {
     position: fixed;
     inset: 0;
     z-index: 29;
@@ -133,14 +133,14 @@
     visibility: hidden;
     transition: opacity 240ms cubic-bezier(0.2, 0, 0, 1), visibility 0s linear 240ms;
   }
-  #main-content:has(.search-box-morph [data-search-line].invisible) .r3-scrim {
+  #main-content:has(.search-box-morph [data-search-line].invisible) .r4-scrim {
     opacity: 1;
     visibility: visible;
     transition-delay: 0s;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .r3-scrim,
+  .r4-scrim,
   #main-content > div.sticky .search-box-morph {
     transition: none;
   }

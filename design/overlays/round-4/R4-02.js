@@ -30,11 +30,11 @@
   const appearance = () => {
     const group = document.querySelector(GROUP);
     if (!group) return;
-    let btn = group.parentElement.querySelector(':scope > .r3-appearance');
+    let btn = group.parentElement.querySelector(':scope > .r4-appearance');
     if (!btn) {
       btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'r3-appearance hit-target';
+      btn.className = 'r4-appearance hit-target';
       btn.addEventListener('click', () => {
         const g = document.querySelector(GROUP);
         if (!g) return;
@@ -68,10 +68,10 @@
     const v = document.querySelector(VERSION);
     const foot = document.querySelector('#__nuxt > div > footer');
     if (!v || !foot) return;
-    let wrap = foot.querySelector(':scope > .r3-version');
+    let wrap = foot.querySelector(':scope > .r4-version');
     if (!wrap) {
       wrap = document.createElement('span');
-      wrap.className = 'r3-version';
+      wrap.className = 'r4-version';
       const dot = document.createElement('span');
       dot.setAttribute('aria-hidden', 'true');
       dot.textContent = '·';

@@ -2,7 +2,7 @@
  *
  * The build sets disabled on Search while the query cannot be submitted.
  * The patch takes that attribute off as soon as it is set and marks the
- * button aria-disabled="true" and data-r341-empty instead; emptiness is
+ * button aria-disabled="true" and data-r410-empty instead; emptiness is
  * read from the field (no text after trimming), which is what the build's
  * own submit check tracks. A press while empty (or Enter in the empty
  * field) is stopped before their handler, focuses the field and shows the
@@ -14,7 +14,7 @@
 (() => {
   if (window.__r4_10) return;
   window.__r4_10 = true;
-  const HINT_ID = 'r341-hint';
+  const HINT_ID = 'r410-hint';
   const boxOf = el => el && el.closest('.search-box-morph');
   const fieldOf = box => box && box.querySelector('textarea');
   const searchOf = box => box && box.querySelector('button[aria-label="Search"]');
@@ -34,7 +34,7 @@
     if (!h) {
       h = document.createElement('p');
       h.id = HINT_ID;
-      h.className = 'r341-hint';
+      h.className = 'r410-hint';
       box.after(h);
     }
     h.textContent = t.getAttribute('aria-label') || t.getAttribute('placeholder') || '';
@@ -49,10 +49,10 @@
       const empty = isEmpty(box);
       if (b.hasAttribute('disabled')) b.removeAttribute('disabled');
       if (empty) {
-        if (!b.hasAttribute('data-r341-empty')) b.setAttribute('data-r341-empty', '');
+        if (!b.hasAttribute('data-r410-empty')) b.setAttribute('data-r410-empty', '');
         if (b.getAttribute('aria-disabled') !== 'true') b.setAttribute('aria-disabled', 'true');
-      } else if (b.hasAttribute('data-r341-empty')) {
-        b.removeAttribute('data-r341-empty');
+      } else if (b.hasAttribute('data-r410-empty')) {
+        b.removeAttribute('data-r410-empty');
         b.removeAttribute('aria-disabled');
         hide(box);
       }

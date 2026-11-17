@@ -43,8 +43,8 @@
     const want = LANG[office] && CJK.test(el.textContent || '') ? LANG[office] : null;
     const has = el.getAttribute('lang');
     if (want && has !== want) el.setAttribute('lang', want);
-    else if (!want && has && el.dataset.r352) el.removeAttribute('lang');
-    if (want) el.dataset.r352 = ''; else delete el.dataset.r352;
+    else if (!want && has && el.dataset.r405) el.removeAttribute('lang');
+    if (want) el.dataset.r405 = ''; else delete el.dataset.r405;
   };
 
   /* "Open CN 109891482 B in IPTECH" → CN */

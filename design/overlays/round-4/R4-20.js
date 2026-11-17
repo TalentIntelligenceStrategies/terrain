@@ -15,27 +15,27 @@
   const place = pop => {
     const w = pop.parentElement;
     const r = w.getBoundingClientRect();
-    pop.style.setProperty('--r327-x', `${r.left}px`);
-    pop.style.setProperty('--r327-y', `${r.bottom}px`);
-    pop.style.setProperty('--r327-vh', `${window.innerHeight}px`);
-    pop.style.setProperty('--r327-vw', `${document.documentElement.clientWidth}px`);
+    pop.style.setProperty('--r420-x', `${r.left}px`);
+    pop.style.setProperty('--r420-y', `${r.bottom}px`);
+    pop.style.setProperty('--r420-vh', `${window.innerHeight}px`);
+    pop.style.setProperty('--r420-vw', `${document.documentElement.clientWidth}px`);
   };
 
   const sync = () => {
     for (const pop of document.querySelectorAll('.result-groups-popover')) {
       if (!phone.matches) {
-        pop.removeAttribute('data-r327');
+        pop.removeAttribute('data-r420');
         continue;
       }
-      pop.setAttribute('data-r327', '');
+      pop.setAttribute('data-r420', '');
       place(pop);
       if (!watched.has(pop.parentElement)) {
         watched.add(pop.parentElement);
         new MutationObserver(() => place(pop)).observe(pop.parentElement, { attributes: true, attributeFilter: ['style'] });
       }
-      if (!pop.querySelector(':scope > [data-r327-foot]')) {
+      if (!pop.querySelector(':scope > [data-r420-foot]')) {
         const foot = document.createElement('div');
-        foot.setAttribute('data-r327-foot', '');
+        foot.setAttribute('data-r420-foot', '');
         const done = document.createElement('button');
         done.type = 'button';
         done.className = 'btn btn-secondary';
