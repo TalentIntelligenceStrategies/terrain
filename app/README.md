@@ -284,11 +284,13 @@ removed. **On top of that they hold the delta built from `handoff-2026-10-26`**:
 patent report as a template with two sample PDFs, the block contract, and the five ports that are new
 or changed. **On top of that they hold the delta built from `handoff-2026-11-06`**: UX and UI on
 desktop and phone, as a patch for their live build, with the `app/` changes it rests on and no
-change to any port. **The contract they hold is `design/components.md` at `handoff-2026-11-06`**,
-20 ports.
+change to any port. **On top of that they hold the delta built from `handoff-2026-11-17`**: the
+items of the 11-06 delta their v1.0.42 did not build, as a patch rebuilt on that build, with no
+change to `app/` or to any port. **The contract they hold is `design/components.md` at
+`handoff-2026-11-17`**, 20 ports.
 
 **A change to a port's shape after that tag is a change they do not have.** `git diff
-handoff-2026-11-06 -- app/js/ports.mjs design/components.md` is what has moved since, and a new
+handoff-2026-11-17 -- app/js/ports.mjs design/components.md` is what has moved since, and a new
 package with a new tag is how it reaches them. The tag is the record; nothing else here tracks it.
 
 **Every package is a delta** from the newest `handoff-*` tag: what their shipped build got wrong
