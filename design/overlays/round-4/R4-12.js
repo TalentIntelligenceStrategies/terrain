@@ -1,29 +1,30 @@
 /* R4-12 (restores R3-07) · Number search: the keyboard does not correct a patent number
  *
- * Current: number mode reuses the description textarea and sets no
- * autocapitalize, autocorrect, spellcheck or enterkeyhint on it, so iOS
- * capitalises the first letter only, offers to correct "US20230123456A1"
- * and underlines it as a misspelling.
+ * Current: Patent number mode reuses the description textarea and sets no
+ * autocapitalize, autocorrect or spellcheck on it (all three null, in Text
+ * and in Patent number mode, at 390 and 1440); only enterkeyhint="search"
+ * is there, in every mode. So iOS capitalises the first letter only,
+ * offers to correct "US20230123456A1" and underlines it as a misspelling.
  * Wanted:  in Patent number mode the field carries
- * autocapitalize="characters", autocorrect="off" and spellcheck="false",
- * with enterkeyhint="search" as in every mode (R3-01); back in Text it
- * drops the first three and keeps enterkeyhint="search".
+ * autocapitalize="characters", autocorrect="off" and spellcheck="false";
+ * back in Text it drops all three. enterkeyhint="search" stays as it is.
+ * Viewport: both. The item is filed for the phone, where the keyboard is
+ * the fault, but the attributes are input semantics with no layout, and
+ * desktop spellcheck underlines a patent number exactly as iOS does.
  *
- * Measured at 390 and 1440 with R3-01 and R4-12 together:
- *   Text:           enterkeyhint search; the other three absent
- *   Patent number:  characters / off / false / search
- *   Text again:     enterkeyhint search; the other three absent
- * Viewport: both. The item is filed for the phone, where the keyboard is the
- * fault, but the attributes are input semantics with no layout, and desktop
- * spellcheck underlines a patent number exactly as iOS does.
+ * Measured with the patch, at 390 and at 1440:
+ *   Text:           the three absent; enterkeyhint search
+ *   Patent number:  characters / off / false; enterkeyhint search
+ *   Text again:     the three absent; enterkeyhint search
+ * What the keyboard then does needs a device.
  *
  * In the component: bind autocapitalize, autocorrect and spellcheck to the
- * Patent number mode on the textarea; enterkeyhint="search" is constant. The patch follows their aria-pressed on the Patent number
- * segment. */
+ * Patent number mode on the textarea. The patch follows their aria-pressed
+ * on the Patent number segment. */
 (() => {
   if (window.__r4_12) return;
   window.__r4_12 = true;
-  const NUMBER = { autocapitalize: 'characters', autocorrect: 'off', spellcheck: 'false', enterkeyhint: 'search' };
+  const NUMBER = { autocapitalize: 'characters', autocorrect: 'off', spellcheck: 'false' };
   const sync = () => {
     for (const box of document.querySelectorAll('.search-box-morph')) {
       const t = box.querySelector('textarea');
