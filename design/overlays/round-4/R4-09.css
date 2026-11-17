@@ -1,32 +1,39 @@
-/* R4-09 (restores R3-30) · Composer: the phone mode switch says Text and Patent #
+/* R4-09 (restores R3-30) · Composer: on home too, the phone mode switch says Text and Patent #
  *
- * Current: below sm the two segments are glyphs, a T and a #. Their names
- * are right for a screen reader ("Text", "Patent number"), but # does not
- * read as patent number to a sighted user, and the desktop tooltip never
- * shows on touch.
- * Wanted:  below sm, the segments say "Text" and "Patent #" (their
- * byText and byPatentShort strings); the glyphs go. The accessible names
- * stay "Text" and "Patent number". Desktop keeps "Text" and
- * "Patent number" in words, unchanged.
- * Viewport: phone (below sm). Measured at 390 with the patch: the switch is
- * 128px wide (was 76), Text 50px and Patent # 74px, each 44px tall as
- * before.
+ * Current: on results, the reopened box's segments already read "Text"
+ * (44x44) and "Patent #" (66x44). On home, below sm, they are still
+ * glyphs, a T and a #, 44x44 each, with no visible word: their names are
+ * right for a screen reader ("Text", "Patent number"), but # does not read
+ * as patent number to a sighted user, and the desktop tooltip never shows
+ * on touch. Home renders the byPatentShort span only when showSearchLine is
+ * set, which is the results box.
+ * Wanted:  on home below sm, the segments say "Text" and "Patent #", as
+ * the results box does; the glyphs go. The accessible names stay "Text"
+ * and "Patent number". Desktop keeps "Text" and "Patent number" in words,
+ * unchanged, and the results box is left as it is.
+ * Viewport: phone (below sm), home.
  *
- * In the component: below sm render byPatentShort in the Patent segment's
- * span and show both spans (drop "hidden sm:inline" and the sm:hidden
- * icons). The patch writes "Patent #" as generated content, because the
- * span carries "Patent number" at every width. */
+ * Measured at 390 with the patch: on home the switch is 128px wide (was
+ * 92), Text 50x44 and Patent # 74x44; the names are unchanged. On results
+ * the reopened box still reads Text 44x44 and Patent # 66x44, each word
+ * once.
+ *
+ * In the component: render the byPatentShort span on home as well (drop
+ * the showSearchLine condition on it and on phone:hidden for the glyphs).
+ * The patch keys on home's segments as the ones with a single span, and
+ * writes "Patent #" as generated content, because home's span carries
+ * "Patent number" at every width. */
 @media not all and (min-width: 40rem) {
-  [role="group"][aria-label="Search mode"] > button > svg {
+  [role="group"][aria-label="Search mode"] > button:not(:has(> span + span)) > svg {
     display: none;
   }
-  [role="group"][aria-label="Search mode"] > button[aria-label="Text"] > span {
+  [role="group"][aria-label="Search mode"] > button[aria-label="Text"]:not(:has(> span + span)) > span {
     display: inline;
   }
-  [role="group"][aria-label="Search mode"] > button[aria-label="Patent number"] > span {
+  [role="group"][aria-label="Search mode"] > button[aria-label="Patent number"]:not(:has(> span + span)) > span {
     display: none;
   }
-  [role="group"][aria-label="Search mode"] > button[aria-label="Patent number"]::after {
+  [role="group"][aria-label="Search mode"] > button[aria-label="Patent number"]:not(:has(> span + span))::after {
     content: "Patent #";
   }
 }
