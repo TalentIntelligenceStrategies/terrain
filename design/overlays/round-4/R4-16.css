@@ -1,0 +1,10 @@
+/* R4-16 (restores R3-12) · Search settings: the Rerank hint (the rest is R4-16.js)
+ *
+ * One line at the muted ink under the Rerank segment, at their settings
+ * body size. */
+.pop-set .pop-hint {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 1.4;
+}

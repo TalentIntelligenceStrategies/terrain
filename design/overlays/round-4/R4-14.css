@@ -1,0 +1,25 @@
+/* R4-14 (restores R3-08) · Search settings: the field row holds their field control (R4-14.js)
+ *
+ * The moved select keeps its own classes; in the row it is shown (their
+ * wrapper is "hidden sm:flex"), full width, inside a 44px bordered field so
+ * it reads as a control (their wrapper is also self-center, so it is
+ * stretched back to the row) and not as the header's ghost button. Their
+ * trigger's height is h-7! (important), so the 44px is the wrapper's. */
+@media not all and (min-width: 40rem) {
+  .pop-set [data-r308] {
+    display: flex;
+    align-self: stretch;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 6px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+  }
+  .pop-set [data-r308] > button {
+    flex: 1;
+    justify-content: space-between;
+    color: var(--foreground);
+    font-weight: 500;
+  }
+}

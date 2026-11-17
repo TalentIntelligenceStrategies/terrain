@@ -1,0 +1,87 @@
+/* R4-02 (restores R3-14) · Masthead: one row on the phone gutter (was R1-07)
+ *
+ * Current: at 390 the masthead wraps to two rows. Row one is the mark with
+ * "TIS Terrain", New and History, starting about 34px in; the three
+ * appearance buttons and the version label drop to a second row that straddles the
+ * header rule and overlaps the composer's top edge, and on scroll the
+ * field tiles. At 320 the wordmark goes and the bar still wraps.
+ * Wanted:  below sm (40rem), one 57px row, padded 8px at each side so the
+ * icons' own boxes bring them to the 16px gutter: the mark, New and History
+ * icon-only, their names kept as their accessible names ("TIS Terrain",
+ * "New search", "History"); the version out of the masthead and into the
+ * footer, after "Powered by Innovue". Below 420px the three appearance
+ * buttons become one button at the right that steps light → dark → system
+ * (R4-02 script); from 420px up the three stay, and fit the one row beside
+ * the icon-only links.
+ * Viewport: phone (below sm, 640px); the appearance button below 420px.
+ * Desktop and tablet are unchanged.
+ *
+ * Measured at 390 with the patch: masthead 57px (one row), the mark's
+ * icon at x 16, the appearance button at 354–382; the mark's name is
+ * still "TIS Terrain"; three presses go System → Light → Dark → System,
+ * pressing their own buttons (aria-pressed and data-theme follow). At
+ * 1440 the before and after shots are pixel-identical.
+ *
+ * Hit areas stay at their 28px here; 44px to a coarse pointer is R4-01.
+ *
+ * In the component: below sm, render the wordmark as sr-only rather than
+ * hidden, so the mark keeps its name; drop the labels of New and History
+ * (their aria-labels already name them); move the version into the footer
+ * line. Below 420px, render one appearance button in place of the
+ * three-button group. Results pages have no footer, so on a phone the
+ * version is on home only. */
+@media not all and (min-width: 40rem) {
+  #__nuxt > div > header > div {
+    --r3-mast-pad: 8px;
+    flex-wrap: nowrap;
+    gap: 4px;
+    padding-inline: var(--r3-mast-pad);
+  }
+  /* the wordmark: out of sight, still the mark's name */
+  #__nuxt > div > header button[title="Back to home"] > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  #__nuxt > div > header :is(button[aria-label="New search"], button[aria-label="History"]) > span {
+    display: none;
+  }
+  /* the version leaves the masthead; R4-02.js puts it in the footer */
+  #__nuxt > div > header [role="group"][aria-label="Choose appearance"] ~ button:not(.r3-appearance) {
+    display: none;
+  }
+  #__nuxt > div > footer .r3-version {
+    display: inline;
+  }
+}
+@media (max-width: 419px) {
+  #__nuxt > div > header [role="group"][aria-label="Choose appearance"] {
+    display: none;
+  }
+  #__nuxt > div > header .r3-appearance {
+    display: inline-flex;
+  }
+}
+.r3-version {
+  display: none;
+}
+/* the one appearance button the script adds; their size-7 icon button */
+.r3-appearance {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: calc(var(--radius) - 2px);
+  color: var(--muted-foreground);
+}
+.r3-appearance:hover {
+  color: var(--foreground);
+}
+.r3-appearance svg {
+  width: 14px;
+  height: 14px;
+}

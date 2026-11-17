@@ -1,0 +1,32 @@
+/* R4-09 (restores R3-30) · Composer: the phone mode switch says Text and Patent #
+ *
+ * Current: below sm the two segments are glyphs, a T and a #. Their names
+ * are right for a screen reader ("Text", "Patent number"), but # does not
+ * read as patent number to a sighted user, and the desktop tooltip never
+ * shows on touch.
+ * Wanted:  below sm, the segments say "Text" and "Patent #" (their
+ * byText and byPatentShort strings); the glyphs go. The accessible names
+ * stay "Text" and "Patent number". Desktop keeps "Text" and
+ * "Patent number" in words, unchanged.
+ * Viewport: phone (below sm). Measured at 390 with the patch: the switch is
+ * 128px wide (was 76), Text 50px and Patent # 74px, each 44px tall as
+ * before.
+ *
+ * In the component: below sm render byPatentShort in the Patent segment's
+ * span and show both spans (drop "hidden sm:inline" and the sm:hidden
+ * icons). The patch writes "Patent #" as generated content, because the
+ * span carries "Patent number" at every width. */
+@media not all and (min-width: 40rem) {
+  [role="group"][aria-label="Search mode"] > button > svg {
+    display: none;
+  }
+  [role="group"][aria-label="Search mode"] > button[aria-label="Text"] > span {
+    display: inline;
+  }
+  [role="group"][aria-label="Search mode"] > button[aria-label="Patent number"] > span {
+    display: none;
+  }
+  [role="group"][aria-label="Search mode"] > button[aria-label="Patent number"]::after {
+    content: "Patent #";
+  }
+}

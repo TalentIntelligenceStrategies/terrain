@@ -1,0 +1,62 @@
+/* R4-44 (restores R3-43) · Drawing viewer: its controls swap in dark; the current thumbnail is ringed
+ *
+ * Current: the viewer's head turns --card (#1a1a1a) in dark, but its icons
+ * are a hard-coded #595959: the close is 2.5:1 on the band (7.0:1 in light).
+ * The zoom pill is hard-coded #ffffffd1 with #595959 icons and readout, so it
+ * stays a light lozenge on the dark band; the pressed Fill screen is a raw
+ * #252525. The current thumbnail's only mark is a 1px --foreground border,
+ * which in dark is #f0f0f0 against a white thumbnail and disappears.
+ * Wanted:  the head icons, the pill, its readout, separators and pressed
+ * state from your swapping tokens (--muted-foreground; the pill --card at
+ * 88%, so the drawing shows faintly through it; --border; --primary /
+ * --primary-foreground; --accent); a 2px ink-pair ring on the
+ * current thumbnail (--foreground, offset 2px so the band shows between
+ * ring and thumbnail) in both themes. The paper stays white in both themes:
+ * that is right and unchanged here.
+ * Viewport: all.
+ *
+ * Measured (composited from computed colours): close icon on the head band
+ * dark 2.48:1 -> 6.9:1, light 7.0:1 -> 5.57:1; zoom readout and icons on
+ * the pill dark 4.77:1 on a light pill -> 6.9:1 on a --card pill (4.79:1
+ * where the pill sits on the paper, phone); current-thumbnail outline
+ * 2px solid #252525 / #f0f0f0, offset 2px. The close icon's drop in light,
+ * 7.0:1 to 5.57:1, is on purpose: it takes --muted-foreground, as the
+ * other head icons do, and stays above 4.5:1.
+ *
+ * In the component: the pill is the one control that can sit on the paper
+ * (it does on a phone, R4-43). There it stays a --card pill, but its edge is
+ * the paper's line, R4-45's #252525 at 50% (3.1:1 on white): --border is
+ * 1.3:1 on white in light and would not read. That is the non-swapping
+ * token the package's Q3 asks about. */
+.figview .figbar-btn[aria-label] {
+  color: var(--muted-foreground);
+}
+.figview .figbar[role="toolbar"] {
+  background: color-mix(in oklab, var(--card) 88%, transparent);
+  border-color: var(--border);
+}
+@media not all and (min-width: 40rem) {
+  .figview .figbar[role="toolbar"] {
+    border-color: #25252580;
+  }
+}
+.figview .figbar .figbar-zoom {
+  color: var(--muted-foreground);
+}
+.figview .figbar .figbar-sep {
+  background: var(--border);
+}
+.figview .figbar-btn[aria-pressed="true"] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+@media (hover: hover) and (pointer: fine) {
+  .figview .figbar-btn[aria-label]:not(:disabled):not([aria-pressed="true"]):hover {
+    color: var(--foreground);
+    background: var(--accent);
+  }
+}
+.figview .figstrip-btn.is-current {
+  outline: 2px solid var(--foreground);
+  outline-offset: 2px;
+}

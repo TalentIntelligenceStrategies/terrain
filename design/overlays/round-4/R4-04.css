@@ -1,0 +1,38 @@
+/* R4-04 (restores R3-61) · Shell: reduced motion stills dialog and popover enter and exit
+ *
+ * Current: their prefers-reduced-motion block stills every custom
+ * transition (the fades, the shell and grid swaps, the lane, the search-box
+ * pulse, the progress sweep, the lightbox) and .meta-top-sync, but not the
+ * shared Reka layers: the dialog the phone record opens in, its overlay,
+ * the popovers and the dropdown menus enter with data-[state=open]:
+ * animate-in fade-in-0 zoom-in-95 and leave with animate-out fade-out-0
+ * zoom-out-95 (150–200 ms); the accordion's collapsible-down/up; and
+ * animate-pulse on a loading card and the service-status dot.
+ * Wanted:  under prefers-reduced-motion: reduce, those layers appear and
+ * go without animation. Reka's presence unmounts at once when the
+ * animation is none, so closing still closes.
+ * Viewport: both.
+ * Measured with emulateMedia({ reducedMotion: 'reduce' }), with the patch:
+ * a div with their dialog classes and data-state="open" computes
+ * animation "none 0s" (was "enter 0.15s"); data-state="closed" with the
+ * exit classes "none 0s" (was "exit 0.15s"); .animate-pulse "none 0s"
+ * (was "pulse 2s"); the sort menu opens and closes (0 menus left after
+ * Escape). .meta-top-sync already computes transition 0s under reduce
+ * without the patch (their block covers it); the rule is kept so the
+ * list reads complete.
+ *
+ * In the component: add these to the existing reduce block in
+ * entry.css. The press scales on .btn, .seg-btn and .record-act are small
+ * and stay. */
+@media (prefers-reduced-motion: reduce) {
+  .data-\[state\=open\]\:animate-in[data-state="open"],
+  .data-\[state\=closed\]\:animate-out[data-state="closed"],
+  .data-\[state\=open\]\:animate-collapsible-down[data-state="open"],
+  .data-\[state\=closed\]\:animate-collapsible-up[data-state="closed"],
+  .animate-pulse {
+    animation: none;
+  }
+  .meta-top-sync {
+    transition: none;
+  }
+}

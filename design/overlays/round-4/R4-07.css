@@ -1,0 +1,36 @@
+/* R4-07 (restores R3-46) · Home: a ring means focus; a selected field says so another way
+ *
+ * Current: the selected field tile is drawn with a 1px foreground border
+ * plus a 1px foreground inset ring, a 2px dark edge that reads as the
+ * focus ring. On a keyboard the two cannot be told apart, and on a phone
+ * the composer's tap border is the same dark edge.
+ * Wanted:  the selected tile keeps its 1px foreground edge and loses the
+ * inset ring, and carries a check (Lucide "check", stroke 1.5) in its top
+ * right corner, in the foreground ink; unselected tiles keep their 1px
+ * --border edge. A 2px ring, offset 2px, is focus and nothing else; their
+ * :focus-visible rule already draws it from --ring in both themes, so a
+ * selected tile with focus has the edge, the check and the ring.
+ * Viewport: both. On the phone chip row (R3-15) the check sits after the
+ * name, in the chip's flow.
+ *
+ * In the component: drop "inset-ring inset-ring-foreground" from the
+ * selected tile and render the check icon in it (aria-hidden; the tile's
+ * aria-pressed already says it is chosen). The composer's own
+ * focus-within border stays as it is. The patch draws the check as a mask
+ * of the Lucide path so that it takes currentColor. */
+section[aria-label="Patent technology fields"] button[aria-pressed="true"] {
+  --tw-inset-ring-shadow: 0 0 #0000;
+  position: relative;
+}
+section[aria-label="Patent technology fields"] button[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+}

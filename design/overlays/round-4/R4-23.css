@@ -1,0 +1,67 @@
+/* R4-23 (restores R3-21) · Result row and record, phone: the kind is text; the version is chosen under the title
+ *
+ * See R4-23.js for Current and Wanted. This file hides the row's segment and
+ * the single-version kind word (both replaced by the text in the number
+ * line), styles the kind text, and draws the record's version tabs under
+ * the title in the head (R4-36 places them).
+ *
+ * The segment is hidden, not removed, because the patch's tabs drive it;
+ * in the component it is not rendered on the row at all.
+ * Viewport: phone (below sm, 40rem). From sm up the row keeps its switch
+ * and none of this applies: there the row has the width for it, and the
+ * switch is chosen before the record opens.
+ *
+ * Measured at 390: two tabs, 44px tall, 24px apart, under the title; the
+ * current one's 2px underline sits on the head's bottom rule; absent on a
+ * patent with one version. */
+@media not all and (min-width: 40rem) {
+  [data-result-card] [role="group"][aria-label="Switch grant/application version"],
+  [data-result-card] [data-r3-kind-src] {
+    display: none;
+  }
+}
+[data-r3-kind] {
+  display: inline-block; /* keeps the link's hover underline off the kind */
+  font-family: var(--font-sans);
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+[data-r3-version] {
+  display: flex;
+  gap: 24px;
+}
+[data-r3-version] > button {
+  position: relative;
+  height: 44px;
+  padding: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+[data-r3-version] > button[aria-pressed="true"] {
+  font-weight: 500;
+  color: var(--foreground);
+}
+/* the current tab's underline sits on the head's bottom rule */
+[data-r3-version] > button[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--foreground);
+}
+[data-r3-version] > button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+/* Last in the file, so it outranks the display rules above by source order. */
+@media (min-width: 40rem) {
+  [data-r3-kind],
+  [data-r3-version] {
+    display: none;
+  }
+}

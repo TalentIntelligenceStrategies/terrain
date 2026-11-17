@@ -1,0 +1,24 @@
+/* R4-18 (restores R3-51) · Search settings: a chip shows its off state (was R1-46)
+ *
+ * Current: every office and document chip is on by default, with a check
+ * and a foreground outline. Off is the same white pill with the check made
+ * invisible and the text and outline muted, so on and off differ by a
+ * glyph and two greys, and until one is turned off the chips read as
+ * static tags.
+ * Wanted:  on is filled (the muted surface) with the full-ink outline,
+ * text and check; off is the card with a muted outline, muted text and no
+ * check. On and off differ in fill as well as glyph.
+ * Viewport: both. The finding is filed for the phone, where the panel is
+ * first seen; the chips are the same component at every width.
+ *
+ * The off check keeps its slot (their "invisible" class), so a chip does
+ * not change width when it is toggled. Their rule that the last chip in a
+ * group cannot be turned off is unchanged. */
+.pop-chip[aria-pressed="true"] {
+  background: var(--muted);
+}
+.pop-chip[aria-pressed="false"] {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--muted-foreground);
+}

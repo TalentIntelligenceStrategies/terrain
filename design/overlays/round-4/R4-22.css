@@ -1,0 +1,101 @@
+/* R4-22 (restores R3-23) · Result row, phone: the rank leads the number line; two whole results to a screen
+ *
+ * Current: a phone card is about 408px (measured, row 1 at 390x844): the
+ * number, then the Grant | Application segment on a line of its own with
+ * rank and score, the title, a two-column meta grid, three lines of
+ * abstract and a strip of 96x112 tiles. Under the pinned controls a reader
+ * scans one patent per swipe.
+ * Wanted:  rank, number, kind and score on one line (R4-23 takes the
+ * segment off the row on a phone), in that order: the rank first, "#1" in
+ * a soft chip (--muted fill, no border, 20px, Inconsolata 13 medium in the
+ * foreground colour), then the number and kind in the muted colour, then
+ * "Relevance 0.8855" at the right, muted. The rank is the line's one
+ * emphasis; the title under it stays the card's heading. The abstract keeps
+ * its three lines, at 14/21 with text-wrap: pretty: they are what a reader
+ * decides by without opening the record. Strip tiles are 80x100, the
+ * record's 4:5.
+ * Viewport: phone (below sm, 40rem). Desktop is untouched.
+ *
+ * Measured at 390×844 with the combined patch, row 1: the row 382px tall
+ * (was about 408); the number line one 20px line, the rank chip and the
+ * number and kind at the left, the score at the right, their centres level; title 23px; the abstract
+ * three lines, 55px; the strip 117px tall, 80×100 tiles.
+ *
+ * Under 360px (one width query beyond their breakpoints, for the narrowest
+ * phones) the score moves to a second line, under the number, so the
+ * number and kind are never cut.
+ *
+ * In the component: below sm the number line is a grid, rank | number and
+ * kind | score, the rank rendered as a chip (bg-muted, rounded-sm, px-1.5,
+ * font-mono font-medium). */
+@media not all and (min-width: 40rem) {
+  [data-result-card] [data-idx],
+  [data-result-card] [role="status"][aria-label="Loading drawings"] > div,
+  [data-result-card] .relative.flex.gap-2 > div.bg-muted {
+    width: 80px;
+    height: 100px;
+  }
+  /* the number line: rank | number and kind | score */
+  [data-result-card] [data-slot="card"] > div > div:first-child {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "rank link score";
+    align-items: center;
+    column-gap: 8px;
+  }
+  [data-result-card] [data-slot="card"] > div > div:first-child > div:last-child {
+    display: contents;
+  }
+  [data-result-card] [data-slot="card"] > div > div:first-child > div:first-child {
+    grid-area: link;
+    min-width: 0;
+  }
+  [data-result-card] [data-slot="card"] > div > div:first-child div.flex-col.items-end {
+    grid-area: rank;
+  }
+  [data-result-card] [data-slot="card"] > div > div:first-child .text-right {
+    grid-area: score;
+  }
+  [data-result-card] div.flex-col.items-end > span.font-mono {
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: calc(var(--radius) - 4px);
+    background: var(--muted);
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 500;
+    color: var(--foreground);
+  }
+  [data-result-card] a[title^="Open "] {
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--muted-foreground);
+  }
+  [data-result-card] .text-right span {
+    color: var(--muted-foreground);
+  }
+  [data-result-card] .line-clamp-3 {
+    font-size: 14px;
+    line-height: 21px;
+    text-wrap: pretty;
+  }
+}
+/* Under 360px the number would be cut: the score takes a second line, under
+   the number, so the number and kind are never truncated. */
+@media (max-width: 359.98px) {
+  [data-result-card] [data-slot="card"] > div > div:first-child {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "rank link"
+      ".    score";
+    row-gap: 2px;
+  }
+  [data-result-card] [data-slot="card"] > div > div:first-child .text-right {
+    justify-self: start;
+  }
+  [data-result-card] [data-slot="card"] > div > div:first-child .text-right > div {
+    justify-content: flex-start;
+  }
+}

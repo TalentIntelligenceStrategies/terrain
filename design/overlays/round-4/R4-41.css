@@ -1,0 +1,27 @@
+/* R4-41 (restores R3-47) · Patent record: a disabled chevron reads as disabled
+ *
+ * Current: on the first record, Previous patent is natively disabled
+ * (disabled, measured) and drawn at their disabled:opacity-30 over
+ * --muted-foreground: #D2D2D2 on #FFF (about 1.5:1) and #434343 on #1A1A1A
+ * (about 1.8:1). Beside the live chevron it reads as a missing icon.
+ * Wanted:  the disabled chevron at about 3:1 against the card in both
+ * themes, full opacity, and still lighter than the live one; disabled stays
+ * native, so it announces dimmed.
+ * Viewport: both (the desktop pane and the phone dialog share the toolbar).
+ *
+ * Measured on the rendered button (computed colour, opacity 1): light
+ * srgb(0.585) ≈ #959595 on #FFF, 2.98:1; dark srgb(0.397) ≈ #656565 on
+ * #1A1A1A, 3.00:1. The live chevron stays 5.57:1 and 6.90:1; before the
+ * patch the disabled one was 1.51:1 and 1.76:1.
+ *
+ * Their token set has no tertiary text colour at 3:1, so the patch mixes
+ * --muted-foreground into --card per theme (dark, and your violet theme,
+ * which shares the dark tokens). The component wants one token
+ * (a disabled foreground) defined in both theme blocks. */
+[data-result-detail] button:is([aria-label="Previous patent"], [aria-label="Next patent"]):disabled {
+  opacity: 1;
+  color: color-mix(in srgb, var(--muted-foreground) 70%, var(--card));
+}
+:root:is([data-theme="dark"], [data-theme="violet"]) [data-result-detail] button:is([aria-label="Previous patent"], [aria-label="Next patent"]):disabled {
+  color: color-mix(in srgb, var(--muted-foreground) 55%, var(--card));
+}

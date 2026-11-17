@@ -1,0 +1,26 @@
+/* R4-06 (restores R3-59) · Home: the phone hero sits inside the gutter
+ *
+ * Current: below sm "What are you building?" is text-4xl, 36px, and fills
+ * the 358px line from gutter to gutter; the lede wraps greedily and its
+ * third line opens on the dash: "— and gives you the data to take
+ * anywhere."
+ * Wanted:  below sm the heading scales with the width,
+ * clamp(1.75rem, 1rem + 4vw, 2.25rem): 31.6px at 390 (measured),
+ * 31px at 375, 28.8px at 320, 36px from 500px up, so it clears the right gutter
+ * with room to spare. The lede is text-wrap: pretty, and a dash in it is
+ * held to the word before it (R4-06 script), so no line starts with one.
+ * Viewport: phone (below sm). Desktop unchanged.
+ * Measured at 390: h1 31.6px on one line, 16–374; text-wrap pretty; the
+ * lede reads "…closest to it<NBSP>— and…", and no line opens on the dash.
+ *
+ * In the component: the clamp on the h1 below sm, text-wrap: pretty on the
+ * lede, and a no-break space before the em dash in the lede string. The
+ * patch changes no word. */
+@media not all and (min-width: 40rem) {
+  #main-content h1.text-4xl {
+    font-size: clamp(1.75rem, 1rem + 4vw, 2.25rem);
+  }
+  #main-content h1.text-4xl + p {
+    text-wrap: pretty;
+  }
+}

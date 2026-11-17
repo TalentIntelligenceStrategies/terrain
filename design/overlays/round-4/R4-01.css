@@ -1,0 +1,72 @@
+/* R4-01 (restores R3-36) · Every control, touch: reached through 44x44 (was R1-40)
+ *
+ * Current: on a 390 phone, counting the controls a finger can reach (not
+ * under a scrim or aria-hidden) by the area a tap lands on, 22 are under
+ * 44px on results, 30 with the record open and 48 in the drawing viewer.
+ * Ten on results are under WCAG 2.5.8's 24px floor: the number link 18
+ * high, the version segment 22, "View details" 23, the version 18, Remove
+ * group 20x20, Keyboard shortcuts 16x28. The record's Previous, Next and
+ * Close are 24x24 inside 75px in the top-right corner.
+ * Wanted:  under a coarse pointer, every control is reached through 44x44,
+ * whatever size its glyph is drawn (design-language.md §7). Where the glyph
+ * should stay small, the box grows by a transparent hit area, not padding,
+ * so the drawing does not move. Where two such areas would overlap, the
+ * controls move apart until they do not: an area a thumb shares with its
+ * neighbour is not one. The record head, the viewer bar and the masthead
+ * get real 44px boxes. A tap anywhere on a result row that is not a
+ * control opens its record.
+ * Viewport: (pointer: coarse), whatever the width: phones, and tablets
+ * without a trackpad. Desktop is untouched.
+ *
+ * What the patch does instead, and where it falls short. It cannot move
+ * your layout apart from outside, so where two areas would overlap it
+ * stops each one halfway to its neighbour. R4-01.js measures each small
+ * control and writes how far its area may reach on each side
+ * (--r336-t/r/b/l); this file draws the area. The record's Close (R4-35)
+ * and the viewer's Close (R4-43) are already 44px.
+ *
+ * Measured at 390x844 with the combined patch, by the same count:
+ *   results  under 44: 22 -> 4, under 24: 10 -> 0. The four are what
+ *            halving leaves: each row's number link (35px high) and title
+ *            (38px high), stacked with 13px between them. In the component
+ *            they move apart, by about 9px between the number line and the
+ *            title, which the patch cannot do.
+ *   record   under 44: 30 -> 0.
+ *   drawing viewer   under 44: 48 -> 0.
+ *   overlapping areas: 0, apart from thumbnails scrolled under the
+ *            record's pinned footer, which is drawn over them.
+ *   A tap on a row's abstract opens its record.
+ * The skip link (32x16) is left as it is: it shows only on keyboard focus.
+ *
+ * In the component: a hit-area utility on the small controls (an ::after,
+ * or padding with a negative margin) and min 44px on the record head, the
+ * viewer bar and the masthead, instead of a script; spacing that keeps
+ * neighbouring areas apart; the row as one tap target is the card's own
+ * click handler, ignoring presses that start on a control. */
+@media (pointer: coarse) {
+  [data-r336] {
+    position: relative;
+  }
+  [data-r336]::after {
+    content: "";
+    position: absolute;
+    top: calc(var(--r336-t, 0px) * -1);
+    right: calc(var(--r336-r, 0px) * -1);
+    bottom: calc(var(--r336-b, 0px) * -1);
+    left: calc(var(--r336-l, 0px) * -1);
+  }
+  [data-terrain-record-head] button,
+  .figview .figbar-btn,
+  .figview button[aria-label="Previous figure"],
+  .figview button[aria-label="Next figure"],
+  #__nuxt > div > header :is(a, button) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .figview button[aria-label^="Drawing "] {
+    min-width: 44px;
+  }
+  [data-result-card][data-r336-card] {
+    cursor: pointer;
+  }
+}

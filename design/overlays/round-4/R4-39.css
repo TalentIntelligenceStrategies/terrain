@@ -1,0 +1,37 @@
+/* R4-39 (restores R3-09) · Patent record (phone): Export is two buttons, and a download says its name
+ *
+ * Current: below sm the record's footer carries "Export this record", a
+ * Reka dropdown that opens CSV / Markdown upward over the record, its left
+ * edge mid-code; neither item says what it holds, and nothing confirms the
+ * download.
+ * Wanted:  two inline footer buttons, CSV and Markdown, beside Open in
+ * IPtech, named "Download this record as CSV" and "Download this record
+ * as Markdown"; after either, one line in the footer confirms the file by name
+ * ("Downloaded 09000581.csv"), in a polite status region.
+ * Viewport: phone, below sm (40rem). At sm and above the dropdown is
+ * unchanged.
+ *
+ * Measured at 390×844: CSV fires a download named 09000581.csv and
+ * Markdown 09000581.md (Playwright download events); the status line reads
+ * the same name; the hidden menu never paints.
+ *
+ * Not patchable here: the buttons drive their own menu out of sight (open
+ * the trigger, choose the item) so the file is theirs byte for byte; the
+ * name is read from their download anchor. In the component the two
+ * buttons call the export function directly and the status comes from it.
+ * No confirmation string ships in their bundle; "Downloaded {file}" is
+ * new copy. */
+@media not all and (min-width: 40rem) {
+  [role="dialog"][data-result-detail] .record-foot:has([data-terrain-export]) > button[aria-expanded] { display: none; }
+  [data-terrain-export] { display: contents; }
+  [data-terrain-export-status]:empty { display: none; }
+  [data-terrain-export-status] {
+    flex-basis: 100%;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--muted-foreground);
+  }
+  [data-terrain-export-status] span { font-family: var(--font-mono); color: var(--foreground); }
+}
+/* While a phone button drives their menu, the menu is never shown. */
+html[data-terrain-exporting] [data-reka-popper-content-wrapper]:has(.record-export-menu) { visibility: hidden; }

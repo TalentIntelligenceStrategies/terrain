@@ -1,0 +1,120 @@
+/* R4-24 (restores R3-34) · Results header, phone: the count, the view and Sort on one line
+ *
+ * Current: below sm the count block is basis-full (max-sm:basis-full), so
+ * the Sort trigger drops to a line of its own, alone at the right with
+ * nothing on its left; the view toggle is a full row of its own in the
+ * search box above; "50 matched · 50 shown" repeats one number when both
+ * are equal.
+ * Wanted:  one line. At the left the count, short: "50 results" when every
+ * match is shown, "50 of 120" when fewer are, 16/20 semibold with its
+ * numerals in Inconsolata at 500, never wrapping. At the right, 8px apart,
+ * two controls of one family: Sort with its words and chevron, keeping its
+ * own outline button's surface and 1px --border, at 36px and the corner
+ * radius − 2px; and the view toggle (Results view: Details and drawings,
+ * Drawings only) drawn to match it, two icon halves in one box. Both are
+ * centred on the count's line.
+ * Sort drops its leading arrows icon below sm and keeps its chevron, the
+ * cue that it opens a menu.
+ * Viewport: phone (below sm, 40rem). Desktop is untouched.
+ *
+ * Measured at 390 with the combined patch: count, view and Sort on one
+ * line, their centres within 1px of each other; view 90×36, Sort 36px tall.
+ * Under 360px (one width query beyond their breakpoints) Sort is its
+ * arrows icon alone (44×36), so at 320 the line still fits. The 44px hit areas are R4-01's.
+ *
+ * In the component: drop max-sm:basis-full and hide Sort's leading icon
+ * below sm; render the count as "N results" / "N of M"; render the view
+ * toggle here (R4-24 script), styled as Sort is. */
+[data-r3-view],
+[data-r3-count] {
+  display: none;
+}
+@media not all and (min-width: 40rem) {
+  section.shell-swap header > div {
+    align-items: center;
+  }
+  section.shell-swap header > div > div.flex-1 {
+    flex: 1 1 auto;
+    flex-basis: auto;
+    min-width: 0;
+  }
+  /* their heading stays for screen readers; [data-r3-count] is what shows */
+  section.shell-swap header h2 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  [data-r3-count] {
+    display: block;
+    margin: 0;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 600;
+    color: var(--foreground);
+    white-space: nowrap;
+  }
+  [data-r3-count] > span {
+    font-family: var(--font-mono);
+    font-weight: 500;
+  }
+  section.shell-swap header > div > div.ml-auto {
+    gap: 8px;
+  }
+  button[aria-label="Sort the list"] {
+    height: 36px;
+    border-radius: calc(var(--radius) - 2px);
+  }
+  button[aria-label="Sort the list"] > svg:first-child {
+    display: none;
+  }
+  [data-r3-view] {
+    display: inline-flex;
+    height: 36px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) - 2px);
+    background: var(--card);
+  }
+  [data-r3-view] > button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 34px;
+    color: var(--muted-foreground);
+    cursor: pointer;
+  }
+  [data-r3-view] > button + button {
+    border-inline-start: 1px solid var(--border);
+  }
+  [data-r3-view] > button[aria-pressed="true"] {
+    background: var(--muted);
+    color: var(--foreground);
+  }
+  [data-r3-view] > button > svg {
+    width: 16px;
+    height: 16px;
+  }
+  [data-r3-view] > button:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: -2px;
+  }
+}
+/* Under 360px the line cannot hold "Relevance": Sort is its arrows icon,
+   44×36, its name ("Sort the list") unchanged; the menu still says which. */
+@media (max-width: 359.98px) {
+  button[aria-label="Sort the list"] {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+  button[aria-label="Sort the list"] > svg:first-child {
+    display: block;
+  }
+  button[aria-label="Sort the list"] > :not(svg:first-child) {
+    display: none;
+  }
+}

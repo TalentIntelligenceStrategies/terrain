@@ -1,0 +1,80 @@
+/* R4-20 (restores R3-27) · Grouping panel: a bottom sheet on a phone, rows without a dead indent
+ *
+ * Current: below sm the panel is a Reka popover dropped from the Group
+ * button over the list, 358 wide, with no Done, close or scrim. Group
+ * headings are 11px tracked uppercase, so sentence-length topics wrap in
+ * caps. Each leaf is tick (16) + a 32px right-aligned count + gaps before
+ * its title: the title starts 76px in from the heading and wraps in 240px.
+ * Wanted:  below sm, a sheet fixed to the bottom of the viewport, full
+ * width, over a scrim, with Done pinned at its foot above the safe area
+ * (R4-20.js adds Done). Headings in sentence case at medium weight, 14px,
+ * full ink. A leaf's tick stays in the row's leading slot, at the heading's
+ * edge; the title follows it; the count moves to the row end in tabular
+ * Inconsolata.
+ * Viewport: phone (below sm). Desktop keeps the popover and its rows.
+ * Measured on the live page at 390 with the patch: sheet 390 wide, bottom
+ * at 844; tick left edge = heading left edge; title starts 26px in from
+ * the heading (was 76) and wraps in 307px (was 240); count right edge =
+ * row's right padding edge. Done is 44px tall (their btn-secondary is 36,
+ * which left 89% of a 44×44 square on it).
+ *
+ * What the patch cannot do: Reka positions the popover's wrapper with an
+ * inline transform, and a transformed ancestor is the containing block of a
+ * fixed element. R4-20.js reads where Reka put the wrapper and offsets the
+ * sheet by that much (--r327-x, --r327-y), every time Reka moves it. In the
+ * component, below sm render the panel as a sheet (a Reka Dialog, or the
+ * popover with position strategy fixed and no transform), not a popover.
+ * Tapping the scrim closes it through Reka's own outside-pointerdown. */
+@media not all and (min-width: 40rem) {
+  .result-groups-popover[data-r327] {
+    position: fixed;
+    left: calc(-1 * var(--r327-x, 0px));
+    top: auto;
+    bottom: calc(var(--r327-y, 0px) - var(--r327-vh, 100dvh));
+    width: var(--r327-vw, 100vw);
+    max-height: 80dvh;
+    border-bottom: 0;
+    border-radius: 16px 16px 0 0;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    box-shadow: 0 0 0 100vmax color-mix(in oklab, var(--color-black) 45%, transparent);
+  }
+  .result-groups-popover[data-r327] ul > li > h3 {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 14px;
+    line-height: 1.35;
+    font-weight: 500;
+    color: var(--foreground);
+  }
+  .result-groups-popover[data-r327] [data-group-node] {
+    margin-inline: -8px;
+    width: calc(100% + 16px);
+  }
+  .result-groups-popover[data-r327] [data-group-node] > span.font-mono {
+    order: 2;
+    width: auto;
+    min-width: 2ch;
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .result-groups-popover[data-r327] [data-group-node] > span:not(.font-mono) {
+    order: 1;
+    flex: 1;
+  }
+  .result-groups-popover [data-r327-foot] {
+    display: flex;
+    justify-content: flex-end;
+    flex: none;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  .result-groups-popover [data-r327-foot] > .btn {
+    min-height: 44px;
+  }
+}
+@media (min-width: 40rem) {
+  .result-groups-popover [data-r327-foot] {
+    display: none;
+  }
+}
