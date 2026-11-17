@@ -1,33 +1,44 @@
-/* R4-02 (restores R3-14) · Masthead: one row on the phone gutter (was R1-07)
+/* R4-02 (restores R3-14) · Masthead: one row on the phone gutter
  *
- * Current: at 390 and at 320 the masthead wraps to two rows, 95px tall.
- * Row one is the mark with "TIS Terrain" (119x28 at x 24; at 320 the
- * wordmark goes and it is 40x28), New 62x28 and History 76x28, each with
- * its word. Row two is the three appearance buttons in their group
- * (122x34, named "Choose appearance") and the version, the button "View
- * release notes (v1.0.42)", 58x22, with its unread dot.
- * Wanted:  below sm (40rem), one row, padded so the first and last glyphs
- * sit on the 16px gutter: the mark, New and History icon-only, their names
- * kept as their accessible names ("TIS Terrain", "New search", "History").
- * The version leaves the masthead for the footer, after "Powered by
- * Innovue", and stays the same button there: same name, same unread dot,
- * and pressing it opens the release notes. Below 420px the three appearance
- * buttons become one button at the right that steps light → dark → system
- * (R4-02 script); from 420px up the three stay, and fit the one row beside
- * the icon-only links.
+ * Current: at 390 and at 320 the masthead wraps to two rows, 95px tall,
+ * with 24px side padding. Row one is the mark with "TIS Terrain" (119x28
+ * at x 24; at 320 the wordmark goes and it is 40x28), New 62x28 and
+ * History 76x28, each with its word. Row two is the three appearance
+ * buttons in your group (122x34, named "Choose appearance") and the
+ * version, the button "View release notes (v1.0.42)", 58x22, with its
+ * unread dot.
+ * Wanted:  below sm (40rem), one row, gap 4px, padded so the first and
+ * last glyphs sit on the 16px gutter: the mark, New and History icon-only,
+ * their names kept as their accessible names ("TIS Terrain", "New search",
+ * "History"). The version leaves the masthead for the footer, after
+ * "Powered by Innovue" and a middle dot, 6px between the dot and it, and
+ * stays the same button there, with your classes: same name, same unread
+ * dot, and pressing it opens the release notes. Below 420px the three
+ * appearance buttons become one 28x28 button at the right (corner
+ * calc(var(--radius) - 2px), 6px), its icon 14px in --muted-foreground
+ * (--foreground on hover), that steps light → dark → system (R4-02.js);
+ * from 420px up the three stay, and fit the one row beside the icon-only
+ * links.
+ * The side padding is what puts the glyphs on the gutter, so it depends on
+ * the box each glyph sits in. With a fine pointer the boxes hug their
+ * glyphs and both sides are 8px. Under a coarse pointer each box is 44px
+ * (R4-01) with its glyph centred: the mark's 24px glyph is 10px in from its
+ * box's left edge and the appearance button's 14px glyph 15px in from its
+ * right, so the row pads 6px at the start and 1px at the end (6 + 10 and
+ * 1 + 15, each 16px).
  * Viewport: phone (below sm, 640px); the one appearance button below
  * 420px. Tablet and desktop are unchanged.
  *
- * Measured with the patch (and R4-01, which makes each box 44px on touch):
- *   390x844  masthead 61px, one row (was 95px over two): the mark's glyph
- *            at x 16, the appearance glyph ending at x 374. The mark is
- *            still named "TIS Terrain". Three presses go System → Light →
- *            Dark → System, each pressing their own button (aria-pressed
- *            and data-theme follow). The footer reads "Powered by Innovue
- *            · v1.0.42" with the dot; pressing the footer button opens
- *            "What's new", and Escape returns focus to it.
- *   320x568  the same, 61px, one row.
- *   1440: unchanged; the before and after shots match.
+ * Measured with the patch (and R4-01), home and results:
+ * - 390x844: masthead 61px, one row (was 95px over two); the mark's glyph
+ *   at x 16, the appearance glyph ending at x 374. The mark is still named
+ *   "TIS Terrain". Three presses go System → Light → Dark → System, each
+ *   pressing your own button (aria-pressed and data-theme follow).
+ * - 390x844, home: the footer reads "Powered by Innovue · v1.0.42" with
+ *   the dot; pressing the footer button opens "What's new", and Escape
+ *   returns focus to it.
+ * - 320x568: the same, 61px, one row.
+ * - 1440: unchanged; the before and after shots match.
  *
  * In the component: below sm, render the wordmark as sr-only rather than
  * hidden, so the mark keeps its name; drop the labels of New and History
@@ -64,7 +75,8 @@
 }
 /* On touch each box is 44px (R4-01) and its glyph sits in its middle: the
    mark's 24px glyph 10px in from the box's edge, the appearance glyph 15px.
-   The row pads 6px and 1px so the first and last glyphs land on the gutter. */
+   The row pads 6px and 1px so the first and last glyphs land on the 16px
+   gutter. */
 @media (not (min-width: 40rem)) and (pointer: coarse) {
   #__nuxt > div > header > div {
     --r4-mast-pad: 6px;
@@ -85,7 +97,7 @@
   align-items: baseline;
   gap: 0.375rem;
 }
-/* the one appearance button the script adds; their size-7 icon button */
+/* the one appearance button the script adds; your size-7 icon button */
 .r4-appearance {
   display: none;
   align-items: center;

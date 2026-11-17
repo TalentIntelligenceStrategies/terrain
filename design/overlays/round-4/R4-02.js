@@ -10,7 +10,7 @@
  * and data-theme on <html> are untouched. Below sm the version is a button
  * in the footer, after "Powered by Innovue": the same name, title, text
  * and unread dot as the masthead's, kept in step with it (the dot goes
- * when the notes have been read), and a press on it is a press on theirs,
+ * when the notes have been read), and a press on it is a press on yours,
  * so the release notes open as they do now.
  * Viewport: the appearance button below 420px, the footer version below sm
  * (R4-02.css). Both are in the page at every width and shown only there.
@@ -45,9 +45,9 @@
       group.after(btn);
     }
     const pressed = ORDER.find(l => group.querySelector(`button[aria-label="${l}"]`)?.getAttribute('aria-pressed') === 'true') || ORDER[2];
-    /* the icon: their own, from the button for the appearance in use. With
+    /* the icon: your own, from the button for the appearance in use. With
        system chosen it is the monitor; otherwise the sun or the moon that
-       matches what <html> is showing, which is what their control set. */
+       matches what <html> is showing, which is what your control set. */
     const shown = pressed === ORDER[2] ? ORDER[2]
       : (document.documentElement.dataset.theme === 'dark' ? ORDER[1] : ORDER[0]);
     if (btn.dataset.shown !== shown || !btn.firstElementChild) {
@@ -62,7 +62,7 @@
     }
   };
 
-  /* the footer's version button: a copy of theirs that presses theirs. Its
+  /* the footer's version button: a copy of yours that presses yours. Its
      contents are refreshed in place, so it keeps focus across an update. */
   const version = () => {
     const v = document.querySelector(VERSION);
@@ -86,7 +86,7 @@
       const val = v.getAttribute(a);
       if (val == null) b.removeAttribute(a); else if (b.getAttribute(a) !== val) b.setAttribute(a, val);
     }
-    /* their classes, less the margin that spaced it from the appearance group */
+    /* your classes, less the margin that spaced it from the appearance group */
     const cls = [...v.classList].filter(c => c !== 'ml-1' && c !== 'coarse:ml-2').join(' ');
     if (b.className !== cls) b.className = cls;
     if (b.innerHTML !== v.innerHTML) b.innerHTML = v.innerHTML;
