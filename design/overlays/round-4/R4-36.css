@@ -6,10 +6,13 @@
  * the head reads "Patent record · Find similar"; scrolled, PatentDetailToolbar
  * fills the slot with heading.number (13px mono, muted) and heading.title
  * (16px semibold, truncated). Until then the head does not say which patent
- * is open, and it changes shape under the reader when it fills.
+ * is open, and its content changes when it fills.
  * Wanted:  at 820 the head names the patent from the start, as the phone's
  * head already does: the number and the title in the slot, drawn as the
- * scrolled toolbar draws them, so scrolling changes nothing in the head.
+ * scrolled toolbar draws them (the number 13px Inconsolata in
+ * --muted-foreground, never wrapping; 8px; the title 16px semibold in
+ * --foreground on one line, ending in an ellipsis; both on one baseline),
+ * so scrolling changes nothing in the head.
  * Viewport: sm to lg (40rem to 63.99rem), where the dialog has this head
  * row. Below sm your sticky head ([data-detail-head]) is built and is not
  * touched; from lg the pane is not touched.
@@ -25,22 +28,22 @@
  * draws it as pseudo-elements from attributes R4-36.js copies out of the
  * body's head, because the slot is Vue's. */
 @media (min-width: 40rem) and (max-width: 63.99rem) {
-  [data-terrain-record-name]:empty {
+  [data-r4-record-name]:empty {
     display: flex;
     align-items: baseline;
     gap: 8px;
     overflow: hidden;
   }
-  [data-terrain-record-name]:empty::before {
-    content: attr(data-terrain-pn);
+  [data-r4-record-name]:empty::before {
+    content: attr(data-r4-pn);
     flex: none;
     font-family: var(--font-mono);
     font-size: 13px;
     color: var(--muted-foreground);
     white-space: nowrap;
   }
-  [data-terrain-record-name]:empty::after {
-    content: attr(data-terrain-title);
+  [data-r4-record-name]:empty::after {
+    content: attr(data-r4-title);
     min-width: 0;
     overflow: hidden;
     white-space: nowrap;
