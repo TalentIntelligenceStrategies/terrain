@@ -1,14 +1,14 @@
-/* R4-18 (restores R3-51) · Search settings: a chip shows its off state (was R1-46)
+/* R4-18 (restores R3-51) · Search settings: a chip shows its off state
  *
  * Current: every office and document chip is on by default, with a check
  * and a foreground outline. Off is the same pill with the check made
  * invisible: in light, both #FFFFFF, off with a #E4E4E4 outline and #686868
  * ink; in dark, both #1A1A1A with a #F0F0F0 outline and ink, so on and off
- * differ by the check alone. Until one is turned off the chips read as
- * static tags.
- * Wanted:  on is filled (the muted surface) with the full-ink outline,
- * text and check; off is the card with a muted outline, muted text and no
- * check. On and off differ in fill as well as glyph.
+ * differ by the check alone.
+ * Wanted:  on is filled with --muted, with the --foreground outline, text
+ * and check, as now; off is --card with a --border outline,
+ * --muted-foreground text and no check. On and off differ in fill as well
+ * as glyph.
  * Viewport: both. The finding is filed for the phone, where the panel is
  * first seen; the chips are the same component at every width.
  *
