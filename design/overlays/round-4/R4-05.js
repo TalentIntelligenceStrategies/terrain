@@ -1,31 +1,36 @@
 /* R4-05 (restores R3-52) · Shell: the page declares English; Chinese records declare theirs
  *
- * Current: <html lang="en"> is set at runtime (the served index.html opens
- * a bare <html>; Nuxt adds lang="en" after boot, measured on v1.0.35 and
- * still so on v1.0.36). CN
- * and TW records carry no lang of their own, so a screen reader reads
- * their titles, holders and abstracts with the English voice (WCAG 3.1.1,
- * 3.1.2).
- * Wanted:  lang="en" on <html> from the first byte, and on each record's
- * title, holder and abstract, the language of its office: lang="zh-Hans"
- * for CN, lang="zh-Hant" for TW. Only those three texts: the labels around
- * them ("Published", "Holder", "Abstract") stay English. A text is marked
- * only when it is written in Chinese (it contains CJK characters), since a
- * CN record can carry an English title.
+ * Current: the served index.html opens a bare <html>; lang="en" arrives
+ * only after boot, from app.head htmlAttrs. Until then the document has no
+ * language, which is what a crawler or a reader that does not run the
+ * script sees. CN and TW records carry no lang of their own: "zh-Hans" and
+ * "zh-Hant" occur nowhere in the bundle, so a screen reader reads their
+ * titles, holders and abstracts with the English voice (WCAG 3.1.1, 3.1.2).
+ * Wanted:  lang="en" on <html> in the served file, from the first byte;
+ * and on each record's title, holder and abstract, the language of its
+ * office: lang="zh-Hans" for CN, lang="zh-Hant" for TW. Only those three
+ * texts: the labels around them ("Published", "Holder", "Abstract") stay
+ * English. A text is marked only when it is written in Chinese (it
+ * contains CJK characters), since a CN record can carry an English title.
  * Viewport: both.
  *
- * Where the patch reads the office: on a list row, the IPtech link's
- * docId (usb_…, cnb_…, twa_…); in the record, the number line ("Open CN …
- * in IPtech"). The recording this round replays is US records only, so the
- * patch was checked on a list row and a record whose office and text were
- * rewritten to CN and Chinese in the page: title and abstract
- * lang="zh-Hans", a Latin holder none, the record's h3 zh-Hans, the US
- * rows none, <html lang="en">. Checked again on a Taiwan record served
- * whole (office, title, holder and abstract in Chinese): the row's and the
- * record's three texts and the record's h3 lang="zh-Hant", <html lang="en">.
+ * The patch cannot do the first half: it runs after boot, when their own
+ * lang="en" is already there; it only sets it if it is missing. It does the
+ * second half. Where it reads the office: on a list row, the number link's
+ * title ("Open CN 109891482 B in IPTECH"); in the record, its "Where"
+ * field, or failing that the number link's title.
  *
- * In the component: lang="en" in the html template (app.head.htmlAttrs),
- * and a lang binding on the three elements from the record's country. */
+ * Measured: the recording this round replays is US and EP records only, so
+ * the patch was checked by rewriting, in the page, the first row's and the
+ * open record's office to CN and their title, holder and abstract to
+ * Chinese: the row's title button, holder and abstract, and the record's
+ * h3, holder and abstract paragraphs take lang="zh-Hans"; with TW,
+ * "zh-Hant"; an English holder on the same record and every other row get
+ * none; the labels get none; <html lang="en">.
+ *
+ * In the component: lang="en" on the html element in the served template
+ * (not only in htmlAttrs), and a lang binding on the three elements from
+ * the record's country. */
 (() => {
   if (window.__r4_05) return;
   window.__r4_05 = true;
@@ -42,12 +47,13 @@
     if (want) el.dataset.r352 = ''; else delete el.dataset.r352;
   };
 
+  /* "Open CN 109891482 B in IPTECH" → CN */
+  const officeOf = a => ((a && a.getAttribute('title')) || '').match(/^Open ([A-Z]{2}) .* in IPTECH$/i)?.[1].toUpperCase() || '';
+
   function sync() {
     /* list rows */
     for (const card of document.querySelectorAll('[data-result-card]')) {
-      const href = card.querySelector('a[href*="docId="]')?.getAttribute('href') || '';
-      const m = href.match(/docId=([a-z]{2})[a-z]?_/i);
-      const office = m ? m[1].toUpperCase() : '';
+      const office = officeOf(card.querySelector('a[title^="Open "]'));
       mark(card.querySelector('[data-card-primary]'), office);
       /* the holder is the first meta cell, the one with the building icon,
          whose title is the full name */
@@ -56,9 +62,9 @@
     }
     /* the record, in the side pane or the phone dialog */
     for (const rec of document.querySelectorAll('.detail-stack')) {
-      const t = rec.querySelector('a[title^="Open "][title$=" in IPtech"]')?.getAttribute('title') || '';
-      const m = t.match(/^Open ([A-Z]{2}) /);
-      const office = m ? m[1] : '';
+      const where = [...rec.querySelectorAll('.record-fields dt')].find(dt => dt.textContent.trim() === 'Where');
+      const office = (where?.nextElementSibling?.textContent.trim().match(/^[A-Z]{2}$/) || [])[0]
+        || officeOf(rec.querySelector('a[title^="Open "]'));
       mark(rec.querySelector('h3'), office);
       for (const dt of rec.querySelectorAll('.record-fields dt')) {
         if (dt.textContent.trim() === 'Holder') for (const s of dt.nextElementSibling?.querySelectorAll('span') || []) mark(s, office);
