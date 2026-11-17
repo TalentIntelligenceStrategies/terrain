@@ -6,9 +6,9 @@
  * button named "Drawing 1 of US 9000581 B2", and the <img> beside it repeats
  * the same text as its alt.
  * Wanted:  the strip is role="group" with aria-label "Drawings of
- * {pn}, {n} figures" (their figureCount string), and "1 figure" for one:
+ * {pn}, {n} figures" (your figureCount string), and "1 figure" for one:
  * that string needs a singular form added. Each thumbnail button is named
- * "Open figure {i} of {pn}", the record's string (their openFigure string),
+ * "Open figure {i} of {pn}", the record's string (your openFigure string),
  * and the image beside it is alt="" because the button names it. Badges stay
  * aria-hidden, as they ship.
  * Viewport: both.
