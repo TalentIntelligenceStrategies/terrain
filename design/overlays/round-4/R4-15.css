@@ -1,23 +1,31 @@
 /* R4-15 (restores R3-28) · Search settings: a bottom sheet on a phone
  *
  * Current: below sm the panel is a popover positioned by script under the
- * settings button: on results 358×606 at (17,162), 12px corners all round.
- * There is no scrim, and the page behind scrolls (a 600px wheel over it
- * moves the page 600px). Every segment (10…200, Off/On, Filed/Published/
- * Priority) is 24px tall; Reset (67×36) and Done (60×36) sit at the
- * panel's foot, in its flow.
+ * settings button: on results 358×577 at (17,251), 12px corners all round,
+ * 16px padding. There is no scrim, and the page behind scrolls (a 600px
+ * wheel over it moves the page 600px). Every segment (10…200, Off/On,
+ * Filed/Published/Priority) is 24px tall; Reset (67×36) and Done (60×36)
+ * sit at the panel's foot, in its flow.
  * Wanted:  below sm (40rem), a sheet fixed to the bottom of the viewport,
- * full width, top corners rounded, over a scrim; Reset and Done stay pinned
- * at its foot above the home-indicator safe area while the body scrolls;
- * scroll is contained in the sheet and the page behind does not scroll; the
- * segments are 44px tall.
+ * full width, top corners 16px, no bottom edge, over a scrim,
+ * color-mix(in oklab, var(--color-black) 40%, transparent), that covers
+ * the page and the masthead. The sheet keeps your 16px padding, 16px plus
+ * the bottom safe area at its foot; the body (.pop-body, no padding of its
+ * own) scrolls inside it, capped at 85dvh less 120px, with its scroll
+ * contained, and the page behind does not scroll. Reset and Done stay
+ * pinned at its foot above the home-indicator safe area while the body
+ * scrolls, as they are now: Reset 67×36 and Done 60×36, 13px at weight
+ * 500, 8px apart, in your foot row with its 1px --border top edge and 12px
+ * above them. The segments are 44px tall and at least 44px wide. The
+ * sheet enters and leaves with your own pop-fade, unchanged.
  * Viewport: phone (below sm). Desktop and tablet keep the popover.
- * Measured with the patch, 390×844 on results: the sheet 390×666 at
- * (0,178), its bottom at 844, top corners 16px, over a black 45% scrim;
- * every segment 44px; the body scrolls (589 in 539) while Reset and Done
- * stay at y 792, 16px plus the safe area above the sheet's bottom edge;
- * the page does not move under a 600px wheel. At 1440 the popover is
- * unchanged.
+ *
+ * Measured with the patch, 390×844 on results: the sheet 390×577 at
+ * (0,267), its bottom at 844, top corners 16px, over the scrim
+ * rgba(0,0,0,0.4); every segment 44px; the body scrolls (538 in 450) while
+ * Reset (67×36) and Done (60×36) stay at y 792, 16px plus the safe area
+ * above the sheet's bottom edge; the page does not move under a 600px
+ * wheel. At 1440 the popover is unchanged.
  *
  * What the patch cannot do: your script writes max-height, left and width
  * inline on the panel and its wrapper for the popover. The patch does not
@@ -25,7 +33,7 @@
  * body is capped instead (.pop-body max-height). In the component, branch
  * the positioning script on the breakpoint and do not run it for the sheet.
  * The scrim is a spread shadow on the sheet plus a brightness filter on the
- * sticky header, which sits in a higher stacking context than the panel;
+ * sticky masthead, which sits in a higher stacking context than the panel;
  * in the component it is one element under the sheet. Tapping the scrim
  * closes the panel through your existing outside-pointerdown handler,
  * which discards unsaved changes as it already does. */
@@ -40,7 +48,7 @@
     border-radius: 16px 16px 0 0;
     padding-bottom: calc(16px + env(safe-area-inset-bottom));
     overscroll-behavior: contain;
-    box-shadow: 0 0 0 100vmax color-mix(in oklab, var(--color-black) 45%, transparent);
+    box-shadow: 0 0 0 100vmax color-mix(in oklab, var(--color-black) 40%, transparent);
   }
   .pop-set .pop-body {
     max-height: calc(85dvh - 120px);
@@ -52,19 +60,10 @@
   html:has(.pop-set) {
     overflow: hidden;
   }
-  /* The sticky header is a higher stacking context than the panel, so the
-     sheet's scrim passes under it. Black at 45% over a colour is that colour
-     times 0.55, which is what brightness(.55) paints, the header's wrapped
-     theme control included (it overflows the header's box at 390). */
-  body:has(.pop-set) header.sticky {
-    filter: brightness(0.55);
-  }
-  /* Your pop-fade scales the panel's wrapper; a transform on an ancestor
-     would make the fixed sheet jump to it for the length of the fade. */
-  :is(.pop-fade-enter-from, .pop-fade-leave-to):has(.pop-set) {
-    transform: none;
-  }
-  .pop-set:is(.pop-fade-enter-from, .pop-fade-leave-to) {
-    transform: translateY(24px);
+  /* The sticky masthead is a higher stacking context than the panel, so the
+     sheet's scrim passes under it. Black at 40% over a colour is that colour
+     times 0.6, which is what brightness(0.6) paints. */
+  body:has(.pop-set) #__nuxt > div > header {
+    filter: brightness(0.6);
   }
 }
