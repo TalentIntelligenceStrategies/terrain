@@ -1,50 +1,51 @@
 /* R4-37 (restores R3-16) · Patent record (phone): the field panel in two columns; the drawings a strip
  *
- * Current: below sm the record's field panel is one column (their
+ * Current: below sm the record's field panel is one column (your
  * @container record (max-width: 420px) rule): eleven label/value pairs,
  * Number to Classes, one to a row, 553px tall at 390, before the drawings.
- * The drawings are .detail-figures, a grid of 154×193 tiles two to a row,
+ * The drawings are .detail-figures, a grid of 152×191 tiles two to a row,
  * capped at 12 behind "Show all {n} drawings": nine drawings are five rows,
- * 995px, and the Abstract heading starts 1769px down the record's scroll.
- * Wanted:  their order stays (title, field panel, drawings, abstract,
+ * 995px of grid, 1033px with its heading, and the Abstract heading starts
+ * 1769px down the record's scroll.
+ * Wanted:  your order stays (title, field panel, drawings, abstract,
  * claims). The panel keeps its style, the small uppercase label above the
- * value, in two columns (design-language.md §7, "Below 420px it pairs up
- * again"): number, application, kind, the dates, the office and the main
- * class pair up, two to a row (your panel has the application number and
- * the main class as well, short identifiers like the rest, so they pair
- * too); holder, inventors and classes each take a full row. The drawings are one row that scrolls sideways, the way a
- * result row's strip does: tiles 102px wide at 4:5 (102×128, the paper's
- * proportion, as the row's 80×100 is on a phone, R4-22), 6px apart,
- * bleeding through the record body's 20px padding to the card's edge so
- * the cut tile reads as "more" (R4-26's treatment). No scroll snap: snap
- * would settle every rest position on a flush edge and delete the cut
- * tile that says there is more. The strip is not capped (R4-37 script
- * presses "Show all").
+ * value, in two columns 14px apart, rows 4px apart and 8px above each label
+ * after the first row: number, application, kind, the dates, the office and
+ * the main class pair up, two to a row, in your order; holder, inventors
+ * and classes (your .field-wide) each take a full row, after the pairs. The
+ * drawings are one row that scrolls sideways, the way a result row's strip
+ * does: tiles 102px wide at 4:5 (102×128), 6px apart, with 4px under the
+ * row, bleeding through the record body's 20px padding to the card's edge
+ * (margin-inline -1.25rem, padding-inline and scroll-padding-inline
+ * 1.25rem), overscroll-behavior-x contain, a thin scrollbar, no scroll
+ * snap. The strip is not capped: every drawing is in it, and "Show all"
+ * is not shown.
  * Viewport: the panel pairs where the record body is 420px or narrower (a
- * container width, as their own rule is, which only the phone reaches);
+ * container width, as your own rule is, which only the phone reaches);
  * the strip is phone, below sm (40rem). Landscape, tablet and desktop are
  * unchanged.
  *
- * Measured at 390×844 with R4-35's card: the field panel 553px tall
- * before, 364px after, columns 145px 145px (Number·Application, Kind·Filed,
- * Published·Priority, Where·Main class, then Holder, Inventors, Classes);
- * the drawings 995px of grid before, one row of nine 102×128 tiles after,
- * 132px tall, running from the card's edge past its right edge; the
- * Abstract heading moves from 1769px to 717px down the record's scroll.
+ * Measured at 390×844 with R4-35's card:
+ * - the field panel 553px tall before, 364px after, columns 145px 145px
+ *   (Number·Application, Kind·Filed, Published·Priority, Where·Main class,
+ *   then Holder, Inventors, Classes)
+ * - the drawings 995px of grid before, one row of nine 102×128 tiles after,
+ *   132px tall, running from the card's edge past its right edge
+ * - the Abstract heading moves from 1769px to 717px down the record's scroll
  *
  * Not patchable here: the panel's pairing is grid-row/grid-column written
  * by the script onto each dt/dd, because a label-above-value pair in a
  * flat <dl> cannot be placed two to a row by CSS alone. In the component:
  * wrap each pair in a <div> (valid inside <dl>) and let the grid place the
  * divs, with the wide fields spanning; render the strip uncapped below sm. */
-dl.record-fields[data-terrain-pairs] {
+dl.record-fields[data-r4-pairs] {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 4px 14px;
   align-items: start;
 }
-dl.record-fields[data-terrain-pairs] dt { margin: 8px 0 0; }
-dl.record-fields[data-terrain-pairs] dt[data-terrain-first-row] { margin-top: 0; }
-dl.record-fields[data-terrain-pairs] dt.field-wide { margin-bottom: 0; }
+dl.record-fields[data-r4-pairs] dt { margin: 8px 0 0; }
+dl.record-fields[data-r4-pairs] dt[data-r4-first-row] { margin-top: 0; }
+dl.record-fields[data-r4-pairs] dt.field-wide { margin-bottom: 0; }
 
 @media not all and (min-width: 40rem) {
   [role="dialog"][data-result-detail] .detail-figures {
@@ -64,7 +65,7 @@ dl.record-fields[data-terrain-pairs] dt.field-wide { margin-bottom: 0; }
     height: auto;
     aspect-ratio: 4 / 5;
   }
-  [role="dialog"][data-result-detail] section[aria-label="Drawings"] button[data-terrain-show-all] {
+  [role="dialog"][data-result-detail] section[aria-label="Drawings"] button[data-r4-show-all] {
     display: none;
   }
 }
