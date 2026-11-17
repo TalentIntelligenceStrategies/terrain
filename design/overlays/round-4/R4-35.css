@@ -1,40 +1,46 @@
 /* R4-35 (restores R3-19) · Patent record (phone): a card over the list, 8px from every edge
  *
  * Current: below sm the record is a Reka DialogContent card centred with a
- * 16px inset (max-w calc(100% - 2rem), max-h calc(100dvh - 32px)) and 20px
- * corners. Only the 24×24 corner ×, a tap on the scrim and Back close it;
- * Escape does not (R4-42), and there is no drag.
+ * 16px inset (measured at 390×844: x 16, y 16, w 358, h 812; max-w
+ * calc(100% - 2rem), max-h calc(100dvh - 32px)) and 20px corners. Its head
+ * is the sticky [data-detail-head] inside the scroll area, with Close
+ * details already 44×44. ×, Back and a pointer click on the scrim close it.
+ * Escape does not (R4-42), and a touch drag down on the head does nothing
+ * (140px slow, 60px, 95px in 170ms: still open). The scroll area is
+ * overscroll-behavior: auto, so a scroll that reaches the record's end
+ * runs on into the list behind it. Nothing in the stylesheet or the
+ * scripts reads env(safe-area-inset-*).
  * Wanted:  their floating card, tightened (design-language.md §7, "Below
- * 1080 the record is a card over the list"): 8px from every edge, its four
- * corners rounded as theirs, so a sliver of the list shows on each side. It
+ * 1080 the record is a card over the list"): 8px from every edge, its
+ * corners as theirs (20px), so a sliver of the list shows on each side. It
  * scrolls itself with overscroll-behavior: contain. A drag down on its head
- * closes it (R4-35 script), as do ×, Escape (R4-42), Back, and a pointer
- * click on the scrim; a finger tap on the 8px gutter does not (below).
- * The footer actions clear the bottom safe area, and Close details is 44×44.
- * Viewport: phone, below sm (40rem). The dialog only exists below lg; from
- * sm up their centred card is unchanged, and landscape is R4-38's.
+ * closes it (R4-35.js), as do ×, Escape (R4-42), Back, and a pointer click
+ * on the scrim. The card's top and bottom clear the safe area, so the
+ * footer's actions never sit under the home indicator.
+ * Viewport: phone, below sm (40rem) and taller than 480px. From sm up their
+ * centred card is unchanged, and landscape is R4-38's.
  *
- * Measured at 390×844, the combined patch, injected before the page loads:
- * card x 8, y 8, w 374, h 828 (was 16, 16, 358, 812); corners 20px;
- * Close details 44×44; the scroll area overscroll-behavior contain. A
- * touch drag down on the head (CDP synthesizeScrollGesture, touch) of 40px
- * springs back; 300px closes it, and focus returns to the row
- * (R4-40). ×, Escape (R4-42) and Back close it.
+ * Measured at 390×844 with the combined patch: card x 8, y 8, w 374,
+ * h 828, corners 20px; the scroll area overscroll-behavior contain; the
+ * head's touch-action none, so a drag that starts on it moves the card
+ * and not the body.
  *
- * The scrim: a click in the 8px gutter closes the record (Reka's
- * pointer-down-outside, measured with a mouse click at x 4). A touch tap
- * there does not, with or without this patch: Chrome's touch adjustment
- * moves any tap within about 8px of the card onto the card (on their own
- * 16px inset a tap 6px from the card fails too, 14px away succeeds). With
- * an 8px gutter on every side the scrim is not a finger target on a full
- * card; the drag on the head is the gesture that replaces it.
+ * The safe area: the patch insets the card by max(8px, env(safe-area-inset-*)),
+ * but env() reads 0 until the page's viewport meta carries
+ * viewport-fit=cover, and yours is "width=device-width, initial-scale=1".
+ * The component needs both: viewport-fit=cover in the meta, and the inset
+ * on the dialog. The patch does not change the meta, because that moves
+ * every page's layout under the notch.
  *
- * Not patchable here: the drag is a script laid over their dialog; in the
- * component it belongs with the dialog's own state (drag offset, release
- * velocity) and closes through the same path as ×. The 8px card should be
- * the DialogContent's own classes below sm (inset-2, no translate), with
- * env(safe-area-inset-*) on the top and bottom. Only Close is enlarged
- * here; the rest of the head takes R4-01's 44px. */
+ * A finger tap in the 8px gutter does not close the card, with or without
+ * the patch: Chrome's touch adjustment moves a tap that close to the card
+ * onto the card (on your own 16px inset a tap 6px from the card fails too).
+ * The drag on the head is the gesture that replaces it.
+ *
+ * In the component: the 8px card is the DialogContent's own classes below
+ * sm (inset-2, no translate), with the safe-area inset on top and bottom
+ * and overscroll-contain on the scroll area; the drag is the dialog's own
+ * state, not listeners laid over it (R4-35.js). */
 @media (max-width: 39.99rem) and (min-height: 480.01px) {
   [role="dialog"][data-result-detail] {
     top: max(8px, env(safe-area-inset-top));
@@ -49,18 +55,11 @@
   [role="dialog"][data-result-detail]:not([data-terrain-dragging]) {
     transition: translate var(--dur-land) var(--ease-out-expo);
   }
-  [role="dialog"][data-result-detail] [data-terrain-record-head],
-  [role="dialog"][data-result-detail] > div:has(> button[aria-label="Find similar"]) {
+  [role="dialog"][data-result-detail] [data-detail-head] {
     touch-action: none;
   }
   [role="dialog"][data-result-detail] > [class*="overflow-y-auto"] {
     overscroll-behavior: contain;
-  }
-  [role="dialog"][data-result-detail] button[aria-label="Close details"] {
-    width: 44px;
-    height: 44px;
-    margin-block: -10px;
-    margin-inline-end: -10px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

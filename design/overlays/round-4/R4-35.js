@@ -1,38 +1,48 @@
 /* R4-35 (restores R3-19) · Patent record (phone): a drag down on its head closes it
  *
- * Current: the corner ×, a tap on the scrim and Back close the record; a
- * drag does nothing.
- * Wanted:  a finger drag down that starts on the card's head row closes it.
+ * Current: a touch drag down on the record's head does nothing (measured at
+ * 390×844: 140px slow, 60px, and 95px in 170ms each leave it open,
+ * transform none). ×, Back and a pointer click on the scrim close it.
+ * Wanted:  a finger drag down that starts on the card's head (the sticky
+ * [data-detail-head]: the actions, the number and the title) closes it.
  * The card follows the finger; on release it closes once it has travelled
  * past 120px or a quarter of the card's height, whichever is less, or on a
- * flick: more than 24px at over 0.5px/ms. Otherwise it springs back. A drag that starts in
- * the record's body scrolls the record, as before. Closing goes through
- * their own Close details button, so the URL, focus return (R4-40) and
- * analytics are theirs. A press that does not move is still a tap on the
- * head's controls.
- * Viewport: phone, below sm (40rem), re-evaluated on change.
+ * flick: more than 24px at over 0.5px/ms. Otherwise it springs back. A drag
+ * that starts in the record's body scrolls the record, as before. Closing
+ * goes through the head's own Close details, so the URL, the focus return
+ * to the row (R4-40) and analytics are yours. A press that does not move
+ * is still a tap on the head's controls.
+ * Viewport: phone, below sm (40rem) and taller than 480px, re-evaluated on
+ * change.
  *
- * Measured at 390×844 with the patch injected before load (CDP
- * synthesizeScrollGesture, gestureSourceType touch, from the head; the card
- * is 828px tall there, so the threshold is 120px):
- *   a slow 100px drag springs back; a slow 140px drag closes
- *   a flick of 95px in 176ms (0.54px/ms) closes
- *   a flick of 75px in 155ms (0.48px/ms) springs back, as it should
+ * Measured at 390×844 with R4-35 and R4-42 (touch events on the head's
+ * number line; the card is 828px tall, so the threshold is 120px):
+ *   a slow drag of 140px (600ms) closes; 100px springs back; 40px springs back
+ *   a flick of 95px in 150ms (0.63px/ms) closes
+ *   a flick of 60px in 171ms (0.35px/ms) springs back
+ *   a 150px drag that starts in the body does not close it
+ * After a close, the hash drops rec= (no history entry is added) and focus
+ * is on the row's View details.
  *
- * In the component this is the dialog's own drag state, not listeners laid
- * over it. */
+ * In the component this is the dialog's own drag state (offset, release
+ * velocity), closing through the same path as ×, not listeners laid over
+ * it. */
 (() => {
-  if (window.__terrainR3_19) return;
-  window.__terrainR3_19 = true;
+  if (window.__terrainR4_35) return;
+  window.__terrainR4_35 = true;
   const phone = matchMedia('(max-width: 39.99rem) and (min-height: 480.01px)');
   const SEL = '[role="dialog"][data-result-detail]';
-  const HEAD = `${SEL} > div:has(> button[aria-label="Find similar"])`;
+  const HEAD = `${SEL} [data-detail-head]`;
   let drag = null;
 
   const reset = d => {
     d.removeAttribute('data-terrain-dragging');
     d.style.removeProperty('--terrain-sheet-drag');
   };
+  /* The dialog keeps your sm-up head row too, hidden below sm: press the
+     Close details that is drawn. */
+  const closer = d => [...d.querySelectorAll('button[aria-label="Close details"]')]
+    .find(b => b.getClientRects().length);
 
   document.addEventListener('touchstart', e => {
     if (!phone.matches || e.touches.length !== 1) return;
@@ -64,10 +74,10 @@
     if (!on) return;
     const dy = y - y0;
     const v = dy / Math.max(1, performance.now() - t0);
-    const close = d.querySelector('button[aria-label="Close details"]');
+    const close = closer(d);
     const far = Math.min(120, d.getBoundingClientRect().height / 4);
     if ((dy > far || (dy > 24 && v > 0.5)) && close) {
-      /* Keep the offset: their leave animation starts where the finger let go. */
+      /* Keep the offset: the leave animation starts where the finger let go. */
       d.removeAttribute('data-terrain-dragging');
       close.click();
     } else reset(d);
