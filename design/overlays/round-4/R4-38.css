@@ -3,20 +3,31 @@
  * Current: at 844×390 the record is your centred dialog card, measured at
  * x 86, y 16, w 672, h 358 (max-height calc(100dvh - 32px)), corners 20px;
  * the head row is 55px and the footer of two text buttons 67px, so 234px
- * of 390 is left for the record's scroll area.
- * Wanted:  below 480px tall, the dialog takes the full height, no inset
- * and no corner radius; the head and the footer are each one 44px row
- * (the footer's actions stay in the footer, on one row).
+ * of 390 is left for the record's scroll area. At 568×320 the card is
+ * x 16, y 16, w 536, h 288, footer 67px, scroll area 219px.
+ * Wanted:  below 480px tall, the dialog takes the full height (100dvh), no
+ * inset, no corner radius and no top or bottom border; the head row and the
+ * footer are each one 44px row with no block padding (the footer keeps its
+ * 20px inline padding and its actions stay in it, on one row that does not
+ * wrap). The footer's bottom clears the home indicator by
+ * env(safe-area-inset-bottom), which needs Q2: until then nothing visible
+ * changes there.
  * Viewport: landscape: (max-height: 480px), below lg (where the dialog
- * exists). The width stays their sm:max-w-2xl (672px), centred.
+ * exists). The width stays your sm:max-w-2xl (672px), centred; on a phone
+ * narrower than sm (568×320) it is your calc(100% - 2rem).
  *
- * Measured at 844×390 with the patch: dialog x 86, y 0, w 672, h 390,
- * corners 0; head 44, footer 44 ("Open in IPTECH" and "Export this record"
- * on one row); the record's scroll area 302px (was 234).
+ * Measured with the patch:
+ * - 844×390: dialog x 86, y 0, w 672, h 390, corners 0; head 44, footer 44
+ *   ("Open in IPTECH" and "Export this record" on one row); the record's
+ *   scroll area 302px (was 234)
+ * - 568×320, with R4-39: dialog x 16, y 0, w 536, h 320, corners 0; footer
+ *   44, "Open in IPTECH", CSV and Markdown on one row; the scroll area 276px
+ *   (was 219). Below sm the dialog's head row is not drawn (your sticky
+ *   [data-detail-head] is the head there), so the 44px head applies from sm
  *
- * A small phone in landscape (568×320) is below sm as well as this short;
- * there this rule is the one that applies, and the card (R4-35) stops at
- * 480px tall, so the two never apply at once. */
+ * At 568×320 the phone card (R4-35) does not apply, as it stops at 480px
+ * tall, so the two never apply at once; R4-39's buttons do, and they share
+ * this one row (R4-39 says how). */
 @media (max-height: 480px) and (max-width: 63.99rem) {
   [role="dialog"][data-result-detail] {
     top: 0;
@@ -27,7 +38,6 @@
     border-radius: 0;
     border-block-width: 0;
   }
-  [role="dialog"][data-result-detail] > [data-terrain-record-head],
   [role="dialog"][data-result-detail] > div:has(> button[aria-label="Find similar"]) {
     min-height: 44px;
     padding-block: 0;
