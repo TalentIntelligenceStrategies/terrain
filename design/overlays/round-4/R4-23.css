@@ -1,19 +1,11 @@
 /* R4-23 (restores R3-21) · Result row and record, phone: the kind is text; the version is chosen under the title
  *
- * See R4-23.js for Current and Wanted. This file hides the row's segment and
- * the single-version kind word (both replaced by the text in the number
- * line), styles the kind text, and draws the record's version tabs under
- * the title in the record's head ([data-detail-head]).
- *
- * The segment is hidden, not removed, because the patch's tabs drive it;
- * in the component it is not rendered on the row at all.
- * Viewport: phone (below sm, 40rem). From sm up the row keeps its switch
- * and none of this applies: there the row has the width for it, and the
- * switch is chosen before the record opens.
- *
- * Measured at 390: two tabs, 44px tall, 24px apart, under the title; the
- * current one's 2px underline sits on the head's bottom rule; absent on a
- * patent with one version. */
+ * This file hides the row's segment and the single-version kind word (both
+ * replaced by the kind as text in the number line), styles that text, and
+ * draws the record's version tabs under the title in the record's head
+ * ([data-detail-head]). The segment is hidden, not removed, because the
+ * patch's tabs drive it; in the component it is not rendered on the row at
+ * all. From sm up none of this applies. */
 @media not all and (min-width: 40rem) {
   [data-result-card] [role="group"][aria-label="Switch grant/application version"],
   [data-result-card] [data-r4-kind-src] {

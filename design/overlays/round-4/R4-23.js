@@ -1,54 +1,53 @@
 /* R4-23 (restores R3-21) · Result row and record, phone: the kind is text; the version is chosen under the title
  *
- * ── List (the row) ──
- * Current: below sm every row with two versions carries the "Switch
+ * Current: List: below sm every row with two versions carries the "Switch
  * grant/application version" segment (136×28 at 390, Grant 49×22 |
- * Application 81×22) on a line of its own with the rank and the score, and a
- * single-version row prints a plain "Grant" in the same slot, so the slot
- * means two things. The number line, "US 9000581 B2", says nothing of the
- * kind. 27 of the 50 rows in the recorded search carry the segment.
- * Wanted:  the row says its kind as text in the number line,
- * "US 9000581 B2 · Grant", muted, in the sans face; the segment and the plain
- * kind word are not shown on the row. The version is chosen in the record.
- * Measured at 390 with the patch: the segment is not rendered (display
- * none); the number line reads "US 9000581 B2 · Grant" on one 18px line,
- * centred with the rank chip and the score (R4-22); row 5, one version,
- * reads "US … · Grant" the same way.
- *
- * ── Record (the version tabs) ──
- * Current: below sm the record's head is your sticky [data-detail-head]:
- * the actions, then the number (13px), then the title (20/26). It has no
- * version control: for US 9000581 B2, a patent with both versions, the
- * dialog holds 0 Grant/Application controls and 0 [aria-label*=version],
- * and the number line does not say the kind. The row's segment is the only
- * switch, and it is behind the modal.
- * Wanted:  where both versions exist, the version is chosen under the title
- * with two text tabs, Grant and Application, 44px tall, the current one in
- * the foreground colour with a 2px underline on the head's bottom rule; on a
- * patent with one version there are no tabs and the kind is beside the
- * number ("US … B2 · Grant"). They are in the natural tab order (R4-32).
- * Measured at 390×844 with the patch: the tabs sit under the h3, Grant 36×44
- * and Application 70×44, 24px apart; the head drops its 16px bottom padding
- * and grows from 115px to 147px. Choosing Application loads
- * US 20130313698 A1 into the same head, the head stays 147px, the tab keeps
- * the focus, and the hash reads rec=20130313698; Grant brings
- * US 9000581 B2 back the same way. The patch adds no history entry.
- *
+ * Application 81×22) on a line of its own with the rank and the score, and
+ * a single-version row prints a plain "Grant" in the same slot, so the slot
+ * means two things; the number line, "US 9000581 B2", does not say the kind.
+ * 27 of the 50 rows in the recorded search carry the segment. Record: below
+ * sm the record's head is your sticky [data-detail-head]: the actions, then
+ * the number (13px), then the title (20/26). It has no version control: for
+ * US 9000581 B2, a patent with both versions, the dialog holds 0
+ * Grant/Application controls and 0 [aria-label*=version], and the number
+ * line does not say the kind. The row's segment is the only switch, and it
+ * is behind the modal.
+ * Wanted:  List: the row says its kind as text in the number line,
+ * "US 9000581 B2 · Grant", in --muted-foreground, in the sans face, no
+ * underline on hover; the segment and the plain kind word are not shown on
+ * the row. Record: where both versions exist, the version is chosen under
+ * the title with two text tabs, Grant and Application: 14/20, each tab 44px
+ * tall with no padding, 24px apart, 4px below the title; the unselected tab
+ * in --muted-foreground at 400, the selected one in --foreground at 500 with
+ * a 2px --foreground underline (1px radius) that sits on the head's bottom
+ * rule, the head dropping its 16px bottom padding; a 2px --ring focus ring,
+ * offset 2px. On a patent with one version there are no tabs and the kind is
+ * beside the number ("US … B2 · Grant"). The tabs are in the natural tab
+ * order (R4-32).
  * Viewport: phone only (below sm, 40rem). From sm up the row keeps its
- * switch; R4-23.css hides all of this from 40rem up.
+ * switch and none of this applies.
  *
- * The patch drives their own state: a pick clicks the hidden row segment of
+ * Measured at 390×844 with the patch:
+ * - the row's segment is not rendered (display none); the number line reads
+ *   "US 9000581 B2 · Grant" on one 18px line, centred with the rank chip and
+ *   the score (R4-22); row 5, one version, reads "US … · Grant" the same way
+ * - in the record the tabs sit under the h3, Grant 36×44 and Application
+ *   70×44, 24px apart; the head grows from 115px to 147px
+ * - choosing Application loads US 20130313698 A1 into the same head, the
+ *   head stays 147px, the tab keeps the focus, and the hash reads
+ *   rec=20130313698; Grant brings US 9000581 B2 back the same way; the patch
+ *   adds no history entry
+ *
+ * The patch drives your own state: a pick clicks the hidden row segment of
  * the row whose number the record shows, so the card's own version handler
  * still emits "open" and the record follows. In the component the variant
  * index belongs to the record, not the card: the record head renders the
- * tabs under its title from hit.alternatives, and the card renders kind-as-text
- * from the current variant. */
+ * tabs under its title from hit.alternatives, and the card renders
+ * kind-as-text from the current variant. */
 (() => {
   if (window.__r4_23) return;
   window.__r4_23 = true;
   const GROUP = '[role="group"][aria-label="Switch grant/application version"]';
-
-  /* ═══ LIST: the row's kind as text ═══ */
 
   /* Row: kind as text inside the number link, before its icon. */
   const rowWord = card => {
@@ -73,11 +72,7 @@
     if (tag.textContent !== t) tag.textContent = t;
   };
 
-  /* ═══ RECORD: the version tabs under the title ═══ */
-
-  /* Record: which row it is. The record's head prints the number as the row
-     does ("US 9000581 B2"); the Number field drops the office and the kind
-     and keeps the leading zero, so compare digits with the zeros stripped. */
+  /* Record: which row it is, by the number's digits without leading zeros. */
   const norm = s => ((s || '').match(/\b[A-Z]{2} 0*([0-9A-Z]{5,})/) || [])[1] || '';
   const rowFor = n => (n && [...document.querySelectorAll('[data-result-card]')]
     .find(c => norm(c.querySelector('a[title^="Open "]')?.textContent) === n)) || null;
@@ -136,8 +131,6 @@
     });
     mine.slice(from.length).forEach(m => m.remove());
   };
-
-  /* ═══ end RECORD ═══ */
 
   const fix = () => {
     document.querySelectorAll('[data-result-card]').forEach(rowKind);
