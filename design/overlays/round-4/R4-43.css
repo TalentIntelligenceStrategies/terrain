@@ -1,38 +1,40 @@
 /* R4-43 (restores R3-20) · Drawing viewer: full bleed on a phone
  *
- * Current: below 520px (your own rule) the viewer is a 374x692 card inset 8px over a
- * translucent scrim, with the record still showing round it. The drawing
- * gets about 372x330 of a 372x503 stage (24px padding inside the image box);
- * the zoom pill takes its own 58px band under the stage; the 32px close sits
- * mid-header straight after "Figure 1 of 9", while the record's own close
- * sits at the right edge above it.
+ * Current: below 40rem the viewer is a 374×692 card at (8,76) with a 16px
+ * radius, over a translucent scrim, with the record showing round it. The
+ * stage is 372×499; Viewer.js fits the drawing to 90% of it, so the first
+ * figure is drawn 335×235 (.viewer-move). The zoom pill
+ * (Rotate left, Rotate right, Reset rotation, Zoom out, the readout, Zoom
+ * in, Fill screen) is 336×44 in its own band under the stage, at y 641.
+ * Close is 32×32 mid-header at x 199, straight after "Figure 1 of 9",
+ * while the record's own close sits at the right edge above it.
  * Wanted:  below 40rem the viewer is the whole screen: inset 0, 100dvh, no
  * radius, no edge, no shadow, over a solid scrim (--card, the panel's own
  * ground, so nothing of the record shows through while it lands). The
- * drawing runs the full width of the screen. The zoom pill is overlaid on
- * the bottom of the drawing instead of taking a band. The close is 44x44 at
- * the top-right edge, inside the safe area. The thumbnail strip stays where
- * it is, under the drawing, clear of the home indicator.
+ * drawing runs the full width of the screen (R4-43.js). The zoom pill is
+ * overlaid on the bottom of the drawing instead of taking a band. Close is
+ * 44×44 at the top-right edge, inside the safe area. The thumbnail strip
+ * stays under the drawing, clear of the home indicator.
  * Viewport: phone (below 40rem). Desktop and tablet are unchanged.
  *
  * Also here, as this component's part of R4-03 (fixed layers clear the safe
  * area): the head and strip take env(safe-area-inset-*) on a phone and in
  * Fill screen; the inset card above 40rem keeps at least its 24px from each
  * edge and more where the inset is larger. Chromium reports every inset as
- * 0 unless one is emulated, so the before and after shots do not show this
- * part; with an iPhone's insets emulated (47 top, 34 bottom) the close sits
- * below the status bar and the strip above the home indicator.
+ * 0 unless one is emulated, so the shots do not show this part.
  *
- * Measured (phone 390x844): panel 374x692 at (8,76), radius 16px ->
- * 390x844 at (0,0), radius 0; stage 372x503 -> 390x719; drawing drawn at
- * 324x227 -> 390x273 (full width); close 32x32 at x 199 -> 44x44 at
- * (342,4), 4px from the right edge; scrim solid --card in both themes.
- * Desktop boxes unchanged (panel 1100x738, stage 1098x516). */
+ * Measured with the patch, 390×844: panel 390×844 at (0,0), radius 0;
+ * head 53px; stage 390×715; the first figure drawn 390×273 at x 0 (the
+ * readout rises with it, 18% to 21% on US 9000581 fig. 1), and the second
+ * 390×355, the fit holding as figures change and through Fill screen; the pill
+ * 336×44 at (27,714), over the foot of the stage and inside the screen;
+ * close 44×44 at (342,4); strip 390×75 at y 770. Desktop boxes unchanged
+ * (panel 1100×738, stage 1098×516, drawing 512×359). */
 @media not all and (min-width: 40rem) {
   .figview[role="dialog"] {
     padding: 0;
   }
-  /* :root lifts it over their dark-theme scrim rule, (0,3,1). */
+  /* :root lifts it over your dark-theme scrim rule, (0,3,1). */
   :root .figview[role="dialog"][aria-label]::before {
     background: var(--card);
   }
@@ -53,6 +55,7 @@
     width: 44px;
     height: 44px;
   }
+  /* the preview drawn before the engine loads */
   .figview-stage .figview-img {
     padding: 8px 0;
   }
