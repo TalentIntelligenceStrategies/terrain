@@ -4,7 +4,8 @@
  * keeps the same strip: a flex row of 96×112 tiles, three to a screen with
  * a fourth cut, so the drawings are no bigger than in "Details and drawings".
  * Wanted:  in Drawings only, below sm, each row shows its first four figures
- * as a two-column grid at the full width of the row, in the record's 4:5.
+ * as a two-column grid at the full width of the row, 8px apart, in the
+ * record's 4:5.
  * The rest stay one tap away: a tile opens the figure viewer, whose strip
  * carries every figure.
  * Viewport: phone (below sm, 40rem). Desktop's Drawings only is unchanged.
@@ -12,7 +13,7 @@
  * Measured at 390 with the patch, row 1: a grid of two 154px columns, four
  * tiles of 154×193, 8px apart; tiles 5 to 9 not rendered.
  *
- * Keyed on their own view-mode control (title="Drawings only",
+ * Keyed on your own view-mode control (title="Drawings only",
  * aria-pressed="true"), which the header toggle and the composer's share.
  * In the component: the mode is already a prop of the card; render the grid
  * variant of the strip for it below sm. */
