@@ -5,11 +5,11 @@
  * button aria-disabled="true" and data-r410-empty instead; emptiness is
  * read from the field (no text after trimming), which is what the build's
  * own submit check tracks. A press while empty (or Enter in the empty
- * field) is stopped before their handler, focuses the field and shows the
- * hint, whose text is the field's own aria-label; their handler would do
+ * field) is stopped before your handler, focuses the field and shows the
+ * hint, whose text is the field's own aria-label; your handler would do
  * nothing anyway, since it makes the same check itself.
  *
- * Loading: their render sets aria-disabled while a search runs; the patch
+ * Loading: your render sets aria-disabled while a search runs; the patch
  * leaves aria-disabled alone whenever the field has text. */
 (() => {
   if (window.__r4_10) return;

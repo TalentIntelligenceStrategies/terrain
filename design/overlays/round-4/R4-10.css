@@ -1,28 +1,33 @@
 /* R4-10 (restores R3-41) · Composer: an empty Search stays in the tab order and answers
- * (was R1-26)
  *
  * Current: with the field empty, Search is natively disabled, drawn as
  * --primary at 50% opacity: #252525 behind a white icon in light, #F0F0F0
  * behind #141414 in dark, where it is the brightest control on the page.
- * Tab skips it: at 1440 it goes from Search settings to the body (focus is
- * lost); at 390 to the field tiles. Pressing it, or Enter in the empty
- * field, does nothing and says nothing.
+ * Tab skips it: at 1440 Tab goes from Search settings to the next control
+ * on the page; at 390 to the field tiles. Pressing it, or Enter in the
+ * empty field, does nothing and says nothing.
  * Wanted:  Search is never natively disabled. Empty, it carries
  * aria-disabled="true", stays in the tab order, and is drawn as a muted
- * surface (--muted fill, --muted-foreground icon, full opacity) in both
- * themes. Pressing it, or Enter in the empty field, focuses the field and
- * shows a hint under the box, tied to the field with aria-describedby: the
- * field's own label ("Describe what you are building, e.g. hinge structure
- * for foldable displays", or in Patent number mode "Patent publication or
- * grant number, e.g. US9000581B2"). The hint goes when the field has text.
+ * surface (--muted fill, --muted-foreground icon, full opacity, the same
+ * fill on hover, default cursor) in both themes. Pressing it, or Enter in
+ * the empty field, focuses the field and shows a hint under the box, tied
+ * to the field with aria-describedby: the field's own label ("Describe
+ * what you are building, e.g. hinge structure for foldable displays", or
+ * in Patent number mode "Patent publication or grant number, e.g.
+ * US9000581B2"). The hint is a paragraph in --muted-foreground at the size
+ * it inherits there (13px, line height 1.4), 8px below the box and 4px in
+ * from its sides. It goes when the field has text.
  * Viewport: both.
  *
- * Measured with the patch, at 1440 and at 390: Tab goes Search settings →
- * Search (aria-disabled="true"); Enter on it focuses the field with
- * aria-describedby="r410-hint" and the hint shown; Search fill #EEEEEE
- * with a #686868 icon in light (4.8:1), #252525 with #A3A3A3 in dark
- * (6.1:1), opacity 1. Typing "hinge" removes aria-disabled and the hint
- * and restores --primary (#252525, white icon, opacity 1).
+ * Measured with the patch, at 1440 and at 390:
+ * - Tab goes Search settings → Search (aria-disabled="true").
+ * - Enter on it focuses the field, with aria-describedby="r410-hint" and
+ *   the hint shown: 13px / 18.2px, #686868, its top 8px under the box
+ *   (one line at 1440, two at 390).
+ * - Search fill #EEEEEE with a #686868 icon in light (4.8:1), #252525 with
+ *   #A3A3A3 in dark (6.1:1), opacity 1.
+ * - Typing "hinge" removes aria-disabled and the hint and restores
+ *   --primary (#252525, white icon, opacity 1).
  *
  * In the component: bind aria-disabled to "cannot submit" instead of
  * disabled, keep loading as aria-busy, and on an empty submit focus the
@@ -41,7 +46,5 @@
 }
 .r410-hint {
   margin: 8px 4px 0;
-  font-size: 14px;
-  line-height: 1.4;
   color: var(--muted-foreground);
 }
