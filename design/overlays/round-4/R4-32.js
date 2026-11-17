@@ -1,9 +1,10 @@
 /* R4-32 (restores R3-37) · Result row: Tab reaches the number link and the version switch
  *
- * Current: the row's IPtech link (US 08664729 B ↗) and its Grant /
- * Application segment both render tabindex="-1", so Tab goes "View details
- * of …" → the drawing strip → the next row, and a keyboard user can neither
- * open the patent in IPtech nor reach the other version (WCAG 2.1.1).
+ * Current: the row's IPtech link ("US 9000581 B2 ↗") and both buttons of its
+ * Grant / Application segment render tabindex="-1". Measured at 1440, Tab
+ * from Sort: "View details of US 9000581 B2" → the strip → the next row's
+ * title button, so a keyboard user can neither open the patent in IPtech nor
+ * reach the other version (WCAG 2.1.1).
  * Wanted:  the link is a plain <a href> in the natural order, ahead of the
  * title, at every width. On desktop, where the row keeps its version switch
  * (R4-23), the switch's two buttons are ordinary buttons in the natural
@@ -12,10 +13,10 @@
  * row needs a roving tabindex.
  * Viewport: both.
  *
- * Measured at 1440 with the patch, Tab from Sort: "Open US 09000581 B2 in
- * IPtech" → Grant → Application → the title button → the strip group →
- * the next row's link, every row. Before: the link and the segment were
- * skipped.
+ * Measured at 1440 with the patch, Tab from Sort: "Open US 9000581 B2 in
+ * IPTECH" → Grant → Application → "Semiconductor package, US 9000581 B2" →
+ * the strip group → the next row's link, every row; no tabindex="-1" left
+ * on a row.
  *
  * In the component: drop tabindex="-1" from the card's <a> and from the
  * segment's buttons. The link's keydown.stop already keeps Enter from
