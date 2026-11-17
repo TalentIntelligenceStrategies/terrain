@@ -6,27 +6,37 @@
  * trigger, which is hidden (0×0), so Reka's referenceHidden writes
  * visibility: hidden and pointer-events: none inline on the popper wrapper.
  * The panel is 358×560 at (0,8), invisible, and no group can be seen or
- * chosen. Its group headings are 11px, tracked 0.08em, in the muted ink,
- * the style of a three-word label, over sentence-length topics. Each leaf is
- * tick (16) + a 32px right-aligned count + gaps before its title, so the
- * title starts 76px in from the heading.
+ * chosen. Its group headings are 11px at weight 500, tracked 0.08em, in
+ * --muted-foreground, over sentence-length topics. Each leaf is tick (16)
+ * + a 32px right-aligned count + gaps before its title, so the title
+ * starts 76px in from the heading.
  * Wanted:  the panel shows, as a sheet fixed to the bottom of the viewport,
- * full width, over a scrim, with Done pinned at its foot above the safe area
- * (R4-20.js adds Done). Headings in sentence case at medium weight, 14px,
- * full ink, untracked. A leaf's tick stays in the row's leading slot, at
- * the heading's edge; the title follows it; the count moves to the row end
- * in tabular Inconsolata.
+ * full width, at most 80dvh tall, top corners 16px, no bottom edge, your
+ * 16px padding (16px plus the bottom safe area at its foot), over a scrim,
+ * color-mix(in oklab, var(--color-black) 40%, transparent). Done is pinned
+ * at its foot (R4-20.js adds it): your secondary button, 44px tall, at the
+ * end of a foot row with a 1px --border top edge and 12px above it. The
+ * headings stay as written in the data, with no text-transform (v1.0.42
+ * already dropped the uppercase), and only their size, tracking and ink
+ * change: 14px, line height 1.35, no tracking, --foreground; the weight
+ * stays 500. A leaf's tick stays in the row's leading slot, at the
+ * heading's edge (the row widened by 8px each side to reach it); the title
+ * follows it after the row's 10px gap and takes the rest of the row; the
+ * count moves to the row end in tabular Inconsolata (--font-mono).
  * Viewport: phone (below sm), and short screens below lg (max-height 480px:
  * a phone in landscape), the scope of your own phone: variant. Tablet and
- * desktop keep the popover, its rows and no Done (measured unchanged at 820).
+ * desktop keep the popover, its rows and no Done (measured unchanged at
+ * 820).
  *
- * Measured with the patch, 390×844: the panel visible, 390×640 at (0,204),
- * bottom at 844, top corners 16px; headings 14px; tick at the heading's left
- * edge; title 26px in from the heading (was 76), 307px wide; the count's
- * right edge at the row's padding edge; Done 60×44 at (313,784). Choosing
- * "Semiconductor package" ticks it and the list reads "50 matched · 11
- * shown"; Done closes the panel. 844×390: 844×312 at (0,78), Done at
- * (767,330).
+ * Measured with the patch:
+ * - 390×844: the panel visible, 390×640 at (0,204), bottom at 844, top
+ *   corners 16px, over the scrim rgba(0,0,0,0.4); headings 14px.
+ * - 390×844: tick at the heading's left edge (x 17); title 26px in from
+ *   the heading (was 76), 307px wide; the count's right edge at the row's
+ *   padding edge; Done 60×44 at (313,784).
+ * - 390×844: choosing "Semiconductor package" ticks it and the list reads
+ *   "50 matched · 11 shown"; Done closes the panel.
+ * - 844×390: 844×312 at (0,78), Done at (767,330).
  *
  * What the patch cannot do: Reka positions the popover's wrapper with an
  * inline transform, and a transformed ancestor is the containing block of a
@@ -54,13 +64,12 @@
     border-bottom: 0;
     border-radius: 16px 16px 0 0;
     padding-bottom: calc(16px + env(safe-area-inset-bottom));
-    box-shadow: 0 0 0 100vmax color-mix(in oklab, var(--color-black) 45%, transparent);
+    box-shadow: 0 0 0 100vmax color-mix(in oklab, var(--color-black) 40%, transparent);
   }
   .result-groups-popover[data-r420] ul > li > h3 {
     letter-spacing: 0;
     font-size: 14px;
     line-height: 1.35;
-    font-weight: 500;
     color: var(--foreground);
   }
   .result-groups-popover[data-r420] [data-group-node] {
