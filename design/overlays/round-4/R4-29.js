@@ -4,8 +4,7 @@
  * and the figure viewer all print the number one way, "US 9000581 B2". The
  * record's Number field (dl.record-fields, first row) still prints the
  * zero-padded document number alone, "09000581", so one screen shows the
- * same patent's number in two forms, and the padded one matches nothing a
- * reader can search for.
+ * same patent's number in two forms.
  * Wanted:  the Number field reads "US 9000581 B2", the form the row prints.
  * The unpadded form is kept everywhere it already is; nothing else changes.
  * The Kind field (B2) and the Where field stay as they are.
