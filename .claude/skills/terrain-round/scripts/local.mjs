@@ -1,7 +1,7 @@
 /* Serves their build from the mirror, with a round's patch on top, at 127.0.0.1.
  *
  *   node scripts/local.mjs --round 3 [--port 8766]
- *   then http://127.0.0.1:8766/ipcembedding/
+ *   then http://127.0.0.1:8766/<their path>/ (VuePat/ from round 4)
  *
  * The files are round-N/mirror/ (mirror.mjs). EVERY /api/ CALL IS ANSWERED
  * FROM round-N/replay/api.json; a key the recording lacks gets a 503 and is
@@ -14,7 +14,7 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
-import { args, roundDir, die, readOverlay } from './lib.mjs';
+import { args, roundDir, die, readOverlay, baseOf } from './lib.mjs';
 
 const a = args();
 if (!a.round) die('--round N is required');
@@ -22,7 +22,8 @@ const port = Number(a.port || 8766);
 const mirror = roundDir(a.round, 'mirror');
 const meta = path.join(mirror, 'MIRROR.json');
 if (!fs.existsSync(meta)) die(`no ${path.relative(process.cwd(), meta)}: run mirror.mjs --round ${a.round} first`);
-const { version, files } = JSON.parse(fs.readFileSync(meta, 'utf8'));
+const { version, files, from } = JSON.parse(fs.readFileSync(meta, 'utf8'));
+const base = baseOf(from);
 const store = JSON.parse(fs.readFileSync(path.join(roundDir(a.round, 'replay'), 'api.json'), 'utf8'));
 const TELEMETRY = /posthog|\/rum\/v\d/i;
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript',
@@ -41,7 +42,7 @@ background:var(--card);color:var(--foreground);font:500 12px/1 var(--font-sans,s
 onclick="document.cookie='terrain_patch=${on ? 'off' : 'on'};path=/';location.reload()">Patch <b>${on ? 'on' : 'off'}</b></button>`;
 
 function page(req) {
-  let html = fs.readFileSync(path.join(mirror, 'ipcembedding', 'index.html'), 'utf8')
+  let html = fs.readFileSync(path.join(mirror, base, 'index.html'), 'utf8')
     /* their drawing host, served from the mirror's copies */
     .replace(/https:\/\/(impat\.webpat\.co)\//g, '/_ext/$1/');
   const on = !/(?:^|;\s*)terrain_patch=off/.test(req.headers.cookie || '');
@@ -63,8 +64,8 @@ console.info('terrain local: round ${a.round} patch, ${files.length} files');})(
 const server = http.createServer((req, res) => {
   const u = new URL(req.url, `http://127.0.0.1:${port}`);
   if (TELEMETRY.test(u.pathname)) { res.writeHead(204); return res.end(); }
-  if (u.pathname === '/' ) { res.writeHead(302, { Location: '/ipcembedding/' }); return res.end(); }
-  if (u.pathname.startsWith('/ipcembedding/api/')) {
+  if (u.pathname === '/' ) { res.writeHead(302, { Location: `/${base}/` }); return res.end(); }
+  if (u.pathname.startsWith(`/${base}/api/`)) {
     let body = '';
     req.on('data', c => { body += c; });
     req.on('end', () => {
@@ -86,7 +87,7 @@ const server = http.createServer((req, res) => {
   if (p.endsWith('/')) p += 'index.html';
   const file = path.join(mirror, p);
   if (!file.startsWith(mirror)) { res.writeHead(403); return res.end(); }
-  const isPage = p === '/ipcembedding/index.html' || (!path.extname(p) && p.startsWith('/ipcembedding'));
+  const isPage = p === `/${base}/index.html` || (!path.extname(p) && p.startsWith(`/${base}`));
   if (isPage) {
     res.writeHead(200, { 'Content-Type': TYPES['.html'], 'Cache-Control': 'no-store' });
     return res.end(page(req));
@@ -101,5 +102,5 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, '127.0.0.1', () => {
   const n = readOverlay(a.round, 'all').files.length;
-  console.log(`their build ${version}, local, at http://127.0.0.1:${port}/ipcembedding/ · round ${a.round} patch: ${n} files · ${Object.keys(store).length} recorded answers`);
+  console.log(`their build ${version}, local, at http://127.0.0.1:${port}/${base}/ · round ${a.round} patch: ${n} files · ${Object.keys(store).length} recorded answers`);
 });

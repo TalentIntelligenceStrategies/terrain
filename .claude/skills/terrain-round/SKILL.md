@@ -1,6 +1,6 @@
 ---
 name: terrain-round
-description: Run one review-and-handoff round against Innovue's shipped build of TIS Terrain (pi.innovue.ltd/ipcembedding) — capture it, audit features and design, list the differences from app/ and the last handoff, iterate fixes as overlays on their live build or in app/, measure, and assemble the delta handoff package. Use when the user says "new round", "terrain round", "review their build", "Innovue's build", or "handoff package". Runs in checkpointed phases; pass a phase name to jump to it.
+description: Run one review-and-handoff round against Innovue's shipped build of TIS Terrain (terrain.innovue.ltd/VuePat) — capture it, audit features and design, list the differences from app/ and the last handoff, iterate fixes as overlays on their live build or in app/, measure, and assemble the delta handoff package. Use when the user says "new round", "terrain round", "review their build", "Innovue's build", or "handoff package". Runs in checkpointed phases; pass a phase name to jump to it.
 ---
 
 # /terrain-round
@@ -210,7 +210,7 @@ For each item, in the order the user picks:
   their live address, which reads as editing their site:
   ```sh
   node .claude/skills/terrain-round/scripts/mirror.mjs --round N   # once: their static files and drawings
-  node .claude/skills/terrain-round/scripts/local.mjs --round N    # http://127.0.0.1:8766/ipcembedding/
+  node .claude/skills/terrain-round/scripts/local.mjs --round N    # http://127.0.0.1:8766/VuePat/ (a round's mirror serves under the path it was taken from)
   ```
   The mirror walks their site with every `/api/` call answered from `replay/api.json` and never
   from their service. The server answers only from that recording (any other search shows an

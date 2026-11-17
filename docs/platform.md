@@ -1222,7 +1222,7 @@ knowing before changing one.*
 ## 13 · Rounds against Innovue's build
 
 **Innovue builds Terrain from our handoff packages, on their own engine, and ships it at
-`https://pi.innovue.ltd/ipcembedding/`.** Their build is what the founder uses; `app/` is the
+`https://terrain.innovue.ltd/VuePat/`.** Their build is what the founder uses; `app/` is the
 reference it is built from. A round compares their shipped build with what they were
 given, settles every difference, and sends back only the differences. The procedure is the
 `/terrain-round` skill in `.claude/skills/terrain-round/`. This section is what it decides against.

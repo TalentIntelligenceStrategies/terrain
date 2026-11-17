@@ -12,7 +12,12 @@ import path from 'node:path';
 import fs from 'node:fs';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..');
-export const THEIRS = 'https://pi.innovue.ltd/ipcembedding/';
+export const THEIRS = 'https://terrain.innovue.ltd/VuePat/';
+/* The path their build is served under ('VuePat'), from its address. A mirror
+   records the address it was taken from, so an older round's mirror still
+   serves under its own path. */
+export const baseOf = url => new URL(url).pathname.replace(/^\/|\/$/g, '');
+export const BASE = baseOf(THEIRS);
 export const OURS_LOCAL = 'http://127.0.0.1:8765/app/';
 export const QUERY = 'A semiconductor package with a through-silicon via and a heat spreader that reduces warpage';
 
@@ -72,7 +77,7 @@ export async function replay(ctx, round, { mode = 'replay' } = {}) {
   const file = path.join(roundDir(round, 'replay'), 'api.json');
   const store = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
   let live = 0, served = 0, dirty = false;
-  await ctx.route(/\/ipcembedding\/api\//, async route => {
+  await ctx.route(new RegExp(`/${BASE}/api/`), async route => {
     const r = route.request(), u = new URL(r.url());
     const key = `${r.method()} ${u.pathname}${u.search} ${r.postData() || ''}`;
     const hit = store[key];

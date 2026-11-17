@@ -11,7 +11,7 @@
  * That folder is their code, so it stays in visual-reference/, untracked. */
 import fs from 'node:fs';
 import path from 'node:path';
-import { args, roundDir, die, open, reachTheirs, THEIRS, THEIRS_STATES } from './lib.mjs';
+import { args, roundDir, die, open, reachTheirs, THEIRS, THEIRS_STATES, BASE } from './lib.mjs';
 
 const a = args();
 if (!a.round) die('--round N is required');
@@ -25,7 +25,7 @@ let version = null;
 for (const vp of ['desktop', 'phone']) {
   for (const state of THEIRS_STATES) {
     const { browser, ctx, page } = await open({ viewport: vp });
-    await ctx.route(/\/ipcembedding\/api\//, route => {
+    await ctx.route(new RegExp(`/${BASE}/api/`), route => {
       const r = route.request(), u = new URL(r.url());
       const key = `${r.method()} ${u.pathname}${u.search} ${r.postData() || ''}`;
       const hit = store[key];
