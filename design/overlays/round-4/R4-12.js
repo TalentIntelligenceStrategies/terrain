@@ -13,13 +13,13 @@
  * desktop spellcheck underlines a patent number exactly as iOS does.
  *
  * Measured with the patch, at 390 and at 1440:
- *   Text:           the three absent; enterkeyhint search
- *   Patent number:  characters / off / false; enterkeyhint search
- *   Text again:     the three absent; enterkeyhint search
- * What the keyboard then does needs a device.
+ * - Text: the three absent; enterkeyhint search.
+ * - Patent number: characters / off / false; enterkeyhint search.
+ * - Text again: the three absent; enterkeyhint search.
+ * - What the keyboard then does needs a device.
  *
  * In the component: bind autocapitalize, autocorrect and spellcheck to the
- * Patent number mode on the textarea. The patch follows their aria-pressed
+ * Patent number mode on the textarea. The patch follows your aria-pressed
  * on the Patent number segment. */
 (() => {
   if (window.__r4_12) return;
