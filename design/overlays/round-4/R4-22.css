@@ -7,13 +7,12 @@
  * 96×112. Row 1 is 435.5px tall.
  * Wanted:  rank, number, kind and score on one line (R4-23 takes the
  * segment off the row on a phone), in that order: the rank first, "#1" in
- * a soft chip (--muted fill, no border, 20px, Inconsolata 13 medium in the
- * foreground colour), then the number and kind in the muted colour, then
- * "Relevance 0.8862" at the right, muted. The rank is the line's one
- * emphasis; the title under it stays the card's heading. The abstract keeps
- * its three lines, at 14/21 with text-wrap: pretty: they are what a reader
- * decides by without opening the record. Strip tiles are 80×100, the
- * record's 4:5.
+ * a soft chip (--muted fill, no border, 20px tall, 6px inline padding,
+ * calc(var(--radius) - 4px) = 4px corners, Inconsolata 13/18 at 500 in
+ * --foreground), then the number and kind, 13/18 in --muted-foreground,
+ * then "Relevance 0.8862" at the right in --muted-foreground; 8px between
+ * the three, centred on one line. The abstract keeps its three lines, at
+ * 14/21 with text-wrap: pretty. Strip tiles are 80×100, the record's 4:5.
  * Viewport: phone (below sm, 40rem). Desktop is untouched.
  *
  * Measured at 390 with the combined patch, row 1: the row 410px tall (was
@@ -21,7 +20,7 @@
  * text, radius 4px; the chip, the number and the score centred on one line
  * (y 93); the abstract three lines at 14/21, 63px; tiles 80×100.
  *
- * Under 360px (one width query beyond their breakpoints, for the narrowest
+ * Under 360px (one width query beyond your breakpoints, for the narrowest
  * phones) the score moves to a second line, under the number, so the
  * number and kind are never cut.
  *
