@@ -2,15 +2,15 @@
  *
  * Current: three live regions speak about one task. When Find similar
  * starts, the list's loading line "Finding similar patents…" is a
- * p[role=status], and 80ms later the header's chip "Nearest to US 9000581 B2"
+ * p[role=status], and about 80ms later the header's chip "Nearest to US 9000581 B2"
  * arrives as a second span[role=status], while the page's own polite region
  * (div[role=status][aria-atomic], the one that says "50 matched, 50 shown.")
  * keeps its count and is not told. Measured on a phone: +0ms loading line,
- * +79ms chip, +380ms the loading line is removed and the chip's region stays.
+ * +82ms chip, +402ms the loading line is removed and the chip's region stays.
  * Wanted:  one region, the page's existing one. It says "Finding similar
  * patents…" when the similar search starts, and that text is replaced on
  * completion by "Nearest to US 9000581 B2. 50 matched, 50 shown." The
- * loading line and the chip are plain text, still visible as shipped; their
+ * loading line and the chip are plain text, still visible as shipped; your
  * v-if already removes the loading line on completion.
  * Viewport: both (it was found on a phone).
  *
@@ -22,7 +22,7 @@
  * In the component: drop role="status" from the chip and from the list's
  * loading line, and bind the page region's text to similarLoading /
  * nearestPatent as well as the count. The patch writes into the region's own
- * text node, so their next count update still lands. */
+ * text node, so your next count update still lands. */
 (() => {
   if (window.__r4_34) return;
   window.__r4_34 = true;
