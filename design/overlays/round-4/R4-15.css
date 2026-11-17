@@ -1,23 +1,25 @@
 /* R4-15 (restores R3-28) · Search settings: a bottom sheet on a phone
  *
- * Current: below sm the panel is a popover positioned by script above or
- * below the settings button. On home it opens upward over the field it
- * configures and most of the hero; the page behind still scrolls; there is
- * no scrim; the count and Rerank segments are 24px tall in a 28px track.
+ * Current: below sm the panel is a popover positioned by script under the
+ * settings button: on results 358×606 at (17,162), 12px corners all round.
+ * There is no scrim, and the page behind scrolls (a 600px wheel over it
+ * moves the page 600px). Every segment (10…200, Off/On, Filed/Published/
+ * Priority) is 24px tall; Reset (67×36) and Done (60×36) sit at the
+ * panel's foot, in its flow.
  * Wanted:  below sm (40rem), a sheet fixed to the bottom of the viewport,
  * full width, top corners rounded, over a scrim; Reset and Done stay pinned
  * at its foot above the home-indicator safe area while the body scrolls;
  * scroll is contained in the sheet and the page behind does not scroll; the
  * segments are 44px tall.
  * Viewport: phone (below sm). Desktop and tablet keep the popover.
- * Measured on the live page at 390 with the patch: sheet 0..390 wide,
- * bottom 844 = the viewport; every segment 44px; the foot (Reset, Done)
- * spans 779..828, 16px + safe area above the sheet's bottom edge;
- * overscroll-behavior contain; page scrollY 0 before and after a 600px
- * wheel over the scrim. At 1440 the popover is unchanged (dark shots
- * pixel-identical before and after).
+ * Measured with the patch, 390×844 on results: the sheet 390×666 at
+ * (0,178), its bottom at 844, top corners 16px, over a black 45% scrim;
+ * every segment 44px; the body scrolls (589 in 539) while Reset and Done
+ * stay at y 792, 16px plus the safe area above the sheet's bottom edge;
+ * the page does not move under a 600px wheel. At 1440 the popover is
+ * unchanged.
  *
- * What the patch cannot do: their script writes max-height, left and width
+ * What the patch cannot do: your script writes max-height, left and width
  * inline on the panel and its wrapper for the popover. The patch does not
  * fight them; the sheet is fixed (so left and width do not apply) and the
  * body is capped instead (.pop-body max-height). In the component, branch
@@ -25,7 +27,7 @@
  * The scrim is a spread shadow on the sheet plus a brightness filter on the
  * sticky header, which sits in a higher stacking context than the panel;
  * in the component it is one element under the sheet. Tapping the scrim
- * closes the panel through their existing outside-pointerdown handler,
+ * closes the panel through your existing outside-pointerdown handler,
  * which discards unsaved changes as it already does. */
 @media not all and (min-width: 40rem) {
   .pop-set {
@@ -57,7 +59,7 @@
   body:has(.pop-set) header.sticky {
     filter: brightness(0.55);
   }
-  /* Their pop-fade scales the panel's wrapper; a transform on an ancestor
+  /* Your pop-fade scales the panel's wrapper; a transform on an ancestor
      would make the fixed sheet jump to it for the length of the fade. */
   :is(.pop-fade-enter-from, .pop-fade-leave-to):has(.pop-set) {
     transform: none;
