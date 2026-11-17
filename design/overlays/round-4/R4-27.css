@@ -2,24 +2,30 @@
  *
  * Current: a figure tile still loading shows TiffImage's bg-muted span under
  * .sk-shimmer: rgb(238,238,238) in light and rgb(37,37,37) in dark, a
- * dark-grey block on the tile's white paper, which on a phone reads as a
- * failure; the sweep is themed (oklch 0.72 / 0.15 with a 0.96 band in dark).
- * A strip still loading ([role=status] "Loading drawings") draws its shimmer
- * tiles on the card's ground, with no paper under them.
- * Wanted:  one placeholder: their .sk-shimmer on the paper ground, which is
+ * dark-grey block on the tile's white paper. The sweep is themed: a base of
+ * --muted-foreground at 15% (oklch 0.52 in light, 0.72 in dark) with a band
+ * of --foreground at 14% (oklch 0.26 in light, 0.96 in dark), so in dark a
+ * light band crosses a dark block on white. A strip still loading
+ * ([role=status] "Loading drawings") draws its shimmer tiles on the card's
+ * ground, with no paper under them.
+ * Wanted:  one placeholder: your .sk-shimmer on the paper ground, which is
  * what the drawing arrives on, so nothing changes colour when it lands. The
- * paper does not swap with the theme, so the sweep is drawn in black at low
- * alpha, as their light theme draws it, in both themes. Under reduced
- * motion their own rule stops the sweep and leaves a still tile on paper.
- * A failure keeps their shipped "Figure {index} did not load" with Retry.
+ * placeholder span is transparent over the tile's bg-white. The paper does
+ * not swap with the theme, so the sweep is black at low alpha in both
+ * themes: a base of black at 4% with a band of black at 7%, at your angle
+ * (100deg) and band stops (30%, 50%, 70%). A strip's loading tiles take
+ * the same paper (--color-white) under the same sweep, with the tile's own
+ * 1px border (--border at 60%). Under reduced motion your own rule stops the
+ * sweep and leaves a still tile on paper. A failure keeps your shipped
+ * "Figure {index} did not load" with Retry.
  * Viewport: both (it shows most on a phone, where drawings load slowest).
  *
  * Measured at 390 with every drawing request held, light and dark: the
  * span is transparent over the tile's white, the shimmer rgba(0,0,0,.04)
- * with a .07 band. The strip-level loader did not stay up long enough to
- * sample in the recorded search; its rule is written against its markup.
+ * with a .07 band. The strip-level loader was not seen in the recording;
+ * its rule is read from your markup.
  *
- * Their tile already uses bg-white and their badge bg-black, so the patch
+ * Your tile already uses bg-white and your badge bg-black, so the patch
  * uses white and black for the paper and the sweep. In the component: drop
  * bg-muted from TiffImage's placeholder span inside a figure tile, and give
  * the strip's loading tiles the tile's own bg-white and border. */
@@ -28,13 +34,12 @@
   background-color: transparent;
 }
 [data-idx] > span.bg-muted > .sk-shimmer,
-.detail-figures > div > span.bg-muted > .sk-shimmer,
-[data-result-card] [role="status"][aria-label="Loading drawings"] > .sk-shimmer {
+.detail-figures > div > span.bg-muted > .sk-shimmer {
   background-color: rgb(0 0 0 / 0.04);
   background-image: linear-gradient(100deg, transparent 30%, rgb(0 0 0 / 0.07) 50%, transparent 70%);
 }
 [data-result-card] [role="status"][aria-label="Loading drawings"] > .sk-shimmer {
-  background-color: white;
+  background-color: var(--color-white);
   background-image: linear-gradient(100deg, transparent 30%, rgb(0 0 0 / 0.07) 50%, transparent 70%),
     linear-gradient(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.04));
   border: 1px solid color-mix(in oklch, var(--border) 60%, transparent);
