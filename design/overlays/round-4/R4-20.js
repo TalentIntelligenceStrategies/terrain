@@ -1,15 +1,15 @@
 /* R4-20 (restores R3-27) · Grouping panel: the sheet's position and its Done (see R4-20.css)
  *
- * Below sm: marks the panel as a sheet, offsets it by where Reka put its
- * transformed wrapper (so the fixed sheet lands on the viewport's bottom
- * edge), and adds Done, which closes the panel through its own trigger
- * ("Hide result groups"). Re-measures whenever Reka rewrites the wrapper's
- * style, on resize, and when the breakpoint changes. Their "Done" string is
- * the one settings uses. */
+ * On a phone and in landscape: marks the panel as a sheet, offsets it by
+ * where Reka put its transformed wrapper (so the fixed sheet lands on the
+ * viewport's bottom edge), and adds Done, which closes the panel through its
+ * own trigger. Re-measures whenever Reka rewrites the wrapper's style, on
+ * resize, and when the breakpoint changes. The "Done" string is the one
+ * Search settings uses. */
 (() => {
   if (window.__r4_20) return;
   window.__r4_20 = true;
-  const phone = matchMedia('not all and (min-width: 40rem)');
+  const phone = matchMedia('(max-width: 39.99rem), (max-height: 480px) and (max-width: 63.99rem)');
   const watched = new WeakSet();
 
   const place = pop => {
