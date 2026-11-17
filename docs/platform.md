@@ -1347,7 +1347,7 @@ tied to R3-11's *holder names as published*.
 | R4-37 | R3-16 | phone | Record | The field panel in two columns; the drawings a strip that scrolls sideways, as on a row |
 | R4-38 | R3-25 | phone | Record | In landscape the record fills the height; one action row |
 | R4-39 | R3-09 | phone | Record | Export is two buttons, CSV and Markdown, and the download is confirmed by name |
-| R4-40 | R3-40 | phone, tablet | Record | Focus returns to the row after Escape and after the drag down too, once those close the record (R4-35, R4-42) |
+| R4-40 | R3-40 | phone, tablet | Record | Focus returns to the row whose record was showing, however the record closes |
 | R4-41 | R3-47 | both | Record | A disabled chevron reads as disabled, at about 3:1 |
 | R4-42 | R3-55 | both | Record | Escape closes the record |
 | R4-43 | R3-20 | phone | Drawing viewer | Full bleed, the drawing at full width, close at the top edge |
