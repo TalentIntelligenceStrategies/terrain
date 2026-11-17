@@ -2,15 +2,14 @@
  *
  * Current: the strip lives inside the row's 20px inline padding. At 390 the
  * scroller runs from x 37 to 353 inside a card from 17 to 373; at 1440 from
- * 37 to 683 inside a card from 17 to 703. Its last visible tile ends in a
- * hard cut at the text column's edge, with nothing to say the strip scrolls.
+ * 37 to 683 inside a card from 17 to 703. Its last visible tile is cut at
+ * the text column's edge.
  * Wanted:  the strip bleeds through the row's padding to the card's edge
  * (margin-inline -1.25rem, padding-inline 1.25rem), so at rest the first
  * tile still lines up with the text and the cut tile sits at the card's own
- * edge, which reads as "more". scroll-padding-inline equals the padding,
- * so a tile brought into view by focus lands against the text column. No
- * scroll snap: snap would settle every rest position on a flush edge, and
- * the tile cut at the edge is the one thing that says the strip scrolls.
+ * edge. scroll-padding-inline equals the padding, so a tile brought into
+ * view by focus lands against the text column. No scroll snap, so a rest
+ * position can leave a tile cut at the edge.
  * Viewport: both. The row's padding is px-5 at every width.
  *
  * Measured with the patch: the scroller runs 17–373 at 390 and 17–703 at
@@ -20,7 +19,7 @@
  * The rule above the strip (border-t on its wrapper) stays inside the
  * padding. In the component: the same on the strip's scroller; if the row
  * padding changes, the three values follow it. */
-[data-result-card] div.overflow-x-auto:has(> [data-idx]),
+[data-result-card] div:has(> [data-idx]),
 [data-result-card] [role="status"][aria-label="Loading drawings"] {
   margin-inline: -1.25rem;
   padding-inline: 1.25rem;
