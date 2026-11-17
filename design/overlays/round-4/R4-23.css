@@ -3,7 +3,7 @@
  * See R4-23.js for Current and Wanted. This file hides the row's segment and
  * the single-version kind word (both replaced by the text in the number
  * line), styles the kind text, and draws the record's version tabs under
- * the title in the head (R4-36 places them).
+ * the title in the record's head ([data-detail-head]).
  *
  * The segment is hidden, not removed, because the patch's tabs drive it;
  * in the component it is not rendered on the row at all.
@@ -58,10 +58,25 @@
   outline-offset: 2px;
   border-radius: 2px;
 }
+/* The record's head (phone): with the tabs, they end the head on its rule;
+   on a patent with one version, the kind beside the number instead. */
+@media not all and (min-width: 40rem) {
+  [role="dialog"][data-result-detail] [data-detail-head]:has([data-r3-version]) {
+    padding-bottom: 0;
+  }
+  [data-detail-head] [data-r3-version] {
+    margin-top: 4px;
+  }
+  [data-detail-head] p[data-r3-head-kind]::after {
+    content: " · " attr(data-r3-head-kind);
+    font-family: var(--font-sans);
+  }
+}
 /* Last in the file, so it outranks the display rules above by source order. */
 @media (min-width: 40rem) {
   [data-r3-kind],
-  [data-r3-version] {
+  [data-r3-version],
+  [data-detail-head] p[data-r3-head-kind]::after {
     display: none;
   }
 }
