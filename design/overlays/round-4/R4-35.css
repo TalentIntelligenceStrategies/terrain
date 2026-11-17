@@ -10,37 +10,38 @@
  * overscroll-behavior: auto, so a scroll that reaches the record's end
  * runs on into the list behind it. Nothing in the stylesheet or the
  * scripts reads env(safe-area-inset-*).
- * Wanted:  their floating card, tightened (design-language.md §7, "Below
- * 1080 the record is a card over the list"): 8px from every edge, its
- * corners as theirs (20px), so a sliver of the list shows on each side. It
- * scrolls itself with overscroll-behavior: contain. A drag down on its head
- * closes it (R4-35.js), as do ×, Escape (R4-42), Back, and a pointer click
- * on the scrim. The card's top and bottom clear the safe area, so the
- * footer's actions never sit under the home indicator.
- * Viewport: phone, below sm (40rem) and taller than 480px. From sm up their
+ * Wanted:  your floating card, inset top and bottom by max(8px,
+ * env(safe-area-inset-top / -bottom)) and 8px at the sides, with your 20px
+ * corners, so a sliver of the list shows on each side. Its scroll area is
+ * overscroll-behavior: contain. A drag down on its head closes it
+ * (R4-35.js), as do ×, Escape (R4-42), Back, and a pointer click on the
+ * scrim; while the drag is not under the finger the card moves with your
+ * --dur-land and --ease-out-expo, and not at all under reduced motion.
+ * Viewport: phone, below sm (40rem) and taller than 480px. From sm up your
  * centred card is unchanged, and landscape is R4-38's.
  *
- * Measured at 390×844 with the combined patch: card x 8, y 8, w 374,
- * h 828, corners 20px; the scroll area overscroll-behavior contain; the
- * head's touch-action none, so a drag that starts on it moves the card
- * and not the body.
+ * Measured at 390×844 with the combined patch:
+ * - card x 8, y 8, w 374, h 828, corners 20px
+ * - the scroll area overscroll-behavior contain
+ * - the head's touch-action none, so a drag that starts on it moves the
+ *   card and not the body
  *
- * The safe area: the patch insets the card by max(8px, env(safe-area-inset-*)),
- * but env() reads 0 until the page's viewport meta carries
- * viewport-fit=cover, and yours is "width=device-width, initial-scale=1".
- * The component needs both: viewport-fit=cover in the meta, and the inset
- * on the dialog. The patch does not change the meta, because that moves
- * every page's layout under the notch.
+ * The safe-area part needs Q2: env() reads 0 until the page's viewport meta
+ * carries viewport-fit=cover, and yours is "width=device-width,
+ * initial-scale=1", so until Q2 nothing visible changes. The component
+ * needs both: viewport-fit=cover in the meta, and the inset on the dialog.
+ * The patch does not change the meta, because that moves every page's
+ * layout under the notch.
  *
  * A finger tap in the 8px gutter does not close the card, with or without
  * the patch: Chrome's touch adjustment moves a tap that close to the card
  * onto the card (on your own 16px inset a tap 6px from the card fails too).
- * The drag on the head is the gesture that replaces it.
+ * The drag on the head is the gesture that closes it by touch.
  *
- * In the component: the 8px card is the DialogContent's own classes below
- * sm (inset-2, no translate), with the safe-area inset on top and bottom
- * and overscroll-contain on the scroll area; the drag is the dialog's own
- * state, not listeners laid over it (R4-35.js). */
+ * In the component: the card is the DialogContent's own classes below sm
+ * (inset-x-2, no translate), with the safe-area inset on top and bottom and
+ * overscroll-contain on the scroll area; the drag is the dialog's own state,
+ * not listeners laid over it (R4-35.js). */
 @media (max-width: 39.99rem) and (min-height: 480.01px) {
   [role="dialog"][data-result-detail] {
     top: max(8px, env(safe-area-inset-top));
@@ -50,9 +51,9 @@
     width: auto;
     max-width: none;
     max-height: none;
-    translate: 0 var(--terrain-sheet-drag, 0px);
+    translate: 0 var(--r4-sheet-drag, 0px);
   }
-  [role="dialog"][data-result-detail]:not([data-terrain-dragging]) {
+  [role="dialog"][data-result-detail]:not([data-r4-dragging]) {
     transition: translate var(--dur-land) var(--ease-out-expo);
   }
   [role="dialog"][data-result-detail] [data-detail-head] {
