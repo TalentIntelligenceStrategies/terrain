@@ -1,11 +1,15 @@
 /* R4-31 (restores R3-45) · Result row: the row's link is named by its title
  *
  * Current: the row's primary control, the title button, is named "View
- * details of US 08664729 B", so a screen reader's list of controls is fifty
- * numbers with no title, the one thing a user scans by (WCAG 2.4.4).
+ * details of US 9000581 B2", so the heading's accessible name is the number
+ * too, and a screen reader's list of controls is fifty numbers with no
+ * title, the one thing a user scans by (WCAG 2.4.4).
  * Wanted:  aria-label "{title}, {pn}", e.g. "Semiconductor package,
- * US 09000581 B2", with the full kind (R4-29).
+ * US 9000581 B2".
  * Viewport: both.
+ *
+ * Measured with the patch, phone and desktop: row 1's title button is
+ * "Semiconductor package, US 9000581 B2".
  *
  * In the component: aria-label from the hit's title and the formatted number;
  * or drop the aria-label and let the visible title be the name, with the
@@ -13,13 +17,7 @@
 (() => {
   if (window.__r4_31) return;
   window.__r4_31 = true;
-  const pnOf = card => {
-    const shown = card.querySelector('a[title^="Open "] span')?.textContent.trim() || '';
-    const u = card.querySelector('a[href*="docId="]')?.getAttribute('href') || card.querySelector('[data-idx] img')?.getAttribute('src') || '';
-    const id = (u.match(/docId=([^&#]+)/) || u.match(/\/drw\/([^/?#]+)/) || [])[1] || '';
-    const kind = (id.match(/_([A-Z][0-9]?)$/) || [])[1] || '';
-    return shown.replace(/^([A-Z]{2} [0-9A-Z]{5,}) ([A-Z][0-9]?)$/, (m, pn, k) => (kind && kind[0] === k[0] ? `${pn} ${kind}` : m));
-  };
+  const pnOf = card => card.querySelector('a[title^="Open "] span')?.textContent.trim() || '';
   const fix = () => {
     for (const card of document.querySelectorAll('[data-result-card]')) {
       const b = card.querySelector('button[data-card-primary]');
