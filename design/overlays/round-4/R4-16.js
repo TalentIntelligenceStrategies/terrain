@@ -1,13 +1,13 @@
 /* R4-16 (restores R3-12) · Search settings: parallel document types; Rerank says what it does
  *
- * Current: What to include reads "Granted patents" beside the singular
- * "Application". Rerank results reads Off / On and nothing says what it
+ * Current: What to include reads "Granted patents" (135×32) beside the
+ * singular "Application" (105×32). Rerank results reads Off / On and nothing says what it
  * changes, so nobody has a reason to pick either.
  * Wanted:  the two chips read "Grants" and "Applications". Under Rerank, one
  * muted line: "Re-scores the top 200 against your text. Text mode only."
  *
  * What Rerank does, read from your shipped client code, not from a
- * response: with Rerank on and a text query, the search asks for 400 hits
+ * response: with Rerank on and a text query, the search asks for 400 hits,
  * keeps the top 200 (grant/application pairs merged
  * first where both kinds are searched), posts those 200 and the query text
  * to /Search/GetPatentRerank, re-sorts them by the scores it returns and
@@ -16,6 +16,9 @@
  * call requires a text query). What model scores the 200 is not in the client; the hint
  * says only what the client shows.
  * Viewport: both.
+ * Measured with the patch, phone and desktop: the chips read "Grants" and
+ * "Applications"; the hint sits under the segment, and the segment's
+ * aria-describedby names it.
  *
  * In the component: change search.kinds (or the chip labels) to "Grants" /
  * "Applications", and add the hint as a string under search.rerank. The
