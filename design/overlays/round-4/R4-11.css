@@ -8,17 +8,18 @@
  * Wanted:  the panel opens on focus only when it has entries to pick. With
  * none, focusing the field opens nothing. The History item in the
  * masthead still opens its own panel, with the empty line, as it does now.
- * Viewport: both; the phone panel is the same component.
+ * Viewport: desktop, where it was found; the rule holds at every width,
+ * since the phone panel is the same component.
  *
  * Measured with the patch, no history: on focus the panel element still
- * mounts (their v-if) but computes display: none, at 1440 and 390; the
+ * mounts (your v-if) but computes display: none, at 1440 and 390; the
  * masthead's History still opens its panel with the empty line. With one
  * search in history, focus opens the panel with its list as before
  * (106px at 1440).
  *
  * In the component: add history.length to the condition that renders the
  * panel (focused && !query.trim() && items.length). The patch keys on what
- * the empty panel renders: their SearchHistory with no list in it. */
+ * the empty panel renders: your SearchHistory with no list in it. */
 .search-box-morph ~ div.top-full:not(:has(ul)) {
   display: none;
 }
