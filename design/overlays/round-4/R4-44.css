@@ -10,19 +10,22 @@
  * Wanted:  the head icons, the pill, its readout, separators and pressed
  * state from your swapping tokens (--muted-foreground; the pill --card at
  * 88%, so the drawing shows faintly through it; --border; --primary /
- * --primary-foreground; --accent); a 2px ink-pair ring on the
- * current thumbnail (--foreground, offset 2px so the band shows between
- * ring and thumbnail) in both themes. The paper stays white in both themes:
- * that is right and unchanged here.
+ * --primary-foreground; --accent); a 2px --foreground outline on the
+ * current thumbnail, offset 2px so the band shows between outline and
+ * thumbnail, in both themes. Below 40rem, where the pill sits on the paper
+ * (R4-43), its edge is #252525 at 50% instead of --border. A pill button
+ * on hover (fine pointer) takes --foreground on --accent; a pressed one
+ * --primary-foreground on --primary. The paper stays white in both themes,
+ * unchanged here.
  * Viewport: all.
  *
  * Measured with the patch, desktop dark: Close and every pill icon
  * #A3A3A3 (6.9:1 on the band); the pill --card at 88% with a #333333 edge
  * and separators; the readout #A3A3A3; the current thumbnail outlined 2px
  * solid #F0F0F0, offset 2px (#252525 in light). On a phone, where the pill
- * sits on the paper, its edge is #252525 at 50%. The close icon in light
- * goes from 7.0:1 to 5.57:1 on purpose: it takes --muted-foreground, as the
- * other head icons do, and stays above 4.5:1.
+ * sits on the paper, its edge is #252525 at 50%. In light the close icon
+ * goes from 7.0:1 to 5.57:1: it takes --muted-foreground, as the other
+ * head icons do, and stays above 4.5:1.
  *
  * In the component: the pill is the one control that can sit on the paper
  * (it does on a phone, R4-43). There it stays a --card pill, but its edge is
@@ -57,7 +60,7 @@
     background: var(--accent);
   }
 }
-.figview .figstrip-btn.is-current {
+.figview .figstrip-btn:has(> [aria-current="true"]) {
   outline: 2px solid var(--foreground);
   outline-offset: 2px;
 }
