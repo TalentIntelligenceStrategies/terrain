@@ -3,15 +3,16 @@
  * Current: the selected field, a tile at sm and up and a chip on the
  * phone, is drawn with a 1px foreground border plus a 1px foreground inset
  * ring (box-shadow "rgb(37,37,37) 0 0 0 1px inset" in light), a 2px dark
- * edge that reads as the focus ring. It carries no other mark: the only
+ * edge, the width of the 2px focus ring. It carries no other mark: the only
  * svg in it is the field's icon. Keyboard focus is already distinct: a 2px
  * ring that appears only on :focus-visible, not after a click.
  * Wanted:  the selected field keeps its 1px foreground edge and loses the
- * inset ring, and carries a check (Lucide "check", stroke 1.5) in the
- * foreground ink: in the tile's top right corner, and on the phone chip
- * after the name, in the chip's flow. Unselected fields keep their 1px
- * --border edge. A 2px ring is focus and nothing else, as it is now, so a
- * selected field with focus has the edge, the check and the ring.
+ * inset ring, and carries a check (Lucide "check", 16x16, stroke 1.5) in
+ * the foreground ink (currentColor): in the tile 10px from its top and
+ * right edges, and on the phone chip after the name, in the chip's flow,
+ * after its own 6px gap. Unselected fields keep their 1px --border edge.
+ * A 2px ring is focus and nothing else, as it is now, so a selected field
+ * with focus has the edge, the check and the ring.
  * Viewport: both.
  *
  * Measured with the patch: the selected field's box-shadow has no inset
@@ -42,6 +43,8 @@ section[aria-label="Patent technology fields"] button[aria-pressed="true"]::afte
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 /* the phone's chip row: the check follows the name, in the chip's flow */
-section[aria-label="Patent technology fields"] > div:not(.grid) > button[aria-pressed="true"]::after {
-  position: static;
+@media not all and (min-width: 40rem) {
+  section[aria-label="Patent technology fields"] button[aria-pressed="true"]::after {
+    position: static;
+  }
 }
