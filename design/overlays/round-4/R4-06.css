@@ -1,17 +1,23 @@
-/* R4-06 (restores R3-59) · Home: the phone hero sits inside the gutter
+/* R4-06 (restores R3-59) · Home: the phone hero sits inside the gutter; the lede does not open a line on a dash
  *
- * Current: below sm "What are you building?" is text-4xl, 36px, and fills
- * the 358px line from gutter to gutter; the lede wraps greedily and its
- * third line opens on the dash: "— and gives you the data to take
- * anywhere."
+ * Current: below sm "What are you building?" is text-4xl, 36px. At 390 it
+ * fills the line from 16 to 370 against the gutter at 374; at 375 and at
+ * 320 it wraps to two lines. The lede is text-wrap: wrap with a plain
+ * space before the dash, and at 390 and at 375 its third line opens on it:
+ * "— and gives you the data to take anywhere."
  * Wanted:  below sm the heading scales with the width,
- * clamp(1.75rem, 1rem + 4vw, 2.25rem): 31.6px at 390 (measured),
- * 31px at 375, 28.8px at 320, 36px from 500px up, so it clears the right gutter
- * with room to spare. The lede is text-wrap: pretty, and a dash in it is
- * held to the word before it (R4-06 script), so no line starts with one.
+ * clamp(1.75rem, 1rem + 4vw, 2.25rem), so it holds one line inside the
+ * gutter; 36px from 500px up. The lede is text-wrap: pretty, and the dash
+ * is held to the word before it (R4-06 script), so no line starts with it.
  * Viewport: phone (below sm). Desktop unchanged.
- * Measured at 390: h1 31.6px on one line, 16–374; text-wrap pretty; the
- * lede reads "…closest to it<NBSP>— and…", and no line opens on the dash.
+ *
+ * Measured with the patch, the heading one line at every width:
+ *   390  31.6px, 16–326; lede line 3 "it — and gives you the data to take
+ *        anywhere."
+ *   375  31px, 16–320; the same lede wrap.
+ *   320  28.8px, 16–299; lede line 3 "patents closest to it — and gives
+ *        you the", no line opening on the dash.
+ *   1440 unchanged: 36px, text-wrap: wrap, the same two lede lines.
  *
  * In the component: the clamp on the h1 below sm, text-wrap: pretty on the
  * lede, and a no-break space before the em dash in the lede string. The
