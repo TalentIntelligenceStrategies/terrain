@@ -12,12 +12,12 @@
  * Viewport: phone (below sm). Desktop unchanged.
  *
  * Measured with the patch, the heading one line at every width:
- *   390  31.6px, 16–326; lede line 3 "it — and gives you the data to take
- *        anywhere."
- *   375  31px, 16–320; the same lede wrap.
- *   320  28.8px, 16–299; lede line 3 "patents closest to it — and gives
- *        you the", no line opening on the dash.
- *   1440 unchanged: 36px, text-wrap: wrap, the same two lede lines.
+ * - 390: 31.6px, 16–326; lede line 3 "it — and gives you the data to take
+ *   anywhere."
+ * - 375: 31px, 16–320; the same lede wrap.
+ * - 320: 28.8px, 16–299; lede line 3 "patents closest to it — and gives
+ *   you the", no line opening on the dash.
+ * - 1440: unchanged, 36px, text-wrap: wrap, the same two lede lines.
  *
  * In the component: the clamp on the h1 below sm, text-wrap: pretty on the
  * lede, and a no-break space before the em dash in the lede string. The

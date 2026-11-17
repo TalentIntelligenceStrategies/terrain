@@ -3,8 +3,8 @@
  * Below sm, the space before each em or en dash in the lede (the paragraph
  * after the hero heading) becomes a no-break space, so the dash stays at
  * the end of the line before rather than opening the next. The words are
- * theirs and unchanged. At sm and up the original text is put back.
- * Re-applied if their render replaces the text. Measurements in R4-06.css.
+ * yours and unchanged. At sm and up the original text is put back.
+ * Re-applied if your render replaces the text. Measurements in R4-06.css.
  *
  * In the component: write the no-break space into the lede string. */
 (() => {
