@@ -9,28 +9,36 @@
  * indicator. With an iPhone's insets emulated at 390 (top 47, bottom 34),
  * the masthead's top padding is 0 and the footer's bottom padding 24px.
  * Wanted:  every layer keeps its padding and takes the inset where the
- * inset is larger: max(<current>, env(safe-area-inset-*)). The masthead
- * grows by the top inset and pads its sides; the skip link, the main
- * column and the footer clear the sides and the bottom. The pinned
+ * inset is larger: max(<current>, env(safe-area-inset-*)). The masthead's
+ * top padding is the top inset, and its sides max(<its side padding>,
+ * the side inset); the skip link's top and left are max(1rem, the inset);
+ * the main column and the footer pad their sides max(1rem, the inset),
+ * and the footer its bottom max(1.5rem, the bottom inset). The pinned
  * composer on results needs nothing: its inline top is measured from the
  * masthead, so it follows the taller masthead on its own.
  * Viewport: phone, portrait and landscape. Everywhere else the insets are 0
  * and every value is the one it replaces.
  *
- * Measured with the patch (and R4-01, R4-02), home and results:
- *   1440, insets 0: masthead top padding 0, sides 24px, main sides 16px,
- *     footer sides 16px and bottom 24px; unchanged.
- *   390, insets 0: as before, but for the masthead's sides (6px and 1px,
- *     R4-02's).
- *   390, top 47 and bottom 34: masthead top padding 47px (61px row, 108px
- *     in all); the pinned composer's top 107px (60px without the inset);
- *     skip link top 47px; footer bottom padding 34px.
- *   844x390, left and right 47, bottom 21: masthead sides, main sides and
- *     footer sides 47px; footer bottom stays 24px, which is more than 21.
+ * The masthead's side padding on a phone is R4-02's: 6px at the start and
+ * 1px at the end under a coarse pointer, because each control there is a
+ * 44px box (R4-01) and its glyph is centred in it, 10px in for the mark
+ * and 15px in for the appearance button, so the glyphs land on the 16px
+ * gutter (6 + 10, 1 + 15). Elsewhere it is your 24px.
  *
- * Add viewport-fit=cover to the meta viewport only together with this, never
- * before it. The patch does not add it, so on today's Safari it changes
- * nothing; it is the spec for the day cover goes in.
+ * The safe-area half needs viewport-fit=cover in the meta viewport (Q2).
+ * Until Q2, nothing visible changes: Safari reports every inset as 0, and
+ * each max() resolves to the value it replaces. Add cover only together
+ * with these rules, never before them.
+ *
+ * Measured with the patch (and R4-01, R4-02), home and results:
+ * - 1440, insets 0: masthead top padding 0, sides 24px, main sides 16px,
+ *   footer sides 16px and bottom 24px; unchanged.
+ * - 390, insets 0: as before, but for the masthead's sides (6px and 1px).
+ * - 390, top 47 and bottom 34: masthead top padding 47px (61px row, 108px
+ *   in all); the pinned composer's top 107px (60px without the inset);
+ *   skip link top 47px; footer bottom padding 34px.
+ * - 844x390, left and right 47, bottom 21: masthead sides, main sides and
+ *   footer sides 47px; footer bottom stays 24px, which is more than 21.
  *
  * The other fixed layers take the inset in their own items: the phone
  * record's footer and close (R4-35), the drawing viewer's close and
