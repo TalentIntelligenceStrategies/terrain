@@ -3,9 +3,9 @@
  * Current: below sm the record's field panel is one column (their
  * @container record (max-width: 420px) rule): eleven label/value pairs,
  * Number to Classes, one to a row, 553px tall at 390, before the drawings.
- * The drawings are .detail-figures, a grid of 148px tiles two to a row,
+ * The drawings are .detail-figures, a grid of 154×193 tiles two to a row,
  * capped at 12 behind "Show all {n} drawings": nine drawings are five rows,
- * about 1000px, before the abstract.
+ * 995px, and the Abstract heading starts 1769px down the record's scroll.
  * Wanted:  their order stays (title, field panel, drawings, abstract,
  * claims). The panel keeps its style, the small uppercase label above the
  * value, in two columns (design-language.md §7, "Below 420px it pairs up
@@ -25,12 +25,12 @@
  * the strip is phone, below sm (40rem). Landscape, tablet and desktop are
  * unchanged.
  *
- * Measured at 390×844, the combined patch (R4-35's card): field panel
- * 553px tall before, 364px after (Number·Application, Kind·Filed,
+ * Measured at 390×844 with R4-35's card: the field panel 553px tall
+ * before, 364px after, columns 145px 145px (Number·Application, Kind·Filed,
  * Published·Priority, Where·Main class, then Holder, Inventors, Classes);
- * the drawings 995px of grid before, one row of nine 102×128 tiles after;
- * the Abstract heading moves from 1740px to about 680px below the top of
- * the record's scroll.
+ * the drawings 995px of grid before, one row of nine 102×128 tiles after,
+ * 132px tall, running from the card's edge past its right edge; the
+ * Abstract heading moves from 1769px to 717px down the record's scroll.
  *
  * Not patchable here: the panel's pairing is grid-row/grid-column written
  * by the script onto each dt/dd, because a label-above-value pair in a
