@@ -1,24 +1,32 @@
 /* R4-03 (restores R3-26) · Shell: fixed and sticky layers clear the safe area
  *
- * Current: no rule in the build reads env(safe-area-inset-*), and the meta
- * viewport has no viewport-fit=cover. Safari letterboxes the page today, so
- * nothing is under the notch yet; the moment cover is added, the sticky
- * masthead runs under the status bar, its first and last controls under the
- * landscape notch, the skip link under the notch, and the footer line on
- * the home indicator.
+ * Current: the meta viewport is "width=device-width, initial-scale=1", with
+ * no viewport-fit=cover, and no rule in the build reads
+ * env(safe-area-inset-*). Safari letterboxes the page today, so nothing is
+ * under the notch yet; the moment cover is added, the sticky masthead runs
+ * under the status bar, its first and last controls under the landscape
+ * notch, the skip link under the notch, and the footer line on the home
+ * indicator. With an iPhone's insets emulated at 390 (top 47, bottom 34),
+ * the masthead's top padding is 0 and the footer's bottom padding 24px.
  * Wanted:  every layer keeps its padding and takes the inset where the
  * inset is larger: max(<current>, env(safe-area-inset-*)). The masthead
- * grows by the top inset and pads its sides; the sticky composer pins below
- * the taller masthead; the skip link, the main column and the footer clear
- * the sides and the bottom.
+ * grows by the top inset and pads its sides; the skip link, the main
+ * column and the footer clear the sides and the bottom. The pinned
+ * composer on results needs nothing: its inline top is measured from the
+ * masthead, so it follows the taller masthead on its own.
  * Viewport: phone, portrait and landscape. Everywhere else the insets are 0
  * and every value is the one it replaces.
  *
- * Measured with the patch at 1440, 820 and 390, insets 0: masthead top
- * padding 0, sides 24px (8px at 390, R4-02's), main sides 16px, footer sides 16px and bottom
- * 24px, all unchanged. At 390 with an iPhone's insets emulated (top 47,
- * bottom 34): masthead top padding 47px, and the pinned composer's top
- * moves down by the same 47px.
+ * Measured with the patch (and R4-01, R4-02), home and results:
+ *   1440, insets 0: masthead top padding 0, sides 24px, main sides 16px,
+ *     footer sides 16px and bottom 24px; unchanged.
+ *   390, insets 0: as before, but for the masthead's sides (6px and 1px,
+ *     R4-02's).
+ *   390, top 47 and bottom 34: masthead top padding 47px (61px row, 108px
+ *     in all); the pinned composer's top 107px (60px without the inset);
+ *     skip link top 47px; footer bottom padding 34px.
+ *   844x390, left and right 47, bottom 21: masthead sides, main sides and
+ *     footer sides 47px; footer bottom stays 24px, which is more than 21.
  *
  * Add viewport-fit=cover to the meta viewport only together with this, never
  * before it. The patch does not add it, so on today's Safari it changes
@@ -35,12 +43,7 @@
 }
 #__nuxt > div > header > div {
   padding-left: max(var(--r3-mast-pad, 1.5rem), env(safe-area-inset-left, 0px));
-  padding-right: max(var(--r3-mast-pad, 1.5rem), env(safe-area-inset-right, 0px));
-}
-/* the composer pins under the masthead, so it moves down by what the
-   masthead grew; their top-14 is 3.5rem */
-#main-content > div.sticky {
-  top: calc(3.5rem + env(safe-area-inset-top, 0px));
+  padding-right: max(var(--r3-mast-pad-end, var(--r3-mast-pad, 1.5rem)), env(safe-area-inset-right, 0px));
 }
 #__nuxt > div > a[href="#main-content"] {
   top: max(1rem, env(safe-area-inset-top, 0px));
