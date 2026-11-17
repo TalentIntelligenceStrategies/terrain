@@ -1,12 +1,13 @@
 /* R4-10 (restores R3-41) · Composer: an empty Search stays in the tab order and answers
  *
- * The build sets disabled on Search while the query cannot be submitted. The patch takes
- * that attribute off as soon as it is set and marks the button
- * aria-disabled="true" and data-r341-empty instead; emptiness is read from
- * the field (no text after trimming), which is what the build's own
- * submit check tracks on this page. A press while empty (or Enter in the empty field) is stopped
- * before their handler, focuses the field and shows the hint; their
- * handler would do nothing anyway, since it makes the same check itself.
+ * The build sets disabled on Search while the query cannot be submitted.
+ * The patch takes that attribute off as soon as it is set and marks the
+ * button aria-disabled="true" and data-r341-empty instead; emptiness is
+ * read from the field (no text after trimming), which is what the build's
+ * own submit check tracks. A press while empty (or Enter in the empty
+ * field) is stopped before their handler, focuses the field and shows the
+ * hint, whose text is the field's own aria-label; their handler would do
+ * nothing anyway, since it makes the same check itself.
  *
  * Loading: their render sets aria-disabled while a search runs; the patch
  * leaves aria-disabled alone whenever the field has text. */
@@ -14,10 +15,6 @@
   if (window.__r4_10) return;
   window.__r4_10 = true;
   const HINT_ID = 'r341-hint';
-  const TEXT = {
-    text: 'Describe what you are building, e.g. hinge structure for foldable displays',
-    number: 'Patent publication or grant number, e.g. US9000581B2',
-  };
   const boxOf = el => el && el.closest('.search-box-morph');
   const fieldOf = box => box && box.querySelector('textarea');
   const searchOf = box => box && box.querySelector('button[aria-label="Search"]');
@@ -33,7 +30,6 @@
   function show(box) {
     const t = fieldOf(box);
     if (!t) return;
-    const number = box.querySelector('[role="group"][aria-label="Search mode"] > button[aria-label="Patent number"]')?.getAttribute('aria-pressed') === 'true';
     let h = box.parentElement.querySelector(`:scope > #${HINT_ID}`);
     if (!h) {
       h = document.createElement('p');
@@ -41,7 +37,7 @@
       h.className = 'r341-hint';
       box.after(h);
     }
-    h.textContent = number ? TEXT.number : TEXT.text;
+    h.textContent = t.getAttribute('aria-label') || t.getAttribute('placeholder') || '';
     t.setAttribute('aria-describedby', HINT_ID);
     t.focus();
   }
