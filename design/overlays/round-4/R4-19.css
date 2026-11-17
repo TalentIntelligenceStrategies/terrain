@@ -11,7 +11,7 @@
  * (--muted-foreground). Light is unchanged.
  * Viewport: both.
  *
- * Measured on the live page (computed colours, WCAG contrast):
+ * Measured, phone and desktop (computed colours, WCAG contrast):
  *   before, selected on track: #1A1A1A on #252525, 1.14:1, the wrong way round
  *   before, search mode: #1A1A1A on #1F1F1F, 1.06:1
  *   after, selected on track: #2B2B2B on #141414, 1.30:1, the right way round
