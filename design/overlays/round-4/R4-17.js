@@ -8,6 +8,9 @@
  * and the record is within the rule and stays as it is: "Patent technology
  * fields", "Coming soon", the record's field labels.
  * Viewport: both.
+ * Measured with the patch, phone and desktop: the labels read SEARCH
+ * SETTINGS · PATENT TECHNOLOGY FIELDS · WHERE TO SEARCH · WHAT TO INCLUDE ·
+ * RESULTS TO SHOW · RERANK RESULTS · DATE RANGE.
  *
  * In the component: the string itself; the patch rewrites the text node. */
 (() => {
