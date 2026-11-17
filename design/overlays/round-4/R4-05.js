@@ -14,19 +14,20 @@
  * contains CJK characters), since a CN record can carry an English title.
  * Viewport: both.
  *
- * The patch cannot do the first half: it runs after boot, when their own
+ * The patch cannot do the first half: it runs after boot, when your own
  * lang="en" is already there; it only sets it if it is missing. It does the
  * second half. Where it reads the office: on a list row, the number link's
  * title ("Open CN 109891482 B in IPTECH"); in the record, its "Where"
  * field, or failing that the number link's title.
  *
- * Measured: the recording this round replays is US and EP records only, so
- * the patch was checked by rewriting, in the page, the first row's and the
- * open record's office to CN and their title, holder and abstract to
- * Chinese: the row's title button, holder and abstract, and the record's
- * h3, holder and abstract paragraphs take lang="zh-Hans"; with TW,
- * "zh-Hant"; an English holder on the same record and every other row get
- * none; the labels get none; <html lang="en">.
+ * Measured: the recorded search has US and EP records only, so the patch
+ * was checked by rewriting, in the page, the first row's and the open
+ * record's office to CN and their title, holder and abstract to Chinese:
+ * the row's title button, holder and abstract, and the record's h3, holder
+ * and abstract paragraphs take lang="zh-Hans"; with TW, "zh-Hant"; an
+ * English holder on the same record and every other row get none; the
+ * labels get none; <html lang="en">. To check it on real records, open
+ * CN109891482B and TWI610284B (your own accepted-form examples) by number.
  *
  * In the component: lang="en" on the html element in the served template
  * (not only in htmlAttrs), and a lang binding on the three elements from
