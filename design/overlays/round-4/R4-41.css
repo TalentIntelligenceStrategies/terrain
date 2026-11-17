@@ -9,10 +9,11 @@
  * native, so it announces dimmed.
  * Viewport: both (the desktop pane and the phone dialog share the toolbar).
  *
- * Measured on the rendered button (computed colour, opacity 1): light
- * srgb(0.585) ≈ #959595 on #FFF, 2.98:1; dark srgb(0.397) ≈ #656565 on
- * #1A1A1A, 3.00:1. The live chevron stays 5.57:1 and 6.90:1; before the
- * patch the disabled one was 1.51:1 and 1.76:1.
+ * Measured on the rendered button at 390 (phone head, 44×44) and 1440 (the
+ * pane, 24×24), computed colour with opacity 1: light srgb(0.585) ≈ #959595
+ * on #FFF, 2.98:1; dark srgb(0.397) ≈ #656565 on #1A1A1A, 3.00:1. The live
+ * chevron stays 5.57:1 and 6.90:1; without the patch the disabled one is
+ * opacity 0.3 over rgb(104,104,104), 1.52:1 and 1.76:1.
  *
  * Their token set has no tertiary text colour at 3:1, so the patch mixes
  * --muted-foreground into --card per theme (dark, and your violet theme,
