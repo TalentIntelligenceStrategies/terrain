@@ -1,25 +1,25 @@
-/* R4-22 (restores R3-23) · Result row, phone: the rank leads the number line; two whole results to a screen
+/* R4-22 (restores R3-23) · Result row, phone: the rank leads the number line; smaller strip tiles
  *
- * Current: a phone card is about 408px (measured, row 1 at 390x844): the
- * number, then the Grant | Application segment on a line of its own with
- * rank and score, the title, a two-column meta grid, three lines of
- * abstract and a strip of 96x112 tiles. Under the pinned controls a reader
- * scans one patent per swipe.
+ * Current: at 390 the number is on a line of its own; the version segment,
+ * "#1" and "Relevance 0.8862" share a second line 45px below it
+ * (coarse:gap-y-[22px]). "#1" is plain muted text, 13px at 400, with no
+ * ground. The abstract is 13/18.2, three lines, 54.6px. Strip tiles are
+ * 96×112. Row 1 is 435.5px tall.
  * Wanted:  rank, number, kind and score on one line (R4-23 takes the
  * segment off the row on a phone), in that order: the rank first, "#1" in
  * a soft chip (--muted fill, no border, 20px, Inconsolata 13 medium in the
  * foreground colour), then the number and kind in the muted colour, then
- * "Relevance 0.8855" at the right, muted. The rank is the line's one
+ * "Relevance 0.8862" at the right, muted. The rank is the line's one
  * emphasis; the title under it stays the card's heading. The abstract keeps
  * its three lines, at 14/21 with text-wrap: pretty: they are what a reader
- * decides by without opening the record. Strip tiles are 80x100, the
+ * decides by without opening the record. Strip tiles are 80×100, the
  * record's 4:5.
  * Viewport: phone (below sm, 40rem). Desktop is untouched.
  *
- * Measured at 390×844 with the combined patch, row 1: the row 382px tall
- * (was about 408); the number line one 20px line, the rank chip and the
- * number and kind at the left, the score at the right, their centres level; title 23px; the abstract
- * three lines, 55px; the strip 117px tall, 80×100 tiles.
+ * Measured at 390 with the combined patch, row 1: the row 410px tall (was
+ * 435.5); the rank chip 25×20, rgb(238,238,238) under 13px/500 foreground
+ * text, radius 4px; the chip, the number and the score centred on one line
+ * (y 93); the abstract three lines at 14/21, 63px; tiles 80×100.
  *
  * Under 360px (one width query beyond their breakpoints, for the narrowest
  * phones) the score moves to a second line, under the number, so the
