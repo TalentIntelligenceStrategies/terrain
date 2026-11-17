@@ -2,16 +2,16 @@
  *
  * Current: on desktop the strip is left-packed in the 1100px panel
  * (justify-content: normal): the nine thumbnails centre on x 507, under a
- * drawing and a zoom pill that both centre on x 720, so the eye moves
- * between three anchors.
+ * drawing and a zoom pill that both centre on x 720.
  * Wanted:  the strip centred under the drawing (justify-content: safe
  * center), so a strip shorter than the panel sits on the same axis as the
  * drawing and the pill, and one that overflows still starts at its first
  * thumbnail and scrolls, rather than clipping both ends.
- * Measured with the patch, 1440×900: the thumbnails centre on x 720.
- * Viewport: 40rem and up. On a phone the strip overflows at nine figures and
- * safe center falls back to start anyway; the rule is kept off it so the
- * phone is unchanged. */
+ * Viewport: 40rem and up. On a phone the strip overflows at nine figures
+ * and safe center falls back to start anyway; the rule is kept off it so
+ * the phone is unchanged.
+ *
+ * Measured with the patch, 1440×900: the thumbnails centre on x 720. */
 @media (min-width: 40rem) {
   .figview .figstrip[aria-label] {
     justify-content: safe center;
