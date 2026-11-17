@@ -1,18 +1,20 @@
 /* R4-11 (restores R3-56) · Composer: no empty history panel on focus
  *
- * Current: focusing the empty field opens the history panel below the
- * box even when there is no history: "Search history · No searches yet.
- * Every search you run is kept here, in this browser, so you can run it
- * again." covers the coverage table's caption on home.
+ * Current: focusing the empty field with no history opens the history
+ * panel below the box, at 1440 and at 390: "Search history · No searches
+ * yet. Each one you run is kept here, in this browser, so you can run it
+ * again." (94px tall at 1440, 113px at 390), over the fields and the
+ * coverage table on home.
  * Wanted:  the panel opens on focus only when it has entries to pick. With
  * none, focusing the field opens nothing. The History item in the
  * masthead still opens its own panel, with the empty line, as it does now.
- * Viewport: desktop, where it was found; the rule is the same at every
- * width, since the phone panel is the same component.
+ * Viewport: both; the phone panel is the same component.
  *
- * Measured at 1440 with no history: on focus the panel element still
- * mounts (their v-if) but computes display: none (was block, over the
- * coverage caption).
+ * Measured with the patch, no history: on focus the panel element still
+ * mounts (their v-if) but computes display: none, at 1440 and 390; the
+ * masthead's History still opens its panel with the empty line. With one
+ * search in history, focus opens the panel with its list as before
+ * (106px at 1440).
  *
  * In the component: add history.length to the condition that renders the
  * panel (focused && !query.trim() && items.length). The patch keys on what
