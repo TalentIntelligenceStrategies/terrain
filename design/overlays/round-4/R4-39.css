@@ -1,19 +1,21 @@
 /* R4-39 (restores R3-09) · Patent record (phone): Export is two buttons, and a download says its name
  *
- * Current: below sm the record's footer carries "Export this record", a
- * Reka dropdown that opens CSV / Markdown upward over the record, its left
- * edge mid-code; neither item says what it holds, and nothing confirms the
- * download.
+ * Current: below sm the record's footer reads "Open in IPTECH" and
+ * "Export this record ⌄", a Reka dropdown that opens CSV / Markdown upward
+ * over the record; neither item says what it holds. Measured at 390: CSV
+ * downloads 09000581.csv, and nothing confirms it: the footer is unchanged
+ * and the only status region on the page reads "50 matched, 50 shown.".
  * Wanted:  two inline footer buttons, CSV and Markdown, beside Open in
- * IPtech, named "Download this record as CSV" and "Download this record
+ * IPTECH, named "Download this record as CSV" and "Download this record
  * as Markdown"; after either, one line in the footer confirms the file by name
  * ("Downloaded 09000581.csv"), in a polite status region.
  * Viewport: phone, below sm (40rem). At sm and above the dropdown is
  * unchanged.
  *
- * Measured at 390×844: CSV fires a download named 09000581.csv and
- * Markdown 09000581.md (Playwright download events); the status line reads
- * the same name; the hidden menu never paints.
+ * Measured at 390×844 with the patch: the footer reads "Open in IPTECH ·
+ * CSV · Markdown" (67px); CSV fires a download named 09000581.csv, and the
+ * status line under the buttons reads "Downloaded 09000581.csv" (the
+ * footer grows to 93px); the hidden menu never paints.
  *
  * Not patchable here: the buttons drive their own menu out of sight (open
  * the trigger, choose the item) so the file is theirs byte for byte; the
