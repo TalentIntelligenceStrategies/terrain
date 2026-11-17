@@ -8,8 +8,9 @@
  * every viewport, keyboard and layout change.
  *
  * Also writes .r4-scrim into #main-content, which R4-13.css shows while the
- * box is open; a tap on it closes the box through your own Escape on the
- * field (and a blur, which your box also folds on).
+ * box is open (its .search-editor-track is not inert); a tap on it closes
+ * the box through your own Escape on the field (and a blur, which your box
+ * also folds on).
  *
  * In the component this is the dock's own position, padding and scrim. */
 (() => {
@@ -21,13 +22,13 @@
   const set = (k, v) => { if (root.style.getPropertyValue(k) !== v) root.style.setProperty(k, v); };
 
   const measure = () => {
-    const dock = document.querySelector('#main-content > div.sticky');
-    const on = short.matches && dock && dock.querySelector('[data-search-line]');
+    const dock = document.querySelector('#main-content > div:has([data-search-line])');
+    const on = short.matches && !!dock;
     const kb = on && vv ? Math.max(0, Math.round(innerHeight - vv.height - vv.offsetTop)) : 0;
     set('--r4-kb', `${kb}px`);
     root.toggleAttribute('data-r4-kb', kb > 80);
     /* measured folded only: the list's end must not move while the box is open */
-    const folded = on && !dock.querySelector('.search-editor-track.grid-rows-\\[1fr\\]');
+    const folded = on && !dock.querySelector('.search-editor-track:not([inert])');
     if (folded) set('--r4-dock-h', `${Math.round(dock.firstElementChild.getBoundingClientRect().height)}px`);
   };
 
@@ -39,9 +40,10 @@
     el.setAttribute('aria-hidden', 'true');
     el.addEventListener('pointerdown', e => {
       e.preventDefault();
-      const t = document.querySelector('.search-box-morph textarea');
+      const dock = document.querySelector('#main-content > div:has([data-search-line])');
+      const t = dock?.querySelector('.search-box-morph textarea');
       t?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-      if (document.querySelector('.search-box-morph [data-search-line].invisible')) t?.blur();
+      if (dock?.querySelector('.search-editor-track:not([inert])')) t?.blur();
     });
     main.prepend(el);
   };
@@ -52,6 +54,6 @@
   vv?.addEventListener('scroll', later);
   addEventListener('resize', later);
   short.addEventListener('change', later);
-  new MutationObserver(later).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+  new MutationObserver(later).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'inert'] });
   later();
 })();

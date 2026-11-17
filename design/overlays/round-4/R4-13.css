@@ -1,45 +1,57 @@
 /* R4-13 (restores R3-18) · Results, phone: the search floats at the bottom
  *
- * Current: on results the folded search box (one 52px row) sits in
- * a sticky band under the masthead: the band is position: sticky with an
+ * Current: on results the folded search box (one 52px row) sits in a
+ * sticky band under the masthead: the band is position: sticky with an
  * inline top equal to the masthead's height (style="top: 94px" at 390×844,
  * where the masthead wraps to two rows; "top: 56px" at 844×390). The box is
- * at y 106 before and after any scroll, so the pinned chrome ends at about
- * 171 of 844px, and the search is at the top of the screen, the farthest
- * place from the thumb. Opened, it grows downward in place to 148px and
- * pushes the list down; nothing dims behind it.
+ * at y 106 before and after any scroll and ends at about 160 of 844px, so
+ * the search is at the top of the screen, the farthest place from the
+ * thumb. Opened, it grows downward in place to 148px and pushes the list
+ * down; nothing dims behind it.
  * Wanted:  on results the box floats at the bottom of the screen from the
  * start and stays there: 12px in from the sides and 12px above the home
- * indicator (the bottom safe area), with no band behind it; its depth is a
- * layered shadow and a hairline ring, and its corner is Search's corner plus
- * the space between them, so the two nest. The masthead alone is pinned at
- * the top; the results end above the box. Tapped, the box grows upward
+ * indicator (max(12px, the side insets); 12px plus the bottom inset), with
+ * no band behind it. Folded, its corner is calc(var(--radius) + 2px), 10px
+ * (Search's 6px corner plus the 4px between them, so the two nest); opened,
+ * calc(var(--radius) + 6px), 14px (the 8px padding); the corner moves over
+ * 240ms cubic-bezier(0.2, 0, 0, 1). It is --card with a transparent border,
+ * and its depth is a hairline ring and a layered shadow: folded,
+ * 0 0 0 1px --foreground at 10%, 0 2px 6px -1px --color-black at 8%,
+ * 0 12px 32px -8px --color-black at 18%; opened, the ring at 14% and the
+ * last layer 0 16px 40px -8px at 22%. The masthead alone is pinned at the
+ * top; the results end 16px above the box. Tapped, the box grows upward
  * where it floats into the editor (the field, then the mode, settings,
- * grouping and Search) over a scrim that dims the results; a tap on the
- * scrim closes it. With the soft keyboard up, the box sits 8px above the
- * keyboard. Home is unchanged: there the composer is the page.
+ * grouping and Search) over a scrim, color-mix(in oklab, var(--color-black)
+ * 40%, transparent), that fades in and out over 240ms and dims the results;
+ * a tap on the scrim closes the box. With the field emptied, the search
+ * history opens upward, 8px above the box. With the soft keyboard up, the
+ * box sits 8px above the keyboard. Home is unchanged: there the composer
+ * is the page.
  * Viewport: phone (below sm), and short screens below lg (max-height 480px:
  * a phone in landscape). Desktop and tablet are unchanged.
  *
- * Measured with the patch, 390×844: the band keeps its inline top (94px) and
- * is fixed from there to the bottom edge, transparent to the pointer; the box
- * 366×52 at (12,780), its bottom 12px above the viewport's, and the same
- * after a 2000px scroll; opened 366×164 at (12,668), growing upward, over a
- * full-viewport scrim (black 32%); with the field emptied, the search
- * history opens upward from the box (366×124, its foot 8px above it; it
- * opened below the screen's edge, at y 840, without this); #main-content
- * padded 80px at its foot, so the last result ends 16px above the box.
- * 844×390: the box 820×52 at (12,326), opened 820×164 at (12,214).
+ * Measured with the patch:
+ * - 390×844: the band keeps its inline top (94px) and is fixed from there
+ *   to the bottom edge, transparent to the pointer; the box 366×52 at
+ *   (12,780), its bottom 12px above the viewport's, and the same after a
+ *   2000px scroll.
+ * - 390×844, opened: 366×148 at (12,684), growing upward, over the scrim
+ *   rgba(0,0,0,0.4) across the viewport; with the field emptied, the
+ *   history opens upward from the box, its foot 8px above it (without
+ *   this it opened below the screen's edge).
+ * - 390×844: #main-content padded 80px at its foot, so the last result
+ *   ends 16px above the box.
+ * - 844×390: the box 820×52 at (12,326); opened 820×148 at (12,230).
  *
  * The inline top is not overridden: no stylesheet rule can beat it without
  * !important, and it changes with the masthead. The patch leaves it as the
  * band's top edge and adds a bottom edge, so the band spans the screen under
- * the masthead and the box sits at its foot (flex-end).
+ * the masthead and the box sits at its foot (flex-end). The box is open
+ * when its .search-editor-track is not inert. --r4-kb and --r4-dock-h are
+ * written by R4-13.js, which also draws the scrim.
  *
- * The shadow and the scrim are black at low opacity in both themes, as your
- * own shadow-md is: they darken whatever is under them, and no token of
- * yours names a shadow or an overlay. --r4-kb and --r4-dock-h are written by
- * R4-13.js, which also draws the scrim.
+ * The shadow and the scrim are your --color-black at low opacity in both
+ * themes, as your own shadow-md is: they darken whatever is under them.
  *
  * In the component: on phones the results page renders the composer as a
  * floating dock (fixed, bottom: the keyboard inset), not in the sticky
@@ -53,7 +65,7 @@
      is stretched from there to the bottom edge, or to the keyboard; the box
      sits at the band's foot, so it grows upward when opened. The band is
      transparent to the pointer, so the list under it still takes taps. */
-  #main-content > div.sticky:has([data-search-line]) {
+  #main-content > div:has([data-search-line]) {
     position: fixed;
     inset-inline: 0;
     bottom: var(--r4-kb, 0px);
@@ -66,16 +78,16 @@
     background: transparent;
     pointer-events: none;
   }
-  #main-content > div.sticky:has([data-search-line]) > div {
+  #main-content > div:has([data-search-line]) > div {
     margin: 0;
     max-width: none;
     padding: 0 max(12px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
   }
   /* with the keyboard up, the home indicator is under the keyboard */
-  html[data-r4-kb] #main-content > div.sticky:has([data-search-line]) > div {
+  html[data-r4-kb] #main-content > div:has([data-search-line]) > div {
     padding-bottom: 8px;
   }
-  #main-content > div.sticky:has([data-search-line]) .search-box-morph {
+  #main-content > div:has([data-search-line]) .search-box-morph {
     pointer-events: auto;
     border-color: transparent;
     /* Search's corner (radius - 2px) plus the 4px between them */
@@ -83,42 +95,26 @@
     background: var(--card);
     box-shadow:
       0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent),
-      0 2px 6px -1px rgb(0 0 0 / 0.08),
-      0 12px 32px -8px rgb(0 0 0 / 0.18);
-    transition: scale 150ms cubic-bezier(0.2, 0, 0, 1), border-radius 240ms cubic-bezier(0.2, 0, 0, 1);
+      0 2px 6px -1px color-mix(in oklab, var(--color-black) 8%, transparent),
+      0 12px 32px -8px color-mix(in oklab, var(--color-black) 18%, transparent);
+    transition: border-radius 240ms cubic-bezier(0.2, 0, 0, 1);
   }
   /* opened, the padding is 8px, so the corner is Search's plus 8px */
-  #main-content > div.sticky:has([data-search-line]) .search-box-morph:has([data-search-line].invisible) {
+  #main-content > div:has([data-search-line]) .search-box-morph:has(> .search-editor-track:not([inert])) {
     border-radius: calc(var(--radius) + 6px);
     box-shadow:
       0 0 0 1px color-mix(in oklch, var(--foreground) 14%, transparent),
-      0 2px 6px -1px rgb(0 0 0 / 0.08),
-      0 16px 40px -8px rgb(0 0 0 / 0.22);
-  }
-  /* your keyboard ring (2px, offset 2) reads as a double outline around a
-     floating box, and a field being typed in always matches it; here focus is
-     the box's own edge, firmer, in the 45% your focused border uses */
-  #main-content > div.sticky:has([data-search-line]) .search-box-morph:has(textarea:focus-visible) {
-    outline: none;
-    box-shadow:
-      0 0 0 1.5px color-mix(in oklch, var(--foreground) 45%, transparent),
-      0 2px 6px -1px rgb(0 0 0 / 0.08),
-      0 16px 40px -8px rgb(0 0 0 / 0.22);
+      0 2px 6px -1px color-mix(in oklab, var(--color-black) 8%, transparent),
+      0 16px 40px -8px color-mix(in oklab, var(--color-black) 22%, transparent);
   }
   /* the history list under an empty field opens upward from the dock */
-  #main-content > div.sticky:has([data-search-line]) .search-box-morph ~ div.top-full {
+  #main-content > div:has([data-search-line]) .search-box-morph ~ div.top-full {
     top: auto;
     bottom: 100%;
     margin: 0 0 8px;
     pointer-events: auto;
   }
-  #main-content > div.sticky:has([data-search-line]) .search-box-morph textarea {
-    min-height: 72px;
-  }
-  #main-content > div.sticky:has([data-search-line]) .search-box-morph:has([data-search-line]:active) {
-    scale: 0.96;
-  }
-  #main-content:has(> div.sticky [data-search-line]) {
+  #main-content:has(> div [data-search-line]) {
     padding-bottom: calc(var(--r4-dock-h, 64px) + 16px);
   }
   /* the results dim while the box is open; a tap on them closes it */
@@ -127,13 +123,12 @@
     inset: 0;
     z-index: 29;
     display: block;
-    /* a dark veil in both themes: dimming, never lightening */
-    background: rgb(0 0 0 / 0.32);
+    background: color-mix(in oklab, var(--color-black) 40%, transparent);
     opacity: 0;
     visibility: hidden;
     transition: opacity 240ms cubic-bezier(0.2, 0, 0, 1), visibility 0s linear 240ms;
   }
-  #main-content:has(.search-box-morph [data-search-line].invisible) .r4-scrim {
+  #main-content:has(.search-editor-track:not([inert]) ~ .search-toolbar [data-search-line]) .r4-scrim {
     opacity: 1;
     visibility: visible;
     transition-delay: 0s;
@@ -141,10 +136,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .r4-scrim,
-  #main-content > div.sticky .search-box-morph {
+  #main-content > div:has([data-search-line]) .search-box-morph {
     transition: none;
-  }
-  #main-content > div.sticky .search-box-morph:has([data-search-line]:active) {
-    scale: none;
   }
 }
