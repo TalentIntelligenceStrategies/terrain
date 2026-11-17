@@ -6,34 +6,64 @@
  * downloads 09000581.csv, and nothing confirms it: the footer is unchanged
  * and the only status region on the page reads "50 matched, 50 shown.".
  * Wanted:  two inline footer buttons, CSV and Markdown, beside Open in
- * IPTECH, named "Download this record as CSV" and "Download this record
- * as Markdown"; after either, one line in the footer confirms the file by name
- * ("Downloaded 09000581.csv"), in a polite status region.
+ * IPTECH and drawn as it is (your .record-act, with the Lucide download
+ * icon), named "Download this record as CSV" and "Download this record as
+ * Markdown". After either, one line in the footer confirms the file by
+ * name, "Downloaded 09000581.csv", in a polite status region: 13px with a
+ * 1.4 line height, in --muted-foreground, the file name in Inconsolata in
+ * --foreground. It takes its own line under the buttons, 8px below them
+ * (your footer's row gap), and stays until the dialog shows another record
+ * or closes. In a short landscape phone (below sm and 480px tall or less,
+ * e.g. 568×320) R4-38's one 44px row wins: Open in IPTECH, CSV and
+ * Markdown sit in it without wrapping, and the confirmation shows in the
+ * same row after Markdown, 12px after it (your footer's column gap), on one
+ * line that ends in an ellipsis if it runs out of room.
  * Viewport: phone, below sm (40rem). At sm and above the dropdown is
- * unchanged.
+ * unchanged, which includes 844×390.
  *
- * Measured at 390×844 with the patch: the footer reads "Open in IPTECH ·
- * CSV · Markdown" (67px); CSV fires a download named 09000581.csv, and the
- * status line under the buttons reads "Downloaded 09000581.csv" (the
- * footer grows to 93px); the hidden menu never paints.
+ * Measured with the patch:
+ * - 390×844: the footer reads "Open in IPTECH · CSV · Markdown" (67px); CSV
+ *   fires a download named 09000581.csv, and the line under the buttons
+ *   reads "Downloaded 09000581.csv", 13/18.2, rgb(104,104,104) (the footer
+ *   grows to 93px); the hidden menu never paints
+ * - 568×320 with R4-38: the footer one 44px row, Open in IPTECH 128×30, CSV
+ *   64×30, Markdown 100×30; after CSV, "Downloaded 09000581.csv" in the
+ *   same row and the footer stays 44px
  *
- * Not patchable here: the buttons drive their own menu out of sight (open
- * the trigger, choose the item) so the file is theirs byte for byte; the
- * name is read from their download anchor. In the component the two
+ * Not patchable here: the buttons drive your own menu out of sight (open
+ * the trigger, choose the item) so the file is yours byte for byte; the
+ * name is read from your download anchor. In the component the two
  * buttons call the export function directly and the status comes from it.
- * No confirmation string ships in their bundle; "Downloaded {file}" is
+ * No confirmation string ships in your bundle; "Downloaded {file}" is
  * new copy. */
 @media not all and (min-width: 40rem) {
-  [role="dialog"][data-result-detail] .record-foot:has([data-terrain-export]) > button[aria-expanded] { display: none; }
-  [data-terrain-export] { display: contents; }
-  [data-terrain-export-status]:empty { display: none; }
-  [data-terrain-export-status] {
+  [role="dialog"][data-result-detail] .record-foot:has([data-r4-export]) > button[aria-expanded] { display: none; }
+  [data-r4-export] { display: contents; }
+  [data-r4-export-status]:empty { display: none; }
+  [data-r4-export-status] {
     flex-basis: 100%;
     font-size: 13px;
     line-height: 1.4;
     color: var(--muted-foreground);
   }
-  [data-terrain-export-status] span { font-family: var(--font-mono); color: var(--foreground); }
+  [data-r4-export-status] span { font-family: var(--font-mono); color: var(--foreground); }
 }
-/* While a phone button drives their menu, the menu is never shown. */
-html[data-terrain-exporting] [data-reka-popper-content-wrapper]:has(.record-export-menu) { visibility: hidden; }
+/* A short landscape phone: R4-38's one row holds the buttons and the line. */
+@media not all and (min-width: 40rem) {
+  @media (max-height: 480px) {
+    [role="dialog"][data-result-detail] .record-foot:has([data-r4-export]) > a,
+    [data-r4-export] > button {
+      flex: none;
+      white-space: nowrap;
+    }
+    [data-r4-export-status] {
+      flex: 1 1 0;
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}
+/* While a phone button drives your menu, the menu is never shown. */
+html[data-r4-exporting] [data-reka-popper-content-wrapper]:has(.record-export-menu) { visibility: hidden; }
