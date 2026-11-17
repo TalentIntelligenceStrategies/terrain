@@ -1,16 +1,19 @@
 /* R4-28 (restores R3-48) · Drawing thumbnails: figure badges at 7:1 or more
  *
  * Current: the figure number on a row thumbnail is white on bg-black/45,
- * which composites to #8C8C8C on the paper: 3.36:1 in both themes, under
- * 4.5:1 for small text, and the badge is the thumbnail's only visible label.
- * The record's badges are a second style, neutral-600 on white/90.
+ * which composites to #8C8C8C on the paper: 3.35:1 in both themes (the paper
+ * does not swap), under 4.5:1 for small text, and the badge is the
+ * thumbnail's only visible label. The record's badges are a second style,
+ * text-neutral-600 on bg-white/90 (7.8:1), so rows and record differ.
  * Wanted:  one badge, white on the darkest neutral, in rows and in the
  * record. The paper a drawing was published on does not swap with the
  * theme, so neither does the badge: black at 86% over white is #242424, the
- * value of their --foreground in light, and white on it is 15.4:1 (computed;
- * the ceiling sits over a white paper ground, the badge is darker still over
- * a line).
+ * value of their --foreground in light, and white on it is 15.6:1 (darker
+ * still over a line).
  * Viewport: both.
+ *
+ * Measured at 1440 with the patch: row and record badges both
+ * rgba(0,0,0,.86) under rgb(255,255,255), in light and dark.
  *
  * Their own rule for this element uses black (bg-black/45), so the patch
  * keeps black and changes only its alpha; it is not a theme token because
