@@ -1,19 +1,24 @@
 /* R4-14 (restores R3-08) · Search settings: the field row holds your field control (see R4-14.js)
  *
- * The moved select keeps its own classes; in the row it is shown (your
- * wrapper is "hidden sm:flex"), full width, inside a 44px bordered field so
- * it reads as a control (the wrapper is also self-center, so it is
- * stretched back to the row) and not as the header's ghost button. The
- * trigger's height is h-7! (important), so the 44px is the wrapper's. */
+ * The moved select keeps its own classes. In the row it is shown (your
+ * wrapper is "hidden sm:flex") and stretched to the row's width (the
+ * wrapper is also self-center), inside a field rather than as the
+ * header's ghost button: min-height 44px, 1px --border edge,
+ * corner var(--radius) (8px), --card ground, no padding of its own. The
+ * trigger fills it (flex: 1), its value at the start and its chevron at
+ * the end, the value in --foreground at weight 500, your px-2 inside. The
+ * trigger's height is h-7! (important), so the 44px is the wrapper's; the
+ * trigger's own .hit-target::before, 44px tall under a coarse pointer and
+ * as wide as the trigger, makes the whole box the tap target. */
 @media not all and (min-width: 40rem) {
   .pop-set [data-r414] {
     display: flex;
     align-self: stretch;
     align-items: center;
     min-height: 44px;
-    padding: 0 6px;
+    padding: 0;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: var(--radius);
     background: var(--card);
   }
   .pop-set [data-r414] > button {
