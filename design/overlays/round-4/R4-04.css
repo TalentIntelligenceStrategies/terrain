@@ -1,6 +1,6 @@
 /* R4-04 (restores R3-61) · Shell: reduced motion stills dialog and popover enter and exit
  *
- * Current: their prefers-reduced-motion blocks still every custom
+ * Current: your prefers-reduced-motion blocks still every custom
  * transition (the fades, the shell and grid swaps, the lane, the
  * search-box track, .meta-top-sync, the lightbox) and .sk-shimmer, but not
  * the shared Reka layers: the dialog the phone record opens in, its
