@@ -1,10 +1,10 @@
 /* R4-24 (restores R3-34) · Results header, phone: the count reads "50 results"
  *
- * Writes [data-r4-count] after their count heading: "50 results" when every
+ * Writes [data-r4-count] after your count heading: "50 results" when every
  * match is shown ("1 result" for one), "50 of 120" when fewer are (shown of
- * matched), read from the heading's two numbers. Their heading stays as the
+ * matched), read from the heading's two numbers. Your heading stays as the
  * accessible text (R4-24.css hides it visually below sm); ours is
- * aria-hidden. The view toggle is theirs, restyled in R4-24.css; this script
+ * aria-hidden. The view toggle is yours, restyled in R4-24.css; this script
  * adds no control. Re-read on every change, as Vue re-renders the header.
  * Idempotent.
  *

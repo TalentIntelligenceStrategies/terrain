@@ -7,29 +7,33 @@
  * is centred at y −10 and the controls at y 35). It repeats one number when
  * both are equal. The controls are 30px tall: the toggle is two borderless
  * 30×30 ghost buttons with a 14px gap (coarse:gap-3.5) and no shared box,
- * and Sort is a 30px outline button with an 8px radius, so the two read as
- * different kinds of control. At 320 Sort keeps its arrows icon and its word
- * (119px wide).
+ * and Sort is a 30px outline button with an 8px radius: two different
+ * kinds of control side by side. At 320 Sort keeps its arrows icon and its
+ * word (119px wide).
  * Wanted:  one line. At the left the count, short: "50 results" when every
- * match is shown, "50 of 120" when fewer are, 16/20 semibold with its
- * numerals in Inconsolata at 500, never wrapping. At the right, 8px apart,
- * two controls of one family, both 36px tall with the radius − 2px: Sort,
- * keeping its outline surface and 1px --border, with its words and its
- * chevron (its leading arrows icon goes below sm; the chevron is the cue that
- * it opens a menu); and their own view toggle drawn to match it, its two icon
- * buttons as halves of one bordered box, the pressed half on --muted. All
- * three are centred on one line.
- * Viewport: phone (below sm, 40rem). Desktop is untouched (the header toggle
- * is sm:hidden there, and the composer's toggle is unchanged).
+ * match is shown, "50 of 120" when fewer are, 16/20 semibold in
+ * --foreground with its numerals in Inconsolata at 500, never wrapping. At
+ * the right, 8px apart, two controls of one family, both 36px tall with
+ * rounded-md (calc(var(--radius) - 2px) = 6px): Sort, keeping its outline
+ * surface and 1px --border, with its words and its chevron (its leading
+ * arrows icon goes below sm; the chevron is the cue that it opens a menu);
+ * and your own view toggle drawn to match it, its two icon buttons as 44px
+ * halves of one box with a 1px --border round it and between them, on
+ * --card, the pressed half on --muted, the icons as shipped (14px). All
+ * three are centred on one line. Under 360px Sort shows its arrows icon
+ * only, 44×36; its name ("Sort the list") is unchanged and the menu still
+ * says which order is chosen.
+ * Viewport: phone (below sm, 40rem); the icon-only Sort under 360px (one
+ * width query beyond your breakpoints, for the narrowest phones). Desktop is
+ * untouched (the header toggle is sm:hidden there, and the composer's toggle
+ * is unchanged).
  *
- * Measured with the combined patch: at 390 the count "50 results", the
- * toggle (90×36) and Sort (36px tall) on one line, their centres within 1px;
- * one 20px count line, header 61px tall. At 320 Sort is its arrows icon alone,
- * 44×36, and its right edge is at the card's text column (x 283 of 320); the
- * page does not scroll sideways.
- * Under 360px (one width query beyond their breakpoints, for the narrowest
- * phones) Sort shows its arrows icon only; its name ("Sort the list") is
- * unchanged and the menu still says which order is chosen.
+ * Measured with the combined patch:
+ * - at 390: the count "50 results", the toggle (90×36) and Sort (36px tall)
+ *   on one line, the three centres within 1px; one 20px count line, header
+ *   61px tall
+ * - at 320: Sort is its arrows icon alone, 44×36, its right edge at the
+ *   card's text column (x 283 of 320); the page does not scroll sideways
  *
  * In the component: drop max-sm:basis-full and hide Sort's leading icon
  * below sm; render the count as "N results" / "N of M"; give the header's
@@ -47,7 +51,7 @@
     flex: 1 1 auto;
     min-width: 0;
   }
-  /* their heading stays for screen readers; [data-r4-count] is what shows */
+  /* your heading stays for screen readers; [data-r4-count] is what shows */
   section.shell-swap header h2 {
     position: absolute;
     width: 1px;
@@ -72,7 +76,7 @@
   section.shell-swap header > div > div.ml-auto {
     gap: 8px;
   }
-  /* their view toggle, drawn as Sort is: two halves of one outline box */
+  /* your view toggle, drawn as Sort is: two halves of one outline box */
   section.shell-swap header [role="group"][aria-label="View mode"] {
     gap: 0;
     height: 36px;
@@ -88,10 +92,6 @@
   }
   section.shell-swap header [role="group"][aria-label="View mode"] > button + button {
     border-inline-start: 1px solid var(--border);
-  }
-  section.shell-swap header [role="group"][aria-label="View mode"] > button > svg {
-    width: 16px;
-    height: 16px;
   }
   section.shell-swap header [role="group"][aria-label="View mode"] > button:focus-visible {
     outline: 2px solid var(--ring);
