@@ -1,11 +1,12 @@
 /* R4-44 (restores R3-43) · Drawing viewer: its controls swap in dark; the current thumbnail is ringed
  *
- * Current: the viewer's head turns --card (#1a1a1a) in dark, but its icons
- * are a hard-coded #595959: the close is 2.5:1 on the band (7.0:1 in light).
- * The zoom pill is hard-coded #ffffffd1 with #595959 icons and readout, so it
- * stays a light lozenge on the dark band; the pressed Fill screen is a raw
- * #252525. The current thumbnail's only mark is a 1px --foreground border,
- * which in dark is #f0f0f0 against a white thumbnail and disappears.
+ * Current: the viewer's head turns --card (#1A1A1A) in dark, but its icons
+ * are a hard-coded #595959: Close is 2.5:1 on the band (7.0:1 in light).
+ * The zoom pill is a hard-coded rgba(255,255,255,.82) with #595959 icons
+ * (the rotate controls among them) and readout, and #252525/12% edge and
+ * separators, so it stays a light lozenge on the dark band. The current
+ * thumbnail has no outline, only its 1px --foreground border, which in dark
+ * is #F0F0F0 against a white thumbnail and disappears.
  * Wanted:  the head icons, the pill, its readout, separators and pressed
  * state from your swapping tokens (--muted-foreground; the pill --card at
  * 88%, so the drawing shows faintly through it; --border; --primary /
@@ -15,12 +16,12 @@
  * that is right and unchanged here.
  * Viewport: all.
  *
- * Measured (composited from computed colours): close icon on the head band
- * dark 2.48:1 -> 6.9:1, light 7.0:1 -> 5.57:1; zoom readout and icons on
- * the pill dark 4.77:1 on a light pill -> 6.9:1 on a --card pill (4.79:1
- * where the pill sits on the paper, phone); current-thumbnail outline
- * 2px solid #252525 / #f0f0f0, offset 2px. The close icon's drop in light,
- * 7.0:1 to 5.57:1, is on purpose: it takes --muted-foreground, as the
+ * Measured with the patch, desktop dark: Close and every pill icon
+ * #A3A3A3 (6.9:1 on the band); the pill --card at 88% with a #333333 edge
+ * and separators; the readout #A3A3A3; the current thumbnail outlined 2px
+ * solid #F0F0F0, offset 2px (#252525 in light). On a phone, where the pill
+ * sits on the paper, its edge is #252525 at 50%. The close icon in light
+ * goes from 7.0:1 to 5.57:1 on purpose: it takes --muted-foreground, as the
  * other head icons do, and stays above 4.5:1.
  *
  * In the component: the pill is the one control that can sit on the paper
