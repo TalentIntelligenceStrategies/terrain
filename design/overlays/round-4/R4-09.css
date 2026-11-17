@@ -5,8 +5,8 @@
  * glyphs, a T and a #, 44x44 each, with no visible word: their names are
  * right for a screen reader ("Text", "Patent number"), but # does not read
  * as patent number to a sighted user, and the desktop tooltip never shows
- * on touch. Home renders the byPatentShort span only when showSearchLine is
- * set, which is the results box.
+ * on touch. The composer renders the byPatentShort span only when
+ * showSearchLine is set, which is the results box.
  * Wanted:  on home below sm, the segments say "Text" and "Patent #", as
  * the results box does; the glyphs go. The accessible names stay "Text"
  * and "Patent number". Desktop keeps "Text" and "Patent number" in words,
