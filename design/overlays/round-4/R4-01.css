@@ -1,35 +1,33 @@
 /* R4-01 (restores R3-36) · Masthead, touch: every control is a real 44x44 box
  *
- * Current: under (pointer: coarse) every control outside the masthead now
- * reaches 44x44, through .hit-target::before or its own min-h-11, and the
- * record head has 44px boxes. The masthead does not: at 390 its controls
- * are drawn 28px high (the mark 119x28, New 62x28, History 76x28, Light,
- * Dark and System 28x28 each, the version 58x22), and at 820 the same plus
- * the field select, 148x28. They reach 44px only through the ::before,
- * which spills past each box onto its neighbour and past the header's
- * edge.
+ * Current: under (pointer: coarse) the masthead's controls are drawn 28px
+ * high: at 390 the mark 119x28, New 62x28, History 76x28, Light, Dark and
+ * System 28x28 each, the version 58x22; at 820 the same, plus the field
+ * select on results, 148x28. They reach 44px only through
+ * .hit-target::before, which spills past each box onto its neighbour and
+ * past the header's edge.
  * Wanted:  under a coarse pointer, each masthead control is itself at least
- * 44x44: the mark, New search, History, the field select (from sm, on
- * results), each appearance button (or the one appearance button below
- * 420px, R4-02) and the version. The glyphs stay the size they are,
- * centred where the box is wider than its content; the row grows to hold
- * them.
+ * 44x44 (min-width and min-height 44px): the mark, New search, History, the
+ * field select (from sm, on results), each appearance button (or the one
+ * appearance button below 420px, R4-02) and the version. The glyphs stay
+ * the size they are, centred where the box is wider than its content; the
+ * row grows to hold them. The version's unread dot stays on the top-right
+ * corner of its text, not of the taller box.
  * Viewport: (pointer: coarse), whatever the width. Desktop is untouched.
  *
  * Measured with the patch and R4-02 (which puts the phone masthead on one
  * row), home and results:
- *   390x844  masthead 61px, one row (was 95px over two): the mark 44x44 at
- *            x 6, New and History 44x44, Appearance 44x44 at 345–389, its
- *            glyph ending at 374 on the gutter. No two boxes overlap.
- *   320x568  the same row, 61px; Appearance at 275–319.
- *   820x1180 masthead 67px (was 57): the mark 119x44, New 62x44, History
- *            76x44, the field select 148x44, Light, Dark and System 44x44,
- *            the version 58x44; the appearance group, with its own 2px
- *            padding and border, is the 50px that sets the row. The pinned
- *            composer follows it (their inline top: 66px, was 56).
- *   1440 (fine pointer): unchanged, 57px, every box as before.
- *   The version's unread dot stays on its text's top-right corner in the
- *   44px box. Without R4-02 the phone masthead stays two rows, now taller.
+ * - 390x844: masthead 61px, one row (was 95px over two); the mark 44x44 at
+ *   x 6, New and History 44x44, Appearance 44x44 at 345–389, its glyph
+ *   ending at 374 on the gutter. No two boxes overlap.
+ * - 320x568: the same row, 61px; Appearance at 275–319.
+ * - 820x1180: masthead 67px (was 57); the mark 119x44, New 62x44, History
+ *   76x44, the field select 148x44, Light, Dark and System 44x44, the
+ *   version 58x44. The appearance group, with its own 2px padding and
+ *   border, is the 50px that sets the row. The pinned composer follows it
+ *   (your inline top: 66px, was 56).
+ * - 1440 (fine pointer): unchanged, 57px, every box as before.
+ * - Without R4-02 the phone masthead stays two rows, now taller.
  *
  * In the component: coarse:min-h-11 coarse:min-w-11 on the masthead's
  * buttons, as the composer's mode segments already have. */
