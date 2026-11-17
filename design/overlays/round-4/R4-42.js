@@ -1,10 +1,11 @@
 /* R4-42 (restores R3-55) · Patent record: Escape closes it
  *
- * Current: Escape does nothing to the record. Measured on desktop: after
- * Escape the URL keeps &rec=09000581 and the pane stays. On the phone
- * dialog Escape does not close it either (measured: still open), because
- * their DialogContent forwards keydown as a shortcut with .stop, so Reka's
- * own Escape listener on the document never hears it.
+ * Current: Escape does nothing to the record. Measured at 1440: with focus
+ * on the row, on Next patent or on the title, Escape leaves #…&rec=09000581
+ * and the pane in place. At 390 the dialog stays open too, because your
+ * DialogContent forwards keydown as a shortcut with .stop, so Reka's own
+ * Escape listener on the document never hears it. With the drawing viewer
+ * open, Escape closes only the viewer, which is right.
  * Wanted:  Escape closes the record, through its own Close details, after
  * anything above it has had the key: the drawing viewer (lightbox), an open
  * menu, listbox or popover (the Export menu, the sort menu), another
@@ -14,9 +15,15 @@
  * Viewport: both. Desktop is the item; the phone dialog takes the same fix
  * because the same .stop is what breaks it there.
  *
- * Measured with the patch: desktop, Escape removes rec= and the pane;
- * focus on that row's link. With the lightbox open, the first
- * Escape closes only the lightbox and the record stays.
+ * Measured with the patch at 1440: Escape (focus on the row, or on Next
+ * patent) drops rec= from the hash and closes the pane, and focus is on
+ * "View details of US 9000581 B2"; after Next patent, Escape puts focus on
+ * "View details of US 9252068 B2". history.length is unchanged (3). At 390
+ * Escape closes the dialog and focus is on the row (R4-40). The open
+ * record is read from the hash (#s=…&rec=…) and the pane's number; the
+ * patch adds no history entry.
+ * With the drawing viewer open (#…&fig=1), the first Escape closes only
+ * the viewer: fig= goes, rec= stays, focus returns to Open figure 1.
  *
  * What was open is read in the capture phase on window, before any
  * handler (theirs or Reka's) has closed it, and acted on after the event.
@@ -42,16 +49,20 @@
       .find(b => b.getClientRects().length);
     if (!close) return;
     const dialog = !!close.closest('[role="dialog"]');
-    /* The open record is named in the URL (rec=09000581). */
-    const digits = new URLSearchParams(location.search).get('rec') || '';
+    /* The open record is named in the hash (#s=…&rec=09000581); the row's
+       name prints it without the leading zero ("US 9000581 B2"). */
+    const rec = (new URLSearchParams(location.hash.slice(1)).get('rec') || '').replace(/^0+/, '');
+    const pn = close.closest('[data-result-detail]').querySelector('p.font-mono')?.textContent.trim() || '';
     setTimeout(() => {
       if (!close.isConnected) return;
       close.click();
-      if (dialog || !digits) return; /* the dialog's focus return is R4-40 */
+      if (dialog || !(rec || pn)) return; /* the dialog's focus return is R4-40 */
+      const hit = rec && new RegExp(`(^|\\D)${rec.replace(/\W/g, '')}(\\D|$)`);
       setTimeout(() => {
         const row = [...document.querySelectorAll('[data-card-primary][aria-label]')]
-          .find(b => b.getAttribute('aria-label').includes(digits));
-        row?.focus({ preventScroll: false });
+          .find(b => b.getClientRects().length && ((pn && b.getAttribute('aria-label').includes(pn)) || (hit && hit.test(b.getAttribute('aria-label')))));
+        row?.focus({ preventScroll: true });
+        row?.scrollIntoView({ block: 'nearest' });
       }, 60);
     }, 0);
   }, true);
