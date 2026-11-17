@@ -1,23 +1,22 @@
 /* R4-45 (restores R3-58) · Drawing viewer: the figure arrows have an edge on the paper
  *
  * Current: Previous figure / Next figure are white discs (#ffffffd1) on the
- * white drawing ground, with a 1px #2525251f edge (1.1:1 on white) and a
- * faint shadow. The glyph reads; the disc does not, so the arrows look like
- * loose chevrons over the drawing's margins.
- * Wanted:  a 1px edge that reads on the paper, in both themes.
+ * white drawing ground, with a 1px #2525251f edge (about 1.3:1 on white) and a
+ * faint shadow. The glyph shows; the disc's edge does not.
+ * Wanted:  a 1px edge of #252525 at 50% (#25252580), which composites to
+ * #929292 on the white paper, 3.1:1, in both themes. Everything else on
+ * the discs is unchanged.
  * Viewport: all (the discs are the same everywhere).
+ *
  * Measured with the patch, light and dark, desktop and phone: the edge
  * rgba(37,37,37,.5), #929292 on the paper, 3.1:1 (was rgba(37,37,37,.12)).
  *
- * The paper is #fff in both themes (--figure-ground in ours: it does not
- * swap, because it is the sheet the drawing was published on), so the edge
- * must not swap either. Your --border is #e4e4e4 in light (1.3:1 on white)
- * and #333 in dark: one would not read and the other would change for no
- * reason. The edge is your own ink, #252525, the value your rule already
- * uses for this disc at 12%, raised to 50%: composited on white it is
- * #929292, 3.1:1. In the component this is one non-swapping token for
- * "line on the paper", which the zoom pill can take too where it sits on the
- * drawing. */
+ * The paper is #fff in both themes, so the edge does not swap either. Your
+ * --border is #e4e4e4 in light, about 1.3:1 on white, and #333 in dark.
+ * The edge is your own ink, #252525, the value your rule already uses for
+ * this disc at 12%, raised to 50%. In the component this is one
+ * non-swapping token for a line on the paper, which the zoom pill takes too
+ * where it sits on the drawing (R4-44). */
 .figview-stage .figview-step[aria-label] {
   border-color: #25252580;
 }
