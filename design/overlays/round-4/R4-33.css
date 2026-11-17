@@ -1,12 +1,16 @@
 /* R4-33 (restores R3-32) · Results header: no keyboard-shortcuts control on a touch screen
  *
- * Current: a 28x28 "Keyboard shortcuts" button ships to touch phones, 16x28
- * once "Restore the original order" appears: the narrowest target on the
- * page, for shortcuts a touch user cannot press.
+ * Current: the 28×28 "Keyboard shortcuts" button beside the count ships to
+ * touch phones (rendered at the phone preset: touch, coarse pointer, no
+ * hover), the narrowest target in the header, for shortcuts a touch user
+ * cannot press.
  * Wanted:  the control is not rendered where the primary pointer is coarse
  * and cannot hover. A tablet with a keyboard and trackpad reports a fine
  * pointer and keeps it.
  * Viewport: (hover: none) and (pointer: coarse), whatever the width.
+ *
+ * Measured with the patch: not rendered at the phone preset; rendered at
+ * 1440 with a fine pointer, as shipped.
  *
  * In the component: v-if on a useMediaQuery for the same query, so the
  * button is not in the tab order or the accessibility tree either; the
