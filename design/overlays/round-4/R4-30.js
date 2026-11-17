@@ -1,34 +1,29 @@
 /* R4-30 (restores R3-44) · Result row: the drawing strip is named for its patent
  *
- * Current: each row's strip is a scroll container, so it is a tab stop, and
- * it is announced by its contents, "1 2 3 4 5 6 7 8 9 10 11 12 13": nothing
- * says these are drawings, or of which patent. Each thumbnail is a button
- * named "Drawing 3 of US 09000581 B", and the <img> beside it repeats the
- * same text as its alt.
+ * Current: each row's strip is a scroll container with no role and no name,
+ * so it is a tab stop announced by its contents, "1 2 3 4 5 6 7 8 9":
+ * nothing says these are drawings, or of which patent. Each thumbnail is a
+ * button named "Drawing 1 of US 9000581 B2", and the <img> beside it repeats
+ * the same text as its alt.
  * Wanted:  the strip is role="group" with aria-label "Drawings of
  * {pn}, {n} figures" (their figureCount string), and "1 figure" for one:
- * that string needs a singular form added. Each
- * thumbnail button is named "Open figure {i} of {pn}", the record's string
- * (their openFigure string), and the image beside it is alt="" because the button names
- * it. Badges stay aria-hidden, as they ship.
+ * that string needs a singular form added. Each thumbnail button is named
+ * "Open figure {i} of {pn}", the record's string (their openFigure string),
+ * and the image beside it is alt="" because the button names it. Badges stay
+ * aria-hidden, as they ship.
  * Viewport: both.
+ *
+ * Measured with the patch, phone and desktop, row 1: the strip is a group
+ * "Drawings of US 9000581 B2, 9 figures"; its first button "Open figure 1
+ * of US 9000581 B2"; alt="".
  *
  * In the component: the attributes on the strip's root, openFigure for the
  * button, alt="" on the thumbnail's TiffImage. {pn} is the formatted number
- * with its full kind (R4-29). */
+ * the row prints. */
 (() => {
   if (window.__r4_30) return;
   window.__r4_30 = true;
-  const kindOf = card => {
-    const u = card.querySelector('a[href*="docId="]')?.getAttribute('href') || card.querySelector('[data-idx] img')?.getAttribute('src') || '';
-    const id = (u.match(/docId=([^&#]+)/) || u.match(/\/drw\/([^/?#]+)/) || [])[1] || '';
-    return (id.match(/_([A-Z][0-9]?)$/) || [])[1] || '';
-  };
-  const pnOf = card => {
-    const shown = card.querySelector('a[title^="Open "] span')?.textContent.trim() || '';
-    const kind = kindOf(card);
-    return shown.replace(/^([A-Z]{2} [0-9A-Z]{5,}) ([A-Z][0-9]?)$/, (m, pn, k) => (kind && kind[0] === k[0] ? `${pn} ${kind}` : m));
-  };
+  const pnOf = card => card.querySelector('a[title^="Open "] span')?.textContent.trim() || '';
   const set = (el, name, v) => { if (el.getAttribute(name) !== v) el.setAttribute(name, v); };
   const fix = () => {
     for (const card of document.querySelectorAll('[data-result-card]')) {
