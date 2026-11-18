@@ -11,6 +11,10 @@
  * the foreground ink (currentColor): in the tile 10px from its top and
  * right edges, and on the phone chip after the name, in the chip's flow,
  * after its own 6px gap. Unselected fields keep their 1px --border edge.
+ * The check makes the selected chip 22px wider, so on the phone the chip
+ * row bleeds to the screen's edges: it scrolls from edge to edge, padded
+ * so its first chip still starts on the 16px gutter (and stops there when
+ * scrolled), and the chip it cuts is cut by the screen, not by the gutter.
  * A 2px ring is focus and nothing else, as it is now, so a selected field
  * with focus has the edge, the check and the ring.
  * Viewport: both.
@@ -20,12 +24,18 @@
  * is 16x16: at 1440 and 820 10px from the tile's top and right edges, clear
  * of the name (the tile is 148 or 150px wide, the name centred); at 390
  * after "All technology fields", the chip 188px wide (was 166).
+ * The phone row, 390: was 16-374 with the second chip (212-398) cut at
+ * 374, 16px short of the screen, mid-word; now the row is 0-390 with 16px
+ * padding at each end, the first chip still at x 16, the second cut at the
+ * screen's edge at 390, and scrolled to its end the last chip stops 16px
+ * from the right edge. 320: the same, the row 0-320.
  *
  * In the component: drop "inset-ring inset-ring-foreground" from the
  * selected field and render the check icon in it (aria-hidden; its
  * aria-pressed already says it is chosen). The composer's own focus-within
  * border stays as it is. The patch draws the check as a mask of the Lucide
- * path so that it takes currentColor. */
+ * path so that it takes currentColor. On the phone, the chip row takes
+ * -mx-4 px-4 scroll-px-4 (the safe-area inset where it is larger, R4-03). */
 section[aria-label="Patent technology fields"] button[aria-pressed="true"] {
   --tw-inset-ring-shadow: 0 0 #0000;
   position: relative;
@@ -46,5 +56,14 @@ section[aria-label="Patent technology fields"] button[aria-pressed="true"]::afte
 @media not all and (min-width: 40rem) {
   section[aria-label="Patent technology fields"] button[aria-pressed="true"]::after {
     position: static;
+  }
+  /* the chip row bleeds to the screen's edges; its padding keeps the first
+     chip on the gutter */
+  section[aria-label="Patent technology fields"] > div {
+    --r407-l: max(1rem, env(safe-area-inset-left, 0px));
+    --r407-r: max(1rem, env(safe-area-inset-right, 0px));
+    margin-inline: calc(-1 * var(--r407-l)) calc(-1 * var(--r407-r));
+    padding-inline: var(--r407-l) var(--r407-r);
+    scroll-padding-inline: var(--r407-l) var(--r407-r);
   }
 }
