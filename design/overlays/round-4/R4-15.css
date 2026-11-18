@@ -1,61 +1,118 @@
-/* R4-15 (restores R3-28) · Search settings: a bottom sheet on a phone
+/* R4-15 (restores R3-28) · Search settings: a sheet on a phone, a popover that clears the masthead, 44px on touch
  *
- * Current: below sm the panel is a popover positioned by script under the
- * settings button: on results 358×577 at (17,251), 12px corners all round,
- * 16px padding. There is no scrim, and the page behind scrolls (a 600px
- * wheel over it moves the page 600px). Every segment (10…200, Off/On,
- * Filed/Published/Priority) is 24px tall; Reset (67×36) and Done (60×36)
- * sit at the panel's foot, in its flow.
- * Wanted:  below sm (40rem), a sheet fixed to the bottom of the viewport,
- * full width, top corners 16px, no bottom edge, over a scrim,
- * color-mix(in oklab, var(--color-black) 40%, transparent), that covers
- * the page and the masthead. The sheet keeps your 16px padding, 16px plus
- * the bottom safe area at its foot; the body (.pop-body, no padding of its
- * own) scrolls inside it, capped at 85dvh less 120px, with its scroll
- * contained, and the page behind does not scroll. Reset and Done stay
- * pinned at its foot above the home-indicator safe area while the body
- * scrolls, as they are now: Reset 67×36 and Done 60×36, 13px at weight
- * 500, 8px apart, in your foot row with its 1px --border top edge and 12px
- * above them. The segments are 44px tall and at least 44px wide. The
- * sheet enters and leaves with your own pop-fade, unchanged.
- * Viewport: phone (below sm). Desktop and tablet keep the popover.
+ * Current: the panel is a popover your script places at the settings
+ * button, above or below it, whichever has more room, with an inline
+ * max-height of that room less 8px and 16px from the viewport edge. The
+ * edge it measures from is the viewport, not the masthead: on home at
+ * 1440×900 it opens upward and may reach y 16, and with R4-16's hint and
+ * R4-50's edge the panel is 456 tall, so its top is at y 35, 22px under the
+ * 57px masthead, and the title is cut. On a phone and on a phone in
+ * landscape it is the same popover; in landscape it is mostly under the
+ * masthead. On a phone it is 12px corners all round, no scrim, and the
+ * page behind scrolls. The panel title, "SEARCH SETTINGS", is the same
+ * 11px tracked uppercase --muted-foreground as the section labels under
+ * it. On any touch screen, a phone or a tablet, every segment (10…200,
+ * Off/On, Filed/Published/Priority) is 24px tall, every chip 32px, and
+ * Reset (67×36) and Done (60×36) are 36px. The body scrolls with nothing
+ * to show there is more below.
+ * Wanted:
+ * - Popover (sm and up, and not a short screen): it keeps your placement,
+ *   but where it opens upward its top stays 16px below the masthead's
+ *   bottom edge, the edge your script keeps from the viewport. The body
+ *   is capped to fit; the title and the foot stay whole.
+ * - Sheet (your phone: variant: below sm, or a short screen below lg, which
+ *   is a phone in landscape): fixed to the bottom of the viewport, full
+ *   width, top corners 16px, no bottom edge, over a scrim,
+ *   color-mix(in oklab, var(--color-black) 40%, transparent), that covers
+ *   the page and the masthead. Its height is its content's, up to 85dvh,
+ *   whatever the trigger's position. It keeps your 16px padding, 16px plus
+ *   the bottom safe area at its foot. The body scrolls inside it with its
+ *   scroll contained, and the page behind does not scroll. Reset and Done
+ *   stay pinned at its foot in your foot row, with its 1px --border top
+ *   edge and 12px above them. The title reads "Search settings" and is set
+ *   as a title: 16px at weight 600, line height 1.35, no tracking or
+ *   uppercase, --foreground. The section labels are unchanged. The sheet
+ *   enters and leaves with your own pop-fade.
+ * - Both: while the body has more below, its last 32px fade to nothing
+ *   (a mask, so the fade is the panel's own --card at any theme); scrolled
+ *   to the end, no fade.
+ * - On a coarse pointer, at any width (a touch tablet keeps the popover
+ *   and takes these too): segments 44px tall and at least 44px wide, chips
+ *   44px tall, Reset and Done 44px tall.
+ * Viewport: all. The sheet below sm and on short screens below lg; the
+ * popover elsewhere; 44px wherever the pointer is coarse.
  *
- * Measured with the patch, 390×844 on results: the sheet 390×577 at
- * (0,267), its bottom at 844, top corners 16px, over the scrim
- * rgba(0,0,0,0.4); every segment 44px; the body scrolls (538 in 450) while
- * Reset (67×36) and Done (60×36) stay at y 792, 16px plus the safe area
- * above the sheet's bottom edge; the page does not move under a 600px
- * wheel. At 1440 the popover is unchanged.
+ * Measured with the patch (whole patch applied):
+ * - 1440×900, home: the popover opens upward, 700×417 at (252,74), its top
+ *   17px below the 57px masthead (was y 35, under it); the body is capped
+ *   at 289 (327 of content), fades, and clears at the end; Reset 67×36 and
+ *   Done 60×36 whole. Title SEARCH SETTINGS, 11px, as before.
+ * - 1440×900, results: opens downward at (17,131), 700×456, no cap, no fade.
+ * - 820×1180 (touch tablet): the popover, 700×524 at (18,91), below the
+ *   61px masthead; chips 44 tall, segments 44×44 at least, Reset 67×44,
+ *   Done 60×44.
+ * - 390×844, home and results: the sheet 390×717 at (0,127), bottom at 844
+ *   (85dvh; was 433 tall, set by the trigger's position); title "Search
+ *   settings" 16px / 600, #252525 light, #F0F0F0 dark, over 11px labels;
+ *   body 574 tall scrolling 600 (626 on results) with the fade, none when
+ *   scrolled to the end; chips and segments 44; Reset 67×44 at (17,784),
+ *   Done 60×44 at (313,784).
+ * - 320×568: the sheet 320×483 at (0,85); body 339 tall of 684, faded.
+ * - 844×390: the sheet (was the popover under the masthead), 844×332 at
+ *   (0,59); body 188 tall of 387, faded; Done 60×44 at (767,330).
  *
- * What the patch cannot do: your script writes max-height, left and width
- * inline on the panel and its wrapper for the popover. The patch does not
- * fight them; the sheet is fixed (so left and width do not apply) and the
- * body is capped instead (.pop-body max-height). In the component, branch
- * the positioning script on the breakpoint and do not run it for the sheet.
- * The scrim is a spread shadow on the sheet plus a brightness filter on the
- * sticky masthead, which sits in a higher stacking context than the panel;
- * in the component it is one element under the sheet. Tapping the scrim
- * closes the panel through your existing outside-pointerdown handler,
- * which discards unsaved changes as it already does. */
-@media not all and (min-width: 40rem) {
+ * What the patch cannot do: your script writes max-height inline on the
+ * panel. R4-15.js removes it while the panel is a sheet and, for the
+ * popover, caps the body (--r415-body) rather than fight it. In the
+ * component, the placement script takes the masthead's bottom edge as the
+ * top of its room (your safeTop prop is there for it) and does not run for
+ * the sheet. The title is a literal "SEARCH SETTINGS" in your template;
+ * R4-15.js rewrites it to "Search settings" (search.advanced), which the
+ * popover still shows in uppercase through .pop-title. The scrim is a
+ * spread shadow on the sheet plus a brightness filter on the sticky
+ * masthead, which sits in a higher stacking context than the panel; in the
+ * component it is one element under the sheet. Tapping the scrim closes
+ * the panel through your existing outside-pointerdown handler, which
+ * discards unsaved changes as it already does. */
+.pop-set .pop-body {
+  max-height: var(--r415-body, none);
+}
+.pop-set .pop-body[data-r415-more] {
+  mask-image: linear-gradient(to bottom, black calc(100% - 32px), transparent);
+}
+@media (pointer: coarse) {
+  .pop-set .seg-btn {
+    height: 44px;
+    min-width: 44px;
+  }
+  .pop-set .pop-chip {
+    min-height: 44px;
+  }
+  .pop-set .pop-foot .btn {
+    min-height: 44px;
+  }
+}
+@media (not (min-width: 1024px)) and (max-height: 480px), not all and (min-width: 640px) {
   .pop-set {
     position: fixed;
     inset: auto 0 0 0;
     z-index: 70;
     width: auto;
     max-width: none;
+    max-height: 85dvh;
     border-bottom: 0;
     border-radius: 16px 16px 0 0;
     padding-bottom: calc(16px + env(safe-area-inset-bottom));
     overscroll-behavior: contain;
     box-shadow: 0 0 0 100vmax color-mix(in oklab, var(--color-black) 40%, transparent);
   }
-  .pop-set .pop-body {
-    max-height: calc(85dvh - 120px);
-  }
-  .pop-set .seg-btn {
-    height: 44px;
-    min-width: 44px;
+  .pop-set .pop-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--foreground);
   }
   html:has(.pop-set) {
     overflow: hidden;
