@@ -1,0 +1,29 @@
+/* R4-47 (new) · Page ground, dark: slate, with one light at the top right
+ *
+ * Current: a flat #141414 ground; cards #1a1a1a, borders #333, all neutral.
+ * Wanted:  the ground is slate #16191c with one radial light at the top
+ * right of the viewport (#2c3238 at its centre, #1e2227 at 34%, the ground
+ * from 70%). The light is fixed to the viewport, so the sticky bars that
+ * paint --background (the masthead, the search bar) show the same light as
+ * the page behind them and no band appears where they meet. Cards, sheets,
+ * menus and drawings keep a solid fill: the light is on the page ground only.
+ * Viewport: all.
+ *
+ * Measured: --foreground 11.37:1 on the light's centre, 15.49:1 on the
+ * ground; --muted-foreground 5.14:1 and 7.00:1. Card on ground 1.10:1, with
+ * the 1px border carrying the edge (1.55:1 on the card).
+ *
+ * In the component: the tokens below in [data-theme=dark], and the gradient
+ * on body. background-attachment: fixed is ignored by iOS Safari; there the
+ * light scrolls with the page. Check on a phone. */
+[data-theme=dark] {
+  --background: #16191c;
+  --card: #1e2227;
+  --popover: #1e2227;
+  --muted: #2a2f35;
+  --secondary: #2a2f35;
+  --accent: #2c3238;
+  --border: #3a4148;
+  --input: #454c53;
+  --r4-ground: radial-gradient(ellipse at 86% 16%, #2c3238 0%, #1e2227 34%, #16191c 70%);
+}
