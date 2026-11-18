@@ -12,17 +12,28 @@
  * text-wrap: pretty. Under the meta block's top rule (its 1px --border
  * border-top, with 4px more above it and 14px below it),
  * one fact per line, 6px apart, the holder and inventors at 14/20, the date
- * line at 13/18: the holder, the inventors, then the date and the class,
+ * line at 13/18: the holder (wrapping to a second line rather than cut
+ * mid-name, clamped at two), the inventors, then the date and the class,
  * "2015-04-07 · US H01L 23/36". Only the holder is the foreground colour
  * (your medium weight); the inventors, the date and the class are muted, the
  * date and class in Inconsolata, the date without its "Published" label;
  * every icon is muted. Holder names are as published: no case change.
- * Viewport: phone (below sm, 40rem). Desktop is untouched: its title is
- * line-clamp-none and its meta is two columns, as shipped.
+ * From sm up the meta stays two columns, as shipped, except that a holder
+ * wider than its column (TAIWAN SEMICONDUCTOR MANUFACTURING CO., LTD. in a
+ * 345px column at 820) is no longer cut mid-name: it takes the meta's whole
+ * first line, wrapping to a second if it must (clamped at two), and the
+ * inventors go under it, 8px below, so the meta reads holder / inventors /
+ * date and class. A holder that fits keeps its column.
+ * Viewport: phone (below sm, 40rem) for the title and the three lines; the
+ * long-holder rule at every width.
  *
  * Measured at 390 with the patch, row 1: title 17/22, clamp 2; three lines at
  * y 174, 200 and 226, 20/20/18px tall, 6px apart; the holder rgb(37,37,37) at
  * 500, the inventors and the date line muted (rgb(104,104,104)) at 400.
+ *
+ * Measured with the combined patch, scrolled state: holders cut mid-name
+ * 0 of 50 at 1440, 820 and 844 (21, 15 and 14 of them take the line; before,
+ * 15 of 50 were cut at 820); 0 of 50 at 390 and 320.
  *
  * In the component: line-clamp-2 in place of line-clamp-1 below sm;
  * below sm the meta is a flex-col of three lines with gap-1.5, the date line
@@ -59,6 +70,20 @@
   [data-result-card] div.flex-col.border-t > div:first-child > div {
     width: 100%;
   }
+  /* the holder is never cut mid-name: it may take a second line */
+  [data-result-card] div.flex-col.border-t > div:first-child > div:first-child {
+    align-items: flex-start;
+  }
+  [data-result-card] div.flex-col.border-t > div:first-child > div:first-child > svg {
+    margin-top: 3px;
+  }
+  [data-result-card] div.flex-col.border-t > div:first-child > div:first-child > span.truncate {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    white-space: normal;
+  }
   /* the date line: date · class, muted, numbers in Inconsolata */
   [data-result-card] div.flex-col.border-t > div:last-child {
     margin-top: 0;
@@ -85,6 +110,28 @@
     /* your 6px flex gap is the space after it */
     margin-inline-start: 6px;
     font-family: var(--font-sans);
+  }
+}
+/* From sm up: a holder wider than its column (R4-21.js marks it) takes the
+   meta's whole first line and may wrap to two; the inventors go under it. */
+@media (min-width: 40rem) {
+  [data-result-card] div.flex-col.border-t > div:first-child:has(> [data-r4-long]) {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  [data-result-card] div.flex-col.border-t > div:first-child > [data-r4-long] {
+    flex: 1 0 100%;
+    align-items: flex-start;
+  }
+  [data-result-card] [data-r4-long] > svg {
+    margin-top: 3px;
+  }
+  [data-result-card] [data-r4-long] > span.truncate {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    white-space: normal;
   }
 }
 [data-r4-date] {
