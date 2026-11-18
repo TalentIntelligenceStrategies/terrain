@@ -1,6 +1,6 @@
 /* Serves their build from the mirror, with a round's patch on top, at 127.0.0.1.
  *
- *   node scripts/local.mjs --round 3 [--port 8766] [--overlays N]
+ *   node scripts/local.mjs --round 3 [--port 8766] [--overlays N] [--visual R4-47,R4-48]
  *   then http://127.0.0.1:8766/<their path>/ (VuePat/ from round 4)
  *
  * The files are round-N/mirror/ (mirror.mjs). EVERY /api/ CALL IS ANSWERED
@@ -10,7 +10,9 @@
  *
  * The patch is read from design/overlays/round-N/ on each page load, so an
  * overlay edit shows on reload. A cookie, set by the pill at bottom-left,
- * turns it off to show their build as it is. */
+ * turns it off to show their build as it is. --visual names the items a second
+ * pill turns off on their own, so a visual layer can be judged with the rest
+ * of the patch on. */
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -22,6 +24,7 @@ const port = Number(a.port || 8766);
 /* --overlays 3 serves this round's mirror with round 3's patch: whether an
    earlier package still applies to the build that came back. */
 const ovRound = a.overlays || a.round;
+const VISUAL = String(a.visual || '').split(',').filter(Boolean);
 const mirror = roundDir(a.round, 'mirror');
 const meta = path.join(mirror, 'MIRROR.json');
 if (!fs.existsSync(meta)) die(`no ${path.relative(process.cwd(), meta)}: run mirror.mjs --round ${a.round} first`);
@@ -36,22 +39,26 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '
 
 const CSP = `<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:">`;
 const PILL = on => `<style>
-#terrain-local{position:fixed;z-index:2147483647;right:env(safe-area-inset-right,0px);top:62%;
+#terrain-local,#terrain-visual{position:fixed;z-index:2147483647;right:env(safe-area-inset-right,0px);top:62%;
 display:flex;align-items:center;gap:6px;writing-mode:vertical-rl;min-width:28px;padding:12px 6px;border-radius:10px 0 0 10px;border:1px solid var(--border);border-right:0;
 background:var(--card);color:var(--foreground);font:500 12px/1 var(--font-sans,system-ui);box-shadow:0 2px 10px rgba(0,0,0,.15);cursor:pointer}
 /* a tab on the right edge, clear of their footers and of the record's actions */
-#terrain-local b{font-weight:700}#terrain-local:focus-visible{outline:2px solid var(--ring);outline-offset:2px}</style>
+#terrain-local b,#terrain-visual b{font-weight:700}#terrain-local:focus-visible{outline:2px solid var(--ring);outline-offset:2px}</style>
 <button id="terrain-local" type="button" aria-pressed="${on}" title="Local copy of v${version}. Turn the round ${ovRound} patch ${on ? 'off' : 'on'}"
 onclick="document.cookie='terrain_patch=${on ? 'off' : 'on'};path=/';location.reload()">Patch <b>${on ? 'on' : 'off'}</b></button>`;
+const VPILL = vis => `<style>#terrain-visual{top:calc(62% + 120px)}</style>
+<button id="terrain-visual" class="terrain-local-pill" type="button" aria-pressed="${vis}" title="Turn ${VISUAL.join(', ')} ${vis ? 'off' : 'on'}"
+onclick="document.cookie='terrain_visual=${vis ? 'off' : 'on'};path=/';location.reload()">Visual <b>${vis ? 'on' : 'off'}</b></button>`;
 
 function page(req) {
   let html = fs.readFileSync(path.join(mirror, base, 'index.html'), 'utf8')
     /* their drawing host, served from the mirror's copies */
     .replace(/https:\/\/(impat\.webpat\.co)\//g, '/_ext/$1/');
   const on = !/(?:^|;\s*)terrain_patch=off/.test(req.headers.cookie || '');
+  const vis = VISUAL.length > 0 && !/(?:^|;\s*)terrain_visual=off/.test(req.headers.cookie || '');
   let inject = CSP;
   if (on) {
-    const { css, js, files } = readOverlay(ovRound, 'all');
+    const { css, js, files } = readOverlay(ovRound, 'all', vis ? [] : VISUAL);
     const safe = s => s.replace(/<\/(script|style)/gi, '<\\/$1');
     /* As injectOverlay does it: the style kept in place by an observer, the
        scripts run once the document has parsed. */
@@ -60,7 +67,7 @@ document.addEventListener('DOMContentLoaded',()=>{put();new MutationObserver(put
 try{new Function(${safe(JSON.stringify(js))})();}catch(e){console.error('terrain overlay script failed',e);}});
 console.info('terrain local: round ${ovRound} patch, ${files.length} files');})();</script>`;
   }
-  html = html.replace(/<head([^>]*)>/i, `<head$1>${inject}`).replace(/<\/body>/i, `${PILL(on)}</body>`);
+  html = html.replace(/<head([^>]*)>/i, `<head$1>${inject}`).replace(/<\/body>/i, `${PILL(on)}${on && VISUAL.length ? VPILL(vis) : ''}</body>`);
   return html;
 }
 
