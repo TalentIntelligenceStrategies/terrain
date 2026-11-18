@@ -12,7 +12,10 @@
 *,*::before,*::after{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0; background:var(--ground); color:var(--text-1);
+  margin:0; color:var(--text-1);
+  /* the ground and its one light, fixed so every layer that paints the
+     ground lines up with it · design-language.md §2 */
+  background:var(--ground-light) fixed; background-color:var(--ground);
   font-family:'Urbanist',system-ui,-apple-system,'Segoe UI',sans-serif;
   font-size:16px; line-height:1.55; font-weight:400;
   -webkit-font-smoothing:antialiased;

@@ -218,8 +218,8 @@ argument, not the chronology.
 ### Lift a rule by narrowing it
 
 When a rule stops serving, **replace it with a narrower one that can actually be applied.** Deleting
-it outright leaves a vacuum that the next session fills with a guess. **Eight rules have been lifted
-this way, and each successor is checkable** — five by a document that says exactly what is permitted,
+it outright leaves a vacuum that the next session fills with a guess. **Nine rules have been lifted
+this way, and each successor is checkable** — six by a document that says exactly what is permitted,
 three by a script that refuses:
 
 - Terrain **may** draw a view of a set, and a caption over it **states a count**. The line moved
@@ -228,6 +228,9 @@ three by a script that refuses:
 
 - Terrain **has** an accent, and it is **achromatic** — the ink pair. `design-language.md` §3.8 says
   the three places it may appear and the places it may not.
+- *No gradient* is now **two named gradients and no third**: the ground's one light, on the page
+  ground only, and the deck's silver edge, on four controls listed by name. `design-language.md` §2
+  and §3.8 say where each may sit, and a fifth silver site is an amendment.
 - A **download** is not the line between software and a document. The line is **what the file is
   permitted to say**, and `brief.md` §1 carries the test: does it state anything its page did not.
   The starred set leaves as a CSV or Markdown; a report leaves as a PDF of its own page, without its
@@ -251,7 +254,8 @@ three by a script that refuses:
 ### Colour carries information, or it is not there
 
 **Terrain has no hue of its own.** One place may take colour, the accent, and the accent is
-achromatic. No gradient, no decorative colour, no tinted background. *Three other places had colour
+achromatic. No decorative colour, and no gradient or tint but two, both the deck's: the slate ground
+with its one light, and the silver edge on four named controls (`design-language.md` §2, §3.8). *Three other places had colour
 and each left with what it coloured: chart layers with the charts, discrete states with the
 legal-status chip (`platform.md` §13, R1-17), direction of change with a delta pill that never
 shipped. Their tokens are gone rather than parked. A view of the set, when one is built, does not
@@ -268,11 +272,12 @@ decision. Terrain's green is the website's marketing hue and does not enter the 
 **Innovue's blue may only ever appear inside the Innovue mark itself.** In a border, a chip or a
 button, it has been misread.
 
-**And the rule describes two palettes.** Dark is a swap of **27 semantic tokens** — `design-language.md`
+**And the rule describes two palettes.** Dark is a swap of **29 semantic tokens** — `design-language.md`
 §10.1 is where that number is argued, and `tools/check-app.py` is what keeps every printed copy of it
 honest — with **two named component exceptions and no others**, the two `.foot-mark-*` selectors on
-the attribution line. **Two semantic tokens do not swap and each says so in its own row**, and both are facts about the
-content rather than exemptions: `--figure-ground` is the paper a patent drawing was published on —
+the attribution line. **Three semantic tokens do not swap and each says so in its own row.** `--edge-silver` is one
+gradient that reads on both grounds; the other two are facts about the content rather than
+exemptions: `--figure-ground` is the paper a patent drawing was published on —
 black line-work composited onto `#1A1A1A` is a blank rectangle — and `--veil` is the ground under a
 control bar floating on that paper, so it composites over the drawing rather than over the app.
 *`--scrim` is the one that looks like it belongs with them and does not: it dims the app, which does

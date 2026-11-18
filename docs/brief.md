@@ -546,8 +546,16 @@ it would stop being enforceable the moment a fourth site appeared.
 
 - **In data.** Not a score, not a relevance rank, not a bar. A hue for data would be an amendment to
   [`design-language.md`](design-language.md) §2, and the accent would not be it.
-- **As decoration.** No gradient, no wash, no accent border on a card, no tinted background.
+- **As decoration.** No wash, no accent border on a card, and no gradient but two.
 - **Anywhere it could be read as a verdict.**
+
+**The deck's ground and silver edge are the product's.** The page ground is the deck's slate, with
+one light at the top right — slide 1's in dark, the appendix's in light — and the actions that move a
+founder from a search to a file (the home composer, Search in the results bar, Find similar, Export)
+carry the deck's silver edge. Both are named exceptions to *no gradient*, and neither carries data:
+the light sits only on the page ground, and the edge marks four controls and no result.
+[`design-language.md`](design-language.md) §2 and §3.8 carry the values and the rules. The reason is
+that a founder who has seen the deck should open the product and recognise it.
 
 **One deck exception: a status palette.** The sales deck marks *availability* with three dots:
 **green** (#4DBF5F, Terrain's marketing green measured from the Products-menu thumbnail) for live,
@@ -595,6 +603,9 @@ monorepo from this folder** — record it here and leave it for a deliberate pro
   `brand/visual-guide.md`, where the gradient ↔ pillar pairings live.
 - Terrain's neutral ramp and semantic-colour rule → the two systems will need deliberate
   reconciliation, not a copy.
+- **Terrain's slate ground and silver edge** — the deck's grounds and edge, now the product's
+  (§5) → `brand/visual-guide.md`. They are the one place Terrain is tinted where the brand ramp is
+  true neutral, so they need reconciling rather than copying.
 - **Terrain's dark palette** — the semantic tokens in `design-language.md` §10, and more usefully the
   rule that no component may read a primitive.
 - **Terrain's motion vocabulary** — the easing curves and the standing prohibitions.

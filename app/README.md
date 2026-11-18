@@ -154,7 +154,7 @@ custom property on `:root`**. `design-language.md` §3.9 is the rule; this is th
 | --- | --- | --- | --- |
 | primitive | 11 | `:root` once | `--n-0`…`--n-10`. No component may read one |
 | scale | 28 | `:root` once | Invariant by construction |
-| semantic | 27 | **all three blocks** | The dark contract |
+| semantic | 29 | **all three blocks** | The dark contract |
 | derived | 1 | `:root` once | Resolves *through* a themed token. **Never in a dark block** |
 | component-scoped | 4 | the component's own class | Never on `:root` |
 

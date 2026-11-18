@@ -63,7 +63,7 @@ TOK=app/styles/tokens.css
 # violation in a file the gate does not read, and reported FAIL on a gate that
 # was working perfectly. A test that fails for the wrong reason costs the same
 # attention as one that passes for the wrong reason and buys less.
-s_value()    { sed -i.bak 's|--border:#2E2E2E|--border:#2E2E2F|' "$1/design/previews/terrain-loading-lab.html"; rm -f "$1"/design/previews/*.bak; }
+s_value()    { sed -i.bak 's|--border:#3A4148|--border:#3A4149|' "$1/design/previews/terrain-loading-lab.html"; rm -f "$1"/design/previews/*.bak; }
 s_comment()  { sed -i.bak 's|even in L\*|even in L star|' "$1/design/previews/terrain-loading-lab.html"; rm -f "$1"/design/previews/*.bak; }
 s_sentinel() { sed -i.bak 's|/\* ══ end tokens ══ \*/||' "$1/design/previews/terrain-loading-lab.html"; rm -f "$1"/design/previews/*.bak; }
 
@@ -83,8 +83,8 @@ c_root()  { printf ':root{--probe:#fff}\n'               > "$1/app/styles/90-pro
 d_drift() { python3 - "$1/$TOK" <<'PY'
 import io,sys
 p=sys.argv[1]; s=io.open(p,encoding='utf-8').read()
-s=s.replace('  --text-1:var(--n-10); --text-2:var(--n-8); --text-3:var(--n-7);',
-            '  --probe:var(--n-1);\n  --text-1:var(--n-10); --text-2:var(--n-8); --text-3:var(--n-7);',1)
+s=s.replace('  --text-1:var(--n-10); --text-2:var(--n-8);\n',
+            '  --probe:var(--n-1);\n  --text-1:var(--n-10); --text-2:var(--n-8);\n',1)
 io.open(p,'w',encoding='utf-8').write(s)
 PY
 }

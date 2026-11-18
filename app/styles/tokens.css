@@ -102,8 +102,19 @@ html{color-scheme:light dark;background:var(--ground)}
    Gate D asserts the PROPERTY, and gate G is what holds the number, in the
    one place it is argued.                                                  */
 :root{
-  --ground:var(--n-2); --surface:var(--n-0); --surface-sunken:var(--n-3);
-  --border:var(--n-4); --border-strong:var(--n-5);
+  /* THE GROUND IS SLATE, AND IT CARRIES ONE LIGHT · design-language.md §2.
+     The deck's grounds, taken exactly: #ECEEF0 under a radial light at the
+     top right, #FFFFFF at its centre to #E4E6E9 from 70%, which is most of the
+     page. The only tinted values in the system (hue 248, chroma under .015):
+     the ramp below stays true neutral, and so do --surface and the paper.
+     --border is the deck's slate rule, 1.49:1 on --surface.
+     --edge-silver IS THE SAME IN BOTH THEMES, like --figure-ground, and for
+     the opposite reason: it is read against whichever ground it sits on, and
+     each theme reads it from the half that contrasts (§3.8). */
+  --ground:#ECEEF0; --surface:var(--n-0); --surface-sunken:var(--n-3);
+  --border:#D0D4D8; --border-strong:var(--n-5);
+  --ground-light:radial-gradient(ellipse at 86% 16%,#FFFFFF 0%,#F2F3F5 34%,#E4E6E9 70%);
+  --edge-silver:linear-gradient(135deg,#3A4148 0%,#C9D0D6 30%,#4A5158 55%,#9AA2AA 80%,#3A4148 100%);
   /* THE ACCENT · brief.md §5, design-language.md §3.8.
      Terrain's accent is ACHROMATIC. It is the near-black ink pair, and that is
      the decision rather than a slot waiting on a hue.
@@ -138,7 +149,10 @@ html{color-scheme:light dark;background:var(--ground)}
      answers "how does the accent hover", and those stay two questions. */
   --accent:var(--n-10); --accent-ink:#FAFAFA; --accent-hover:var(--n-9);
   --accent-on-surface:var(--n-10);   /* the accent as INK, on --surface */
-  --text-1:var(--n-10); --text-2:var(--n-8); --text-3:var(--n-7);
+  --text-1:var(--n-10); --text-2:var(--n-8);
+  /* slate, with the ground: #5F666D is 4.65:1 on the ground's darkest stop,
+     #E4E6E9, where --n-7 measured 4.14. 5.11 on --surface-sunken. */
+  --text-3:#5F666D;
   --text-disabled:var(--n-6); --text-inverse:#FAFAFA;
   /* three more semantics, added with the dark pass. Each replaced a component
      that was reaching past --n-* into the ramp: §10 makes dark cheap only if
@@ -295,11 +309,16 @@ html{color-scheme:light dark;background:var(--ground)}
    layer of --dark-* primitives — buys nothing and hides which value is live. */
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-  /* neutral — a re-step, not an inversion. The ground/surface step is 1.06
-     against 1.08 in light, so --border does the separating that the step does
-     there. §10's reading of the dark reference screen. */
-  --ground:#141414; --surface:#1A1A1A; --surface-sunken:#101010;
-  --border:#2E2E2E; --border-strong:#454545;
+  /* slate — a re-step, not an inversion. The ground is the deck's cover,
+     #16191C under a light at the top right (#2C3238 at its centre). The
+     ground/surface step is 1.10, so --border, the deck's #3A4148 rule at
+     1.55:1 on --surface, does the separating. --text-3 is the deck's grey,
+     6.18 on --surface and 5.01 at the light's centre, where #8E8E8E measured
+     3.96. */
+  --ground:#16191C; --surface:#1E2227; --surface-sunken:#101010;
+  --border:#3A4148; --border-strong:#454545;
+  --ground-light:radial-gradient(ellipse at 86% 16%,#2C3238 0%,#1E2227 34%,#16191C 70%);
+  --edge-silver:linear-gradient(135deg,#3A4148 0%,#C9D0D6 30%,#4A5158 55%,#9AA2AA 80%,#3A4148 100%);
   /* the accent, achromatic here exactly as in light: the near-black fill
      becomes a near-white one and --accent-ink inverts with it. There is no
      hue to re-measure against this ground, which is the maintenance cost §3.8
@@ -308,7 +327,7 @@ html{color-scheme:light dark;background:var(--ground)}
      contrast (brief.md §5). */
   --accent:#F0F0F0; --accent-ink:#141414; --accent-hover:#FFFFFF;
   --accent-on-surface:#F0F0F0;
-  --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
+  --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#9AA2AA;
   --text-disabled:#5A5A5A; --text-inverse:#141414;
   /* --text-1 is the primary fill and --text-inverse its label, so a near-black
      button becomes a near-white one with no component rule changing. */
@@ -347,11 +366,16 @@ html{color-scheme:light dark;background:var(--ground)}
   }
 }
 :root[data-theme="dark"]{
-  /* neutral — a re-step, not an inversion. The ground/surface step is 1.06
-     against 1.08 in light, so --border does the separating that the step does
-     there. §10's reading of the dark reference screen. */
-  --ground:#141414; --surface:#1A1A1A; --surface-sunken:#101010;
-  --border:#2E2E2E; --border-strong:#454545;
+  /* slate — a re-step, not an inversion. The ground is the deck's cover,
+     #16191C under a light at the top right (#2C3238 at its centre). The
+     ground/surface step is 1.10, so --border, the deck's #3A4148 rule at
+     1.55:1 on --surface, does the separating. --text-3 is the deck's grey,
+     6.18 on --surface and 5.01 at the light's centre, where #8E8E8E measured
+     3.96. */
+  --ground:#16191C; --surface:#1E2227; --surface-sunken:#101010;
+  --border:#3A4148; --border-strong:#454545;
+  --ground-light:radial-gradient(ellipse at 86% 16%,#2C3238 0%,#1E2227 34%,#16191C 70%);
+  --edge-silver:linear-gradient(135deg,#3A4148 0%,#C9D0D6 30%,#4A5158 55%,#9AA2AA 80%,#3A4148 100%);
   /* the accent, achromatic here exactly as in light: the near-black fill
      becomes a near-white one and --accent-ink inverts with it. There is no
      hue to re-measure against this ground, which is the maintenance cost §3.8
@@ -360,7 +384,7 @@ html{color-scheme:light dark;background:var(--ground)}
      contrast (brief.md §5). */
   --accent:#F0F0F0; --accent-ink:#141414; --accent-hover:#FFFFFF;
   --accent-on-surface:#F0F0F0;
-  --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#8E8E8E;
+  --text-1:#F0F0F0; --text-2:#B4B4B4; --text-3:#9AA2AA;
   --text-disabled:#5A5A5A; --text-inverse:#141414;
   /* --text-1 is the primary fill and --text-inverse its label, so a near-black
      button becomes a near-white one with no component rule changing. */
@@ -416,4 +440,12 @@ html{color-scheme:light dark;background:var(--ground)}
      near-black/near-white pair as the ink; deriving it still matters, because
      it is what keeps the three permitted places to one declaration. */
   --focus:var(--accent);
+}
+
+/* ── 6 · INCREASED CONTRAST ────────────────────────────────────────────────
+   The silver edge reads from whichever half of its gradient contrasts with
+   the ground, so half of it is always faint. Asked for more contrast, it is a
+   solid --text-1 edge: the same 2px, nothing faint. design-language.md §3.8. */
+@media (prefers-contrast:more){
+  :root{--edge-silver:linear-gradient(var(--text-1),var(--text-1))}
 }

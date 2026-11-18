@@ -16,7 +16,7 @@
    built for is gone with the conversation: platform.md §3 is one composer and
    one button, and the search runs on submit.                    */
 .conv{min-height:100%;display:flex;flex-direction:column;padding:var(--s-40) var(--s-24) 0;
-      background:var(--ground)}
+      background:var(--ground-light) fixed;background-color:var(--ground)}
 .conv-body{flex:1;display:flex;flex-direction:column;justify-content:center}
 /* 680px was a reading measure for a thread of messages. The home surface
    carries a row of tiles and a two-column table instead, and neither is
@@ -48,6 +48,12 @@
       padding:var(--s-14) var(--s-16) var(--s-10);
       transition:border-color var(--dur-2) var(--ease)}
 .cmp-inner:focus-within{border-color:var(--border-strong)}
+/* the home composer is the silver edge's first site (10-button.css). Its
+   running and focus edges sit 1px outside a 1px border; on a 2px one they
+   move out with it. */
+.cmp-inner.edge-silver,.cmp-inner.edge-silver:focus-within{border:2px solid transparent;
+  background:linear-gradient(var(--surface),var(--surface)) padding-box,var(--edge-silver) border-box}
+.cmp-inner.edge-silver::before,.cmp-inner.edge-silver::after{inset:-2px}
 /* A RUNNING SEARCH PULSES THE PANEL'S EDGE (platform.md §13.4, R1-09). The
    signal sits on the control that started it, and the list below stays at
    full strength until the answer replaces it. Keyed on the Search button's

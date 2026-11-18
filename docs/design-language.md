@@ -39,6 +39,15 @@ weight and spacing, and the one place colour is permitted is achromatic:
 | --- | --- |
 | **The accent** | the primary action, the focus ring, a selected control — §3.8 |
 
+**The ground is slate, and it carries one light that encodes nothing.** The page ground is the
+deck's: `#ECEEF0` in light and `#16191C` in dark, lighter toward the top right in one radial light,
+fixed to the viewport so every layer that paints the ground lines up with it (`--ground-light`,
+§3.2). It sits on the page ground and nowhere else — never on a card, a row, a sheet or a drawing —
+so nothing that is read sits on a gradient. Its tint is hue 248 at a chroma under .015: there to set
+the ground apart from the white of a card and the paper of a drawing, not read as a colour, and the
+only tinted values in the system. **The deck and the product share it**, which is why it is taken
+exactly rather than redrawn on the ramp.
+
 *Three other places had colour and each left with what it coloured. **Chart layers** went with the
 charts; **discrete states** — the live / expired / pending chip — went with legal status
 (`platform.md` §13, R1-17); **direction of change** was a delta pill that never shipped. §3.3 and
@@ -76,7 +85,9 @@ own prose into a silently wrong pointer rather than a visibly missing one.
 
 ### 3.1 · Neutral ramp
 
-Perceptually even in L*, **true neutral — no hue at all, R = G = B**.
+Perceptually even in L*, **true neutral — no hue at all, R = G = B**. The ground, its hairline and
+the quietest text sit beside the ramp rather than on it: they are the deck's slate (§2), and §3.2
+gives their values.
 
 | | Hex | L* | |
 |---|---|---|---|
@@ -104,15 +115,17 @@ what lets an accent sit on the system without fighting a temperature.
 
 | Token | → | Contrast |
 |---|---|---|
-| `--ground` | `--n-2` | page background |
+| `--ground` | `#ECEEF0` | page background, slate |
+| `--ground-light` | radial, `#FFFFFF` → `#F2F3F5` 34% → `#E4E6E9` 70% | the ground's one light, at 86% 16%, fixed — §2 |
 | `--surface` | `--n-0` | cards, menus, popovers |
 | `--surface-sunken` | `--n-3` | input tracks, table headers, segmented tracks |
-| `--border` | `--n-4` | every hairline, 1px |
+| `--border` | `#D0D4D8` | every hairline, 1px; slate, 1.49 on surface |
+| `--edge-silver` | 135°, `#3A4148` 0% · `#C9D0D6` 30% · `#4A5158` 55% · `#9AA2AA` 80% · `#3A4148` 100% | the silver edge, 2px — §3.8. **Does not swap** |
 | `--border-strong` | `--n-5` | active edges |
 | `--focus` | `--n-10` | 2px ring, 2px offset |
 | `--text-1` | `--n-10` | 15.3 on surface |
 | `--text-2` | `--n-8` | 6.99 |
-| `--text-3` | `--n-7` | 5.02 on surface, 4.65 on ground |
+| `--text-3` | `#5F666D` | 5.82 on surface, 5.11 on sunken, 4.65 on the ground's darkest stop |
 | `--text-disabled` | `--n-6` | non-text use only |
 | `--text-inverse` | `#FAFAFA` | on ink fills |
 | `--ink-hover` | `--n-9` | hover on an ink fill |
@@ -265,8 +278,32 @@ one that is only selected never looks focused.
 
 - **In data.** Not a score, not a relevance rank, not a count. §2 permits the accent in controls and
   nowhere else.
-- **As decoration.** No gradient, no wash, no tinted card background, no accent border.
+- **As decoration.** No wash, no tinted card background, no accent border, and no gradient but the
+  two named ones: the ground's light (§2) and the silver edge below.
 - **Anywhere it could be read as a verdict.**
+
+#### The silver edge
+
+**The deck's silver edge marks the actions that move a founder from a search to a file**, and is the
+only edge the accent's sites take. A 2px border drawn with `--edge-silver` behind the control's own
+fill, clipped to the border box, so no wrapper carries it. **Four sites, and they are the whole
+list:**
+
+1. **The home composer** — the whole box. Its Search button keeps its fill and no edge.
+2. **Search in the results bar.**
+3. **Find similar**, on the open record.
+4. **Export this record.** On a phone, where it is two buttons, CSV and Markdown each carry it.
+
+**It is the same in both themes, and reads from whichever half contrasts.** On the dark ground the
+`#C9D0D6` and `#9AA2AA` stops carry it (5.01:1 or more) and it reads as silver; on the light ground
+the `#3A4148` and `#4A5158` stops do (6.44:1 or more) and it reads darker. On a light Search, whose
+fill is the ink, the dark stops merge into the fill and the edge is a highlight rather than a ring;
+that is accepted, and the fill stays the accent.
+
+**It is not focus and not a state.** Focus keeps its 2px ring outside the edge. Hover changes the
+fill, never the edge. A disabled Search has a flat `--border` instead. Under `prefers-contrast: more`
+the edge is a solid `--text-1`. **A fifth site is an amendment**, argued against this section, because
+an edge on every button is an edge on none.
 
 **What being achromatic buys.** It can never be read as data, and it needs no separately measured
 dark value: the ink pair inverts with the theme and §10.3's ink rows already carry its contrast. **A
@@ -287,7 +324,7 @@ blocks that goes stale. `tools/check-app.py` refuses one declared anywhere else.
 | --- | --- | --- | --- |
 | **primitive** | 11 | `:root`, once | `--n-0`…`--n-10`. **No component may read one.** |
 | **scale** | 28 | `:root`, once | `--s-*` `--r-*` `--dur-*` `--ease*` `--cycle`. Invariant by construction: a step is not a different size at night. |
-| **semantic** | 27 | **all three blocks** | This is the dark contract. §10.1. |
+| **semantic** | 29 | **all three blocks** | This is the dark contract. §10.1. |
 | **derived** | 1 | `:root`, once | Resolves *through* a themed token, so it inverts for free. **Never add one to a dark block.** |
 | **component-scoped** | 5 | on the component's own class | Never on `:root`, never read outside that component. |
 
@@ -1183,7 +1220,7 @@ The list is **duplicated on purpose.** CSS cannot share a declaration block betw
 a third indirection layer of `--dark-*` primitives buys nothing and hides which value is live.
 Whatever writes one writes both.
 
-**27 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
+**29 semantic tokens**, and **this is where that count is argued.** It is printed in three places —
 here, `CLAUDE.md`, and `app/README.md`'s tier table — and **a gate keeps them equal to the file**
 rather than a sentence asking everyone to keep them equal to each other.
 
@@ -1226,20 +1263,22 @@ this section.
 
 ### 10.3 · The values, measured
 
-**Neutral.** Contrast against `--surface` `#1A1A1A`.
+**Ground, surface and text.** Contrast against `--surface` `#1E2227`. The ground and its hairline
+are slate (§2); the text above `--text-3` stays neutral.
 
 | Token | Hex | On surface | L* |
 | --- | --- | --- | --- |
-| `--ground` | `#141414` | — | 6.3 |
-| `--surface` | `#1A1A1A` | — | 9.3 |
-| `--surface-sunken` | `#101010` | 1.09 | 3.9 |
-| `--border` | `#2E2E2E` | 1.28 | 18.9 |
-| `--border-strong` | `#454545` | 1.82 | 29.3 |
-| `--focus` | `#F0F0F0` | 15.27 | 94.8 |
-| `--text-1` | `#F0F0F0` | **15.27** | 94.8 |
-| `--text-2` | `#B4B4B4` | **8.39** | 73.3 |
-| `--text-3` | `#8E8E8E` | **5.31** | 59.0 |
-| `--text-disabled` | `#5A5A5A` | 2.52 | 38.2 |
+| `--ground` | `#16191C` | 1.10 | 8.6 |
+| `--ground-light` | radial, `#2C3238` → `#1E2227` 34% → `#16191C` 70% | — | — |
+| `--surface` | `#1E2227` | — | 13.0 |
+| `--surface-sunken` | `#101010` | 1.19 | 3.9 |
+| `--border` | `#3A4148` | 1.55 | 27.2 |
+| `--border-strong` | `#454545` | 1.67 | 29.3 |
+| `--focus` | `#F0F0F0` | 14.03 | 94.8 |
+| `--text-1` | `#F0F0F0` | **14.03** | 94.8 |
+| `--text-2` | `#B4B4B4` | **7.71** | 73.3 |
+| `--text-3` | `#9AA2AA` | **6.18**, 5.01 at the light's centre | 66.2 |
+| `--text-disabled` | `#5A5A5A` | 2.32 | 38.2 |
 | `--text-inverse` | `#141414` | — | 6.3 |
 | `--ink-hover` | `#FFFFFF` | — | 100 |
 | `--track-pressed` | `#2A2A2A` | — | 17.1 |
@@ -1262,9 +1301,11 @@ this section.
 | `--figure-ground` | `#FFFFFF` | **does not swap** — see §3.2 |
 | `--figure-ink` | `#595959` | **does not swap** — the paper does not, so the ink on it may not |
 | `--figure-ink-strong` | `#252525` | **does not swap** — the raised form of the same |
+| `--edge-silver` | the five stops, §3.2 | **does not swap** — it is read against either ground (§3.8) |
 
-**Two semantic tokens are identical in both palettes, and both are facts about the content rather
-than exemptions.** A patent drawing is black line-work on a transparent background; composited onto
+**`--edge-silver` is identical in both palettes because one gradient reads on both grounds**
+(§3.8). **The drawings' tokens are identical for a different reason: they are facts about the
+content rather than exemptions.** A patent drawing is black line-work on a transparent background; composited onto
 `#1A1A1A` it is a blank rectangle — so `--figure-ground` means *the paper this was published on*,
 which has no dark value, and `--veil` sits on that paper and may not swap either. Every other
 semantic token means *the surface under our own chrome*.

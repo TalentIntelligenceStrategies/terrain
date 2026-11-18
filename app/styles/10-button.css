@@ -24,6 +24,19 @@
 .btn-primary{background:var(--accent);color:var(--accent-ink)}
 .btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text-1)}
 .btn-ghost{color:var(--text-2)}
+/* THE SILVER EDGE · design-language.md §3.8. A 2px --edge-silver border on
+   the fill, drawn as a second background clipped to the border box, so no
+   wrapper element carries it. Four sites and the whole list: the home
+   composer (30-composer.css), Search in the results bar, Find similar and
+   Export this record (35-record.css). It is not the focus ring, which stays
+   outside it, and a disabled Search has none. */
+.btn-primary.edge-silver{border:2px solid transparent;
+  background:linear-gradient(var(--accent),var(--accent)) padding-box,var(--edge-silver) border-box}
+@media (hover:hover){
+  .btn-primary.edge-silver:hover{
+    background:linear-gradient(var(--accent-hover),var(--accent-hover)) padding-box,var(--edge-silver) border-box}
+}
+.btn-primary.edge-silver[disabled]{background:var(--accent);border-color:var(--border)}
 /* ══ A WAITING BUTTON HAS NO FILL · 05-wait-fail.css carries the argument ══
    In dark theme --accent is #F0F0F0, so the resting fill draws a near-white
    48×36 box around a 20px indicator — the same "box around a dot" 05 already

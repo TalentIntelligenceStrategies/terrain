@@ -1288,9 +1288,10 @@ Innovue only. It is never published.
 ### 13.4 · The current round
 
 **Round 4, against their v1.0.42, captured 2026-11-17 at `terrain.innovue.ltd/VuePat/`, from
-`handoff-2026-11-06`.** A conformance round: Innovue reported round 3 as built, and this round checks
-each of its 58 cards against what shipped and sends back what did not land. **It proposes nothing
-new.** Every card was measured on a local copy of v1.0.42, with round 3's patch on and off.
+`handoff-2026-11-06`.** Innovue reported round 3 as built, and **Part A** checks each of its 58 cards against what shipped
+and sends back what did not land; every card was measured on a local copy of v1.0.42, with round 3's
+patch on and off. **Part B** is the four changes below: the deck's ground and silver edge
+(`design-language.md` §2, §3.8), judged on the same local copy against `corpus/`.
 
 **Twelve cards are confirmed built** and leave the patch: R3-01, R3-02, R3-03, R3-04, R3-05, R3-06,
 R3-10, R3-13, R3-15, R3-31, R3-39, R3-49. **Forty-six return**, every one as an overlay re-based on
@@ -1354,6 +1355,15 @@ tied to R3-11's *holder names as published*.
 | R4-44 | R3-43 | both | Drawing viewer | Its controls swap in dark; the current thumbnail is ringed |
 | R4-45 | R3-58 | both | Drawing viewer | The arrows have an edge on the paper |
 | R4-46 | R3-62 | desktop, tablet | Drawing viewer | The thumbnail strip is centred |
+
+**Part B · Changes.**
+
+| ID | | Viewport | Component | Wanted |
+| --- | --- | --- | --- | --- |
+| R4-47 | new | all | Page ground | Dark: slate `#16191C` with one light at the top right |
+| R4-48 | new | all | Page ground | Light: slate `#ECEEF0` with one light at the top right; slate hairlines and muted text |
+| R4-49 | new | all | Search, Find similar, Export | The silver edge on Search in the results bar, Find similar and Export (on a phone, CSV and Markdown) |
+| R4-50 | new | all | Home composer | The silver edge on the whole composer box |
 
 **Earlier rounds' IDs stay valid where `app/` and the docs cite them** (*R1-39*, *R1-36* …): each is
 defined in this section as it stood at that round's tag — `handoff-2026-10-14` for R1,
