@@ -8,39 +8,97 @@
  * light band crosses a dark block on white. A strip still loading
  * ([role=status] "Loading drawings") draws its shimmer tiles on the card's
  * ground, with no paper under them.
- * Wanted:  one placeholder: your .sk-shimmer on the paper ground, which is
+ * A paper-only placeholder is not enough on its own: in dark, a record of
+ * nine loading figures read as nine blank white pages, with a badge on each,
+ * and a figure still loading could not be told from a blank one.
+ * Wanted:  one placeholder, in the row strip, the record's grid and the
+ * viewer's thumbnail strip: your .sk-shimmer on the paper ground, which is
  * what the drawing arrives on, so nothing changes colour when it lands. The
  * placeholder span is transparent over the tile's bg-white. The paper does
  * not swap with the theme, so the sweep is black at low alpha in both
- * themes: a base of black at 4% with a band of black at 7%, at your angle
- * (100deg) and band stops (30%, 50%, 70%). A strip's loading tiles take
- * the same paper (--color-white) under the same sweep, with the tile's own
- * 1px border (--border at 60%). Under reduced motion your own rule stops the
- * sweep and leaves a still tile on paper. A failure keeps your shipped
- * "Figure {index} did not load" with Retry.
+ * themes: a base of black at 4% with a band of black at 10%, at your angle
+ * (100deg) and band stops (30%, 50%, 70%). Centred on it, a Lucide
+ * loader-circle (stroke 2), 20px (16px in the viewer's 64px thumbnails),
+ * black at 55%, turning once a second; under reduced motion your own rule
+ * stops the sweep and the glyph stands still. The figure badge is held back
+ * until the drawing lands (R4-28's badge, visibility hidden while the tile
+ * holds the shimmer); the viewer's thumbnail keeps its number, your #595959,
+ * 5.1:1 on the sweep's darkest point. A strip's loading tiles take the same
+ * paper (--color-white), sweep and glyph, with the tile's own 1px border
+ * (--border at 60%). A failure keeps your shipped "Figure {index} did not
+ * load" with Retry.
  * Viewport: both (it shows most on a phone, where drawings load slowest).
  *
- * Measured at 390 with every drawing request held, light and dark: the
+ * Measured at 820 with every drawing request held, light and dark: the
  * span is transparent over the tile's white, the shimmer rgba(0,0,0,.04)
- * with a .07 band. The strip-level loader was not seen in the recording;
- * its rule is read from your markup.
+ * with a .10 band, the glyph 20×20 at the tile's centre, rgba(0,0,0,.55)
+ * (4.7:1 on the base, 4.4:1 at the band's peak), no badge until the image
+ * loads; in the viewer's strip the glyph is 16×16 and the number #595959
+ * is 6.4:1 on the base and 5.1:1 at the peak. The strip-level loaders were not seen in the recording; their
+ * rules are read from your markup.
  *
  * Your tile already uses bg-white and your badge bg-black, so the patch
  * uses white and black for the paper and the sweep. In the component: drop
- * bg-muted from TiffImage's placeholder span inside a figure tile, and give
- * the strip's loading tiles the tile's own bg-white and border. */
+ * bg-muted from TiffImage's placeholder span inside a figure tile and render
+ * the loader-circle icon centred in it (animate-spin, motion-reduce:
+ * animate-none); render the badge only once the image has loaded; give the
+ * strip's loading tiles (and the viewer's .figstrip-sk) the tile's own
+ * bg-white and border. */
 [data-idx] > span.bg-muted:has(> .sk-shimmer),
-.detail-figures > div > span.bg-muted:has(> .sk-shimmer) {
+.detail-figures > div > span.bg-muted:has(> .sk-shimmer),
+.figstrip-btn > span.bg-muted:has(> .sk-shimmer) {
   background-color: transparent;
 }
 [data-idx] > span.bg-muted > .sk-shimmer,
-.detail-figures > div > span.bg-muted > .sk-shimmer {
+.detail-figures > div > span.bg-muted > .sk-shimmer,
+.figstrip-btn > span.bg-muted > .sk-shimmer {
   background-color: rgb(0 0 0 / 0.04);
-  background-image: linear-gradient(100deg, transparent 30%, rgb(0 0 0 / 0.07) 50%, transparent 70%);
+  background-image: linear-gradient(100deg, transparent 30%, rgb(0 0 0 / 0.1) 50%, transparent 70%);
 }
-[data-result-card] [role="status"][aria-label="Loading drawings"] > .sk-shimmer {
+[data-result-card] [role="status"][aria-label="Loading drawings"] > .sk-shimmer,
+.figstrip-sk {
+  position: relative;
   background-color: var(--color-white);
-  background-image: linear-gradient(100deg, transparent 30%, rgb(0 0 0 / 0.07) 50%, transparent 70%),
+  background-image: linear-gradient(100deg, transparent 30%, rgb(0 0 0 / 0.1) 50%, transparent 70%),
     linear-gradient(rgb(0 0 0 / 0.04), rgb(0 0 0 / 0.04));
   border: 1px solid color-mix(in oklch, var(--border) 60%, transparent);
+}
+/* the wait, visible on the paper: Lucide loader-circle, centred */
+[data-idx] > span.bg-muted > .sk-shimmer::after,
+.detail-figures > div > span.bg-muted > .sk-shimmer::after,
+.figstrip-btn > span.bg-muted > .sk-shimmer::after,
+[data-result-card] [role="status"][aria-label="Loading drawings"] > .sk-shimmer::after,
+.figstrip-sk::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  background: rgb(0 0 0 / 0.55);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12a9 9 0 1 1-6.219-8.56'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12a9 9 0 1 1-6.219-8.56'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-idx] > span.bg-muted > .sk-shimmer::after,
+  .detail-figures > div > span.bg-muted > .sk-shimmer::after,
+  .figstrip-btn > span.bg-muted > .sk-shimmer::after,
+  [data-result-card] [role="status"][aria-label="Loading drawings"] > .sk-shimmer::after,
+  .figstrip-sk::after {
+    animation: r4-27-turn 1s linear infinite;
+  }
+}
+.figstrip-btn > span.bg-muted > .sk-shimmer::after,
+.figstrip-sk::after {
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+}
+@keyframes r4-27-turn {
+  to { transform: rotate(1turn); }
+}
+/* the badge waits for the drawing */
+[data-idx]:has(> span.bg-muted > .sk-shimmer) > span.font-mono,
+.detail-figures > div:has(> span.bg-muted > .sk-shimmer) > span.font-mono {
+  visibility: hidden;
 }
