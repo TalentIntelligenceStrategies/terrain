@@ -1,0 +1,36 @@
+/* R4-48 (new) · Page ground, light: slate, with one light at the top right
+ *
+ * Current: a flat #f6f6f6 ground; borders #e4e4e4, muted text #686868, all
+ * neutral.
+ * Wanted:  the ground is slate #eceef0 with one radial light at the top
+ * right of the viewport (#ffffff at its centre, #f2f3f5 at 34%, #e4e6e9 from
+ * 70%, which is most of the page). Fixed to the viewport, as in R4-47, and on
+ * the page ground only: cards stay #ffffff.
+ * Viewport: all.
+ *
+ * Measured: --foreground 12.26:1 on #e4e6e9. --muted-foreground moves to
+ * slate #5f666d: 4.65:1 on #e4e6e9, where your #686868 measures 4.46:1.
+ * Card on ground 1.16 to 1.25:1; border #d0d4d8 1.49:1 on the card.
+ *
+ * In the component: the tokens below in :root / [data-theme=light], and the
+ * gradient as .tech-bg's background-image, which is none today (this file
+ * paints it in both themes). */
+:root:not([data-theme=dark]) {
+  --background: #eceef0;
+  --muted: #eceef0;
+  --secondary: #eceef0;
+  --accent: #e4e6e9;
+  --border: #d0d4d8;
+  --input: #d0d4d8;
+  --muted-foreground: #5f666d;
+  --r4-ground: radial-gradient(ellipse at 86% 16%, #ffffff 0%, #f2f3f5 34%, #e4e6e9 70%);
+}
+/* The ground, both themes. Every element that paints the page ground takes
+   the same fixed light, so it lines up across them. */
+body,
+.tech-bg,
+[class~="bg-background"],
+[class~="bg-background/95"] {
+  background: var(--r4-ground) fixed, var(--background);
+}
+[class~="bg-background/95"] { backdrop-filter: none; }
