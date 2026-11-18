@@ -14,8 +14,9 @@
  * the 1px border carrying the edge (1.55:1 on the card).
  *
  * In the component: the tokens below in [data-theme=dark], and the gradient
- * on body. background-attachment: fixed is ignored by iOS Safari; there the
- * light scrolls with the page. Check on a phone. */
+ * as .tech-bg's background-image. R4-48 carries the same painting rule, so
+ * either file applies on its own. background-attachment: fixed is ignored
+ * by iOS Safari, where the light scrolls with the page: check on a phone. */
 [data-theme=dark] {
   --background: #16191c;
   --card: #1e2227;
@@ -27,3 +28,10 @@
   --input: #454c53;
   --r4-ground: radial-gradient(ellipse at 86% 16%, #2c3238 0%, #1e2227 34%, #16191c 70%);
 }
+body,
+.tech-bg,
+[class~="bg-background"],
+[class~="bg-background/95"] {
+  background: var(--r4-ground) fixed, var(--background);
+}
+[class~="bg-background/95"] { backdrop-filter: none; }
