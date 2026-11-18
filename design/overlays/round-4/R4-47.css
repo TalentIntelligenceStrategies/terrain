@@ -10,7 +10,9 @@
  * Viewport: all.
  *
  * Measured: --foreground 11.37:1 on the light's centre, 15.49:1 on the
- * ground; --muted-foreground 5.14:1 and 7.00:1. Card on ground 1.10:1, with
+ * ground. --muted-foreground moves to slate #9aa2aa, as light's does
+ * (R4-48), so quiet text is slate in both themes: 5.01:1 on the light's
+ * centre, 6.18:1 on a card. Card on ground 1.10:1, with
  * the 1px border carrying the edge (1.55:1 on the card).
  *
  * In the component: the tokens below in [data-theme=dark], and the gradient
@@ -26,6 +28,7 @@
   --accent: #2c3238;
   --border: #3a4148;
   --input: #454c53;
+  --muted-foreground: #9aa2aa;
   --r4-ground: radial-gradient(ellipse at 86% 16%, #2c3238 0%, #1e2227 34%, #16191c 70%);
 }
 body,

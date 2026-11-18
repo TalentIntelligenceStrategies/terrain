@@ -12,6 +12,14 @@
  * slate #5f666d: 4.65:1 on #e4e6e9, where your #686868 measures 4.46:1.
  * Card on ground 1.16 to 1.25:1; border #d0d4d8 1.49:1 on the card.
  *
+ * Two fills move off the ground, because a fill equal to the ground reads
+ * as a hole through whatever it sits in: the selected result row, on its
+ * white card, is --foreground at 5% over --card (#f3f3f3 in light,
+ * #272b2f in dark) rather than --muted; and the Coming soon tiles are
+ * --card at 55% over the ground, so they read a step lighter than the page
+ * wherever the light falls, rather than lighter on the left and darker on
+ * the right.
+ *
  * In the component: the tokens below in :root / [data-theme=light], and the
  * gradient as .tech-bg's background-image, which is none today (this file
  * paints it in both themes). */
@@ -34,3 +42,10 @@ body,
   background: var(--r4-ground) fixed, var(--background);
 }
 [class~="bg-background/95"] { backdrop-filter: none; }
+/* the selected row and the disabled tiles: fills that are not the ground */
+[data-result-card] > [data-slot="card"].bg-muted {
+  background-color: color-mix(in oklab, var(--foreground) 5%, var(--card));
+}
+section[aria-label="Patent technology fields"] div.bg-muted {
+  background-color: color-mix(in oklab, var(--card) 55%, transparent);
+}

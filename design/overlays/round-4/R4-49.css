@@ -1,43 +1,78 @@
-/* R4-49 (new) · The silver edge: Search in the results bar, Find similar,
- * Export this record (on a phone, its CSV and Markdown buttons)
+/* R4-49 (new) · The silver edge on the record: Find similar and Export
  *
- * Current: Search is a flat filled button; Find similar a card-coloured
- * button; Export this record a muted text button. Nothing marks the actions
- * that move a reader from a search to similar patents to a file.
- * Wanted:  these three carry a 2px silver edge: a 135deg gradient through
- * five stops, the fill unchanged inside it, the same in both themes:
- *   #3a4148 0%, #c9d0d6 30%, #4a5158 55%, #9aa2aa 80%, #3a4148 100%.
- * Export this record takes --foreground for its label while it carries the
- * edge; on a phone, where R4-39 makes it two buttons, CSV and Markdown each
- * carry it. Hover changes the fill as yours does; the edge does not move. An
- * empty or disabled Search has no edge (a flat --border). Focus keeps your
- * ring, outside the edge. Increased contrast: a solid --foreground edge.
+ * Current: Find similar is a card-coloured button and, on a phone, a bare
+ * 20px icon; Export this record is a muted text button. Nothing marks the
+ * two actions that take a reader from a record to similar patents or to a
+ * file.
+ * Wanted:  on the record, and nowhere else on results, Find similar and
+ * Export this record carry a 2px silver edge: a 135deg gradient through
+ * five stops, the same in both themes,
+ *   #3a4148 0%, #c9d0d6 30%, #4a5158 55%, #9aa2aa 80%, #3a4148 100%,
+ * with the button's own fill inside it. Search in the results bar keeps
+ * its plain filled look: it is already the strongest control there.
+ * On a phone Find similar shows its label beside the icon, because an edge
+ * on a bare icon reads as a pressed toggle; and CSV and Markdown (R4-39)
+ * are one two-part control with one edge round both, not two edged
+ * buttons. While the open record is the patent the list is already sorted
+ * by (the "Nearest to" chip names it), Find similar has no edge: it would
+ * only run the same sort again. The edge never changes a box's size: the
+ * 2px comes out of the padding. Focus turns the whole edge solid
+ * --foreground in place of your outside ring, so focus and the edge are
+ * never two rules. Hover changes the fill, not the edge. Increased
+ * contrast: a solid --foreground edge.
  * Viewport: all.
  *
- * Measured: on the light ground the #3a4148 and #4a5158 stops are 6.44:1
- * or more; on the dark ground the #c9d0d6 and #9aa2aa stops are 5.01:1 or
- * more. The edge reads in both themes from whichever half contrasts.
+ * Measured with the whole patch: on the light ground the #3a4148 and
+ * #4a5158 stops are 6.44:1 or more; on the dark ground the #c9d0d6 and
+ * #9aa2aa stops are 5.01:1 or more. Find similar on desktop measures
+ * 104 x 30 with and without the edge; the record head's rule stays level
+ * with the list header's.
  *
- * In the component: one --edge-silver token per theme, and the edge as
+ * In the component: one --edge-silver token, and the edge as
  * border: 2px solid transparent; background: <fill> padding-box,
- * var(--edge-silver) border-box. No wrapper element. */
+ * var(--edge-silver) border-box, on the two record actions. R4-49.js
+ * marks Find similar when its record is the anchor of the current sort. */
 :root {
   --r4-silver: linear-gradient(135deg, #3a4148 0%, #c9d0d6 30%, #4a5158 55%, #9aa2aa 80%, #3a4148 100%);
 }
-.search-box-morph:has(.search-toolbar-line) button[aria-label="Search"]:not(:disabled):not([data-r410-empty]) { --r4-fill: var(--primary); }
-.search-box-morph:has(.search-toolbar-line) button[aria-label="Search"]:not(:disabled):not([data-r410-empty]):hover { --r4-fill: color-mix(in oklab, var(--primary) 90%, var(--background)); }
-button[aria-label="Find similar"] { --r4-fill: var(--card); }
-button[aria-label="Find similar"]:hover { --r4-fill: var(--muted); }
-button.record-act[id^="reka-dropdown-menu-trigger"], [data-r4-export] > button.record-act { --r4-fill: var(--card); color: var(--foreground); }
-button.record-act[id^="reka-dropdown-menu-trigger"]:hover, [data-r4-export] > button.record-act:hover { --r4-fill: var(--muted); }
+@media (prefers-contrast: more) {
+  :root { --r4-silver: linear-gradient(var(--foreground), var(--foreground)); }
+}
 
-.search-box-morph:has(.search-toolbar-line) button[aria-label="Search"]:not(:disabled):not([data-r410-empty]),
-button[aria-label="Find similar"],
+/* the two sites, with their fills */
+button[aria-label="Find similar"]:not([data-r4-anchor]),
 button.record-act[id^="reka-dropdown-menu-trigger"],
-[data-r4-export] > button.record-act {
+[data-r4-export] {
+  --r4-fill: var(--card);
   border: 2px solid transparent;
   background: linear-gradient(var(--r4-fill), var(--r4-fill)) padding-box, var(--r4-silver) border-box;
 }
-@media (prefers-contrast: more) {
-  :root { --r4-silver: linear-gradient(var(--foreground), var(--foreground)); }
+button[aria-label="Find similar"]:not([data-r4-anchor]):hover,
+button.record-act[id^="reka-dropdown-menu-trigger"]:hover { --r4-fill: var(--muted); }
+button.record-act[id^="reka-dropdown-menu-trigger"] { color: var(--foreground); }
+
+/* the 2px comes out of the padding, so no box grows */
+button[aria-label="Find similar"]:not([data-r4-anchor]):not(.size-11) { padding: 4px 8px; }
+button.record-act[id^="reka-dropdown-menu-trigger"] { padding: 4px 6px; }
+
+/* focus is the edge itself, solid, instead of a second ring outside it */
+button[aria-label="Find similar"]:not([data-r4-anchor]):focus-visible,
+button.record-act[id^="reka-dropdown-menu-trigger"]:focus-visible,
+[data-r4-export]:has(:focus-visible) {
+  --r4-silver: linear-gradient(var(--foreground), var(--foreground));
+  box-shadow: none;
+  outline: none;
+}
+
+/* phone: Find similar is labelled; an edge on a bare icon reads as a toggle */
+button[aria-label="Find similar"].size-11:not([data-r4-anchor]) {
+  width: auto;
+  gap: 6px;
+  padding: 0 10px;
+  color: var(--foreground);
+}
+button[aria-label="Find similar"].size-11::after {
+  content: "Find similar";
+  font-size: 14px;
+  font-weight: 500;
 }
