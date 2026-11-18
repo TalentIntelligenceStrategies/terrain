@@ -6,15 +6,17 @@
  * (about 1.8:1).
  * Wanted:  the disabled chevron at about 3:1 against the card in both
  * themes, full opacity, and still lighter than the live one:
- * --muted-foreground mixed 70% into --card in light, 55% in dark (in
+ * --muted-foreground mixed 70% into --card in light, 60% in dark (in
  * srgb). Disabled stays native, so it announces dimmed.
  * Viewport: both (the desktop pane and the phone dialog share the toolbar).
  *
- * Measured on the rendered button at 390 (phone head, 44×44) and 1440 (the
- * pane, 24×24), computed colour with opacity 1: light srgb(0.585) ≈ #959595
- * on #FFF, 2.98:1; dark srgb(0.397) ≈ #656565 on #1A1A1A, 3.00:1. The live
- * chevron stays 5.57:1 and 6.90:1; without the patch the disabled one is
- * opacity 0.3 over rgb(104,104,104), 1.52:1 and 1.76:1.
+ * Measured with the whole patch (R4-47's dark tokens, R4-48's light), on
+ * the rendered button at 390 (phone head, 44×44) and 1440 (the pane,
+ * 24×24), computed colour with opacity 1: light #8F9499 on #FFF, 3.06:1;
+ * dark #686F76 on #1E2227, 3.14:1. The live chevron is 5.82:1 and 6.18:1;
+ * without the patch the disabled one is opacity 0.3 over rgb(104,104,104),
+ * 1.52:1 and 1.76:1. The drawing viewer's disabled controls take the same
+ * mix (R4-44).
  *
  * Your token set has no tertiary text colour at 3:1, so the patch mixes
  * --muted-foreground into --card per theme (dark, and your violet theme,
@@ -25,5 +27,5 @@
   color: color-mix(in srgb, var(--muted-foreground) 70%, var(--card));
 }
 :root:is([data-theme="dark"], [data-theme="violet"]) [data-result-detail] button:is([aria-label="Previous patent"], [aria-label="Next patent"]):disabled {
-  color: color-mix(in srgb, var(--muted-foreground) 55%, var(--card));
+  color: color-mix(in srgb, var(--muted-foreground) 60%, var(--card));
 }
