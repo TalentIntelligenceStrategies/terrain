@@ -6,20 +6,30 @@
  * thumbnail's only visible label. The record's badges are a second style,
  * text-neutral-600 on bg-white/90 (7.8:1), so rows and record differ.
  * Wanted:  one badge, white on the darkest neutral, in rows and in the
- * record: --color-white text on black at 86% (rgb(0 0 0 / 0.86)). The paper a drawing was published on does not swap with the
+ * record, in the same place, bottom left (4px up, 6px in: the record's
+ * bottom-1 left-1.5), so a row tile cut by the card's edge keeps its whole
+ * badge: --color-white text on black at 86% (rgb(0 0 0 / 0.86)). The paper a drawing was published on does not swap with the
  * theme, so neither does the badge: black at 86% over white is #242424, a
  * step from your --foreground (#252525), and white on it is 15.6:1 (darker
  * still over a line).
  * Viewport: both.
  *
- * Measured at 1440 with the patch: row and record badges both
- * rgba(0,0,0,.86) under rgb(255,255,255), in light and dark.
+ * Measured at 1440 and 390 with the patch: row and record badges both
+ * rgba(0,0,0,.86) under rgb(255,255,255), in light and dark, both 4px above
+ * and 6px in from the tile's bottom-left corner. While the drawing loads the
+ * badge is hidden (R4-27).
  *
  * Your own rule for this element uses black (bg-black/45), so the patch
  * keeps black and changes only its alpha; it is not a theme token because
- * the ground under it is not themed. */
+ * the ground under it is not themed. In the component: the row badge's
+ * bottom-0.5 right-0.5 becomes bottom-1 left-1.5. */
 [data-result-card] [data-idx] > span.font-mono[aria-hidden="true"],
 .detail-figures > div > span.font-mono {
   background-color: rgb(0 0 0 / 0.86);
   color: var(--color-white);
+}
+[data-result-card] [data-idx] > span.font-mono[aria-hidden="true"] {
+  right: auto;
+  bottom: 0.25rem;
+  left: 0.375rem;
 }
