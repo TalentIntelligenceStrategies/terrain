@@ -1,19 +1,22 @@
-/* R4-02 (restores R3-14) · Masthead: one appearance button on a narrow phone; the version button in the footer
+/* R4-02 (restores R3-14) · Masthead: one appearance button on touch below lg and on a narrow phone; the version button in the footer
  *
  * Current: three buttons, Light, Dark and Match your system appearance, in
- * a group that does not fit the phone row; beside them the version, the
- * button "View release notes (v1.0.42)" with its unread dot.
- * Wanted:  below 420px, one button that shows the appearance in use and,
- * when pressed, moves to the next: light → dark → system → light. Its name
- * says the appearance in use ("Appearance: Dark"); each press is the same
- * as pressing the next of the three buttons, so the store, its persistence
- * and data-theme on <html> are untouched. Below sm the version is a button
- * in the footer, after "Powered by Innovue": the same name, title, text
- * and unread dot as the masthead's, kept in step with it (the dot goes
- * when the notes have been read), and a press on it is a press on yours,
- * so the release notes open as they do now.
- * Viewport: the appearance button below 420px, the footer version below sm
- * (R4-02.css). Both are in the page at every width and shown only there.
+ * a group that does not fit the phone row and, on a touch tablet, is
+ * 170x50 (R4-01), the heaviest thing in the masthead; beside them the
+ * version, the button "View release notes (v1.0.42)" with its unread dot.
+ * Wanted:  below 420px, and under a coarse pointer below lg (64rem), one
+ * button that shows the appearance in use and, when pressed, moves to the
+ * next: light → dark → system → light. Its name says the appearance in use
+ * ("Appearance: Dark"); each press is the same as pressing the next of the
+ * three buttons, so the store, its persistence and data-theme on <html>
+ * are untouched. Below sm the version is a button in the footer, after
+ * "Powered by Innovue": the same name, title, text and unread dot as the
+ * masthead's, kept in step with it (the dot goes when the notes have been
+ * read), and a press on it is a press on yours, so the release notes open
+ * as they do now.
+ * Viewport: the appearance button below 420px and on touch below lg, the
+ * footer version below sm (R4-02.css). Both are in the page at every width
+ * and shown only there.
  *
  * In the component: one appearance button bound to the same setting,
  * cycling it, with the current appearance's icon (sun, moon, monitor); and
