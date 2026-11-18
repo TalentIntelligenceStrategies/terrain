@@ -1,4 +1,4 @@
-/* R4-20 (restores R3-27) · Grouping panel: shown on a phone and in landscape, as a sheet with Done
+/* R4-20 (restores R3-27) · Grouping panel: one row rule at every width; on a phone and in landscape, a sheet with Done
  *
  * Current: on a phone (and a phone in landscape) Group the results sits in
  * the opened search box, 44×44. Tapping it opens the panel (data-state
@@ -6,47 +6,90 @@
  * trigger, which is hidden (0×0), so Reka's referenceHidden writes
  * visibility: hidden and pointer-events: none inline on the popper wrapper.
  * The panel is 358×560 at (0,8), invisible, and no group can be seen or
- * chosen. Its group headings are 11px at weight 500, tracked 0.08em, in
- * --muted-foreground, over sentence-length topics. Each leaf is tick (16)
- * + a 32px right-aligned count + gaps before its title, so the title
- * starts 76px in from the heading.
- * Wanted:  the panel shows, as a sheet fixed to the bottom of the viewport,
- * full width, at most 80dvh tall, top corners 16px, no bottom edge, your
- * 16px padding (16px plus the bottom safe area at its foot), over a scrim,
- * color-mix(in oklab, var(--color-black) 40%, transparent). Done is pinned
- * at its foot (R4-20.js adds it): your secondary button, 44px tall, at the
- * end of a foot row with a 1px --border top edge and 12px above it. The
- * headings stay as written in the data, with no text-transform (v1.0.42
- * already dropped the uppercase), and only their size, tracking and ink
- * change: 14px, line height 1.35, no tracking, --foreground; the weight
- * stays 500. A leaf's tick stays in the row's leading slot, at the
- * heading's edge (the row widened by 8px each side to reach it); the title
- * follows it after the row's 10px gap and takes the rest of the row; the
- * count moves to the row end in tabular Inconsolata (--font-mono).
- * Viewport: phone (below sm), and short screens below lg (max-height 480px:
- * a phone in landscape), the scope of your own phone: variant. Tablet and
- * desktop keep the popover, its rows and no Done (measured unchanged at
- * 820).
+ * chosen. At every width its title, "Grouped by technology", and its group
+ * headings are the same 11px at weight 500, tracked 0.08em, in
+ * --muted-foreground, so the headings over sentence-length topics read
+ * smaller and fainter than the 14px leaves under them. Each leaf is tick
+ * (16) + a 32px right-aligned count + gaps before its title, so the title
+ * starts 76px in from the heading. The list scrolls (at 1440×900, 511 in
+ * 497) and is cut mid-line with nothing to show there is more.
+ * Wanted:
+ * - At every width, popover and sheet: the headings stay as written in the
+ *   data, with no text-transform, and only their size, tracking and ink
+ *   change: 14px, line height 1.35, no tracking, --foreground; the weight
+ *   stays 500. A leaf's tick stays in the row's leading slot, at the
+ *   heading's left edge; the title follows it after the row's 10px gap and
+ *   takes the rest of the row; the count moves to the row end in tabular
+ *   Inconsolata (--font-mono). To put the tick at the heading's edge the
+ *   list reaches 10px into the panel's padding (2px of it kept clear for
+ *   the rows' focus ring) and the headings take 8px of inline padding, so
+ *   the row's own hover and focus fills are never clipped. While the list
+ *   has more below, its last 32px fade to nothing (a mask); scrolled to
+ *   the end, no fade.
+ * - On a phone and in landscape: the panel shows, as a sheet fixed to the
+ *   bottom of the viewport, full width, at most 80dvh tall, top corners
+ *   16px, no bottom edge, your 16px padding (16px plus the bottom safe area
+ *   at its foot), over a scrim, color-mix(in oklab, var(--color-black) 40%,
+ *   transparent). Its content is a column at most 28rem wide, centred, so a
+ *   count stays near its title in landscape. The title is set as a title:
+ *   16px at weight 600, line height 1.35, no tracking or uppercase,
+ *   --foreground. Done is pinned at its foot (R4-20.js adds it): your
+ *   secondary button at the end of a foot row with a 1px --border top edge
+ *   and 12px above it, 44px tall on a coarse pointer.
+ * Viewport: all for the rows and the fade. The sheet in your phone: variant
+ * (below sm, and short screens below lg: a phone in landscape); tablet and
+ * desktop keep the popover and no Done.
  *
- * Measured with the patch:
- * - 390×844: the panel visible, 390×640 at (0,204), bottom at 844, top
- *   corners 16px, over the scrim rgba(0,0,0,0.4); headings 14px.
- * - 390×844: tick at the heading's left edge (x 17); title 26px in from
- *   the heading (was 76), 307px wide; the count's right edge at the row's
- *   padding edge; Done 60×44 at (313,784).
- * - 390×844: choosing "Semiconductor package" ticks it and the list reads
- *   "50 matched · 11 shown"; Done closes the panel.
- * - 844×390: 844×312 at (0,78), Done at (767,330).
+ * Measured with the patch (whole patch applied):
+ * - 1440×900: the popover 380×560 at (256,131); title as before (11px);
+ *   headings 14px #252525; the tick at x 273, the heading text's edge; the
+ *   title 297 wide; the count's right edge at the row's padding edge; the
+ *   list 522 in 497, faded, clear at the end.
+ * - 820×1180 (touch tablet): the same popover and rows; no Done.
+ * - 390×844: the sheet 390×648 at (0,196), bottom at 844, over the scrim
+ *   rgba(0,0,0,0.4); title 16px / 600 --foreground; the tick at x 17, the
+ *   heading's edge; the list fits (505 in 505), no fade; Done 60×44 at
+ *   (313,784).
+ * - 844×390: the sheet 844×312 at (0,78); the content column 448 wide
+ *   (x 198 to 646, was 810), the tick at x 199 and the count's right edge
+ *   at 645; the list 168 in 417, faded; Done 60×44 at (585,330).
  *
  * What the patch cannot do: Reka positions the popover's wrapper with an
  * inline transform, and a transformed ancestor is the containing block of a
  * fixed element. R4-20.js reads where Reka put the wrapper and offsets the
  * sheet by that much (--r420-x, --r420-y), every time Reka moves it. In the
  * component, anchor the popover to the trigger that is on screen (the one
- * in the opened box), and below sm render the panel as a sheet (a Reka
- * Dialog, or the popover with position strategy fixed and no transform).
- * Tapping the scrim closes it through Reka's own outside-pointerdown. */
-@media (max-width: 39.99rem), (max-height: 480px) and (max-width: 63.99rem) {
+ * in the opened box), and in the phone: variant render the panel as a
+ * sheet (a Reka Dialog, or the popover with position strategy fixed and no
+ * transform). Tapping the scrim closes it through Reka's own
+ * outside-pointerdown. */
+.result-groups-popover ul > li > h3 {
+  padding-inline: 8px;
+  letter-spacing: 0;
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--foreground);
+}
+.result-groups-popover > .overflow-y-auto {
+  margin-inline: -10px;
+  padding-inline: 2px;
+}
+.result-groups-popover > .overflow-y-auto[data-r420-more] {
+  mask-image: linear-gradient(to bottom, black calc(100% - 32px), transparent);
+}
+.result-groups-popover [data-group-node] > span.font-mono {
+  order: 2;
+  width: auto;
+  min-width: 2ch;
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.result-groups-popover [data-group-node] > span:not(.font-mono) {
+  order: 1;
+  flex: 1;
+}
+@media (not (min-width: 1024px)) and (max-height: 480px), not all and (min-width: 640px) {
   /* Reka writes visibility: hidden and pointer-events: none inline on the
      wrapper when the anchor is hidden (referenceHidden); the panel takes
      both back, which an inherited value allows. */
@@ -63,30 +106,18 @@
     max-height: 80dvh;
     border-bottom: 0;
     border-radius: 16px 16px 0 0;
+    padding-left: max(calc(16px + env(safe-area-inset-left)), calc((var(--r420-vw, 100vw) - 28rem) / 2));
+    padding-right: max(calc(16px + env(safe-area-inset-right)), calc((var(--r420-vw, 100vw) - 28rem) / 2));
     padding-bottom: calc(16px + env(safe-area-inset-bottom));
     box-shadow: 0 0 0 100vmax color-mix(in oklab, var(--color-black) 40%, transparent);
   }
-  .result-groups-popover[data-r420] ul > li > h3 {
-    letter-spacing: 0;
-    font-size: 14px;
+  .result-groups-popover[data-r420] > h2 {
+    font-size: 16px;
+    font-weight: 600;
     line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
     color: var(--foreground);
-  }
-  .result-groups-popover[data-r420] [data-group-node] {
-    margin-inline: -8px;
-    width: calc(100% + 16px);
-  }
-  .result-groups-popover[data-r420] [data-group-node] > span.font-mono {
-    order: 2;
-    width: auto;
-    min-width: 2ch;
-    margin-left: auto;
-    font-family: var(--font-mono);
-    font-variant-numeric: tabular-nums;
-  }
-  .result-groups-popover[data-r420] [data-group-node] > span:not(.font-mono) {
-    order: 1;
-    flex: 1;
   }
   .result-groups-popover [data-r420-foot] {
     display: flex;
@@ -95,11 +126,13 @@
     border-top: 1px solid var(--border);
     padding-top: 12px;
   }
+}
+@media (pointer: coarse) {
   .result-groups-popover [data-r420-foot] > .btn {
     min-height: 44px;
   }
 }
-@media (min-width: 40rem) and (min-height: 480.02px), (min-width: 64rem) {
+@media (min-width: 1024px), (min-width: 640px) and (min-height: 480.02px) {
   .result-groups-popover [data-r420-foot] {
     display: none;
   }
