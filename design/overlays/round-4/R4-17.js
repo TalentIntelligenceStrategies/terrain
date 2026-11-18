@@ -9,9 +9,10 @@
  * labels.
  * Viewport: both.
  *
- * Measured with the patch, phone and desktop: the labels read SEARCH
- * SETTINGS · PATENT TECHNOLOGY FIELDS · WHERE TO SEARCH · WHAT TO INCLUDE ·
- * RESULTS TO SHOW · RERANK RESULTS · DATE RANGE.
+ * Measured with the patch, phone and desktop: the labels read PATENT TECHNOLOGY FIELDS · WHERE TO SEARCH · WHAT TO INCLUDE ·
+ * RESULTS TO SHOW · RERANK RESULTS · DATE RANGE. The panel title is
+ * R4-15's: SEARCH SETTINGS in the popover, "Search settings" set as a
+ * title in the sheet.
  *
  * In the component: the string itself; the patch rewrites the text node. */
 (() => {
