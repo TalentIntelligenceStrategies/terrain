@@ -1,0 +1,23 @@
+/* R4-50 (new) · Home: the silver edge on the composer box
+ *
+ * Current: the home composer is a card with a 1px --border edge, which
+ * turns --foreground at 45% while it has focus.
+ * Wanted:  the whole box carries the 2px silver edge of R4-49 (its tokens),
+ * the card fill unchanged inside it, as the box is drawn on the deck's
+ * closing slide. Search inside it keeps its own fill and no edge: the box is
+ * the one silver element on the home screen. While the box has focus, a 2px
+ * ring at 2px offset in --foreground at 45% shows outside the edge, so focus
+ * is still visible.
+ * Viewport: all. Home only; the results bar is R4-49.
+ *
+ * In the component: the edge on .search-box-morph on the home page, as in
+ * R4-49; drop the focus-within border colour for the ring. */
+.search-box-morph:not(:has(.search-toolbar-line)) {
+  border: 2px solid transparent;
+  background: linear-gradient(var(--card), var(--card)) padding-box, var(--r4-silver) border-box;
+}
+.search-box-morph:not(:has(.search-toolbar-line)):focus-within {
+  border-color: transparent;
+  outline: 2px solid color-mix(in oklab, var(--foreground) 45%, transparent);
+  outline-offset: 2px;
+}
