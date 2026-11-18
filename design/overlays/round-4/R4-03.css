@@ -19,11 +19,12 @@
  * Viewport: phone, portrait and landscape. Everywhere else the insets are 0
  * and every value is the one it replaces.
  *
- * The masthead's side padding on a phone is R4-02's: 6px at the start and
- * 1px at the end under a coarse pointer, because each control there is a
- * 44px box (R4-01) and its glyph is centred in it, 10px in for the mark
- * and 15px in for the appearance button, so the glyphs land on the 16px
- * gutter (6 + 10, 1 + 15). Elsewhere it is your 24px.
+ * The masthead's side padding is R4-02's, the one that puts its first
+ * glyph and its last ink on the page's 16px gutter: 8px at the start and
+ * 10px at the end from sm up; below sm 8px a side, or 6px and 1px under a
+ * coarse pointer, because each control there is a 44px box (R4-01) with
+ * its glyph centred, 10px in for the mark and 15px in for the appearance
+ * button (6 + 10, 1 + 15).
  *
  * The safe-area half needs viewport-fit=cover in the meta viewport (Q2).
  * Until Q2, nothing visible changes: Safari reports every inset as 0, and
@@ -31,8 +32,8 @@
  * with these rules, never before them.
  *
  * Measured with the patch (and R4-01, R4-02), home and results:
- * - 1440, insets 0: masthead top padding 0, sides 24px, main sides 16px,
- *   footer sides 16px and bottom 24px; unchanged.
+ * - 1440, insets 0: masthead top padding 0, sides 8px and 10px (R4-02),
+ *   main sides 16px, footer sides 16px and bottom 24px.
  * - 390, insets 0: as before, but for the masthead's sides (6px and 1px).
  * - 390, top 47 and bottom 34: masthead top padding 47px (61px row, 108px
  *   in all); the pinned composer's top 107px (60px without the inset);
