@@ -7,22 +7,26 @@
  * hairline. In light the selected segment is lighter than its track
  * (white on #EEEEEE).
  * Wanted:  in dark the track is --background and the selected segment
- * --accent (#2B2B2B in dark) with a 1px --input edge (#3D3D3D; on the
- * search box's mode switch an inset 1px ring) and --foreground text;
- * unselected text stays --muted-foreground. Light is unchanged.
+ * --accent with a 1px --input edge (on the search box's mode switch an
+ * inset 1px ring) and --foreground text; unselected text stays
+ * --muted-foreground. Light is unchanged. With the whole patch, dark
+ * --background is #16191C, --accent #2C3238 and --input #454C53 (R4-47).
  * Viewport: both.
  *
- * Measured, phone and desktop (computed colours, WCAG contrast):
- * - Before, selected on track: #1A1A1A on #252525, 1.14:1, darker than
- *   the track.
- * - Before, search mode: #1A1A1A on #1F1F1F, 1.06:1.
- * - After, selected on track: #2B2B2B on #141414, 1.30:1, lighter than
- *   the track.
- * - After, the selected edge on the track: #3D3D3D on #141414, 1.70:1.
- * - After, selected text: #F0F0F0 on #2B2B2B, 12.4:1.
- * - After, unselected text: #A3A3A3 on #141414, 7.3:1.
- * - Light, unchanged: #FFFFFF on #EEEEEE, 1.16:1, with your --border edge
- *   and shadow-sm.
+ * Measured at 1440, the whole patch applied (computed
+ * colours, WCAG contrast):
+ * - Before (your build alone), selected on track: #1A1A1A on #252525,
+ *   1.14:1, darker than the track.
+ * - Before, search mode: #1A1A1A on --muted at 50% over #1A1A1A, 1.06:1.
+ * - After, selected on track: #2C3238 on #16191C, 1.36:1, lighter than
+ *   the track; the same on the search box's mode switch.
+ * - After, the selected edge on the track: #454C53 on #16191C, 2.03:1.
+ * - After, selected text: #F0F0F0 on #2C3238, 11.4:1.
+ * - After, unselected text: #9AA2AA on #16191C, 6.8:1.
+ * - After, the track on the settings panel's --card: #16191C on #1E2227,
+ *   1.10:1 (the track is a well in the panel, as --muted is in light).
+ * - Light, with the patch: #FFFFFF on #ECEEF0, 1.16:1, with your --border
+ *   edge (#D0D4D8) and shadow-sm, as before.
  *
  * The step is carried by fill, edge and ink together, not by fill alone.
  *
