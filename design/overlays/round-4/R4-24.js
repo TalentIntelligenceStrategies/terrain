@@ -8,11 +8,22 @@
  * adds no control. Re-read on every change, as Vue re-renders the header.
  * Idempotent.
  *
- * In the component: render the count below sm as "N results" / "N of M". */
+ * Also, at every width, rewrites your "Restore the original order" link in
+ * the similar state to "Restore order" and marks it [data-r4-restore] for
+ * R4-24.css.
+ *
+ * In the component: render the count below sm as "N results" / "N of M";
+ * the restore string is "Restore order". */
 (() => {
   if (window.__r4_24) return;
   window.__r4_24 = true;
   const run = () => {
+    /* "Restore the original order" reads "Restore order", at every width */
+    for (const b of document.querySelectorAll('section.shell-swap header button:not([aria-label])')) {
+      const t = [...b.childNodes].find(n => n.nodeType === 3 && /^\s*Restore the original order\s*$/.test(n.nodeValue));
+      if (t) t.nodeValue = 'Restore order';
+      if (/^\s*Restore (the original )?order\s*$/.test(b.textContent) && !b.hasAttribute('data-r4-restore')) b.setAttribute('data-r4-restore', '');
+    }
     const h2 = document.querySelector('section.shell-swap header h2');
     if (!h2) return;
     const [m, sh] = [...h2.querySelectorAll('span.font-mono')].map(x => x.textContent.trim());

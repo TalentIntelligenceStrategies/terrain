@@ -1,4 +1,4 @@
-/* R4-24 (restores R3-34) · Results header, phone: the count, the view toggle and Sort on one line
+/* R4-24 (restores R3-34) · Results header, phone: the count, the view toggle and Sort on one line; the similar state on two
  *
  * Current: below sm the view toggle already sits in the results header,
  * beside Sort ([role=group] "View mode", sm:hidden). But the count block is
@@ -23,6 +23,16 @@
  * three are centred on one line. Under 360px Sort shows its arrows icon
  * only, 44×36; its name ("Sort the list") is unchanged and the menu still
  * says which order is chosen.
+ * In the similar state your header adds the "Nearest to US …" chip and
+ * "Restore the original order"; one line cannot hold them. There the header
+ * is two lines: line 1 the count, the toggle and Sort as above, the count
+ * never shrinking below its own width; line 2 the chip at the left, at its
+ * full width (your max-w-52 lifted), and the link at the right, 8px below
+ * line 1. The link reads "Restore order" (new copy, at every width,
+ * desktop included, so the chip shows its whole number there too). Under
+ * 360px line 2 is tightened (the chip's inline padding 6px, the link's 0,
+ * its hit-target keeping 44px), and a chip too long for it wraps the link
+ * under it rather than cut the number.
  * Viewport: phone (below sm, 40rem); the icon-only Sort under 360px (one
  * width query beyond your breakpoints, for the narrowest phones). Desktop is
  * untouched (the header toggle is sm:hidden there, and the composer's toggle
@@ -34,8 +44,18 @@
  *   61px tall
  * - at 320: Sort is its arrows icon alone, 44×36, its right edge at the
  *   card's text column (x 283 of 320); the page does not scroll sideways
+ * - similar, at 390: line 1 "50 results" 37–154, the toggle 162–252, Sort
+ *   260–353, all at y 90; line 2 the chip 163×26 at (37,134) showing
+ *   "Nearest to US 9000581 B2" whole, "Restore order" 93×26 at x 260;
+ *   header 95px
+ * - similar, at 320: line 1 "50 results" 96px wide, the toggle, Sort 44;
+ *   line 2 the chip 159px whole and "Restore order" 77px, 10px apart
+ * - similar, at 1440: the chip 163px, its number whole (was cut at 113px
+ *   beside the 160px "Restore the original order")
  *
- * In the component: drop max-sm:basis-full and hide Sort's leading icon
+ * In the component: the restore link's string is "Restore order"; in the
+ * similar state below sm the chip and the link render as a second row of
+ * the header, under the count and the controls. Drop max-sm:basis-full and hide Sort's leading icon
  * below sm; render the count as "N results" / "N of M"; give the header's
  * View mode group the outline-button box (border, h-9, rounded-md,
  * overflow-hidden, gap-0) with w-11 halves; h-9 on Sort below sm. */
@@ -105,8 +125,61 @@
     display: none;
   }
 }
-/* Under 360px the line cannot hold "Relevance": Sort is its arrows icon, 44×36. */
+/* The similar state (your "Nearest to" chip is in the header): two lines.
+   Line 1 is the count, the view toggle and Sort, as above; line 2 is the
+   chip and Restore order. Both blocks of your row are display: contents so
+   their children can be ordered into the two lines; the row's ::after is a
+   zero-height full-width item that ends line 1. The count never shrinks. */
+@media not all and (min-width: 40rem) {
+  section.shell-swap header > div:has(span[title^="Nearest to"]) {
+    flex-wrap: wrap;
+    column-gap: 8px;
+    row-gap: 0;
+  }
+  section.shell-swap header > div:has(span[title^="Nearest to"]) > div {
+    display: contents;
+  }
+  section.shell-swap header > div:has(span[title^="Nearest to"])::after {
+    content: "";
+    order: 2;
+    flex: 0 0 100%;
+    height: 0;
+  }
+  section.shell-swap header > div:has(span[title^="Nearest to"]) [data-r4-count] {
+    flex: 1 0 auto;
+    min-width: max-content;
+  }
+  section.shell-swap header > div:has(span[title^="Nearest to"]) [role="group"][aria-label="View mode"],
+  section.shell-swap header > div:has(span[title^="Nearest to"]) button[aria-label="Sort the list"] {
+    order: 1;
+    flex: none;
+  }
+  section.shell-swap header span[title^="Nearest to"],
+  section.shell-swap header [data-r4-restore] {
+    order: 3;
+    margin-top: 8px;
+  }
+  section.shell-swap header span[title^="Nearest to"] {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: none;
+  }
+  section.shell-swap header [data-r4-restore] {
+    flex: none;
+    margin-inline-start: auto;
+  }
+}
+/* Under 360px the line cannot hold "Relevance": Sort is its arrows icon, 44×36.
+   In the similar state line 2 is tightened to hold the chip and Restore
+   order (your hit-target keeps Restore's 44px touch area); a chip too long
+   for it still wraps Restore order under it rather than cut the number. */
 @media (max-width: 359.98px) {
+  section.shell-swap header span[title^="Nearest to"] {
+    padding-inline: 6px;
+  }
+  section.shell-swap header [data-r4-restore] {
+    padding-inline: 0;
+  }
   button[aria-label="Sort the list"] {
     width: 44px;
     padding: 0;
