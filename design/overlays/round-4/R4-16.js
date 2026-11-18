@@ -12,7 +12,8 @@
  *
  * Measured with the patch, phone and desktop: the chips read "Grants" and
  * "Applications"; the hint sits 8px under the segment, 13px / 18.2px,
- * #686868 in light, and the segment's aria-describedby names it.
+ * --muted-foreground (#5F666D in light, #9AA2AA in dark with the whole
+ * patch), and the segment's aria-describedby names it.
  *
  * What Rerank does, read from your shipped client code, not from a
  * response: with Rerank on and a text query, the search asks for 400 hits,
