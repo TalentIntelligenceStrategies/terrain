@@ -1,44 +1,86 @@
-/* R4-39 (restores R3-09) · Patent record (phone): Export is two buttons, and a download says its name
+/* R4-39 (restores R3-09) · Patent record (phone): Export is one two-part control, and a download says its name
  *
  * Current: below sm the record's footer reads "Open in IPTECH" and
  * "Export this record ⌄", a Reka dropdown that opens CSV / Markdown upward
  * over the record; neither item says what it holds. Measured at 390: CSV
  * downloads 09000581.csv, and nothing confirms it: the footer is unchanged
  * and the only status region on the page reads "50 matched, 50 shown.".
- * Wanted:  two inline footer buttons, CSV and Markdown, beside Open in
- * IPTECH and drawn as it is (your .record-act, with the Lucide download
- * icon), named "Download this record as CSV" and "Download this record as
- * Markdown". After either, one line in the footer confirms the file by
+ * Wanted:  one two-part control beside Open in IPTECH: CSV | Markdown, each
+ * part your .record-act with the Lucide download icon, named "Download this
+ * record as CSV" and "Download this record as Markdown". The control is one
+ * box, <div data-r4-export role="group" aria-label="Download this record">,
+ * your .record-act's height (30px) whatever edge it carries, a 1px --border
+ * edge, radius calc(var(--radius) - 4px), and a 1px --border rule between
+ * the parts; the parts carry no padding of their own top and bottom, so an
+ * edge comes out of the box rather than adding to it. R4-49 draws its one
+ * silver edge on this box. Below 23rem (368px) Open in IPTECH shows its
+ * icon alone, a 30×30 square, and keeps its label in the link for its
+ * accessible name, so the footer stays one row: with its label the row
+ * needs 308px of content, which a 375 screen has (317) and a 360 one does
+ * not (302).
+ * After either part, one line in the footer confirms the file by
  * name, "Downloaded 09000581.csv", in a polite status region: 13px with a
  * 1.4 line height, in --muted-foreground, the file name in Inconsolata in
  * --foreground. It takes its own line under the buttons, 8px below them
  * (your footer's row gap), and stays until the dialog shows another record
  * or closes. In a short landscape phone (below sm and 480px tall or less,
- * e.g. 568×320) R4-38's one 44px row wins: Open in IPTECH, CSV and
- * Markdown sit in it without wrapping, and the confirmation shows in the
- * same row after Markdown, 12px after it (your footer's column gap), on one
+ * e.g. 568×320) R4-38's one 44px row wins: Open in IPTECH and the control
+ * sit in it without wrapping, and the confirmation shows in the same row
+ * after the control, 12px after it (your footer's column gap), on one
  * line that ends in an ellipsis if it runs out of room.
  * Viewport: phone, below sm (40rem). At sm and above the dropdown is
  * unchanged, which includes 844×390.
  *
- * Measured with the patch:
- * - 390×844: the footer reads "Open in IPTECH · CSV · Markdown" (67px); CSV
- *   fires a download named 09000581.csv, and the line under the buttons
- *   reads "Downloaded 09000581.csv", 13/18.2, rgb(104,104,104) (the footer
- *   grows to 93px); the hidden menu never paints
- * - 568×320 with R4-38: the footer one 44px row, Open in IPTECH 128×30, CSV
- *   64×30, Markdown 100×30; after CSV, "Downloaded 09000581.csv" in the
- *   same row and the footer stays 44px
+ * Measured with the whole patch (R4-49's 2px edge on the control):
+ * - 390×844 and 375×667: one row, Open in IPTECH 128×30, the control 168×30
+ *   (CSV 64×26, Markdown 101×26 inside the edge); footer 67px. CSV fires a
+ *   download named 09000581.csv and the line under the row reads
+ *   "Downloaded 09000581.csv", 13/18.2, --muted-foreground (#5f666d light,
+ *   #9aa2aa dark); the footer grows to 93px; the hidden menu never paints.
+ * - 320×568 (and up to 367 wide): one row, Open in IPTECH 30×30 icon, the
+ *   control 168×30 at the same y; footer 67px (it wrapped to two rows,
+ *   Markdown alone on the second, before). At 368 the label returns, still
+ *   one row.
+ * - 568×320 with R4-38: the footer one 44px row, Open in IPTECH 128×30, the
+ *   control 168×30, and after CSV "Downloaded 09000581.csv" in the same row.
+ * - R4-39 alone: the control 166×30 with its own 1px --border edge.
  *
  * Not patchable here: the buttons drive your own menu out of sight (open
  * the trigger, choose the item) so the file is yours byte for byte; the
  * name is read from your download anchor. In the component the two
- * buttons call the export function directly and the status comes from it.
- * No confirmation string ships in your bundle; "Downloaded {file}" is
- * new copy. */
+ * buttons call the export function directly and the status comes from it,
+ * and the icon-only link takes aria-label="Open in IPTECH" rather than a
+ * zero font size. No confirmation string ships in your bundle;
+ * "Downloaded {file}" is new copy. */
 @media not all and (min-width: 40rem) {
   [role="dialog"][data-result-detail] .record-foot:has([data-r4-export]) > button[aria-expanded] { display: none; }
-  [data-r4-export] { display: contents; }
+  /* one two-part control: the wrapper is the box, the two buttons its parts */
+  /* The box is your .record-act's height (6 + 13 x 1.4 + 6 px) whatever
+     edge it carries, so an edge never makes the footer taller. */
+  [data-r4-export] {
+    display: inline-flex;
+    flex: none;
+    align-items: stretch;
+    block-size: calc(0.75rem + 1.4 * 13px);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) - 4px);
+  }
+  [data-r4-export] > button.record-act {
+    padding-block: 0;
+    border-radius: 0;
+    white-space: nowrap;
+  }
+  [data-r4-export] > button.record-act:first-child {
+    border-start-start-radius: calc(var(--radius) - 6px);
+    border-end-start-radius: calc(var(--radius) - 6px);
+  }
+  [data-r4-export] > button.record-act:last-child {
+    border-start-end-radius: calc(var(--radius) - 6px);
+    border-end-end-radius: calc(var(--radius) - 6px);
+  }
+  [data-r4-export] > button.record-act + button.record-act {
+    border-inline-start: 1px solid var(--border);
+  }
   [data-r4-export-status]:empty { display: none; }
   [data-r4-export-status] {
     flex-basis: 100%;
@@ -48,11 +90,23 @@
   }
   [data-r4-export-status] span { font-family: var(--font-mono); color: var(--foreground); }
 }
+/* Below 23rem (368px): Open in IPTECH is its icon alone, so the row
+   holds. With its label the row needs 308px of content, which a 375
+   screen has (317) and a 360 one does not (302). The
+   label stays in the link (font-size 0 hides it from sight, not from the
+   accessibility tree), so its name is still "Open in IPTECH"; the icon is
+   sized in rem and keeps its 16px. */
+@media not all and (min-width: 23rem) {
+  [role="dialog"][data-result-detail] .record-foot:has([data-r4-export]) > a.record-act {
+    font-size: 0;
+    gap: 0;
+    padding: 7px;
+  }
+}
 /* A short landscape phone: R4-38's one row holds the buttons and the line. */
 @media not all and (min-width: 40rem) {
   @media (max-height: 480px) {
-    [role="dialog"][data-result-detail] .record-foot:has([data-r4-export]) > a,
-    [data-r4-export] > button {
+    [role="dialog"][data-result-detail] .record-foot:has([data-r4-export]) > a {
       flex: none;
       white-space: nowrap;
     }

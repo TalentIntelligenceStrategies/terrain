@@ -1,7 +1,9 @@
 /* R4-39 (restores R3-09) · Patent record (phone): Export is two buttons, and a download says its name
  *
  * Adds CSV and Markdown buttons (your .record-act style, Lucide download
- * icon) to the record's footer and a status line under them. A press opens
+ * icon) to the record's footer, inside one wrapper, <div data-r4-export
+ * role="group" aria-label="Download this record">, which R4-39.css draws
+ * as one two-part control and R4-49 edges; and a status line under them. A press opens
  * your export menu with Enter on its trigger, hidden, chooses the matching
  * item, reads the file name from your download anchor, and writes it to
  * the status line. Focus returns to the pressed button.
@@ -59,6 +61,8 @@
       const wrap = have || document.createElement('div');
       if (!have) {
         wrap.setAttribute('data-r4-export', '');
+        wrap.setAttribute('role', 'group');
+        wrap.setAttribute('aria-label', 'Download this record');
         for (const [label, aria] of [['CSV', 'Download this record as CSV'], ['Markdown', 'Download this record as Markdown']]) {
           const b = document.createElement('button');
           b.type = 'button';
