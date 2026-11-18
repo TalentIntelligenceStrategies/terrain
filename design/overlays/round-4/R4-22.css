@@ -21,8 +21,16 @@
  * (y 93); the abstract three lines at 14/21, 63px; tiles 80×100.
  *
  * Under 360px (one width query beyond your breakpoints, for the narrowest
- * phones) the score moves to a second line, under the number, so the
- * number and kind are never cut.
+ * phones) the score moves to a second line that starts at the rank chip's
+ * edge, the row's text column, so the number and kind are never cut; the
+ * row marked "This patent" in the similar set takes the same second line.
+ * Dropping the word "Relevance" instead would not keep one line: an
+ * application's "US 20130270686 A1 · Application" is 204px, and at 320 the
+ * slot beside the chip and a bare "0.8860" is 166px.
+ *
+ * Measured at 320 with the combined patch: row 1 "#1 US 9000581 B2 · Grant"
+ * on line 1, "Relevance 0.8862" on line 2 at x 37, the chip's x; in the
+ * similar set row 1's "This patent" at x 37 the same way.
  *
  * In the component: below sm the number line is a grid, rank | number and
  * kind | score, the rank rendered as a chip (bg-muted, rounded-sm, px-1.5,
@@ -81,18 +89,19 @@
     text-wrap: pretty;
   }
 }
-/* Under 360px the number would be cut: the score takes a second line, under
-   the number, so the number and kind are never truncated. */
+/* Under 360px the number would be cut: the score takes a second line from
+   the chip's edge, so the number and kind are never truncated. */
 @media (max-width: 359.98px) {
   [data-result-card] [data-slot="card"] > div > div:first-child {
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-areas:
-      "rank link"
-      ".    score";
+      "rank  link"
+      "score score";
     row-gap: 2px;
   }
   [data-result-card] [data-slot="card"] > div > div:first-child .text-right {
     justify-self: start;
+    justify-items: start;
   }
   [data-result-card] [data-slot="card"] > div > div:first-child .text-right > div {
     justify-content: flex-start;
