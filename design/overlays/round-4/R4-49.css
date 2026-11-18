@@ -1,0 +1,43 @@
+/* R4-49 (new) · The silver edge: Search in the results bar, Find similar,
+ * Export this record (on a phone, its CSV and Markdown buttons)
+ *
+ * Current: Search is a flat filled button; Find similar a card-coloured
+ * button; Export this record a muted text button. Nothing marks the actions
+ * that move a reader from a search to similar patents to a file.
+ * Wanted:  these three carry a 2px silver edge: a 135deg gradient through
+ * five stops, the fill unchanged inside it, the same in both themes:
+ *   #3a4148 0%, #c9d0d6 30%, #4a5158 55%, #9aa2aa 80%, #3a4148 100%.
+ * Export this record takes --foreground for its label while it carries the
+ * edge; on a phone, where R4-39 makes it two buttons, CSV and Markdown each
+ * carry it. Hover changes the fill as yours does; the edge does not move. An
+ * empty or disabled Search has no edge (a flat --border). Focus keeps your
+ * ring, outside the edge. Increased contrast: a solid --foreground edge.
+ * Viewport: all.
+ *
+ * Measured: on the light ground the #3a4148 and #4a5158 stops are 6.44:1
+ * or more; on the dark ground the #c9d0d6 and #9aa2aa stops are 5.01:1 or
+ * more. The edge reads in both themes from whichever half contrasts.
+ *
+ * In the component: one --edge-silver token per theme, and the edge as
+ * border: 2px solid transparent; background: <fill> padding-box,
+ * var(--edge-silver) border-box. No wrapper element. */
+:root {
+  --r4-silver: linear-gradient(135deg, #3a4148 0%, #c9d0d6 30%, #4a5158 55%, #9aa2aa 80%, #3a4148 100%);
+}
+.search-box-morph:has(.search-toolbar-line) button[aria-label="Search"]:not(:disabled):not([data-r410-empty]) { --r4-fill: var(--primary); }
+.search-box-morph:has(.search-toolbar-line) button[aria-label="Search"]:not(:disabled):not([data-r410-empty]):hover { --r4-fill: color-mix(in oklab, var(--primary) 90%, var(--background)); }
+button[aria-label="Find similar"] { --r4-fill: var(--card); }
+button[aria-label="Find similar"]:hover { --r4-fill: var(--muted); }
+button.record-act[id^="reka-dropdown-menu-trigger"], [data-r4-export] > button.record-act { --r4-fill: var(--card); color: var(--foreground); }
+button.record-act[id^="reka-dropdown-menu-trigger"]:hover, [data-r4-export] > button.record-act:hover { --r4-fill: var(--muted); }
+
+.search-box-morph:has(.search-toolbar-line) button[aria-label="Search"]:not(:disabled):not([data-r410-empty]),
+button[aria-label="Find similar"],
+button.record-act[id^="reka-dropdown-menu-trigger"],
+[data-r4-export] > button.record-act {
+  border: 2px solid transparent;
+  background: linear-gradient(var(--r4-fill), var(--r4-fill)) padding-box, var(--r4-silver) border-box;
+}
+@media (prefers-contrast: more) {
+  :root { --r4-silver: linear-gradient(var(--foreground), var(--foreground)); }
+}
