@@ -8,7 +8,9 @@
  * drawing spans the stage's width; a viewer already open when the patch
  * arrives is refitted in place and its zoom readout updated (zoomTo at
  * the new ratio fires your zoom handler). Zoom, pan, rotate and Fill screen
- * work from that fit as before. At 40rem and up the coverage stays 0.9.
+ * work from that fit as before. At 40rem and up the coverage stays 0.9,
+ * including a short landscape screen (R4-43.css), where the drawing is
+ * fitted to the stage's height and 0.9 keeps it off the head's rule.
  *
  * In the component: pass initialCoverage: 1 to Viewer.js below sm. */
 (() => {

@@ -1,4 +1,4 @@
-/* R4-43 (restores R3-20) · Drawing viewer: full bleed on a phone
+/* R4-43 (restores R3-20) · Drawing viewer: full bleed on a phone and a short landscape screen
  *
  * Current: below 40rem the viewer is a 374×692 card at (8,76) with a 16px
  * radius, over a translucent scrim, with the record showing round it. The
@@ -10,7 +10,9 @@
  * readout, Zoom in, Fill screen) is 336×44 in its own band under the
  * stage, at y 641. Close is 32×32 mid-header at x 199,
  * straight after "Figure 1 of 9", while the record's own close sits at the
- * right edge above it.
+ * right edge above it. At 844×390 the viewer is a 796×320 card with the
+ * pill and a 105px strip in bands of their own, so the stage is 794×96 and
+ * the figure is drawn 128×90, at 7%.
  * Wanted:  below 40rem the viewer is a full-bleed card, not a card over a
  * scrim: inset 0, no padding round it, 100dvh tall, no radius, no edge, no
  * shadow, on --card. The layer under it (your scrim) is --card as well, so
@@ -22,17 +24,34 @@
  * strip stays under the drawing, padded 12px at the sides and 8px below.
  * The drawing's preview, shown before the viewer engine loads, pads 8px
  * top and bottom and none at the sides.
- * Viewport: phone (below 40rem). Desktop and tablet are unchanged.
+ * Under 360px the pill fits the screen: no gaps between its controls and
+ * each button 40px wide (the 32px glyph box widened, so the 44px hit areas
+ * still meet), at most the screen less 16px. Before, at 320, it was 336px
+ * wide and clipped at both ends.
+ * On a short landscape screen (480px tall or less, below lg; 844×390) the
+ * viewer is the same full-bleed card, head and Close, with one difference:
+ * the drawing there is fitted to the stage's height, so a pill laid over the
+ * stage's foot would cover the foot of the drawing. The pill shares the
+ * strip's row instead, at its end, 12px from the edge, centred on the
+ * strip; the stage takes everything above them, and its foot carries the
+ * rule the strip's top had.
+ * Viewport: phone (below 40rem), and (max-height: 480px) below lg, the
+ * scope R4-20 gives its sheet. Desktop and tablet are unchanged.
  *
- * Measured with the patch, 390×844, figure 1 of US 9000581 B2 at rest:
- * - panel 390×844 at (0,0), radius 0; head 53px; stage 390×715.
- * - the figure drawn 390×273 at x 0; the readout 21% (18% without).
- * - the pill 336×44 at (27,714), 10px above the foot of the stage.
- * - close 44×44 at (342,4); strip 390×75 at y 770.
- * - The second figure is drawn 390×355; the fit holds as figures change
- *   and through Fill screen.
+ * Measured with the whole patch, figure 1 of US 9000581 B2 at rest:
+ * - 390×844: panel 390×844 at (0,0), radius 0; head 53px; stage 390×715;
+ *   the figure drawn 390×273 at x 0; the readout 21% (18% without); the
+ *   pill 336×44 at (27,714), 10px above the foot of the stage; close 44×44
+ *   at (342,4); strip 390×75 at y 770. The second figure is drawn 390×355;
+ *   the fit holds as figures change and through Fill screen.
+ * - 320×568: stage 320×439, the figure 320×224, readout 17%; the pill
+ *   288×44 at x 16, every control inside the screen (336px at x -8 before).
+ * - 844×390: panel 844×390 (was a 796×320 card); head 53; stage 844×237
+ *   (was 794×96); the figure drawn 304×213, readout 16% (was 128×90, 7%);
+ *   strip 497×100 and the pill 336×44 at (497,318) in one row; close 44×44
+ *   at (796,4).
  * - Desktop boxes unchanged (panel 1100×738, stage 1098×516, drawing
- *   512×359).
+ *   662×464 at 36%).
  *
  * Also here, as this component's part of R4-03 (fixed layers clear the
  * safe area): the head and strip take max(<their padding>,
@@ -40,7 +59,7 @@
  * card above 40rem keeps at least its 24px from each edge and more where
  * the inset is larger. Like R4-03, this needs viewport-fit=cover (Q2);
  * until then every inset is 0 and nothing visible changes. */
-@media not all and (min-width: 40rem) {
+@media not all and (min-width: 40rem), (max-height: 480px) and (max-width: 63.99rem) {
   .figview[role="dialog"] {
     padding: 0;
   }
@@ -81,10 +100,53 @@
     padding-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
   }
 }
-@media (min-width: 40rem) {
+/* Under 360px the pill fits the screen: no gaps, and each button 40px
+   wide (its 32px glyph box widened), so the hit areas still meet. */
+@media not all and (min-width: 22.5rem) {
+  .figview .figbar[role="toolbar"] {
+    gap: 0;
+    max-width: calc(100% - 16px);
+  }
+  .figview .figbar[role="toolbar"] .figbar-btn {
+    width: 40px;
+  }
+}
+/* A short landscape screen: the drawing is fitted to the stage's height,
+   so a pill laid over the stage's foot would cover the foot of the
+   drawing. The pill shares the strip's row instead, at its end, and the
+   stage takes everything above them. */
+@media (min-width: 40rem) and (max-height: 480px) and (max-width: 63.99rem) {
+  .figview[role="dialog"] .figview-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+  .figview[role="dialog"] .figview-head,
+  .figview[role="dialog"] .figview-stage {
+    grid-column: 1 / -1;
+  }
+  .figview[role="dialog"] .figview-stage {
+    border-block-end: 1px solid var(--border);
+  }
+  .figview[role="dialog"] .figstrip {
+    grid-row: 3;
+    grid-column: 1;
+    border-block-start: 0;
+  }
+  .figview .figbar[role="toolbar"] {
+    grid-row: 3;
+    grid-column: 2;
+    margin-block: 0;
+    margin-inline: 0 max(12px, env(safe-area-inset-right));
+  }
+}
+/* the inset card: everywhere the full-bleed rules above do not apply */
+@media (min-width: 40rem) and (min-height: 480.02px), (min-width: 64rem) {
   .figview[role="dialog"]:not([data-full]) {
     padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
   }
+}
+@media (min-width: 40rem) {
   .figview[data-full] .figview-head {
     padding-block-start: max(12px, env(safe-area-inset-top));
     padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));
