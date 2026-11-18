@@ -9,12 +9,14 @@
  * thumb. Opened, it grows downward in place to 148px and pushes the list
  * down; nothing dims behind it.
  * Wanted:  on results the box floats at the bottom of the screen from the
- * start and stays there: 12px in from the sides and 12px above the home
- * indicator (max(12px, the side insets); 12px plus the bottom inset), with
- * no band behind it. Folded, its corner is calc(var(--radius) + 2px), 10px
+ * start and stays there: on the page's 16px gutter, so its edges line up
+ * with the list card's (max(16px, the side insets)), and 12px above the home
+ * indicator (12px plus the bottom inset), with no band behind it. Folded, its corner is calc(var(--radius) + 2px), 10px
  * (Search's 6px corner plus the 4px between them, so the two nest); opened,
  * calc(var(--radius) + 6px), 14px (the 8px padding); the corner moves over
- * 240ms cubic-bezier(0.2, 0, 0, 1). It is --card with a transparent border,
+ * 240ms cubic-bezier(0.2, 0, 0, 1). It is --card with a transparent border
+ * in light; in dark it is --muted, one step up from the list card it floats
+ * over (#2a2f35 on #1e2227 with R4-47), so the two never merge,
  * and its depth is a hairline ring and a layered shadow: folded,
  * 0 0 0 1px --foreground at 10%, 0 2px 6px -1px --color-black at 8%,
  * 0 12px 32px -8px --color-black at 18%; opened, the ring at 14% and the
@@ -25,23 +27,28 @@
  * 40%, transparent), that fades in and out over 240ms and dims the results;
  * a tap on the scrim closes the box. With the field emptied, the search
  * history opens upward, 8px above the box. With the soft keyboard up, the
- * box sits 8px above the keyboard. Home is unchanged: there the composer
- * is the page.
+ * box sits 8px above the keyboard. Under 360px the folded line's inline
+ * padding is 4px (from 8px) and the toolbar's gaps 4px, so the query keeps
+ * the room. Home is unchanged: there the composer is the page.
  * Viewport: phone (below sm), and short screens below lg (max-height 480px:
  * a phone in landscape). Desktop and tablet are unchanged.
  *
  * Measured with the patch:
  * - 390×844: the band keeps its inline top (94px) and is fixed from there
- *   to the bottom edge, transparent to the pointer; the box 366×52 at
- *   (12,780), its bottom 12px above the viewport's, and the same after a
- *   2000px scroll.
- * - 390×844, opened: 366×148 at (12,684), growing upward, over the scrim
+ *   to the bottom edge, transparent to the pointer; the box 358×52 at
+ *   (16,780), its edges on the list's (16 and 374), its bottom 12px above
+ *   the viewport's, and the same after a 2000px scroll.
+ * - dark: the box rgb(42,47,53), --muted, over the card's rgb(30,34,39).
+ * - 320×568: the box 288×52 at (16,504), on the list's edges; the line's
+ *   text starts 8px after Search settings (was 12px), so the query keeps
+ *   its 156px although the box is 8px narrower.
+ * - 390×844, opened: 358×148 at (16,684), growing upward, over the scrim
  *   rgba(0,0,0,0.4) across the viewport; with the field emptied, the
  *   history opens upward from the box, its foot 8px above it (without
  *   this it opened below the screen's edge).
  * - 390×844: #main-content padded 80px at its foot, so the last result
  *   ends 16px above the box.
- * - 844×390: the box 820×52 at (12,326); opened 820×148 at (12,230).
+ * - 844×390: the box 812×52 at (16,326); opened 812×148 at (16,230).
  *
  * The inline top is not overridden: no stylesheet rule can beat it without
  * !important, and it changes with the masthead. The patch leaves it as the
@@ -81,7 +88,7 @@
   #main-content > div:has([data-search-line]) > div {
     margin: 0;
     max-width: none;
-    padding: 0 max(12px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+    padding: 0 max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
   }
   /* with the keyboard up, the home indicator is under the keyboard */
   html[data-r4-kb] #main-content > div:has([data-search-line]) > div {
@@ -106,6 +113,10 @@
       0 0 0 1px color-mix(in oklch, var(--foreground) 14%, transparent),
       0 2px 6px -1px color-mix(in oklab, var(--color-black) 8%, transparent),
       0 16px 40px -8px color-mix(in oklab, var(--color-black) 22%, transparent);
+  }
+  /* dark: one step up from the list card under it */
+  [data-theme=dark] #main-content > div:has([data-search-line]) .search-box-morph {
+    background: var(--muted);
   }
   /* the history list under an empty field opens upward from the dock */
   #main-content > div:has([data-search-line]) .search-box-morph ~ div.top-full {
@@ -132,6 +143,16 @@
     opacity: 1;
     visibility: visible;
     transition-delay: 0s;
+  }
+}
+/* the narrowest phones: the query keeps the room */
+@media (max-width: 359.98px) {
+  #main-content > div:has([data-search-line]) .search-toolbar {
+    gap: 4px;
+  }
+  #main-content > div:has([data-search-line]) .search-toolbar-line {
+    padding-inline: 4px;
+    gap: 4px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
