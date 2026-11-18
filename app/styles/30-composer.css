@@ -52,8 +52,11 @@
    running and focus edges sit 1px outside a 1px border; on a 2px one they
    move out with it. */
 .cmp-inner.edge-silver,.cmp-inner.edge-silver:focus-within{border:2px solid transparent;
+  padding:calc(var(--s-14) - 1px) calc(var(--s-16) - 1px) calc(var(--s-10) - 1px);
   background:linear-gradient(var(--surface),var(--surface)) padding-box,var(--edge-silver) border-box}
 .cmp-inner.edge-silver::before,.cmp-inner.edge-silver::after{inset:-2px}
+/* focus is the edge itself, solid, not a second ring outside it (§3.8) */
+.cmp-inner.edge-silver:has(.cmp-field textarea:focus-visible){outline:none;border-color:var(--focus)}
 /* A RUNNING SEARCH PULSES THE PANEL'S EDGE (platform.md §13.4, R1-09). The
    signal sits on the control that started it, and the list below stays at
    full strength until the answer replaces it. Keyed on the Search button's

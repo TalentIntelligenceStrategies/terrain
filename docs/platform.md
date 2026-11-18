@@ -1362,7 +1362,7 @@ tied to R3-11's *holder names as published*.
 | --- | --- | --- | --- | --- |
 | R4-47 | new | all | Page ground | Dark: slate `#16191C` with one light at the top right |
 | R4-48 | new | all | Page ground | Light: slate `#ECEEF0` with one light at the top right; slate hairlines and muted text |
-| R4-49 | new | all | Search, Find similar, Export | The silver edge on Search in the results bar, Find similar and Export (on a phone, CSV and Markdown) |
+| R4-49 | new | all | Find similar, Export | The silver edge on Find similar and Export (on a phone, one edge round CSV and Markdown) |
 | R4-50 | new | all | Home composer | The silver edge on the whole composer box |
 
 **Earlier rounds' IDs stay valid where `app/` and the docs cite them** (*R1-39*, *R1-36* …): each is

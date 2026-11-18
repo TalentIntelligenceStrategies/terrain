@@ -229,8 +229,8 @@ three by a script that refuses:
 - Terrain **has** an accent, and it is **achromatic** — the ink pair. `design-language.md` §3.8 says
   the three places it may appear and the places it may not.
 - *No gradient* is now **two named gradients and no third**: the ground's one light, on the page
-  ground only, and the deck's silver edge, on four controls listed by name. `design-language.md` §2
-  and §3.8 say where each may sit, and a fifth silver site is an amendment.
+  ground only, and the deck's silver edge, on three controls listed by name. `design-language.md` §2
+  and §3.8 say where each may sit, and a fourth silver site is an amendment.
 - A **download** is not the line between software and a document. The line is **what the file is
   permitted to say**, and `brief.md` §1 carries the test: does it state anything its page did not.
   The starred set leaves as a CSV or Markdown; a report leaves as a PDF of its own page, without its
@@ -255,7 +255,7 @@ three by a script that refuses:
 
 **Terrain has no hue of its own.** One place may take colour, the accent, and the accent is
 achromatic. No decorative colour, and no gradient or tint but two, both the deck's: the slate ground
-with its one light, and the silver edge on four named controls (`design-language.md` §2, §3.8). *Three other places had colour
+with its one light, and the silver edge on three named controls (`design-language.md` §2, §3.8). *Three other places had colour
 and each left with what it coloured: chart layers with the charts, discrete states with the
 legal-status chip (`platform.md` §13, R1-17), direction of change with a delta pill that never
 shipped. Their tokens are gone rather than parked. A view of the set, when one is built, does not

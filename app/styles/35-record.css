@@ -252,6 +252,7 @@
    a --surface fill inside it, and the label at --text-1 rather than the
    quiet --text-2 of the record's other actions. */
 .rec-act.edge-silver{border:2px solid transparent;color:var(--text-1);
+  padding:calc(var(--s-6) - 2px) calc(var(--s-8) - 2px);   /* the edge comes out of the padding */
   background:linear-gradient(var(--surface),var(--surface)) padding-box,var(--edge-silver) border-box}
 /* THE CONFIRMATION IS A GLYPH SWAP AND NOTHING MOVES. Both marks are 16px in
    the same slot, so the label does not shift under the pointer that just

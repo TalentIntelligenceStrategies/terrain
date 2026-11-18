@@ -551,9 +551,9 @@ it would stop being enforceable the moment a fourth site appeared.
 
 **The deck's ground and silver edge are the product's.** The page ground is the deck's slate, with
 one light at the top right — slide 1's in dark, the appendix's in light — and the actions that move a
-founder from a search to a file (the home composer, Search in the results bar, Find similar, Export)
+founder from a search to a file (the home composer, Find similar, Export)
 carry the deck's silver edge. Both are named exceptions to *no gradient*, and neither carries data:
-the light sits only on the page ground, and the edge marks four controls and no result.
+the light sits only on the page ground, and the edge marks three controls, one per surface, and no result.
 [`design-language.md`](design-language.md) §2 and §3.8 carry the values and the rules. The reason is
 that a founder who has seen the deck should open the product and recognise it.
 

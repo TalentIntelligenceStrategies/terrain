@@ -286,23 +286,26 @@ one that is only selected never looks focused.
 
 **The deck's silver edge marks the actions that move a founder from a search to a file**, and is the
 only edge the accent's sites take. A 2px border drawn with `--edge-silver` behind the control's own
-fill, clipped to the border box, so no wrapper carries it. **Four sites, and they are the whole
-list:**
+fill, clipped to the border box, so no wrapper carries it. **Three sites, and they are the whole
+list — one per surface, so the edge marks a path rather than a style:**
 
 1. **The home composer** — the whole box. Its Search button keeps its fill and no edge.
-2. **Search in the results bar.**
-3. **Find similar**, on the open record.
-4. **Export this record.** On a phone, where it is two buttons, CSV and Markdown each carry it.
+2. **Find similar**, on the open record. On a phone it carries its label beside the icon: an edge
+   on a bare icon reads as a pressed toggle.
+3. **Export this record.** On a phone, where it is two choices, CSV and Markdown are one two-part
+   control with one edge round both.
+
+**Search in the results bar has none.** It is the filled primary already, and an edge on an ink fill
+merges with it on one half and with the card on the other. **Find similar drops its edge while its
+record is the one the list is sorted by**: pressing it would only sort the same way again.
 
 **It is the same in both themes, and reads from whichever half contrasts.** On the dark ground the
 `#C9D0D6` and `#9AA2AA` stops carry it (5.01:1 or more) and it reads as silver; on the light ground
 the `#3A4148` and `#4A5158` stops do (6.44:1 or more) and it reads darker. On a light Search, whose
-fill is the ink, the dark stops merge into the fill and the edge is a highlight rather than a ring;
-that is accepted, and the fill stays the accent.
-
-**It is not focus and not a state.** Focus keeps its 2px ring outside the edge. Hover changes the
-fill, never the edge. A disabled Search has a flat `--border` instead. Under `prefers-contrast: more`
-the edge is a solid `--text-1`. **A fifth site is an amendment**, argued against this section, because
+**It is not a state, and it changes no box's size.** The 2px comes out of the control's padding.
+**Focus turns the edge solid** (`--focus`) in place of a ring outside it, so focus and the edge are
+never two rules side by side. Hover changes the fill, never the edge. Under `prefers-contrast: more`
+the edge is a solid `--text-1`. **A fourth site is an amendment**, argued against this section, because
 an edge on every button is an edge on none.
 
 **What being achromatic buys.** It can never be read as data, and it needs no separately measured
