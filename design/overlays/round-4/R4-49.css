@@ -18,7 +18,9 @@
  * only run the same sort again. The edge never changes a box's size: the
  * 2px comes out of the padding. Focus turns the whole edge solid
  * --foreground in place of your outside ring, so focus and the edge are
- * never two rules. Hover changes the fill, not the edge. Increased
+ * never two rules. In the phone's CSV | Markdown control the part with
+ * focus keeps your own ring, which says which of the two it is; the edge
+ * round the pair does not change. Hover changes the fill, not the edge. Increased
  * contrast: a solid --foreground edge.
  * Viewport: all.
  *
@@ -57,8 +59,7 @@ button.record-act[id^="reka-dropdown-menu-trigger"] { padding: 4px 6px; }
 
 /* focus is the edge itself, solid, instead of a second ring outside it */
 button[aria-label="Find similar"]:not([data-r4-anchor]):focus-visible,
-button.record-act[id^="reka-dropdown-menu-trigger"]:focus-visible,
-[data-r4-export]:has(:focus-visible) {
+button.record-act[id^="reka-dropdown-menu-trigger"]:focus-visible {
   --r4-silver: linear-gradient(var(--foreground), var(--foreground));
   box-shadow: none;
   outline: none;
