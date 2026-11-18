@@ -1,4 +1,4 @@
-/* R4-14 (restores R3-08) · Search settings: the field row holds your field control (see R4-14.js)
+/* R4-14 (restores R3-08) · Search settings: the field row holds your field control (see R4-14.js); the field select is one treatment in both themes
  *
  * The moved select keeps its own classes. In the row it is shown (your
  * wrapper is "hidden sm:flex") and stretched to the row's width (the
@@ -9,7 +9,33 @@
  * the end, the value in --foreground at weight 500, your px-2 inside. The
  * trigger's height is h-7! (important), so the 44px is the wrapper's; the
  * trigger's own .hit-target::before, 44px tall under a coarse pointer and
- * as wide as the trigger, makes the whole box the tap target. */
+ * as wide as the trigger, makes the whole box the tap target.
+ *
+ * One treatment in both themes, in the header and in the row. Current: the
+ * trigger is bg-transparent, but dark:bg-input/30 (and dark:hover:bg-
+ * input/50) fill it in dark only: in the header at 820 and 1440 a 148x28
+ * (44 on touch) lozenge of --input at 30% over the ground in dark and no
+ * fill in light; in the phone row a --input wash over --card in dark and
+ * plain --card in light. Wanted: the trigger has no fill of its own at
+ * rest in either theme, like New and History beside it; in the header,
+ * hover and open fill it with --accent, which is what light does now; in
+ * the row the 44px field is the control's edge, and the trigger inside it
+ * takes no fill. In the row the
+ * field's ground is --card in both themes (above).
+ * Measured, results: the header select's ground is transparent in both
+ * themes at 1440 (148x28) and 820 (148x44); before, dark computed --input
+ * at 30% (oklab 0.41 / 0.3) and light transparent. Hover fills --accent in
+ * both. On the phone row the ground is the wrapper's --card in both.
+ *
+ * In the component: drop dark:bg-input/30 and dark:hover:bg-input/50 from
+ * the trigger's classes (the select's own defaults, which the header's
+ * ghost style does not override in dark). */
+[aria-label="Change search domain"] {
+  background: transparent;
+}
+header [aria-label="Change search domain"]:is(:hover, [data-state="open"]) {
+  background: var(--accent);
+}
 @media not all and (min-width: 40rem) {
   .pop-set [data-r414] {
     display: flex;
