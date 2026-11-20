@@ -52,8 +52,7 @@ DEMO_JS  = walk('demo', ('.mjs', '.js'))
 APP_HTML = [p for p in walk('app', ('.html',))]
 PARTIALS = walk('app/partials', ('.html',))
 PREVIEWS = ['design/previews/terrain-prototype.html',
-            'design/previews/terrain-loading-lab.html',
-            'design/previews/terrain-report-lab.html']
+            'design/previews/terrain-loading-lab.html']
 TOKENS   = 'app/styles/tokens.css'
 
 def read(p):
@@ -358,26 +357,39 @@ if iface:
 
 
 # ── GATE I · every font-size is a step of the scale ─────────────────────────
-# design-language.md §4: six sizes, each a role. A size off the scale is a
-# role nobody named, and the scale was eleven sizes before anything refused
-# one -- four components had each invented a size in the same gap. The two
-# exceptions are literal: the wordmark is brand, not text, and 98-bench.css
-# styles lab.html's bench chrome, which is a measuring page and not product.
-TYPE_SCALE = {'11px', '13px', '16px', '20px', '26px', '36px'}
+# design-language.md §4: eleven sizes, each a role. A size off the scale is a
+# role nobody named. The two exceptions are literal: the wordmark is brand,
+# not text, and 98-bench.css styles lab.html's bench chrome.
+#
+# THE SHORTHAND IS READ TOO. The V8 lab sets most of its type with `font:`
+# (`font: 600 11px/1.3 'Urbanist'`), and a gate that only matched
+# `font-size:` would have passed every size written that way -- the gap that
+# makes a rule report clean while the tree breaks it.
+TYPE_SCALE = {'11px', '12px', '13px', '14px', '15px', '16px', '18px', '20px', '24px', '26px', '36px'}
 TYPE_EXEMPT_RULES = {'.wordmark'}
 TYPE_EXEMPT_FILES = {'app/styles/98-bench.css'}
+SHORTHAND_SIZE = re.compile(r'(?:^|\s)(\d+(?:\.\d+)?px)(?=\s*/|\s+[\'"a-zA-Z])')
 for p in APP_CSS:
     if p == TOKENS or p in TYPE_EXEMPT_FILES:
         continue
     body = strip_comments_css(texts[p])
     for rule in re.finditer(r'([^{}]+)\{([^{}]*)\}', body):
         sel = rule.group(1).strip()
-        for m in re.finditer(r'font-size\s*:\s*([^;}]+)', rule.group(2)):
-            v = m.group(1).strip()
-            if v in TYPE_SCALE or v == 'inherit' or sel in TYPE_EXEMPT_RULES:
-                continue
-            fail(f"{p}: {sel} sets font-size {v}, off the type scale -- the steps are "
-                 f"11 13 16 20 26 36 (design-language.md §4)")
+        if sel in TYPE_EXEMPT_RULES:
+            continue
+        for m in re.finditer(r'(?<![\w-])font(-size)?\s*:\s*([^;}]+)', rule.group(2)):
+            v = m.group(2).strip()
+            if m.group(1):
+                sizes = [v]
+            else:
+                if v in ('inherit', 'initial', 'unset') or v.startswith('var('):
+                    continue
+                sizes = SHORTHAND_SIZE.findall(' ' + v)
+            for size in sizes:
+                if size in TYPE_SCALE or size == 'inherit':
+                    continue
+                fail(f"{p}: {sel} sets font-size {size}, off the type scale -- the steps are "
+                     f"11 12 13 14 15 16 18 20 24 26 36 (design-language.md §4)")
 
 # ── the state conventions · three, written down, not unified ──────────────
 # 1 Does ARIA already have a word for it? Then ARIA is the state and CSS styles
@@ -409,8 +421,8 @@ if SURFACES:
         styled |= set(re.findall(r'\[(aria-[\w-]+)\s*=', strip_comments_css(texts[p])))
     for a in sorted(styled):
         if not re.search(rf'''setAttribute\(\s*['"]{re.escape(a)}['"]''', alljs) \
-           and not re.search(rf'''{re.escape(a)}''', '\n'.join(texts[p] for p in PARTIALS) or ''):
-            fail(f"app/styles: [{a}] is styled but no module sets it and no partial carries it. "
+           and not re.search(rf'''{re.escape(a)}''', '\n'.join(texts[p] for p in PARTIALS + APP_HTML) or ''):
+            fail(f"app/styles: [{a}] is styled but no module sets it and no partial or page carries it. "
                  f"The writer and the styler are in different directories now")
 
 

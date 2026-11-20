@@ -23,7 +23,6 @@ const POLITE = {
   home:        '#sayHome',
   list:        '#sayList',
   work:        '#sayWork',
-  destination: '#sayDestination',
 };
 
 /* A LIVE REGION RE-SET TO THE STRING IT ALREADY HOLDS is a mutation several

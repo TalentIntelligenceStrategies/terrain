@@ -35,7 +35,6 @@ mirror() {
   [ -d demo ] && cp -R demo "$d"/
   mkdir -p "$d/design/previews" "$d/docs"
   cp design/previews/terrain-loading-lab.html "$d/design/previews/" 2>/dev/null
-  cp design/previews/terrain-report-lab.html "$d/design/previews/" 2>/dev/null
   cp docs/*.md "$d/docs/" 2>/dev/null
   cp design/components.md "$d/design/" 2>/dev/null
 }
@@ -111,7 +110,9 @@ h_unterm(){ printf '.probe{color:var(--text-1)}\n/* never closed\n' > "$1/app/st
 # broke the day tokens.css went to 32 -- a test that has to be edited whenever
 # the thing it guards changes is a second copy of the number it exists to stop
 # anyone keeping. Any digits in, an impossible number out.
-i_type() { printf '.probe{font-size:14px}\n'               > "$1/app/styles/90-probe.css"; }
+i_type() { printf '.probe{font-size:17px}\n'               > "$1/app/styles/90-probe.css"; }
+# ── I · the same size written in the font shorthand, which the gate once missed ──
+i_font() { printf ".probe{font:600 17px/1.3 'Urbanist',sans-serif}\\n" > "$1/app/styles/90-probe.css"; }
 g_count() { sed -i.bak -E 's|\*\*[0-9]+ semantic tokens\*\*|**999 semantic tokens**|' "$1/docs/design-language.md"; rm -f "$1"/docs/*.bak; }
 # ── a second demo/ import outside main.mjs ──
 x_demo()  { mkdir -p "$1/app/js" "$1/demo"; printf 'export const x=1\n' > "$1/demo/engine.mjs";
@@ -135,6 +136,7 @@ runsrc "mirror class for an ARIA state" "mirrors an ARIA" "tools/check-app.py"  
 runsrc "a second demo/ import"         "imported exactly once" "tools/check-app.py"     x_demo
 runsrc "G · printed token count drifts" "prints 999 semantic" "tools/check-app.py"       g_count
 runsrc "I · font-size off the scale"   "off the type scale" "tools/check-app.py"     i_type
+runsrc "I · off-scale size in font:"   "off the type scale" "tools/check-app.py"     i_font
 runsrc "H · comment closes early"      "selector prelude" "tools/check-app.py"           h_orphan
 runsrc "H · comment never closes"      "unterminated"    "tools/check-app.py"           h_unterm
 

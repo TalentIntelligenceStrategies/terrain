@@ -7,7 +7,7 @@
  * decide whether the answer was worth asking for.
  *
  * TWO KINDS OF REQUEST, TWO NUMBERS, and the second is not a rounding of the
- * first. BEAT is the ENGINE's -- a search across 180M records and the things
+ * first. BEAT is the ENGINE's -- a search across Innovue's database and the things
  * that search returns. SAVE_MS is ours: writing a name onto an account or
  * posting a message to a support queue goes to our own service with one small
  * payload. Collapsing them would say those are the same kind of work.

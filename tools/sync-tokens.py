@@ -55,13 +55,11 @@ CLOSE  = '/* ══ end tokens ══ */'
 # that its block can no longer be verified, and that is why the page carries
 # its own note saying which it is.
 #
-# The list is the two benches in design/previews/: the loading lab and the
-# report lab. Both are pages somebody may open on their own, so both carry the
-# bytes; the report lab needs a server for its engine and would still be
-# legible without one, which is the rule's test and not app/index.html's.
+# The list is the one bench in design/previews/: the loading lab. It is a page
+# somebody may open on its own, so it carries the bytes; that is the rule's
+# test, and app/index.html cannot meet it, so it links tokens.css instead.
 TARGETS = [
     'design/previews/terrain-loading-lab.html',
-    'design/previews/terrain-report-lab.html',
 ]
 
 def read(p):

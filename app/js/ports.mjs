@@ -16,13 +16,6 @@
  *   cannot tell them apart renders "nothing found" over an outage, which is
  *   the one wrong thing it can say. An empty array is not a failure signal.
  *
- *   PARTIAL SUCCESS IS THE NORMAL CASE. The views resolve independently and
- *   each arrives when its own data lands, so one view failing while the others
- *   succeed is ordinary. That is why every view is its own port rather than
- *   one call returning everything: a response that can only be wholly good or
- *   wholly bad forces the surface to blank nine working views to report one
- *   broken one.
- *
  *   THE REASON IS MACHINE-READABLE; THE SENTENCE IS OURS. `code` is for our
  *   logs and for choosing which sentence to print. NEVER return prose intended
  *   for display: our copy states the fix rather than the fault and does it in
@@ -84,161 +77,60 @@ export const CODE = {
 
 /** @typedef {{id:string, label:string|null}} Labelled — label null renders a bar */
 
-/** The list · FOUR FIELDS PER ROW AND NO MORE — that rule is about what the row
- *  DRAWS, and the row still draws four. `number` and `where` are carried and not
- *  drawn, because the starred set leaves as a seven-column file and the export
- *  cannot reach the record port: fifty starred patents would be fifty calls to
- *  fill in two columns the list already had.
+/** THE ROW · what the list draws, and what the export writes.
  *
- *  `thumbs` IS CARRIED FOR THE SAME REASON AND IS NOT A FIFTH FIELD. A field is
- *  a value read OFF the patent — its holder, its year, its class. A drawing is
- *  the patent. The row draws its fields and up to twelve pictures, and the rule
- *  it narrows is the one about how many facts a row asserts.
+ *  `holder` HAS THREE STATES: a string is the holder; null is a holder held
+ *  back, which renders a bar; '' means the patent names no assignee, which
+ *  prints *No assignee listed* (core/format.mjs).
  *
- *  UP TO TWELVE, AND THE ENGINE DECIDES WHICH. They are the row's glance value —
- *  is this the kind of mechanism I meant — so the first few are what matter and
- *  the rest are there because the strip scrolls. They are carried with the row rather than
- *  fetched per-row for the reason `number` is: twenty rows would be twenty
- *  record calls to fill a strip the search already had.
+ *  `score` IS THE ENGINE'S RELEVANCE SCORE and the row prints it as published,
+ *  in the chip beside the rank. null prints no chip. Terrain computes none.
  *
- *  THE SKELETON CONTRACT IS UNCHANGED and is the same one `figures` carries:
- *  `[]` means this patent HAS no drawings, `[{n, src:null}]` means it has them
- *  and we decline to show them. The engine may point `src` at a SMALLER
- *  rendition than the record's — a 64px thumbnail has no business decoding the
- *  full drawing — and nothing in the contract says the two must be one file.
+ *  `ipcWords` IS CPC'S OWN WORDS for the subclasses the row carries, keyed by
+ *  subclass (H10D → "INORGANIC ELECTRIC SEMICONDUCTOR DEVICES"). Group by
+ *  topic reads it, so the grouping is CPC's classification and its counts are
+ *  the rows'. An engine without it sends {} and the topics show codes alone.
  *
- *  THE ID IS NOT THE NUMBER, and the export is where that stops being pedantry.
- *  `id` is whatever the engine keys on; `number` is what is printed on the patent
- *  and what the founder searches their own document for. Writing the id into a
- *  column headed *Number* puts a string that is not a patent number into their
- *  data, and nothing downstream can tell.
+ *  `thumbs` IS UP TO EIGHT drawings in the smaller rendition; `figs` is the
+ *  total. `[]` means the patent HAS no drawings; `[{n, src:null}]` means it has
+ *  them and we decline to show them.
  *
- *  `order` is a first-class field and not an array index — rows are keyed
- *  by patent, and the FLIP, the rail, the focus return and the reversal all resolve
- *  through that key. `matched` and `patents.length` differ by what was binned, and
- *  printing the wrong one beneath the standing chip is a recorded regression. */
-/** `holder` HAS THREE STATES, kept apart the way `figures` keeps its two: a
- *  string is the holder; null is a holder held back, which renders a bar; ''
- *  means the patent names no assignee, which prints *No assignee listed*
- *  (core/format.mjs, platform.md §13.4 R1-31). */
-/** THERE IS NO `status`. Legal status is not printed anywhere in Terrain
- *  (platform.md §13, R1-17), so it is not asked for. */
-/** THE ROW DRAWS MORE THAN THE FOUR FIELDS IT USED TO, and the rule that
- *  changed is not "how many facts may a row assert" but WHICH SURFACE ANSWERS
- *  THE GLANCE. Four fields could not separate a
- *  foundry's filing from a university's without opening the record, so the record
- *  was opened on every row and the list was a table of contents rather than a
- *  result. The fields added are the ones that end that trip: who invented it,
- *  what class it sits in, when it published, and what it actually claims.
+ *  `version` says which document the row is, 'grant' or 'application'.
  *
- *  `abstract` IS THE ONE THAT PAYS FOR ITSELF and the one to watch. It is the
- *  only field here that is prose rather than an identifier, the row clamps it
- *  to three lines, and a clamp is a rendering decision rather than a contract:
- *  the engine sends the abstract as published and the row decides how much of
- *  it fits. An engine that pre-truncates has made that decision for every
- *  surface, and the record needs the whole thing.
- *
- *  `inventors` IS AN ARRAY AND THE ROW PRINTS ONE. Same string, same shape as
- *  the record's, because a row that received a pre-joined string could not
- *  print "and 5 others" without parsing prose back into a list.
- *
- *  `figs` IS THE TOTAL FIGURE COUNT AND `thumbs` IS WHAT THE STRIP HOLDS. They
- *  are different numbers on purpose — `thumbs` is capped at twelve and `figs`
- *  is what the patent has, so the strip's last tile can say what it stands in
- *  for. `null` means we hold no figure list, which is NOT zero: the tile prints
- *  nothing rather than `+0`.
- *
- *  TWO OPTIONAL FIELDS ARE THE REPORT'S: `holderRecorded`, the holder exactly
- *  as the record prints it, which the appendix shows while every count uses
- *  `holder`; and `flags`, what the record anomalies exhibit lists — `[]`
- *  checked and clean, `null` not checked, and the exhibit is left out.
+ *  `url` is the patent's page at its public source, opened from the row's
+ *  link glyph. null hides the glyph.
  *
  *  @typedef {{id:string, number:string|null, skim:string|null, holder:string|null,
- *             where:string|null, year:number|null, thumbs:Figure[],
+ *             where:string|null, year:number|null, thumbs:Figure[], figs:number|null,
  *             score:number|null, inventors:string[]|null, abstract:string|null,
- *             ipcMain:string|null, filed:string|null, published:string|null,
- *             kind:string|null, figs:number|null, versions:Version[]|null,
- *             holderRecorded?:string|null, flags?:{code:string, text:string}[]|null}} PatentRow */
-/** A PATENT IS OFTEN TWO DOCUMENTS, the application as published and the grant,
- *  with their own numbers and dates. `versions` lists the ones the index holds,
- *  the one to show first first; the row shows one at a time and the founder
- *  switches. One version renders as a word, two as a switch, null as nothing.
- *  `record` takes the chosen `version` and answers with that document.
- *  @typedef {{kind:'grant'|'application', number:string|null,
- *             published:string|null}} Version */
-/** `elapsedMs` is the search's own time, printed beside the count; only
- *  `search` carries it, and null prints nothing.
+ *             ipcMain:string|null, ipcWords:Object<string,string>|null,
+ *             filed:string|null, published:string|null, kind:string|null,
+ *             version:'grant'|'application'|null, url:string|null}} PatentRow */
+/** THE SET · every row the search returned, at once. There is no paging: the
+ *  list shows all of them, up to `settings.count` (at most 200), and sorts and
+ *  groups what it holds. `elapsedMs` is the search's own time.
  *  @typedef {{patents:PatentRow[], order:string[], matched:number,
  *             elapsedMs?:number|null}} PatentSet */
 
-/** The record · the title, eleven identifiers, the abstract, and the claim set AS
- *  PUBLISHED. `claims` is an ARRAY, one entry per claim, never one blob: a patent
- *  numbers its claims and counsel is pointed at claim 4 by number. Nothing here may
- *  arrive INTERPRETED — no highlight offsets, no decode.
- *
- *  `title` WAS MISSING FROM THIS TYPEDEF AND THE RECORD PANE DRAWS IT. The list row
- *  carries `skim` and the pane carries `title`, and they are the same string for the
- *  same patent — but the pane receives a record and never an index, so it cannot
- *  reach the row's copy. Found by building app/: the pane rendered a skeleton where
- *  the prototype prints a title, and the only reason nothing looked broken is that a
- *  bar is what every OTHER record draws there.
- *
- *  It is `string|null` like every other identity-shaped field, and null means the
- *  bar — a patent whose title we decline to print is the ordinary case, not an
- *  error. */
-/* `figures` CARRIES THE SKELETON CONTRACT LIKE EVERY OTHER FIELD, and the two
- *  cases it has to keep apart are the whole of its design.
- *
- *    figures: []              this record HAS NO DRAWINGS. A fact about it.
- *    figures: [{n, src:null}] it has drawings and we decline to show them.
- *
- *  The first renders a sentence; the second renders numbered skeleton frames,
- *  exactly as a withheld holder name renders a bar. Collapsing them would be
- *  the same error in either direction: an empty array where drawings exist says
- *  a patent has none, and a frame where none exist claims one is being
- *  withheld. `src === null` is the ONLY thing that means render the frame,
- *  which is `null`'s meaning everywhere else in this file.
- *
- *  `n` IS THE PUBLISHED FIGURE NUMBER AND IS NOT THE INDEX. The claims refer to
- *  figures by number; a renumbered figure is a different document. It is carried
- *  rather than derived from position for exactly that reason. */
-/** @typedef {{n:number, src:string|null, alt:string|null}} Figure */
-
-/** The grouping · TWO LEVELS AND NO MORE. A third is a taxonomy, which is the
- *  authored artifact a founder cannot produce and the thing this product
- *  refuses to require. `n` is the leaf's size over the WHOLE set, not over the
- *  page the client is holding. */
-/** @typedef {{id:string, label:string, n:number}} Leaf */
-/** @typedef {{label:string, leaves:Leaf[]}} Spine */
-/** @typedef {{head:string, spines:Spine[]}} Cluster */
-
-/** The report's field counts · COUNTS OVER THE FULL RESULTS OF EACH SEARCH
- *  BEHIND THE STARS, not over the stars and not over a page. A hand-picked set
- *  says little about a field, so the report counts the field from the searches
- *  and the detail from the stars (platform.md §5.3). The searches are re-run
- *  with the settings they were stamped with, and their sets are unioned by id,
- *  so a patent two searches returned is counted once.
- *
- *  `holders` keeps PatentRow's three states: a string is the holder, `null` is
- *  withheld and renders a bar, `''` is a patent that names no assignee. Every
- *  array is a count per bucket and every bucket's counts sum to `results` —
- *  the report prints a total, and a total the rows do not reach is a total
- *  nobody can check. Year is the FILING year, one year type throughout; a
- *  patent with no filing date counts under `null`. Class is the four-character
- *  IPC main group, as the grouping buckets it. Kind is the first version's.
- *  @typedef {{results:number,
- *             holders:{name:string|null, n:number}[],
- *             years:[number|null, number][],
- *             offices:[string|null, number][],
- *             classes:[string|null, number][],
- *             classYears:[string|null, [number|null, number][]][],
- *             kinds:{grant:number, application:number, unknown:number}}} FieldCounts */
+/** THE RECORD · the title, every identifier, the abstract and the claim set AS
+ *  PUBLISHED. `claims` is an ARRAY, one entry per claim. Nothing may arrive
+ *  interpreted. Three fields the record prints with an em dash when absent:
+ *  `status`, the legal status as the source states it, split into its word
+ *  and its expiry ({word:'Active', expires:'2036-12-04'}); `priority`, the priority date; `ipcWords`, CPC's words per
+ *  subclass. `sourceUrl` is the record at IPTECH, and null hides
+ *  *Open in IPTECH*. */
+/* `figures` CARRIES THE SKELETON CONTRACT: [] means no drawings, a figure with
+ *  `src:null` means one we decline to show. `n` is the published figure
+ *  number, not the index. `thumb` is the smaller rendition, optional. */
+/** @typedef {{n:number, src:string|null, thumb?:string|null, alt:string|null}} Figure */
 
 /** @typedef {{title:string|null, number:string|null, appno:string|null, kind:string|null,
- *             ipcMain:string|null, ipc:string[]|null, holder:string|null,
- *             inventors:string[]|null, filed:string|null, published:string|null,
- *             where:string|null, abstract:string|null,
- *             claims:string[]|null, figures:Figure[]}} Record */
+ *             version:'grant'|'application'|null, kindCode:string|null,
+ *             ipcMain:string|null, ipc:string[]|null, ipcWords:Object<string,string>|null,
+ *             holder:string|null, inventors:string[]|null, filed:string|null,
+ *             published:string|null, priority:string|null, where:string|null,
+ *             status:{word:string, expires:string|null}|null, abstract:string|null, claims:string[]|null,
+ *             figures:Figure[], url:string|null, sourceUrl:string|null}} Record */
 
 /* ─────────────────────────────────────────────────────────────────────────
  * THE PORTS. One per data-bearing row of components.md §1, named after it.
@@ -249,131 +141,29 @@ export const PORTS = [
   'fields',          // the technology fields, and which are covered yet
   'coverage',        // → {scope, sources:[{source, grant, application}]}, one row per source
 
-  /* the search. ONE CALL, NO STEP BETWEEN THE SENTENCE AND THE SET — the
-     reading, the five questions, the gate and the build stream were four
-     ports and are now none. */
-  /* `settings` is the search-settings panel's whole state and it travels as
-     one object, not as six loose arguments: the panel is the only thing that
-     builds it and the engine is the only thing that reads it, so a shape
-     change is a change in two places rather than in every call site.
-       sources[] · jurisdictions, at least one
+  /* the search. ONE CALL, from the sentence to the set. `settings` is the
+     search-settings panel's whole state, one object:
+       sources[] · office codes, at least one ('US','CN','TW','EP','KR','JP')
        kinds[]   · 'granted' | 'applications', at least one
-       count     · 10 | 20 | 50 | 100 | 500
-       basis     · 'filed' | 'published' — which date the range applies to
-       from, to  · each a year ('2013') or a full date ('2013-02-20') as a
-                   string, '' meaning no bound. A year as `to` means its last
-                   day and as `from` its first
+       count     · 10 | 20 | 50 | 100 | 200
+       rerank    · boolean — the engine re-orders what it returns in a second pass
+       basis     · 'filed' | 'published' | 'priority' — which date the range applies to
+       from, to  · a year ('2013') or a full date ('2013-02-20'), '' for no bound
      `mode` says what `query` IS: 'text', a description, or 'number', a patent
-     number to look up. A number search returns the set with that patent first,
-     or NOT_FOUND, not retryable, when the index does not hold it — an answer
-     about the number rather than an outage. */
+     number. A number search returns the set with that patent first, or
+     NOT_FOUND, not retryable. */
   'search',          // {query, field, settings, mode:'text'|'number'} → PatentSet
 
-  /* the list. ALL THREE ARE REQUESTS — twenty rows arrive at a time, so the
-     client never holds the whole set and sorting what it has would sort a page
-     rather than a result. Each waits and each can fail. */
-  'patents',         // → PatentSet
-  'patentsPage',     // Show more
-  'sort',            // {sort:'relevance'|'newest'|'oldest'} → PatentSet
-  'facets',          // {groups:[leafId]} → PatentSet, the grouping's branches
-  /* `nearness` is optional: each patent's nearness to the anchor, which the
-     row prints as *Nearness* while the set is in that order. Without it the
-     row prints no score, because relevance down a nearness order reads as the
-     reason for it. The anchor itself is marked *This patent*. */
-  'rerank',          // {anchors:[id]} → {order:[id], nearness?:{[id]:number}} over the SAME set
+  /* the list. Both re-order the SAME set and add no patent to it. */
+  'sort',            // {sort:'relevance'|'newest'|'oldest'} → {order:[id]}, by the published date
+  'similar',         // {anchor:id} → {order:[id]}: Find similar, nearest to the anchor first
 
-  /* THE GROUPING. It partitions the set the search returned; it does not
-     re-query, and it covers the WHOLE set rather than the page.
-
-     A LEAF CARRIES A COUNT, NOT A LIST OF IDS, and that follows from the line
-     above `patents`: the client holds twenty rows at a time and never the
-     whole set, so a leaf naming its patents would name ones the list does not
-     have. Selecting a branch is therefore a REQUEST, exactly as sort and
-     facets are — `facets({groups:[leafId]})` returns a fresh first page — and
-     `n` is what the badge prints. One number, from the engine, so the badge
-     and the filtered count cannot disagree.
-
-     TOO FEW TO GROUP IS A SUCCESSFUL RESPONSE, not a failure: `spines: []`
-     with `ok:true`. A set of three has no structure to show, and refusing
-     would make the panel offer a retry that cannot help. */
-  'cluster',         // → {head, spines:[{label, leaves:[{id,label,n}]}]}
-
-  /* THERE IS NO EXPORT PORT. Every field that goes into a CSV or a Markdown
-     list is already in the client — core/starred.mjs holds the rows the list
-     port returned — so the file is built there and taking the set out never
-     reaches the engine. */
-
-  /* THE REPORT. Its counted part is the one place the client needs numbers
-     over more rows than it holds, so it asks: each search behind the stars,
-     re-run with its stamped settings, counted whole. It does not touch the
-     current result set — the list the founder left behind is still there when
-     they go back. */
-  'fieldCounts',     // {searches:[{query, field, settings, mode}]} → FieldCounts
-
-  /* THE PRO PART. What its sections are and what they say are the engine's:
-     the quote names them before anything runs, and the result fills them as
-     blocks (components.md §1). A run takes minutes, so it is started, then
-     asked after, then fetched — and THE CHARGE LANDS ON DELIVERY, never at the
-     start, so a run that fails has charged nothing. */
-  'proQuote',        // {starred:[id], description, searches} → {price, sections:[{key, title, question}]}
-  'proStart',        // same request → {runId}, tied to exactly that starred set
-  'proStatus',       // {runId} → {state:'queued'|'running'|'done'|'failed', etaSeconds}
-  'proResult',       // {runId} → {runId, starred:[id], sections:[{key, blocks:[Block]}]}
+  /* THERE IS NO EXPORT PORT. Every field a CSV or a Markdown file carries is
+     already in the client, so the file is built there (core/export.mjs). */
 
   /* the record */
-  'record',          // {id, version?:'grant'|'application'} → Record
-
-  /* THERE IS NO projects PORT. Search history is the founder's own and is kept
-     in the browser, as the starred set is (core/history.mjs). */
-
-  /* the destinations */
-  'account',
-  'saveAccount',
-  'billing',
-  'invoices',
-  'sendSupport',
+  'record',          // {id} → Record
 ];
-
-/**
- * tallyField — the FieldCounts arithmetic, over rows an engine already holds.
- *
- * THE REFERENCE FOR WHAT EACH BUCKET MEANS, not a client-side shortcut: the
- * client never holds the field's rows, which is why `fieldCounts` is a port.
- * The report runs it over the starred rows, which the client does hold, so
- * the set and the field it is printed beside are bucketed one way. Both
- * fake engines call it so they cannot disagree about a bucket, and an engine
- * that counts server-side owes the same buckets — a filing year, a four-character
- * class, the first version's kind, and `null` kept apart from `''`.
- */
-export function tallyField(rows) {
-  const bump = (m, k) => m.set(k, (m.get(k) || 0) + 1);
-  const holders = new Map(), years = new Map(), offices = new Map(), classes = new Map();
-  const classYears = new Map();
-  const kinds = { grant: 0, application: 0, unknown: 0 };
-  for (const r of rows) {
-    const y = r.filed ? Number(String(r.filed).slice(0, 4)) || null : null;
-    const c = r.ipcMain ? String(r.ipcMain).replace(/\s+/g, '').slice(0, 4) : null;
-    bump(holders, r.holder ?? null);
-    bump(years, y);
-    bump(offices, r.where ?? null);
-    bump(classes, c);
-    if (!classYears.has(c)) classYears.set(c, new Map());
-    bump(classYears.get(c), y);
-    const k = r.versions?.[0]?.kind;
-    kinds[k === 'grant' || k === 'application' ? k : 'unknown']++;
-  }
-  const desc = m => [...m].sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0])));
-  const byYear = m => [...m].sort((a, b) => (a[0] ?? 1e9) - (b[0] ?? 1e9));
-  return {
-    results: rows.length,
-    holders: desc(holders).map(([name, n]) => ({ name, n })),
-    years: byYear(years),
-    offices: desc(offices),
-    classes: desc(classes),
-    classYears: desc(classes).map(([c]) => [c, byYear(classYears.get(c))]),
-    kinds,
-  };
-}
 
 /**
  * NullEngine — every port, implemented by refusing.
