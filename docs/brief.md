@@ -22,8 +22,13 @@ one report, whoever reads it**, because a founder and a backer want the same sec
 wants the risk flags and the questions before an investor raises them, the backer wants where the
 idea may differ and each patent in plain English.
 
-Self-serve software, English-native, searching Innovue's patent database. The search shows no
-price; the Pro part of a report is paid per report (§6).
+Self-serve software, English-native, searching Innovue's patent database. Terrain is the low-cost
+baseline, and neither the search nor the report shows a price.
+
+**TIS provides a patent intelligence layer, and Terrain is TIS's own tool on it.** An organisation —
+an incubator, an accelerator, an investor — keeps its data, its tools and its decisions; the layer
+sits between them, and every tool the organisation runs, its own or one it buys, can call it.
+Terrain is the first such tool and the one every organisation gets (§6).
 
 **Innovue builds and ships it.** The founder uses Innovue's build, on Innovue's engine. `app/` in this
 repository is the reference that build is made from — behaviour, flow and the engine contract — and
@@ -41,14 +46,14 @@ it, and a surface that serves none does not belong in the product.
 3. **Star.** The founder's own shortlist, and the only thing in the product they curate by hand.
 4. **The starred set.** Its own surface, where the shortlist is read as a whole.
 5. **Report or export.** The starred set becomes a **patent report**, or leaves as a
-   CSV or a Markdown list. A report opens with counts anyone can check and runs on into its Pro part,
-   which is written only when the user runs it. [`platform.md`](platform.md) §5.3 is the report.
+   CSV or a Markdown list. A report opens with counts anyone can check and runs on into its AI-written part,
+   Part 2, which is written only when the user asks for it. [`platform.md`](platform.md) §5.3 is the report.
 
 ### The search shows what came back; a report says what it may mean
 
 **A conclusion is worth only as much as the reader's ability to check it.** So the search never draws
 one, and a report draws its conclusions where they can be checked: every reading sits in a section
-marked Pro, cites the starred patents it rests on, and stands beside counts of the same
+marked AI-written, cites the starred patents it rests on, and stands beside counts of the same
 set. A founder who would rather run the analysis themselves still has the set, exactly as published.
 
 **The gap is not finding patent information; it is finding information a founder can trust and act
@@ -71,7 +76,7 @@ copy keeps them apart:
   document retrieved from the index and printed as the database holds it — identifiers, holder,
   dates, abstract, claims, drawings — with nothing summarised, paraphrased or interpreted. Copy says
   *real* and *as published* about results, and *nothing generated* only about the search: a report's
-  Pro sections are generated, and say so. It does not say *accurate*, because the database is not
+  AI-written sections are generated, and say so. It does not say *accurate*, because the database is not
   verbatim either: family merge and name unification are Innovue's hygiene (§3), and a field can come
   back blank.
 - **Near is a claim about the set, and it is an aim.** The evaluations of the engine are
@@ -80,14 +85,14 @@ copy keeps them apart:
   *built to return* rather than *returns*, and the evaluation that would change that is one run on
   founders' own descriptions. ***Reliable* describes the data, never the results** — *reliable
   patent records* is true; *reliable results* would be heard as *it finds the right ones*.
-- **A reading is a claim about the starred set, and it is checkable or it is not printed.** A Pro
-  section cites the patents, claims and passages it rests on, so every sentence in it can be traced
+- **A reading is a claim about the starred set, and it is checkable or it is not printed.** An
+  AI-written section cites the patents, claims and passages it rests on, so every sentence in it can be traced
   to a row the founder can open. **A fact from outside the rows names its source** — a data source
   someone holds, such as assignment records, never what a model remembers — and is marked *O*; a
   fact anyone can check against the rows (a date, a count, a claim number) is marked *C*. Unmarked
   is a reading. A sentence that would need an *O* and has no source is not printed.
 
-**The search uses AI and does not generate; a report's Pro part does, and says so.** The engine's
+**The search uses AI and does not generate; a report's AI-written part does, and says so.** The engine's
 embedding model is from the same family as the large language models behind a chatbot, so the
 contrast is never *AI* or *an LLM* against none — a technical buyer answers *you use one too*, and is
 right. In the search the contrast is **generating against retrieving**: the model compares meaning
@@ -96,7 +101,10 @@ starred patents and the founder's description, and the contrast becomes **a retr
 reading of it you can check against the set.** *To understand what you mean, it compares; where it
 writes, it says so and shows its sources.* Copy says **generative AI**, or *an LLM that writes
 answers* in a technical room, and never names a product: a named chatbot dates the claim, and invites
-the reply that it now searches the web.
+the reply that it now searches the web. **One place shows them by their marks: the deck's positioning
+chart**, where a row of marks stands for the category a founder already reaches for, and a mark is
+recognised faster than the phrase. The chart claims nothing about any one product; its caption and
+the speaker still say *generative AI*.
 
 **So the line is where a reading sits, not whether there is one.**
 
@@ -104,19 +112,19 @@ the reply that it now searches the web.
   per class — of the starred patents, or of what the searches returned — the rows counted and
   redrawn. Every number in it can be checked against the rows, and a caption over it may state a
   count and nothing more. *Three holders account for 6 of the 12 starred patents* is a count.
-- **Admissible only in a report's Pro part: a reading of the set.** A summary, a claim chart, what
-  falls outside the claims, where an idea may differ — marked Pro, citing what it rests on,
+- **Admissible only in a report's AI-written part: a reading of the set.** A summary, a claim chart, what
+  falls outside the claims, where an idea may differ — marked AI-written, citing what it rests on,
   and in *may* wording wherever it touches a claim's reach. **A report names no method for a
-  reading**: how Pro is produced is not settled, and the mark and the citations are what make a
+  reading**: how Part 2 is produced is not settled, and the mark and the citations are what make a
   reading checkable, whatever produces it.
 - **Out everywhere:** a reading on the search surface; a verdict shown as a score, a rank or a
   probability of Terrain's own; and anything shaped like legal advice stated as fact — *infringes*,
   *is clear*, *is free to use*, *freedom to operate*, *is novel*, *is invalid*, *will be granted*. *Holder A leads this space* is a reading and
-  belongs in a Pro section if anywhere; *a design without feature C may avoid claim 1 of Patent X* is
+  belongs in an AI-written section if anywhere; *a design without feature C may avoid claim 1 of Patent X* is
   admissible there under the disclaimer; *you are clear to build* is not admissible at all.
 
 Terrain prints what the engine returned, what the patent says, counts of both, and — in a report's
-Pro part — a marked reading of the starred set. **The views ship in the report's counted part**
+AI-written part — a marked reading of the starred set. **The views ship in the report's counted part**
 ([`platform.md`](platform.md) §5.3), and [`design-language.md`](design-language.md) §2 says they are
 drawn without a hue.
 
@@ -157,7 +165,7 @@ about Terrain's flow, not about what any other product lacks.
 
 **A search that returns nothing has found nothing, which is not the same as there being nothing.**
 The engine searched an index, over a vocabulary, at a moment. Copy may describe **what came back**
-and may not describe **what exists** — and that holds inside a report's Pro part as much as on the
+and may not describe **what exists** — and that holds inside a report's AI-written part as much as on the
 search surface:
 
 - Sayable: *Nothing in the Innovue database came back close to this.* *Forty-one patents matched, and
@@ -191,7 +199,7 @@ for. The report carries no conclusion that is not on its page.
 
 **The file test survives, narrowed to what the page showed.** The founder may take the starred set out
 as a CSV or a Markdown list: the rows already on their screen. A report leaves as a PDF of its own
-page — before Pro, the counted sections and nothing else; after Pro, everything. **The moment a file
+page — before Part 2 is written, the counted sections and nothing else; after, everything. **The moment a file
 states something its page did not, Terrain has produced a different document**, and that is an
 amendment to this lock argued as one.
 
@@ -209,7 +217,7 @@ practitioner who has it can bring a claim and a cutoff date, and a founder who d
 sentence, and the same search serves both. **The backer reads the same report the founder does**,
 written in neutral voice so it reads the same when a founder forwards it, and nothing in the
 interface changes for them. The search never says what a result means, whoever is reading; the
-report does, in its Pro part.
+report does, in its AI-written part.
 
 **User and buyer are not the same.** The first market is **US** founders, and frequently someone else
 pays — the university, accelerator, incubator or investor backing them. Incubators and accelerators
@@ -379,9 +387,13 @@ what they found.
   180 million patents*: that figure is Innovue's database, and how much of it a field's index holds
   is not stated. Anything shaped like legal advice stated as a finding — a freedom-to-operate view,
   patentability, *open ground* (§1), or *qualifies as prior art*, which Innovue's deck says of one
-  demo and which is a reading of a document, not something the engine returned. A report's Pro part
+  demo and which is a reading of a document, not something the engine returned. A report's AI-written part
   may say a change *may avoid* a claim, under its disclaimer (§1); no copy says the engine or a
   report finds what infringes.
+- **Assessment is a service, never an output.** Material that sells the layer (§6) may name
+  *novelty, freedom-to-operate and claim-scope assessment* as a service TIS delivers to an
+  organisation, scoped with it and carried out with qualified review. No copy says the engine, the
+  search or a report produces one, and the product names none of them.
 - **The engine's score is printed and not sold.** It is the engine's ordering, not a confidence,
   and no copy may present it as one; whether it separates near from not near at all is
   `platform.md` §12's question.
@@ -422,7 +434,7 @@ what a buyer will ask, and it is local because its answers carry the figures.
 - **The search never says what the set means; a report's reading is marked and cited.** A view of
   a set is admissible anywhere — counts by year, holder, office or class, the rows redrawn, with a
   caption that states a count. A reading — a summary, a claim chart, a finding sentence — is
-  admissible only in a report's Pro part, marked Pro and citing the patents it rests on. A
+  admissible only in a report's AI-written part, marked AI-written and citing the patents it rests on. A
   verdict shown as a score, and legal advice stated as fact, are admissible nowhere. *The line is
   where the claim sits and whether it shows its sources, not the form*: a one-line caption under a
   plain table on the search surface can still say *here is the gap*, and that is the caption most
@@ -436,7 +448,7 @@ what a buyer will ask, and it is local because its answers carry the figures.
 - **The record is rendered, not an opinion about it.** A patent's identifiers, abstract and claims
   are the public text of a granted patent and Terrain shows them as published — on the search
   surface, on the record, and in a report's counted part. A *reading* of that text — a plain-English
-  version, a claim chart — appears only in a report's Pro part, marked. Nowhere: match highlighting,
+  version, a claim chart — appears only in a report's AI-written part, marked. Nowhere: match highlighting,
   *strong match*.
 
   The engine's own relevance score is printed, and that is a real narrowing of this rule rather than
@@ -452,8 +464,8 @@ what a buyer will ask, and it is local because its answers carry the figures.
   survives is the part that was doing the work — two columns, no sidebar, and nothing floating that
   does not have to. A top masthead, not a sidebar.
 - **The search runs on submit.** No narrowing questions, no criteria to approve, no build stream. The
-  commitment is pressing Search. A report's Pro part is the one thing in the product that takes
-  minutes, and it runs only when the user asks for it.
+  commitment is pressing Search. Part 2 of a report is the one thing in the product that takes
+  minutes, and it is written only when the user asks for it.
 - **Starring is the one thing the founder curates by hand**, and it is per-row. *This is a narrowed
   successor, not a reversal*: the old rule banned per-row selection because checkboxes redrew a
   chart and the set feeding the charts had to stay whole. The starred set feeds itself, the export
@@ -558,16 +570,12 @@ the light sits only on the page ground, and the edge marks three controls, one p
 that a founder who has seen the deck should open the product and recognise it.
 
 **One deck exception: a status palette.** The sales deck marks *availability* with three dots:
-**green** (#4DBF5F, Terrain's marketing green measured from the Products-menu thumbnail) for live,
+**green** (#4DBF5F) for live,
 **amber** (#E0A63A) for coming, **grey** for later. A dot always carries its word beside it, and
 none ever marks a figure, a result, our engine against another tool, or anything in the interface.
 A deck is marketing material, and a dot here says *when*, never *how good*. Red for limits and blue
 for emphasis were considered and refused: red on a comparison reads as a verdict, and blue belongs
 to the Innovue mark.
-
-**Terrain's green lives on the TIS website, not in the product.** It is the hue Terrain's row carries
-in the website's Products menu, and `brand/assets/imagery/terrain/` is the gradient thumbnail that
-uses it. That is the marketing system's accent, recorded upstream; it does not enter the interface.
 
 ---
 
@@ -575,13 +583,21 @@ uses it. That is the marketing system's accent, recorded upstream; it does not e
 
 - **The name.** Three are in use (§2) and none is decided. Clearance is outstanding on whichever is
   chosen, and nothing is locked until it clears.
-- **The price of Pro.** The model is decided — the search shows no price and the Pro part of a report
-  is paid per report, because a founder needs one around a pitch or a filing and a backer per deal,
-  and neither comes back monthly. **The price is shown before a run and charged when the report is
-  delivered**, so a run that fails costs nothing (`platform.md` §5.3). Open: the price, what a run
-  costs Innovue, and whether institutions buy reports in bulk. *Free* is never printed: everything outside Pro simply works, and **Pro is the
-  only tier word**.
-- **What the Pro sections say, and how.** Innovue writes the prompt behind each Pro section and runs
+- **What Terrain costs, and what the layer costs.** The model is decided, and it has four layers:
+  the organisation's own knowledge (its disclosures, its deal pipeline, its portfolio records); **the
+  TIS patent intelligence layer**; the tools that call it; and the decisions the organisation makes
+  with them. **TIS provides the second and only the second.** The layer is the engine, from our
+  IP-technology provider (§3), plus access to it for the organisation's tools, connectors to the
+  organisation's own data, and assessment delivered as a service (§3). The first and fourth
+  layers stay the organisation's, and the third is whatever it builds or buys.
+  **Terrain is the low-cost baseline tool on the layer**: search, find similar, star and export,
+  with no price shown anywhere in the product. Anything else an organisation needs — its own
+  tools, a portal fitted to it, Part 2 of the patent report, the AI-written reading of a starred
+  set — calls the same layer, and is scoped with that organisation. **Terrain has no tier word**:
+  nothing in the product is named as a paid part, and *free* is never printed, because everything
+  in the baseline simply works. Open: the baseline's price, what the layer costs an organisation,
+  what a connector or an assessment engagement costs, and what a run of Part 2 costs Innovue.
+- **What the AI-written sections say, and how.** Innovue writes the prompt behind each section and runs
   the job; TIS checks the wording against §1. The run time (about ten minutes is the aim) and how the
   user hears it is done are open.
 - **Whether Terrain sits on Innovue's semantic search surface or beside it.**
@@ -599,8 +615,10 @@ Decisions recorded here that belong in the TIS monorepo when Terrain graduates. 
 monorepo from this folder** — record it here and leave it for a deliberate propagation pass.
 
 - The Terrain name and the endorsed-sub-brand lockup → `brand/positioning.md`.
-- **Terrain's accent decision** — an achromatic product accent beside a green marketing hue →
-  `brand/visual-guide.md`, where the gradient ↔ pillar pairings live.
+- **TIS as the patent intelligence layer** — the second of four layers, with Terrain as TIS's own
+  tool on it (§6) → `brand/positioning.md`. It is the Patent Intelligence pillar's offer, not
+  Terrain's alone.
+- **Terrain's accent decision** — an achromatic product accent → `brand/visual-guide.md`.
 - Terrain's neutral ramp and semantic-colour rule → the two systems will need deliberate
   reconciliation, not a copy.
 - **Terrain's slate ground and silver edge** — the deck's grounds and edge, now the product's
@@ -612,7 +630,7 @@ monorepo from this folder** — record it here and leave it for a deliberate pro
 - **What the lockup *does*** — a masthead lockup that is the way home is a component behaviour, not
   just a mark.
 - **The record-vs-opinion rule, split between search and report** → `brand/positioning.md`. The
-  search renders the record; a report's Pro part may read it, marked and cited. It is the item on this
+  search renders the record; a report's AI-written part may read it, marked and cited. It is the item on this
   list most likely to matter to a sibling product.
 - **The browser-tab icon**, `brand/favicon.svg` — the submark with its own `prefers-color-scheme`
   block.
@@ -620,8 +638,8 @@ monorepo from this folder** — record it here and leave it for a deliberate pro
 - **The website's Patent Search page** (`website/product/search/`, veiled) is a downstream consumer of
   this repository: its screenshots are captured from it, and its brief points at §1. Three things on
   it trail this brief and wait for the propagation pass. Its limits row says *No charts or
-  summaries*, which §1 no longer holds — a report draws counts of the set and, in its Pro part, a
-  marked Pro reading; the page says nothing of the report at all. It
+  summaries*, which §1 no longer holds — a report draws counts of the set and, in its AI-written part, a
+  marked reading; the page says nothing of the report at all. It
   names the product *Patent Search*, one of the three unsettled names in §2. And its Traditional
   Chinese translation is marketing copy, which §1's language rule does not govern. Its copy also
   trails the product in four places: it lists a legal-status filter, which Terrain does not have
@@ -633,6 +651,6 @@ monorepo from this folder** — record it here and leave it for a deliberate pro
   which names founders and the backers behind them. And its shots of the starred set predate the page
   `platform.md` §5.2 describes: the set as the results card or a table, the record opening over it,
   and the report panel beside it.
-- **The Pro label** — one solid ink chip marking the paid part of a product without a hue
-  (`design-language.md` §7). If a sibling product sells a part of itself, this is the pattern to
+- **The AI-written label** — one solid ink chip marking the generated part of a product without a
+  hue (`design-language.md` §7). If a sibling product prints generated text, this is the pattern to
   reconcile rather than reinvent.

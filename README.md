@@ -12,7 +12,7 @@ worth solving is not finding patent information but finding information a founde
 generative AI is near and writes what it returns, a keyword index is real and misses what is near.
 Terrain is built to give both — the real patents nearest the idea, exactly as published — and then a
 reading of the starred set that can be checked against it. A count of the set is admissible anywhere;
-a reading only in a report's Pro part, marked Pro and citing the patents it rests on.
+a reading only in a report's AI-written part, marked AI-written and citing the patents it rests on.
 
 Terrain is a TIS product in the Patent Intelligence pillar, and *Terrain* is its working name.
 Innovue builds and ships it. This repository holds the reference it is built from — `app/` — and
@@ -130,18 +130,10 @@ run against the *tracked set* and against a capture set that only a human has se
 particular cannot recognise a name it has not been told.
 
 ```bash
-# 1 · no raster images, except the one permitted family.
-#     Every OTHER raster here would be a capture of a third party's product or a
-#     mood board, and neither is ours to publish. The exception is
-#     brand/assets/imagery/terrain/terrain-forest.{jpg,webp} -- three files,
-#     48 KB, Terrain's own gradient thumbnail for the TIS website's Products
-#     menu. Ours, and meant to be published, so neither reason applies.
-#
-#     The second grep is the whole exception. Anything it does not match is
-#     still refused -- including a RENAME of those three files, which is the
-#     failure mode that made this check necessary.
-git ls-files | grep -iE '\.(png|jpe?g|gif|webp|bmp|tiff)$' \
-  | grep -vE '^brand/assets/imagery/terrain/terrain-forest(-400|-640)?\.(jpg|webp)$'
+# 1 · no raster images at all.
+#     Any raster here would be a capture of a third party's product or a mood
+#     board, and neither is ours to publish. Prints nothing when clean.
+git ls-files | grep -iE '\.(png|jpe?g|gif|webp|bmp|tiff)$'
 
 # 2 · nothing local-only is tracked, by name as well.
 #     TWO Innovue variants are tracked on purpose -- the ones the attribution

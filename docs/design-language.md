@@ -20,8 +20,8 @@ Three things follow from that and everything else is downstream of them:
   patent data should be able to find the heading, the figure and the caption without a hue telling
   them which is which.
 - **Nothing on the search surface is a reading of what is on screen.** Terrain prints the engine's
-  answer and the patent's own text. A reading lives in one place — a report's Pro part, marked Pro
-  and citing what it rests on (`brief.md` §1) — and a caption anywhere else states a count
+  answer and the patent's own text. A reading lives in one place — a report's AI-written part, marked
+  AI-written and citing what it rests on (`brief.md` §1) — and a caption anywhere else states a count
   or nothing.
 - **Nothing pretends to more certainty than it has.** A value we do not hold is a grey bar. A wait is
   a loader, not a fake skeleton. An empty result says what was searched.
@@ -938,11 +938,12 @@ way forward. **The primary action of a settings card is never deletion** — whe
 irreversible, the safe path is the affirmed button and the act is the ghost one, with the weight
 carried by the sentence above them rather than by a hue.
 
-**The Pro label is ink, and it is a label.** A solid `--text-1` chip with `--text-inverse` text — 11px,
-semibold, uppercase, `--r-chip`, no border — wherever Pro is named: beside the Pro group on the starred
-page's report panel and on the report's Pro sections. It swaps with the theme like the ink it is. It is
-the one solid chip in the product, which is what lets it mark the paid part without a hue, and it is
-never pressable, so it does not count against the one filled button.
+**The AI-written label is ink, and it is a label.** A solid `--text-1` chip with `--text-inverse`
+text — 11px, semibold, uppercase, `--r-chip`, no border — reading *AI-written*: beside the group of
+AI-written sections on the starred page's report panel and on each of the report's AI-written
+sections. It swaps with the theme like the ink it is. It is the one solid chip in the product, which
+is what lets it mark the generated part without a hue, and it is never pressable, so it does not count
+against the one filled button.
 
 **The report panel offers no choice of report.** There is one report, so the starred page's panel
 opens with an eyebrow on `--surface-sunken` above a 1px `--border` rule, then the report's question,
@@ -956,7 +957,7 @@ marking, and nothing about a toggle says *this is a sketch*. Do not add one for 
 not exist.
 
 **There are no widget cards, and no caption states a finding.** A finding is a reading of the data,
-and `brief.md` §1 puts readings in one place: a report's Pro part. **A report's exhibit title states
+and `brief.md` §1 puts readings in one place: a report's AI-written part. **A report's exhibit title states
 a count** — *Three holders account for 67 of 186 results* — and nothing more; anywhere else, there is
 no caption. **The info popover survives and carries explanation only** — what a score is, what *Nearness* measures. The test is whether a
 screenshot with **no popover open** still says what the founder is looking at; an interface that needs
@@ -1052,8 +1053,8 @@ each sheet, and no Innovue mark: the report is a document, not a product surface
 - **How the set was made** comes next: Re, Date, Basis as a definition list between a 2px `--text-1`
   rule and a 1px `--border` one, then the contents. The figures are the cover's and the glance
   page's; a third copy between them would only repeat them.
-- **At a glance is page 3**: the five figures at 26px on `--surface-sunken`, *From Part 2* — the Pro
-  result's summary, one line each, once it has run — and the counted exhibits small in a
+- **At a glance is page 3**: the five figures at 26px on `--surface-sunken`, *From Part 2* — Part 2's
+  summary, one line each, once it has run — and the counted exhibits small in a
   three-column grid, as many as the page holds, each with the exhibit and page its full version is
   on.
 - **Numbered exhibits**: an 11px uppercase label (*Exhibit 2 · Filed by year*), a 16px title that
@@ -1062,20 +1063,20 @@ each sheet, and no Innovue mark: the report is a document, not a product surface
   `--text-1` rule between them. **Two that share a base sit side by side** across a 1px `--border`
   rule; the large ones run full width.
 - **Part 1 ends on the turn**: one 16px line at weight 500 with a 13px `--text-2` line under it,
-  32px below the last exhibit, behind a 3px `--text-1` rule down its left side. Before Pro on
-  screen the turn is the **band** that runs Pro: `--surface-sunken`, the same 3px rule, one line on
-  what Pro is, and **Run the Pro report**, whose confirm step opens inside the band. The surface's
+  32px below the last exhibit, behind a 3px `--text-1` rule down its left side. Before Part 2 is
+  written, on screen the turn is the **band** that writes it: `--surface-sunken`, the same 3px rule,
+  one line on what Part 2 is, and **Write Part 2**, whose confirm step opens inside the band. The surface's
   one filled button is the same action in the page head; the band's is secondary and steps aside
   while the step is open, and the head's steps down, so *Confirm and run* is the only filled button
   while it is. While a run is queued or running the band holds *Ready in about N minutes* and no
   button; a failed run holds its sentence and *Try again*.
 - **Part 2 opens on a page of its own**: *Part 2* in 11px uppercase, the title at 26px, a 13px
-  line under it, and *In this part*, its sections as a numbered list. **Then each Pro section starts
-  a page**: its title at 16px semibold after its number in Inconsolata at weight 500 and
-  `--text-3`, with the Pro label beside them, the question it
+  line under it, and *In this part*, its sections as a numbered list. **Then each AI-written section
+  starts a page**: its title at 16px semibold after its number in Inconsolata at weight 500 and
+  `--text-3`, with the AI-written label beside them, the question it
   answers at 13px `--text-3`, and its blocks. Reading text holds a 72ch measure; tables keep the
   full width. The disclaimer, 11px `--text-3` over a 1px `--border` rule, closes the last section.
-- **A Pro section's blocks** (`components.md` §1), each drawn without a hue, by one renderer —
+- **An AI-written section's blocks** (`components.md` §1), each drawn without a hue, by one renderer —
   `app/js/core/blocks.mjs` with `app/styles/43-blocks.css`, which the template links too:
   - **Prose** at 13px, line height 1.6. A patent citation is Inconsolata at 11px in `--text-3`,
     `[5]`; a section prints as its number, *2.3*, and an exhibit as *Exhibit 4*. A checkable fact
@@ -1102,7 +1103,7 @@ each sheet, and no Innovue mark: the report is a document, not a product surface
   US Letter pages** by measuring — a block never splits, so a block from the engine is kept under a
   page, and the worked example's own long tables carry split points between their rows — with page
   numbers,
-  and the contents and the glance tiles filled with them. Before Pro, the paper leaves Part 2 out. It
+  and the contents and the glance tiles filled with them. Before Part 2 is written, the paper leaves it out. It
   prints light in either theme, because paper does not swap.
 
 ---
@@ -1146,8 +1147,9 @@ the act that does — the same distinction the loader draws against the bar, one
 
 **The screen must read as populated through layout alone.** That is the harder and more useful test.
 
-**A report's Pro sections are bars until they are run, and that is the contract read straight.** A
-Pro section's text exists to be written and is being withheld until the founder runs it, so its
+**A report's AI-written sections are bars until they are written, and that is the contract read
+straight.** An AI-written section's text exists to be written and is being withheld until the founder
+asks for it, so its
 lines are bars under a real heading — never a blur over real text, which would be text generated and
 then hidden, and never lorem ipsum. The heading and the line saying what the section answers are
 chrome, and print in full.

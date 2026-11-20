@@ -23,14 +23,14 @@
      the field through `fieldCounts`. No holder name is in this file; one
      appears only when corpus/ is served beside it.
 
-     THE PRO TEXT IS A PLACEHOLDER, AND SAYS SO. Pro does not run in the
-     reference. "After Pro" shows the shape of a reading — may wording, every
+     THE PART 2 TEXT IS A PLACEHOLDER, AND SAYS SO. Part 2 is not written in the
+     reference. "After" shows the shape of a reading — may wording, every
      sentence citing the appendix rows it rests on — labelled Sample text, and
      claims nothing about any patent or holder.
 
      PAGES IS THE PDF. Every page is a US Letter sheet, 816 × 1056 at 96dpi,
      with its running head and foot inside it rather than in @page margin
-     boxes, so the screen and the file paginate identically. Before Pro, the
+     boxes, so the screen and the file paginate identically. Before Part 2 is written, the
      Pages view and the PDF leave Part 2 out (platform.md §5.3).
 
      Needs a server, like app/: python3 -m http.server 8765 from the repo
@@ -49,11 +49,11 @@
 
 <link rel="icon" href="../../brand/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../../brand/fonts/fonts.css">
-<!-- A PRO SECTION'S BLOCKS are drawn by app/'s renderer and styled by its
+<!-- AN AI-WRITTEN SECTION'S BLOCKS are drawn by app/'s renderer and styled by its
      stylesheet, so the template and app/ draw a block one way -->
 <link rel="stylesheet" href="../../app/styles/43-blocks.css">
 <script>
-/* Before first paint: the direction, view and Pro state come from the URL so
+/* Before first paint: the direction, view and Part 2 state come from the URL so
    a headless print lands on the right one without a click. Paper does not
    swap, so the bench is light whatever the system says. */
 (function(){
@@ -582,7 +582,7 @@ body{margin:0;background:var(--ground);color:var(--text-1);font-family:'Urbanist
 .bal{text-wrap:balance}
 .pretty{text-wrap:pretty}
 
-/* Only on screen: the Run button and the Pro part before it runs. */
+/* Only on screen: the Run button and Part 2 before it is written. */
 .only-screen{display:none}
 :root[data-view="screen"] .only-screen{display:revert}
 :root[data-view="screen"] .pg{height:auto;min-height:0}
@@ -647,7 +647,7 @@ body{margin:0;background:var(--ground);color:var(--text-1);font-family:'Urbanist
   --fs-micro:11px;--fs-small:13px;--fs-body:13px}
 /* THE LOCKUP: the submark and TIS bold, the product name regular */
 .brand b{font-weight:700}
-.tag{display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:var(--r-chip);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;line-height:1;background:var(--text-1);color:var(--text-inverse)}
+.tag{display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:var(--r-chip);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;line-height:1;white-space:nowrap;background:var(--text-1);color:var(--text-inverse)}
 .run-btn{font:inherit;font-size:13px;font-weight:600;border:0;border-radius:var(--r-control);padding:10px 16px;background:var(--accent);color:var(--accent-ink);white-space:nowrap}
 .ht .tot .n,.gt .t{font-weight:500}
 
@@ -799,7 +799,7 @@ body{margin:0;background:var(--ground);color:var(--text-1);font-family:'Urbanist
 .turn{margin-top:var(--s-32);padding:var(--s-16) 0 0 var(--s-16);border-left:3px solid var(--rule);font-size:16px;line-height:1.45;font-weight:500;max-width:56ch}
 .turn span{display:block;font-size:13px;font-weight:400;color:var(--ink-2);margin-top:var(--s-6)}
 
-/* the founder's features: the Pro input, on screen before it runs */
+/* the founder's features: Part 2's input, on screen before it runs */
 .feat{margin:calc(-1 * var(--s-16)) 0 var(--s-32);padding:var(--s-12) var(--s-16);border:1px dashed var(--border-strong);font-size:13px}
 .feat .lbl{margin-bottom:var(--s-8)}
 .feat li{display:grid;grid-template-columns:1.8em 1fr;padding:4px 0;border-bottom:1px solid var(--hair)}
@@ -949,7 +949,7 @@ body{margin:0;background:var(--ground);color:var(--text-1);font-family:'Urbanist
     </div></div>
   <div class="bench-g"><span class="bench-l">View</span>
     <div class="seg" id="segView"><button type="button" data-v="screen">Screen</button><button type="button" data-v="pages">Pages · PDF</button></div></div>
-  <div class="bench-g"><span class="bench-l">Pro</span>
+  <div class="bench-g"><span class="bench-l">Part 2</span>
     <div class="seg" id="segPro"><button type="button" data-v="before">Before</button><button type="button" data-v="after">After</button></div></div>
   <div class="bench-g" id="gDesc" hidden><span class="bench-l">Description</span>
     <div class="seg" id="segDesc"><button type="button" data-v="given">Given</button><button type="button" data-v="none">None</button></div></div>
@@ -989,8 +989,8 @@ function blockSecs() {
   const secn = Object.fromEntries(PB.SECTIONS.map((x, i) => [x.key, `2.${i + 1}`]));
   const exn = { holders: 1, years: 2, status: 3 };
   const ctx = { section: k => secn[k] || '', exhibit: k => exn[k] || '', patent: r => `Patent ${r}, fictional` };
-  const tag = '<span class="tag">Pro</span>';
-  const out = [{ key: 'blk', cls: '', blocks: [`<header class="op"><p class="op-n">The block kinds</p><h2 class="op-t bal">A Pro result, drawn</h2><p class="op-s pretty">contract/examples/pro-result.json, through the renderer app/ uses. The content is invented, about a fictional frame and three fictional patents; the shapes are the contract, and what a section says is yours.</p></header>`] }];
+  const tag = '<span class="tag">AI-written</span>';
+  const out = [{ key: 'blk', cls: '', blocks: [`<header class="op"><p class="op-n">The block kinds</p><h2 class="op-t bal">A Part 2 result, drawn</h2><p class="op-s pretty">contract/examples/pro-result.json, through the renderer app/ uses. The content is invented, about a fictional frame and three fictional patents; the shapes are the contract, and what a section says is yours.</p></header>`] }];
   PB.SECTIONS.forEach((x, i) => {
     const got = PB.RESULT.sections.find(r => r.key === x.key);
     const b = drawBlocks(got ? got.blocks : [], ctx);
@@ -1028,7 +1028,7 @@ const REPORT = {
     ['Questions a backer may ask', 'What these patents leave open, turned into questions for the team.', 'list'],
     ['Each patent in plain English', 'For every starred patent: what it protects, and what it doesn’t cover.', 'each'],
   ],
-  disclaimer: 'Pro sections are generated from the patents you starred and the description. They are not legal or investment advice, and not a freedom-to-operate, patentability or validity opinion. Patents outside this set may matter.',
+  disclaimer: 'AI-written sections are generated from the patents you starred and the description. They are not legal or investment advice, and not a freedom-to-operate, patentability or validity opinion. Patents outside this set may matter.',
 };
 
 const today = new Date();
@@ -1299,7 +1299,7 @@ function eachBlocks() {
   });
 }
 
-/* SAMPLE TEXT. The shape of a Pro reading — may wording, a citation on every
+/* SAMPLE TEXT. The shape of an AI-written reading — may wording, a citation on every
    sentence — and no claim about any patent or holder. */
 const SAMPLE = [
   'Sample text. The closest claims may describe the core of the idea as the description states it <span class="cite">[1][3]</span>. Where the description adds a step the claims do not recite, the idea may differ from them <span class="cite">[2]</span>.',
@@ -1345,7 +1345,7 @@ const DIRS = {
 };
 
 /* ══ the sections ════════════════════════════════════════════════════════
-   A section is a list of BLOCKS — an opener, an exhibit, a Pro section, a
+   A section is a list of BLOCKS — an opener, an exhibit, an AI-written section, a
    table — and a block never splits across a page. The Pages view packs them
    by measuring (paginate, below), so a page holds as much as fits and the
    PDF breaks where the screen does. */
@@ -1379,7 +1379,7 @@ function sections(m, dir, after, view, div) {
       <div class="ex-b">${e.body}</div>${e.note ? `<p class="ex-note pretty">${e.note}</p>` : ''}
       <p class="ex-src">Source: TIS Terrain, ${D.short}. Base: ${e.base}.</p></section>`;
   };
-  const tags = '<span class="tag">Pro</span>';
+  const tags = '<span class="tag">AI-written</span>';
   const op = (n, t, s) => div ? '' : `<header class="op"><p class="op-n">${n}</p><h2 class="op-t bal">${t}</h2>${s ? `<p class="op-s pretty">${s}</p>` : ''}</header>`;
   /* the front matter is numbered too where the margin numbers it */
   const fm = (n, s) => /^\d+$/.test(n) ? `${n} · ${s}` : s;
@@ -1401,7 +1401,7 @@ function sections(m, dir, after, view, div) {
   sec('cover', [d.cover(m)], 'pg-cover');
 
   const leadBody = after && SET ? `<ol class="bl">${concOf().map((c, i) => `<li><span class="n">${i + 1}</span><span><b>${esc(c.head)}</b> ${say(c.short)} <span class="refs">→ ${SECNUM.conclusion}</span></span></li>`).join('')}</ol>`
-    : after ? `<p class="pretty">${SAMPLE[0]} ${SAMPLE[1]}</p>` : `${skp(96)}${skp(90)}${skp(58)}<p class="ex-note">${REPORT.lead[1]} Written when you run the Pro report.</p>`;
+    : after ? `<p class="pretty">${SAMPLE[0]} ${SAMPLE[1]}</p>` : `${skp(96)}${skp(90)}${skp(58)}<p class="ex-note">${REPORT.lead[1]} Written when you write Part 2.</p>`;
   const lead = `<section class="lead${after ? '' : ' only-screen'}"><h3>${REPORT.lead[0]} ${tags}</h3>${leadBody}</section>`;
   sec('made', [
     `${div ? `<header class="op"><p class="op-n">${d.labels[0]}</p><h2 class="op-t bal">How the set was made</h2><p class="op-s pretty">Every count in this report rests on what follows.</p></header>` : op(d.labels[0], 'How the set was made', 'Every count in this report rests on what follows.')}
@@ -1410,7 +1410,7 @@ function sections(m, dir, after, view, div) {
 
   /* AT A GLANCE: the key figures, the bottom line, and every counted exhibit
      small, each with the page its full version is on. A view of the set, so
-     it is admissible before Part 1; the bottom line is Pro and marked. */
+     it is admissible before Part 1; the bottom line is AI-written and marked. */
   {
     /* a hand-written set's bottom line is four answers, so the glance keeps the
        three tiles a backer reads first and stays one page */
@@ -1430,21 +1430,21 @@ function sections(m, dir, after, view, div) {
   blocks[0] = `${op(d.part(1), 'The counts', countsSay)}${blocks[0]}`;
   /* THE TURN. Part 1 ends on what its counts cannot say, which is the
      question Part 2 opens by answering. */
-  /* After Pro it is a bridge; in a file made before Pro it states the copy's
+  /* After Part 2 it is a bridge; in a file made before Part 2 it states the copy's
      scope and sells nothing, because that file is forwarded; on screen before
-     Pro it is not here at all — it heads the Pro band instead. */
+     Part 2 it is not here at all — it heads the Part 2 band instead. */
   if (SET && after) blocks.push(`${blocks.pop()}<p class="turn">The counts say who holds these patents, when they were filed and what the records leave out. They cannot say how close any claim comes to the idea.<span>That is a reading, and Part 2 is where the report makes one.</span></p>`);
   else if (SET && view === 'pages') blocks.push(`${blocks.pop()}<p class="turn">This copy carries the counts only.<span>It does not say how close any claim comes to the idea.</span></p>`);
   sec('counts', blocks);
 
-  const band = SET && !after ? `<div class="band band-turn"><div><p class="bt">The counts say who holds these and when. They can’t say how close any claim comes to ${descGiven() ? 'your idea' : 'your product'}.</p><p class="pretty">${descGiven() ? 'Pro reads each claim against your features, and cites every patent it rests on.' : 'Pro reads each claim and says what a product would need to do to come near it.'} Ready in about 10 minutes. Paid per report.</p></div><button type="button" class="run-btn only-screen">Run the Pro report</button></div>` : `<div class="band"><div><h2>${d.part(2)} · Analysis</h2><p class="pretty">${after ? 'Generated from the starred patents and the description. Every reading cites the patents it rests on, by their row in the appendix.' + (SET ? ' Everything in Part 2 is a reading of the claims. A sentence marked <span class="st st-C">C</span> can be checked against the rows; one marked <span class="st st-O">O</span> comes from outside the records.' : '') : 'Generated from the starred patents and the description. Ready in about 10 minutes. Paid per report.'}</p></div>${after ? '' : '<button type="button" class="run-btn only-screen">Run the Pro report</button>'}</div>`;
+  const band = SET && !after ? `<div class="band band-turn"><div><p class="bt">The counts say who holds these and when. They can’t say how close any claim comes to ${descGiven() ? 'your idea' : 'your product'}.</p><p class="pretty">${descGiven() ? 'Part 2 reads each claim against your features, and cites every patent it rests on.' : 'Part 2 reads each claim and says what a product would need to do to come near it.'} Ready in about 10 minutes.</p></div><button type="button" class="run-btn only-screen">Write Part 2</button></div>` : `<div class="band"><div><h2>${d.part(2)} · Analysis</h2><p class="pretty">${after ? 'Generated from the starred patents and the description. Every reading cites the patents it rests on, by their row in the appendix.' + (SET ? ' Everything in Part 2 is a reading of the claims. A sentence marked <span class="st st-C">C</span> can be checked against the rows; one marked <span class="st st-O">O</span> comes from outside the records.' : '') : 'Generated from the starred patents and the description. Ready in about 10 minutes.'}</p></div>${after ? '' : '<button type="button" class="run-btn only-screen">Write Part 2</button>'}</div>`;
   const PRO = SET ? setPro() : REPORT.pro;
   const body = k => SET && after ? setBody(k) : proBody(k, m, after);
   const hn = (t, i) => SET ? `<span class="n hn">2.${i + 1}</span>${t}` : t;
   const ps = ([t, w, k], i) => `<section class="ps" data-k="ps${i}"><h3>${hn(t, i)} ${tags}</h3><p class="ps-q pretty">${w}</p><div class="ps-b">${body(k)}</div></section>`;
   /* THE PRO INPUT. Before it runs, the band carries the idea's features as
      the founder wrote them; they become the claim chart's rows. */
-  const feat = SET && !after && descGiven() ? `<div class="feat"><p class="lbl">The idea’s features · Pro reads each one against the closest claims</p><ol>${SET.FEATURES.map((f, i) => `<li><span class="n">${i + 1}.</span><span>${esc(f)}</span></li>`).join('')}</ol><p>Taken from the description; edit or add before you run. Each becomes a row of the claim chart.</p></div>` : '';
+  const feat = SET && !after && descGiven() ? `<div class="feat"><p class="lbl">The idea’s features · Part 2 reads each one against the closest claims</p><ol>${SET.FEATURES.map((f, i) => `<li><span class="n">${i + 1}.</span><span>${esc(f)}</span></li>`).join('')}</ol><p>Taken from the description; edit or add before you run. Each becomes a row of the claim chart.</p></div>` : '';
   divider('pro', d.part(2), 'Analysis', 'Generated from the starred patents and the description. Every reading cites the patents it rests on.', PRO.map(([t], i) => [t, `ps${i}`]), !after);
   const blocksOf = ([t, w, k], i) => SET && after && k === 'each'
     ? (([first, ...rest]) => [`<section class="ps" data-k="ps${i}"><h3>${hn(t, i)} ${tags}</h3><p class="ps-q pretty">${w}</p><div class="ps-b">${first}</div></section>`, ...rest.map(b => `<div class="ps-b ps-cont">${b}</div>`)])(eachBlocks())
@@ -1452,20 +1452,20 @@ function sections(m, dir, after, view, div) {
   const head = `${op(d.proLabel || d.part(2), 'Analysis', 'A reading of the starred patents against the description, a section to a page.')}${band}${feat}`;
   const disc = `<p class="disc pretty">${REPORT.disclaimer}</p>`;
   if (SET) {
-    /* A PAGE PER SECTION: each Pro section starts a sheet of its own, so a
+    /* A PAGE PER SECTION: each AI-written section starts a sheet of its own, so a
        backer can pull one out; the opener and band ride with the first, and
        the disclaimer closes the last. */
     const S = PRO.map(blocksOf);
     S[S.length - 1].push(`${S[S.length - 1].pop()}${disc}`);
     /* PART 2 OPENS ON A SHEET OF ITS OWN: the opener, the band (the run
-       before Pro; the tag key after) and what the part holds, with pages */
+       before Part 2; the tag key after) and what the part holds, with pages */
     const list = `<p class="lbl">In this part</p><ol class="toc">${PRO.map(([t], i) => `<li><span><span class="n hn">2.${i + 1}</span> ${t}</span><span class="dots"></span><span class="n" data-at="ps${i}"></span></li>`).join('')}</ol>`;
     sec('pro', [`${head}${!after && descGiven() ? '' : list}`], 'pg-pro1', !after);
     S.forEach((bl, i) => sec(`pro${i}`, bl, 'pg-pro1', !after));
   } else {
     const P = PRO.flatMap(blocksOf), last = P.pop();
     P[0] = `${head}${P[0]}`;
-    /* the disclaimer closes the Pro part, so it travels with the last section
+    /* the disclaimer closes Part 2, so it travels with the last section
        rather than landing alone on a page of its own */
     sec('pro', [...P, `${last}${disc}`], 'pg-pro1', !after);
   }
@@ -1494,7 +1494,7 @@ function sections(m, dir, after, view, div) {
       <li><h3>It is not an opinion on any patent.</h3><p class="pretty">It is not a freedom-to-operate, patentability or validity opinion, and no word in it says a patent is infringed, clear or novel.</p></li>
       <li><h3>It is not a full search.</h3><p class="pretty">${SET ? `Its counts and its readings rest on the ${plural(m.rows.length, 'patent', 'patents')} starred from one search, whose full results are not part of this copy.` : `Its counts describe what ${plural(m.searches.length, 'search', 'searches')} returned — ${plural(m.c.results, 'result', 'results')} — and its readings rest on the ${plural(m.rows.length, 'patent', 'patents')} starred from them.`} Patents outside this set may matter.</p></li>
       <li><h3>It holds no score.</h3><p class="pretty">No number in it is a rating, a rank or a probability. Every count can be checked against the rows it was taken from.</p></li>
-      <li><h3>Its readings are marked.</h3><p class="pretty">Part 2 is generated from the starred patents and the description, marked Pro, and every reading cites the patents it rests on.${after ? '' : ' It has not been run for this copy, so this copy carries none.'}${SET && after ? ` All of it is a reading of the claims unless marked: <span class="st st-C">C</span> checkable against the rows, <span class="st st-O">O</span> a fact from outside the records, to verify before relying on it.` : ''}</p></li>
+      <li><h3>Its readings are marked.</h3><p class="pretty">Part 2 is generated from the starred patents and the description, marked AI-written, and every reading cites the patents it rests on.${after ? '' : ' It has not been run for this copy, so this copy carries none.'}${SET && after ? ` All of it is a reading of the claims unless marked: <span class="st st-C">C</span> checkable against the rows, <span class="st st-O">O</span> a fact from outside the records, to verify before relying on it.` : ''}</p></li>
     </ol>`,
     `<div class="cl-made"><p class="lbl">How this report was made</p>
       <dl class="memo"><dt>Generated</dt><dd>By TIS Terrain on ${D.long}, from a starred set.</dd><dt>Searches</dt><dd>${m.searches.map(s => `“${esc(s.query)}”`).join('; ')}</dd><dt>Basis</dt><dd class="pretty">${m.basis}</dd></dl></div>`], 'pg-close');
@@ -1571,7 +1571,7 @@ async function paint(m) {
   const at = {};
   pages.forEach((p, i) => { for (const k of p.el.querySelectorAll('[data-k]')) if (!(k.dataset.k in at)) at[k.dataset.k] = i + 1; });
   for (const el of document.querySelectorAll('[data-at]')) el.textContent = at[el.dataset.at] || '';
-  if (view === 'pages' && !after) document.getElementById('desk').insertAdjacentHTML('afterbegin', '<p class="desk-say">Before Pro, the PDF leaves Part 2 out. Switch to Screen to see it, or to After to see it filled.</p>');
+  if (view === 'pages' && !after) document.getElementById('desk').insertAdjacentHTML('afterbegin', '<p class="desk-say">Before Part 2 is written, the PDF leaves it out. Switch to Screen to see it, or to After to see it filled.</p>');
   check();
 }
 

@@ -93,24 +93,3 @@ build/
 *.webp
 *.bmp
 *.tiff
-
-# ── The one permitted raster family. Read the rule above first. ──────────────
-# Terrain's own marketing gradient for the website's Products menu, in the same
-# three-file shape as licensing-warm-v2 and signal-cool: a 640x413 original as
-# the <img> fallback plus the two webp widths the image build emits.
-#
-# It clears the rule above on the distinction that rule was actually drawing:
-# these are OURS. Not a capture of a third party's product, not a mood board.
-# Neither of the two reasons rasters were refused applies to them.
-#
-# But it IS a weakening, so it is scoped as narrowly as the syntax allows --
-# three literal paths, no glob. A rename is still refused. A fourth file in the
-# same directory is still refused. The invariant still catches what the
-# path-based entries at the top of this file failed to.
-#
-# Adding a product means adding its three paths here, deliberately, one line
-# each. If that ever feels tedious enough to replace with a glob, that is the
-# guard working.
-!brand/assets/imagery/terrain/terrain-forest.jpg
-!brand/assets/imagery/terrain/terrain-forest-400.webp
-!brand/assets/imagery/terrain/terrain-forest-640.webp

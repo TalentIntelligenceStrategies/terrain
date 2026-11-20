@@ -216,6 +216,22 @@ For each item, in the order the user picks:
   from their service. The server answers only from that recording (any other search shows an
   error), keeps every request on 127.0.0.1 with a CSP, reads the overlays on each load, and has a
   *Patch: on / off* pill. `round-N/mirror/` is their code: it stays in `visual-reference/`.
+- **To walk through their build on our fake data, any query**, serve the same mirror with
+  `fake.mjs` instead:
+  ```sh
+  node .claude/skills/terrain-round/scripts/fake.mjs --round N     # http://127.0.0.1:8767/VuePat/
+  ```
+  Every endpoint their build calls is rebuilt in their response shape from `demo/data.mjs`, so any
+  search returns results. Row 0 is the ACME record. Every value demo/ withholds becomes an obviously
+  fake placeholder, because their build has no bar state. Drawings are grey "Fig. N" frames. No
+  patch, the same CSP, and nothing reaches their service: an unknown endpoint gets a 501 and is
+  logged. A few fixture rows (a grant and its application, a claims preamble, a Taiwan record in
+  Chinese, a long title, no drawings) give the data-dependent cards something to show.
+- **To see the package as Innovue will apply it**, add `--patch`. Each load builds `apply.js` from
+  `design/overlays/round-N/` with `buildApply()` in `lib.mjs`, the same lines `package.mjs` writes
+  into the zip, and runs it once their app has mounted, as a console paste would. The startup line
+  says whether it still matches the newest zip. Every item applies on every load; `/package/`
+  serves the package's `.md` files.
 
 Checkpoint: every item done or explicitly deferred.
 

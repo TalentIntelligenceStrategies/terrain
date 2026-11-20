@@ -27,7 +27,7 @@
 | **The home surface** | Where the founder picks a technology field and describes an idea. One composer, one button. |
 | **The results surface** | The patents the search found down the left, with their drawings; whichever one you open on the right, with all of them. |
 | **The starred set** | Everything the founder starred, read as a whole, and where it leaves as a file or becomes a report. |
-| **The report** | The starred set as a patent report — counts anyone can check, then the Pro part, written when it is run. §5.3. |
+| **The report** | The starred set as a patent report — counts anyone can check, then the AI-written part, written when it is asked for. §5.3. |
 | *Destinations* | Account settings · Plan & billing · Help. Reached from the masthead, returned from in place. |
 
 A **surface** is somewhere the product happens. A **destination** is somewhere the founder steps off
@@ -52,7 +52,7 @@ appearance control, the account menu.
 | 2 · What was found | results | The ranked patents fill the left column, and keep it. Nothing is approved and nothing is waited for beyond the one call. |
 | 3 · Working | results | Sorting, grouping, starring, finding similar, reading a record, opening a drawing. The founder may stay here indefinitely and most of the product's value is spent here. |
 | 4 · Taking stock | starred set | The shortlist as a whole, two links that write a file, and one button that opens the report. |
-| 5 · The report | report | The starred set read for one question, whoever is building it or backing it. Counts first; the Pro part follows, and runs only when asked. |
+| 5 · The report | report | The starred set read for one question, whoever is building it or backing it. Counts first; the AI-written part follows, and is written only when asked for. |
 
 **There is no confirm step and no build stream.** The search runs on submit. The reading, the five
 narrowing questions, the priced gate and the staged build were four ports and are now none — a
@@ -60,7 +60,7 @@ founder who has to approve a paraphrase of their own sentence before anything ha
 being asked to do the product's job.
 
 **The commitment is pressing Search.** Nothing is approved before it and nothing is charged by it.
-The one thing in the product that takes minutes and is paid is a report's Pro part, and it is asked
+The one thing in the product that takes minutes is a report's AI-written part, and it is asked
 for there, at the end, never before a search.
 
 **Moments 4 and 5 are moments and not destinations.** The starred set and its report are where the
@@ -761,10 +761,10 @@ moves to the next one. A shortlist is the founder's own work, and one mis-press 
 **The report sits beside the set.** A panel at the trailing side holds the report's question, what
 it holds and the surface's one filled button, *Create patent report*. There is no choice of report
 before it: one report serves the founder and the backer alike (§5.3).
-What it holds is said plainly in two groups: **Ready now**, the counted sections, and **Pro · about
-10 minutes**, the sections Pro writes, under the Pro label (`design-language.md` §7). Each item names a
-real section of the report (§5.3) in plain words, and **every** section appears — the Pro ones
-as the engine's quote names them — so the panel promises nothing the report does not contain and leaves out nothing
+What it holds is said plainly in two groups: **Ready now**, the counted sections, and **AI-written ·
+about 10 minutes**, the sections Part 2 holds, under the AI-written label (`design-language.md` §7).
+Each item names a real section of the report (§5.3) in plain words, and **every** section appears —
+the AI-written ones as the engine's quote names them — so the panel promises nothing the report does not contain and leaves out nothing
 it does. The two files leave from the foot of the panel as quiet links. Below 1080px the panel moves
 above the set, and its two lists fold behind *What's in the report*: the question and the button
 stay, so the shortlist starts on the first screen.
@@ -825,7 +825,7 @@ it draws every page and every block, filled with an illustrative set.
    patents are starred — then the contents. The most common failure of a landscape is not saying how
    its set was made, and *these counts describe the starred patents and what the searches returned,
    not every patent that exists* is `brief.md` §1's test applied to a page.
-3. **At a glance**: five figures, the Pro part's answers one line each once Pro has run, and every
+3. **At a glance**: five figures, Part 2's answers one line each once it is written, and every
    counted exhibit small, each with the page its full version is on.
 4. **Part 1, the counts.** Numbered exhibits, each titled with a sentence that states a count and
    nothing more, with a note and a source line naming its base. **Each counts the starred patents,
@@ -838,10 +838,10 @@ it draws every page and every block, filled with an illustrative set.
    the rows' `flags`, left out when no row was checked; and what the set does not contain — the
    offices, kinds and text it has, and the fields no row records.
 5. **The turn.** Part 1 ends on one line that hands over to Part 2, and it has three states: before
-   Pro on screen it is the band that runs Pro; in a PDF printed before Pro it says *This copy carries
-   the counts only*; after Pro it says what Part 2 does with the counts.
-6. **Part 2, Pro.** An opener page, *In this part*, lists the sections. Then **each section on a page
-   of its own**: its number (2.1, 2.2 …), its title, the question it answers, the Pro label, and its
+   Part 2 is written, on screen it is the band that writes it; in a PDF printed before then it says
+   *This copy carries the counts only*; after, it says what Part 2 does with the counts.
+6. **Part 2, AI-written.** An opener page, *In this part*, lists the sections. Then **each section on a page
+   of its own**: its number (2.1, 2.2 …), its title, the question it answers, the AI-written label, and its
    blocks. **Which sections there are, in what order, and what they say are Innovue's**: the engine
    sends the list with the quote and the blocks with the result (`components.md` §1). The page lays
    out any section the contract can describe. A reading cites the patents by their appendix row,
@@ -870,42 +870,43 @@ is on.
   precision, and a score would be a verdict of Terrain's own.
 - **Where filings cluster is a class-by-period grid with the numbers in the cells.**
 
-**Five rules hold whatever Pro writes**, and they are `brief.md` §1's: no score, rank or probability
+**Five rules hold whatever Part 2 says**, and they are `brief.md` §1's: no score, rank or probability
 of Terrain's own; *may* wherever a reading touches a claim, and nothing shaped like legal advice stated as fact,
 in the words `brief.md` §1 lists; every sentence cites
 what it rests on; a fact from outside the records names its source; and one disclaimer, which the
-report prints itself and reads: *Pro sections are generated from the patents you starred and the
+report prints itself and reads: *AI-written sections are generated from the patents you starred and the
 description. They are not legal or investment advice, and not a freedom-to-operate, patentability or
 validity opinion. Patents outside this set may matter.*
 
 **The five rules and the disclaimer are fixed; the rest of the words are Innovue's to change.** The
-report's question, the turn's lines, the closing page and the sections Pro writes are drawn in the
-template as one way to fill the layout, and the layout is what is specified. **How Pro's content
+report's question, the turn's lines, the closing page and the sections of Part 2 are drawn in the
+template as one way to fill the layout, and the layout is what is specified. **How Part 2's content
 is laid out is fixed by nine block kinds** (`components.md` §1), drawn by one renderer,
 `app/js/core/blocks.mjs`, which `app/` uses for a delivered section and the template uses for the
 contract's example.
 
 **Download PDF prints the page**, on US Letter, with the cover as page one and a running head and
-a numbered foot on every page after it. Before Pro it carries everything but Part 2, and the turn
-says so; after Pro it carries everything. It prints light whatever the theme, because it is paper.
+a numbered foot on every page after it. Before Part 2 is written it carries everything else, and the
+turn says so; after, it carries everything. It prints light whatever the theme, because it is paper.
 The file test is §5.2's: the PDF states nothing its page did not.
 
-**How Pro runs.**
+**How Part 2 is written.**
 
-- **The price is shown at the press.** *Run the Pro report* opens a confirm step in the band: the
-  sections Pro writes, from the quote, the price, and *Charged when the report is delivered. A run
-  that fails costs nothing.* The price prints as a bar until it is set; `XXX` never reaches the screen.
-- **A run takes minutes, and the band says where it is.** Queued and running show *Ready in about N
-  minutes* from the engine's estimate. A failed run says *Pro did not finish. Nothing was charged.* with *Try again*.
-- **The charge lands on delivery**, not at the press, so nothing needs refunding.
-- **A paid analysis outlives a changed set.** If the stars change after Pro has run, the report keeps
-  the analysis it paid for, with one line above it: *Written for the earlier set of N; the set now
-  has M.* A re-run is a new paid run, and the PDF carries the analysis with that line.
+- **The sections are named at the press, and no price is.** *Write Part 2* opens a confirm step in
+  the band: the sections Part 2 holds, from the quote, and nothing else. The report shows no price;
+  what the layer and the tools on it cost an organisation is agreed with TIS, not printed
+  (`brief.md` §6).
+- **A run takes minutes, and the band says where it is.** Queued and running show *Part 2 is being
+  written* and *Ready in about N minutes* from the engine's estimate. A failed run says *Part 2 did
+  not finish.* with *Try again*; a finished one says *Part 2 written on* its date.
+- **A written Part 2 outlives a changed set.** If the stars change after it is written, the report
+  keeps it, with one line above it: *Written for the earlier set of N; the set now has M.* Writing it
+  again is a new run, and the PDF carries Part 2 with that line.
 
-**What the reference cannot do yet, and says.** The Pro sections wait on Innovue's prompts; in `app/`
+**What the reference cannot do yet, and says.** The AI-written sections wait on Innovue's prompts; in `app/`
 the confirm, running, done and failed states are real against the demo engine, which returns an
 invented result in every block kind (`demo/pro-blocks.mjs`), and the corpus engine, which returns
-none. A run lives in the page: keeping one across a reload, and paying for it, come in a later
+none. A run lives in the page: keeping one across a reload comes in a later
 round. The TIS listing is TIS-side data and renders as a skeleton bar on screen until it
 exists, and is left out of the PDF.
 
@@ -943,7 +944,7 @@ row in settings hands over a file nobody looked at first.
 What is paid. The plan and its price, the payment method, a receipt switch, and a list of invoices.
 
 **The plan name is a bar and the price is `XXX`.** A price is a *figure*, and every figure here is
-illustrative. A tier *name* is a taxonomy, and inventing Pro / Team / Enterprise would
+illustrative. A tier *name* is a taxonomy, and inventing tier names would
 put a tier structure nobody has decided into a public artifact. `XXX` means nobody has chosen a price
 yet; a bar would mean a real value exists and is not ours to print. The two must not be conflated.
 
@@ -1082,11 +1083,11 @@ anyone to configure it.
 
 | Cut | Why |
 | --- | --- |
-| **The analysis layer, as a place to work** | Dozens of destinations of charts, matrices and trend cuts, each a reading authored for an analyst to navigate. A founder does not operate an analyst's workbench; the set — real, as published, and built to be near — is what the search returns. What comes back is narrower and has one home: a report on the starred set (§5.3), whose counted part says nothing the rows do not and whose Pro part is marked and cited. Every row below is downstream of that split. |
+| **The analysis layer, as a place to work** | Dozens of destinations of charts, matrices and trend cuts, each a reading authored for an analyst to navigate. A founder does not operate an analyst's workbench; the set — real, as published, and built to be near — is what the search returns. What comes back is narrower and has one home: a report on the starred set (§5.3), whose counted part says nothing the rows do not and whose AI-written part is marked and cited. Every row below is downstream of that split. |
 | The authored taxonomy | IPtech wants a taxonomy written before the first search. Terrain generates its grouping from the result set — this is the whole of what makes it operable by a founder. |
 | Valuation (`價值通`) | A verdict on a patent's worth, as a score. Terrain shows no score of its own. |
-| Plain-English decode (`AI閱讀Pro`), on the record | A paraphrase in place of the record. It returns only inside the report's Pro part, marked Pro and cited; the record itself stays as published. |
-| The landscape summary (`AI Insight`), at corpus scale | A reading of a whole field nobody chose. It returns only inside the report's Pro part, over the starred set, citing the patents it rests on. |
+| Plain-English decode (`AI閱讀Pro`), on the record | A paraphrase in place of the record. It returns only inside the report's AI-written part, marked and cited; the record itself stays as published. |
+| The landscape summary (`AI Insight`), at corpus scale | A reading of a whole field nobody chose. It returns only inside the report's AI-written part, over the starred set, citing the patents it rests on. |
 | An attorney handoff file | A document somebody could file against. The report is not one: it is a reading for the founder and whoever backs them, under a disclaimer, and routes nobody anywhere (§5.3). |
 | The zone names (`地雷區` / `新興區` / `處女地帶`) | Minefield, emerging, virgin territory. They label absence, and a search result cannot carry a claim about what exists. The report's *Where filings cluster* counts what came back and names no zone. |
 
@@ -1137,8 +1138,8 @@ postponed, it says so.
    postponed. The report is a reading under a disclaimer that routes nobody anywhere (§5.3); a file
    written for counsel would be a second kind of document, and that is an amendment to `brief.md` §1
    argued as one.
-8. **Running Pro in the reference.** Run the Pro report answers inline in `app/` until Innovue's
-   prompts are connected. **Starts when:** Innovue writes the prompt behind each Pro section and
+8. **Writing Part 2 in the reference.** *Write Part 2* answers inline in `app/` until Innovue's
+   prompts are connected. **Starts when:** Innovue writes the prompt behind each AI-written section and
    states what a run returns — `components.md` §1 lists what the port has to carry.
 9. **Against its neighbours** — where the company's own filings sit among the starred set, in the
    report. **Starts when:** the company's own patents are an input, which starring does not

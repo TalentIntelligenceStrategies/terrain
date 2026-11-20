@@ -10,7 +10,7 @@ rules owned elsewhere and defines none of its own:
 
 | Source | Owns |
 | --- | --- |
-| `docs/brief.md` §1 | What Terrain may say about a set, *trusted* vs *near*, *generative AI* not a chatbot's name, where a reading may sit (a report's Pro part only) |
+| `docs/brief.md` §1 | What Terrain may say about a set, *trusted* vs *near*, *generative AI* not a chatbot's name, where a reading may sit (a report's AI-written part only) |
 | `docs/brief.md` §3 | What may be said about the engine and Innovue's research; credentials cited as Innovue's; a deck names them *our IP-technology provider* |
 | `sales/answers.md` Part 4 *Never say* | The banned words and wrong values (local only) |
 | `~/Desktop/TIS/brand/brand-voice.md` §4 | TIS's company-wide banned phrases. **Read it, don't recall it.** Read-only, and only §4: its voice anchor and its Innovue section do not govern Terrain |
@@ -78,13 +78,13 @@ Scan every output.
 2. **No hedge** — *may*, *could potentially*, *helps you*. Commit or cut the claim.
 3. **No unbacked claim** — every claim carries its basis: a published figure with its scope, a
    behaviour of the product, a named public source. Softening an unbacked claim is not a fix.
-4. **No reading outside a report's Pro part** — no verdict, no *strong match*, no *white space*, no
+4. **No reading outside a report's AI-written part** — no verdict, no *strong match*, no *white space*, no
    *open ground*, anywhere. A sentence must stay true if the rest of the world's patents were added
-   to the index (`brief.md` §1). Inside a Pro section a reading is marked as AI-written, cites what
+   to the index (`brief.md` §1). Inside an AI-written section a reading is marked as AI-written, cites what
    it rests on, and says *may* wherever it touches a claim; never *infringes*, *is clear*, *is novel*.
 5. **Report means the patent report**, and nothing else. Never
-   *insights*, *decision-ready*, *actionable* or *AI-powered*, and never *free*: Pro is the only tier
-   word.
+   *insights*, *decision-ready*, *actionable* or *AI-powered*, and never *free* or *Pro*: Terrain has no
+   tier word.
 6. **No figure without its scope.** A figure from Innovue's internal research stays out of public
    material until Innovue confirms it; a roadshow figure (✅ in `sales/answers.md`) is cited as
    Innovue's, with its cutoffs.
