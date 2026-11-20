@@ -1,780 +1,333 @@
-/* surfaces/record — the patent record, over the right pane. platform.md §4.5.
+/* surfaces/record — the patent record, from the V8 lab's v-v8.html.
  *
- * ═══ THE PEEK IS THE SPEC, NOT A MARGIN ════════════════════════════════════
- * The record leaves ~200px of the views showing behind it. That is what keeps
- * it legible as "this came from there" rather than as "this replaced that",
- * which is why `.rec` is positioned against `.panecol` and ships inside
- * surface.html rather than in a host of its own.
+ * WHAT A FOUNDER NEEDS FIRST GOES FIRST: the number and the title, the holder,
+ * the three actions, then the four facts in one ruled row (legal status, filed,
+ * published, where), then the drawings — drawing 1 as the lead sheet and eight
+ * beside it — then the abstract and claim 1, and the rest of the record in the
+ * rail: the parties, the identifiers, the classes grouped by subclass in CPC's
+ * own words. Every section that holds more ends in "Show all".
  *
- * ═══ NOTHING ARRIVES INTERPRETED ═══════════════════════════════════════════
- * The abstract and the claim set are AS PUBLISHED. No highlight offsets, no
- * plain-English decode, no summary. `claims` is an ARRAY, one entry per claim,
- * never one blob: a patent numbers its claims and counsel is pointed at claim 4
- * by number.
+ * NOTHING IS DROPPED AND NOTHING IS INVENTED. A field the record does not carry
+ * prints an em dash in its place, so the layout says the field exists and the
+ * source left it empty, rather than closing up as if there were no such field.
  *
- * ═══ WHICH FIELDS ARE FIGURES ══════════════════════════════════════════════
- * A number and a classification symbol are read character by character and
- * retyped into somebody else's field; a name and a jurisdiction are read as
- * words. Inconsolata for the first, the text face for the second — and the
- * class goes on the <dd>, so a mono field carries it whether it holds real
- * English or a bar, and there is no second code path to keep in step.
+ * On a wide window the record is the right panel and stays beside the list;
+ * below 640px it slides in over the list, full screen, with Back, previous and
+ * next in its head and the actions in a bar at its foot. Back closes it there.
  */
-import { $, esc } from '../core/dom.mjs';
+import { $, $$, esc } from '../core/dom.mjs';
+import * as Url from '../core/url.mjs';
+import * as Pop from '../core/pop.mjs';
+import * as Export from '../core/export.mjs';
+import * as List from './list.mjs';
+import { openViewer, viewerOpen } from '../core/viewer.mjs';
 import { waitOn, landIn, failWith } from '../core/wait.mjs';
+import { btnWait, btnRest } from '../core/button-wait.mjs';
 import { say } from '../core/live-region.mjs';
-import { onActivate } from '../core/delegate.mjs';
-import { push, drop, top } from '../core/esc-stack.mjs';
-import { focusQuietly, captureFocus } from '../core/focus.mjs';
-import { wait as pause } from '../core/timers.mjs';
-import { bar, bars, statusHTML, statusWord, langAttr } from '../core/primitives.mjs';
-import { bump, stale } from '../core/generation.mjs';
-import { reduced, DUR2, DUR3, enter } from '../core/motion.mjs';
-import * as Starred from '../core/starred.mjs';
-import * as Viewer from '../core/figure-viewer.mjs';
-/* THE SCORE IS THE ROW'S, NOT THE RECORD'S, and this import is what says so.
-   components.md gives `score` to the list row and not to the record, because
-   it is a fact about the SEARCH rather than about the document — the same
-   patent fetched from a different query has a different one, and fetched from
-   no query has none. Adding it to the record port would make the engine answer
-   a question the record was not asked. surfaces/starred.mjs reaches across the
-   same way and for the same reason. */
-import { rowFor } from './list.mjs';
+import { toast } from '../core/toast.mjs';
+import { holderText } from '../core/format.mjs';
+import * as Search from './search.mjs';
 
 let ENGINE = null;
-let restore = null;
-/* THE OPEN RECORD'S DRAWINGS, held so a thumbnail press hands the viewer the
-   whole set rather than one src. Paging inside the viewer needs the others,
-   and re-reading them out of the DOM would mean parsing <img> tags back into
-   the shape the port already gave us. */
-let FIGURES = [];
-/* THE OPEN RECORD, kept for the closing block's citation. The <dl> above is
-   rendered HTML by then, and scraping five values back out of markup that
-   renders half of them as skeleton bars is parsing a skeleton. */
+let openId = null;
 let REC = null;
-/* WHICH PATENT IS OPEN, so the step controls know where they are. The list is
-   hidden while the record is up (platform.md §4.5), so this is the only thing
-   that knows the founder's place in it. */
-let OPEN_ID = null;
-const FLOOR = 240;
-/* how many thumbnails the strip shows before the control. See figuresHTML. */
-const CAP = 12;
+let gen = 0;
+let listY = 0;
+const DASH = '—';
+const IPTECH = 'https://iptech.cc/Member/Account/LogOn?ReturnUrl=%2F';
+const phone = () => matchMedia('(max-width: 640px)').matches;
 
-/* WHICH FIELDS ARE SET IN THE FIGURE FACE. §4 reads "Inconsolata for every
-   number, date, year, count and code" and this map had the numbers and the
-   codes and not the dates — so `Filed 2003-12-02` rendered in Urbanist four
-   rows above `Number US20040174570A1` in Inconsolata, in a column the eye
-   reads straight down. A date is the clearest case the rule names. */
-const MONO = { number: 1, appno: 1, filed: 1, published: 1, ipcMain: 1, ipc: 1 };
-/* WHICH FIELDS TAKE A WHOLE ROW of the two-pair grid. Both are lists rather
-   than single values, so both wrap; 35-record.css carries the rule and the
-   argument. It is a map beside MONO rather than a test inside the renderer
-   because the two answer the same shape of question about a field. */
-const WIDE = { inventors: 1, ipc: 1 };
-/* platform.md §4.5's five-field handoff, and the only place it exists. It was
-   specified, claimed as built, and never built: 35-record.css said "the
-   five-field handoff is now a SUBSET VIEW of this same record through the
-   same field function", and FIELDS has exactly one caller rendering all
-   eleven. That renderer was deleted and the comment outlived it.
+const I = (p, c = 'i') => `<svg class="${c}" viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
+const P = {
+  back: '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+  prev: '<path d="m15 18-6-6 6-6"/>', next: '<path d="m9 18 6-6-6-6"/>',
+  x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  ext: '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+  similar: '<path d="M10 12h11"/><path d="M10 18h11"/><path d="M10 6h11"/><path d="M4 10h2"/><path d="M4 6h1v4"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/>',
+  chev: '<path d="m6 9 6 6 6-6"/>',
+  zoom: '<path d="M15 3h6v6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/><path d="M9 21H3v-6"/>',
+  pm: '<path d="M5 12h14"/><path class="v" d="M12 5v14"/>',
+};
+const FIGS_FIRST = 9, CLAIMS_FIRST = 1;
 
-   A PROJECTION, NOT A SECOND FIELD LIST. Printing five of the eleven again at
-   the foot of a record that has just printed all eleven is the repetition the
-   Classes rule already refuses — "a reader who sees it twice looks for the
-   difference". Its stated purpose is "for the founder taking this to
-   counsel", which is something that LEAVES, so it is the clipboard's payload
-   rather than a block on screen.
+/* ── the sheet ──────────────────────────────────────────────────────────── */
+function factHTML(label, value, mono) {
+  if (!value) return `<div><dt>${label}</dt><dd class="missing">${DASH}</dd></div>`;
+  return `<div><dt>${label}</dt><dd${mono ? ' class="mono"' : ''}>${esc(value)}</dd></div>`;
+}
 
-   THE TITLE IS THE SIXTH AND THE CONTROL IS WHY. A citation without a title
-   is a handoff line, not a citation. .rec-end-note names all six where the
-   founder is standing when they press it. */
-const HANDOFF = ['number', 'title', 'holder', 'where', 'status', 'ipcMain'];
+/* the legal status as the source states it: the word, then its expiry with the
+   date in mono, on the same line (components.md: status is {word, expires}) */
+function statusHTML(st) {
+  if (!st || !st.word) return `<div><dt>Legal status</dt><dd class="missing">${DASH}</dd></div>`;
+  return `<div><dt>Legal status</dt><dd>${esc(st.word)}${st.expires ? ` <span class="sub">· expires <span class="mono">${esc(st.expires)}</span></span>` : ''}</dd></div>`;
+}
 
-const FIELDS = [
-  ['number', 'Number'], ['appno', 'Application'], ['kind', 'Kind'],
-  ['status', 'Status'], ['filed', 'Filed'], ['published', 'Published'],
-  ['where', 'Where'], ['holder', 'Holder'], ['inventors', 'Inventors'],
-  ['ipcMain', 'Main class'], ['ipc', 'Classes'],
-];
+function sheetHTML(r, id) {
+  const num = List.numberText(r.number) || DASH;
+  const kind = List.kindLine(r);
+  const kc = r.kindCode || List.parts(r.number)?.[2] || '';
+  const title = r.title || List.rowById(id)?.skim || '';
+  const figs = Array.isArray(r.figures) ? r.figures : [];
+  const claims = Array.isArray(r.claims) ? r.claims : [];
+  const inv = Array.isArray(r.inventors) ? r.inventors : [];
+  const iptech = r.sourceUrl === null ? null : (r.sourceUrl || IPTECH);
+  const words = r.ipcWords || {};
 
-function valueHTML(rec, key) {
-  const v = rec[key];
-  if (key === 'status') return v ? statusHTML(v) : bar('w-sm');
-  if (v == null) {
-    /* null is "this value exists and we decline to print it". The bar count
-       for a list field is a shape, not a claim about how many there are. */
-    if (key === 'ipc') return bars(3, ['w-sm', 'w-xs', 'w-sm']);
-    if (key === 'inventors') return bars(3, ['w-sm', 'w-sm', 'w-xs']);
-    return bar(key === 'holder' ? 'w-lg' : 'w-md');
+  const figLis = figs.map((f, i) => {
+    const src = i === 0 ? f.src : (f.thumb || f.src);
+    return `<li${i === 0 ? ' class="lead"' : ''}${i >= FIGS_FIRST ? ' hidden' : ''}><button class="dfig" type="button" data-fig="${i}" aria-label="Open drawing ${esc(f.n)} of ${figs.length} in the viewer">`
+      + (src ? `<img alt="" decoding="async"${i >= FIGS_FIRST ? ' loading="lazy"' : ''} src="${esc(src)}">` : '<span class="sk-fig" aria-hidden="true"></span>')
+      + `<span class="n">${esc(f.n)}</span>${I(P.zoom, 'i zoom')}</button></li>`;
+  }).join('');
+
+  const claimLis = claims.map((c, i) => {
+    const m = String(c).match(/^(\d+)\.\s*([\s\S]*)$/);
+    const n = m ? m[1] : String(i + 1);
+    return `<li aria-label="Claim ${esc(n)}"${i >= CLAIMS_FIRST ? ' hidden' : ''}><span class="cn">${esc(n)}</span><p>${esc(m ? m[2] : c)}</p></li>`;
+  }).join('');
+
+  const groups = new Map();
+  (r.ipc || []).forEach(c => { const k = String(c).replace(/\s+/g, '').slice(0, 4); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(c); });
+  const mainSub = String(r.ipcMain || '').replace(/\s+/g, '').slice(0, 4);
+  const subs = [...groups.entries()].map(([sub, codes]) => {
+    const w = List.sentence(words[sub]);
+    return `<details class="csub"${sub === mainSub ? ' open' : ''}><summary aria-label="${esc(sub + (w ? ', ' + w.toLowerCase() : '') + ', ' + codes.length + ' classes')}">`
+      + `<span class="code">${esc(sub)}</span><span class="words"${w ? ` title="${esc(w)}"` : ''}>${esc(w)}</span><span class="c">${codes.length}</span>${I(P.pm, 'i pm')}</summary>`
+      + `<ul class="codes">${codes.map(c => `<li${c === r.ipcMain ? ' aria-current="true"' : ''}>${esc(c)}</li>`).join('')}</ul></details>`;
+  }).join('');
+
+  const ids = [['Number', r.number ? num : null, true], ['Application', r.appno, true],
+    ['Kind', kind ? kind + (kc ? ` (${kc})` : '') : null, false], ['Priority', r.priority, true]]
+    .map(([k, v, m]) => `<dt>${k}</dt><dd class="${v ? (m ? 'mono' : '') : 'missing'}">${v ? esc(v) : DASH}</dd>`).join('');
+
+  const show = (what, n) => `${I(P.chev)}Show all ${n} ${what}`;
+  return `<article class="doc" aria-labelledby="recTitle">
+  <header class="rec-bar" id="recBar">
+    <button class="ib back" type="button" aria-label="Back to results" data-act="close">${I(P.back)}</button>
+    <div class="rb-id"><span class="rb-num mono">${esc(num)}</span><span class="rb-title" aria-hidden="true">${esc(title)}</span></div>
+    <nav class="rb-tools" aria-label="Record">
+      <button class="ib" type="button" aria-label="Previous record" data-act="prev"${List.neighbour(id, -1) ? '' : ' aria-disabled="true"'}>${I(P.prev)}</button>
+      <button class="ib" type="button" aria-label="Next record" data-act="next"${List.neighbour(id, 1) ? '' : ' aria-disabled="true"'}>${I(P.next)}</button>
+    </nav>
+  </header>
+  <button class="ib x-corner" type="button" aria-label="Close record" data-act="close">${I(P.x)}</button>
+
+  <header class="hero">
+    <div>
+      <p class="eyebrow"><span class="num mono">${esc(num)}</span><span>${esc(kind)}</span></p>
+      <h1 id="recTitle" tabindex="-1">${title ? esc(title) : '<span class="sk sk-h-title w-xl" aria-hidden="true"></span>'}</h1>
+      ${r.holder != null ? `<p class="rc-holder">${esc(holderText(r.holder))}</p>` : ''}
+      ${iptech ? `<a class="ghost iptech-m" href="${esc(iptech)}" target="_blank" rel="noopener">${I(P.ext)}Open in IPTECH</a>` : ''}
+    </div>
+    <div class="actions">
+      <button class="edge" type="button" data-act="similar">Find similar <span class="well">${I(P.similar)}</span></button>
+      <div class="export">
+        <div class="anchor xmenu-a">
+          <button class="edge plain-edge" type="button" id="recExpBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="recExpPop">Export this record <span class="well">${I(P.chev)}</span></button>
+          <div class="pop menu xmenu" id="recExpPop" role="menu" aria-label="Export this record">
+            <button type="button" role="menuitem" data-exp="csv">Spreadsheet <span class="ext">.csv</span></button>
+            <button type="button" role="menuitem" data-exp="md">Markdown <span class="ext">.md</span></button>
+          </div>
+        </div>
+        <div class="xsplit">
+          <button class="edge" type="button" data-exp="csv" aria-label="Export this record as CSV">CSV</button>
+          <button class="edge" type="button" data-exp="md" aria-label="Export this record as Markdown">Markdown</button>
+        </div>
+      </div>
+      ${iptech ? `<a class="ghost" href="${esc(iptech)}" target="_blank" rel="noopener">${I(P.ext)}Open in IPTECH</a>` : ''}
+    </div>
+  </header>
+
+  <dl class="facts">
+    ${statusHTML(r.status)}${factHTML('Filed', r.filed, true)}${factHTML('Published', r.published, true)}${factHTML('Where', r.where, false)}
+  </dl>
+
+  <section class="band" aria-labelledby="recFigsH">
+    <h2 id="recFigsH">Drawings <span class="count">${figs.length}</span></h2>
+    ${figs.length ? `<ul class="figs" id="recFigs">${figLis}</ul>` : '<p class="no-figs">This record has no drawings.</p>'}
+    ${figs.length > FIGS_FIRST ? `<button class="show-all" type="button" data-more="figs" aria-expanded="false" aria-controls="recFigs">${show('drawings', figs.length)}</button>` : ''}
+  </section>
+
+  <div class="rc-body">
+    <div class="read">
+      <section aria-labelledby="recAbsH">
+        <h2 id="recAbsH">Abstract</h2>
+        <p class="abstract">${r.abstract ? esc(r.abstract) : DASH}</p>
+      </section>
+      <section aria-labelledby="recClaimsH">
+        <h2 id="recClaimsH">Claims <span class="count">${claims.length}</span></h2>
+        ${claims.length ? `<ol class="claims" id="recClaims">${claimLis}</ol>` : `<p class="abstract">${DASH}</p>`}
+        ${claims.length > CLAIMS_FIRST ? `<button class="show-all" type="button" data-more="claims" aria-expanded="false" aria-controls="recClaims">${show('claims', claims.length)}</button>` : ''}
+      </section>
+    </div>
+    <aside class="rail" aria-labelledby="recRailH">
+      <h2 id="recRailH" class="sr-only">Record</h2>
+      <div class="rail-groups">
+        <div class="rgroup">
+          <h3 class="rlabel">Parties</h3>
+          <dl class="kv"><dt id="recInvLbl">Inventors</dt><dd${inv.length ? '' : ' class="missing"'}>${inv.length ? `<ul class="people" aria-labelledby="recInvLbl">${inv.map(n => `<li title="${esc(n)}">${esc(n)}</li>`).join('')}</ul>` : DASH}</dd></dl>
+        </div>
+        <div class="rgroup">
+          <h3 class="rlabel">Identifiers</h3>
+          <dl class="kv">${ids}</dl>
+        </div>
+        <div class="rgroup classes">
+          <h3 class="rlabel">Classification</h3>
+          <div class="main-class"><span class="code">${r.ipcMain ? esc(List.cls(r.ipcMain)) : DASH}</span><span class="mc-tag">main class</span></div>
+          ${subs}
+        </div>
+      </div>
+      <p class="src">As published. Class words are CPC’s own, where the record carries them.</p>
+    </aside>
+  </div>
+</article>`;
+}
+
+/* ── open, close, step ──────────────────────────────────────────────────── */
+async function open({ id, fig = null, el = null, byKey = false } = {}) {
+  if (!id) return;
+  const same = id === openId && REC;
+  openId = id;
+  List.mark(id);
+  const split = $('#split'), pane = $('#pane'), host = $('#rec');
+  split.removeAttribute('data-closed');
+  if (phone()) {
+    if (!pane.hasAttribute('data-open')) { listY = scrollY; pane.setAttribute('data-open', ''); }
+    if (!Url.covered('record')) Url.cover('record', null);
+  } else {
+    Url.record(id);
+    List.scrollToOpen();
   }
-  /* CLASSES DOES NOT REPEAT MAIN CLASS. Real classification lists lead with
-     the main symbol, so the two rows printed the same code one above the
-     other — a reader sees a repetition and looks for the difference. The
-     payload is unchanged and still carries the full list (`components.md`
-     §1); this is the renderer declining to say the same thing twice. */
-  if (key === 'ipc' && Array.isArray(v) && rec.ipcMain) {
-    const rest = v.filter(c => c !== rec.ipcMain);
-    if (!rest.length) return '<span class="pn-only">Only the main class</span>';
-    v.length = 0; v.push(...rest);
-  }
-  if (Array.isArray(v)) return v.map(x => '<span>' + esc(x) + '</span>').join('');
-  return esc(v);
-}
+  if (same) { if (fig != null) showDrawing(fig, el, byKey); return; }
 
-/* CLAIM TEXT ARRIVES CARRYING ITS OWN NUMBER — "1. A method of…" — and the
-   gutter adds one, so every claim printed its number twice. Stripping it
-   blindly would be worse: a claim set that does not start at 1, or one whose
-   numbering has been preserved through a reissue, is telling you something.
-   So the leading number comes off ONLY when it agrees with the position the
-   gutter is about to print. Where they disagree, both stay and the disagreement
-   is visible, which is the useful outcome. */
-/* A WITHHELD FIELD CONTRIBUTES NOTHING — not the string "null", not an empty
-   separator. Same rule the export's own cell() follows one surface over. */
-function citation(rec) {
-  return HANDOFF
-    .map(k => (k === 'status' ? statusWord(rec.status) : rec[k]))
-    .filter(v => v != null && v !== '')
-    .join(' · ');
-}
-
-function claimText(text, n) {
-  const m = /^\s*(\d+)\s*[.)]\s+/.exec(text || '');
-  return m && Number(m[1]) === n ? text.slice(m[0].length) : text;
-}
-
-/* ── the drawings · platform.md §4.5 ───────────────────────────────────────
-   A FIGURE *IS* THE RECORD, which is why this is the one visual thing in the
-   pane that is not a reading of the patent. The identifiers, the abstract and
-   the claims are the published text; these are the published drawings.
-
-   NO BARS HERE, AND THAT IS THE POINT. §8's skeleton contract is for values
-   that exist and are being withheld — a grey rectangle where a drawing goes
-   would claim a drawing is being withheld rather than that the record has
-   none. An empty array gets a sentence instead.
-
-   THE NUMBER IS THE PATENT'S, NOT THE INDEX. Claims refer to figures by
-   number, so `n` is carried through the contract rather than counted here: a
-   record whose first drawing is FIG. 2 is an ordinary record, and renumbering
-   it would make the claims point at the wrong picture.
-
-   IT IS ALWAYS VISIBLE, not only on hover. The founder asked for the number on
-   hover and that is what the raised state does — but a caption that exists
-   only under a pointer is a caption that does not exist on a touch screen or
-   to a keyboard, so it sits there quietly and hover brings it up. */
-function figuresHTML(figures) {
-  const figs = Array.isArray(figures) ? figures : [];
-  if (!figs.length) {
-    /* h3 AND NOT h4. The pane's own heading is the h2 in .rec-head, so a
-       section inside it is the next level down — these were h4, and a screen
-       reader navigating the record by heading level got an outline reporting
-       two missing sections between the record and its contents. The SIZE is
-       title-s either way; the level is the outline, not the type. */
-    return '<section class="pn-sec"><h3 class="t-title-s pn-sec-h">Drawings</h3>'
-      + '<p class="pn-nofig t-body">This record has no drawings.</p></section>';
-  }
-  /* ══ TWO ROWS, AND THE REST BEHIND A CONTROL ════════════════════════════
-     A REAL RECORD IN THE CORPUS HAS 347 FIGURES. Rendered whole, under the
-     claims, that is a wall of thumbnails nobody scrolls to the end of and it
-     buries whatever comes after it. Capping at CAP shows what a drawings
-     strip is for — a glance at what this patent looks like — and the count in
-     the heading already says how many there are, so the control is disclosure
-     rather than a claim about the data.
-
-     THE CAP IS A COUNT, NOT A HEIGHT. The track is auto-fill, so the number
-     per row changes with the column; a max-height would show two rows at one
-     width and one and a half at another. Twelve is two rows at the six-across
-     this column gives and three at four-across, and both read as a strip.
-
-     THE CAP IS CSS. Every thumbnail is in the DOM either way, so the control
-     unhides rather than re-renders — and `Drawings only` mode lifts it with
-     one rule, because a mode whose whole purpose is the drawings should not
-     hide most of them. */
-  const capped = figs.length > CAP;
-  return '<section class="pn-sec pn-figs-sec">'
-    + '<h3 class="t-title-s pn-sec-h">Drawings '
-    + '<span class="fig pn-sec-n">' + figs.length + '</span></h3>'
-    + '<ol class="pn-figs" id="pnFigs"' + (capped ? ' data-capped' : '') + '>'
-    + figs.map((f, i) =>
-        '<li class="pn-fig">'
-        /* THE WHOLE THUMBNAIL IS THE CONTROL. A separate "open" affordance
-           beside a picture is two targets for one intention, and the picture
-           is the bigger and more obvious of the two. */
-        /* A WITHHELD FIGURE IS NOT A CONTROL THAT OPENS AN EMPTY VIEWER.
-           `src === null` means the drawing exists and we decline to show it,
-           so there is nothing larger to open — the button says why instead,
-           the same way `Drawings only` refuses on a record with none.
-           aria-disabled rather than disabled, so it keeps its tab stop and
-           can carry the reason to a keyboard. */
-        + '<button class="pn-fig-btn" type="button" data-fig="' + i + '"'
-        + (f.src == null ? ' aria-disabled="true"' : '')
-        + ' aria-label="Figure ' + f.n
-        + (f.src == null ? ', not shown' : ', open it larger') + '">'
-        /* `src === null` MEANS RENDER THE FRAME, and it is the only thing that
-           means that. An <img> with a null src is a broken-image glyph and a
-           console 404 per figure; the frame says the same thing the bar two
-           fields up says, in the shape a drawing has. */
-        + (f.src == null
-          ? '<span class="pn-fig-sk sk" aria-hidden="true"></span>'
-          : '<img class="pn-fig-img" src="' + esc(f.src) + '" alt="" loading="lazy"'
-            + ' decoding="async">')
-        + '<span class="pn-fig-n fig fig-s">' + f.n + '</span>'
-        + '</button></li>').join('')
-    + '</ol>'
-    + (capped
-      ? '<button class="pn-figs-more" type="button" aria-expanded="false">'
-        + '<span>Show all <span class="fig fig-s">' + figs.length + '</span> drawings</span></button>'
-      : '')
-    + '</section>';
-}
-
-/* THE ID COMES FROM THE CALLER, NOT OFF THE RECORD, because a Record has no
-   id — components.md does not give it one and neither engine returns one. The
-   thing that knows which patent this is, is whoever asked for it.
-
-   IT IS NOT AN ERROR FOR THE ROW TO BE GONE. The client holds one page at a
-   time, so a record opened before a page turn outlives the row it came from;
-   an absent row means the same as a null score, which is that there is nothing
-   to print. */
-function scoreHTML(id) {
-  const row = rowFor(id);
-  if (!row || row.score == null) return '';
-  return '<span class="pn-score">'
-    + '<span class="t-micro pn-score-k">Score</span>'
-    + '<span class="fig fig-s">' + row.score.toFixed(4) + '</span>'
-    + '</span>';
-}
-
-/* THE HEAD'S TWO SET CONTROLS, RAISED AND LOWERED TOGETHER. data-star IS THE
-   WHOLE WIRING for the star: list.mjs's delegated .set-star handler reads it,
-   so the record's star is the row's star with a label on it — one treatment,
-   one handler, one set. Clearing it to "" rather than removing it keeps the
-   attribute selector in 35-record.css matching an empty, hidden control rather
-   than falling through to an unstyled one for a frame. */
-function setActs(on, id) {
-  const star = $('#recStar'), sim = $('#recSimilar'), sep = $('.rec-head-sep');
-  if (star) {
-    star.hidden = !on;
-    star.setAttribute('data-star', on ? id : '');
-    star.setAttribute('aria-pressed', String(Boolean(on) && Starred.has(id)));
-  }
-  if (sim) {
-    sim.hidden = !on;
-    if (on) sim.setAttribute('data-pn', id);
-    else sim.removeAttribute('data-pn');
-  }
-  if (sep) sep.hidden = !on;
-}
-
-function paneHTML(rec, id) {
-  const claims = (rec.claims || []).map((c, k) =>
-    '<li class="pn-claim"><span class="fig fig-s pn-cn">' + (k + 1) + '</span>'
-    + '<span class="pn-prose t-body"' + langAttr(claimText(c, k + 1), rec.number) + '>'
-    + esc(claimText(c, k + 1)) + '</span></li>').join('');
-
-  const claimCount = rec.claims ? rec.claims.length : 0;
-
-  return '<div class="pn">'
-    /* THE NUMBER LEADS, THE SAME WAY IT LEADS THE ROW. It was under the title
-       beside the status chip, which made the record and the row disagree about
-       what a patent is called first — the founder scans a number on the left,
-       presses, and has to find it again somewhere else on the right. It is the
-       one string they carry out of here into their own documents.
-
-       THE STATUS STAYS UNDER THE TITLE. It is a fact ABOUT the patent rather
-       than its name, and it is the one coloured thing in this head; putting it
-       up on the identifier line would make the first thing read a hue. */
-    + '<div class="pn-head"><div class="pn-head-lines">'
-    + '<div class="pn-no-line">'
-    + '<span class="fig fig-s pn-no">' + valueHTML(rec, 'number') + '</span>'
-    + '</div>'
-    + '<div class="pn-name">'
-    + (rec.title || rec.skim
-      ? '<span class="pn-name-real t-display-2">' + esc(rec.title || rec.skim) + '</span>'
-      : bar('w-full', 'display') + bar('w-lg', 'display'))
-    + '</div>'
-    /* THE SCORE SITS WITH THE STATUS, as a peer on a row that is read across.
-       §7's "a figure block puts its label above, never beside" describes a
-       block you read AT — a micro label over a figure, on its own. This is a
-       meta row, and stacking one of two would make the shortest item the
-       tallest.
-
-       SAME SHAPE AS THE ROW'S, down to the four decimals and the omission.
-       The record and the list printing one number two ways is the founder
-       having to work out that it is the same number. And when the engine
-       returned none, the whole block goes: platform.md's "the label goes with
-       the value or neither goes", which is why every corpus record shows a
-       status chip here and nothing beside it. */
-    + '<div class="pn-meta">' + (rec.status ? statusHTML(rec.status) : '')
-    + scoreHTML(id)
-    + '</div></div></div>'
-    + '<div class="pn-body">'
-    + '<dl class="hf">' + FIELDS.map(([k, label]) => {
-        /* .hf IS TWO PAIRS A ROW SINCE 2026-09-26 and these two are lists —
-           a run of inventor names, a run of class codes — so they wrap, and a
-           wrapping list in a half-track is the whitespace the second pair was
-           added to remove. The class goes on BOTH halves: a <dt> left in a
-           half-track strands its own label a row above its value. */
-        const wide = WIDE[k] ? ' hf-wide' : '';
-        return '<dt class="t-micro' + wide + '">' + label + '</dt>'
-          + '<dd class="' + (MONO[k] ? 'fig' : '') + wide + '">'
-          + valueHTML(rec, k) + '</dd>';
-      }).join('') + '</dl>'
-    /* ══ THE DRAWINGS SIT UNDER THE FIELD PANEL ═══════════════════════════
-       platform.md §4.5, and this is the third position they have had. They
-       were here, then last — under the claims — on the reading that "under
-       the text" meant under ALL of it.
-
-       MEASURED, THAT PUT THEM 951px DOWN A 1300px SCROLLER. A founder who
-       opens a patent to see what it looks like scrolled past five to forty
-       claims of legal prose and mostly concluded the pictures were not there.
-       Ordering by what a patent is published in lost to ordering by what the
-       reader came for.
-
-       UNDER THE PANEL AND NOT INSIDE IT. The <dl> above has its own ground —
-       it is the identifiers, one block — and the drawings are the patent
-       rather than a fact about it. They follow it, at the section rhythm
-       everything else in this pane uses. */
-    + figuresHTML(rec.figures)
-    + '<section class="pn-sec"><h3 class="t-title-s pn-sec-h">Abstract</h3>'
-    + '<div class="pn-lines">'
-    + (rec.abstract
-      ? '<p class="pn-prose t-body"' + langAttr(rec.abstract, rec.number) + '>'
-        + esc(rec.abstract) + '</p>'
-      : bars(4, ['w-full', 'w-full', 'w-full', 'w-lg']))
-    + '</div></section>'
-    + '<section class="pn-sec"><h3 class="t-title-s pn-sec-h">Claims '
-    + '<span class="fig pn-sec-n">' + (claimCount || '') + '</span></h3>'
-    + (claimCount
-      ? '<ol class="pn-claims">' + claims + '</ol>'
-      : '<ol class="pn-claims">' + Array.from({ length: 6 }, (_, k) =>
-          '<li class="pn-claim"><span class="fig fig-s pn-cn">' + (k + 1) + '</span>'
-          + '<span class="pn-lines">'
-          + bars(k === 0 ? 4 : 2, ['w-full', 'w-full', 'w-lg', 'w-md'])
-          + '</span></li>').join('') + '</ol>')
-    + '</section>'
-    + '</div></div>';
-}
-
-/* ── THE PANE IS DRIVEN BY A CLASS ON #app, NOT BY `hidden` ALONE ──────────
-   `.rec` is at opacity 0, 6px low, until `.rec-open` lands on an ancestor, so
-   unhiding the element alone leaves it invisible and the surface looks as if
-   the row did nothing. `hidden` still does the a11y work —
-   it is what keeps the pane out of the tab order while it is away — so both are
-   needed and they are not redundant.
-
-   ON CLOSE THE HIDE WAITS FOR THE TRANSITION. Hiding on the same frame as the
-   class comes off removes the element mid-exit and the record vanishes rather
-   than leaving. */
-function close() {
-  OPEN_ID = null;
-  const pane = $('#recPane');
-  const app = $('#app');
-  if (!pane || pane.hidden) return;
-  /* A DRAWING CANNOT OUTLIVE THE RECORD IT BELONGS TO. The viewer is absolute
-     inside the same column, so closing the record underneath it would leave a
-     figure floating over an empty pane with its own esc-stack entry still
-     registered. */
-  Viewer.close();
-  if (app) app.classList.remove('rec-open');
-  markOpen(null);
-  /* `data-mode` IS NOT RESET HERE and no longer could be. It was a property of
-     the record being read while the record owned the toggle; it is a property
-     of how the LIST is drawn now, and the list outlives any one record. */
-  const end = $('#recEnd');
-  if (end) { end.hidden = true; end.removeAttribute('data-pn'); }
-  setActs(false, null);
-  REC = null;
-  drop('record');
-  /* `restore` IS A FUNCTION, NOT A NODE. captureFocus hands back the act of
-     restoring rather than the thing to restore to, because it is the one that
-     knows about the fallback and about isConnected — a row re-rendered while
-     the record was open is the ordinary case, not the exception, and focusing
-     a detached node silently drops focus to <body>.
-
-     This read `restore.isConnected`, which is undefined on a function, so the
-     guard was never true and closing the record left focus on <body>. It threw
-     nothing and logged nothing: a keyboard user pressed Escape and landed at
-     the top of the document. */
-  if (restore) restore();
-  restore = null;
-  setTimeout(() => {
-    if (!app || !app.classList.contains('rec-open')) pane.hidden = true;
-  }, reduced() ? 0 : DUR2 + 20);
-}
-
-/* ══ THE LIST SAYS WHICH ROW IS OPEN ═════════════════════════════════════
-   Both layers specified this and neither was wired: list.mjs writes
-   aria-current="false" on every toggle and nothing ever set it true, and
-   34-list.css styles .set-row[data-open] and nothing ever wrote it. It was
-   cosmetic while the record stood in the list's place, because the list was
-   not on screen to mark. The list never leaves now, so the founder can see
-   six rows and the record of one of them with nothing joining the two.
-
-   ONE PLACE WRITES BOTH, so the visible mark and the announced state cannot
-   drift. `id` of null clears. */
-function markOpen(id) {
-  document.querySelectorAll('#setList .drill-toggle').forEach(b => {
-    const on = id != null && b.getAttribute('data-pn') === id;
-    b.setAttribute('aria-current', String(on));
-    const row = b.closest('.set-row');
-    if (row) row.toggleAttribute('data-open', on);
-  });
-}
-
-/* THE ORDER IS READ OFF THE DOM, not held as a second array. The list already
-   holds the true sequence — Find similar MOVES rows rather than rebuilding
-   them, so a cached copy would be the one that went stale. Reading it costs a
-   querySelectorAll on a press a human made. */
-function rowIds() {
-  return [...document.querySelectorAll('#setList .drill-toggle')]
-    .map(b => b.getAttribute('data-pn'));
-}
-
-/* Both controls are aria-disabled at the ends rather than hidden: a control
-   that vanishes at the end of a list takes its own explanation with it, and
-   the founder cannot tell whether they ran out or it broke. */
-function syncSteps() {
-  const ids = rowIds();
-  const i = ids.indexOf(OPEN_ID);
-  const set = (sel, off, word) => {
-    const b = $(sel);
-    if (!b) return;
-    const to = i < 0 ? -1 : i + off;
-    const none = to < 0 || to >= ids.length;
-    b.setAttribute('aria-disabled', String(none));
-    b.setAttribute('aria-label', none
-      ? word + ' patent — you are at the ' + (off < 0 ? 'first' : 'last') + ' result'
-      : word + ' patent in your results, ' + (to + 1) + ' of ' + ids.length);
-  };
-  set('#recPrev', -1, 'Previous');
-  set('#recNext', +1, 'Next');
-}
-
-/* WHAT THE VIEWER'S HEAD NAMES: the open record's number and title, as this
-   pane prints them. A withheld value is null and the viewer prints nothing
-   for it — the record behind the scrim already carries its bar. */
-function viewerContext() {
-  return REC ? { number: REC.number ?? null, title: REC.title ?? REC.skim ?? null } : null;
-}
-
-/* Stepping keeps focus where it is. The founder pressed Next and is still
-   pressing Next; moving focus to the heading on every step would make the
-   second press land on something else. */
-function step(delta) {
-  const ids = rowIds();
-  const i = ids.indexOf(OPEN_ID);
-  if (i < 0) return;
-  const to = i + delta;
-  if (to < 0 || to >= ids.length) return;
-  open(ids[to], null, true);
-}
-
-/* `opts` RATHER THAN A FOURTH POSITIONAL. `stepping` stays where it is
-   because three call sites pass it; `figure` arrives from the row's drawings
-   and nothing else, and open(id, el, false, 3) would have been unreadable at
-   every one of them. */
-async function open(id, trigger, stepping, opts = {}) {
-  const pane = $('#recPane');
-  const body = $('#recBody');
-  if (!pane || !body) return;
-
-  const app = $('#app');
-  OPEN_ID = id;
-  /* A STEP DOES NOT RE-CAPTURE THE RETURN POINT. Escape after five Next
-     presses must land back on the row the founder actually opened, not on the
-     one they stepped to — otherwise closing returns them somewhere they never
-     chose to be. */
-  if (!stepping) restore = captureFocus(trigger);
-  markOpen(id);
-  syncSteps();
-  /* ENTERING IS THE FIRST OPEN, and only the first. A second row pressed
-     while a record is showing, or a step, finds the panel already in place —
-     and §6 says a container in place does not move to say its contents
-     changed. Those crossfade the body instead, below. */
-  const entering = !!app && !app.classList.contains('rec-open');
-  pane.hidden = false;
-  /* THE START STATE IS COMMITTED, THEN RELEASED ON THE NEXT FRAME — §6's two
-     traps together. A panel that was display:none has no style to transition
-     from, and adding the class in the same style pass as un-hiding it lands
-     it with no entrance at all; the forced read commits opacity 0, and the
-     frame is the release. The entrance is the view swap's: opacity and 6px
-     of rise over --dur-3, never a slide. */
-  if (entering) void pane.offsetWidth;
-  if (app) requestAnimationFrame(() => app.classList.add('rec-open'));
-  push('record', close);
-
-  /* THE PANEL GOES BACK TO THE TOP, AND IT HAS TO BE SAID OUT LOUD.
-     Replacing #recBody's innerHTML used to reset the scroll for free, because
-     #recBody WAS the scroller. It is #recScroll now — the panel's body, head
-     excluded — so stepping Next from claim 30 would land on claim 30 of the
-     next patent. focusQuietly cannot do it: it is focus({preventScroll:true})
-     by design, which is the fix for the record jumping on open.
-     BEFORE waitOn, so the wait block is seen from the top rather than
-     scrolled past. */
-  const col = $('#recScroll');
-  if (col) col.scrollTop = 0;
-
-  /* THE CONTROLS GO DOWN BEFORE THE WAIT DOES. They live outside #recBody, so
-     waitOn() and failWith() cannot take them down — controls offering to star,
-     cite and export a record that has not arrived, or has just failed to.
-     record.mjs owns them explicitly because the markup is static.
-
-     IT IS TWO PLACES NOW, and that is the cost of splitting the block. The
-     three that take the patent out are inside #recEnd and go down with it; the
-     two that act on the set are in the panel's head, which stays up because it
-     holds the heading and the stepping pair. So they are hidden by name. A
-     star still showing the PREVIOUS record's data-star for the length of a
-     fetch is a button that stars the wrong patent. */
-  const end = $('#recEnd');
-  if (end) end.hidden = true;
-  setActs(false, null);
-  REC = null;
-
-  const token = bump('record');
-  waitOn(body, 360);
-  /* THE CONTENT WAITS FOR THE PANEL TO LAND. FLOOR is 240ms and the entrance
-     is 320, so a fast answer would fade its text in while the panel carrying
-     it was still rising — §6, contents do not move while their container
-     does. Only on the entering open, and not under reduced motion, where
-     there is no entrance to wait out; a beat is never lengthened for a
-     movement that is not happening. */
-  const floor = entering && !reduced() ? Math.max(FLOOR, DUR3) : FLOOR;
-  const [res] = await Promise.all([ENGINE.record({ id }), pause(floor)]);
-  if (stale('record', token)) return;
-
+  const mine = ++gen;
+  pane.scrollTop = 0;
+  waitOn(host, 320);
+  const res = await ENGINE.record({ id });
+  if (mine !== gen) return;
   if (!res.ok) {
-    /* NOT retryable for a record — the engine says so, and the block then says
-       there is no way forward BY HAVING NO BUTTON rather than by saying so. */
-    /* AND WHEN THERE IS NO BUTTON, THE SENTENCE NAMES THE NEXT MOVE. A failure
-       that offers nothing reads as the product being stuck; the founder's way
-       on is the rest of the list, which still opens, so the block says so. */
-    const why = res.retryable ? 'This record did not load.'
-      : 'This record did not load. The other patents in your results still open.';
-    failWith(body, why, res.retryable ? () => open(id, trigger) : null);
-    say('list', why);
+    REC = null;
+    failWith(host, res.code === 'NOT_FOUND' ? 'This record is not in the index.' : 'The record did not load.',
+      res.retryable ? () => { openId = null; open({ id, fig, el, byKey }); } : null);
     return;
   }
-  FIGURES = Array.isArray(res.data.figures) ? res.data.figures : [];
   REC = res.data;
-  landIn(body, paneHTML(res.data, id));
-  /* the body crossfades in on --dur-1 — on a step, a second row, and the
-     first open alike, because in all three the panel is standing still by
-     the time the text arrives. */
-  enter([body]);
-  setActs(true, id);
-  if (end) {
-    const out = $('#recOut'), cite = $('#recCite');
-    /* OMITTED, NOT DISABLED, and it is the score's rule applied to a control:
-       there is no act here and no sentence to read, so a disabled button would
-       be a promise the engine has not made. `sourceUrl` is not in the port
-       yet — components.md §4 question 3 — so until it is, undefined means the
-       placeholder stands and only an explicit null hides it. */
-    if (out) out.hidden = res.data.sourceUrl === null;
-    if (cite) cite.hidden = res.data.number == null && res.data.title == null;
-    /* THE BLOCK CARRIES THE ID, so the export menu inside it does not have to
-       ask another control which record it is looking at. */
-    end.setAttribute('data-pn', id);
-    end.hidden = false;
+  landIn(host, sheetHTML(REC, id));
+  armSheet(host);
+  if (byKey && fig == null) host.querySelector('#recTitle')?.focus({ preventScroll: true });
+  if (fig != null) showDrawing(fig, el, byKey);
+}
+
+function close() {
+  if (!openId && !$('#pane').hasAttribute('data-open')) return;
+  const was = openId;
+  openId = null; REC = null; gen++;
+  const split = $('#split'), pane = $('#pane');
+  if (phone() || pane.hasAttribute('data-open')) {
+    pane.removeAttribute('data-open');
+    if (Url.covered('record')) Url.uncover('record');
+    scrollTo(0, listY);
   }
-  /* ══ THE MODE CONTROL IS NOT THE RECORD'S ANY MORE ══════════════════════
-     This used to mark `Drawings only` aria-disabled from the open record's
-     figure count, which was right while the toggle governed this pane. It
-     governs the LIST now (work.mjs), so a record with no drawings says so in
-     its own strip and has no business reaching up into the search bar to
-     disable a control about twenty other patents. */
-  /* ══ THE SECOND IDLE SENTENCE IS GONE, AND SO ARE ITS THREE STATES ═════
-     The right column used to carry a sentence with three forms — no drawings,
-     drawings we decline to show, or pick one — because the drawing opened
-     HERE and this column was the empty thing being explained. The drawing is
-     a lightbox over the viewport now and the record is in this column, so
-     there is no second empty region and nothing to write in it.
+  split.setAttribute('data-closed', '');
+  List.mark(null);
+  Url.record(null);
+  if (was) $(`#rows .row[data-id="${CSS.escape(was)}"]`)?.focus({ preventScroll: true });
+}
 
-     THE DISTINCTION IS NOT LOST, it moved to where it is asked. figuresHTML
-     renders a withheld drawing as a frame that says so and refuses the press
-     (aria-disabled), and a record with none prints "This record has no
-     drawings" in the strip's own place — which is where a founder looking
-     for drawings is looking. The column-idle copy was the same three facts
-     one column away from the question. */
-  syncSteps();
-  /* ══ A ROW DRAWING OPENED TWO THINGS, AND THE ORDER IS THE STACK'S ══════
-     The record was pushed first and the viewer goes second, so Escape closes
-     the drawing and leaves the record standing — the order they were opened
-     in. Nothing new is needed for that; it falls out of push('record') then
-     push('figure').
+function step(d) {
+  if (!openId) return;
+  const n = List.neighbour(openId, d);
+  if (n) open({ id: n });
+}
 
-     THE JOIN IS THE PUBLISHED FIGURE NUMBER AND NOT THE INDEX. ports.mjs is
-     explicit that the row's `thumbs` and the record's `figures` are two
-     renditions the engine chooses independently — nothing says thumbs[3] is
-     figures[3], and a renumbered figure is a different document.
+/* a drawing named by its published number (from a row) or its index (from the sheet) */
+function showDrawing(which, back, byKey) {
+  const figs = (REC?.figures || []).map(f => ({ n: f.n, src: f.src, thumb: f.thumb || f.src }));
+  if (!figs.length) return;
+  let k = typeof which === 'number' ? which : figs.findIndex(f => String(f.n) === String(which));
+  if (k < 0) k = 0;
+  openViewer(figs, k, { title: REC.title || '', number: List.numberText(REC.number), returnFocus: back, byKey });
+}
 
-     AND IT WAITED FOR THE RECORD. Opening the viewer on the row's own
-     thumbnail would have blown a ~4 KB, ~90px image up to the viewport, which
-     is the failure components.md §4 question 4 records costing a month. */
-  const want = opts.figure;
-  const at = want == null ? -1 : FIGURES.findIndex(f => f && f.n === want);
-  if (at >= 0) {
-    /* NOT focusQuietly BELOW, and this is the trap. Viewer.open moves focus to
-       its own close button and marks #app inert; focusing #recTitle after that
-       puts the keyboard inside an inert subtree, which silently drops it on
-       <body>. The viewer owns focus from here. */
-    Viewer.open(FIGURES, at, trigger, viewerContext());
-    return;
-  }
-  /* NO FALLBACK TO ZERO. A row thumbnail whose number is in none of the
-     record's figures is two ports disagreeing, and opening a different drawing
-     would hide that. The record is open, which is the half of the act that is
-     certainly right. */
-  /* focus moves to the heading, quietly — preventScroll is the fix for the
-     record jumping the pane it opened over. NOT ON A STEP: the founder's hand
-     is on the Next button and moving focus off it breaks the second press. */
-  if (!stepping && !opts.keep) focusQuietly($('#recTitle'));
-  else say('list', 'Patent ' + (rowIds().indexOf(id) + 1) + ' of ' + rowIds().length + '.');
+function armSheet(host) {
+  const bar = host.querySelector('#recBar'), title = host.querySelector('#recTitle');
+  if (bar && title) new IntersectionObserver(([e]) => {
+    bar.toggleAttribute('data-stuck', !e.isIntersecting && e.boundingClientRect.top < 60);
+  }, { root: $('#pane'), rootMargin: '-60px 0px 0px 0px' }).observe(title);
+  Pop.wire(host.querySelector('#recExpBtn'), host.querySelector('#recExpPop'));
+}
+
+async function findSimilar(btn) {
+  if (!openId || btn.hasAttribute('data-waiting')) return;
+  btnWait(btn, true);
+  const ok = await List.similar(openId);
+  btnRest(btn);
+  if (ok) toast('Results re-ordered by nearness to this record.');
+  if (ok && phone()) close();
+}
+
+function exportRecord(ext) {
+  if (!REC || !openId) return;
+  const row = { ...(List.rowById(openId) || {}), ...REC, skim: REC.title, rank: List.rankOf(openId),
+                score: List.rowById(openId)?.score ?? null, url: REC.url ?? List.rowById(openId)?.url ?? null };
+  const stem = String(REC.number || openId).replace(/[^A-Za-z0-9]+/g, '');
+  const name = Export.save([row], ext, { query: List.lastQuery(), stem });
+  toast(`Downloaded ${name}`);
 }
 
 export function init(ctx) {
   ENGINE = ctx.engine;
-  Viewer.init();
+  document.addEventListener('terrain:open', e => open(e.detail));
+  document.addEventListener('terrain:close-record', () => { if (openId || $('#pane').hasAttribute('data-open')) close(); });
+  window.addEventListener('terrain:uncover', e => {
+    if (!e.detail.kinds.includes('record')) return;
+    openId = null; REC = null; gen++;
+    $('#pane').removeAttribute('data-open');
+    $('#split').setAttribute('data-closed', '');
+    List.mark(null);
+    scrollTo(0, listY);
+  });
 
-  /* ══ A DRAWING MAY NOT OUTLIVE THE SURFACE IT WAS OPENED ON ══════════════
-     The viewer became position:fixed and moved to <body> on 2026-09-24, which
-     took it out of `.view-work` and out of the router's reach — leaving the
-     results surface with a drawing open would float it over the starred set,
-     over billing, over everything, with `#app` still inert underneath and no
-     control reachable. go() switches views by class and closes nothing, so
-     the close has to be asked for here.
-
-     THE RECORD GOES TOO, and for a plainer reason: it is the thing the
-     drawing belongs to, and coming back to a surface mid-read is a state the
-     founder did not leave in. */
-  ctx.onRoute(() => { if (Viewer.isOpen()) Viewer.close(); close(); });
-
-  onActivate(document, '.pn-fig-btn', el => {
-    if (el.getAttribute('aria-disabled') === 'true') {
-      say('list', 'This drawing is not shown.');
+  const host = $('#rec');
+  host.addEventListener('click', e => {
+    const a = e.target.closest('[data-act]');
+    if (a) {
+      if (a.getAttribute('aria-disabled') === 'true') return;
+      const act = a.dataset.act;
+      if (act === 'close') close();
+      if (act === 'prev') step(-1);
+      if (act === 'next') step(1);
+      if (act === 'similar') findSimilar(a);
       return;
     }
-    Viewer.open(FIGURES, Number(el.getAttribute('data-fig')) || 0, el, viewerContext());
-  });
-  /* THE CONTROL UNHIDES RATHER THAN RE-RENDERS, so the thumbnails already
-     fetched are not fetched again and the founder's scroll position holds.
-     It does not collapse back: a founder who asked for 347 drawings and got
-     them does not then want a control offering to take 335 away, and the
-     record's own close is the way out of a long strip. */
-  onActivate(document, '.pn-figs-more', el => {
-    const ol = $('#pnFigs');
-    if (!ol) return;
-    ol.removeAttribute('data-capped');
-    el.setAttribute('aria-expanded', 'true');
-    el.hidden = true;
-    say('work', 'All drawings shown.');
-  });
-  onActivate(document, '.drill-toggle', el => open(el.getAttribute('data-pn'), el));
-  /* ── a drawing on a ROW ──────────────────────────────────────────────
-     It lives here rather than in list.mjs because it needs FIGURES, which is
-     the record's, and because the act it performs IS opening a record. The
-     strip is a sibling of .drill-toggle now, so this is the only handler that
-     sees the press — nothing bubbles into the row's button any more. */
-  onActivate(document, '.set-thumb', el => {
-    const row = el.closest('.set-row');
-    if (!row) return;
-    const id = row.getAttribute('data-id');
-    /* the +N tile is about the record, not about one drawing */
-    if (el.classList.contains('set-thumb-more')) { open(id, el); return; }
-    if (el.getAttribute('aria-disabled') === 'true') {
-      say('list', 'This drawing is not shown.');
-      return;
+    const x = e.target.closest('[data-exp]');
+    if (x) { Pop.close(); exportRecord(x.dataset.exp); return; }
+    const f = e.target.closest('[data-fig]');
+    if (f) { showDrawing(Number(f.dataset.fig), f, e.detail === 0); return; }
+    const more = e.target.closest('[data-more]');
+    if (more) {
+      const what = more.dataset.more, openNow = more.getAttribute('aria-expanded') !== 'true';
+      const list = host.querySelector(what === 'figs' ? '#recFigs' : '#recClaims');
+      const first = what === 'figs' ? FIGS_FIRST : CLAIMS_FIRST;
+      [...list.children].forEach((li, i) => { if (i >= first) li.hidden = !openNow; });
+      more.setAttribute('aria-expanded', String(openNow));
+      const n = list.children.length;
+      more.innerHTML = I(P.chev) + (openNow ? (what === 'figs' ? 'Show fewer drawings' : 'Show claim 1 only') : `Show all ${n} ${what === 'figs' ? 'drawings' : 'claims'}`);
     }
-    open(id, el, false, { figure: Number(el.getAttribute('data-fig-n')) });
   });
-  onActivate(document, '#recClose', close);
 
-  /* ══ THE KEYBOARD · platform.md §4.3 ═════════════════════════════════════
-     The flow is search → read → star, and every step of it was a Tab walk:
-     three stops a row, twenty rows, and the record's stepping pair at the far
-     side of the split. Five keys make the reading loop one hand:
-
-       j / k        next / previous patent — focus moves to its row and the
-                    record opens beside it, focus staying on the list so the
-                    next j is one press away;
-       ↓ / ↑        move between rows without opening anything;
-       ] / [        step the open record, the stepping pair's own act;
-       s            star the open patent, or the focused row's.
-
-     SCOPED, AND THAT IS WCAG 2.1.4 RATHER THAN TASTE. A single-character
-     shortcut that fires anywhere fires into speech input and into a founder
-     who did not know it existed, so these work only while focus is inside the
-     two columns, never in a text field, never with a modifier (the browser's
-     and the OS's own shortcuts stay theirs), and never over an open menu,
-     popover or drawing — the Escape stack's top has to be the record or
-     nothing. The help page lists them. */
-  const rowBtns = () => [...document.querySelectorAll('#setList .drill-toggle')];
-  const rowIndex = list => {
-    const here = document.activeElement && document.activeElement.closest('.set-row');
-    const row = here || document.querySelector('#setList .set-row[data-open]');
-    return row ? list.findIndex(b => b.closest('.set-row') === row) : -1;
-  };
+  /* keys: Esc closes the innermost thing; ← → step the record; / edits the search */
   document.addEventListener('keydown', e => {
-    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || Viewer.isOpen()) return;
-    const t = e.target instanceof Element ? e.target : null;
-    const split = $('#workSplit');
-    if (!t || !split || !split.contains(t)) return;
-    if (t.closest('input, textarea, select, [contenteditable="true"]')) return;
-    const onTop = top();
-    if (onTop && onTop !== 'record') return;
-    const k = e.key;
-    if (k === 'j' || k === 'k' || ((k === 'ArrowDown' || k === 'ArrowUp') && t.closest('.drill-toggle'))) {
-      const list = rowBtns();
-      if (!list.length) return;
-      const i = rowIndex(list);
-      const fwd = k === 'j' || k === 'ArrowDown';
-      const to = i < 0 ? 0 : Math.max(0, Math.min(list.length - 1, i + (fwd ? 1 : -1)));
-      e.preventDefault();
-      const btn = list[to];
-      btn.focus({ preventScroll: true });
-      btn.closest('.set-row').scrollIntoView({ block: 'nearest',
-        behavior: reduced() ? 'auto' : 'smooth' });
-      if ((k === 'j' || k === 'k') && to !== i) open(btn.getAttribute('data-pn'), btn, false, { keep: true });
-    } else if ((k === ']' || k === '[') && OPEN_ID) {
-      e.preventDefault();
-      step(k === ']' ? +1 : -1);
-    } else if (k === 's') {
-      const recStar = $('#recStar');
-      const rowStar = t.closest('.set-row') && t.closest('.set-row').querySelector('.set-star[data-star]');
-      /* the row under focus first — it is the patent the founder is
-         pointing at — and the open record's when focus is in the record. */
-      const target = rowStar || (OPEN_ID && recStar && !recStar.hidden ? recStar : null);
-      if (!target) return;
-      e.preventDefault();
-      target.click();
-    }
+    if (e.metaKey || e.ctrlKey || e.altKey || e.defaultPrevented || viewerOpen() || Pop.isOpen()) return;
+    if (document.documentElement.getAttribute('data-view') !== 'work') return;
+    if (e.target.closest('input, textarea')) return;
+    if (e.key === 'Escape' && openId) { e.preventDefault(); close(); return; }
+    if (e.key === '/') { e.preventDefault(); Search.focusQuery(); return; }
+    if (!openId || phone()) return;
+    if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
   });
-  onActivate(document, '#recPrev', b =>
-    b.getAttribute('aria-disabled') === 'true' || step(-1));
-  onActivate(document, '#recNext', b =>
-    b.getAttribute('aria-disabled') === 'true' || step(+1));
 
-  /* ── copy citation ───────────────────────────────────────────────────────
-     THE GLYPH CONFIRMS AND THE LABEL DOES NOT. Changing the label would change
-     the accessible name and announce the same fact a second time, which §7's
-     "live regions announce once; two regions, two moments, never the same
-     fact" forbids. So the mark swaps to a tick, the words stay put, and the
-     live region says it once.
-
-     AND IT STATES THE FIX RATHER THAN THE FAULT when the clipboard refuses.
-     navigator.clipboard is absent on an insecure origin and rejects without a
-     user gesture in some browsers; either way the founder's next move is the
-     same, and the record above them is where the fields are. */
-  onActivate(document, '#recCite', async btn => {
-    if (!REC) return;
-    const text = citation(REC);
-    if (!text) return;
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch (e) {
-      say('list', 'This browser would not let Terrain copy. '
-        + 'The citation is in the record above.');
-      return;
-    }
-    btn.setAttribute('data-done', '');
-    setTimeout(() => btn.removeAttribute('data-done'), 1600);
-    say('list', 'Citation copied.');
-  });
+  ctx.onRoute(view => { if (view !== 'work' && openId) close(); });
 }

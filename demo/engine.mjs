@@ -34,30 +34,19 @@ const qs = new URLSearchParams(location.search);
 /* ?fail=search,record  ·  ?fail=all  ·  ?slow=3 */
 const FAILING = new Set((qs.get('fail') || '').split(',').filter(Boolean));
 const FAIL_ALL = FAILING.has('all');
+
+/* `?empty` MAKES EVERY SEARCH COME BACK WITH NOTHING, which is how the empty
+   state is reached against an engine that cannot judge relevance. */
+const EMPTY = qs.has('empty');
 const SLOW = Number(qs.get('slow') || 1) || 1;
 
-/* WHICH FAILURES ARE RETRYABLE IS THE ENGINE'S ANSWER, not the client's guess.
-   It is exactly what core/wait.mjs's failHTML(say, act) consumes: true means
-   offer `Try again`, false means say there is no way forward BY HAVING NO
-   BUTTON. Guessing wrong in either direction either wastes the founder's time
-   or hides their way out. */
-const PERMANENT = new Set(['record', 'saveAccount']);
+/* WHICH FAILURES ARE RETRYABLE IS THE ENGINE'S ANSWER, not the client's guess. */
+const PERMANENT = new Set(['record']);
 
 const wait = ms => new Promise(r => setTimeout(r, ms * SLOW));
 
-/* Different ports take visibly different times, and that is deliberate rather
-   than decorative: the views resolve INDEPENDENTLY and each arrives when its
-   own data lands. A grid where every card resolves on the same frame cannot
-   demonstrate partial success, which components.md §0.1 calls the normal case. */
-const DELAY = {
-  fields: 180, coverage: 340, search: 900,
-  patents: 700, patentsPage: 520, sort: 420, facets: 420, rerank: 1100, cluster: 1400,
-  export: 500,
-  record: 600,
-  projects: 240,
-  points: 300, runs: 380, account: 300, saveAccount: 800,
-  billing: 340, invoices: 380, sendSupport: 900,
-};
+/* Different ports take visibly different times, so every wait is reachable. */
+const DELAY = { fields: 180, coverage: 340, search: 900, sort: 420, similar: 1100, record: 600 };
 
 async function respond(port, data) {
   await wait(DELAY[port] ?? 400);
@@ -69,138 +58,68 @@ async function respond(port, data) {
   return ok(data);
 }
 
-/* ── the list, held here because sorting is a REQUEST ───────────────────────
-   All three of sort, facets and patentsPage are requests and not client-side
-   array work. Twenty rows arrive at a time, so the client never holds the whole
-   set — and sorting what it has would sort a page rather than a result. That is
-   a contract claim, so the fake engine honours it: the whole set lives here and
-   only a page of it is ever returned. */
-const ALL = D.patentRows();
-let ORDER = ALL.map(r => r.id);
-const PAGE = 20;
-
-function page(order, n) {
-  const ids = order.slice(0, n);
-  const by = new Map(ALL.map(r => [r.id, r]));
-  return { patents: ids.map(id => by.get(id)), order, matched: order.length };
-}
-
-let shown = PAGE;
-/* leaf id -> patent ids, held by the ENGINE because the client never has the
-   whole set. Null until the grouping has been asked for. */
-let GROUPS = null;
-
-/* WHAT THE FOUNDER ASKED FOR, held across the reload. `patents` re-runs right
-   after a search — the list reloads itself on terrain:searched — so a limit
-   that lived only in `search` would be honoured for one frame and then reset
-   to twenty by the very next call. */
-let LIMIT = PAGE;
-
+/* ── the set ────────────────────────────────────────────────────────────────
+   The rows the row contract describes, built from data.mjs. Every field the
+   demo does not hold stays null and renders a bar; `ipcWords` is {} because
+   there are no classes to name; `url` is null, so no row offers a source. */
+const ALL = D.patentRows().map(r => ({
+  ...r,
+  version: r.versions?.[0]?.kind ?? null,
+  ipcWords: {},
+  url: null,
+  thumbs: (r.thumbs || []).slice(0, 8),
+}));
 const byId = new Map(ALL.map(r => [r.id, r]));
+
+/* THE SET THE SEARCH RETURNED, capped at `settings.count`, and its order */
+let SET = [];
+let ORDER = [];
+
+const pub = id => byId.get(id).published || '';
 const cmp = {
   relevance: (a, b) => byId.get(b).score - byId.get(a).score,
-  newest:    (a, b) => byId.get(b).year - byId.get(a).year,
-  oldest:    (a, b) => byId.get(a).year - byId.get(b).year,
+  newest:    (a, b) => pub(b).localeCompare(pub(a)),
+  oldest:    (a, b) => pub(a).localeCompare(pub(b)),
+};
+
+/* A NUMBER, NORMALISED THE WAY A FOUNDER PASTES ONE: case, spaces, commas,
+   slashes and the zero padding fall away, and the kind code is optional. */
+const normNo = s => String(s || '').toUpperCase().replace(/[^0-9A-Z]/g, '')
+  .replace(/^([A-Z]{2})0+/, '$1');
+const byNumber = (rows, q) => {
+  const want = normNo(q);
+  if (!want) return null;
+  return rows.find(r => r.number && (normNo(r.number) === want
+    || normNo(r.number).replace(/[A-Z]\d?$/, '') === want)) || null;
 };
 
 export const DemoEngine = {
-  /* ── the conversation and the gate ───────────────────────────────────── */
-  /* ONE CALL. The old flow charged at the gate; there is no gate, so this is
-     where the ledger moves. A failed search returns the balance untouched. */
-  /* THE SETTINGS ARE HONOURED, NOT ACKNOWLEDGED. `count` is the one the
-     founder can check against what is on screen — they picked 10 and ten rows
-     came back — so the fake engine answers it rather than echoing it. The
-     other four narrow a corpus this demo does not have: every row here is the
-     same synthetic shape, so filtering by jurisdiction would return the same
-     set with a smaller number on it, which is a lie with a number attached.
-     They reach the engine and `corpus/` is where they mean something. */
-  search: async ({ settings = {} } = {}) => {
-    LIMIT = Number(settings.count) || PAGE;
-    shown = Math.min(LIMIT, ALL.length);
-    ORDER = ALL.map(r => r.id).sort(cmp.relevance);
-    return respond('search', {
-      ...page(ORDER, shown),
-      elapsedMs: 240,
-      balance: D.POINTS.balance - 2,
-    });
-  },
-
-  /* ── the home surface ──────────────────────────────────────────────── */
   fields:   async () => respond('fields',   { fields: D.FIELDS }),
-  coverage: async () => respond('coverage', { scope: D.COVERAGE_SCOPE,
-                                              sources: D.COVERAGE }),
+  coverage: async () => respond('coverage', { scope: D.COVERAGE_SCOPE, sources: D.COVERAGE }),
 
-  /* ── the list ────────────────────────────────────────────────────────── */
-  /* SORTED, because the bar says Relevance from the first frame. This handed
-     back generator order, and the generator ramps `score` upward by index — so
-     the opening list ran 0.6250, 0.6620, 0.6990 downward, worst first, under a
-     control that claimed it was ranked by relevance. The comparator below was
-     right the whole time and simply never ran until somebody opened the menu.
-
-     Whatever `cmp.relevance` does IS the default, rather than a copy of it. */
-  patents: async () => {
-    shown = Math.min(LIMIT, ALL.length);
-    ORDER = ALL.map(r => r.id).sort(cmp.relevance);
-    return respond('patents', page(ORDER, shown));
-  },
-
-  patentsPage: async () => {
-    shown = Math.min(shown + PAGE, ALL.length);
-    return respond('patentsPage', page(ORDER, shown));
-  },
-
-  sort: async ({ sort = 'relevance' } = {}) => {
-    ORDER = ALL.map(r => r.id).sort(cmp[sort] || cmp.relevance);
-    return respond('sort', page(ORDER, shown));
-  },
-
-  facets: async ({ facets = {}, groups = [] } = {}) => {
-    /* THE FACETS ARE REAL VALUES ONLY. status and kind are English words
-       already printed on the row; jurisdiction was considered and refused,
-       because §8 keeps it a bar and filtering on it would mean inventing a
-       facet the founder cannot check against what they can see. */
-    let ids = ALL.filter(r => !facets.status || r.status === facets.status)
-                 .map(r => r.id);
-    /* A BRANCH SELECTION IS A FACET, and it lands here rather than in a port
-       of its own because it does the same thing: it changes which patents the
-       founder is looking at, over the set the search already returned.
-       Several branches union rather than intersect — picking two branches asks
-       for both, which is what the removable chips above the list read as. */
-    if (groups.length && GROUPS) {
-      const want = new Set(groups.flatMap(g => GROUPS.get(g) || []));
-      ids = ids.filter(id => want.has(id));
+  /* ONE CALL, from the sentence to the set, and every row of it at once. The
+     count is honoured; the other settings narrow a corpus this demo does not
+     have, so they reach the engine and corpus/ is where they mean something. */
+  search: async ({ query = '', settings = {}, mode = 'text' } = {}) => {
+    let order = EMPTY ? [] : ALL.map(r => r.id).sort(cmp.relevance);
+    if (mode === 'number') {
+      const hit = byNumber(ALL, query);
+      if (!hit) { await wait(DELAY.search); return err(CODE.NOT_FOUND, false, 'demo: no patent ' + query); }
+      order = [hit.id, ...order.filter(id => id !== hit.id)];
     }
-    ORDER = ids;
-    shown = Math.min(PAGE, ids.length);
-    const res = page(ORDER, shown);
-    res.matched = ids.length;
-    return respond('facets', res);
+    SET = order.slice(0, Number(settings.count) || order.length);
+    ORDER = SET.slice();
+    return respond('search', { patents: SET.map(id => byId.get(id)), order: ORDER, matched: SET.length, elapsedMs: 240 });
   },
 
-  /* FIND SIMILAR RE-SEQUENCES A CORPUS ALREADY PAID FOR and adds no patent to it.
-     It returns an ORDER over the SAME set — never a new set — which is what
-     lets the client FLIP the rows it already has rather than redraw. */
-  rerank: async ({ anchors = [] } = {}) => {
-    const anchor = new Set(anchors);
-    const order = [...ORDER].sort((a, b) => {
-      const A = anchor.has(a) ? 1 : 0, B = anchor.has(b) ? 1 : 0;
-      if (A !== B) return B - A;
-      return byId.get(b).score - byId.get(a).score;
-    });
-    ORDER = order;
-    return respond('rerank', { order });
+  /* both re-order the SAME set and add no patent to it */
+  sort: async ({ sort = 'relevance' } = {}) => {
+    ORDER = [...SET].sort(cmp[sort] || cmp.relevance);
+    return respond('sort', { order: ORDER });
   },
-
-  /* THE GROUPING PARTITIONS THE SET IT WAS GIVEN, so it is built from ORDER
-     and not from the whole corpus: a facet that removed half the results must
-     remove them from the branches too, or the counts contradict the list
-     directly above them. And it covers the whole ORDER rather than the loaded
-     page — a branch count that grew as the founder pressed Show more would be
-     reporting our paging rather than their results. */
-  cluster: async () => {
-    const { tree, members } = D.clusterFor(ORDER);
-    GROUPS = members;
-    return respond('cluster', tree);
+  similar: async ({ anchor } = {}) => {
+    ORDER = [...SET].sort((a, b) => (b === anchor) - (a === anchor) || cmp.relevance(a, b));
+    return respond('similar', { order: ORDER });
   },
 
   /* AN UNKNOWN ID IS NOT_FOUND, never ok(null): the pane offers no retry for
@@ -210,47 +129,16 @@ export const DemoEngine = {
       await wait(DELAY.record);
       return err(CODE.NOT_FOUND, false, `demo: no record ${id}`);
     }
-    return respond('record', D.recordFor(id));
+    const r = D.recordFor(id);
+    return respond('record', {
+      ...r,
+      version: byId.get(id).version,
+      kindCode: null, status: null, priority: null, ipcWords: {}, url: null,
+    });
   },
-
-  /* THE LEDGER, and nothing else. It is handed the ids so a real engine can
-     record WHAT left, and it answers with the balance. It never returns the
-     rows: the client already has them, and a second copy of the columns here
-     would be a second place the export's shape is decided. */
-  export: async ({ ids = [] } = {}) =>
-    respond('export', { balance: D.POINTS.balance - 8 }),
-
-  /* ── projects ────────────────────────────────────────────────────────── */
-  projects: async () => respond('projects', { projects: D.PROJECTS }),
-
-  /* ── the destinations ────────────────────────────────────────────────── */
-  points: async () => respond('points', {
-    balance: D.POINTS.balance, allowance: D.POINTS.allowance,
-    runTypes: D.RUN_TYPES,
-  }),
-  runs: async () => respond('runs', { runs: D.RUNS }),
-  account: async () => respond('account', D.ACCOUNT),
-  /* ONE FIELD PER CALL, KEYED BY THE CONTROL THAT EDITED IT — acctName or
-     acctMail — and the answer is the account as it now stands. */
-  saveAccount: async (patch = {}) => respond('saveAccount', {
-    name:  'acctName' in patch ? patch.acctName : D.ACCOUNT.name,
-    email: 'acctMail' in patch ? patch.acctMail : D.ACCOUNT.email,
-  }),
-  billing: async () => respond('billing', D.BILLING),
-  invoices: async () => respond('invoices', { invoices: D.INVOICES }),
-  sendSupport: async () => respond('sendSupport', { sent: true }),
 };
 
-/* A port added to ports.mjs and forgotten here would otherwise be a TypeError
-   at the moment a founder presses something, several surfaces in. assertEngine
-   catches it at mount; this catches it at module load, which is earlier and
-   names the file that is behind. */
 const missing = PORTS.filter(p => typeof DemoEngine[p] !== 'function');
-if (missing.length) {
-  console.warn(
-    `demo/engine.mjs is missing ${missing.length} port(s): ${missing.join(', ')}. ` +
-    `app/ will refuse to mount. Add them here, or remove them from ports.mjs if ` +
-    `design/components.md no longer has a row for them.`);
-}
+if (missing.length) console.warn(`demo/engine.mjs is missing ${missing.length} port(s): ${missing.join(', ')}.`);
 
 export default DemoEngine;

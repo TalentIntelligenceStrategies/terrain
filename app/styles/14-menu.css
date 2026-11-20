@@ -5,9 +5,8 @@
    token: nothing referenced it, and a dead full-viewport node at z-index 50
    is one visibility flip away from covering the product.
 
-   A MENU FLATTENS, and both of these do. The project switcher held a nested
-   version block until versions were removed; nothing in the product nests a
-   menu now, and a new one would have to argue for itself.
+   A MENU FLATTENS, and both of these do. Nothing in the product nests a
+   menu, and a new one would have to argue for itself.
 
    THE SELECTED STATE IS §3.8's ACCENT SITE 3, on the LABEL. The row's fill
    stays neutral -- a filled accent row inside a menu would be a second
@@ -15,7 +14,7 @@
    ═══════════════════════════════════════════════════════════════════════ */
 
 /* ── the two masthead menus ─────────────────────────────────────────────
-   ONLY ONE MAY BE OPEN. Two dropdowns anchored to the same 48px bar overlap
+   ONLY ONE MAY BE OPEN. Two dropdowns anchored to the same 56px bar overlap
    whatever is in them, so opening one closes the other. */
 .mast-menu-wrap{position:relative;flex:0 0 auto}
 .mast-menu{position:absolute;top:calc(100% + var(--s-6));min-width:260px;
@@ -24,15 +23,17 @@
       opacity:0;visibility:hidden;transform:translateY(-4px) scale(.97);z-index:7;
       transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
                  visibility 0s linear var(--dur-2)}
-.mast-menu-proj{left:0;width:300px;max-height:min(70vh,540px);overflow-y:auto}
+.mast-menu-hist{left:0;width:340px;max-height:min(70vh,540px);overflow-y:auto}
 #acctMenu{right:0;left:auto;min-width:220px}
-.proj-open #projMenu,.menu-open #acctMenu{opacity:1;visibility:visible;transform:none;
+.hist-open #histMenu,.menu-open #acctMenu{opacity:1;visibility:visible;transform:none;
       transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),
                  visibility 0s linear 0s}
 /* --s-6 AND NOT 5. Five is not a step on §5's scale and nothing argued it;
    the name-over-address stack is the same label-over-value pair every other
    surface spaces with --s-6. */
 .menu-who{display:flex;flex-direction:column;gap:var(--s-6);padding:var(--s-8)}
+/* the build, for support: quiet, and in the figure face because it is an id */
+.menu-ver{margin:0;padding:var(--s-4) var(--s-12) var(--s-8);color:var(--text-3)}
 
 /* ── MOVED HERE FROM THE RESET SECTION, and it is safe to move because it
    wins on SPECIFICITY wherever it lands rather than on order.
@@ -44,3 +45,28 @@
    whole interaction gone. Inset by 2 so it sits inside the item rather than
    against the menu's own 8px of padding. */
 #acctMenu .menu-item:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+
+/* ── search history · platform.md §5 ─────────────────────────────────────
+   A ROW IS THE SENTENCE OVER ITS FIELD AND DATE, and the whole of it runs the
+   search; the remove control is its own target at the trailing edge, never
+   inside the run button. One line of sentence, because the masthead panel is
+   a list to choose from and the full sentence is what the run puts back in
+   the composer. */
+.hist-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--s-2)}
+.hist-row{display:flex;align-items:center;gap:var(--s-4)}
+.hist-run{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-4);
+  padding:var(--s-8) var(--s-10);border-radius:var(--r-chip);text-align:start;
+  transition:background var(--dur-1) var(--ease)}
+.hist-q{font-size:13px;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-meta{color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-x{flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+  width:var(--s-32);height:var(--s-32);border-radius:var(--r-chip);color:var(--text-3);
+  transition:background var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
+@media (hover:hover){
+  .hist-run:hover,.hist-x:hover{background:var(--surface-sunken)}
+  .hist-x:hover{color:var(--text-1)}
+}
+.hist-run:focus-visible,.hist-x:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.hist-foot{display:flex;justify-content:flex-end;border-top:1px solid var(--border);
+  margin-top:var(--s-8);padding-top:var(--s-8)}
+.hist-empty{margin:0;padding:var(--s-8) var(--s-10);color:var(--text-2)}

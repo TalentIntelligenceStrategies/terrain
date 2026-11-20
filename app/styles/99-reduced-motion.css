@@ -28,6 +28,7 @@
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-property:none!important;animation:none!important}
   .sk::after{display:none}                    /* shimmer goes flat, never off */
+  .cmp-inner:has([data-waiting])::after{opacity:.45}   /* the edge holds, still */
   .sweep::after{width:100%;opacity:.5}        /* so does the sweep */
   /* AND SO DOES THE LOADER -- present, visible, motionless. --rest is set per
      dot at build time from the library's own idle formula, so the grid holds

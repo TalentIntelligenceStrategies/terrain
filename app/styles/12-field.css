@@ -55,12 +55,10 @@
    --text-2 below is the whole of the hierarchy; §2 has no colour to spend
    here and does not need any. */
 .pref-label{grid-column:1;grid-row:1;min-width:0;color:var(--text-1)}
-/* SIZE AND LEADING ARE .t-body's, ON THE MARKUP -- .empty-note's fix, applied
-   to the second site that had the same defect. This was 13/1.55: `label`'s
-   size carrying a leading that is neither role's, invented in the gap between
-   two real ones. §4: "Prose is `body` wherever it appears." What is left here
-   is what belongs to the component -- its cell, its measure and its colour. */
-.pref-help{grid-column:1;grid-row:2;margin:0;color:var(--text-2);
+/* A HINT IS A FACT ABOUT ITS FIELD, so it is meta (§4), 13/400, under a 13/500
+   label: the two separate by weight and ink, and the hint never outranks the
+   label it explains. */
+.pref-help{grid-column:1;grid-row:2;margin:0;color:var(--text-2);font-size:13px;line-height:1.5;
       max-width:68ch;text-wrap:pretty}
 /* 36px RESERVED IN EVERY STATE, so a switch row and a field row are the
    same height and nothing on the card moves when a value becomes a field.
@@ -119,7 +117,7 @@
    same indicator as every other control on the screen, and it survives
    forced colours where a swap between two greys does not.                */
 .fld{display:block;width:100%;height:36px;padding:0 var(--s-10);
-     font-size:14px;line-height:1.55;
+     font-size:16px;line-height:1.55;
      color:var(--text-1);background:var(--surface);
      border:1px solid var(--border);border-radius:var(--r-control);
      transition:border-color var(--dur-1) var(--ease)}
@@ -129,7 +127,7 @@
    here is one component at two sizes: this is a box you write a paragraph
    in and the founder may want it bigger. */
 .ta{display:block;width:100%;min-height:104px;padding:var(--s-10);
-     font:inherit;font-size:14px;line-height:1.55;
+     font:inherit;font-size:16px;line-height:1.55;
      color:var(--text-1);background:var(--surface);
      border:1px solid var(--border);border-radius:var(--r-control);
      resize:vertical;

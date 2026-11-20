@@ -96,7 +96,7 @@
 /* A WAITING REGION. min-height is set inline from the height the region had
    before it emptied, so a card does not collapse to the loader's 20px and the
    grid does not reflow twice per resolve -- the same reason .cmp-status
-   reserves 17px for a line it does not yet have. */
+   reserves one line (1lh) for a message it does not yet have. */
 .is-wait{display:grid;place-items:center}
 .is-wait>.dmx-root{grid-area:1/1}
 /* ***THESE THREE ARE NOT REDUNDANT AND THAT IS THE WHOLE NOTE.*** `.is-wait`
@@ -281,7 +281,7 @@
 /* the icon-beside-sentence row is .fld-msg's shape, reused rather than
    reinvented: this is that message one surface up. */
 .fail-say{display:flex;align-items:flex-start;gap:var(--s-8);margin:0;
-      font-size:14px;line-height:1.6;color:var(--text-1);
+      font-size:16px;line-height:1.55;color:var(--text-1);
       max-width:68ch;text-wrap:pretty}
 .fail-say svg{flex:0 0 16px;margin-block-start:var(--s-4);color:var(--text-2)}
 /* CANCEL-LEADS ordering does not apply: there is one control and it is the

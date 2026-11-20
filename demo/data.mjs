@@ -102,7 +102,13 @@ export const DEMO_RECORD = {
   where: 'United States',
 };
 
-export const DEMO_PROJECT = 'Drone airframe and body structure';
+/* the demonstration patent as two documents: the grant, and the application
+   it issued from. 2018/9912345 is past any number the office has published. */
+export const DEMO_VERSIONS = [
+  { kind: 'grant',       number: DEMO_RECORD.number,    published: '2019-05-10' },
+  { kind: 'application', number: 'US 2018/9912345 A1', published: '2018-02-15' },
+];
+
 export const DEMO_IDEA = 'drone';
 
 /* ── the list ────────────────────────────────────────────────────────────────
@@ -119,15 +125,6 @@ function seeded(i) {
   const n = Math.abs((i * 37 + 5) | 0) % 997;
   return {
     n,
-    /* ALL FOUR STATUS WORDS APPEAR IN THE DEMO, because a vocabulary the
-       demo never renders is a vocabulary nobody looks at. Real data carries
-       roughly half live, a quarter expired, a tenth pending and a handful
-       abandoned; these proportions are that shape and are illustrative like
-       every other figure here. */
-    status: n % 13 === 4 ? 'pending'
-          : n % 17 === 9 ? 'abandoned'
-          : (n % 7 === 3 || n % 11 === 6) ? 'expired'
-          : 'live',
     /* Innovue's own relevance score, printed rather than re-derived. Four
        decimals, because that is what the engine returns; rounding it would be
        Terrain restating it. No word about quality may sit beside it. */
@@ -150,11 +147,19 @@ export function patentRows(count = SET_CEILING) {
          which is what null means everywhere else; it is NOT the id wearing a
          different column heading. */
       skim: i === 0 ? DEMO_TITLE : null,
-      holder: i === 0 ? DEMO_HOLDER : null,
+      /* p73 NAMES NO ASSIGNEE: '' and not null, so the first page shows the
+         third holder state (core/format.mjs); it ranks third. It is a fact
+         about a patent, not a name, so it does not break the rule that every
+         other row's identity is withheld. */
+      holder: i === 0 ? DEMO_HOLDER : i === 73 ? '' : null,
       number: i === 0 ? DEMO_RECORD.number : null,
+      /* THE DEMONSTRATION ROW HAS BOTH DOCUMENTS, so the switch can be seen;
+         DEMO_APPLICATION's number is outside the range ever issued, like the
+         grant's. Every other row's number is withheld, and so is which
+         version it is. */
+      versions: i === 0 ? DEMO_VERSIONS : null,
       where: i === 0 ? DEMO_RECORD.where : null,
       year: s.year,
-      status: s.status,
       /* AND IT SCORES HIGHEST, so relevance order puts it first. The seed gave
          it whatever the formula produced, which left the one row that can
          demonstrate a title, a holder and a record sitting at position 61 —
@@ -224,67 +229,7 @@ export function patentRows(count = SET_CEILING) {
   return out;
 }
 
-/* ── the grouping · platform.md §4.4 ──────────────────────────────────────
-   TWO LEVELS, AND THE LEAVES PARTITION THE SET EXHAUSTIVELY. That is the
-   contract the panel is built on: selecting a leaf filters the list to
-   `ids`, so a patent in no leaf would be unreachable through the panel while
-   still sitting in the list, and a patent in two would be counted twice by
-   the chip above the results.
-
-   The vocabulary is drone airframe engineering, which is this demo's own
-   invented domain and nobody's client data. Real branches would come from the
-   engine over the real set; these are the SHAPE, illustrative like every other
-   figure here.
-
-   THE LEAF OWNS THE MEMBERSHIP AND EMITS ONLY A COUNT. The client holds one
-   page and never the whole set, so a leaf that listed its patents would list
-   ones the list does not have. `leafIds` below is what the engine filters
-   with; `n` is what the panel prints. */
-const SPINES = [
-  ['Airframe structure', [
-    'Folding arm and hinge', 'Monocoque and shell', 'Boom and truss', 'Landing gear']],
-  ['Propulsion and lift', [
-    'Rotor and propeller', 'Motor mounting', 'Ducted and shrouded', 'Tilt and transition']],
-  ['Power and thermal', [
-    'Battery housing', 'Thermal path', 'Power distribution']],
-  ['Control and sensing', [
-    'Flight control', 'Obstacle sensing', 'Payload gimbal']],
-];
-
-export function clusterFor(ids) {
-  /* Below a floor there is no structure to show, and the panel says so rather
-     than drawing two branches and implying one. Three patents in fourteen
-     leaves is noise wearing the shape of a taxonomy. */
-  if (ids.length < 12) return { tree: { head: DEMO_IDEA, spines: [] }, members: new Map() };
-
-  const leaves = [];
-  SPINES.forEach(([spine, names], si) =>
-    names.forEach((label, li) => leaves.push({ spine, si, label, id: 's' + si + 'l' + li, ids: [] })));
-
-  /* DEALT ROUND ROBIN OFF A STABLE HASH so the same patent lands in the same
-     leaf on every render, and every leaf that exists has at least one patent —
-     an empty branch is a claim that a category was considered and came back
-     with nothing, which is exactly the finding this panel does not state. */
-  ids.forEach((id, i) => {
-    const n = Number(String(id).replace(/\D/g, '')) || i;
-    leaves[(n * 7 + (n % 5)) % leaves.length].ids.push(id);
-  });
-
-  return {
-    tree: {
-      head: DEMO_IDEA,
-      spines: SPINES.map(([label], si) => ({
-        label,
-        leaves: leaves.filter(l => l.si === si && l.ids.length)
-                      .map(({ id, label, ids }) => ({ id, label, n: ids.length })),
-      })).filter(sp => sp.leaves.length),
-    },
-    /* the engine's own half: leaf id -> the patents in it */
-    members: new Map(leaves.map(l => [l.id, l.ids])),
-  };
-}
-
-export function recordFor(id) {
+export function recordFor(id, version) {
   const i = Number(String(id).replace(/^p/, '')) || 0;
   const s = seeded(i);
   if (i !== 0) {
@@ -294,9 +239,11 @@ export function recordFor(id) {
     return {
       title: null,
       number: null, appno: null, kind: 'Invention', ipcMain: null, ipc: null,
-      holder: null, inventors: null,
+      /* p73's row names no assignee, so its record says the same (R1-31):
+         the row and the record are one holder from one source. */
+      holder: i === 73 ? '' : null, inventors: null,
       filed: String(s.year), published: String(s.year + 1), where: null,
-      status: s.status, abstract: null, claims: null,
+      abstract: null, claims: null,
       /* EMPTY, NOT null, AND NOT A BAR. The skeleton contract covers values
          that exist and are being withheld; the demo corpus has no drawings at
          all, and a row of grey rectangles would claim it does. corpus/ is what
@@ -304,11 +251,15 @@ export function recordFor(id) {
       figures: [],
     };
   }
+  /* THE APPLICATION IS THE SAME PATENT AS PUBLISHED BEFORE GRANT: its own
+     number, kind and date, and the same everything else. */
+  const app = version === 'application' && DEMO_VERSIONS[1];
   return {
     ...DEMO_RECORD,
+    ...(app ? { number: app.number, kind: 'Application' } : {}),
     title: DEMO_TITLE,
-    filed: '2021', published: '2023',
-    status: 'live', abstract: DEMO_ABSTRACT, claims: DEMO_CLAIMS,
+    filed: '2017', published: app ? app.published : DEMO_VERSIONS[0].published,
+    abstract: DEMO_ABSTRACT, claims: DEMO_CLAIMS,
     /* SIX DRAWINGS, EVERY ONE OF THEM WITHHELD — `src: null`, which is what
        null means in every other field here. This is §8's contract, not a fifth
        exception to it: the record HAS drawings and Terrain declines to print
@@ -327,59 +278,6 @@ export function recordFor(id) {
     figures: [1, 2, 3, 4, 5, 6].map(n => ({ n, src: null, alt: null })),
   };
 }
-
-/* ── projects, points, account, billing ─────────────────────────────────── */
-/* NOTHING IS INVENTED. Every other project is a bar — naming a roster would be
-   inventing six projects a founder never made, which is a different act from
-   printing the one the surface already shows. */
-export const PROJECTS = [
-  { id: 'proj-1', label: DEMO_PROJECT, current: true },
-  { id: 'proj-2', label: null }, { id: 'proj-3', label: null },
-  { id: 'proj-4', label: null }, { id: 'proj-5', label: null },
-];
-
-export const POINTS = { balance: 180, allowance: 400 };
-
-/* THREE RUN TYPES, BECAUSE THERE ARE THREE. platform.md §6.1 lists what
-   exists; `Rebuild after a scope change` was the gate's re-run and `Watch` is
-   filing alerts, which §10 item 1 says are not built. A price beside a run the
-   product cannot perform is the same defect as a switch for a capability that
-   does not exist — design-language.md §7 — and this one also lands on the page
-   whose whole job is telling the founder what they are paying for.
-
-   THE FIGURES ARE ILLUSTRATIVE and pricing is unsettled; §6.1 says so. */
-export const RUN_TYPES = [
-  { id: 'search', label: 'New search', cost: 40 },
-  { id: 'rerank', label: 'Find similar', cost: 4 },
-  { id: 'export', label: 'Export', cost: 8 },
-];
-
-export const RUNS = [
-  { id: 'r1', kind: 'New search', project: null, when: '2026-09-14', cost: 40 },
-  { id: 'r2', kind: 'Find similar', project: null, when: '2026-09-14', cost: 4 },
-  { id: 'r3', kind: 'Export', project: null, when: '2026-09-12', cost: 8 },
-  { id: 'r4', kind: 'New search', project: null, when: '2026-09-09', cost: 40 },
-];
-
-/* THE FOUNDER'S OWN NAME AND ADDRESS ARE BARS TOO. §8 does not bend for them:
-   a settings page whose whole content is a name and an email is where that
-   temptation is strongest. A password renders as a run of dots, which is what a
-   password looks like everywhere and is chrome rather than an identity being
-   withheld. */
-export const ACCOUNT = { name: null, email: null };
-
-/* 'XXX' IS NOT null, AND THE TWO RENDER THROUGH DIFFERENT PATHS ON PURPOSE.
-   null is "this value exists and we decline to print it"; 'XXX' is "nobody has
-   chosen one yet". Pricing is open — platform.md §12 — so the plan screen
-   prints XXX and a bar rather than guessing a number into existence. */
-export const BILLING = { price: 'XXX' };
-
-export const INVOICES = [
-  { id: 'i1', when: '2026-09-01', amount: 'XXX', status: 'paid' },
-  { id: 'i2', when: '2026-08-01', amount: 'XXX', status: 'paid' },
-  { id: 'i3', when: '2026-07-01', amount: 'XXX', status: 'paid' },
-  { id: 'i4', when: '2026-06-01', amount: 'XXX', status: 'paid' },
-];
 
 /* ── the home surface ─────────────────────────────────────────────────────
    ILLUSTRATIVE, like every figure in this file. The dates are plausible and
@@ -401,17 +299,13 @@ export const COVERAGE_SCOPE =
   'Terrain currently covers semiconductor devices filed in the United States, '
   + 'China, Taiwan, Europe, Korea and Japan.';
 
+/* ONE ROW PER SOURCE: the latest grant and the latest application taken in.
+   Illustrative, like every figure here. */
 export const COVERAGE = [
-  { source: 'United States · granted',      updated: '2026-09-17' },
-  { source: 'United States · applications', updated: '2026-09-17' },
-  { source: 'China · granted',              updated: '2026-09-15' },
-  { source: 'China · applications',         updated: '2026-09-15' },
-  { source: 'Taiwan · granted',             updated: '2026-09-16' },
-  { source: 'Taiwan · applications',        updated: '2026-09-16' },
-  { source: 'Europe · granted',             updated: '2026-09-11' },
-  { source: 'Europe · applications',        updated: '2026-09-11' },
-  { source: 'Korea · granted',              updated: '2026-09-09' },
-  { source: 'Korea · applications',         updated: '2026-09-09' },
-  { source: 'Japan · granted',              updated: '2026-09-18' },
-  { source: 'Japan · applications',         updated: '2026-09-18' },
+  { source: 'United States', grant: '2026-09-15', application: '2026-09-17' },
+  { source: 'China',         grant: '2026-09-15', application: '2026-09-15' },
+  { source: 'Taiwan',        grant: '2026-09-16', application: '2026-09-11' },
+  { source: 'Europe',        grant: '2026-09-09', application: '2026-09-11' },
+  { source: 'Korea',         grant: '2026-04-28', application: '2026-09-09' },
+  { source: 'Japan',         grant: '2026-09-18', application: '2026-09-16' },
 ];

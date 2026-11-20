@@ -1,0 +1,75 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   30 · THE SEARCH — the sentence, then the scope it ran over.
+   From the V8 lab: one row holds the sentence, what it is (Text or Patent
+   number) and the button that runs it; under a hairline, each criterion is
+   one chip, label and value on one line, the time the search took, and the
+   one control that changes them. The home composer is the same panel.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.search{margin:0 var(--s-16);flex:none}
+.q{display:grid;grid-template-columns:minmax(0,1fr) auto auto;column-gap:var(--s-12);row-gap:var(--s-8);align-items:start;
+   padding:var(--s-16) var(--s-16) var(--s-16) var(--s-24)}
+.q .sentence{grid-column:1;grid-row:1;padding-top:5px;margin-right:var(--s-12)}
+.q .seg{grid-column:2;grid-row:1;margin-top:4px}
+.q .go{grid-column:3;grid-row:1;margin-top:4px}
+@media (max-width:760px){ .q .seg{grid-column:1 / 3;grid-row:2;justify-self:end;margin-top:0} }
+.sentence{display:flex;align-items:flex-start;gap:var(--s-8);min-width:0}
+.sentence label{flex:1;min-width:0}
+.sentence textarea{display:block;width:100%;margin:0;padding:var(--s-4) 0;border:0;background:none;resize:none;outline:none;
+                   font-size:18px;line-height:1.45;color:var(--text-1);text-wrap:pretty;
+                   min-height:calc(1.45em + 8px);max-height:calc(2.9em + 8px);overflow-y:auto}
+.sentence textarea::placeholder{color:var(--text-3)}
+.q-note{grid-column:1 / -1;margin:0;font-size:13px;color:var(--text-2);min-height:0}
+.q-note:empty{display:none}
+
+/* the scope: what was searched, stated; one button changes it */
+.scope{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-8);margin:0;
+       padding:var(--s-14) var(--s-24) var(--s-16);border-top:1px solid var(--border)}
+.scope>div{display:grid;gap:var(--s-4);min-width:0}
+.scope>div:not(.end):not(.took){display:inline-flex;align-items:center;gap:var(--s-6);height:32px;padding:0 var(--s-12);
+                                border:1px solid var(--border);border-radius:var(--r-control);background:var(--surface)}
+.scope dt{font-family:'Urbanist',sans-serif;font-weight:400;font-size:13px;line-height:1;letter-spacing:0;text-transform:none;color:var(--text-3)}
+.scope dd{margin:0;font-size:13px;font-weight:500;color:var(--text-1);white-space:nowrap}
+.scope .took{margin-left:auto}
+.scope .took dd{font-weight:400;color:var(--text-3)}
+.scope .end>.ctl{height:32px;font-size:13px}
+
+/* ── search settings ────────────────────────────────────────────────────── */
+.settings{width:560px;padding:var(--s-16)}
+.set-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-16) var(--s-24)}
+.settings fieldset{border:0;margin:0;padding:0;min-width:0;display:grid;gap:var(--s-8);align-content:start}
+.settings legend{padding:0;margin-bottom:var(--s-8)}
+.settings .val{font-size:14px;font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:var(--s-6)}
+.chip-t{display:inline-flex;align-items:center;gap:var(--s-6);height:32px;padding:0 var(--s-12);border-radius:var(--r-control);
+        border:1px solid var(--border-strong);background:var(--surface);color:var(--text-2);font-size:13px;font-weight:500;cursor:pointer}
+.chip-t svg.i{width:14px;height:14px;display:none}
+.chip-t[aria-pressed="true"]{color:var(--text-1);border-color:var(--text-1)}
+.chip-t[aria-pressed="true"] svg.i{display:block}
+.help{font-size:12px;color:var(--text-3);margin:0}
+.dates{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-8)}
+.dates label{display:grid;gap:var(--s-4);font-size:12px;color:var(--text-3)}
+.dates input{height:36px;padding:0 var(--s-10);border:1px solid var(--border-strong);border-radius:var(--r-control);background:var(--surface);
+             font-size:14px;color:var(--text-1);min-width:0}
+.set-foot{display:flex;align-items:center;gap:var(--s-12);margin-top:var(--s-16);padding-top:var(--s-12);border-top:1px solid var(--border)}
+.set-foot .note{margin-right:auto;font-size:12px;color:var(--text-3)}
+.set-warn{font-size:12px;color:var(--text-1);min-height:1em;margin:var(--s-8) 0 0}
+
+@media (max-width:640px){
+  .settings{position:fixed;left:var(--s-8);right:var(--s-8);top:64px;width:auto;max-height:calc(100dvh - 80px);overflow:auto}
+  .set-grid{grid-template-columns:1fr}
+}
+
+/* ── phone: on the results surface the search docks at the foot ─────────── */
+@media (max-width:640px){
+  .view[data-view="work"] .search{position:fixed;left:var(--s-8);right:var(--s-8);bottom:calc(var(--s-8) + env(safe-area-inset-bottom));
+                                  z-index:4;margin:0;box-shadow:var(--shadow-float)}
+  .view[data-view="work"] .q{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--s-8);padding:var(--s-6) var(--s-6) var(--s-6) var(--s-16)}
+  .view[data-view="work"] .q .seg,.view[data-view="work"] .scope,.view[data-view="work"] .q-note{display:none}
+  /* a textarea cannot ellipsize, so the end of a long sentence fades instead of being cut */
+  .view[data-view="work"] .sentence textarea{height:32px;min-height:0;font-size:16px;line-height:24px;white-space:nowrap;overflow:hidden;padding-top:var(--s-4);
+                                             -webkit-mask-image:linear-gradient(to right, black 82%, transparent);mask-image:linear-gradient(to right, black 82%, transparent)}
+  .view[data-view="work"] .q .sentence{padding-top:0;margin-right:0}
+  .view[data-view="work"] .q .go{grid-column:2;grid-row:1;height:44px;margin-top:0;width:44px;padding:0;justify-content:center}
+  .view[data-view="work"] .go .label{display:none}
+}

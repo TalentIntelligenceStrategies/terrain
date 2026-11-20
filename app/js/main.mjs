@@ -67,30 +67,18 @@ async function resolveEngine() {
 }
 /* ════════════════════════════════════════════════════════════════════════ */
 
-const PARTIALS = ['masthead', 'home', 'surface', 'starred', 'points',
-                  'account', 'billing', 'help', 'parked'];
+const PARTIALS = ['masthead', 'home', 'surface'];
 
 /* THE SURFACES. Each is imported for its side-effect-free init(); the order
-   here is the order init() runs, and it is DOM order rather than dependency
-   order because none of them may depend on another having run. */
+   here is the order init() runs. SEARCH BEFORE THE OTHERS, because it builds
+   the settings popover inside both composers and the home and list modules
+   read the scope it states. */
 const SURFACES = [
-  ['masthead',     () => import('./surfaces/masthead.mjs')],
-  /* SETTINGS BEFORE CONVERSATION, and it is the one place the order matters:
-     it moves #setPop out of the [hidden] parked container and under the
-     composer's anchor, and home.mjs reads its values on the way into
-     ENGINE.search(). Everything else here is DOM order. */
-  ['settings',     () => import('./surfaces/settings.mjs')],
-  ['home',         () => import('./surfaces/home.mjs')],
-  ['work',         () => import('./surfaces/work.mjs')],
-  ['list',         () => import('./surfaces/list.mjs')],
-  /* FISHBONE AFTER LIST, so the list's `terrain:refiltered` listener is bound
-     before the panel can dispatch one. Both are idempotent, but an init order
-     that only works because the first request takes a network round trip is an
-     order that breaks the day the engine gets fast. */
-  ['fishbone',     () => import('./surfaces/fishbone.mjs')],
-  ['record',       () => import('./surfaces/record.mjs')],
-  ['starred',      () => import('./surfaces/starred.mjs')],
-  ['destinations', () => import('./surfaces/destinations.mjs')],
+  ['search',   () => import('./surfaces/search.mjs')],
+  ['masthead', () => import('./surfaces/masthead.mjs')],
+  ['home',     () => import('./surfaces/home.mjs')],
+  ['list',     () => import('./surfaces/list.mjs')],
+  ['record',   () => import('./surfaces/record.mjs')],
 ];
 
 /* ── partial loading ──────────────────────────────────────────────────────
@@ -117,32 +105,12 @@ async function loadPartials() {
    the arriving one — a leaving view is painted ABOVE the arriving one whenever
    it comes later in the DOM, which the work surface does and the home surface
    does not. */
-/* WHERE `Back` GOES, and it is a memory rather than a constant. The four
-   destinations are stepped off to and come back from (platform.md §6), so
-   `Back` has to return to whichever surface the founder was on — the results
-   if they have searched, the home surface if they have not. A hard-coded
-   target sends a founder who never searched to an empty result list and calls
-   it going back. */
-const DESTINATIONS = ['usage', 'account', 'billing'];
-let lastSurface = 'home';
-
-/* which hash lands on which view. A hash that names a STATE rather than a
-   surface still has to resolve to one, or the router silently shows nothing. */
+/* WHICH HASH LANDS ON WHICH VIEW. Two surfaces: home, and the results. A hash
+   that names a surface Terrain no longer has — #starred, #report, #account,
+   #billing, #help, from a bookmark or an old link — lands on home rather than
+   on nothing. */
 function viewForHash(h) {
-  if (!h || h.startsWith('home')) return 'home';
-  /* `back` is not a surface, it is a request to leave one — it resolves to
-     wherever the founder was before they stepped off. */
-  if (h === 'back') return lastSurface;
-  /* `technology`, `track` and `drilldown` were here and named the Market /
-     Technology toggle, the column tracker and the drill-down. Nothing emits
-     any of them; a typed one falls through to the home surface, which is
-     right now that the map is gone. */
   if (h === 'work' || h.startsWith('set')) return 'work';
-  if (h.startsWith('starred')) return 'starred';
-  if (h.startsWith('usage')) return 'usage';
-  if (h.startsWith('account')) return 'account';
-  if (h.startsWith('billing')) return 'billing';
-  if (h.startsWith('help')) return 'help';
   return 'home';
 }
 
@@ -155,10 +123,6 @@ export function onRoute(fn) { listeners.push(fn); }
 
 export function go(view) {
   if (view === current) return;
-  /* remembered BEFORE the swap, and `help` is deliberately not in
-     DESTINATIONS' opposite: help is stepped off to as well, so returning to it
-     would be returning to somewhere the founder was leaving. */
-  if (!DESTINATIONS.includes(view) && view !== 'help' && view !== 'starred') lastSurface = view;
   const next = $(`.view[data-view="${view}"]`);
   if (!next) return;
   const prev = current && $(`.view[data-view="${current}"]`);
@@ -203,6 +167,19 @@ function applyTheme(next) {
   requestAnimationFrame(() => requestAnimationFrame(
     () => root.classList.remove('theme-switching')));
 }
+
+/* THE SYSTEM CAN SWITCH THE THEME TOO. Under "Match your system" no control
+   runs when the OS flips to dark at sunset, so the same one frame without
+   transitions is taken here — otherwise every coloured property cross-fades
+   at once, which is the smear applyTheme exists to stop (platform.md §13,
+   R1-45). */
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+  const root = document.documentElement;
+  if (root.hasAttribute('data-theme')) return;
+  root.classList.add('theme-switching');
+  requestAnimationFrame(() => requestAnimationFrame(
+    () => root.classList.remove('theme-switching')));
+});
 
 /* ── boot ─────────────────────────────────────────────────────────────────── */
 async function boot() {

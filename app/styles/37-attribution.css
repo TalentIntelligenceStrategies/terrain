@@ -33,16 +33,12 @@
    bottom now sits on the text's baseline, which is what "bottom aligned"
    means for type.
 
-   THE TEXT IS `body` 14px, AND IT WAS 14.4. That number was 12 + 20%, asked
-   for in the same pass, and it is the only kind of off-scale value worth
-   having: argued, attributed and written down. It still went, because 14 is
-   0.4px away, is a real role, and appears in §4's table -- and a sweep that
-   re-finds an argued exception every time is a sweep nobody finishes. The
-   size that was wanted is what shipped; the scale is now where it is
-   recorded. .conv-foot moved with it, since the two lines are one credit on
-   two surfaces. */
+   THE TEXT IS META, 13px. A credit is a fact about the product, read once,
+   not prose, so it takes §4's meta step rather than body's. .conv-foot
+   carries the same size, since the two lines are one credit on two
+   surfaces. */
 .foot{display:flex;align-items:baseline;justify-content:center;gap:var(--s-6);margin:0;
-      padding:0 var(--s-16) var(--s-32);font-size:14px;color:var(--text-3)}
+      padding:0 var(--s-16) var(--s-32);font-size:13px;color:var(--text-3)}
 /* ══ IT IS THE LAST THING IN THE SCROLL, ON EVERY SURFACE ════════════════
    A CREDIT IS NOT CHROME. It was a fixed strip under both columns on the
    working surface — always on screen, never scrolled to — and on the
