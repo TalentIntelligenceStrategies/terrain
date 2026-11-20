@@ -26,15 +26,23 @@ subclass in CPC's own words. A field the record does not carry prints an em dash
 **The list head** carries *Details* / *Drawings only*, **Group by topic** (the results by CPC
 subclass, every count checkable against the list, picked as a filter tag), **Sort** (relevance,
 newest, oldest, by published date) and **Export** (these results in this order, as CSV or Markdown).
-*Find similar* in the record re-orders the list by nearness to that patent, and the filter bar says
-so with a tag that restores the relevance order. The rank travels with its row through every sort.
+*Find similar* in the record orders the list by similarity to that patent; the sort still reads
+*Relevance*, and the filter bar says what changed with a tag, *Similar to …*, whose × restores the
+relevance order. The rank travels with its row through every sort.
 
 **Pressing any drawing**, on a row or in the record, opens it **in the viewer over the whole
 window**: zoom, rotation, pan, previous and next, and a strip of every drawing. From a row it opens
 the record underneath at the same time, so Escape closes the drawing and leaves you in the record.
 
 **Keys:** ← → step the record, Esc closes the innermost thing, `/` edits the search, Enter searches,
-Shift+Enter is a new line. The masthead's keyboard button lists them.
+Shift+Enter is a new line. There is no shortcuts control.
+
+**A search shows no loader.** Search keeps its label at reduced ink and is busy to a screen reader,
+the rows on screen stay dimmed until the new ones land, and nothing holds the answer back.
+
+**One system of sizes** (`docs/design-language.md` §4, §5, §9): the masthead at Innovue's 28px
+recipe, every other control 32 (44 below 640px), one field-name role in sentence case, every claim at
+one size, four radii, and a glyph sized to its control.
 
 **Below 640px** the masthead is glyphs only, the search docks at the foot of the window, and the
 record slides in over the list, full screen, with Back, previous and next in its head and *Find
@@ -104,8 +112,8 @@ matches what is on disk and that `99-reduced-motion.css` is **last**.
 
 | | |
 | --- | --- |
-| `tokens` `01`–`05` | foundation — tokens, reset, type, skeleton, loader, wait/fail |
-| `10`–`16` | primitives — button, chip, field, inline-confirm, menu, empty, popover. `index.html` links `10` for the failure block's button; the rest are the bench's |
+| `tokens` `01`–`05` | foundation — tokens, reset, type, skeleton, wait/fail |
+| `10`–`16` | primitives — button, chip, field, inline-confirm, menu, empty, popover. **The bench's only**: `index.html` links none of them, and the product's controls are the shell's (`20`) |
 | `20` | the shell — the views, the shared controls (segments, chips, popovers, menus), the masthead |
 | `30` | the search panel, its scope chips and the settings popover |
 | `34` | the split, the list head, the result cards, the record pane's empty state |
@@ -137,7 +145,7 @@ custom property on `:root`**. `design-language.md` §3.9 is the rule; this is th
 | scale | 28 | `:root` once | Invariant by construction |
 | semantic | 29 | **all three blocks** | The dark contract |
 | derived | 1 | `:root` once | Resolves *through* a themed token. **Never in a dark block** |
-| component-scoped | 4 | the component's own class | Never on `:root` |
+| component-scoped | 2 | the component's own class | Never on `:root` |
 
 **Every other copy of the token block is generated.** `tools/sync-tokens.py --write` writes it into
 the loading lab between sentinels; `--check` verifies it **byte for byte** and CI runs it on every
@@ -149,20 +157,14 @@ push to `main`. `app/index.html` is not a target: it links `styles/tokens.css`.
 nowhere, carries no fallback, and is not listed here — so the table cannot go stale while the gate
 passes.
 
-| Property | Set by | Read with fallback | What it carries |
-| --- | --- | --- | --- |
-| `--rest` | the loader build, per dot | `var(--rest, calc(…))` | the idle opacity ramp under reduced motion |
-| `--dmx-speed` | the loader | `var(--dmx-speed,1)` | cycle multiplier |
-| `--dmx-path` | the loader, per dot | `var(--dmx-path,0)` | position along the ripple path |
-| `--dmx-opacity-base` | the loader | on `.dmx-root` | trough of the pulse |
-| `--dmx-opacity-mid` | the loader | on `.dmx-root` | midpoint of the pulse |
-
-*The drawing viewer composes its zoom, rotation and pan into one inline `transform`, so it sets no
-custom property.*
+**There are none.** No module sets a custom property: the drawing viewer composes its zoom,
+rotation and pan into one inline `transform`, and a waiting control or region is a state attribute
+(`data-waiting`, `aria-busy`) that CSS reads. A row added here names the property, what sets it,
+and the fallback its read carries.
 
 **Every read site carries a fallback, and that is load-bearing.** A `var()` whose property is set
 by nothing and whose read has no fallback is *invalid at computed-value time*, and the property takes
-its **initial** value — for `opacity`, `1`.
+its **initial** value, silently.
 
 ---
 
@@ -174,9 +176,8 @@ Dependency-free modules. Each encodes a rule that reads as an implementation det
 | --- | --- |
 | `dom` | `esc` for every string that enters markup |
 | `motion` | `reduced()` is read **live**, never cached |
-| `loader` | One mark, one size, no variants. Third-party motion: permitted in the product, **not** republishable as a standalone component |
-| `wait` | `waitOn` captures `offsetHeight` **before** emptying. `failHTML`'s retry button is optional **by rule** |
-| `button-wait` | Re-applies the label as `aria-label`, because `display:none` children leave the accessible name. Not `disabled` — that drops focus to `<body>` |
+| `wait` | **No loader.** `waitOn` reserves the height and keeps what the region holds, dimmed, with `aria-busy`, until `landIn` replaces it. `failHTML`'s retry button is optional **by rule** |
+| `button-wait` | The label stays and the ink drops; `aria-busy` says it is working. Not `disabled` — that drops focus to `<body>` |
 | `pop` | **One popover open at a time**, anchored to its button. A pointer opening animates; a keyboard opening skips the motion and moves focus in. Outside press and Escape close it; arrows move inside a menu |
 | `viewer` | The drawing viewer. Innermost: it takes Escape, the arrows, + / − and Tab before the page. A drawing we decline to show or one that fails to load says so on the stage |
 | `export` | **One column list for both formats**, so a CSV and a Markdown file cannot carry different things. No column the page did not show |
@@ -186,7 +187,7 @@ Dependency-free modules. Each encodes a rule that reads as an implementation det
 | `url` | **The search in the address.** A reload, a link or Back reruns what the address holds, and the open record is named in it; on a phone the record is a step Back closes |
 | `format` | The jurisdiction as a two-letter code; a holder as one of three things — a string, `null` (the bar), or `''` (*No assignee listed*) |
 | `live-region` | Clears and re-sets after 60ms so an **identical** second message announces |
-| `beat` `generation` `timers` `armed` `esc-stack` `delegate` | the bench's (`lab.html`) and the router's: a counter per channel, a cancellable timer scope, a registry of armed failures, the Escape stack, delegated activation |
+| `generation` `timers` `armed` `esc-stack` `delegate` | the bench's (`lab.html`) and the router's: a counter per channel, a cancellable timer scope, a registry of armed failures, the Escape stack, delegated activation |
 
 ### The numbered checks
 
@@ -256,12 +257,11 @@ downward.
 
 ---
 
-## The four `!important`s
+## The three `!important`s
 
 | Where | Why |
 | --- | --- |
-| `*,*::before,*::after{transition-property:none!important;animation:none!important}` | two of the four. The blanket reduced-motion stop |
-| `.dmx-dot{opacity:…!important}` | beats both the `*` rule above it and the animation origin |
+| `*,*::before,*::after{transition-property:none!important;animation:none!important}` | two of the three. The blanket reduced-motion stop |
 | `:root.theme-switching *{transition:none!important}` | one frame, so a theme change does not cross-fade |
 
 ---

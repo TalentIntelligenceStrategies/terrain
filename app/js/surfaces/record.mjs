@@ -121,10 +121,10 @@ function sheetHTML(r, id) {
       ${iptech ? `<a class="ghost iptech-m" href="${esc(iptech)}" target="_blank" rel="noopener">${I(P.ext)}Open in IPTECH</a>` : ''}
     </div>
     <div class="actions">
-      <button class="edge" type="button" data-act="similar">Find similar <span class="well">${I(P.similar)}</span></button>
+      <button class="edge" type="button" data-act="similar">Find similar ${I(P.similar)}</button>
       <div class="export">
         <div class="anchor xmenu-a">
-          <button class="edge plain-edge" type="button" id="recExpBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="recExpPop">Export this record <span class="well">${I(P.chev)}</span></button>
+          <button class="edge plain-edge" type="button" id="recExpBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="recExpPop">Export this record ${I(P.chev)}</button>
           <div class="pop menu xmenu" id="recExpPop" role="menu" aria-label="Export this record">
             <button type="button" role="menuitem" data-exp="csv">Spreadsheet <span class="ext">.csv</span></button>
             <button type="button" role="menuitem" data-exp="md">Markdown <span class="ext">.md</span></button>
@@ -165,15 +165,15 @@ function sheetHTML(r, id) {
       <h2 id="recRailH" class="sr-only">Record</h2>
       <div class="rail-groups">
         <div class="rgroup">
-          <h3 class="rlabel">Parties</h3>
+          <h3 class="glabel">Parties</h3>
           <dl class="kv"><dt id="recInvLbl">Inventors</dt><dd${inv.length ? '' : ' class="missing"'}>${inv.length ? `<ul class="people" aria-labelledby="recInvLbl">${inv.map(n => `<li title="${esc(n)}">${esc(n)}</li>`).join('')}</ul>` : DASH}</dd></dl>
         </div>
         <div class="rgroup">
-          <h3 class="rlabel">Identifiers</h3>
+          <h3 class="glabel">Identifiers</h3>
           <dl class="kv">${ids}</dl>
         </div>
         <div class="rgroup classes">
-          <h3 class="rlabel">Classification</h3>
+          <h3 class="glabel">Classification</h3>
           <div class="main-class"><span class="code">${r.ipcMain ? esc(List.cls(r.ipcMain)) : DASH}</span><span class="mc-tag">main class</span></div>
           ${subs}
         </div>
@@ -258,12 +258,13 @@ function armSheet(host) {
   Pop.wire(host.querySelector('#recExpBtn'), host.querySelector('#recExpPop'));
 }
 
+/* NO TOAST: the tag above the list ("Similar to ...") is the statement, and a
+   toast laid over the rows would repeat it on top of the thing it describes */
 async function findSimilar(btn) {
   if (!openId || btn.hasAttribute('data-waiting')) return;
-  btnWait(btn, true);
+  btnWait(btn);
   const ok = await List.similar(openId);
   btnRest(btn);
-  if (ok) toast('Results re-ordered by nearness to this record.');
   if (ok && phone()) close();
 }
 

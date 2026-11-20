@@ -11,12 +11,9 @@
  * READ IT THROUGH reduced(), NEVER BY CACHING IT IN A MODULE-LEVEL CONST at
  * the call site. A cached copy is the same bug one level down.
  *
- * REDUCED DOES NOT SHORTEN OR SKIP A BEAT. design-language.md §6's open item
- * was closed on exactly this point: a wait the system is genuinely having is
- * information, and a founder who asked for less movement did not ask to be
- * told an engine call was instant. What reduced motion changes is that the
- * indicator stills -- which the media query does on its own -- and that every
- * end state is declared outright rather than transitioned to.
+ * REDUCED DOES NOT CHANGE HOW LONG ANYTHING TAKES. A wait lasts as long as
+ * the request does, with or without motion; what reduced motion changes is
+ * that every end state is declared outright rather than transitioned to.
  */
 
 const mq = window.matchMedia('(prefers-reduced-motion: reduce)');

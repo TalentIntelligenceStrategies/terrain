@@ -1,7 +1,7 @@
-<!-- THE MASTHEAD · from the V8 lab (split-v8.html), and nothing else on it:
-     the lockup, New, History, the keyboard shortcuts, the appearance control
-     and the release notes. Below 640px it is glyphs only and the appearance
-     control is one button that steps light → dark → system. -->
+<!-- THE MASTHEAD · the V8 lab's contents at Innovue's size: the lockup, New,
+     History, the appearance control and the release notes, every control one
+     28px recipe (design-language.md §7). Below 640px it is 44px glyphs only
+     and the appearance control is one button that steps light → dark → system. -->
   <header class="mast" id="mast">
     <button class="brand" type="button" id="mastBrand" aria-label="TIS Terrain, home">
       <svg viewBox="0 0 1000 1000" aria-hidden="true"><use href="#terrain-tis-mark"/></svg>
@@ -14,21 +14,7 @@
       </div>
     </nav>
     <div class="mast-end">
-      <div class="anchor keys-a">
-        <button class="ib" type="button" id="keysBtn" aria-label="Keyboard shortcuts" aria-haspopup="dialog" aria-expanded="false" aria-controls="keysPop">
-          <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 8h.01"/><path d="M12 12h.01"/><path d="M14 8h.01"/><path d="M16 12h.01"/><path d="M18 8h.01"/><path d="M6 8h.01"/><path d="M7 16h10"/><path d="M8 12h.01"/><rect width="20" height="16" x="2" y="4" rx="2"/></svg></button>
-        <div class="pop end keys" id="keysPop" role="dialog" aria-label="Keyboard shortcuts">
-          <p class="micro">Keyboard shortcuts</p>
-          <dl>
-            <dt><kbd>&larr;</kbd><kbd>&rarr;</kbd></dt><dd>Previous or next patent</dd>
-            <dt><kbd>Esc</kbd></dt><dd>Close the open panel or patent</dd>
-            <dt><kbd>/</kbd></dt><dd>Edit the search</dd>
-            <dt><kbd>Enter</kbd></dt><dd>Search</dd>
-            <dt><kbd>Shift</kbd><kbd>Enter</kbd></dt><dd>New line in the search</dd>
-          </dl>
-        </div>
-      </div>
-      <div class="seg icons theme" role="group" aria-label="Appearance">
+      <div class="seg theme" role="group" aria-label="Appearance">
         <button type="button" data-theme-set="light" aria-pressed="false" aria-label="Light"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
         <button type="button" data-theme-set="dark" aria-pressed="false" aria-label="Dark"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button>
         <button type="button" data-theme-set="system" aria-pressed="false" aria-label="System"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></button>
@@ -40,7 +26,7 @@
         <button class="ver mono" type="button" id="verBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="verPop"
                 aria-label="View release notes (v1.1.0)" title="Release notes">v1.1.0</button>
         <div class="pop end notes" id="verPop" role="dialog" aria-label="Release notes">
-          <p class="micro">Release notes</p>
+          <p class="glabel">Release notes</p>
           <h3>v1.1.0 <span class="mono">· 2026-11-20</span></h3>
           <ul>
             <li>The results page in the new design: the scope as chips, the rank and the relevance score on every result.</li>

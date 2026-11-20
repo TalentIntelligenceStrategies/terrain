@@ -11,7 +11,7 @@
 
    AND THIS IS WHY THERE IS NO @layer. Inside a layer, !important REVERSES
    layer order -- an important declaration in an earlier layer beats one in a
-   later layer. Three of the file's four !importants are in this block, and
+   later layer. Two of the three !importants in the tree are in this block, and
    this block must be the thing that wins. Layer it last and its importants
    become the weakest in the sheet, which is the blank-screen failure
    design-language.md §6 records from a real incident, reintroduced by the
@@ -28,25 +28,6 @@
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-property:none!important;animation:none!important}
   .sk::after{display:none}                    /* shimmer goes flat, never off */
-  .cmp-inner:has([data-waiting])::after{opacity:.45}   /* the edge holds, still */
-  .sweep::after{width:100%;opacity:.5}        /* so does the sweep */
-  /* AND SO DOES THE LOADER -- present, visible, motionless. --rest is set per
-     dot at build time from the library's own idle formula, so the grid holds
-     the positional ramp it would otherwise animate through rather than going
-     to one flat tone. §6's open item was CLOSED on this, 2026-09-14: the beat
-     still runs under reduced motion, because a wait the system is genuinely
-     having is information, and a founder who asked for less movement did not
-     ask to be told an engine call was instant. */
-  /* THE FALLBACK IS NOT DECORATION. `opacity` does not inherit, so --rest
-     unset makes this declaration invalid at computed-value time and opacity
-     takes its INITIAL value of 1: every dot renders at full strength, the
-     positional ramp is gone, and the loader is a solid block. It cannot
-     happen in this file, because the same function that builds the DOM sets
-     --rest on every dot -- and it happens the moment anyone ships this markup
-     statically, which is the handoff case exactly. The fallback is the flat
-     tone the base rule already computes, so a JS-less loader renders present
-     and visible rather than solid. */
-  .dmx-dot{opacity:var(--rest, calc(0.5 * (var(--dmx-opacity-base) + var(--dmx-opacity-mid))))!important}
 
   .view.is-active{opacity:1;visibility:visible;transform:none}
 
@@ -72,14 +53,4 @@
   /* THE BUILD'S TWO END-STATE RULES WENT WITH THE BUILD, and the stagger
      override with them: nothing writes data-stagger, and the entrance it
      declared an end state for is not declared anywhere either. */
-
-
-  /* ── the star and its count · state without travel ──────────────────────
-     THE FILL STAYS AND THE SCALE GOES. The fill IS the encoding — outline
-     means not starred, solid means starred — so removing it would be reduced
-     INFORMATION, which §6 refuses outright. The 6% lift and the count's bump
-     are the parts that are only motion, and both are declared flat here
-     rather than left to a transition that never ticks. */
-  .set-star[aria-pressed="true"] svg{transform:none}
-  .mast-star[data-bump] svg{transform:none}
 }

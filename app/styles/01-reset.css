@@ -43,7 +43,7 @@ a{text-decoration:none;color:inherit}
 [tabindex="-1"]:focus,[tabindex="-1"]:focus-visible{outline:none}
 
 /* ── the theme swap, for one frame · design-language.md §6 ──────────────
-   THE FOURTH !important, AND IT WAS DOCUMENTED IN TWO PLACES AND DECLARED IN
+   THE THIRD !important, AND IT WAS DOCUMENTED IN TWO PLACES AND DECLARED IN
    NEITHER. main.mjs adds .theme-switching, waits two frames and removes it;
    nothing listened, so every one of the 39 colour, border and shadow
    transitions in this tree ran at once on a theme change. A palette does not

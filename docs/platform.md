@@ -36,8 +36,7 @@ IPTECH* and a row's source link, which leave for another site by design.
 **A top masthead, not a sidebar.** Arithmetic, not taste. The two panels split a 1440px laptop
 evenly, and neither half survives a 260px rail: the result list stops being readable under about
 340px, and the record's side panel needs its own 300px beside the prose. Everything a rail would
-have carried is in the 60px bar: New, History, the keyboard shortcuts, the appearance control and the
-version.
+have carried is in the 56px bar: New, History, the appearance control and the version.
 
 ---
 
@@ -184,27 +183,27 @@ reading five records in a row rewrites the entry rather than adding five.
 
 ### 4.1 · The masthead
 
-60px, full width, with a 40px inline inset, sitting on the page ground rather than on a panel. Left
-to right:
+56px, full width, with a 24px inline inset and a hairline along its foot, sitting on the page ground
+rather than on a panel. **Every control in it is one recipe, Innovue's: 28px tall, a 13px label, a
+14px glyph** (`design-language.md` §7), so the bar reads as chrome and the panels under it as the
+work. Left to right:
 
 1. **The lockup**: the TIS submark and *TIS Terrain*, the way home. It is **inert on the home
    surface**, and says so with `aria-disabled` rather than by going grey: a lockup that changes
    appearance by screen stops being a fixed point in the chrome.
 2. **New**: the magnifier and the word. It returns to home with an empty composer.
 3. **History**: the searches the founder has run, newest first (§5).
-4. **Keyboard shortcuts**: a popover listing the keys (§4.3), at the start of the bar's end group.
-5. **The appearance control**: three segments, light, dark, system. **It may not be demoted into a
+4. **The appearance control**: three segments, light, dark, system. **It may not be demoted into a
    menu at any width.**
-6. **The version**: `v1.0.42`-style, in the figure face, quiet, with a dot while the build is new to
+5. **The version**: `v1.0.42`-style, in the figure face, quiet, with a dot while the build is new to
    this browser. It opens the release notes when there are any; it is how support reads the build.
 
 **On a phone the bar is 56px, glyphs only.** The lockup is the mark alone, New and History are their
 glyphs, and the appearance control is **one button that steps through light, dark and system**, its
 glyph the state it is in: three segments at a 44px reach are 132px, which the bar does not have. It
 is still the appearance control, in the bar, with the same three states, so it is not a demotion.
-The keyboard shortcuts and the version are not on the phone bar: a phone has no keyboard to
-shortcut, and the version is a support detail with a desktop home. Every dropped word is still the
-control's accessible name.
+The version is not on the phone bar: it is a support detail with a desktop home. Every glyph is a
+44px button, and every dropped word is still the control's accessible name.
 
 ### 4.2 · The search panel
 
@@ -221,7 +220,16 @@ ran over**, stated as labelled chips:
 | Results | how many the search returns |
 
 **Then the time the search took**, in the figure face, and **Search settings** at the row's end. A
-chip opens the settings; the field chip names the field and changes nothing.
+chip opens the settings; the field chip names the field and changes nothing. **The time clears while
+a new search runs** and comes back with its answer, because the old figure is about a search that is
+no longer the one on screen.
+
+**Search is 32px, like every other control in the panel**, with a 14px label at the same weight as
+theirs; its ink fill is what makes it the primary action.
+
+**A running search shows no loader.** Search keeps its label at reduced ink and is busy to a screen
+reader; the rows already listed stay, dimmed, until the new ones replace them. The answer appears
+when it arrives, and nothing holds it back to make the wait legible (`design-language.md` §6).
 
 **The sentence grows from one line to two and then scrolls**, and it cannot be dragged. Two lines
 hold a founder's description at 18px without pushing the list down; a box the founder could drag
@@ -253,8 +261,11 @@ that says how the list is ordered and how many matched, and then the controls:
 - **Sort**: *Relevance*, *Newest first*, *Oldest first*, the last two by published date.
 - **Export results**: CSV or Markdown, the rows in the order on screen (§4.6).
 
-After *Find similar* the head carries a chip naming the patent the order is by, and **Restore
-order**, which puts the engine's order back.
+After *Find similar* the head carries a tag, **Similar to US 12107086 B2**, with **Restore** beside
+it, which puts the engine's order back. **The sort still reads *Relevance***: the order is still the
+engine's and so is the score on every row; what changed is the patent it is measured from, and the tag
+says so. Choosing *Relevance* from the menu is the same as Restore. Nothing else announces it: no
+toast is laid over the rows to repeat what the tag already states.
 
 **Every result is a card.** Top to bottom:
 
@@ -265,7 +276,7 @@ order**, which puts the engine's order back.
 2. **The title**, 18px, up to two lines.
 3. **The facts**, under a hairline: *Holder* on a full row (a long holder takes its whole line and is
    never cut), then *Inventors* (the first, then `+n`), *Published* and *Class* (the main
-   classification) in three columns, each with a small uppercase label.
+   classification) in three columns, each under its field name in sentence case.
 4. **The abstract**, clamped to three lines.
 5. **The drawings**: up to eight tiles, 92px, in a strip that scrolls sideways.
 
@@ -273,8 +284,8 @@ order**, which puts the engine's order back.
 number, true wherever it was found); what the *query* made of it trails (its place and the engine's
 score, which exist only because this search ran). **The rank is the engine's place for the patent,
 and it travels with the row when the list is sorted**, so *Newest first* reads as the same ranked set
-in another order rather than a new ranking. After *Find similar* the order is a new one, and the ranks
-are renumbered to it.
+in another order rather than a new ranking. *Find similar* is the same: each row keeps its rank and
+its score, and the tag above the list says what the order is measured from.
 
 **The score is the engine's, printed as it comes**, four decimals in the figure face (`brief.md`
 §1). Copy never calls it a match quality; the ⓘ says the list is ordered by the engine's relevance
@@ -294,7 +305,7 @@ the viewer over it; a tile joins the record on the published figure number, neve
 **All the results are on the list at once.** The search returns as many as *Results* asks for, up to
 200, and the list shows every one; there is no *Show more*. A founder who wants fewer asks for fewer.
 
-**The keys.** The keyboard-shortcuts popover lists them:
+**The keys.** There is no shortcuts control; the keys are the ones a founder already expects:
 
 | Key | Does |
 | --- | --- |
@@ -352,13 +363,13 @@ is the engine's choice of where to start, not theirs.
    drawings**. Every tile opens the viewer.
 5. **Abstract**, whole.
 6. **Claims**, with the count: claim 1 whole, then **Show all 20 claims**. Claim 1 is the broadest and
-   the one a founder reads first; the rest are a press away.
+   the one a founder reads first, so it leads by its place; it is set at the same size as the rest.
 7. **The side panel**, beside the abstract and claims on a wide panel and after them on a narrow one:
    - **Parties**: the inventors, in two columns.
    - **Identifiers**: Number, Application, Kind (with its kind code), Priority.
    - **Classification**: the main class, then every class grouped by subclass, each group a
-     disclosure with the subclass code, CPC's words for it and the count; the main class is bold
-     inside its group. A note closes it: *As published. Class words are CPC's own, where the record
+     disclosure with the subclass code, CPC's words for it and the count; the main class is at full
+     ink inside its group. A note closes it: *As published. Class words are CPC's own, where the record
      carries them.*
 
 **Every field the record defines is printed, and a field the record does not carry prints as a
@@ -373,8 +384,12 @@ of legal prose are the longest thing on the page, and claim 1 is what is read fi
 
 **Closing and stepping.** On a wide panel the record has no head bar: a × in its top corner closes
 it, and ← and → step to the previous and next result. The list's accent border is what makes the
-step legible. **Find similar** re-orders the list by nearness to this patent (§4.3), and the record
+step legible. **Find similar** orders the list by similarity to this patent (§4.3), and the record
 stays open.
+
+**Every control on the record is the standard 32px with a 14px label**, the actions and *Show all*
+included, and every claim, claim 1 among them, is set at the abstract's size. A record whose actions
+stood taller than the list head beside them read as a second product.
 
 **On a phone the record is a full screen over the list.** Its head is pinned: **Back**, the number,
 and **previous** and **next**; once the title has scrolled away the head names the patent. *Open in
@@ -403,13 +418,17 @@ page.
 opens at a size the drawing fills, with enough scrim left to say the page is still behind it. Below
 640px the plate is the width of the screen and the viewer opens full bleed.
 
-**The head names the patent as well as the figure**: the record's number and title beside *Figure N of
-M*. **Every figure keeps its published number**, which is what the claims refer to.
+**The head names the patent as well as the drawing**: the record's number and title beside *Drawing N
+of M*, the word every other surface uses. **Every drawing keeps its published number**, which is what
+the claims refer to.
+
+**Its controls are the page's controls**: square 32px buttons with 16px glyphs, in a tool bar, with
+previous and next as the same buttons on the stage's edges. Below 640px every one is 44.
 
 **Zoom, rotate, fill, and a strip.** The zoom buttons step a ladder from 50% to 400%; a wheel, a
 pinch or a double press zoom continuously about the point under the cursor. Rotation is a quarter
 turn either way. *Fill the screen* drops the panel's maxima. A strip of thumbnails runs along the
-foot, and on a phone it shrinks to 44px rather than going. Pan is bounded by the drawing's own edge.
+foot, and on a phone it shrinks rather than going. Pan is bounded by the drawing's own edge.
 
 **The page behind goes `inert`**, Escape and a press on the scrim close the viewer and leave the
 record open, and paging crossfades with the neighbours already fetched.
@@ -783,7 +802,7 @@ What has been settled and not yet packaged. Each goes in the first round whose s
 
 | What | Difference → wanted |
 | --- | --- |
-| The V8 look | `app/` as rebuilt from the detail lab, every component: masthead, search panel and scope chips, settings (200, Rerank, Priority), list head with Group by topic and Export results, the row with rank and score chips, the record with the facts row, Show all and the side panel, the phone dock and full-screen record. Removed: the star, the starred page, the report and the account, billing and help pages (§1). Contract: `components.md` (the record's `status`, `priority`, `ipcWords`, `url`; `similar`) |
+| The V8 look | `app/` as rebuilt from the detail lab, every component: masthead, search panel and scope chips, settings (200, Rerank, Priority), list head with Group by topic and Export results, the row with rank and score chips, the record with the facts row, Show all and the side panel, the phone dock and full-screen record, all on one system of sizes (`design-language.md` §4, §5, §9: the masthead at their 28px recipe, every other control 32, field names in sentence case, every claim at one size, no loader). Removed: the keyboard-shortcuts control, the star, the starred page, the report and the account, billing and help pages (§1). Contract: `components.md` (the record's `status`, `priority`, `ipcWords`, `url`; `similar`) |
 | Session recording | Their build runs PostHog with session recording → usage events only, recording off. `brief.md` §4: the search box holds an idea the founder may not have filed |
 | Question | What does `ipcembedding` mean for retrieval — is each technology field an IPC-scoped index? `components.md` §4 question 11 |
 | Question | What does their analytics record, and where is it sent? `components.md` §4 question 12 |
