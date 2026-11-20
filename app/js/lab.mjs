@@ -8,7 +8,6 @@
  */
 import { $, $$ } from './core/dom.mjs';
 import { reduced, onMotionChange, DUR2 } from './core/motion.mjs';
-import { loader } from './core/loader.mjs';
 import { waitOn, landIn, failIn, failHTML } from './core/wait.mjs';
 import { btnWait, btnRest } from './core/button-wait.mjs';
 import { sayFailure } from './core/live-region.mjs';
@@ -16,7 +15,6 @@ import { bump, stale } from './core/generation.mjs';
 import { timerScope } from './core/timers.mjs';
 import * as esc from './core/esc-stack.mjs';
 import * as armed from './core/armed.mjs';
-import { BEAT } from './core/beat.mjs';
 import { on } from './core/delegate.mjs';
 
 const T = timerScope();
@@ -51,10 +49,10 @@ const acts = {
     const b = $('#b4');
     if (!btnWait(b)) return;                       // the re-press guard IS the return value
     $('#b4n').textContent =
-      `waiting · accessible name "${b.getAttribute('aria-label')}" · aria-busy ${b.getAttribute('aria-busy')}`;
-    T.after(BEAT.row, () => {
+      `waiting · label "${(b.textContent || '').trim()}" still shown · aria-busy ${b.getAttribute('aria-busy')}`;
+    T.after(900, () => {
       btnRest(b);
-      $('#b4n').textContent = `at rest · name "${(b.textContent || '').trim()}" · no aria-label`;
+      $('#b4n').textContent = `at rest · label "${(b.textContent || '').trim()}" · no aria-busy`;
     });
   },
 
@@ -76,7 +74,7 @@ const acts = {
     $('#escOut').textContent = `closed in order: ${closed.join(' → ')}`;
   },
 
-  /* ── 10 · the registry ── */
+  /* ── 9 · the registry ── */
   armed() {
     ['alpha', 'beta', 'gamma'].forEach(n => { if (!armed.registered().includes(n)) armed.register(n, 0); });
     armed.arm('alpha'); armed.arm('gamma');
@@ -91,14 +89,10 @@ on(document, 'click', '[data-act]', hit => acts[hit.dataset.act]?.());
 /* ── 7 · REDUCED is live ── */
 onMotionChange(r => {
   $('#redOut').textContent =
-    `reduced() is ${r} · it is read through a function, never cached · a beat is still ` +
-    `${BEAT.card}ms because a wait the system is having is information`;
+    `reduced() is ${r} · it is read through a function, never cached`;
 });
 
-/* ── 8 · the loader ── */
-$('#h8').append(loader(), loader(), loader());
-
-/* ── 9 · with and without a way forward ── */
+/* ── 8 · with and without a way forward ── */
 $('#h9').innerHTML =
   failHTML('That did not run.', { label: 'Try again' }) +
   failHTML('No corpus can be built from these criteria. Change the scope and search again.');
@@ -121,9 +115,8 @@ const CHECKS = [
     await sleep(30);
     const after = el.offsetHeight;
     return {
-      pass: waiting >= before && before === after && waiting > 20,
-      detail: `${before}px → ${waiting}px waiting → ${after}px. The loader is 20px; ` +
-              `an unreserved region would collapse to it.`,
+      pass: waiting >= before && before === after && el.getAttribute('aria-busy') === null,
+      detail: `${before}px → ${waiting}px waiting → ${after}px, and aria-busy is cleared when it lands.`,
     };
   },
 
@@ -166,14 +159,14 @@ const CHECKS = [
     btnRest(b);
     const resting = (b.textContent || '').trim();
     btnWait(b);
-    const named = b.getAttribute('aria-label');
+    const shown = (b.textContent || '').trim();
     const busy = b.getAttribute('aria-busy');
     const guarded = btnWait(b) === false;
     btnRest(b);
-    const cleaned = !b.hasAttribute('aria-label') && !b.hasAttribute('aria-busy');
+    const cleaned = !b.hasAttribute('aria-busy') && !b.hasAttribute('data-waiting');
     return {
-      pass: named === resting && busy === 'true' && guarded && cleaned,
-      detail: `name "${resting}" → aria-label "${named}", aria-busy ${busy}, ` +
+      pass: shown === resting && busy === 'true' && guarded && cleaned,
+      detail: `label "${resting}" stays "${shown}" while waiting, aria-busy ${busy}, ` +
               `re-press guarded ${guarded}, cleaned up ${cleaned}`,
     };
   },
@@ -199,21 +192,6 @@ const CHECKS = [
     return {
       pass: top === 'three' && closed.join(',') === 'three,two,one',
       detail: `top was "${top}", closed ${closed.join(' → ')}`,
-    };
-  },
-
-  async function loaderCarriesItsRampNotAFlatTone() {
-    const l = loader();
-    document.body.append(l);
-    const dots = $$('.dmx-dot', l);
-    const rests = dots.map(d => d.style.getPropertyValue('--rest'));
-    const opacities = dots.map(d => +getComputedStyle(d).opacity);
-    l.remove();
-    const distinct = new Set(rests).size;
-    return {
-      pass: dots.length === 9 && distinct === 5 && opacities.every(o => o > 0 && o <= 1),
-      detail: `9 dots, ${distinct} distinct --rest bands, opacity ${Math.min(...opacities).toFixed(2)}` +
-              `–${Math.max(...opacities).toFixed(2)}. Unset --rest would render every dot at 1.`,
     };
   },
 

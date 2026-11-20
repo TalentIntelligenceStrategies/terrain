@@ -5,7 +5,7 @@
  * what it holds.
  *
  * THE RANK TRAVELS WITH THE ROW. It is the row's place in the search's own
- * order — the engine's relevance order — so re-sorting by date or by nearness
+ * order — the engine's relevance order — so re-sorting by date or by similarity
  * moves the card and keeps its number. The score beside it is the engine's
  * relevance score, printed as the engine returned it.
  *
@@ -28,7 +28,7 @@ import { holderText } from '../core/format.mjs';
 let ENGINE = null;
 let BYID = new Map();
 let BASE = [];          // the search's order: the rank
-let VIEW = [];          // what the list is in now: sorted, or by nearness
+let VIEW = [];          // what the list is in now: sorted, or by similarity
 let topic = '';
 let sortBy = 'relevance';
 let anchor = null;      // the record Find similar ordered by
@@ -88,7 +88,7 @@ function rowHTML(r) {
   const rank = rankOf(r.id);
   const sc = r.score == null ? null : Number(r.score).toFixed(4);
   const ident = `<span class="num mono">${num == null ? BAR('w-md') : esc(num)}</span><span>${esc(kindLine(r))}</span>`
-    + (r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener" aria-label="Open ${esc(num || 'this patent')} at its source">${I(EXT)}</a>` : '');
+    + (r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener" aria-label="Open ${esc(num || 'this patent')} on Google Patents" title="Open on Google Patents">${I(EXT)}</a>` : '');
   const chips = `<span class="chips-r">`
     + (rank ? `<span class="chip-r" aria-label="Rank ${rank}">#${rank}</span>` : '')
     + (sc ? `<span class="chip-r score" aria-label="Relevance score ${sc}"><span class="l" aria-hidden="true">Relevance score</span><span aria-hidden="true">${sc}</span></span>` : '')
@@ -99,10 +99,10 @@ function rowHTML(r) {
     <div class="row-top">${ident}${chips}</div>
     <h3${r.skim ? ` title="${esc(r.skim)}"` : ''}>${title}</h3>
     <dl class="facts">
-      <div class="holder"><dt class="micro">Holder</dt><dd>${holder}</dd></div>
-      ${inv && inv.length ? `<div><dt class="micro">Inventors</dt><dd>${esc(inv[0])}${inv.length > 1 ? ` <span class="more tnum">+${inv.length - 1}</span>` : ''}</dd></div>` : ''}
-      ${r.published ? `<div><dt class="micro">Published</dt><dd class="mono">${esc(r.published)}</dd></div>` : ''}
-      ${r.ipcMain ? `<div><dt class="micro">Class</dt><dd class="mono">${esc(cls(r.ipcMain))}</dd></div>` : ''}
+      <div class="holder"><dt class="flabel">Holder</dt><dd>${holder}</dd></div>
+      ${inv && inv.length ? `<div><dt class="flabel">Inventors</dt><dd>${esc(inv[0])}${inv.length > 1 ? ` <span class="more tnum">+${inv.length - 1}</span>` : ''}</dd></div>` : ''}
+      ${r.published ? `<div><dt class="flabel">Published</dt><dd class="mono">${esc(r.published)}</dd></div>` : ''}
+      ${r.ipcMain ? `<div><dt class="flabel">Class</dt><dd class="mono">${esc(cls(r.ipcMain))}</dd></div>` : ''}
     </dl>
     ${r.abstract ? `<p class="abs">${esc(r.abstract)}</p>` : ''}
     ${figs ? `<div class="strip">${figs}</div>` : ''}
@@ -111,7 +111,7 @@ function rowHTML(r) {
 
 function tipText() {
   const n = BASE.length, s = shown().length;
-  const how = anchor ? `Ordered by nearness to ${numberText(rowById(anchor)?.number) || 'the open patent'}, nearest first.`
+  const how = anchor ? `Ordered by similarity to ${numberText(rowById(anchor)?.number) || 'the open patent'}, most similar first.`
     : sortBy === 'newest' ? 'Ordered by published date, newest first.'
     : sortBy === 'oldest' ? 'Ordered by published date, oldest first.'
     : 'Ordered by the engine’s relevance score, nearest to your description first.';
@@ -123,8 +123,8 @@ function tipText() {
 function filterbar() {
   const bar = $('#filterbar');
   const bits = [];
-  if (topic) bits.push(`Topic <span class="tag"><span class="mono">${esc(topic)}</span><button class="ib" type="button" data-clear="topic" aria-label="Clear the topic">${I(X)}</button></span><span>${shown().length} of ${BASE.length}</span>`);
-  if (anchor) bits.push(`Similar to <span class="tag"><span class="mono">${esc(numberText(rowById(anchor)?.number) || anchor)}</span><button class="ib" type="button" data-clear="similar" aria-label="Restore the relevance order">${I(X)}</button></span>`);
+  if (topic) bits.push(`Topic <span class="tag"><span class="mono">${esc(topic)}</span><button class="ib" type="button" data-clear="topic" aria-label="Clear the topic" title="Clear the topic">${I(X)}</button></span><span class="n">${shown().length} of ${BASE.length}</span>`);
+  if (anchor) bits.push(`Similar to <span class="tag"><span class="mono">${esc(numberText(rowById(anchor)?.number) || anchor)}</span><button class="ib" type="button" data-clear="similar" aria-label="Restore the relevance order" title="Restore">${I(X)}</button></span>`);
   bar.innerHTML = bits.join('<span aria-hidden="true">·</span>');
   bar.hidden = !bits.length;
 }
@@ -164,21 +164,26 @@ async function sort(by) {
   say('list', `Sorted: ${label}.`);
 }
 
-/** Find similar: the same set, nearest to `id` first. Returns whether it ran. */
+/** Find similar: the same set, most similar to `id` first. Returns whether it ran.
+ *
+ * THE SORT STILL READS RELEVANCE. The order is still the engine's, and the
+ * score on every row is still the engine's relevance score; what changed is
+ * the anchor, and the tag above the list says that ("Similar to ...", with
+ * Restore beside it). Choosing Relevance from the menu is Restore. */
 export async function similar(id) {
   const res = await ENGINE.similar({ anchor: id });
-  if (!res.ok) { toast('The list could not be re-ordered by nearness. Try again.'); return false; }
+  if (!res.ok) { toast('The list could not be re-ordered. Try again.'); return false; }
   anchor = id;
   sortBy = 'relevance';
   topic = '';
-  $$('#sortPop [data-sort]').forEach(x => x.setAttribute('aria-checked', 'false'));
-  $('#sortLbl').textContent = 'Nearness';
-  $('#sortBtn').setAttribute('aria-label', 'Sort: nearness to the open patent');
+  $$('#sortPop [data-sort]').forEach(x => x.setAttribute('aria-checked', String(x.dataset.sort === 'relevance')));
+  $('#sortLbl').textContent = 'Relevance';
+  $('#sortBtn').setAttribute('aria-label', 'Sort: Relevance');
   VIEW = (res.data.order || []).filter(id2 => BYID.has(id2));
   render();
   $('#listScroll').scrollTop = 0;
   scrollToOpen();
-  say('list', `Re-ordered by nearness to ${numberText(rowById(id)?.number) || 'this patent'}.`);
+  say('list', `Ordered by similarity to ${numberText(rowById(id)?.number) || 'this patent'}.`);
   return true;
 }
 
@@ -195,7 +200,7 @@ function topics() {
 }
 function paintTopics() {
   const t = topics();
-  $('#grpPop').innerHTML = `<p class="micro">Topics in these results</p>
+  $('#grpPop').innerHTML = `<p class="glabel">Topics in these results</p>
     <button type="button" role="menuitemradio" data-topic="" aria-checked="${!topic}">${I(TICK, 'i tick')}<span>All results</span><span class="count tnum">${BASE.length}</span></button><hr>`
     + (t.length ? t.map(x => `<button type="button" role="menuitemradio" data-topic="${esc(x.k)}" aria-checked="${topic === x.k}">${I(TICK, 'i tick')}<span><span class="mono">${esc(x.k)}</span>${x.w ? `<span class="w">${esc(x.w)}</span>` : ''}</span><span class="count tnum">${x.n}</span></button>`).join('')
       : '<p class="none">These results carry no classes to group by.</p>');

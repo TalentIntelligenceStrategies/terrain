@@ -6,6 +6,11 @@
    phone rule is a media query here rather than an html.phone class, so the
    layout follows a resize instead of the width the page loaded at.
 
+   ONE SYSTEM OF SIZES (design-language.md §4, §5, §9). Three control
+   heights — 28 compact, 32 standard, 44 touch below 640px — and a glyph
+   takes the size of the control it sits in: 14, 16, 18. Every control label
+   is 500; the filled ink is what says primary, not a heavier label.
+
    Controls press to .96 and tint on hover only where a pointer hovers.
    Popovers fade and scale in from their button; out faster than in.
    ═══════════════════════════════════════════════════════════════════════ */
@@ -14,13 +19,18 @@
 body{font-size:15px;line-height:1.55;-moz-osx-font-smoothing:grayscale}
 button,input,textarea{font:inherit;color:inherit}
 
-svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+svg.i{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .mono{font-family:'Inconsolata',ui-monospace,monospace;font-variant-numeric:tabular-nums}
 .tnum{font-variant-numeric:tabular-nums}
-.micro{font-family:'Urbanist',sans-serif;font-weight:600;font-size:11px;line-height:1.3;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);margin:0}
+/* THE FIELD NAME, one role everywhere: sentence case, 12/500, the quiet ink.
+   A group head (a popover's kicker, the record rail's Parties) is the same
+   role one step up in ink, so it heads the names inside it without becoming
+   a heading. Nothing here is uppercase by style (design-language.md §4). */
+.flabel,.glabel{font-family:'Urbanist',sans-serif;font-weight:500;font-size:12px;line-height:1.4;color:var(--text-3);margin:0}
+.glabel{color:var(--text-2)}
 
-.skip{position:absolute;left:var(--s-16);top:var(--s-8);z-index:50;padding:var(--s-8) var(--s-14);border-radius:var(--r-control);
-      background:var(--accent);color:var(--accent-ink);font-weight:600;transform:translateY(-200%)}
+.skip{position:absolute;left:var(--s-16);top:var(--s-8);z-index:50;display:inline-flex;align-items:center;height:32px;padding:0 var(--s-12);border-radius:var(--r-control);font-size:14px;line-height:1;
+      background:var(--accent);color:var(--accent-ink);font-weight:500;transform:translateY(-200%)}
 .skip:focus-visible{transform:none}
 
 /* ── the views: one at a time ───────────────────────────────────────────── */
@@ -36,32 +46,37 @@ svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-widt
 
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-shell)}
 
-/* ── the shared controls ────────────────────────────────────────────────── */
-.ib,.ctl,.go,.seg button,.chip-t,.menu button{transition:background-color 150ms ease,color 150ms ease,border-color 150ms ease,scale 160ms ease-out}
-:is(.ib,.ctl,.go,.chip-t,.menu button):active{scale:.96}
-.ib{display:inline-grid;place-items:center;width:36px;height:36px;border:0;border-radius:var(--r-control);
+/* ── the shared controls: the standard height is 32 ──────────────────────── */
+.ib,.ctl,.go,.seg button,.chip-t,.menu button,.btn-quiet{
+  transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease),border-color var(--dur-1) var(--ease),scale var(--dur-1) var(--ease)}
+:is(.ib,.ctl,.go,.chip-t,.menu button,.btn-quiet):active{scale:.96}
+.ib{display:inline-grid;place-items:center;width:32px;height:32px;padding:0;border:0;border-radius:var(--r-control);
     background:transparent;color:var(--text-2);cursor:pointer}
+/* a segmented control: a 32px track, 3px in, so a segment is 26 (§5) */
 .seg{display:inline-flex;padding:3px;gap:2px;border-radius:var(--r-control);background:var(--surface-sunken);flex:none}
-.seg button{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-6);height:30px;padding:0 var(--s-12);border:0;
-            border-radius:calc(var(--r-control) - 3px);background:none;color:var(--text-2);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap}
+.seg button{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-6);height:26px;padding:0 var(--s-12);border:0;
+            border-radius:var(--r-seg);background:none;color:var(--text-2);font-size:13px;font-weight:500;line-height:1;cursor:pointer;white-space:nowrap}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--text-1);box-shadow:0 0 0 1px var(--border)}
-.seg button svg.i{width:16px;height:16px}
-.seg.icons button{width:34px;padding:0}
-.ctl{display:inline-flex;align-items:center;gap:var(--s-8);height:36px;padding:0 var(--s-12);border-radius:var(--r-control);
-     border:1px solid var(--border-strong);background:var(--surface);color:var(--text-1);font-size:14px;font-weight:500;
+.seg.icons button{width:30px;padding:0}
+.ctl{display:inline-flex;align-items:center;gap:var(--s-8);height:32px;padding:0 var(--s-12);border-radius:var(--r-control);
+     border:1px solid var(--border-strong);background:var(--surface);color:var(--text-1);font-size:14px;font-weight:500;line-height:1;
      cursor:pointer;white-space:nowrap}
-.ctl svg.i{width:16px;height:16px;color:var(--text-3)}
-.ctl .chev{margin-right:calc(-1 * var(--s-4));transition:rotate 150ms var(--ease)}
+.ctl svg.i{color:var(--text-3)}
+.ctl .chev{margin-right:calc(-1 * var(--s-4));transition:rotate var(--dur-1) var(--ease)}
 .ctl[aria-expanded="true"] .chev{rotate:180deg}
-.go{display:inline-flex;align-items:center;gap:var(--s-8);height:36px;padding:0 var(--s-20) 0 var(--s-16);border:0;flex:none;
-    border-radius:var(--r-control);background:var(--accent);color:var(--accent-ink);font-weight:600;font-size:15px;cursor:pointer}
+/* Search: the one filled control, at the standard size and the control label —
+   the ink fill already says primary, so the label does not say it twice */
+.go{display:inline-flex;align-items:center;gap:var(--s-8);height:32px;padding:0 var(--s-14) 0 var(--s-12);border:0;flex:none;
+    border-radius:var(--r-control);background:var(--accent);color:var(--accent-ink);font-weight:500;font-size:14px;line-height:1;cursor:pointer}
 .go[aria-disabled="true"]{opacity:.45;cursor:default}
-.go[data-waiting]{background:var(--surface-sunken);color:var(--text-1)}
-.btn-quiet{height:36px;padding:0 var(--s-10);border:0;border-radius:var(--r-control);background:none;color:var(--text-2);font-size:14px;
-           font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:var(--s-6)}
-.btn-quiet svg.i{width:16px;height:16px}
+/* A CONTROL THAT IS WAITING KEEPS ITS LABEL AND LOSES INK. There is no loader
+   (design-language.md §6): aria-busy says it to a screen reader, and the
+   reduced ink says it to everyone else, without moving. */
+:is(.go,.ctl,.edge,.btn-quiet)[data-waiting]{opacity:.6;cursor:progress}
+.btn-quiet{height:32px;padding:0 var(--s-10);border:0;border-radius:var(--r-control);background:none;color:var(--text-2);font-size:14px;
+           font-weight:500;line-height:1;cursor:pointer;display:inline-flex;align-items:center;gap:var(--s-6)}
 @media (hover:hover) and (pointer:fine){
-  .ib:hover{background:var(--surface-sunken);color:var(--text-1)}
+  .ib:not([aria-disabled="true"]):hover{background:var(--surface-sunken);color:var(--text-1)}
   .ctl:hover,.chip-t:hover{background:var(--surface-sunken)}
   .seg button:hover{color:var(--text-1)}
   .menu button:hover{background:var(--surface-sunken)}
@@ -74,76 +89,82 @@ svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-widt
 .pop{position:absolute;top:calc(100% + var(--s-6));left:0;z-index:30;min-width:220px;padding:var(--s-6);
      background:var(--surface);border:1px solid var(--border);border-radius:var(--r-inner);box-shadow:var(--shadow-float);
      transform-origin:top left;opacity:0;scale:.97;visibility:hidden;pointer-events:none;
-     transition:opacity 100ms var(--ease),scale 100ms var(--ease),visibility 0s linear 100ms}
+     transition:opacity var(--dur-1) var(--ease),scale var(--dur-1) var(--ease),visibility 0s linear var(--dur-1)}
 .pop.end{left:auto;right:0;transform-origin:top right}
 .pop[data-open]{opacity:1;scale:1;visibility:visible;pointer-events:auto;
-                transition:opacity 150ms var(--ease),scale 150ms var(--ease),visibility 0s}
+                transition:opacity var(--dur-2) var(--ease),scale var(--dur-2) var(--ease),visibility 0s}
 .pop[data-instant]{transition:none}
-.pop .micro{padding:var(--s-6) var(--s-8) var(--s-4)}
-.menu button{display:flex;width:100%;align-items:center;gap:var(--s-10);min-height:36px;padding:var(--s-6) var(--s-8);border:0;
-             background:none;border-radius:calc(var(--r-inner) - var(--s-6));font-size:14px;font-weight:500;text-align:left;cursor:pointer}
-.menu button .tick{width:16px;height:16px;color:var(--text-1);visibility:hidden}
+.pop>.glabel{padding:var(--s-6) var(--s-8) var(--s-4)}
+/* a menu item: 32 tall, the control label, a 6 radius inside the popover's 12 with 6 of padding */
+.menu button{display:flex;width:100%;align-items:center;gap:var(--s-10);min-height:32px;padding:var(--s-4) var(--s-8);border:0;
+             background:none;border-radius:var(--r-seg);font-size:14px;font-weight:500;text-align:left;cursor:pointer}
+.menu button .tick{color:var(--text-1);visibility:hidden}
 .menu button[aria-checked="true"] .tick{visibility:visible}
-.menu button .count{margin-left:auto;padding-left:var(--s-12);color:var(--text-3);font-size:13px}
+.menu button .count{margin-left:auto;padding-left:var(--s-12);font-family:'Inconsolata',monospace;font-size:13px;font-weight:400;color:var(--text-3)}
+.menu button .mono{font-size:14px;font-weight:500}
 .menu button .w{display:block;font-size:12px;font-weight:400;color:var(--text-3);line-height:1.35}
-.menu button .ext{margin-left:auto;padding-left:var(--s-12);font-family:'Inconsolata',monospace;font-size:12px;color:var(--text-3)}
+.menu button .ext{margin-left:auto;padding-left:var(--s-12);font-family:'Inconsolata',monospace;font-size:13px;font-weight:400;color:var(--text-3)}
 .menu hr{border:0;border-top:1px solid var(--border);margin:var(--s-4) var(--s-2)}
 .menu .none{padding:var(--s-8);font-size:14px;color:var(--text-3);margin:0}
 
-/* ── the masthead ───────────────────────────────────────────────────────── */
-.mast{display:flex;align-items:center;gap:var(--s-24);height:60px;padding:0 var(--s-40);flex:none}
-.brand{display:inline-flex;align-items:center;gap:var(--s-10);font-weight:700;font-size:18px;letter-spacing:-.01em;color:var(--text-1);
-       border:0;background:none;padding:0;cursor:pointer}
+/* ── the masthead: Innovue's recipe — every control 28, 13/500, r6, a 14 glyph ── */
+.mast{display:flex;align-items:center;gap:var(--s-16);height:56px;padding:0 var(--s-24);flex:none;border-bottom:1px solid var(--border)}
+.brand{display:inline-flex;align-items:center;gap:var(--s-8);height:28px;margin-left:calc(-1 * var(--s-8));padding:0 var(--s-8);
+       font-size:15px;font-weight:700;line-height:1;letter-spacing:-.01em;color:var(--text-1);
+       border:0;border-radius:var(--r-seg);background:none;cursor:pointer}
 .brand svg{width:24px;height:24px;fill:currentColor}
-.brand .word>span{font-weight:500;color:var(--text-2)}
+.brand .word>span{font-weight:400;color:var(--text-2)}
 .nav{display:flex;align-items:center;gap:var(--s-4)}
-.nav-btn{display:inline-flex;align-items:center;gap:var(--s-6);height:36px;padding:0 var(--s-12);border:0;
-         border-radius:var(--r-control);background:none;color:var(--text-2);font-size:14px;font-weight:500;cursor:pointer}
-.nav-btn svg.i{width:16px;height:16px}
-@media (hover:hover) and (pointer:fine){ .nav-btn:hover{background:color-mix(in srgb, var(--surface) 70%, transparent);color:var(--text-1)} }
+.nav-btn{display:inline-flex;align-items:center;gap:var(--s-6);height:28px;padding:0 var(--s-8);border:0;
+         border-radius:var(--r-seg);background:none;color:var(--text-2);font-size:13px;font-weight:500;line-height:1;cursor:pointer;
+         transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
+.nav-btn svg.i{width:14px;height:14px}
 .hist-pop{width:340px;max-height:420px;overflow:auto}
-.hist-pop .q{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+.hist-pop .hq{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
 .mast-end{margin-left:auto;display:flex;align-items:center;gap:var(--s-12)}
-.ver{position:relative;height:32px;padding:0 var(--s-8);border:0;border-radius:var(--r-control);background:none;
-     font-size:13px;color:var(--text-3);cursor:pointer}
-.ver[data-unread]::after{content:'';position:absolute;top:5px;right:1px;width:6px;height:6px;border-radius:50%;background:var(--text-1)}
-.notes{width:320px;padding:var(--s-12) var(--s-14)}
-.notes .micro{padding:0 0 var(--s-8)}
-.notes h3{margin:0;font-size:15px;font-weight:600}
+/* the appearance control: a 28 track, 2px in, so a segment is 24 */
+.seg.theme{padding:2px}
+.seg.theme button{width:24px;height:24px;padding:0}
+.seg.theme svg.i{width:14px;height:14px}
+.ver{position:relative;height:28px;padding:0 var(--s-8);border:0;border-radius:var(--r-seg);background:none;
+     font-size:13px;font-weight:500;line-height:1;color:var(--text-3);cursor:pointer;
+     transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
+.ver[data-unread]::after{content:'';position:absolute;top:3px;right:1px;width:6px;height:6px;border-radius:50%;background:var(--text-1)}
+@media (hover:hover) and (pointer:fine){
+  .nav-btn:hover,.ver:hover,.brand:not([aria-disabled="true"]):hover{background:var(--surface-sunken);color:var(--text-1)}
+}
+.notes{width:320px;padding:var(--s-16)}
+.notes>.glabel{padding:0 0 var(--s-8)}
+.notes h3{margin:0;font-size:16px;font-weight:600;line-height:1.4}
+.notes h3 .mono{font-size:13px;font-weight:400;color:var(--text-3)}
 .notes ul{margin:var(--s-8) 0 0;padding-left:var(--s-16);font-size:14px;color:var(--text-2)}
 .notes li+li{margin-top:var(--s-4)}
 .theme-cycle{display:none}
-.keys{min-width:260px}
-.keys dl{display:grid;grid-template-columns:auto 1fr;gap:var(--s-8) var(--s-14);margin:0;padding:var(--s-4) var(--s-8) var(--s-8);align-items:center}
-.keys dt{display:flex;gap:var(--s-4)}
-.keys dd{margin:0;font-size:14px;color:var(--text-2)}
-kbd{min-width:22px;height:22px;padding:0 var(--s-6);display:inline-grid;place-items:center;border:1px solid var(--border);
-    border-bottom-width:2px;border-radius:var(--r-chip);background:var(--surface-sunken);font-family:'Inconsolata',monospace;font-weight:500;font-size:12px;line-height:1;color:var(--text-1)}
 
 /* a short-lived line at the foot of the window: what an action did */
 .toast{position:fixed;left:50%;bottom:var(--s-24);z-index:120;transform:translate(-50%,12px);
-       padding:var(--s-10) var(--s-20);border-radius:var(--r-control);background:var(--surface);
+       padding:var(--s-10) var(--s-16);border-radius:var(--r-inner);background:var(--surface);
        border:1px solid var(--border);box-shadow:var(--shadow-float);font-size:14px;color:var(--text-1);
        opacity:0;pointer-events:none;transition:opacity var(--dur-3) var(--ease),transform var(--dur-3) var(--ease);
        max-width:calc(100vw - 32px)}
 .toast[data-show]{opacity:1;transform:translate(-50%,0)}
 
-@media (max-width:1180px){ .mast{padding:0 var(--s-32)} }
-
-/* ── phone: glyphs only, one appearance button, sticky and blurred ───────── */
+/* ── phone: glyphs only at 44 with an 18 glyph, one appearance button, sticky and blurred ── */
 @media (max-width:640px){
   .mast{position:sticky;top:0;z-index:5;height:56px;padding:0 var(--s-8) 0 var(--s-16);gap:var(--s-4);
-        background:color-mix(in srgb, var(--ground) 82%, transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
-  .brand .word,.nav-btn .label,.ver-a,.keys-a{display:none}
+        background:color-mix(in srgb, var(--ground) 82%, transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  .brand{height:44px;margin-left:0;padding:0}
+  .brand .word,.nav-btn .label,.ver-a{display:none}
   .nav{margin-left:var(--s-8)}
-  .nav-btn{width:44px;height:44px;padding:0;justify-content:center}
-  .nav-btn svg.i{width:20px;height:20px}
+  .nav-btn{width:44px;height:44px;padding:0;justify-content:center;border-radius:var(--r-control)}
+  .nav-btn svg.i,.theme-cycle svg.i{width:18px;height:18px}
   .mast-end{gap:0}
   .seg.theme{display:none}
   .theme-cycle{display:inline-grid;width:44px;height:44px}
   .hist-pop{position:fixed;top:56px;left:var(--s-8);right:var(--s-8);width:auto}
+  /* a touch screen reaches every control through 44, inside a popover too (§5) */
+  .menu button{min-height:44px}
+  .pop .ctl,.btn-quiet{height:44px}
   .toast{bottom:calc(96px + env(safe-area-inset-bottom))}
 }
-@media (prefers-reduced-motion:reduce){ .pop,.pop[data-open]{scale:1} :is(.ib,.ctl,.go,.chip-t,.menu button):active{scale:1} }
-/* a control that is waiting holds its width and shows the loader in place of its label */
-.go[data-waiting]>*:not(.btn-wait),.edge[data-waiting]>*:not(.btn-wait){display:none}
+@media (prefers-reduced-motion:reduce){ .pop,.pop[data-open]{scale:1} :is(.ib,.ctl,.go,.chip-t,.menu button,.btn-quiet):active{scale:1} }

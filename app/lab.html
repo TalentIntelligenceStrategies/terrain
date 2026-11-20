@@ -10,7 +10,6 @@
 <link rel="stylesheet" href="styles/01-reset.css">
 <link rel="stylesheet" href="styles/02-type.css">
 <link rel="stylesheet" href="styles/03-skeleton.css">
-<link rel="stylesheet" href="styles/04-loader.css">
 <link rel="stylesheet" href="styles/05-wait-fail.css">
 <link rel="stylesheet" href="styles/10-button.css">
 <link rel="stylesheet" href="styles/11-chip.css">
@@ -53,9 +52,9 @@
 
   <section class="bench-case">
     <h2>1 · A region reserves its height and does not jump twice</h2>
-    <p><code>waitOn</code> captures <code>offsetHeight</code> <em>before</em> emptying. Without it the
-       body collapses to the loader’s 20px, the grid reflows, and it reflows again when data lands —
-       two layout jumps to say one thing arrived.</p>
+    <p><code>waitOn</code> reserves <code>offsetHeight</code> and keeps what the region holds, dimmed,
+       with <code>aria-busy</code>. There is no loader: nothing moves to say a request is in flight, and
+       the arrival is one change rather than a collapse and a second reflow.</p>
     <div class="bench-host"><div class="card-body" id="h1">Content tall enough to measure.<br>A second line.<br>A third.</div></div>
     <p><button class="btn btn-secondary" data-act="wait1" type="button">Wait</button>
        <button class="btn btn-secondary" data-act="land1" type="button">Land</button>
@@ -82,10 +81,9 @@
   </section>
 
   <section class="bench-case">
-    <h2>4 · A button keeps its accessible name through a wait</h2>
-    <p>The CSS hides every child with <code>display:none</code>, and display:none content is excluded
-       from the accessible name computation — so for the length of the beat the button announced as a
-       button with <em>no name at all</em>. Nothing visual shows it.</p>
+    <h2>4 · A button keeps its label through a wait</h2>
+    <p>The label stays and the ink drops; <code>aria-busy</code> says it is working, and a second press
+       while it waits does nothing. Nothing is hidden, so the accessible name never changes.</p>
     <p><button class="btn btn-secondary" id="b4" data-act="btnwait" type="button">Show more</button>
        <span class="bench-note" id="b4n">—</span></p>
   </section>
@@ -108,28 +106,21 @@
   </section>
 
   <section class="bench-case">
-    <h2>7 · <code>REDUCED</code> is live, and a beat is not shortened by it</h2>
+    <h2>7 · <code>REDUCED</code> is live</h2>
     <p>Read through <code>reduced()</code>, never cached: the prototype read it once at parse time, so
        turning reduced motion on mid-session moved the CSS and left the JavaScript behind.</p>
     <p class="bench-note" id="redOut">—</p>
   </section>
 
   <section class="bench-case">
-    <h2>8 · The loader, at rest and in motion</h2>
-    <p>One mark, one size, no variants. Under reduced motion it is present, visible and motionless —
-       and the dots hold the positional ramp rather than going flat.</p>
-    <div class="bench-host bench-loaders" id="h8"></div>
-  </section>
-
-  <section class="bench-case">
-    <h2>9 · <code>failHTML</code> offers a way forward only where there is one</h2>
+    <h2>8 · <code>failHTML</code> offers a way forward only where there is one</h2>
     <p>The retry button is optional <strong>by rule</strong>: a block with no way forward says so by
        having no button rather than by having a dead one.</p>
     <div class="bench-host" id="h9"></div>
   </section>
 
   <section class="bench-case">
-    <h2>10 · <code>armed</code> cannot have an incomplete list</h2>
+    <h2>9 · <code>armed</code> cannot have an incomplete list</h2>
     <p>Registering is the only way to create a flag, so <code>disarmAll()</code> cannot miss one —
        which the hand-maintained nine-flag checklist in the router could.</p>
     <p><button class="btn btn-secondary" data-act="armed" type="button">Arm three, disarm all</button>
@@ -138,7 +129,7 @@
 
 
   <section class="bench-case">
-    <h2>11 · The primitives, in both themes</h2>
+    <h2>10 · The primitives, in both themes</h2>
     <p>Step 3’s checkpoint: every primitive rendered from its own numbered stylesheet, with
        <strong>no <code>--n-*</code> and no raw hex outside <code>tokens.css</code></strong> — which
        <code>check-app.py</code> gate A refuses rather than trusts. Load

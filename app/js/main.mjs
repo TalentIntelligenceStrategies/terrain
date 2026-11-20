@@ -156,7 +156,7 @@ function route() {
 function applyTheme(next) {
   const root = document.documentElement;
   /* one frame with transitions off, so the change does not cross-fade every
-     coloured property at once — one of the four !importants in the tree */
+     coloured property at once — one of the three !importants in the tree */
   root.classList.add('theme-switching');
   if (next === 'system') root.removeAttribute('data-theme');
   else root.setAttribute('data-theme', next);

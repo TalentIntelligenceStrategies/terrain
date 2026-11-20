@@ -37,7 +37,11 @@ const SLOW = Number(qs.get('slow') || 1) || 1;
 
 const PERMANENT = new Set(['record']);
 const wait = ms => new Promise(r => setTimeout(r, ms * SLOW));
-const DELAY = { fields: 180, coverage: 340, search: 900, sort: 420, similar: 900, record: 600 };
+/* THE CORPUS IS IN THE PAGE, so its answers arrive almost at once, and these
+   are only long enough that every port still answers asynchronously, as a
+   real engine does. The interface shows no loader and holds nothing back
+   (design-language.md §6); `?slow=N` multiplies these to see a wait. */
+const DELAY = { fields: 40, coverage: 60, search: 160, sort: 80, similar: 160, record: 120 };
 
 async function respond(port, data) {
   await wait(DELAY[port] ?? 400);

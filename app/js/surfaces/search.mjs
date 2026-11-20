@@ -61,17 +61,17 @@ function settingsHTML(p) {
   return `<button class="ctl" type="button" id="${p}SetBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="${p}SetPop">${I(SLIDERS)}Search settings</button>
   <div class="pop end settings" id="${p}SetPop" role="dialog" aria-label="Search settings">
     <div class="set-grid">
-      <fieldset><legend class="micro">Technology field</legend><span class="val" data-set-field></span></fieldset>
-      <fieldset><legend class="micro">Results to show</legend>
+      <fieldset><legend class="flabel">Technology field</legend><span class="val" data-set-field></span></fieldset>
+      <fieldset><legend class="flabel">Results to show</legend>
         <div class="seg" role="group" aria-label="Results to show" data-set="count">${COUNTS.map(n => `<button type="button" data-v="${n}" aria-pressed="false">${n}</button>`).join('')}</div></fieldset>
-      <fieldset><legend class="micro">Where to search</legend>
+      <fieldset><legend class="flabel">Where to search</legend>
         <div class="chips" data-set-list="sources">${OFFICES.map(([k, n]) => `<button class="chip-t" type="button" data-v="${k}" aria-pressed="false">${TICK}${n}</button>`).join('')}</div></fieldset>
-      <fieldset><legend class="micro">Rerank results</legend>
+      <fieldset><legend class="flabel">Rerank results</legend>
         <div class="seg" role="group" aria-label="Rerank results" data-set="rerank"><button type="button" data-v="false" aria-pressed="false">Off</button><button type="button" data-v="true" aria-pressed="false">On</button></div>
         <p class="help">On: the engine re-orders what it returns in a second pass.</p></fieldset>
-      <fieldset><legend class="micro">What to include</legend>
+      <fieldset><legend class="flabel">What to include</legend>
         <div class="chips" data-set-list="kinds">${DOCS.map(([k, n]) => `<button class="chip-t" type="button" data-v="${k}" aria-pressed="false">${TICK}${n}</button>`).join('')}</div></fieldset>
-      <fieldset><legend class="micro">Date range</legend>
+      <fieldset><legend class="flabel">Date range</legend>
         <div class="seg" role="group" aria-label="Date basis" data-set="basis">${BASES.map(([k, n]) => `<button type="button" data-v="${k}" aria-pressed="false">${n}</button>`).join('')}</div>
         <div class="dates">
           <label>From<input data-date="from" inputmode="numeric" placeholder="Year or date" autocomplete="off"></label>
@@ -171,7 +171,10 @@ export async function run({ query, mode: m = mode, field = Field.get(), from = n
 
   const mine = ++running;
   const gos = $$('[data-composer] .go');
-  gos.forEach(b => btnWait(b, true));
+  gos.forEach(b => btnWait(b));
+  /* the elapsed time is about the search on screen; it clears until the new one lands */
+  const took0 = $('#took');
+  if (took0) took0.textContent = '';
   document.dispatchEvent(new CustomEvent('terrain:searching', { detail: { query: q, mode: m } }));
   const t0 = performance.now();
   const res = await ENGINE.search({ query: q, field, settings: settings(), mode: m });

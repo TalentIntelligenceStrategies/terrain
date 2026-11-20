@@ -1,6 +1,5 @@
-/* surfaces/masthead — the lockup, New, History, the keyboard shortcuts, the
- * appearance control and the release notes. The V8 lab's masthead and nothing
- * else on it.
+/* surfaces/masthead — the lockup, New, History, the appearance control and the
+ * release notes, at Innovue's 28px recipe (design-language.md §7).
  *
  * HISTORY IS THE FOUNDER'S OWN and lives in this browser (core/history.mjs):
  * the menu lists the searches run here, newest first, and picking one runs it
@@ -34,10 +33,10 @@ function paintTheme() {
 function paintHistory(list) {
   const pop = $('#histPop');
   if (!pop) return;
-  if (!list.length) { pop.innerHTML = '<p class="micro">Search history</p><p class="none">The searches you run here are listed here.</p>'; return; }
-  pop.innerHTML = '<p class="micro">Search history</p>'
+  if (!list.length) { pop.innerHTML = '<p class="glabel">Search history</p><p class="none">The searches you run here are listed here.</p>'; return; }
+  pop.innerHTML = '<p class="glabel">Search history</p>'
     + list.map((e, i) => `<button type="button" role="menuitem" data-hist="${i}" title="${esc(e.query)}">`
-      + `<span class="q">${esc(e.query)}</span>${e.mode === 'number' ? '<span class="count">Number</span>' : ''}</button>`).join('')
+      + `<span class="hq">${esc(e.query)}</span>${e.mode === 'number' ? '<span class="count">Number</span>' : ''}</button>`).join('')
     + '<hr><button type="button" role="menuitem" data-hist-clear>Clear history</button>';
 }
 
@@ -59,8 +58,6 @@ export function init(ctx) {
     Pop.close();
     if (entry) run({ query: entry.query, mode: entry.mode, field: entry.field });
   });
-
-  Pop.wire($('#keysBtn'), $('#keysPop'));
 
   const ver = $('#verBtn');
   let seen = false;

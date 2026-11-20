@@ -1,54 +1,58 @@
 /* ═══════════════════════════════════════════════════════════════════════
    40 · THE DRAWING VIEWER — the V8 lab's viewer.mjs, its CSS moved here.
-   A panel over the one scrim; the head names the patent and "Figure N of
-   M"; round previous / next on the stage's edges; a floating tool pill;
-   a strip of every drawing along the foot. Below 640px it opens full
-   bleed and Fill the screen is not shown.
+   The same system at the size of a dialog (design-language.md §7): a panel
+   (--r-shell) over the one scrim; the head names the patent and "Drawing N
+   of M"; square 32px controls at --r-control, in a tool bar at --r-inner,
+   with previous and next as the same buttons on the stage's edges; a strip
+   of every drawing along the foot. Below 640px it opens full bleed, every
+   control is 44, and Fill the screen is not shown.
    ═══════════════════════════════════════════════════════════════════════ */
 
 .dv{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:var(--s-24)}
 .dv[hidden]{display:none}
-.dv-scrim{position:absolute;inset:0;background:var(--scrim);opacity:0;transition:opacity 150ms var(--ease)}
+.dv-scrim{position:absolute;inset:0;background:var(--scrim);opacity:0;transition:opacity var(--dur-2) var(--ease)}
 .dv[data-open] .dv-scrim{opacity:1}
 .dv-panel{position:relative;display:grid;grid-template-rows:auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr);
           width:min(1100px,100%);height:min(740px,100%);background:var(--surface);border:1px solid var(--border);
-          border-radius:var(--r-widget);box-shadow:var(--shadow-float);overflow:hidden;
-          opacity:0;scale:.97;transition:opacity 150ms var(--ease),scale 150ms var(--ease)}
+          border-radius:var(--r-shell);box-shadow:var(--shadow-float);overflow:hidden;
+          opacity:0;scale:.97;transition:opacity var(--dur-2) var(--ease),scale var(--dur-2) var(--ease)}
 .dv[data-open] .dv-panel{opacity:1;scale:1}
 .dv[data-instant] .dv-scrim,.dv[data-instant] .dv-panel{transition:none}
 
 .dv-head{display:flex;align-items:center;gap:var(--s-12);min-height:56px;padding:0 var(--s-12) 0 var(--s-16);border-bottom:1px solid var(--border)}
 .dv-num{font-family:'Inconsolata',ui-monospace,monospace;font-weight:400;font-size:13px;line-height:1;color:var(--text-3);white-space:nowrap}
-.dv-title{flex:1;min-width:0;font-size:15px;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dv-count{font-size:14px;color:var(--text-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.dv-title{flex:1;min-width:0;font-size:15px;font-weight:600;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dv-count{font-size:13px;color:var(--text-3);white-space:nowrap;font-variant-numeric:tabular-nums}
 
-.dv-b{display:inline-grid;place-items:center;width:32px;height:32px;border:0;border-radius:var(--r-pill);background:none;
-      color:var(--text-2);cursor:pointer;transition:background-color 150ms ease,color 150ms ease,scale 160ms ease-out}
+.dv-b{display:inline-grid;place-items:center;width:32px;height:32px;border:0;border-radius:var(--r-control);background:none;
+      color:var(--text-2);cursor:pointer;
+      transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease),scale var(--dur-1) var(--ease)}
 .dv-b:active{scale:.96}
-.dv-b:disabled{opacity:.35;cursor:default}
+.dv-b:disabled{opacity:.45;cursor:default}
 .dv svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 
 .dv-stage{position:relative;min-height:0;overflow:hidden;background:var(--figure-ground);touch-action:none}
 .dv-stage[data-pan]{cursor:grab}
 .dv-stage[data-pan].drag{cursor:grabbing}
 .dv-stage>img{position:absolute;left:50%;top:calc(50% - 28px);max-width:none;user-select:none;-webkit-user-drag:none;
-              transform-origin:50% 50%;transition:transform 150ms var(--ease)}
+              transform-origin:50% 50%;transition:transform var(--dur-1) var(--ease)}
 .dv-stage.drag>img,.dv-stage>img.now{transition:none}
 .dv-fail{position:absolute;inset:0;display:grid;place-items:center;margin:0;font-size:15px;color:var(--figure-ink)}
 .dv-fail[hidden]{display:none}
-.dv .dv-nav{position:absolute;top:50%;translate:0 -50%;z-index:2;width:36px;height:36px;
+.dv .dv-nav{position:absolute;top:50%;translate:0 -50%;z-index:2;width:32px;height:32px;
             border:1px solid var(--border);background:var(--surface);color:var(--text-1);box-shadow:var(--shadow-raise)}
 .dv .dv-nav.prev{left:var(--s-12)}
 .dv .dv-nav.next{right:var(--s-12)}
 .dv .dv-nav:disabled{opacity:0;pointer-events:none}
 .dv-tools{position:absolute;left:50%;bottom:var(--s-16);translate:-50% 0;z-index:2;display:flex;align-items:center;gap:2px;
-          padding:var(--s-4) var(--s-8);border-radius:var(--r-pill);border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow-float)}
+          padding:var(--s-4);border-radius:var(--r-inner);border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow-float)}
 .dv-tools .sep{width:1px;height:18px;background:var(--border);margin:0 var(--s-4)}
 .dv-zoom{min-width:44px;text-align:center;font-size:13px;color:var(--text-1);font-variant-numeric:tabular-nums}
 
 .dv-strip{display:flex;gap:var(--s-8);padding:var(--s-12) var(--s-16);border-top:1px solid var(--border);overflow-x:auto;scrollbar-width:thin}
 .dv .dv-thumb{position:relative;flex:none;width:64px;height:80px;padding:var(--s-4);border-radius:var(--r-control);
-              border:1px solid var(--border);background:var(--figure-ground);cursor:pointer;transition:border-color 150ms ease}
+              border:1px solid var(--border);background:var(--figure-ground);cursor:pointer;transition:border-color var(--dur-1) var(--ease)}
+.dv .dv-thumb:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
 .dv-thumb img{width:100%;height:100%;object-fit:contain;display:block}
 .dv-thumb .n{position:absolute;left:var(--s-6);bottom:var(--s-4);font-family:'Inconsolata',monospace;font-weight:500;font-size:11px;line-height:1;color:var(--figure-ink)}
 /* the open one is a selected control, so it takes the ink edge */
@@ -65,6 +69,7 @@
   .dv{padding:0}
   .dv-panel{width:100vw;height:100dvh;border-radius:0;border:0}
   .dv .dv-fill,.dv .dv-tools .sep.f{display:none}
-  .dv-count{font-size:13px}
+  .dv-b,.dv .dv-nav{width:44px;height:44px}
+  .dv svg{width:18px;height:18px}
 }
 @media (prefers-reduced-motion:reduce){ .dv-panel{scale:1} }

@@ -1,8 +1,8 @@
 /* core/viewer — the enlarged drawing. From the V8 lab's viewer.mjs; its CSS
  * is 40-viewer.css.
  *
- * A panel over the one scrim; the head names the patent and "Figure N of M";
- * round previous / next on the stage's edges; a floating tool pill (rotate
+ * A panel over the one scrim; the head names the patent and "Drawing N of M";
+ * square previous / next on the stage's edges; a floating tool bar (rotate
  * left, rotate right, reset rotation, zoom out, the zoom, zoom in, fill the
  * screen); and a strip of every drawing along the foot. Escape or a press on
  * the scrim closes it and returns focus; the page behind is inert while it is
@@ -43,8 +43,8 @@ function build() {
       <div class="dv-stage">
         <img alt="" draggable="false">
         <p class="dv-fail" hidden></p>
-        <button class="dv-b dv-nav prev" type="button" data-a="prev" aria-label="Previous figure">${svg(I.prev)}</button>
-        <button class="dv-b dv-nav next" type="button" data-a="next" aria-label="Next figure">${svg(I.next)}</button>
+        <button class="dv-b dv-nav prev" type="button" data-a="prev" aria-label="Previous drawing">${svg(I.prev)}</button>
+        <button class="dv-b dv-nav next" type="button" data-a="next" aria-label="Next drawing">${svg(I.next)}</button>
         <div class="dv-tools" role="toolbar" aria-label="Drawing">
           <button class="dv-b" type="button" data-a="rl" aria-label="Rotate left">${svg(I.rl)}</button>
           <button class="dv-b" type="button" data-a="rr" aria-label="Rotate right">${svg(I.rr)}</button>
@@ -136,7 +136,7 @@ function show(i) {
   img.onerror = () => failed(`Drawing ${f.n} did not load.`);
   if (f.src) { img.src = f.src; img.alt = `Drawing ${f.n} of ${figs.length}`; }
   else failed(`Drawing ${f.n} is not shown here.`);
-  root.querySelector('.dv-count').textContent = `Figure ${f.n} of ${figs.length}`;
+  root.querySelector('.dv-count').textContent = `Drawing ${f.n} of ${figs.length}`;
   root.querySelector('[data-a="prev"]').disabled = state.i === 0;
   root.querySelector('[data-a="next"]').disabled = state.i === figs.length - 1;
   root.querySelectorAll('.dv-thumb').forEach((t, k) => t.setAttribute('aria-current', String(k === state.i)));

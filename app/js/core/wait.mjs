@@ -1,34 +1,35 @@
 /* wait — the one pair that starts and ends every wait, and the other way one ends.
  *
+ * THERE IS NO LOADER (design-language.md §6). A region that is waiting keeps
+ * what it holds, dimmed, with aria-busy on it, until the answer replaces it;
+ * a region that held nothing stays empty at its reserved height. Nothing
+ * moves to say a request is in flight, and nothing holds the answer back.
+ *
  * THIS MODULE IS HALF A CONTRACT. app/styles/05-wait-fail.css is the other
- * half: `.is-wait` and `.is-fail` and the `.fail` block. They live in one CSS
- * file rather than beside each component because `.card-body.is-wait` and
- * `.rec-body.is-wait` span two component families FOR THE SAME REASON -- they
- * share one contract, not one appearance.
+ * half: `.is-wait` and `.is-fail` and the `.fail` block.
  */
 import { $, esc } from './dom.mjs';
-import { loader } from './loader.mjs';
 
 /**
  * Put a region into its waiting state.
  *
- * THE HEIGHT IS CAPTURED BEFORE THE REGION EMPTIES, and that ordering is the
- * whole function. Without it a card body collapses to the loader's 20px, the
- * grid reflows, and it reflows again when the data lands -- two layout jumps
- * to say one thing arrived. Reserving what was there means the only thing that
- * changes is what is inside it.
+ * THE HEIGHT IS RESERVED, so the arrival is one change rather than a collapse
+ * and a second reflow. `min` is the floor for a region that has never been
+ * filled and has no height of its own to keep.
  *
- * `min` is the floor for first paint: a region that has never been filled has
- * no previous height to capture and still has to be tall enough to hold a
- * loader without clipping it.
+ * WHAT IS ON SCREEN STAYS, DIMMED, rather than being emptied: a blank panel
+ * for the length of a request claims there is nothing, and the rows a
+ * founder was just reading are still the truest thing to show until the new
+ * ones land. A failure block left from the last request is cleared, because
+ * it is about a request that is no longer the one in flight.
  */
 export function waitOn(el, min) {
   if (!el) return;
   const h = Math.max(el.offsetHeight || 0, min || 0);
   if (h) el.style.minHeight = h + 'px';
+  if (el.classList.contains('is-fail')) { el.classList.remove('is-fail'); el.innerHTML = ''; }
   el.classList.add('is-wait');
-  el.innerHTML = '';
-  el.append(loader());
+  el.setAttribute('aria-busy', 'true');
 }
 
 /**
@@ -42,6 +43,7 @@ export function waitOn(el, min) {
 export function landIn(el, html) {
   if (!el) return;
   el.classList.remove('is-wait', 'is-fail');
+  el.removeAttribute('aria-busy');
   el.style.minHeight = '';
   if (html != null) el.innerHTML = html;
 }
@@ -59,6 +61,7 @@ export function landIn(el, html) {
 export function failIn(el, html) {
   if (!el) return;
   el.classList.remove('is-wait');
+  el.removeAttribute('aria-busy');
   el.classList.add('is-fail');
   if (html != null) el.innerHTML = html;
 }
@@ -82,15 +85,15 @@ const FAIL_ICON =
  * returns `{ok:false, code, retryable}`, and `retryable` is exactly what
  * decides whether `act` is passed.
  *
- * Built here rather than written into each host for the reason the loader is:
- * a block that lives in nine copies of the markup is one nobody can change in
- * one place.
+ * Built here rather than written into each host: a block that lives in nine
+ * copies of the markup is one nobody can change in one place. Its button is
+ * the standard control, `.ctl`, like every other on the page.
  */
 export function failHTML(say, act) {
   return '<div class="fail">' +
     '<p class="fail-say">' + FAIL_ICON + '<span>' + esc(say) + '</span></p>' +
     (act
-      ? '<div class="fail-act"><button class="btn btn-secondary" type="button"' +
+      ? '<div class="fail-act"><button class="ctl" type="button"' +
         (act.id ? ' id="' + esc(act.id) + '"' : '') +
         (act.attrs ? ' ' + act.attrs : '') +
         '>' + esc(act.label) + '</button></div>'
