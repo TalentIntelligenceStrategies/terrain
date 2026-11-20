@@ -10,8 +10,9 @@ rules owned elsewhere and defines none of its own:
 
 | Source | Owns |
 | --- | --- |
-| `docs/brief.md` §1 | What Terrain may say about a set, *trusted* vs *near*, *generative AI* not a chatbot's name, where a reading may sit (a report's AI-written part only) |
+| `docs/brief.md` §1 | What Terrain may say about a set, *trusted* vs *near*, *generative AI* not a chatbot's name, that a reading is printed nowhere, how the relevance score is spoken of |
 | `docs/brief.md` §3 | What may be said about the engine and Innovue's research; credentials cited as Innovue's; a deck names them *our IP-technology provider* |
+| `docs/design-language.md` §4 *Case, and who owns it* | The case of every interface string, the label forms (`micro` uppercase by `text-transform`), counts and engine values |
 | `sales/answers.md` Part 4 *Never say* | The banned words and wrong values (local only) |
 | `~/Desktop/TIS/brand/brand-voice.md` §4 | TIS's company-wide banned phrases. **Read it, don't recall it.** Read-only, and only §4: its voice anchor and its Innovue section do not govern Terrain |
 | this skill | How to execute a copy task against them, and the checks a rule list cannot do |
@@ -49,7 +50,7 @@ Write three candidates. Name the claim each carries and its basis. Keep one and 
 **The swap test does the most work.** Substitute a competitor's name — a generative AI tool, Google
 Patents, an analyst platform. If the line still reads true, it is generic. Rewrite with what only
 Terrain can say: one sentence in and a set out; real records as published, with nothing generated
-in the search; one report the founder and the backer both read, whose readings show their sources.
+and nothing generated; the set leaves as a file carrying exactly what the page showed.
 
 ## 3 · Draft (block and long lanes)
 
@@ -61,6 +62,21 @@ One claim per paragraph. Asymmetric weight — the section that matters gets the
 Run [`references/detection.md`](references/detection.md) in full, then
 [`references/en-native.md`](references/en-native.md) on all English. Both are mechanical; a failure
 is a rewrite, not a discussion.
+
+## Interface strings, as they stand
+
+Reuse these verbatim; a second phrasing of one string is drift. `app/` is where they live.
+
+| Where | String |
+| --- | --- |
+| List head | *Search results*; the ⓘ says the list is ordered by the engine's relevance score |
+| Row | *Relevance score 0.8862*, *#1*, *Invention · Grant* |
+| Empty record | *Select a patent* / *Its full record opens here: the drawings, the claims and every field, as published.* |
+| Record actions | *Find similar*, *Export this record*, *Open in IPTECH* |
+| Record | *Show all 22 drawings*, *Show all 20 claims*; *As published. Class words are CPC's own, where the record carries them.* |
+| List controls | *Group by topic*, *Relevance*, *Newest first*, *Oldest first*, *Export results*, *Restore order* |
+| Masthead | *New*, *History*, *Keyboard shortcuts* |
+| Settings | *Search settings*, *Results to show*, *Where to search*, *Rerank*, *What to include*, *Reset*, *Done* |
 
 ## 5 · Report
 
@@ -78,13 +94,13 @@ Scan every output.
 2. **No hedge** — *may*, *could potentially*, *helps you*. Commit or cut the claim.
 3. **No unbacked claim** — every claim carries its basis: a published figure with its scope, a
    behaviour of the product, a named public source. Softening an unbacked claim is not a fix.
-4. **No reading outside a report's AI-written part** — no verdict, no *strong match*, no *white space*, no
-   *open ground*, anywhere. A sentence must stay true if the rest of the world's patents were added
-   to the index (`brief.md` §1). Inside an AI-written section a reading is marked as AI-written, cites what
-   it rests on, and says *may* wherever it touches a claim; never *infringes*, *is clear*, *is novel*.
-5. **Report means the patent report**, and nothing else. Never
-   *insights*, *decision-ready*, *actionable* or *AI-powered*, and never *free* or *Pro*: Terrain has no
-   tier word.
+4. **No reading, anywhere** — no verdict, no summary, no *strong match*, no *white space*, no
+   *open ground*. A sentence must stay true if the rest of the world's patents were added to the
+   index (`brief.md` §1). Never *infringes*, *is clear*, *is novel*. The relevance score is the
+   engine's order, never a confidence.
+5. **Nothing in the product is a report.** Never *report* for what Terrain produces (it produces a
+   search and a file), never *insights*, *decision-ready*, *actionable* or *AI-powered*, and never
+   *free* or *Pro*: Terrain has no tier word.
 6. **No figure without its scope.** A figure from Innovue's internal research stays out of public
    material until Innovue confirms it; a roadshow figure (✅ in `sales/answers.md`) is cited as
    Innovue's, with its cutoffs.

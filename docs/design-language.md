@@ -19,12 +19,11 @@ Three things follow from that and everything else is downstream of them:
 - **Hierarchy comes from weight, size and space, not from colour.** A founder scanning a screen of
   patent data should be able to find the heading, the figure and the caption without a hue telling
   them which is which.
-- **Nothing on the search surface is a reading of what is on screen.** Terrain prints the engine's
-  answer and the patent's own text. A reading lives in one place — a report's AI-written part, marked
-  AI-written and citing what it rests on (`brief.md` §1) — and a caption anywhere else states a count
-  or nothing.
-- **Nothing pretends to more certainty than it has.** A value we do not hold is a grey bar. A wait is
-  a loader, not a fake skeleton. An empty result says what was searched.
+- **Nothing is a reading of what is on screen.** Terrain prints the engine's answer and the patent's
+  own text (`brief.md` §1), and a caption states a count or nothing.
+- **Nothing pretends to more certainty than it has.** A value we withhold is a grey bar; a field the
+  record does not carry is a dash. A wait is a loader, not a fake skeleton. An empty result says what
+  was searched.
 
 ---
 
@@ -37,7 +36,7 @@ weight and spacing, and the one place colour is permitted is achromatic:
 
 | Where | What it encodes |
 | --- | --- |
-| **The accent** | the primary action, the focus ring, a selected control — §3.8 |
+| **The accent** | the primary action, the focus ring, a selected control, the open row's border — §3.8 |
 
 **The ground is slate, and it carries one light that encodes nothing.** The page ground is the
 deck's: `#ECEEF0` in light and `#16191C` in dark, lighter toward the top right in one radial light,
@@ -48,26 +47,24 @@ the ground apart from the white of a card and the paper of a drawing, not read a
 only tinted values in the system. **The deck and the product share it**, which is why it is taken
 exactly rather than redrawn on the ramp.
 
-*Three other places had colour and each left with what it coloured. **Chart layers** went with the
-charts; **discrete states** — the live / expired / pending chip — went with legal status
-(`platform.md` §13, R1-17); **direction of change** was a delta pill that never shipped. §3.3 and
-§3.5 are retired and their numbers are not reused.*
+**Legal status is a word, never a coloured chip.** The record prints *Active*, *Expired* or
+*Pending* in the text colour of the facts row; a live / expired / pending hue would be the one colour
+on the screen and would read as a verdict on the patent. §3.3 and §3.5 are retired and their numbers
+are not reused.
 
 **A hue is an amendment, not a design task.** The tokens are gone rather than parked, so a hue means
 declaring a semantic token in all three theme blocks, measuring it against both grounds, and arguing
-it against this section — which is the friction this rule is for. **A report's charts are not an
-amendment** — [`brief.md`](brief.md) §1 admits a view of the set — **but a hue for one is**, on the
-same terms. A chart draws from the neutral ramp: a bar is `--text-2`, a folded or withheld bucket
-`--border-strong`, an incomplete period an outline. Its series are told apart by position and label,
-never by colour, which is why the report uses small tables and one series per chart rather than a
-legend. **Where a chart sets the starred set against the results, the results are a tick**, a 2px
-`--text-3` mark at their share: a shape, not a second colour.
+it against this section, which is the friction this rule is for. **A view of the set is not an
+amendment** ([`brief.md`](brief.md) §1 admits one) **but a hue for one is**, on the same terms. A
+view draws from the neutral ramp: *Group by topic* is words and counts, and a chart, when one is
+built, is `--text-2` bars told apart by position and label, never by colour.
 
 **Colour would encode direction, never desirability.** Whatever earns a hue next — a state, a
 direction — earns it as information. Nothing is green because it is good.
 
-**The accent is a control's colour, not a verdict about data** — it is achromatic precisely so it
-cannot be read as one — and it may not enter a score, a rank or a count.
+**The accent is a control's colour, not a verdict about data**: it is achromatic precisely so it
+cannot be read as one, and it may not fill or tint a score, a rank or a count. The open row's border
+marks a state of the interface, not a property of the patent (§3.8).
 
 **Never colour alone.** A coloured element would also carry a word or a shape: a dot plus a label, an
 arrow plus a number. The one hue on any Terrain surface today is a third party's, Innovue's blue
@@ -144,6 +141,13 @@ only alpha values in the system. **`--veil`'s .82 is measured**: below about .78
 stops clearing 4.5:1 against the black line-work showing through, and above .90 the bar stops reading
 as floating and becomes a plate over the figure.
 
+**A component may thin a semantic token with `color-mix(… transparent)`, and only to sit under a blur
+or mark a hover or a well.** That is six places: the phone masthead, the phone record's head bar and
+action bar (each `backdrop-filter`ed over the content scrolling beneath), the icon well inside Find
+similar and Export, the masthead buttons' hover, and the row hover. Mixing a semantic token keeps the
+swap: the result follows the theme the way the token does, which a raw `rgba()` would not. A seventh
+site is an amendment to this paragraph.
+
 **`--veil-edge` is `--veil`'s own argument applied to the edge**, and it exists because that argument
 had only been applied to the fill. The border on a floating control composites over the same varying
 thing the fill does, and it was `--border`, which swaps: in dark the figure bar wore a `#2E2E2E`
@@ -176,17 +180,16 @@ value. It is a token rather than a literal because §3.2's rule is that every co
 named invariant is checkable where a hex in a component is a judgement call the gate has to allow.
 
 **There are exactly two scrims, and each is a layer laid over the founder's place without moving
-it.** The figure viewer is a lightbox over the viewport, because capped at one column of a
-two-column split it is too small for the reference numerals a founder enlarges a drawing to read.
-**Below 1080 the record is a card over the list** (§7), because stacked under the list it cost the
-founder their place in it. Both are a thing being read on top of the set it came from, and the dim
-says the set is still there.
+it.** The figure viewer is a lightbox over the viewport, because capped at one panel of a two-panel
+split it is too small for the reference numerals a founder enlarges a drawing to read. **On a phone
+the search sheet opens over the list** (§7), because a sheet that pushed the list would lose the
+founder's place in it. Both are a thing on top of the set, and the dim says the set is still there.
 
-**Everything else still dims nothing**, and the list is the rule rather than an anecdote: above 1080
-the record opens in its own column, the grouping panel is a popover, the delete confirmation is
-inline, and every menu closes on an outside click the document hears for itself. `--scrim` has two
-readers. **A third is a sign this rule has stopped holding**, not a sign the token turned out to be
-useful.
+**Everything else dims nothing**, and the list is the rule rather than an anecdote: the record opens
+in its own panel (on a phone, a full screen that slides in rather than a dimmed card), search
+settings, grouping and sorting are popovers, and every menu closes on an outside click the document
+hears for itself. `--scrim` has two readers. **A third is a sign this rule has stopped holding**, not
+a sign the token turned out to be useful.
 
 `--text-3` is darker than it looks like it should be. It carries the 11px micro-labels, which are
 small text and need the full 4.5:1 — the obvious mid-grey lands at 3.6 and fails.
@@ -212,12 +215,11 @@ the evidence rather than a violation.
 
 ### 3.3 · State colours — retired
 
-*It held the live / expired / pending hues and the two direction aliases derived from them. They had
-one reader, the legal-status chip, and left with it (`platform.md` §13, R1-17).*
+*It held the live / expired / pending hues. Legal status prints as a word (§2), so they have no
+reader.*
 
-*§3.5 was chart layers and is retired, and `--chart-series` went with it. The report's charts draw
-from the neutral ramp (§2) and do not bring the token back. §3.5's number is not reused, for the
-reason §3 opens with.*
+*§3.5 was chart layers and is retired, and `--chart-series` with it. A view of the set draws from the
+neutral ramp (§2). §3.5's number is not reused, for the reason §3 opens with.*
 
 ### 3.6 · Skeleton
 
@@ -227,8 +229,8 @@ reason §3 opens with.*
 | `--skeleton-shimmer` | `--n-3` |
 | `--skeleton-strong` | `--n-5` |
 
-**`--skeleton-strong` is a bar the founder has acted on** — a starred row, an edited field. It is a
-state, not a second grey.
+**`--skeleton-strong` is a bar the founder has acted on**, such as the open row's withheld holder.
+It is a state, not a second grey.
 
 ### 3.8 · The accent
 
@@ -245,9 +247,9 @@ state, not a second grey.
 ```
 
 **They hold ink values and are still four tokens, because the accent is a role and not a hue.** The
-three sites below have to be able to *say* they are the accent. A site that read `--text-1` would
+sites below have to be able to *say* they are the accent. A site that read `--text-1` would
 leave this section pointing at nothing, and the rule would stop being enforceable the moment somebody
-added a fourth site.
+added a site.
 
 **The fourth exists because two of the three sites do not want a fill.** The selected technology tile
 keeps `--surface` because a filled accent tile would be a second primary action on a surface that
@@ -263,12 +265,15 @@ correct hover for a near-black fill. The two agree today and stay two tokens, be
 fill, the selected control and the ring together, which is what makes site 2 below true by
 construction rather than by discipline. §3.9 carries the tier.
 
-**Where it appears — three places, and they are the whole list:**
+**Where it appears: four places, and they are the whole list.**
 
-1. **The primary action.** One filled button per surface, never two. A surface whose primary action
-   is destructive has no primary action.
+1. **The primary action.** One filled button per surface, never two: Search, on home and in the search
+   panel.
 2. **The focus ring.** `--focus` becomes the accent rather than ink.
 3. **The selected state** of a segmented control or a menu item.
+4. **The open row's border.** The result whose record is open takes a 1px `--accent` border in place
+   of `--border`. It says *you are here*, which is a state of the interface, and it is the only thing
+   that makes ← and → legible when the record has no head bar.
 
 **A ring means focus and nothing else.** A selected tile changes its edge at 1px and its ink; the
 2px ring at an offset is reserved for focus, so a selected tile that also has focus shows both, and
@@ -276,37 +281,46 @@ one that is only selected never looks focused.
 
 **Where it may not appear:**
 
-- **In data.** Not a score, not a relevance rank, not a count. §2 permits the accent in controls and
-  nowhere else.
-- **As decoration.** No wash, no tinted card background, no accent border, and no gradient but the
-  two named ones: the ground's light (§2) and the silver edge below.
+- **In data.** Not a score, not a rank, not a count. §2 permits the accent in controls and in the one
+  state above, and nowhere else.
+- **As decoration.** No wash, no tinted card background, no accent border but the open row's, and no
+  gradient but the two named ones: the ground's light (§2) and the silver edge below. *A mask is not
+  a third*: it paints no colour, only fades what is already there. The docked phone search fades its
+  one-line sentence at the trailing edge with one, and that is the only mask.
 - **Anywhere it could be read as a verdict.**
 
 #### The silver edge
 
-**The deck's silver edge marks the actions that move a founder from a search to a file**, and is the
-only edge the accent's sites take. A 2px border drawn with `--edge-silver` behind the control's own
-fill, clipped to the border box, so no wrapper carries it. **Three sites, and they are the whole
-list — one per surface, so the edge marks a path rather than a style:**
+**The deck's silver edge marks the engine's two outputs a founder acts on: the order, and the
+number it is read by.** A 2px border drawn with `--edge-silver` behind the control's own fill,
+clipped to the border box, so no wrapper carries it:
 
-1. **The home composer** — the whole box. Its Search button keeps its fill and no edge.
-2. **Find similar**, on the open record. On a phone it carries its label beside the icon: an edge
+```
+border: 2px solid transparent;
+background: linear-gradient(<fill>, <fill>) padding-box, var(--edge-silver) border-box;
+```
+
+**Two sites, and they are the whole list:**
+
+1. **Find similar**, on the open record. On a phone it carries its label beside the icon: an edge
    on a bare icon reads as a pressed toggle.
-3. **Export this record.** On a phone, where it is two choices, CSV and Markdown are one two-part
-   control with one edge round both.
+2. **The relevance score chip** on every row. The edge is the same on every row, whatever the value,
+   so it frames the number as the engine's and never ranks one row's number above another's.
 
-**Search in the results bar has none.** It is the filled primary already, and an edge on an ink fill
-merges with it on one half and with the card on the other. **Find similar drops its edge while its
-record is the one the list is sorted by**: pressing it would only sort the same way again.
+**Export this record, Export results, the CSV | Markdown pair and Search have none.** Export is a
+way out, not an engine output, and takes the plain 1px `--border-strong` of every other control;
+Search is the filled primary already, and an edge on an ink fill merges with it on one half and with
+the panel on the other. **The home composer has none**: it is a panel in the results surface's
+language, edged with `--border` like the search panel.
 
 **It is the same in both themes, and reads from whichever half contrasts.** On the dark ground the
 `#C9D0D6` and `#9AA2AA` stops carry it (5.01:1 or more) and it reads as silver; on the light ground
-the `#3A4148` and `#4A5158` stops do (6.44:1 or more) and it reads darker. On a light Search, whose
+the `#3A4148` and `#4A5158` stops do (6.44:1 or more) and it reads darker.
 **It is not a state, and it changes no box's size.** The 2px comes out of the control's padding.
 **Focus turns the edge solid** (`--focus`) in place of a ring outside it, so focus and the edge are
 never two rules side by side. Hover changes the fill, never the edge. Under `prefers-contrast: more`
-the edge is a solid `--text-1`. **A fourth site is an amendment**, argued against this section, because
-an edge on every button is an edge on none.
+the edge is a solid `--text-1`. **A third site is an amendment**, argued against this section,
+because an edge on every control is an edge on none.
 
 **What being achromatic buys.** It can never be read as data, and it needs no separately measured
 dark value: the ink pair inverts with the theme and §10.3's ink rows already carry its contrast. **A
@@ -363,51 +377,41 @@ in `app/README.md`'s interface table.
 Urbanist for all text. Inconsolata for **every** number, date, year, count and code, without
 exception — mixed numeral rendering across a dense table is immediately visible and cheap to avoid.
 
-**Six sizes, and each is a role: 11 · 13 · 16 · 20 · 26 · 36.** They are Innovue's own sizes,
-merged into the fewest steps that still separate every role their build and `app/` draw, which is
-what the round's carve-out asks for: their type, made tighter (`platform.md` §13.4, R1-38). A size
-that is not one of the six is a role nobody named, and `tools/check-app.py` refuses it. The one
-exception is the wordmark, which is brand and not text.
+**Eleven sizes, and each is a role: 11 · 12 · 13 · 14 · 15 · 16 · 18 · 20 · 24 · 26 · 36.** They
+are the round 4 detail lab's (V8), which is the look `app/` is built from. A dense working surface
+needs more steps than a page of prose: a chip, a control, a fact and a reading line sit side by side
+in one card, and each has to be told apart by size as well as weight. A size that is not one of the
+eleven is a role nobody named, and `tools/check-app.py` refuses it. The one exception is the
+wordmark, which is brand and not text.
 
-| Step | Role | Face | Size / line | Weight | Tracking | What carries it |
-|---|---|---|---|---|---|---|
-| 36 | `display-1` | Urbanist | 36 / 1.15 | 600 | -0.02em | the landing headline, and nothing else |
-| 26 | `display-2` | Urbanist | 26 / 1.2 | 700 | -0.015em | the record's patent title, a page's title |
-| 26 | `figure-l` | Inconsolata | 26 / 1.1 | 500 | 0 | a figure at title size |
-| 20 | `title` | Urbanist | 20 / 1.3 | 600 | -0.005em | the record's sections, a card's heading, the list head |
-| 16 | `title-s` | Urbanist | 16 / 1.45 | 600 | 0 | the list row's title, the empty state's heading |
-| 16 | `body` | Urbanist | 16 / 1.55 | 400 | 0 | reading text: the abstract and claims in the record, notes, what is typed into a field |
-| 16 | `body-strong` | Urbanist | 16 / 1.5 | 500 | 0 | emphasis inside body |
-| 13 | `label` | Urbanist | 13 / 1.4 | 500 | 0 | controls: chips, segmented buttons, menus, the record's actions |
-| 13 | meta | Urbanist | 13 / 1.4–1.5 | 400 | 0 | facts: the row's meta grid and abstract preview, field values, table cells, status lines, the credit |
-| 13 | `figure-s` | Inconsolata | 13 / 1.4 | 500 | 0 | every number, date and code at meta size |
-| 11 | `micro` | Urbanist | 11 / 1.2 | 500 | 0.08em, uppercase | field labels, column heads, *Coming soon* |
+| Step | Role | Face | Size / line | Weight | What carries it |
+|---|---|---|---|---|---|
+| 36 | `display-1` | Urbanist | 36 / 1.15 | 600 | the home headline, and nothing else |
+| 26 | `display-2` | Urbanist | 26 / 1.2 | 600 | a full-page record's title |
+| 24 | `title-l` | Urbanist | 24 / 1.2 | 600 | the record's title in the right panel; 22 is not a step, so a phone takes 24 too |
+| 20 | `title` | Urbanist | 20 / 1.3 | 600 | the list head, the record's sections (Drawings, Abstract, Claims) |
+| 18 | `title-s` | Urbanist | 18 / 1.3 | 600 | the row's title; the search sentence at 400 |
+| 16 | `body` | Urbanist | 16 / 1.55 | 400 | reading text: the record's abstract and claim 1, the holder, what is typed into a field |
+| 15 | `body-s` | Urbanist | 15 / 1.55 | 400–600 | the rest of the claims, the facts row's values, Search and the record's actions |
+| 15 | `figure` | Inconsolata | 15 / 1.3 | 500 | the patent number on the row and the record |
+| 14 | `label` | Urbanist | 14 / 1.4 | 500 | controls: menus, list-head controls, the side panel's values |
+| 13 | meta | Urbanist | 13 / 1.4 | 400–500 | the kind line, scope chips, segmented buttons, hints and tips |
+| 13 | `figure-s` | Inconsolata | 13 / 1.4 | 500 | every number, date and code at meta size |
+| 12 | `caption` | Urbanist | 12 / 1.35 | 400 | help under a setting, a menu item's second line, CPC's class words, a drawing's number, a key cap |
+| 11 | `micro` | Urbanist | 11 / 1.3 | 600 | field labels, column heads, *Coming soon*; uppercase, 0.08em |
 
 `font-variant-numeric: tabular-nums` on every Inconsolata run, so columns of numbers align and
 figures do not jitter when they change.
 
-**The two lower steps sit under 1.25 apart, and that is the argued exception.** 13 to 16 is 1.23 and
-11 to 13 is 1.18. Holding 1.25 there would put the row's meta at 11, where a holder name is a
-squint, or the whole row at 14, where the title no longer leads it. Every step above is at least
-1.25, and **weight descends with level** from the record's title (700) through its sections (600)
-to its prose (400). The landing headline is the one display and takes 600, because at 36 it leads
-without the extra weight.
+**Weight descends with level** from the titles (600) to the prose (400); controls sit at 500 and the
+primary action at 600. **Claim 1 is body and the other claims body-s**, so the broadest claim, the one
+read first, reads first.
 
-**A card title is body's size at a title's weight.** The list row's title is 16/600: a step under
-the record's section headings, heavier than anything beside it, and so the row reads title first
-without a size of its own. **The row's abstract is meta, not body**: on the row it is a preview,
-and the title, the holder and the date carry the row; the record is where the abstract is read at
-16.
+**In the row's facts the holder alone keeps `--text-1` at the full line**: it is the fact a founder
+reads first and sorts by later.
 
-**Meta is one size for controls and for facts, and the weight is what separates them.** Controls
-spell 13/500 in their own rule, which is why `label` is the only class at that size; facts are
-13/400, with `figure-s` numerals beside them at the same size so words and figures read as one
-run. In the row's meta grid **the holder alone keeps `--text-1`**: it is the fact a founder reads
-first and sorts by later, and colour is the only lever a meta line has, because its weight is
-fixed.
-
-**What a founder types is body.** The composer, the results bar's query and every input are 16,
-which is also the size iOS does not zoom a page to edit.
+**What a founder types is 16 or more.** The composer is 18 in the search panel and every input is at
+least 16, which is also the size iOS does not zoom a page to edit.
 
 **A role is one class, never two.** Each `figure-*` carries the family, the numeric setting and the
 weight along with its size, because a role split across a base class and a size class is a role that
@@ -448,11 +452,12 @@ interface prints what it gets.
 
 | Kind | Case | Example |
 | --- | --- | --- |
-| Page and section titles | Sentence case | *What you starred* |
-| Buttons, menu items, tabs, chips | Sentence case, verb first when it acts | *Find similar*, *Create patent report* |
+| Page and section titles | Sentence case | *Search results* |
+| Buttons, menu items, tabs, chips | Sentence case, verb first when it acts | *Find similar*, *Export this record*, *Group by topic* |
 | Small field and section labels | `micro`, uppercase, three words at most | NUMBER, WHERE TO SEARCH |
-| Subtext, help, empty states | Sentence case, whole sentences | *Pick a patent on the left to read its record.* |
-| Counts | A figure and a word | *50 matched · 20 shown* |
+| Subtext, help, empty states | Sentence case, whole sentences | *Select a patent* over *Its full record opens here: the drawings, the claims and every field, as published.* |
+| Counts | A figure and a word | *50 matched*, *Show all 22 drawings* |
+| Engine values | The engine's own label, then the figure | *Relevance score 0.8862*, *#1* |
 
 **`micro` is the only uppercase in the product, and it gets there by `text-transform`.** The source
 string stays in sentence case, so a screen reader and a copied label read normally.
@@ -464,17 +469,20 @@ string stays in sentence case, so a screen reader and a copied label read normal
 | Patent titles | Sentence case, acronyms kept | *Semiconductor package having a heat spreader* |
 | Holders | One form per company, as the company writes itself; variants merged | The company's own spelling, once, not the filing's all-caps form beside it |
 | Inventors | Normal case, as the person writes their name | Given and family name in normal case, never all caps |
-| Generated group names | Sentence case. The group headers are `micro` labels | *Thermal interface layers*, not *Thermal Interface Layers* |
+| CPC class words | As CPC publishes them, after the code | *H01L · Semiconductor devices* |
 
 **Lists of people and holders are separated by `; `**, a semicolon and a space. A name can contain a
 comma, so a comma cannot be the separator.
 
-**Jurisdictions are codes on every data surface** — US, CN, TW, EP, KR, JP: the row, the record,
-the coverage table, the starred set and both downloads, all through `core/format.mjs`. Codes are what
-patent numbers already carry, and one form everywhere is the point; *U.S.* next to *Europe* is two
-systems on one screen. **Search settings keep the names**, because there they label a choice.
+**Offices are codes where they are data**: the scope chip (`US · CN · TW · EP · KR · JP`), the
+coverage table and both exports, all through `core/format.mjs`. Codes are what patent numbers already
+carry. **Two places print the name**: Search settings, where it labels a choice, and the record's
+*Where* cell, where it answers a question in a sentence's place (*United States*).
 
-**Codes, numbers and dates are Inconsolata and exactly as issued**: *H01L23/36*, *2015-04-07*.
+**Codes, numbers and dates are Inconsolata**: *2015-04-07*. **A classification symbol is printed with
+one space between the subclass and the group**, *H01L 23/36*, as CPC and both builds print it, so the
+subclass a founder groups by reads as its own word. The source link and the exports carry the symbol
+as the record holds it.
 
 ---
 
@@ -567,15 +575,18 @@ arriving view starts 120ms later at `opacity: 0` / `translateY(6px)` and lands o
 **Exit is faster than enter** — the founder has already decided to leave, and the system should look
 like it is responding rather than deliberating.
 
-**Motion is restrained everywhere.** Nothing animates on a return visit.
+**Motion is restrained everywhere.** Nothing animates on a return visit, and nothing animates on a
+keyboard action. **A control presses to `.96`** on `:active`, and **a popover fades and scales in from
+`.97` out of the corner of its own button**, faster out than in; under reduced motion both stay at
+full size.
 
 ### What a wait looks like
 
 **A loader, not a skeleton.** A bar is the refusal to invent a value and is permanent; a loader is
 work in flight and goes when the work does.
 
-**One loader, one size, every wait** — a 20px dot-matrix mark, from the column to a card to the
-record to the *Show more* button. Two indicators read as an inconsistency, never as a vocabulary: a
+**One loader, one size, every wait**: a 20px dot-matrix mark, from the list to the record to the
+button that was pressed. Two indicators read as an inconsistency, never as a vocabulary: a
 second one asks *why is this one different*, which is never a question about the data, and it does not
 stop asking because there is a good answer.
 
@@ -590,8 +601,8 @@ arrived.
 
 **What waits is what the request changes.** A request that rearranges rows already on screen leaves
 them standing and puts the loader on the control that was pressed — a sort, the next page. A request
-that changes *which* rows exist empties the region and puts the loader inside it — a filter, a new
-search, a record. The test is whether what is on screen is still true while the answer is coming.
+that changes *which* rows exist empties the region and puts the loader inside it: a new search, a
+record. *Group by topic* filters rows already held, so it waits on nothing. The test is whether what is on screen is still true while the answer is coming.
 Where it is, blanking it claims a re-fetch that is not happening; where it is not, keeping it shows
 the founder data they have just excluded.
 
@@ -639,17 +650,14 @@ was pressed.** Four cases, and each has one motion:
 | The request | What the rows do |
 | --- | --- |
 | **The surface's first list** | Land with the view. The view is still arriving, so the rows do not stagger on top of it. |
-| **A new set** — a search, a filter, the grouping | Arrive in a stagger: opacity and 6px of rise on `--dur-3`, 30ms apart, **the first eight only**. The ninth row is below the fold on every supported window, and a stagger that kept counting would make the last visible row wait on rows nobody can see. |
-| **More of the same set** — *Show more* | The rows above are untouched; the new tail arrives with the same stagger under them. |
+| **A new set**: a search, a topic | Arrive in a stagger: opacity and 6px of rise on `--dur-3`, 30ms apart, **the first eight only**. The ninth row is below the fold on every supported window, and a stagger that kept counting would make the last visible row wait on rows nobody can see. |
 | **The same set in another order** — a sort, *Restore*, *Find similar* | Each row moves from where it stood to where it is (FLIP, on `transform`, `--dur-3`). Only rows whose old or new place is inside the scrollport move; a row travelling from off-screen to off-screen is a blur, so it lands. A sort keeps the rows standing while the engine answers and puts the loader on *Sort*. |
-
-**A row leaving fades on `--dur-2`, and the rows below then move up into its place.** On the starred
-page that is the removal; focus goes to the next row's remove button, or the previous row's at the
-end, or the heading once the set is empty.
 
 **The record arrives once.** The open that brings it into the column takes the view swap's entrance —
 opacity and 6px of rise on `--dur-3` — and its exit on `--dur-2`. It never slides: the record is the
-column, not a drawer over it, and a slide reports a place it came from. **Its text waits for it to
+panel, not a drawer over it, and a slide reports a place it came from. **On a phone it does slide**,
+in from the right over `--dur-3`, because there it is a screen of its own laid over the list, and
+Back reverses it. **Its text waits for it to
 land**, so a fast answer is held to the end of the entrance rather than fading in inside a panel still
 rising. Opening another patent or stepping finds the panel in place, and only the body crossfades, on
 `--dur-1`.
@@ -675,7 +683,7 @@ less information, so every rule below keeps what the motion was saying and drops
 - **Motion started from JavaScript checks `reduced()` and does not start.** A stagger, a FLIP, a
   smooth scroll: each reads the preference live through `motion.mjs`, never from a copy cached at
   parse time, and goes straight to its end state.
-- **Information survives.** The star keeps its fill, the shimmer and the sweep go flat rather than
+- **Information survives.** The open row keeps its border, the shimmer and the sweep go flat rather than
   off, and the loader stays on screen, motionless, at its resting ramp.
 - **A beat is never shortened.** A wait the system is genuinely having is information; reduced motion
   stills the indicator and leaves the duration alone.
@@ -691,246 +699,104 @@ code that hides a node after its exit has to know when the exit ends. A hide wai
 `app/` is the component reference: every rule below is implemented in `app/styles/`, with the
 reasoning in its own comments. This section carries what a reader cannot get from the CSS.
 
-**The shell.** TIS submark at the leading edge of a **56px top masthead**, inlined with
-`fill="currentColor"` so it inverts for free. Content on `--ground`, cards on `--surface`, one working
-surface beneath the bar.
+**The shell.** The page is the slate ground (§2) with its one light. On it, a **60px masthead**
+with a 40px inline inset and no panel of its own: the TIS submark at 24px, inlined with
+`fill="currentColor"` so it inverts for free, beside *TIS Terrain* at 18/700; *New* and *History* as
+quiet 36px text buttons with their glyphs; and at the trailing end the keyboard-shortcuts button,
+the appearance control as three icon segments, and the version in the figure face at 13px
+`--text-3`, with a 6px `--text-1` dot while the build is new to this browser.
 
-**Below 1080px the list is the page and the record is a card over it, and the layout is designed
-down to 375px.** Nothing is dropped to make it fit: every region keeps its control
-and loses its words. On a phone the masthead is one row of glyphs with the labels as accessible names,
-the field tiles are one row that scrolls sideways, the folded search bar is the sentence and Search
-alone, and a row's meta is one column so no qualifier is cut. **The masthead is one row down to 320px**,
-and a region it could not hold would wrap it to a second row rather than be hidden — height is what
-a phone has to spare, and a control that is not there cannot be found.
+**Panels are the one container.** A panel is `--surface` with a 1px `--border` and `--r-shell`;
+there is no card inside a card. The results surface is three panels on the ground (the search
+across the top, the list and the record below it, side by side) 16px from the window and 16px
+apart. The home surface puts its composer and its coverage in the same panel.
+
+**The search panel is two rows.** The first: the sentence at 18/400, growing from one line to two
+and then scrolling, with the *Text / Patent number* segmented control and the filled **Search**
+(36px, 15/600, `--accent`) at its trailing end. The second, under a 1px `--border` rule: the scope
+as chips (32px, 1px `--border-strong`, `--r-control`), each a 13px `--text-3` label and a 13px
+value, then the elapsed time in the figure face at `--text-3`, then **Search settings** at the end.
+
+**The list is a panel whose body is the ground.** Its head is on `--surface` (*Search results* at
+20/600, the ⓘ, and the list's controls as 36px `ctl` buttons); under it the body scrolls on
+`--ground`, and **each result is its own soft card**: `--surface`, a 1px `--border`, `--r-inner`,
+8px apart, inset 8px from the panel's edges. The open result's border is `--accent` (§3.8).
+
+**The row's anatomy**, top to bottom: the number line (number at 15/500 Inconsolata, the kind at
+13px `--text-3`, the source glyph as a 28px link), with the **rank chip** (white, 1px
+`--border-strong`, Inconsolata 13px) and the **score chip** (the same, with the silver edge, reading
+*Relevance score 0.8862*) at its trailing end; the title at 18/600, two lines at most; the facts
+grid under a 1px `--border` rule, its cells divided by hairlines, each an 11px `micro` label over a
+15px value (Inconsolata for the date and the class); the abstract at 14px `--text-2`, three lines;
+the drawing strip, 92px tiles on `--figure-ground`, each with its published number at 12px in the
+bottom left.
+
+**One height per title length.** The score and the rank are inline on the number line and the title
+is clamped to two, so a row is one of two heights whatever the patent and whatever the engine
+returned. For a surface whose whole job is scanning, that is the target.
+
+**The strip scrolls and never wraps, and what is off the end is a cut tile**, not a shadow and not a
+fade. A shadow cannot separate two surfaces of the same colour, and these are white tiles on a white
+card; a fade is theme-asymmetric in the wrong direction, white over white in light (invisible when it
+is needed) and a near-black wipe over a white drawing in dark. **The tile is cut by the card's edge,
+never by its padding**: the strip bleeds through the card's inline padding and scrolls back to it with
+`scroll-padding-inline`, so the first tile aligns with the text above it at rest. No scroll snap,
+because snapping resolves every rest position flush and deletes the affordance.
+
+**The record is a panel with no head bar on a wide screen.** A 36px × sits in its top corner. The
+identity is an eyebrow (number at 15px Inconsolata, kind at 13px), the title at 24/600 and the holder
+at 16px; the actions sit beside it on a wide panel and under it on a narrow one: **Find similar**
+(44px, a 15px label, the silver edge, a trailing glyph), **Export this record** (the same size, a
+1px `--border-strong` edge, a menu of CSV and Markdown) and **Open in IPTECH** as a quiet text link
+with its glyph. The **facts row** is four cells divided by hairlines between two rules, each an 11px
+label over a 15px value. **Drawings**: a lead tile across two rows and two columns, eight more in a
+grid, all on `--figure-ground` with a 1px `--border` and the published number at 12px, then *Show
+all 22 drawings* as a 44px secondary button. **Abstract** whole at 16px; **Claims** with claim 1 at
+16px and the others at 15px, numbers in a 14px Inconsolata gutter, then *Show all 20 claims*. The
+**side panel**, about 300px, beside the abstract on a wide panel and after the claims on a narrow
+one: label/value rows (13px label, 14px value, Inconsolata where it is a code or date), the inventors
+in two columns, and the classification as `<details>` rows (the subclass at 14px Inconsolata, CPC's
+words at 12px `--text-3`, the count at the trailing end), the main class bold in its group, and the
+note at 12px `--text-3` closing it.
+
+**A dash is a field the record lacks.** `—` in `--text-3`, in the field's own face, in the field's own
+cell; never a bar (a bar is a value withheld) and never an empty cell (which reads as broken).
+
+**The empty record says what will be there.** A 48px square with the `panel-right-open` glyph, then
+*Select a patent* at 18/600 and one sentence at 14px `--text-2`, centred in the panel.
+
+**Popovers anchor to their button** (`--surface`, a 1px `--border`, `--r-inner`, `--shadow-float`),
+in from the button's corner (§6). The search settings are a 560px popover in two columns, with
+*Reset* and *Done* in its foot; the keyboard shortcuts a list of key caps (`kbd`: 22px, a 1px
+`--border` with a 2px bottom edge, `--surface-sunken`, 12px Inconsolata); *Group by topic* a 340px
+menu, scrolling past 360px, each topic a `menuitemradio` with its code, CPC's words on a second line at
+12px and the count at the trailing end. A chosen topic is a 28px tag above the list with a remove
+button.
+
+**Below 640px the layout is the phone's**, and it is designed down to 375px. The masthead is 56px,
+sticky, on a blurred veil of the ground: the mark alone, New and History as glyphs, and the appearance
+control as one button that steps through its three states; the version and the keyboard shortcuts are
+not shown. The list head is sticky under it. **The search docks at the bottom**: the sentence and a
+44px Search glyph in one bar on the ground's veil, above the safe area; pressing it opens the sheet
+over `--scrim`. The record slides in as a full screen with a pinned head (*Back*, the number, previous
+and next) and a bar on the safe area (*Find similar*, then *CSV | Markdown* as one two-part control
+with a plain border); *Open in IPTECH* sits under the holder, and the drawings are a four-column grid.
+
+**Between 640 and 1080 the two panels stay side by side**, narrowing: the record's actions move under
+its title and its side panel moves under the claims, by container query on the record panel, because
+the same element is half the window at 1440 and most of it at 820.
 
 **On a coarse pointer every control is reached through 44×44**, whatever size its glyph is drawn.
 Where the glyph should stay small the box grows by a transparent hit area rather than by padding, so
-the layout does not move; where two hit areas would overlap, the controls move apart instead. A
-control that only a hardware keyboard can use, *Keyboard shortcuts*, is not shown to a touch
-screen.
-
-**A result row is ~370px, and it buys back the trip into the record.** Measured at 1440 it is 371px
-with a one-line title and 393 with two: an eyebrow, a full-width title, the who-and-when grid as a
-13px meta line, a three-line abstract and the drawing strip. A row of four fields was ~102px.
-That takes a 1000px column from five results to under three. **That is the largest single cost in this document and it is
-spent on one thing:** four fields could not answer the glance, so the record was opened on every row
-and the list was a table of contents rather than a result. A row that settles *not this one* without
-a press is worth more than two more rows that cannot.
-
-**Two heights, where there were six.** The row's height used to depend on whether the engine returned
-a score — stacked, the score block stood 10.35px taller than the head beside it — multiplied by how
-many lines the title took. The score is inline now and the title is clamped to two, so a row is one
-of two heights whatever the patent and whatever the engine said. **For a surface whose whole job is
-scanning, two heights at 340 is a better target than six at 290.**
-
-**The strip is a constant ~134px of it, whatever the patent carries**, and that is a stronger claim
-than the fixed four-up grid could make. The grid capped at four because four was what the column
-could hold — six would have wrapped, and a strip that wraps makes row height depend on the data,
-which is the one thing a scan target cannot have. A horizontal scroller answers that outright:
-twelve drawings or three, the row is the same height. **The gap above the strip is half the row's own
-block padding**, which is the 2:1 that makes a group read as a group rather than as a caption on the
-row below.
-
-**102px on a row, 148px in the record, and the step is still the point.** One size down reads as
-subordinate; the row's job is *which of these*, the record's is *this one*. The row's tile ran 64,
-then 72, and is 102 now — five across the strip instead of not quite seven, which is what a patent
-figure has to be before it is a drawing rather than a kind of drawing. Below about 48px it is a grey
-smudge, which is the floor none of them is near.
-
-**Check the step rendered, not declared, because this section had it wrong twice.** It argued
-72/104 = 0.69 against 80/104 = 0.77, "where the step starts to go". **Both numbers were the wrong
-ones.** 104 was the `minmax()` *floor* of the record grid's `auto-fill`, not a width anything painted:
-measured in a 732px record column it packed six columns at **115px**, so the real step was
-72/115 = 0.624. The floor is 148 now, which packs **four columns at 177px**, and the step is
-102/177 = **0.576** — further from 0.77 than it has ever been. A declared minimum is not a rendered
-size, and a ratio computed from one is a ratio about nothing.
-
-**The strip's scroll affordance is a cut tile, not a shadow and not a fade**, and §5's second clause
-is the half that still carries it: a shadow cannot separate two surfaces of the same colour, and these
-are white tiles on a white row. *§5's first clause used to be the other half. It is not a prohibition
-any more, so the argument has to stand without it — and it does, on something neither document said.*
-
-**The tile is cut by the card's edge, never by its padding.** The strip bleeds through the row's
-inline padding to the card's border and scrolls back to it with `scroll-padding-inline`, so the
-first tile still aligns with the text above it at rest. A tile cut at an invisible line inside the
-card reads as where the strip ends; one cut by the card's own edge reads as more.
-
-**A fade is theme-asymmetric in the wrong direction.** The gradient would run from the row's own
-background to transparent. In light the row is `--surface` `#FFFFFF` and the tiles are
-`--figure-ground` `#FFFFFF`, so it is white over white — invisible at the one moment it is needed. In
-dark the row is `#1A1A1A` and the tiles are **still** `#FFFFFF`, so it is a near-black wipe eating a
-white drawing, and the loudest thing on the row. That asymmetry exists because `--figure-ground` does
-not swap, which is a fact about paper rather than a decision anyone is proposing to revisit. A fade is
-also only honest if it appears when there is somewhere left to scroll, which costs a scroll listener
-on twenty rows or a fourth keyframe.
-
-The track is wider than the column whenever it overflows, so the column's own edge cuts a tile at most
-widths. **Measured at the 108px pitch**, swept at 1px from 1080 to 1920: 5.2% of widths are flush and
-11.3% show 8px or less of a 102px tile, in three bands — about one width in nine. *The 72px tile gave
-8.8% and 18.9% in five bands, so the larger tile roughly halved it.*
-
-*Revisit trigger, named: `@container scroll-state(scrollable: inline-end)` makes the honest
-only-when-scrollable fade a three-line change with no listener and no keyframe. It is Chrome 133+ and
-not yet in Safari. When it reaches baseline, re-argue the fade on the dark-theme asymmetry above.*
-
-**One frame value, doubled between panels.** The working surface is three panels — the composer, the
-list, the record — and they sit in a 16px gutter on all four sides with 32 between any two of them.
-One number produces both, because 16 on each column's facing edge is the 32 between the columns and
-16 under the composer plus 16 above the panels is the 32 there. It was 16 / 16 / 16 / **0**: the
-columns ran flush to the bottom of the viewport, so both panels' 20px corners were cut square by the
-window while the other three sides sat inside a gutter. The attribution supplies the fourth side, and
-that is a job as much as a credit.
-
-**And the three take one radius.** The composer was `--r-widget` over two panels at `--r-shell` —
-four pixels apart, which is the mismatch this file already refuses between two panels of equal
-standing. On the home surface it keeps the widget radius, because there it sits among field tiles
-rather than over shell-radius panels.
-
-**The columns are even, and the list is the product.** They were 44 / 56 against the list while the
-record held the larger half, on the argument that the denser column needs more room. The list is
-where the whole flow happens — search, find similar, star, export — so the half the founder works in
-was the smaller one, and on arrival the larger one held a single sentence. The list carries three
-bands a row and floors at 340px; the record carries ten identifiers, an abstract, the claims and
-the drawings, and it adapts itself rather than being held up by the split.
-
-**The record's field list is the width-critical thing on the surface.** It is a grid of label/value
-pairs, **two pairs to a row**, and what makes ten identifiers scannable is that the values share a
-leading edge. One pair to a row puts a row under every identifier, the one block on the surface spending a whole
-row on one fact, beside a list whose rows put four facts in a 2×2 grid. Two pairs makes it six rows:
-four of pairs, and *Inventors* and *Classes* on a row each.
-
-**The labels stay words, and that is the line between this and the list's cells.** The list leads
-each cell with an icon, which is right for four facts that recur on every row; ten identifiers are
-not four, and there is no glyph that separates *Number* from *Application* from *Main class*. Density
-comes from the second pair, never from deleting a field name.
-
-**Inventors and Classes take the whole row.** Both are lists — a run of names, a run of codes — so
-both wrap, and a wrapping list inside a half-track is exactly the column of whitespace the second
-pair was added to remove.
-
-**Under about 600px the longest values wrap onto second lines under their own labels**, the shared
-edge stops existing, and the grid costs whitespace for nothing — so it halves to one pair. **Below
-420px it pairs up again**, label still above value: number, kind, the dates and the office are each
-under twelve characters, so two of them fit to a row in the panel, and the holder, the inventors and
-the classes take a row each. One identifier to a row was a screen of eleven rows before the
-drawings; two to a row is six.
-
-The chain, at a 1440px window:
-
-```
-1440 × 0.50 (the record's column)   = 720
-     −  32  (the pane's inset)       = 688
-     −   2  (the record's border)    = 686
-     −  40  (the record body's pad)  = 646   what the field list gets
-```
-
-**So the crossing point is a window of about 1348px**, from `0.50W − 74 = 600`. Between 1348 and the
-stack the field list is single-column, which is the arrangement working rather than a defect — and
-the container query has to sit below `.hf`'s base rule: above it, it loses on source order and the
-field list never collapses at any width, while the share appears to protect a floor nothing enforces.
-
-**It is a container query and not a viewport one**, and the reason is that the same element is half of
-a split above the stack and the full width below it — a viewport query would fire at the wrong moment
-in both directions.
-
-**Below 1080 the record is a card over the list**, not a second region under it. Stacked, the
-record a founder opened arrived below the list they were scanning, so opening one meant losing
-their place in the other and Back threw both away. As a card it covers the list without moving
-it: closing it, by its control, a drag down on its head, the scrim, Escape or Back, returns to the
-row that opened it, where it was. **The card sits 8px from every edge** with its four corners
-rounded, so a sliver of the list shows on each side and the record reads as something laid over
-the founder's place rather than a page that replaced it; 8px rather than the gutter's 16 because
-at 390 the second 8 on each side is width the field panel needs. **The scrim closes it to a pointer
-and not to a finger**: a touch screen moves a tap that close to the card onto the card, so on a
-phone the drag down and the close control are the ways out, and Back is the platform's. That is the
-cost of the 8, taken knowingly; a gutter wide enough to tap would be the 16 again. It scrolls itself, with
-`overscroll-behavior: contain` so the list behind never moves under a finger.
-
-**On the card the head is the patent's name, and it does not change.** Its first row is the record's
-actions, *Find similar*, previous, next and close, all in the same muted colour; under them the
-publication number, then the title in full, cut only past four lines, so the body never repeats
-either. Where a patent has a grant and an application, two text tabs under the title choose between
-them, the current one underlined on the head's rule; a tab is a view of the same patent, which a
-switch beside the number made look like a setting. **Switching versions moves nothing**: while the
-other version loads, the head keeps the title and takes the number it is switching to, so the
-reader's eye has nothing to find again.
-
-**Above the stack the breakpoints adjust components, never the structure.** A label narrows, the
-thumbnail strip fits fewer per row, the field tiles reflow.
-
-**The breakpoints are the viewport's, with two exceptions, and both earn it the same way**: a
-subject that exists in the markup, and a width the viewport does not know.
-
-- `.pref-card` — a settings card is handed whatever width its column has.
-- `.rec-body` — the record's field list, §7. The column is half of a split or the whole width,
-  depending on a breakpoint above it.
-
-*`.rec-head` was a third and went when the control that needed it did.* It existed solely so
-*Open in IPtech* could drop its label below 520px of head; that control moved to the record's closing
-block, where it has room for a per-patent label the head could never have held. **Removing a control
-removed a query**, which is the direction this count is supposed to move in.
-
-**A third has to argue the same two things.** The count is here rather than in a comment because
-"it is the only one" was the claim this paragraph used to make, and it stopped being true in one
-pass.
-*A container query whose subject was never built does not fail — it sits in the stylesheet looking
-like responsive behaviour, and no screenshot at any width can show you that it is not there.*
-
-**A head is pinned only where a panel owns its own scroll, and there are exactly two.** A bar that
-stays is a claim that what it holds is needed at every scroll position, and almost nothing is: a menu
-closes, a chip is read once. The two that qualify are the two panels on the working surface, and they
-qualify for the same reason — each fills its column, each scrolls its own body, and each head carries
-the thing the founder is looking at plus the controls that change it. The record's holds *previous*,
-*next* and *close* over a claim set that runs to 1,500px. The list's holds the count and the
-Sort control, which as ordinary content in a scroller would leave on the first gesture and take the
-column's identity with them. **A third is evidence this rule has stopped
-holding**, not evidence that pinning turned out to be useful.
-
-**Neither is `position:sticky` at two columns, and that is the mechanism rather than a detail.** A
-non-flexing item above a scrolling sibling stays put without saying so, which is what a panel that
-fills its column gives for free. The rule is about what persists, not about a property: a `sticky`
-declaration that reproduces this arrangement is the same claim and answers to the same count.
-
-*The record's head keeps its `sticky` anyway, because below 1080 the record is a card that scrolls
-itself and sticky is the whole of what holds its head. That depends on a detail worth writing down once: the card is
-`overflow:clip` and not `overflow:hidden`. `hidden` makes an element a scroll container, so a sticky
-child resolves against the card — which never scrolls — and travels away with it, throwing nothing
-and logging nothing. `clip` clips to the radius without creating a scrollport.*
-
-**The lockup routes home unless there is no home to route to.** On the working screen it scrolls both
-columns to the top — both, because the surface has two and returning one is a half-answer. On a
-destination it returns to the working screen in the mode that destination's own Back would have used.
-On the home surface it is inert.
-
-**The visual does not change between those states**, and that is the constraint everything else
-follows from. It stays an `<a>`, keeps its styling and its cursor, and tells assistive tech with
-`aria-disabled` rather than by greying out. *A lockup that changes appearance by screen stops being a
-fixed point in the chrome, which is the whole of what makes it usable as home.*
-
-**One thing in the masthead is protected by name.** The appearance control stays on the bar at every
-width — burying it in a menu is the same loss as dropping it.
+the layout does not move. A control that only a hardware keyboard can use, *Keyboard shortcuts*, is
+not shown to a touch screen.
 
 **One `<main>` per surface.** Collapsing surfaces is how a screen-reader user loses the landmark they
-meet before anything else.
+navigate by.
 
-**The composer is one component with two states**, and it appears twice: centred on the home surface,
-and above the columns on the results surface still holding what the founder typed. **Open** is a
-field over a hairline over a toolbar, and it is the only state the home surface uses. **Folded** is
-the toolbar alone with the sentence on it as one ellipsised line, 58px against ~150, and it is the
-results surface's resting state once a search has run — the sentence is still on screen, so the
-founder can still read and press what they searched. It is inert until something is typed. **A
-support field may not wear it** — the composer's identity is *the thing you type your idea into*, and
-a second one would claim the help form searches.
-
-**The fold moves on one axis.** The field folds on `grid-template-rows` from `1fr` to `0fr` — open on
-`--dur-3`, folded on `--dur-2` — and the folded sentence holds its box at both states, so the meta and
-Search keep their x while the field moves above them. The sentence leaves on `--dur-1` before the
-field has moved far, and arrives only after it has stopped.
-
-**Its primary action sits at the trailing edge of the toolbar row**, labelled `Search`. The field and
-the button share one edge of one panel, so search and *change what you typed* are still one zone; a
-full-width button under the panel would be a second zone with nothing to separate it from the
-first.
+**The lockup routes home unless there is no home to route to.** On the home surface it is
+`aria-disabled`, and the visual does not change between those states: a lockup that changes
+appearance by screen stops being a fixed point in the chrome.
 
 **One primary action per surface.** A near-black fill — the accent, §3.8 — is what
 says *this is the way forward*. Two filled buttons on one screen make the smaller one look like the
@@ -938,28 +804,14 @@ way forward. **The primary action of a settings card is never deletion** — whe
 irreversible, the safe path is the affirmed button and the act is the ghost one, with the weight
 carried by the sentence above them rather than by a hue.
 
-**The AI-written label is ink, and it is a label.** A solid `--text-1` chip with `--text-inverse`
-text — 11px, semibold, uppercase, `--r-chip`, no border — reading *AI-written*: beside the group of
-AI-written sections on the starred page's report panel and on each of the report's AI-written
-sections. It swaps with the theme like the ink it is. It is the one solid chip in the product, which
-is what lets it mark the generated part without a hue, and it is never pressable, so it does not count
-against the one filled button.
-
-**The report panel offers no choice of report.** There is one report, so the starred page's panel
-opens with an eyebrow on `--surface-sunken` above a 1px `--border` rule, then the report's question,
-what it holds and the one filled button. A choice the reader cannot answer better than the product —
-*which report do I want?* before they have seen either — is a control that costs a press and decides
-nothing.
-
 **A switch is a claim that the product does the thing when it is on.** Every other invented value in
 `demo/` is a grey bar or a figure the reader is told is illustrative; a control carries no such
 marking, and nothing about a toggle says *this is a sketch*. Do not add one for a capability that does
 not exist.
 
 **There are no widget cards, and no caption states a finding.** A finding is a reading of the data,
-and `brief.md` §1 puts readings in one place: a report's AI-written part. **A report's exhibit title states
-a count** — *Three holders account for 67 of 186 results* — and nothing more; anywhere else, there is
-no caption. **The info popover survives and carries explanation only** — what a score is, what *Nearness* measures. The test is whether a
+and `brief.md` §1 prints none. A caption, where there is one, states a count and nothing more. **The
+info popover carries explanation only**: what the score is, how the list is ordered. The test is whether a
 screenshot with **no popover open** still says what the founder is looking at; an interface that needs
 a popover to be legible is not legible.
 
@@ -1030,82 +882,6 @@ one-of-N.
 
 **An info popover anchors to its trigger, not to its card.**
 
-**A sent state replaces its form rather than sitting under it.** A composer left on screen beneath a
-confirmation invites a second send of the same message.
-
-**The report is paper.** It is the one surface drawn as a document rather than as an app screen,
-because a backer reads it beside the memos they already get (`platform.md` §5.3). Sheets of
-`--surface` on `--ground`, one column of about 816px, generous margins, a running head and foot on
-each sheet, and no Innovue mark: the report is a document, not a product surface (`brief.md` §3).
-`design/previews/terrain-report-lab.html` is the bench this look was chosen on.
-
-- **The page is US Letter, 816 × 1056px at 96dpi**, with a text block inset 56px at the top, 72px at
-  the sides and 52px at the foot. **A hairline frame on every sheet**, 1px `--border` inset 36px.
-  Inside it, the running head — the lockup, and *Patent report · date* in 11px uppercase at
-  `--text-3`, over a 1px `--border` rule 12px below it and 32px above the first block — and the
-  foot, the same 11px uppercase over a 1px rule, with *Page n of N* at its trailing end. On a phone
-  the frame comes in to 12px.
-- **The cover is page one**, with no head or foot, and carries only what `brief.md` §1 lets a cover
-  carry. Its frame is double — `--text-3` at 36px, `--border` at 41px — and an ink band, the ink
-  pair inverted, sits flush inside the inner line: the lockup and the date at the top, the question
-  at 36px at the foot. Below the band, four figures in Inconsolata at 36px between hairlines, then
-  About and Basis.
-- **How the set was made** comes next: Re, Date, Basis as a definition list between a 2px `--text-1`
-  rule and a 1px `--border` one, then the contents. The figures are the cover's and the glance
-  page's; a third copy between them would only repeat them.
-- **At a glance is page 3**: the five figures at 26px on `--surface-sunken`, *From Part 2* — Part 2's
-  summary, one line each, once it has run — and the counted exhibits small in a
-  three-column grid, as many as the page holds, each with the exhibit and page its full version is
-  on.
-- **Numbered exhibits**: an 11px uppercase label (*Exhibit 2 · Filed by year*), a 16px title that
-  states a count, the chart or table, a 13px note, and an 11px source line naming the base. The
-  starred count is `--text-1`, the results' count beside it `--text-3`. A 1px
-  `--text-1` rule between them. **Two that share a base sit side by side** across a 1px `--border`
-  rule; the large ones run full width.
-- **Part 1 ends on the turn**: one 16px line at weight 500 with a 13px `--text-2` line under it,
-  32px below the last exhibit, behind a 3px `--text-1` rule down its left side. Before Part 2 is
-  written, on screen the turn is the **band** that writes it: `--surface-sunken`, the same 3px rule,
-  one line on what Part 2 is, and **Write Part 2**, whose confirm step opens inside the band. The surface's
-  one filled button is the same action in the page head; the band's is secondary and steps aside
-  while the step is open, and the head's steps down, so *Confirm and run* is the only filled button
-  while it is. While a run is queued or running the band holds *Ready in about N minutes* and no
-  button; a failed run holds its sentence and *Try again*.
-- **Part 2 opens on a page of its own**: *Part 2* in 11px uppercase, the title at 26px, a 13px
-  line under it, and *In this part*, its sections as a numbered list. **Then each AI-written section
-  starts a page**: its title at 16px semibold after its number in Inconsolata at weight 500 and
-  `--text-3`, with the AI-written label beside them, the question it
-  answers at 13px `--text-3`, and its blocks. Reading text holds a 72ch measure; tables keep the
-  full width. The disclaimer, 11px `--text-3` over a 1px `--border` rule, closes the last section.
-- **An AI-written section's blocks** (`components.md` §1), each drawn without a hue, by one renderer —
-  `app/js/core/blocks.mjs` with `app/styles/43-blocks.css`, which the template links too:
-  - **Prose** at 13px, line height 1.6. A patent citation is Inconsolata at 11px in `--text-3`,
-    `[5]`; a section prints as its number, *2.3*, and an exhibit as *Exhibit 4*. A checkable fact
-    carries an 11px Inconsolata *C* in a 1px `--border` box; a fact from outside the records an *O*
-    in the darker box, `--text-3` edge and `--text-2` letter.
-  - **Tables and the claim chart**: 11px `--text-3` headers over a 1px `--text-1` rule, 13px rows
-    on 1px `--border` hairlines. A chart mark is a symbol and its word — *present*, *unclear*,
-    *absent* — never a fill.
-  - **Bars** are `--text-1` on a share of their own base; a **matrix** marks a reach with a 9px
-    `--text-1` dot and its absence with a 3px `--border-strong` one.
-  - **Answers** sit in a two-column grid under a 1px `--text-1` rule, 16px gutters and a hairline
-    between the columns, each a 13px semibold head over 13px text; a question for the team sits on
-    `--surface-sunken`. A **checklist** is numbered 13px rows on hairlines.
-  - **One per patent**, over a hairline: a 13px semibold head (row, number, holder), then labelled
-    13px lines; where the abstract reads broader than claim 1, two boxes side by side, 1px
-    `--border`, 10 × 12px padding, with what claim 1 adds underlined.
-- **The appendix is one table per row**, sharing one set of columns, so it breaks between rows and
-  still reads as one table: number in Inconsolata over the title at 11px, the holder as recorded at
-  11px, then office, filed, kind and the nominal term. The source line travels with the last row.
-- **The closing page says what the report is not**, then how it was made.
-- **Type stays on the scale**: 11, 13, 16, 20, 26 and 36px, nothing between. Numbers are Inconsolata
-  with tabular figures.
-- **On screen a section is one sheet**, as tall as it needs. **On paper the same blocks are packed into
-  US Letter pages** by measuring — a block never splits, so a block from the engine is kept under a
-  page, and the worked example's own long tables carry split points between their rows — with page
-  numbers,
-  and the contents and the glance tiles filled with them. Before Part 2 is written, the paper leaves it out. It
-  prints light in either theme, because paper does not swap.
-
 ---
 
 ## 8 · The skeleton contract
@@ -1116,7 +892,7 @@ each sheet, and no Innovue mark: the report is a document, not a product surface
 
 | Real English | Grey bar | Illustrative |
 |---|---|---|
-| Titles, buttons, column headers, empty-state copy, menu rows, field labels | Company names, the user's own name and address, plan tier, patent and application numbers, IPC symbols, inventors | Counts, relevance scores, filing and publication years |
+| Titles, buttons, column headers, empty-state copy, menu rows, field labels | Company names, patent and application numbers, classification symbols, inventors | Counts, relevance scores, filing and publication years |
 
 **`corpus/` is the deliberate exception and it is not in this table**, because it is not illustrative
 data — it is real patents, captured, and its whole job is to strain renderers written against
@@ -1127,13 +903,8 @@ present** — `?data=demo` forces the fake engine. `brief.md` §4 carries it.
 **No party is invented.** A named company is never invented, because an invented one reads as a live
 example — and transliterating a real one is fabrication. Both are worse than a bar.
 
-**The founder's own name and address are bars too.** §8 does not bend for them: a settings page whose
-whole content is a name and an email is where that temptation is strongest. A password renders as a
-run of dots, which is what a password looks like everywhere and is chrome rather than an identity
-being withheld.
-
-**A jurisdiction is not a party**, so it is printed, as its two-letter code on every data surface
-(§4 *Case*). Five grey wedges would read as nothing.
+**A jurisdiction is not a party**, so it is printed, as its code where it is data and its name where
+it labels a choice (§4 *Case*). Five grey wedges would read as nothing.
 
 **A patent with no assignee is not a withheld one.** A bar claims a holder exists and is being
 held back; a patent that names none has nothing to hold back. So the contract keeps three holder
@@ -1147,12 +918,9 @@ the act that does — the same distinction the loader draws against the bar, one
 
 **The screen must read as populated through layout alone.** That is the harder and more useful test.
 
-**A report's AI-written sections are bars until they are written, and that is the contract read
-straight.** An AI-written section's text exists to be written and is being withheld until the founder
-asks for it, so its
-lines are bars under a real heading — never a blur over real text, which would be text generated and
-then hidden, and never lorem ipsum. The heading and the line saying what the section answers are
-chrome, and print in full.
+**A field the record does not carry is a dash, not a bar.** A bar says the value exists and is
+withheld; legal status, a priority date or CPC's words that the record never had are absent, and the
+dash says so (§7).
 
 ### The exceptions, and what makes one admissible
 
@@ -1161,8 +929,9 @@ on**, the value is shown and everything around it stays a bar.
 
 - **The year on a list row.** A date sort over a column of grey bars is an order the founder cannot
   check. The control is the argument, not the row.
-- **The relevance score.** *Nearest first* over a column of bars is the same defect, and the score is
-  the engine's own number rather than one Terrain generated.
+- **The relevance score.** A ranked list over a column of bars is the same defect, and the score is
+  the engine's own number rather than one Terrain generated. The corpus prints stand-ins for it
+  (`brief.md` §4).
 - **The one demonstration record.** A record pane of nothing but bars cannot demonstrate a record
   pane. Exactly one is populated, and its field *names* were always real anyway.
 
@@ -1189,20 +958,20 @@ an older release is a different drawing under the same name, and mixing releases
 and proportions exactly as mixing sets does. Upgrading means re-copying every icon, not the ones that
 happen to be touched.
 
-**Six sizes, each with one home.** 1.5px stroke, round caps and joins throughout.
+**Five sizes, each with one home.** 1.5px stroke, round caps and joins throughout.
 
 | Size | Where |
 |---|---|
-| 14px | inline with small text — the row's meta glyphs, menu ticks and chevrons, the masthead's theme control and counters |
-| 15px | the results toolbar, the list bar and the record head — settings, view mode, sort, *Find similar*, and *Back* |
-| 16px | standalone controls — buttons, record actions, masthead buttons, the figure viewer's action bar |
-| 17px | the row's star, the one control a row carries beside its toggle |
-| 18px | the head of a destination page, and the figure viewer's previous and next |
-| 24px | a technology-field tile on the home surface, where the glyph is the tile's subject rather than a marker on a control |
+| 14px | inline with small text: the row's source link, a tag's remove button, a scope chip |
+| 16px | controls: the masthead's buttons and theme segments, the list head, the record's actions, menus, the figure viewer's action bar |
+| 18px | standalone icon buttons: × on the record, the phone record's Back, previous and next, the figure viewer's previous and next |
+| 20px | the phone dock's Search glyph |
+| 24px | the submark in the lockup, a technology-field tile on home, and the empty record's glyph |
 
 **One glyph, one act.** Two controls in one region carrying the same mark for different acts is the
 assembled-from-parts failure arriving through repetition rather than through mixture — so *New search*
-takes the magnifier with a plus in it, and it is the only magnifier in the masthead.
+the masthead's *New* takes the magnifier because it is the only magnifier there; the search panel's
+Search is a word with the same glyph, one region away, and it is the act *New* leads to.
 
 ---
 
@@ -1329,8 +1098,8 @@ because it is read as text.
 ### 10.4 · The control
 
 Three states — light, dark, system — as a segmented control in the masthead, persisted to
-`localStorage` and overridable by URL for headless capture. A second control over the same value on
-the account page is additive: one value, one writer, two places to press.
+`localStorage` and overridable by URL for headless capture. On a phone it is one button that steps
+through the three states.
 
 **It may not be demoted into a menu.** A pass proposing that reverses a recorded decision.
 

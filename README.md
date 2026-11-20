@@ -1,18 +1,18 @@
 # TIS Terrain
 
-**Patent search built to return the patents actually near an idea, and a report on what they may
-mean — for founders, and the people who back them.**
+**Patent search built to return the patents actually near an idea, for founders and the people who
+back them.**
 
-You describe what you are building, Terrain returns the patents that are actually near it, you star
-the ones that matter, and the starred set becomes a patent report, or leaves as a file.
-Self-serve software searching Innovue's patent database.
+You describe what you are building, Terrain returns the patents that are actually near it, you open
+the ones that matter, and the results or one record leave as a CSV or a Markdown file. Self-serve
+software searching Innovue's patent database.
 
-**The search shows what came back; a report says what it may mean, and shows its sources.** The gap
+**The search shows what came back, as published, and says nothing about what it means.** The gap
 worth solving is not finding patent information but finding information a founder can trust:
 generative AI is near and writes what it returns, a keyword index is real and misses what is near.
-Terrain is built to give both — the real patents nearest the idea, exactly as published — and then a
-reading of the starred set that can be checked against it. A count of the set is admissible anywhere;
-a reading only in a report's AI-written part, marked AI-written and citing the patents it rests on.
+Terrain is built to give both: the real patents nearest the idea, exactly as published, each with the
+engine's own relevance score. A count or a grouping of the set is admissible; a reading of it is
+printed nowhere.
 
 Terrain is a TIS product in the Patent Intelligence pillar, and *Terrain* is its working name.
 Innovue builds and ships it. This repository holds the reference it is built from — `app/` — and
@@ -22,8 +22,9 @@ four documents describing it.
 
 ## The product
 
-**[`app/`](app/) is the reference Innovue builds Terrain from.** Where a document and `app/` disagree,
-the code is what was decided.
+**[`app/`](app/) is the reference Innovue builds Terrain from**, for how it looks as much as how it
+behaves; it is built from the round 4 detail lab. Where a document and `app/` disagree, the code is
+what was decided.
 
 **Run it:**
 
@@ -36,7 +37,7 @@ python3 -m http.server 8765      # from the repo root
 opaque. [`app/README.md`](app/README.md) is the handoff document and says so on its first line.
 
 **`app/` is published to GitHub Pages**, running against the real patent corpus rather than the fake
-engine. The site is `noindex` because this is a pre-release product shown to a named few, but that is
+engine; that corpus has no engine behind it, so its relevance scores are stand-ins. The site is `noindex` because this is a pre-release product shown to a named few, but that is
 not the same as private: anyone with the URL can open it. `tools/publish-pages.py` builds it, and
 `CLAUDE.md` under *What is published* says what goes up, what stays local, and why this corpus is
 publishable when a differently assembled one would not be.
@@ -49,8 +50,7 @@ Terrain is.
 ## Every figure here is illustrative
 
 **No number in `demo/` or `docs/` is a real filing count.**
-[`docs/platform.md`](docs/platform.md) §11 carries the one invariant a change has to keep, and
-nothing checks it.
+[`docs/platform.md`](docs/platform.md) §11 says nothing checks them.
 
 **No real patent holder is named in tracked files.** Identities render as grey skeleton bars by
 decision: inventing one reads as a live example, and transliterating a real one is fabrication.
@@ -92,8 +92,8 @@ design/
     terrain-prototype.html    FROZEN v1 — kept for provenance, not maintained
     terrain-loading-lab.html  the loader bench
 
-brand/               fonts, logos, the favicon, and one permitted image family
-tools/               everything CI runs, and every one can refuse
+brand/               fonts, logos and the favicon
+tools/               everything that can refuse: the gates, and the publisher
 .github/workflows/   gates.yml — runs the gates on every push to main
 ```
 
@@ -197,6 +197,6 @@ that is not theoretical — the licences travel with the files whether or not an
 ## Attribution
 
 Terrain is an **endorsed sub-brand**: the TIS mark appears in the lockup, Terrain is the product name.
-**Innovue appears as attribution only** — *Powered by Innovue* at the foot of every surface but a report, rendered
+**Innovue appears as attribution only** — *Powered by Innovue* at the foot of the home page, rendered
 as their own mark in their own blue, and the database cited in body copy where it does credibility
 work. Innovue never enters the product name or the primary lockup.

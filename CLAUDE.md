@@ -4,8 +4,8 @@
 
 The working directory for **TIS Terrain**, an English-native, self-serve SaaS product in the TIS
 Patent Intelligence pillar. **Innovue builds and ships it, and `app/` is the reference it is built
-from** — the frontend that defines behaviour, flow and the engine contract, delivered to them as
-round packages — and four documents describe it. *Terrain* is the working name, not a decided one:
+from**: the frontend that defines how Terrain looks and behaves and the engine contract, delivered
+to them as round packages, and four documents describe it. *Terrain* is the working name, not a decided one:
 `docs/brief.md` §2 records the three in use.
 
 This folder is **deliberately outside** the TIS brand monorepo (`~/Desktop/TIS`). That is a decision,
@@ -13,51 +13,51 @@ not an accident — see "Relationship to the TIS monorepo" at the bottom.
 
 ## The product, in one paragraph
 
-Terrain is **patent search built to return the patents actually near an idea, and a report on what
-they may mean**, for founders and the people who back them (`docs/brief.md` §1 *Who it is for*). You
-describe what you are building, Terrain returns the patents that are actually near it, you star the
-ones that matter, and the starred set becomes a **patent report** — or leaves as a file. *Backers* are
+Terrain is **patent search built to return the patents actually near an idea**, for founders and the
+people who back them (`docs/brief.md` §1 *Who it is for*), **and to hand that set over as a file**.
+You describe what you are building, Terrain returns the patents that are actually near it, you open
+the ones that matter, and the results or one record leave as a CSV or a Markdown file. *Backers* are
 the investors, incubators and accelerators behind a startup; an incubator is a backer, not a third
-audience. **One report serves both readers**, because a founder and a backer want the same sections. Self-serve software searching Innovue's patent database. **TIS provides
-a patent intelligence layer** — the second of four, between an organisation's own data and the tools
-and decisions it runs on it — **and Terrain is TIS's own tool on that layer**: the low-cost baseline,
-showing no price. An organisation's other tools, a portal fitted to it, and the AI-written part of a
-report call the same layer. **Terrain has no tier word** (`docs/brief.md` §6).
+audience. Self-serve software searching Innovue's patent database. **TIS provides a patent
+intelligence layer** (the second of four, between an organisation's own data and the tools and
+decisions it runs on it) **and Terrain is TIS's own tool on that layer**: the low-cost baseline,
+showing no price. An organisation's other tools, a portal fitted to it, and any analysis of a set
+call the same layer. **Terrain has no tier word** (`docs/brief.md` §6).
 
-**One flow, and every surface serves it:** search → find similar → star → the starred set → report or
-export.
+**One flow, and every surface serves it:** search → find similar → export. There is no star, no
+starred set, no report, and no account, billing or help page.
 
-**The search shows what came back; a report says what it may mean, and shows its sources.** The gap
+**The search shows what came back, as published, and says nothing about what it means.** The gap
 worth solving is not finding patent information but finding information a founder can trust:
 generative AI is near and writes what it returns, a keyword index is real and misses what is near.
-Terrain is built to give both — the real patents nearest the idea, as published — and then a reading
-of the starred set that can be checked against it. *Trusted* is a claim about the record and holds by
-construction; *near* is a claim about the set and is an aim, since the evaluations of the engine are
-Innovue's, in two fields, against other tools. `docs/brief.md` §1 carries the wording rules.
+Terrain is built to give both: the real patents nearest the idea, as published. *Trusted* is a claim
+about the record and holds by construction; *near* is a claim about the set and is an aim, since the
+evaluations of the engine are Innovue's, in two fields, against other tools. `docs/brief.md` §1
+carries the wording rules.
 
-**The line is where a reading sits, not whether there is one.** A view of a set — counts by year,
-holder, office or class — is admissible anywhere, because every number in it can be checked against
-the rows, and a caption over it states a count. A reading — a summary, a claim chart, where an idea
-may differ — is admissible only in a report's AI-written part, marked AI-written, citing the patents it
-rests on, in *may* wording wherever it touches a claim. Out everywhere: a reading on the search
-surface, a score or probability of our own, and legal advice stated as fact (*infringes*, *is clear*,
-*is novel*). One disclaimer closes the AI-written part and routes nobody anywhere.
+**The line is between a view of the set and a reading of it.** A view (counts or groups by year,
+holder, office or class, such as *Group by topic*, which groups by CPC subclass in CPC's own words) is
+admissible, because every number in it can be checked against the rows, and a caption over it states
+a count. A reading (a summary, a claim chart, a plain-English version, where an idea may differ) is
+printed nowhere, and neither is legal advice stated as fact (*infringes*, *is clear*, *is novel*).
+**Every row prints the engine's relevance score** beside its rank: the engine's number, never one
+Terrain computes, and never sold as a confidence.
 
-**The search is software; a report says it is one.** The user logs in and searches; nothing is
-human-produced to order. A report is generated by the software from the founder's own starred set,
-opens with how that set was made, and leaves as a PDF of its own page — before its AI-written part is
-written, the counted part only. `docs/brief.md` §1 carries the file test: no file states anything its page did not.
+**The search is software, and a file is its page.** The user opens it and searches; nothing is
+human-produced to order. `docs/brief.md` §1 carries the file test: no file states anything its page
+did not.
 
 ## `app/` is the reference
 
 **`app/` is what was decided.** The documents describe it. Where a document and `app/` disagree, the
 code wins and the document is stale.
 
-**One carve-out: Innovue's shipped build is the reference for type and text layout**, unless a
-round's difference list flags a component. They build Terrain from our handoff packages on their own
-engine, and their type is fine as it is. `app/` stays the reference for behaviour, flow and the
-engine contract, and takes their type and layout as each component is touched. `docs/brief.md` §4 is
-the decision and `docs/platform.md` §13 is the round; `/terrain-round` runs one.
+**`app/` is the reference for everything: behaviour, flow, the engine contract, type and layout.**
+It is built from the round 4 detail lab (`visual-reference/innovue-build/round-4/detail-lab/`, V8),
+which is the look Terrain now has; Innovue builds Terrain from our handoff packages on their own
+engine, and the next round hands them that look. One reference means every difference between the
+two builds has one answer. `docs/brief.md` §4 is the decision and `docs/platform.md` §13 is the
+round; `/terrain-round` runs one.
 
 **Run it:** `python3 -m http.server 8765` from the repo root, then `http://127.0.0.1:8765/app/`.
 `file://` will never work — ES modules are CORS-fetched and a `file://` origin is opaque.
@@ -148,7 +148,9 @@ was *what does a stranger see when the fake engine answers* — bars where every
 should be, and no drawing at all, because `demo/` ships none. The answer is that they do not see the
 fake engine: the published site carries `corpus/`, so the link shows the product with real titles,
 real assignees and 2,247 real plates. `demo/` ships with it as the fallback the seam requires, not
-as what anybody lands on.
+as what anybody lands on. **The corpus has no engine, so its relevance scores are stand-ins**: its
+local engine gives each row a score that descends with the rank, so a row reads as Innovue's engine
+fills it. No number in it was measured, and nothing outside the published page may cite one.
 
 **The corpus is publishable because of how it was assembled, and that is the whole argument.** Ten
 seed patents plus ninety reached by following each seed's own `similar` list on Google Patents — one
@@ -228,24 +230,25 @@ three by a script that refuses:
   caption may say, and `design-language.md` §2 says it is drawn without a hue.
 
 - Terrain **has** an accent, and it is **achromatic** — the ink pair. `design-language.md` §3.8 says
-  the three places it may appear and the places it may not.
+  the four places it may appear (the open row's border among them) and the places it may not.
 - *No gradient* is now **two named gradients and no third**: the ground's one light, on the page
-  ground only, and the deck's silver edge, on three controls listed by name. `design-language.md` §2
-  and §3.8 say where each may sit, and a fourth silver site is an amendment.
+  ground only, and the deck's silver edge, on two sites listed by name (Find similar and the
+  relevance score chip). `design-language.md` §2 and §3.8 say where each may sit, and a third silver
+  site is an amendment.
 - A **download** is not the line between software and a document. The line is **what the file is
   permitted to say**, and `brief.md` §1 carries the test: does it state anything its page did not.
-  The starred set leaves as a CSV or Markdown; a report leaves as a PDF of its own page, without its
-  AI-written part until that part is written.
+  A record and the results leave as a CSV or Markdown, and nothing leaves that the page did not show.
 - `platform.md` §10 is an **ordered list of what is not next**, each with what would start it — not a
   fence, and not a backlog either.
 - The semantic token count is no longer *the one place that number lives* — it appeared in three —
   it is **one argued place and a gate that refuses any copy disagreeing with `tokens.css`**.
 - Tokens are no longer *inlined by hand*; they are **inlined by a generator with a byte-level
   check**, and `sync-tokens.py --check` is the successor to the honour system.
-- Terrain **may** read a set, and **only** in a report's AI-written part. The line moved from *never says
-  what it means* to *where the reading sits and whether it shows its sources*: the search never
-  interprets, and a reading is marked AI-written and cites the starred patents it rests on.
-  `brief.md` §1 says what is admissible where, and `platform.md` §5.3 is the report.
+- Terrain **prints** legal status and CPC's class words, where it used to print neither. The line
+  moved from *no status, no gloss* to *as published, or a dash*: the record prints the office's
+  status word and CPC's published name for a class, and a field the record does not carry prints as
+  a dash, never as a value Terrain derived. `components.md` §1 says exactly which fields and how
+  each prints when `null`.
 - `tools/` is no longer *everything CI or a publish runs*, and it is not *everything CI runs* either:
   it is **everything that can refuse**. `publish-pages.py` is admitted on that qualifier and on
   nothing else — it refuses a dirty tree, a failing gate, a missing corpus and a path it was not
@@ -256,18 +259,17 @@ three by a script that refuses:
 
 **Terrain has no hue of its own.** One place may take colour, the accent, and the accent is
 achromatic. No decorative colour, and no gradient or tint but two, both the deck's: the slate ground
-with its one light, and the silver edge on three named controls (`design-language.md` §2, §3.8). *Three other places had colour
-and each left with what it coloured: chart layers with the charts, discrete states with the
-legal-status chip (`platform.md` §13, R1-17), direction of change with a delta pill that never
-shipped. Their tokens are gone rather than parked. A view of the set, when one is built, does not
-bring a hue back: it draws from the neutral ramp.*
+with its one light, and the silver edge on two named sites (`design-language.md` §2, §3.8). *Legal
+status prints as a word, never a coloured chip, and the state hues have no reader; chart layers and a
+direction-of-change pill left with what they coloured. Their tokens are gone rather than parked. A
+view of the set does not bring a hue back: it draws from the neutral ramp.*
 
 **A hue is an amendment, not a design task.** It means a semantic token in all three theme blocks,
 measured against both grounds, argued against `design-language.md` §2 — and it would encode
 direction, never desirability, and carry a word or a shape beside it. No green-means-good anywhere.
 
-**The accent is for controls, never for data.** A primary action, a focus ring, a selected control.
-Not a score, not a relevance rank. `design-language.md` §3.8 is the rule and `brief.md` §5 is the
+**The accent is for controls, never for data.** A primary action, a focus ring, a selected control,
+and the open row's border, which marks where the founder is. Not a score, not a rank. `design-language.md` §3.8 is the rule and `brief.md` §5 is the
 decision. The one green Terrain material carries is the sales deck's *live* dot, which `brief.md`
 §5 confines to availability, always beside its word.
 
@@ -400,7 +402,7 @@ and writing it down stops the next person looking.
 Four things follow:
 
 - **Every figure in `demo/` and in `docs/` is illustrative.** No number is a real filing count, and
-  `platform.md` §11 carries the one invariant that survived the analysis layer. Nothing checks it.
+  `platform.md` §11 says no invariant among them is checked.
 - **Never name a real holder as data in `demo/`.** Holder names render as skeleton bars there by
   decision. Inventing one reads as a live example; transliterating a real one is fabrication. Both
   are worse than a bar.
@@ -506,7 +508,7 @@ folder does not carry them: the primary logo in dark and light, the dark dual se
 licensing-platform logo. They are there for decks.
 
 Terrain is an **endorsed sub-brand**: the TIS mark appears in the lockup, Terrain is the product name.
-Innovue appears as **attribution only** — *Powered by Innovue* at the foot of every product surface (a report carries none, `docs/brief.md` §3),
+Innovue appears as **attribution only** — *Powered by Innovue* at the foot of the home page and nowhere else in the product (`docs/brief.md` §3),
 rendered as their own mark (a sales deck says *our IP-technology provider* instead, with no mark), and the database cited in body copy where it does credibility work. **Innovue never
 enters the product name or the primary lockup.** The reasons are commercial, not aesthetic, and they
 are in `docs/brief.md` §3.

@@ -23,10 +23,16 @@ user says to.
 
 ## Rules that bite here
 
-- **Scope is a UX and interaction review**: density and spacing, loading, empty and failure states,
-  dark mode, paging and scroll, missing features. **Type and text layout are out unless the user
-  flags one.** Their build is the reference for type by default (§13.1).
-- **Their build is the reference for type; `app/` for behaviour, flow and the contract.**
+- **`app/` is the reference for everything**, type and layout included (§13.1). It is built from the
+  round 4 detail lab (`visual-reference/innovue-build/round-4/detail-lab/`, V8). A difference between
+  their build and `app/` always has one answer: `app/`.
+- **Scope**: the round after round 4 is a **change** round that hands the V8 look over (§13.5, first
+  row), with type and layout in scope. Later rounds are a UX and interaction review against `app/`:
+  density and spacing, loading, empty and failure states, dark mode, scroll, missing features, and
+  type where it differs from `app/`.
+- **A look is settled in a lab, then in `docs/`, then in `app/`.** A lab under
+  `visual-reference/innovue-build/round-N/` is where a redesign is tried; once the user picks one,
+  the docs are rewritten to it and `app/` is rebuilt from it, and only then does a round package it.
 - **PostHog is blocked in every browser run.** `lib.mjs` does it. Never open their build another way.
 - **Captures never enter a tracked file.** Everything under `visual-reference/` is git-ignored and
   the raster rule refuses PNGs anyway. Overlays (`design/overlays/round-N/`) are tracked and must
@@ -54,8 +60,8 @@ paths from the repo root. For `--target ours`, serve the repo first:
 Every browser script takes `--viewport`: `desktop` 1440×900 (the default), `tablet` 820×1180,
 `phone` 390×844 (DPR 3, touch, a mobile user agent), `floor` 375×667, `narrow` 320×568, and
 `landscape` 844×390 with touch. **`phone` is the one the phone half is drawn and measured at**;
-`floor` and `narrow` are checks, because `design-language.md` §6 designs down to 375 and wraps the
-masthead at 320. A measure job names its preset as `"viewport"`. Phone captures go in their own
+`floor` and `narrow` are checks, because `design-language.md` §7 designs the phone layout down to
+375 and the masthead holds one row of glyphs at 320. A measure job names its preset as `"viewport"`. Phone captures go in their own
 folder beside the desktop ones (`captures/theirs-phone/`).
 
 ## Phase 0 · setup
