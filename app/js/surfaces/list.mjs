@@ -288,13 +288,18 @@ export function init(ctx) {
     else { sort('relevance'); $('#sortBtn').focus(); }
   });
 
+  /* Export sits at the end of the scope row; below 640px that row is hidden,
+     so the list head carries the same menu as a glyph */
   Pop.wire($('#expBtn'), $('#expPop'));
-  $('#expPop').addEventListener('click', e => {
+  Pop.wire($('#expBtnP'), $('#expPopP'));
+  const onExport = e => {
     const b = e.target.closest('[data-export-list]'); if (!b) return;
     Pop.close(true);
     const rows = shown().map(id => ({ ...BYID.get(id), rank: rankOf(id) }));
     if (!rows.length) { toast('There are no results to export.'); return; }
     const name = Export.save(rows, b.dataset.exportList, { query });
     toast(`Downloaded ${name}`);
-  });
+  };
+  $('#expPop').addEventListener('click', onExport);
+  $('#expPopP').addEventListener('click', onExport);
 }

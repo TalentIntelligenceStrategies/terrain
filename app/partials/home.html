@@ -1,7 +1,9 @@
-<!-- THE HOME SURFACE · platform.md §3, in the V8 lab's language.
-     The heading, the technology fields, the search panel the results surface
-     carries, and what the corpus covers, in that order down the page. The one
-     credit to Innovue is the foot of this page (brief.md §3). -->
+<!-- THE HOME SURFACE · platform.md §3, a copy of Innovue's live home
+     (terrain.innovue.ltd), value for value. The heading, the technology
+     fields, the composer and what the index covers, in that order down the
+     page; below 640px the composer comes before the fields, and the fields
+     become one scrolling row of chips. The one credit to Innovue is the foot
+     of this page (brief.md §3). -->
   <section class="view" data-view="home" aria-label="Search">
     <main class="home" id="home">
       <div class="home-col">
@@ -13,46 +15,37 @@
       <!-- aria-disabled, NOT disabled, on a field that is not ready: a disabled
            button leaves the tab order, and a keyboard could never reach the tile
            that says the field is coming. -->
-      <div class="home-col">
-        <h2 class="glabel fields-lbl" id="fieldsLbl">Patent technology fields</h2>
+      <div class="home-col home-fields">
+        <h2 class="fields-lbl" id="fieldsLbl">Patent technology fields</h2>
         <div class="fields" id="fields" role="group" aria-labelledby="fieldsLbl"></div>
       </div>
 
-      <div class="home-col">
-        <form class="search panel" role="search" id="homeSearch" data-composer="home">
-          <div class="q">
-            <div class="seg" role="group" aria-label="Search by">
-              <button type="button" data-mode="text" aria-pressed="true">Text</button><button type="button" data-mode="number" aria-pressed="false">Patent number</button>
+      <!-- THE COMPOSER IS INNOVUE'S (terrain.innovue.ltd): the sentence, a count of
+           what it may hold, then Text / Patent number and the settings beside it,
+           and Search at the far end, quiet until there is something to search. -->
+      <div class="home-col home-q">
+        <form class="hs panel" role="search" id="homeSearch" data-composer="home">
+          <label><span class="sr-only">Describe the technology</span>
+            <textarea rows="2" maxlength="5000" placeholder="Describe the technology, e.g. hinge structure for foldable displays"></textarea></label>
+          <p class="hs-count mono" aria-hidden="true"><span data-count>0</span> / 5000</p>
+          <div class="hs-row">
+            <div class="seg hs-seg" role="group" aria-label="Search by">
+              <button type="button" data-mode="text" aria-pressed="true" aria-label="Text"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16"/><path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"/><path d="M9 20h6"/></svg><span class="label">Text</span></button><button type="button" data-mode="number" aria-pressed="false" aria-label="Patent number"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></svg><span class="label">Patent number</span></button>
             </div>
-            <div class="sentence">
-              <label><span class="sr-only">Describe what you are building</span>
-                <textarea rows="2" maxlength="5000" placeholder="For example: a folding drone arm that locks without a latch"></textarea></label>
-            </div>
-            <button class="go" type="submit"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><span class="label">Search</span></button>
-            <p class="q-note" role="status"></p>
+            <div class="anchor hs-set" data-settings-anchor></div>
+            <button class="go hs-go" type="submit" aria-label="Search"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><span class="label">Search</span></button>
           </div>
-          <dl class="scope" aria-label="Searches within">
-            <div><dt>Field</dt><dd data-scope="field"></dd></div>
-            <div><dt>Offices</dt><dd data-scope="offices"></dd></div>
-            <div><dt>Documents</dt><dd data-scope="docs"></dd></div>
-            <div><dt>Dates</dt><dd data-scope="dates"></dd></div>
-            <div><dt>Results</dt><dd data-scope="n" class="tnum"></dd></div>
-            <div class="took"></div>
-            <div class="end anchor" data-settings-anchor></div>
-          </dl>
+          <p class="q-note" role="status"></p>
         </form>
       </div>
 
-      <div class="home-col">
+      <div class="home-col home-cover">
         <section class="panel cover" id="coverCard" aria-labelledby="coverH">
-          <div class="cover-head">
-            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
-            <h2 id="coverH">Data coverage</h2>
-          </div>
+          <h2 id="coverH">Data coverage</h2>
+          <p class="cover-cap">Latest publication · Grant / Application</p>
           <div class="cover-body" id="coverBody">
-            <p class="cover-scope" id="coverScope"></p>
             <table class="cover-tbl">
-              <thead><tr><th class="flabel" scope="col">Source</th><th class="flabel num" scope="col">Grants</th><th class="flabel num" scope="col">Applications</th></tr></thead>
+              <thead><tr><th class="flabel" scope="col">Source</th><th class="flabel num" scope="col">Grant</th><th class="flabel num" scope="col">Application</th></tr></thead>
               <tbody id="coverRows"></tbody>
             </table>
           </div>

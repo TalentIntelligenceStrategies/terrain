@@ -284,8 +284,9 @@ export function recordFor(id, version) {
    are nobody's published claim; what is real is the SHAPE — six jurisdictions
    by two document kinds is how the index is actually cut. */
 export const FIELDS = [
+  { id: 'all',     label: 'All technology fields',     icon: 'globe',    ready: true  },
   { id: 'semi',    label: 'Semiconductor devices',     icon: 'cpu',      ready: true  },
-  { id: 'comms',   label: 'Digital communication',     icon: 'network',  ready: false },
+  { id: 'ict',     label: 'Information & Communication Tech', icon: 'network', ready: true },
   { id: 'compute', label: 'Computing & data',          icon: 'monitor',  ready: false },
   { id: 'energy',  label: 'Batteries & energy',        icon: 'battery',  ready: false },
   { id: 'medical', label: 'Medical diagnostics',       icon: 'stetho',   ready: false },

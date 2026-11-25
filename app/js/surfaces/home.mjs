@@ -12,6 +12,7 @@ import { codeOf } from '../core/format.mjs';
 let ENGINE = null;
 
 const ICON = {
+  globe:   '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>',
   cpu:     '<path d="M12 20v2"/><path d="M12 2v2"/><path d="M17 20v2"/><path d="M17 2v2"/><path d="M2 12h2"/><path d="M2 17h2"/><path d="M2 7h2"/><path d="M20 12h2"/><path d="M20 17h2"/><path d="M20 7h2"/><path d="M7 20v2"/><path d="M7 2v2"/><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="8" height="8" rx="1"/>',
   network: '<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/>',
   monitor: '<rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>',
@@ -38,7 +39,7 @@ function paintPressed() {
 async function paintFields() {
   const host = $('#fields');
   if (!host) return;
-  waitOn(host, 132);
+  waitOn(host, 120);
   const res = await ENGINE.fields();
   if (!res.ok) { failWith(host, 'The technology fields did not load.', res.retryable ? paintFields : null); return; }
   const list = res.data.fields || [];
@@ -59,12 +60,11 @@ async function paintCoverage() {
   const res = await ENGINE.coverage();
   if (!res.ok) { failWith(body, 'The coverage table did not load.', res.retryable ? () => { body.innerHTML = html; paintCoverage(); } : null); return; }
   landIn(body, html);
-  $('#coverScope').textContent = res.data.scope || '';
-  /* one row per source, two dates; a source the corpus does not include is an
-     en dash: an absence, not a withheld value */
-  const day = d => `<td class="num"><span class="mono">${d ? esc(d) : '—'}</span></td>`;
+  /* one row per source, the latest grant and application published; a source
+     the index does not include is an en dash: an absence, not a withheld value */
+  const day = d => `<td class="num mono">${d ? esc(d) : '—'}</td>`;
   $('#coverRows').innerHTML = (res.data.sources || []).map(s =>
-    `<tr><td>${s.source == null ? BAR('w-md') : esc(codeOf(s.source))}</td>${day(s.grant)}${day(s.application)}</tr>`).join('');
+    `<tr><th scope="row">${s.source == null ? BAR('w-md') : esc(codeOf(s.source))}</th>${day(s.grant)}${day(s.application)}</tr>`).join('');
 }
 
 export function init(ctx) {

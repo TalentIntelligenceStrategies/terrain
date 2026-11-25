@@ -25,8 +25,9 @@ subclass in CPC's own words. A field the record does not carry prints an em dash
 
 **The list head** carries *Details* / *Drawings only*, **Group by topic** (the results by CPC
 subclass, every count checkable against the list, picked as a filter tag), **Sort** (relevance,
-newest, oldest, by published date) and **Export** (these results in this order, as CSV or Markdown).
-*Find similar* in the record orders the list by similarity to that patent; the sort still reads
+newest, oldest, by published date). **Export** (these results in this order, as CSV or Markdown)
+sits at the end of the scope row beside *Search settings*, and moves into the list head below 640px,
+where that row is hidden. *Find similar* in the record orders the list by similarity to that patent; the sort still reads
 *Relevance*, and the filter bar says what changed with a tag, *Similar to …*, whose × restores the
 relevance order. The rank travels with its row through every sort.
 
@@ -40,9 +41,9 @@ Shift+Enter is a new line. There is no shortcuts control.
 **A search shows no loader.** Search keeps its label at reduced ink and is busy to a screen reader,
 the rows on screen stay dimmed until the new ones land, and nothing holds the answer back.
 
-**One system of sizes** (`docs/design-language.md` §4, §5, §9): the masthead at Innovue's 28px
-recipe, every other control 32 (44 below 640px), one field-name role in sentence case, every claim at
-one size, four radii, and a glyph sized to its control.
+**Three references, one each** (`docs/design-language.md` §4, §5, §9): the masthead is Innovue's
+28px recipe; the results surface is the round 4 detail lab value for value (36px controls, small-capital
+field names, the record's 44px actions, 44 below 640px); home is Innovue's live home value for value.
 
 **Below 640px** the masthead is glyphs only, the search docks at the foot of the window, and the
 record slides in over the list, full screen, with Back, previous and next in its head and *Find

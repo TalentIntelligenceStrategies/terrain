@@ -47,7 +47,7 @@ have carried is in the 56px bar: New, History, the appearance control and the ve
 | 1 · First run | home | The field tiles, the composer, the question above it, and the coverage below. |
 | 2 · What was found | results | The search panel with the scope it ran over, the ranked patents in the left panel, and *Select a patent* in the right. |
 | 3 · Working | results | Sorting, grouping by topic, reading a record, finding similar, opening a drawing. The founder may stay here indefinitely and most of the product's value is spent here. |
-| 4 · Leaving | results | *Export this record* from the record, or *Export results* from the list head, as CSV or Markdown. |
+| 4 · Leaving | results | *Export this record* from the record, or *Export* from the end of the scope row (the list head below 640px), as CSV or Markdown. |
 
 **There is no confirm step and no build stream.** The search runs on submit. A founder who has to
 approve a paraphrase of their own sentence before anything happens is a founder being asked to do the
@@ -70,8 +70,12 @@ badge on a disabled tile reads as decoration, and this one has to read as a reas
 **The tiles and the composer are the closest pair of blocks on the page.** Choosing a field and
 describing the idea are one decision, so they sit closer to each other than to anything else.
 
-**On a phone the tiles are one row that scrolls sideways**, each a compact tile with the icon beside
-the name. Stacked two-across they put the composer below the fold. The row has no scroll snap, and
+**The home surface is Innovue's live home** (terrain.innovue.ltd), copied value for value: six field
+cards, the composer, the coverage, the attribution, on a flat ground.
+
+**On a phone the composer comes first and the tiles follow it as one row of 44px chips that scrolls
+sideways**, each with the icon beside the name and *Coming soon* as plain text. Stacked two-across
+they put the composer below the fold. The row has no scroll snap, and
 its last visible tile is cut by the screen edge, which is what says there are more.
 
 **A tile that is not ready is `aria-disabled`, not `disabled`.** It keeps its tab stop, so a founder
@@ -86,7 +90,10 @@ it; the tiles are built to take a field that becomes ready, and nothing in the i
 
 ### 3.2 · One composer, one button
 
-Below the tiles: one composer, in the results surface's panel language (`design-language.md` §7).
+Below the tiles: one composer, Innovue's. The sentence in a box at least 56px tall, a count of what
+it may hold (*0 / 5000*) under it, then a row: *Text / Patent number* (glyphs only on a phone), a
+settings glyph that opens the search settings upward, and **Search** at the far end, 36px, quiet until
+there is something to search.
 **A *Text / Patent number* switch says what the box holds**, and the placeholder and the field's
 accessible name change with it, so the engine is never left to guess whether `EP2214203` is a
 description. The results surface carries the same switch on the same value. A number search opens on
@@ -219,13 +226,14 @@ ran over**, stated as labelled chips:
 | Dates | the basis and the range, or *any date* |
 | Results | how many the search returns |
 
-**Then the time the search took**, in the figure face, and **Search settings** at the row's end. A
+**Then the time the search took**, in the figure face, and **Search settings** and **Export** at the
+row's end; below 640px, where this row is hidden, Export is a glyph in the list head. A
 chip opens the settings; the field chip names the field and changes nothing. **The time clears while
 a new search runs** and comes back with its answer, because the old figure is about a search that is
 no longer the one on screen.
 
-**Search is 32px, like every other control in the panel**, with a 14px label at the same weight as
-theirs; its ink fill is what makes it the primary action.
+**Search is 36px, the same height as *Text / Patent number* beside it**, with a 15px label at 600;
+its ink fill is what makes it the primary action.
 
 **A running search shows no loader.** Search keeps its label at reduced ink and is busy to a screen
 reader; the rows already listed stay, dimmed, until the new ones replace them. The answer appears
@@ -276,7 +284,7 @@ toast is laid over the rows to repeat what the tag already states.
 2. **The title**, 18px, up to two lines.
 3. **The facts**, under a hairline: *Holder* on a full row (a long holder takes its whole line and is
    never cut), then *Inventors* (the first, then `+n`), *Published* and *Class* (the main
-   classification) in three columns, each under its field name in sentence case.
+   classification) in three columns, each under its field name in small capitals.
 4. **The abstract**, clamped to three lines.
 5. **The drawings**: up to eight tiles, 92px, in a strip that scrolls sideways.
 
@@ -387,9 +395,8 @@ it, and ← and → step to the previous and next result. The list's accent bord
 step legible. **Find similar** orders the list by similarity to this patent (§4.3), and the record
 stays open.
 
-**Every control on the record is the standard 32px with a 14px label**, the actions and *Show all*
-included, and every claim, claim 1 among them, is set at the abstract's size. A record whose actions
-stood taller than the list head beside them read as a second product.
+**The record is the lab's, value for value**: its actions and *Show all* are 44px with a 15px label
+at 600, and claim 1 is set at 18 over the claims after it at 15.
 
 **On a phone the record is a full screen over the list.** Its head is pinned: **Back**, the number,
 and **previous** and **next**; once the title has scrolled away the head names the patent. *Open in
@@ -422,8 +429,8 @@ opens at a size the drawing fills, with enough scrim left to say the page is sti
 of M*, the word every other surface uses. **Every drawing keeps its published number**, which is what
 the claims refer to.
 
-**Its controls are the page's controls**: square 32px buttons with 16px glyphs, in a tool bar, with
-previous and next as the same buttons on the stage's edges. Below 640px every one is 44.
+**Its controls are the lab's**: round 32px buttons with 16px glyphs in a floating pill, and round
+36px previous and next on the stage's edges. Below 640px every one is 44.
 
 **Zoom, rotate, fill, and a strip.** The zoom buttons step a ladder from 50% to 400%; a wheel, a
 pinch or a double press zoom continuously about the point under the cursor. Rotation is a quarter
@@ -802,7 +809,7 @@ What has been settled and not yet packaged. Each goes in the first round whose s
 
 | What | Difference → wanted |
 | --- | --- |
-| The V8 look | `app/` as rebuilt from the detail lab, every component: masthead, search panel and scope chips, settings (200, Rerank, Priority), list head with Group by topic and Export results, the row with rank and score chips, the record with the facts row, Show all and the side panel, the phone dock and full-screen record, all on one system of sizes (`design-language.md` §4, §5, §9: the masthead at their 28px recipe, every other control 32, field names in sentence case, every claim at one size, no loader). Removed: the keyboard-shortcuts control, the star, the starred page, the report and the account, billing and help pages (§1). Contract: `components.md` (the record's `status`, `priority`, `ipcWords`, `url`; `similar`) |
+| The V8 look | `app/` as rebuilt from the detail lab, every component: masthead, search panel and scope chips, settings (200, Rerank, Priority), list head with Group by topic, Export at the end of the scope row, the row with rank and score chips, the record with the facts row, Show all and the side panel, the phone dock and full-screen record, the results surface value for value with the lab and home value for value with Innovue's live home (`design-language.md` §4, §5, §9: the masthead at their 28px recipe, the lab's 36px controls and small-capital field names, no loader). Removed: the keyboard-shortcuts control, the star, the starred page, the report and the account, billing and help pages (§1). Contract: `components.md` (the record's `status`, `priority`, `ipcWords`, `url`; `similar`) |
 | Session recording | Their build runs PostHog with session recording → usage events only, recording off. `brief.md` §4: the search box holds an idea the founder may not have filed |
 | Question | What does `ipcembedding` mean for retrieval — is each technology field an IPC-scoped index? `components.md` §4 question 11 |
 | Question | What does their analytics record, and where is it sent? `components.md` §4 question 12 |

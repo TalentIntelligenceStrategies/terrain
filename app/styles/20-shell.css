@@ -6,10 +6,9 @@
    phone rule is a media query here rather than an html.phone class, so the
    layout follows a resize instead of the width the page loaded at.
 
-   ONE SYSTEM OF SIZES (design-language.md §4, §5, §9). Three control
-   heights — 28 compact, 32 standard, 44 touch below 640px — and a glyph
-   takes the size of the control it sits in: 14, 16, 18. Every control label
-   is 500; the filled ink is what says primary, not a heavier label.
+   ONE SYSTEM OF SIZES, the lab's (design-language.md §4, §5, §9). The
+   masthead is Innovue's, every control 28; the page under it is the lab's,
+   every control 36, a chip 32 or 28, and 44 on a touch screen below 640px.
 
    Controls press to .96 and tint on hover only where a pointer hovers.
    Popovers fade and scale in from their button; out faster than in.
@@ -22,12 +21,11 @@ button,input,textarea{font:inherit;color:inherit}
 svg.i{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .mono{font-family:'Inconsolata',ui-monospace,monospace;font-variant-numeric:tabular-nums}
 .tnum{font-variant-numeric:tabular-nums}
-/* THE FIELD NAME, one role everywhere: sentence case, 12/500, the quiet ink.
-   A group head (a popover's kicker, the record rail's Parties) is the same
-   role one step up in ink, so it heads the names inside it without becoming
-   a heading. Nothing here is uppercase by style (design-language.md §4). */
-.flabel,.glabel{font-family:'Urbanist',sans-serif;font-weight:500;font-size:12px;line-height:1.4;color:var(--text-3);margin:0}
-.glabel{color:var(--text-2)}
+/* THE FIELD NAME, one role everywhere: the lab's micro label, 11/600, tracked
+   .08em, in small capitals by style, the quiet ink. The markup stays sentence
+   case, so a screen reader and a copy read words rather than shouting. A group
+   head (a popover's kicker, the record rail's Parties) is the same role. */
+.flabel,.glabel{font-family:'Urbanist',sans-serif;font-weight:600;font-size:11px;line-height:1.3;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);margin:0}
 
 .skip{position:absolute;left:var(--s-16);top:var(--s-8);z-index:50;display:inline-flex;align-items:center;height:32px;padding:0 var(--s-12);border-radius:var(--r-control);font-size:14px;line-height:1;
       background:var(--accent);color:var(--accent-ink);font-weight:500;transform:translateY(-200%)}
@@ -46,34 +44,34 @@ svg.i{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-widt
 
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-shell)}
 
-/* ── the shared controls: the standard height is 32 ──────────────────────── */
+/* ── the shared controls: the lab's standard height, 36 ───────────────────── */
 .ib,.ctl,.go,.seg button,.chip-t,.menu button,.btn-quiet{
   transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease),border-color var(--dur-1) var(--ease),scale var(--dur-1) var(--ease)}
 :is(.ib,.ctl,.go,.chip-t,.menu button,.btn-quiet):active{scale:.96}
-.ib{display:inline-grid;place-items:center;width:32px;height:32px;padding:0;border:0;border-radius:var(--r-control);
+.ib{display:inline-grid;place-items:center;width:36px;height:36px;padding:0;border:0;border-radius:var(--r-control);
     background:transparent;color:var(--text-2);cursor:pointer}
-/* a segmented control: a 32px track, 3px in, so a segment is 26 (§5) */
+/* a segmented control: a 36px track, 3px in, so a segment is 30 (§5) */
 .seg{display:inline-flex;padding:3px;gap:2px;border-radius:var(--r-control);background:var(--surface-sunken);flex:none}
-.seg button{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-6);height:26px;padding:0 var(--s-12);border:0;
-            border-radius:var(--r-seg);background:none;color:var(--text-2);font-size:13px;font-weight:500;line-height:1;cursor:pointer;white-space:nowrap}
+.seg button{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-6);height:30px;padding:0 var(--s-12);border:0;
+            border-radius:calc(var(--r-control) - 3px);background:none;color:var(--text-2);font-size:13px;font-weight:500;line-height:1;cursor:pointer;white-space:nowrap}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--text-1);box-shadow:0 0 0 1px var(--border)}
-.seg.icons button{width:30px;padding:0}
-.ctl{display:inline-flex;align-items:center;gap:var(--s-8);height:32px;padding:0 var(--s-12);border-radius:var(--r-control);
+.seg.icons button{width:34px;padding:0}
+.ctl{display:inline-flex;align-items:center;gap:var(--s-8);height:36px;padding:0 var(--s-12);border-radius:var(--r-control);
      border:1px solid var(--border-strong);background:var(--surface);color:var(--text-1);font-size:14px;font-weight:500;line-height:1;
      cursor:pointer;white-space:nowrap}
 .ctl svg.i{color:var(--text-3)}
 .ctl .chev{margin-right:calc(-1 * var(--s-4));transition:rotate var(--dur-1) var(--ease)}
 .ctl[aria-expanded="true"] .chev{rotate:180deg}
-/* Search: the one filled control, at the standard size and the control label —
-   the ink fill already says primary, so the label does not say it twice */
-.go{display:inline-flex;align-items:center;gap:var(--s-8);height:32px;padding:0 var(--s-14) 0 var(--s-12);border:0;flex:none;
-    border-radius:var(--r-control);background:var(--accent);color:var(--accent-ink);font-weight:500;font-size:14px;line-height:1;cursor:pointer}
+/* Search: the one filled control, the same 36 as the Text / Patent number toggle beside it */
+.go{display:inline-flex;align-items:center;gap:var(--s-8);height:36px;padding:0 var(--s-20) 0 var(--s-16);border:0;flex:none;
+    border-radius:var(--r-control);background:var(--accent);color:var(--accent-ink);font-weight:600;font-size:15px;line-height:1;cursor:pointer}
+.go svg.i{width:18px;height:18px}
 .go[aria-disabled="true"]{opacity:.45;cursor:default}
 /* A CONTROL THAT IS WAITING KEEPS ITS LABEL AND LOSES INK. There is no loader
    (design-language.md §6): aria-busy says it to a screen reader, and the
    reduced ink says it to everyone else, without moving. */
 :is(.go,.ctl,.edge,.btn-quiet)[data-waiting]{opacity:.6;cursor:progress}
-.btn-quiet{height:32px;padding:0 var(--s-10);border:0;border-radius:var(--r-control);background:none;color:var(--text-2);font-size:14px;
+.btn-quiet{height:36px;padding:0 var(--s-10);border:0;border-radius:var(--r-control);background:none;color:var(--text-2);font-size:14px;
            font-weight:500;line-height:1;cursor:pointer;display:inline-flex;align-items:center;gap:var(--s-6)}
 @media (hover:hover) and (pointer:fine){
   .ib:not([aria-disabled="true"]):hover{background:var(--surface-sunken);color:var(--text-1)}
@@ -95,9 +93,9 @@ svg.i{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-widt
                 transition:opacity var(--dur-2) var(--ease),scale var(--dur-2) var(--ease),visibility 0s}
 .pop[data-instant]{transition:none}
 .pop>.glabel{padding:var(--s-6) var(--s-8) var(--s-4)}
-/* a menu item: 32 tall, the control label, a 6 radius inside the popover's 12 with 6 of padding */
-.menu button{display:flex;width:100%;align-items:center;gap:var(--s-10);min-height:32px;padding:var(--s-4) var(--s-8);border:0;
-             background:none;border-radius:var(--r-seg);font-size:14px;font-weight:500;text-align:left;cursor:pointer}
+/* a menu item: 36 tall, the control label, the popover's radius less its 6 of padding */
+.menu button{display:flex;width:100%;align-items:center;gap:var(--s-10);min-height:36px;padding:var(--s-6) var(--s-8);border:0;
+             background:none;border-radius:calc(var(--r-inner) - var(--s-6));font-size:14px;font-weight:500;text-align:left;cursor:pointer}
 .menu button .tick{color:var(--text-1);visibility:hidden}
 .menu button[aria-checked="true"] .tick{visibility:visible}
 .menu button .count{margin-left:auto;padding-left:var(--s-12);font-family:'Inconsolata',monospace;font-size:13px;font-weight:400;color:var(--text-3)}
