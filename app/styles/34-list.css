@@ -14,14 +14,14 @@
           border-radius:calc(var(--r-shell) - 1px) calc(var(--r-shell) - 1px) 0 0}
 /* the platform's own scrollbar, thin: a drawn one is a second scrollbar language */
 .list-scroll,.pane{scrollbar-width:thin}
-.list-head{display:flex;align-items:center;gap:var(--s-8);min-height:56px;padding:var(--s-12) var(--s-16) var(--s-12) var(--s-24)}
+.list-head{display:flex;align-items:center;gap:var(--s-8);min-height:60px;padding:var(--s-10) var(--s-16) var(--s-10) var(--s-24)}
 .list-head h2{margin:0;font-size:20px;font-weight:600;line-height:1.3;letter-spacing:-.005em;white-space:nowrap}
 
-/* the ⓘ is a reveal: it shows its sentence on hover or focus */
+/* the ⓘ is a reveal, not a button with a fill: a bare 24px glyph close to the
+   heading that only darkens under a pointer, and shows its sentence on hover or focus */
 .tip-a{position:relative;display:inline-flex;margin-left:calc(-1 * var(--s-2))}
-.list-head .info{display:inline-grid;place-items:center;width:32px;height:32px;padding:0;border:0;background:none;
-                 border-radius:var(--r-control);color:var(--text-3);cursor:default;
-                 transition:color var(--dur-1) var(--ease),background-color var(--dur-1) var(--ease)}
+.list-head .info{display:inline-grid;place-items:center;width:24px;height:24px;padding:0;border:0;background:none;
+                 border-radius:50%;color:var(--text-3);cursor:default;transition:color var(--dur-1) var(--ease)}
 .tip{position:absolute;top:calc(100% + var(--s-8));left:calc(-1 * var(--s-8));z-index:30;width:280px;padding:var(--s-10) var(--s-12);
      background:var(--surface);border:1px solid var(--border);border-radius:var(--r-control);box-shadow:var(--shadow-float);
      font-size:13px;line-height:1.5;color:var(--text-2);text-wrap:pretty;
@@ -30,27 +30,27 @@
 .info:focus-visible+.tip{opacity:1;translate:0 0;visibility:visible;transition:none}
 @media (hover:hover) and (pointer:fine){
   .tip-a:hover .tip{opacity:1;translate:0 0;visibility:visible;transition-delay:300ms,300ms,300ms}
-  .list-head .info:hover{color:var(--text-1);background:var(--surface-sunken)}
+  .list-head .info:hover{color:var(--text-1)}
 }
 .list-head .tools{margin-left:auto;display:flex;align-items:center;gap:var(--s-8)}
 .filterbar{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-8);padding:0 var(--s-16) var(--s-12) var(--s-24);font-size:13px;color:var(--text-2)}
 .filterbar .n{font-family:'Inconsolata',monospace;color:var(--text-3)}
 .filterbar[hidden]{display:none}
-/* a tag is a chip: 28, 13/500, the plain edge. Its remove button reaches 24, the smallest target admitted (§5) */
-.tag{display:inline-flex;align-items:center;gap:var(--s-4);height:28px;padding:0 var(--s-2) 0 var(--s-10);border-radius:var(--r-control);
-     border:1px solid var(--border);background:var(--surface);color:var(--text-1);font-size:13px;font-weight:500;line-height:1}
+/* a tag is a chip: 28, 13/500, the strong edge, and a 22 remove button inside it */
+.tag{display:inline-flex;align-items:center;gap:var(--s-6);height:28px;padding:0 var(--s-4) 0 var(--s-10);border-radius:var(--r-control);
+     border:1px solid var(--border-strong);background:var(--surface);color:var(--text-1);font-size:13px;font-weight:500;line-height:1}
 .tag .mono{font-size:13px;font-weight:500}
-.tag .ib{width:24px;height:24px;border-radius:var(--r-seg)}
+.tag .ib{width:22px;height:22px}
 .tag .ib svg.i{width:14px;height:14px}
 .group-pop{width:340px;max-height:360px;overflow:auto}
 
 /* ── the results: soft flat cards; the card's text starts 24px in, the record's gutter ── */
 .rows{display:flex;flex-direction:column;gap:var(--s-12);padding:var(--s-8);min-height:100%}
 .rows.is-fail{min-height:320px;display:grid;place-items:center}
-/* 20 on the block, 24 on the inline edges: the card's text starts at the record's gutter */
-.row{position:relative;padding:var(--s-20) var(--s-24);border-radius:var(--r-inner);cursor:pointer;
+/* 15px + the 1px border + the 8px inset = the card's text at 24px, the record's gutter */
+.row{position:relative;padding:var(--s-20) 15px;border-radius:var(--r-inner);cursor:pointer;
      background:var(--surface);border:1px solid var(--border);transition:background-color var(--dur-1) var(--ease)}
-@media (hover:hover) and (pointer:fine){ .row:hover{background:var(--surface-sunken)} }
+@media (hover:hover) and (pointer:fine){ .row:hover{background:color-mix(in oklab, var(--text-1) 2%, var(--surface))} }
 /* selected: the outline lives inside the card's own edge, and switches instantly */
 .row[aria-current="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 .5px var(--accent);background:var(--surface)}
 .row-top{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-4) var(--s-8);font-size:13px;color:var(--text-3)}
@@ -66,8 +66,7 @@
 .row .facts>div{padding:var(--s-10) var(--s-16) var(--s-10) 0;min-width:0}
 .row .facts>.holder{grid-column:1 / -1;border-bottom:1px solid var(--border)}
 .row .facts>div:not(.holder)+div{padding-left:var(--s-16);border-left:1px solid var(--border)}
-.row .facts dd{margin:var(--s-4) 0 0;font-size:15px;line-height:1.5;color:var(--text-1);overflow-wrap:anywhere}
-.row .facts dd.mono,.row .facts>.holder dd{font-weight:500}
+.row .facts dd{margin:var(--s-4) 0 0;font-size:15px;color:var(--text-1);overflow-wrap:anywhere}
 .row .facts dd.mono{white-space:nowrap}
 .row .facts dd .more{color:var(--text-3)}
 .row .abs{margin:var(--s-14) 0 0;font-size:14px;line-height:1.55;color:var(--text-2);max-width:75ch;
@@ -87,10 +86,10 @@
 
 /* ── rank and relevance score: two chips, top right; never the ink fill ── */
 .chips-r{margin-left:auto;display:inline-flex;gap:var(--s-6)}
-/* a chip: 28, 13/500 — here in the figure face, because both are the engine's figures */
+/* a chip: 28, in the figure face at 15/500, because both are the engine's figures */
 .chip-r{display:inline-flex;align-items:center;height:28px;padding:0 var(--s-10);border-radius:var(--r-control);
         background:var(--surface);border:1px solid var(--border-strong);color:var(--text-1);
-        font-family:'Inconsolata',ui-monospace,monospace;font-weight:500;font-size:13px;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}
+        font-family:'Inconsolata',ui-monospace,monospace;font-weight:500;font-size:15px;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}
 /* the score wears the record actions' silver edge (design-language.md §3.8) */
 .chip-r.score{border:1px solid transparent;
               background:linear-gradient(var(--surface), var(--surface)) padding-box, var(--edge-silver) border-box}
@@ -107,8 +106,8 @@
 .split[data-closed] .pane .empty{display:grid;justify-items:center;gap:var(--s-8);max-width:320px;padding:var(--s-24);text-align:center}
 .empty .glyph{width:48px;height:48px;display:grid;place-items:center;margin-bottom:var(--s-8);
               border-radius:var(--r-control);border:1px solid var(--border);color:var(--text-3)}
-.empty .glyph svg.i{width:24px;height:24px}
-.empty h2{margin:0;font-size:16px;font-weight:600;line-height:1.4;color:var(--text-1)}
+.empty .glyph svg.i{width:22px;height:22px}
+.empty h2{margin:0;font-size:18px;font-weight:600;color:var(--text-1)}
 .empty p{margin:0;font-size:14px;line-height:1.55;color:var(--text-2);text-wrap:pretty}
 .rec.is-wait,.rec.is-fail{min-height:100%}
 
@@ -127,7 +126,7 @@
   .list-head .ctl .lbl,.list-head .ctl .chev{display:none}
   .list-head .seg.icons button{width:40px;height:38px}
   .rows{padding:var(--s-8) var(--s-8) var(--s-16);gap:var(--s-8)}
-  .row{padding:var(--s-16)}
+  .row{padding:var(--s-16) 15px}
   /* the source link stays a 28px glyph and is reached through 44: a transparent hit area, not padding */
   .row-top a{position:relative}
   .row-top a::after{content:'';position:absolute;inset:-8px}
@@ -143,16 +142,6 @@
 }
 @media (max-width:400px){ .sort-lbl{display:none} }
 @media (prefers-reduced-motion:reduce){ .tip{translate:none} .pane,.pane[data-open]{transition:none} }
-/* an icon-only control in the list head: square, so the head keeps the lab's two labelled controls */
-.ctl.ctl-icon{width:32px;padding:0;justify-content:center}
-@media (max-width:640px){ .list-head .ctl.ctl-icon{width:44px} }
-/* a narrow list (the split at 1024 and below): the head carries one control more than the lab's,
-   Export, so the sort keeps its glyph and its menu and gives up its label */
-.list{container:list / inline-size}
-@container list (max-width:560px){ .list-head .sort-lbl{display:none} .list-head .tools{gap:var(--s-6)} }
-@container list (max-width:420px){
-  .list-head{padding-left:var(--s-16)}
-  .list-head h2{font-size:18px}
-  .list-head .tip-a,.list-head .ctl .chev{display:none}
-  .list-head .ctl:not(.ctl-icon){padding:0 var(--s-10)}
-}
+/* Export: in the scope row above 640px, in the list head below it, where the scope row is hidden */
+.exp-phone{display:none}
+@media (max-width:640px){ .exp-phone{display:inline-flex} }

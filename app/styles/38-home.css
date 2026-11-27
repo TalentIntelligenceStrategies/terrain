@@ -1,56 +1,107 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   38 · THE HOME SURFACE — in the V8 lab's language.
-   The lab draws no home, so this one is built from its parts: the heading
-   at the lab's record-title weight, the technology fields as flat cards
-   that select the way a result row does (the ink edge inside the card),
-   the same search panel the results surface carries, and the coverage as
-   a panel with the list head's heading and the scope row's hairlines.
+   38 · THE HOME SURFACE — a copy of Innovue's live home (terrain.innovue.ltd),
+   measured value for value at 1440 and 390 and set in our tokens.
+
+   A 940 column: the heading at 36, the technology fields as six cards at
+   r16, the composer (the sentence, a count, Text / Patent number, the
+   settings glyph, and Search at 36), and the coverage as one panel with a
+   caption over a ruled table. The ground is flat, without the one light the
+   results surface carries. Below 640px the composer comes first, the fields
+   become one scrolling row of 44px chips, and every control is 44.
    ═══════════════════════════════════════════════════════════════════════ */
 
-.home{flex:1;display:flex;flex-direction:column;align-items:center;padding:var(--s-32) var(--s-16) 0}
-.home-col{width:100%;max-width:960px}
-.home-col+.home-col{margin-top:var(--s-32)}
+:root[data-view="home"] body{background:var(--ground)}
+.home{flex:1;display:flex;flex-direction:column;align-items:center;padding:var(--s-40) var(--s-16) 0}
+.home-col{width:100%;max-width:940px}
 .home h1{margin:0;font-size:36px;line-height:1.15;font-weight:600;letter-spacing:-.02em;outline:none}
-.home-sub{margin:var(--s-12) 0 0;max-width:56ch;font-size:16px;line-height:1.55;color:var(--text-2)}
-.fields-lbl{margin:0 0 var(--s-12)}
-.fields{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--s-12)}
-.fields.is-wait,.fields.is-fail{min-height:132px}
-.field{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s-12);min-height:132px;padding:var(--s-16) var(--s-12);
-       border-radius:var(--r-inner);border:1px solid var(--border);background:var(--surface);color:var(--text-2);text-align:center;cursor:pointer;
+.home-sub{margin:var(--s-12) 0 0;max-width:480px;font-size:16px;line-height:1.55;color:var(--text-3)}
+
+/* ── the technology fields ──────────────────────────────────────────────── */
+.home-fields{margin-top:calc(var(--s-24) + var(--s-4))}
+.fields-lbl{margin:0 0 var(--s-10);font-size:11px;font-weight:500;line-height:1.2;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.fields{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--s-10)}
+.fields.is-wait,.fields.is-fail{min-height:120px}
+.field{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:var(--s-10);min-height:120px;padding:var(--s-20) 14px;
+       border-radius:var(--r-widget);border:1px solid var(--border);background:var(--surface);color:var(--text-1);text-align:center;cursor:pointer;
+       font-size:13px;font-weight:500;line-height:1.4;
        transition:background-color var(--dur-1) var(--ease),border-color var(--dur-1) var(--ease)}
 .field svg.i{width:24px;height:24px}
-.field-name{font-size:14px;font-weight:500;line-height:1.3}
-.field[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 .5px var(--accent);color:var(--text-1)}
-.field[aria-pressed="true"] .field-name{font-weight:600}
-.field[aria-disabled="true"]{cursor:default;background:var(--surface-sunken);color:var(--text-3)}
-.field-soon{display:inline-flex;align-items:center;height:22px;padding:0 var(--s-8);border-radius:var(--r-seg);
-            border:1px solid var(--border-strong);background:var(--surface);font-size:12px;font-weight:500;color:var(--text-2)}
 .field-text{display:flex;flex-direction:column;align-items:center;gap:var(--s-6)}
+.field-name{font-size:13px;line-height:1.4}
+.field[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.field[aria-disabled="true"]{cursor:default;background:var(--surface-sunken);border-color:color-mix(in srgb, var(--border) 70%, transparent);
+                             color:var(--text-3);font-weight:400}
+.field[aria-disabled="true"] svg.i{opacity:.5}
+.field-soon{display:inline-flex;align-items:center;margin-top:calc(-1 * var(--s-4));padding:var(--s-2) var(--s-6);border-radius:var(--r-chip);
+            border:1px solid var(--border);background:var(--surface);
+            font-size:11px;font-weight:500;line-height:1.2;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
 @media (hover:hover) and (pointer:fine){ .field:not([aria-disabled="true"]):not([aria-pressed="true"]):hover{border-color:var(--border-strong)} }
 
-.home .search{margin:0}
-.home .sentence textarea{min-height:calc(2.9em + 8px);max-height:calc(5.8em + 8px)}
+/* ── the composer ──────────────────────────────────────────────────────── */
+.home-q{margin-top:var(--s-16)}
+.hs{display:block;padding:var(--s-16);border-radius:var(--r-widget)}
+.hs label{display:block}
+.hs textarea{display:block;width:100%;min-height:56px;max-height:256px;margin:0;padding:0;border:0;background:none;outline:none;resize:vertical;
+             font-size:16px;line-height:1.55;color:var(--text-1);overflow-y:auto}
+.hs textarea::placeholder{color:var(--text-3)}
+.hs-count{margin:var(--s-8) 0 0;text-align:right;font-size:13px;line-height:1.4;color:var(--text-3)}
+.hs-row{display:flex;align-items:center;gap:var(--s-16)}
+/* Text / Patent number: a 36 track, 2 in, so a segment is 32 */
+.hs-seg{padding:2px}
+.hs-seg button{height:32px;border-radius:var(--r-seg)}
+.hs-seg button svg.i{display:none;width:12px;height:12px;stroke-width:2}
+.hs-seg button[aria-pressed="true"]{box-shadow:var(--shadow-raise)}
+/* the settings glyph: 36 by 32, no edge, a tint under a pointer */
+.hs-set-btn{display:inline-grid;place-items:center;width:36px;height:32px;padding:0;border:0;border-radius:var(--r-control);
+            background:none;color:var(--text-3);cursor:pointer;transition:background-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
+.hs-set-btn svg.i{stroke-width:2}
+.hs-set-btn[aria-expanded="true"]{background:var(--surface-sunken);color:var(--text-1)}
+@media (hover:hover) and (pointer:fine){ .hs-set-btn:hover{background:var(--surface-sunken);color:var(--text-1)} }
+/* the settings open upward from their glyph, over the fields */
+.hs .settings{top:auto;bottom:calc(100% + var(--s-6));left:0;right:auto;transform-origin:bottom left}
+/* Search: 36, 13/500, a 16 glyph, quiet until there is something to search */
+.hs-go{margin-left:auto;height:36px;padding:0 var(--s-12);gap:var(--s-8);font-size:13px;font-weight:500}
+.hs-go svg.i{width:16px;height:16px;stroke-width:2}
+.hs .q-note{margin:var(--s-8) 0 0;font-size:13px;color:var(--text-2)}
+.hs .q-note:empty{display:none}
 
-.cover-head{display:flex;align-items:center;gap:var(--s-10);min-height:56px;padding:var(--s-10) var(--s-24);border-bottom:1px solid var(--border)}
-.cover-head h2{margin:0;font-size:20px;font-weight:600;line-height:1.3;letter-spacing:-.005em}
-.cover-head svg.i{color:var(--text-3)}
-.cover-body{padding:var(--s-16) var(--s-24) var(--s-20)}
+/* ── the coverage ──────────────────────────────────────────────────────── */
+.home-cover{margin-top:calc(var(--s-32) + var(--s-4))}
+.cover{padding:var(--s-24);border-radius:var(--r-widget)}
+.cover h2{margin:0;font-size:20px;font-weight:600;line-height:1.3}
+.cover-cap{margin:var(--s-6) 0 0;font-size:13px;line-height:1.4;color:var(--text-3)}
+.cover-body{margin-top:var(--s-16)}
 .cover-body.is-wait,.cover-body.is-fail{min-height:160px}
-.cover-scope{margin:0 0 var(--s-12);font-size:15px;color:var(--text-2)}
-.cover-tbl{width:100%;border-collapse:collapse}
-.cover-tbl th{padding:var(--s-8) 0;text-align:left;border-bottom:1px solid var(--border)}
-.cover-tbl td{padding:var(--s-12) 0;border-bottom:1px solid var(--border);font-size:15px}
-.cover-tbl tr:last-child td{border-bottom:0}
+.cover-tbl{width:100%;border-collapse:collapse;font-size:13px;line-height:1.4}
+.cover-tbl th,.cover-tbl td{padding:var(--s-10) 0;text-align:left;font-weight:400}
+.cover-tbl thead th{font-size:11px;font-weight:500;line-height:1.2;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.cover-tbl tbody tr{border-top:1px solid var(--border)}
 .cover-tbl .num{text-align:right}
-.home-foot{display:flex;align-items:baseline;justify-content:center;gap:var(--s-6);margin-top:auto;padding:var(--s-40) var(--s-16) var(--s-32);
+.cover-tbl td.mono{font-size:13px}
+
+.home-foot{display:flex;align-items:baseline;justify-content:center;gap:var(--s-6);margin-top:auto;padding:var(--s-56) var(--s-16) var(--s-32);
            font-size:13px;color:var(--text-3)}
 .home-foot em{font-style:italic}
 
-@media (max-width:900px){ .fields{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:1000px){ .fields{grid-template-columns:repeat(3,minmax(0,1fr))} }
+
+/* ── phone: the composer first, the fields one scrolling row of chips ───── */
 @media (max-width:640px){
-  .home{padding-top:var(--s-20)}
-  .home h1{font-size:26px}
-  .fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-8)}
-  .field{min-height:112px}
-  .cover-head,.cover-body{padding-left:var(--s-16);padding-right:var(--s-16)}
+  .home{padding-top:calc(var(--s-40) + var(--s-8))}
+  .home-q{order:2;margin-top:var(--s-16)}
+  .home-fields{order:3;margin:var(--s-16) calc(-1 * var(--s-16)) 0;width:calc(100% + var(--s-32))}
+  .home-cover{order:4;margin-top:var(--s-24)}
+  .home-foot{order:5}
+  .fields-lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .fields{display:flex;gap:var(--s-8);overflow-x:auto;padding:0 var(--s-16);scrollbar-width:none}
+  .fields::-webkit-scrollbar{display:none}
+  .field{flex:none;flex-direction:row;align-items:center;gap:var(--s-6);min-height:44px;padding:0 14px;border-radius:var(--r-pill)}
+  .field svg.i{width:16px;height:16px}
+  .field-text{flex-direction:row;gap:var(--s-6)}
+  .field-soon{margin:0;padding:0;border:0;background:none;letter-spacing:0;text-transform:none;font-weight:400}
+  .hs-seg button{width:36px;height:44px;padding:0}
+  .hs-seg button svg.i{display:block}
+  .hs-seg .label,.hs-go .label{display:none}
+  .hs-go{width:40px;padding:0;justify-content:center}
+  .cover{padding:var(--s-16)}
 }

@@ -35,6 +35,7 @@ let running = 0;
 
 const I = (p, c = 'i') => `<svg class="${c}" viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
 const TICK = I('<path d="M20 6 9 17l-5-5"/>');
+const SETTINGS2 = '<path d="M14 17H5"/><path d="M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/>';
 const SLIDERS = '<path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/>';
 
 /** the settings a search runs with: what the scope row states */
@@ -58,7 +59,11 @@ function paintScope() {
 
 /* ── the settings popover, one per composer, one state ──────────────────── */
 function settingsHTML(p) {
-  return `<button class="ctl" type="button" id="${p}SetBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="${p}SetPop">${I(SLIDERS)}Search settings</button>
+  /* home carries Innovue's glyph beside the mode; the results surface the lab's worded control */
+  const trigger = p === 'home'
+    ? `<button class="hs-set-btn" type="button" id="${p}SetBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="${p}SetPop" aria-label="Search settings" title="Search settings">${I(SETTINGS2)}</button>`
+    : `<button class="ctl" type="button" id="${p}SetBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="${p}SetPop">${I(SLIDERS)}Search settings</button>`;
+  return `${trigger}
   <div class="pop end settings" id="${p}SetPop" role="dialog" aria-label="Search settings">
     <div class="set-grid">
       <fieldset><legend class="flabel">Technology field</legend><span class="val" data-set-field></span></fieldset>
@@ -103,7 +108,7 @@ function paintDraft(pop) {
 
 function armSettings(anchor, p) {
   anchor.innerHTML = settingsHTML(p);
-  const btn = anchor.querySelector('.ctl'), pop = anchor.querySelector('.settings');
+  const btn = anchor.querySelector('button'), pop = anchor.querySelector('.settings');
   const warn = pop.querySelector('[data-set-warn]');
   Pop.wire(btn, pop, () => { draft = clone(applied); warn.textContent = ''; paintDraft(pop); });
   pop.addEventListener('click', e => {
@@ -140,7 +145,7 @@ function setMode(m) {
   mode = m === 'number' ? 'number' : 'text';
   $$('[data-composer] .seg[aria-label="Search by"] button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
   $$('[data-composer] textarea').forEach(t => {
-    if (t.closest('[data-composer="home"]')) t.placeholder = mode === 'number' ? 'For example: US 12107086 B2' : 'For example: a folding drone arm that locks without a latch';
+    if (t.closest('[data-composer="home"]')) t.placeholder = mode === 'number' ? 'Enter a patent number, e.g. US 12107086 B2' : 'Describe the technology, e.g. hinge structure for foldable displays';
     else t.placeholder = mode === 'number' ? 'A patent number' : 'Describe what you are building';
   });
 }
@@ -149,6 +154,14 @@ function setMode(m) {
 function fit(t) {
   if (matchMedia('(max-width: 640px)').matches && t.closest('[data-composer="work"]')) { t.style.height = ''; return; }
   t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px';
+}
+
+/* home's count of what the sentence may hold, and its Search, quiet until
+   there is something to search (Innovue's composer) */
+function count(form) {
+  const t = form.querySelector('textarea'), c = form.querySelector('[data-count]');
+  if (c) c.textContent = String(t.value.length);
+  if (form.dataset.composer === 'home') form.querySelector('.go').setAttribute('aria-disabled', String(!t.value.trim()));
 }
 
 function note(form, text) { const n = form.querySelector('.q-note'); if (n) n.textContent = text || ''; }
@@ -165,6 +178,7 @@ export async function run({ query, mode: m = mode, field = Field.get(), from = n
   }
   setMode(m);
   $$('[data-composer] textarea').forEach(t => { t.value = q; fit(t); });
+  forms.forEach(count);
   forms.forEach(f => note(f, ''));
   Url.searched({ query: q, field, mode: m });
   History.add({ query: q, field, fieldLabel: Field.label(), mode: m });
@@ -214,7 +228,8 @@ export function init(ctx) {
     if (anchor) armSettings(anchor, p);
     const t = form.querySelector('textarea');
     form.addEventListener('submit', e => { e.preventDefault(); run({ query: t.value, from: form }); });
-    t.addEventListener('input', () => { fit(t); note(form, ''); });
+    t.addEventListener('input', () => { fit(t); count(form); note(form, ''); });
+    count(form);
     t.addEventListener('keydown', e => {
       if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit(); }
       if (e.key === 'Escape' && !Pop.isOpen()) { e.stopPropagation(); t.blur(); }

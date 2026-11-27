@@ -137,8 +137,9 @@ function admit(r, s) {
 export const CorpusEngine = {
   fields: async () => respond('fields', {
     fields: [
+      { id: 'all', label: 'All technology fields', icon: 'globe', ready: true },
       { id: 'semi', label: 'Semiconductor devices', icon: 'cpu', ready: true },
-      { id: 'comms', label: 'Digital communication', icon: 'network', ready: false },
+      { id: 'ict', label: 'Information & Communication Tech', icon: 'network', ready: true },
       { id: 'compute', label: 'Computing & data', icon: 'monitor', ready: false },
       { id: 'energy', label: 'Batteries & energy', icon: 'battery', ready: false },
       { id: 'medical', label: 'Medical diagnostics', icon: 'stetho', ready: false },
